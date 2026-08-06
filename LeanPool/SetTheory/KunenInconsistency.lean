@@ -147,7 +147,7 @@ instance : Nonempty κω := by
   simp only [eq, nonpos_iff_eq_zero] at this
   exact Cardinal.aleph0_ne_zero this
 
-instance : Nonempty κωEquinumerousSubsets := ⟨κω, subset_refl _, rfl⟩
+instance : Nonempty κωEquinumerousSubsets := ⟨κω, fun _ h => h, rfl⟩
 instance : Nonempty (ν.ToType) := by simp [ν]
 
 /-- The `s` declaration. -/
@@ -199,13 +199,14 @@ lemma fSet_mem : fSet ∈ Func (Func ωₘ κω) κω :=
 lemma funcToSet_subset {A B C : M} {f : A → B} (hsub : B ⊆ C) :
     funcToSet f = funcToSet (injSubset hsub ∘ f) := by
   ext x
-  simp only [funcToSet, mem_separate_iff, Pairs.spec, injSubset, Embedding.coeFn_mk, comp_apply,
-    and_congr_left_iff, and_congr_right_iff, forall_exists_index]
-  rintro fst_mem f_apply_eq ⟨x, y, ⟨_⟩⟩ -
-  revert fst_mem f_apply_eq
-  simp only [fst_pair, snd_pair]
-  rintro hx (⟨_⟩ : (f ⟨x, hx⟩).1 = y)
-  exact ⟨fun _ => hsub (f ⟨x, hx⟩).2, fun _ => (f ⟨x, hx⟩).2⟩
+  simp only [funcToSet, mem_separate_iff, Pairs.spec, injSubset, comp_apply]
+  constructor
+  · rintro ⟨⟨hpair, hfst, hsnd⟩, hx, heq⟩
+    exact ⟨⟨hpair, hfst, hsub hsnd⟩, hx, heq⟩
+  · rintro ⟨⟨hpair, hfst, _⟩, hx, heq⟩
+    refine ⟨⟨hpair, hfst, ?_⟩, hx, heq⟩
+    rw [← heq]
+    exact (f ⟨fst x, hx⟩).2
 
 lemma funcToSet_mem_Func_of_subset {A B C : M} {f : A → B} (hsub : B ⊆ C) :
     funcToSet f ∈ Func A C := by

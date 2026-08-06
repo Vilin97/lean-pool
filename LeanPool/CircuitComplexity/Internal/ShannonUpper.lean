@@ -142,6 +142,13 @@ private theorem andOr2_gate_eval_two_inputs {W : Nat}
   simp only [Gate.eval, Basis.andOr2, gw, gn]
   cases g.op <;> simp_all [AONOp.eval, Fin.foldl_succ_last, Fin.foldl_zero, Fin.cast]
 
+/-- Reduce a `Basis.andOr2` evaluation to `AONOp.eval`. Rewriting with this instead of
+unfolding `Basis.andOr2` leaves the basis folded in the rest of the goal, which matters
+because `Circuit.wireValue` carries the basis as an implicit argument. -/
+private lemma andOr2_basis_eval {n : Nat} (op : AONOp)
+    (h : (Basis.andOr2.arity op).satisfiedBy n) (v : BitString n) :
+    Basis.andOr2.eval op n h v = op.eval n v := rfl
+
 private theorem binop_wireValue_c₁ {N G₁ G₂ : Nat} [NeZero N]
     (op : AONOp)
     (c₁ : Circuit Basis.andOr2 N 1 G₁) (c₂ : Circuit Basis.andOr2 N 1 G₂)
@@ -164,7 +171,7 @@ private theorem binop_wireValue_c₁ {N G₁ G₂ : Nat} [NeZero N]
         change (binopGWP c₁ c₂ ⟨n - N, _⟩).val.eval _ = _
         -- Unfold binopGWP for the first branch
         simp only [binopGWP, dif_pos hg]
-        rw [mkGate2'_eval, andOr2_gate_eval_two_inputs]
+        rw [mkGate2'_eval (c₁.gates ⟨n - N, hg⟩).op, andOr2_gate_eval_two_inputs]
         have hacyc0 : (gw 0 (c₁.gates ⟨n - N, hg⟩)).val < n := by
           have := c₁.acyclic ⟨_, hg⟩ ⟨0, by rw [andOr2_fanIn]; omega⟩; simp [gw] at this ⊢; omega
         have hacyc1 : (gw 1 (c₁.gates ⟨n - N, hg⟩)).val < n := by
@@ -205,7 +212,8 @@ private theorem binop_wireValue_c₂ {N G₁ G₂ : Nat} [NeZero N]
         have hb2 : ¬(n + G₁ + 1 - N = G₁) := by omega
         have hb3 : n + G₁ + 1 - N < G₁ + 1 + G₂ := by omega
         simp only [binopGWP, dif_neg hb1, dif_neg hb2, dif_pos hb3]
-        rw [mkGate2'_eval, andOr2_gate_eval_two_inputs]
+        rw [mkGate2'_eval (c₂.gates ⟨n + G₁ + 1 - N - G₁ - 1, by omega⟩).op,
+          andOr2_gate_eval_two_inputs]
         -- Simplify gate index
         have : (⟨n + G₁ + 1 - N - G₁ - 1, by omega⟩ : Fin G₂) = ⟨n - N, hg₂⟩ := by
           ext; simp; omega
@@ -247,7 +255,7 @@ theorem binopCircuit_or_correct {N G₁ G₂ : Nat} [NeZero N]
         ⟨G₁, by omega⟩ := Fin.ext (show N + G₁ - N = G₁ by omega)
     rw [hfin]
     simp only [binopGWP, show ¬(G₁ < G₁) from Nat.lt_irrefl G₁, dite_false, dite_true]
-    rw [mkGate2'_eval, andOr2_gate_eval_two_inputs]
+    rw [mkGate2'_eval (c₁.outputs 0).op, andOr2_gate_eval_two_inputs]
     cases (c₁.outputs 0).op <;> simp only <;> congr 1 <;> congr 1
     all_goals (apply binop_wireValue_c₁; exact (gw _ (c₁.outputs 0)).isLt)
   -- Wire N + G₁ + G₂ + 1 corresponds to c₂'s output gate
@@ -264,7 +272,7 @@ theorem binopCircuit_or_correct {N G₁ G₂ : Nat} [NeZero N]
       show ¬(G₁ + G₂ + 1 = G₁) by omega,
       show ¬(G₁ + G₂ + 1 < G₁ + 1 + G₂) by omega,
       dite_false]
-    rw [mkGate2'_eval, andOr2_gate_eval_two_inputs]
+    rw [mkGate2'_eval (c₂.outputs 0).op, andOr2_gate_eval_two_inputs]
     cases (c₂.outputs 0).op <;> simp only <;> congr 1 <;> congr 1
     all_goals (apply binop_wireValue_c₂)
   -- The output gate of cb applies OR to these two wires
@@ -1069,7 +1077,7 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
       simp only [show 1 + j - 1 = j from by omega]
       by_cases hjL1 : j < 4
       · rw [dif_pos hjL1]
-        simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
+        simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
           show ¬((1 : Nat) = 0) from by omega]
@@ -1107,7 +1115,7 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
         cases x ⟨addrBits N, by omega⟩ <;> cases x ⟨addrBits N + 1, by omega⟩ <;>
           cases j.testBit 1 <;> cases (decide (j % 2 = 1)) <;> simp_all
       · rw [dif_neg hjL1]
-        simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
+        simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
           show ¬((1 : Nat) = 0) from by omega]
@@ -1247,7 +1255,7 @@ private theorem colOutput_addrLeaf (N : Nat) [NeZero N]
         change oC q + j - oC q = j; omega]
       by_cases hjL1 : j < 4
       · rw [dif_pos hjL1]
-        simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
+        simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
           show ¬((1 : Nat) = 0) from by omega]
@@ -1276,7 +1284,7 @@ private theorem colOutput_addrLeaf (N : Nat) [NeZero N]
         cases x ⟨0, hN2 0 (by omega)⟩ <;> cases x ⟨1, hN2 1 (by omega)⟩ <;>
           cases j.testBit 1 <;> cases (decide (j % 2 = 1)) <;> simp_all
       · rw [dif_neg hjL1]
-        simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
+        simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
           show ¬((1 : Nat) = 0) from by omega]

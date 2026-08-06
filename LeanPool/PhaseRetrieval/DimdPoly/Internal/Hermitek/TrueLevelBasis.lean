@@ -172,54 +172,53 @@ private theorem sum_Icc_eq_sum_Fin {α : Type*} [AddCommMonoid α]
     simp_all
   · simp_all
 
-private lemma filter_natCast_eq_singleton {D : ℕ} (k : Fin D) :
+private lemma filter_embedding_eq_singleton {D : ℕ} {α : Type*} [DecidableEq α]
+    (e : Fin D ↪ α) (k : Fin D) :
     (Finset.univ : Finset (Fin D)).filter
-      (fun j => ((j.val : ℕ) : ℤ) = ((k.val : ℕ) : ℤ)) = {k} := by
+      (fun j => e j = e k) = {k} := by
   ext j
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
   constructor
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
-    intro h
-    have h' : j.val = k.val := by omega
-    exact Fin.ext h'
-  · simp_all
+  · intro h
+    exact e.injective h
+  · intro h
+    exact congrArg e h
 
 private lemma circleL2Sq_finFourierPoly {D : ℕ} (c : Fin D → ℂ) :
     circleL2Sq (fun t : Circle => ∑ k : Fin D, c k * fourier (k.val : ℤ) t) =
       ∑ k : Fin D, ‖c k‖ ^ 2 := by
-  let E' := (Finset.univ : Finset (Fin D)).map
+  let e : Fin D ↪ ℤ :=
     ⟨fun k => (k.val : ℤ), fun k₁ k₂ h => by
       have h' : (k₁ : ℕ) = k₂ := by exact Nat.cast_injective (R := ℤ) h
       exact Fin.ext h'⟩
+  have he (k : Fin D) : e k = (k.val : ℤ) := rfl
+  let E' := (Finset.univ : Finset (Fin D)).map e
   let b : ℤ → ℂ := fun n => ∑ k ∈ (Finset.univ : Finset (Fin D)).filter
-    (fun k => ((k.val : ℕ) : ℤ) = n), c k
-  have hb_eq : ∀ k : Fin D, b (k.val : ℤ) = c k := by
+    (fun k => e k = n), c k
+  have hb_eq : ∀ k : Fin D, b (e k) = c k := by
     intro k
     simp only [b]
-    rw [filter_natCast_eq_singleton, Finset.sum_singleton]
-  let Pcont : C(Circle, ℂ) := ∑ k : Fin D, c k • fourier (k.val : ℤ)
+    rw [filter_embedding_eq_singleton e k, Finset.sum_singleton]
+  let Pcont : C(Circle, ℂ) := ∑ k : Fin D, c k • fourier (e k)
   have hPcont_eq : ∀ t : Circle, (Pcont : Circle → ℂ) t = ∑ k : Fin D, c k * fourier (k.val : ℤ) t
       := by
     intro t
     simp only [Pcont, ContinuousMap.coe_sum, Finset.sum_apply, ContinuousMap.coe_smul,
       Pi.smul_apply, smul_eq_mul]
+    simp_rw [he]
   let PLp := (ContinuousMap.toLp (α := Circle) 2 AddCircle.haarAddCircle ℂ) Pcont
   have hPLp' : PLp = ∑ n ∈ E', b n • fourierLp 2 n := by
     simp only [PLp, Pcont, fourierLp, map_sum, map_smul, E', b]
     rw [Finset.sum_map]
     congr 1
     ext k
-    simp only [Function.Embedding.coeFn_mk]
-    rw [filter_natCast_eq_singleton, Finset.sum_singleton]
+    rw [filter_embedding_eq_singleton e k, Finset.sum_singleton]
   have hinner_orth : @inner ℂ _ _ PLp PLp = Complex.ofReal (∑ k : Fin D, ‖c k‖ ^ 2) := by
     rw [hPLp', orthonormal_fourier.inner_sum b b E']
-    rw [show E' = (Finset.univ : Finset (Fin D)).map
-      ⟨fun k => (k.val : ℤ), fun k₁ k₂ h => by
-        have h' : (k₁ : ℕ) = k₂ := by exact Nat.cast_injective (R := ℤ) h
-        exact Fin.ext h'⟩ from rfl]
+    rw [show E' = (Finset.univ : Finset (Fin D)).map e from rfl]
     rw [Finset.sum_map, Complex.ofReal_sum]
     congr 1
     ext k
-    simp only [Function.Embedding.coeFn_mk]
     rw [hb_eq k, mul_comm (starRingEnd ℂ _), mul_conj]
     exact_mod_cast (Complex.sq_norm (c k)).symm
   have hcombine := (L2.inner_def (𝕜 := ℂ) PLp PLp).symm.trans hinner_orth
@@ -3088,7 +3087,7 @@ private lemma summable_circleSeries_terms {k : ℕ} {G : ℂ → ℂ} (hG : G �
   have hmul :
       ‖hermiteCoeff k G n * (qkn k n r : ℂ) * fourier (n : ℤ) t‖ ≤
         ‖hermiteCoeff k G n‖ * |qkn k n r| := by
-    simp_all
+    simp_all [fourier_apply, Circle.norm_coe]
   have hAMGM :
       ‖hermiteCoeff k G n‖ * |qkn k n r| ≤
         (‖hermiteCoeff k G n‖ ^ 2 + |qkn k n r| ^ 2) / 2 := by
@@ -3150,7 +3149,7 @@ private theorem circleSeries_l2_identity_canonical :
                 ‖hermiteCoeff k G n.1 * (qkn k n.1 r : ℂ) * fourier (n.1 : ℤ) t‖
                     = ‖c n.1‖ * ‖fourier (n.1 : ℤ) t‖ := by simp [c, mul_assoc]
                 _ = ‖c n.1‖ := by
-                      simp_all
+                      simp_all [fourier_apply, Circle.norm_coe]
         _ = ∑ n ∈ Finset.range (J + 1), ‖c n‖ := by rw [Finset.sum_range]
         _ ≤ M := by exact hc_norm.sum_le_tsum _ (fun n hn => norm_nonneg _)
     have hnonneg : 0 ≤ ‖truncCirclePoly k r J G t‖ ^ 2 := sq_nonneg _
@@ -3310,7 +3309,7 @@ theorem circleSeries_l2_identity :
                 ‖g n.1 * (qkn k n.1 r : ℂ) * fourier (n.1 : ℤ) t‖ = ‖c n.1‖ * ‖fourier (n.1 : ℤ)
                     t‖ := by simp [c, mul_assoc]
                 _ = ‖c n.1‖ := by
-                  simp_all
+                  simp_all [fourier_apply, Circle.norm_coe]
         _ = ∑ n ∈ Finset.range (J + 1), ‖c n‖ := by rw [Finset.sum_range]
         _ ≤ M := by exact hc_norm.sum_le_tsum _ (fun n hn => norm_nonneg _)
     have hnonneg : 0 ≤ ‖finiteCirclePoly k r (fun n : Fin (J + 1) => g n.1) t‖ ^ 2 := sq_nonneg _
@@ -3339,7 +3338,7 @@ theorem circleSeries_l2_identity :
         calc
           ‖a n‖ = ‖c n‖ * ‖fourier (n : ℤ) t‖ := by simp [a, c, mul_assoc]
           _ = ‖c n‖ := by
-            simp_all
+            simp_all [fourier_apply, Circle.norm_coe]
       exact haeq.le
     have hconv :
         Filter.Tendsto (fun J => ∑ n ∈ Finset.range J, a n) Filter.atTop (nhds (circleSeries k g r
@@ -3447,12 +3446,12 @@ theorem circleSeries_fourierCoeff_hermiteCoeff :
         (fun m : ℕ =>
           ∫ t : Circle,
             ‖fourier (-(n : ℤ)) t * (c m * fourier (m : ℤ) t)‖ ∂AddCircle.haarAddCircle) := by
-    simp_all
+    simp_all [fourier_apply, Circle.norm_coe]
   have hsCircle :
       ∀ t : Circle, Summable (fun m : ℕ => c m * fourier (m : ℤ) t) := by
     intro t
     refine Summable.of_norm_bounded (g := fun m => ‖c m‖) hc_norm ?_
-    simp_all
+    simp_all [fourier_apply, Circle.norm_coe]
   calc
     fourierCoeff (circleSeries k (hermiteCoeff k G) r) (n : ℤ)
       = ∑' m : ℕ,
@@ -4037,11 +4036,11 @@ private theorem circleSeries_fourierCoeff_of_summable :
         (fun m : ℕ =>
           ∫ t : Circle, ‖fourier (-(n : ℤ)) t * (c m * fourier (m : ℤ) t)‖
             ∂AddCircle.haarAddCircle) := by
-    simp_all
+    simp_all [fourier_apply, Circle.norm_coe]
   have hsCircle : ∀ t : Circle, Summable (fun m : ℕ => c m * fourier (m : ℤ) t) := by
     intro t
     refine Summable.of_norm_bounded (g := fun m => ‖c m‖) hc_norm ?_
-    simp_all
+    simp_all [fourier_apply, Circle.norm_coe]
   calc
     fourierCoeff (circleSeries k h r) (n : ℤ)
       = ∑' m : ℕ,
@@ -4100,7 +4099,7 @@ private theorem hermiteSeries_circle_representation_of_summable :
     intro n
     have hmul :
         ‖h n * (qkn k n r : ℂ) * fourier (n : ℤ) t‖ ≤ ‖h n‖ * |qkn k n r| := by
-      simp_all
+      simp_all [fourier_apply, Circle.norm_coe]
     have hAMGM : ‖h n‖ * |qkn k n r| ≤ (‖h n‖ ^ 2 + |qkn k n r| ^ 2) / 2 := by
       nlinarith [sq_nonneg (‖h n‖ - |qkn k n r|)]
     exact hmul.trans hAMGM

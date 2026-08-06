@@ -234,7 +234,7 @@ lemma TendstoUniformlyOn.tendsto_circle_integral (hr : 0 < r)
     have hpt : z₀ + r ∈ sphere z₀ r := by simp [hr.le, Real.norm_eq_abs]
     convert circleIntegral.norm_integral_lt_of_norm_le_const_of_lt hr (h'.sub f_cont)
       (fun z hz => (h z hz).le) ⟨z₀ + r, hpt, h _ hpt⟩
-    field_simp [hr.ne, Real.pi_ne_zero, two_ne_zero]
+    all_goals first | rfl | field_simp [hr.ne, Real.pi_ne_zero, two_ne_zero]
 
 lemma hurwitz2_2 (hU : IsOpen U) (hF : ∀ᶠ n in p, DifferentiableOn ℂ (F n) U)
     (hf : TendstoLocallyUniformlyOn F f p U) (hr1 : 0 < r) (hr2 : sphere z₀ r ⊆ U)

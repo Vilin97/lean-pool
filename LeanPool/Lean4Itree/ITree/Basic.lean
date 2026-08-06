@@ -135,8 +135,7 @@ theorem vis_inj {ε α ρ}
   have := Sigma.mk.inj (PFunctor.M.mk_inj h)
   apply And.intro
   · exact eq_of_heq (shape.vis.inj this.left).right
-  · have := eq_of_heq this.right
-    simp_all
+  · exact eq_of_heq this.right
 
 theorem tau_inj {ε ρ} {t1 t2 : ITree ε ρ} (h : tau t1 = tau t2) : t1 = t2 := by
   simp only [tau, tau'] at h
@@ -154,7 +153,7 @@ def dMatchOn {motive : ITree ε ρ → Sort u} (x : ITree ε ρ)
       rw [elim0_eq_all snd] at hm
       simp only [ITree.ret, ret']
       rw [←hm]
-      simp only [PFunctor.M.mk_dest]
+      exact (PFunctor.M.mk_dest x).symm
     )
   | ⟨.tau, c⟩ =>
     tau (c 0) (by
@@ -166,7 +165,7 @@ def dMatchOn {motive : ITree ε ρ → Sort u} (x : ITree ε ρ)
     vis α e k (by
       simp only [ITree.vis, vis']
       rw [←hm]
-      simp only [PFunctor.M.mk_dest]
+      exact (PFunctor.M.mk_dest x).symm
     )
 
 /- Destructor utilities -/
@@ -288,21 +287,23 @@ def IEq (t1 t2 : ITree ε ρ) : Prop :=
     IEqF_monotone sim sim' hsim
 
 theorem ieq_iff_eq (t1 t2 : ITree ε ρ) : IEq t1 t2 ↔ t1 = t2 := by
+  have key : ∀ x y : ITree ε ρ, IEq x y →
+      ∃ a f f', PFunctor.M.dest (F := P ε ρ) x = ⟨a, f⟩ ∧
+        PFunctor.M.dest (F := P ε ρ) y = ⟨a, f'⟩ ∧ ∀ i, IEq (f i) (f' i) := by
+    intro x y hxy
+    rw [IEq] at hxy
+    rcases IEqF_inv _ _ _ hxy with ⟨v, hx, hy⟩ | ⟨α, e, k1, k2, hk, hx, hy⟩ | ⟨u1, u2, hu, hx, hy⟩
+    · subst hx; subst hy
+      exact ⟨_, _, _, dest_ret, dest_ret, fun i => elim0 i⟩
+    · subst hx; subst hy
+      exact ⟨_, _, _, dest_vis, dest_vis, hk⟩
+    · subst hx; subst hy
+      refine ⟨_, _, _, dest_tau, dest_tau, ?_⟩
+      intro i
+      match i with
+      | .up (.ofNat' 0) => exact hu
   constructor
-  · intro h
-    apply PFunctor.M.bisim (fun t1 t2 => IEq t1 t2) <;> try assumption
-    intro t1; apply ITree.dMatchOn (x := t1)
-    <;> (
-      intros; rename_i h1 t2 heq
-      simp only [IEq] at heq
-      cases heq <;> itree_elim h1
-      substItreeInj h1
-      simpItreeBasic
-      try grind [fin1Const]
-    )
-    rename_i v
-    exists .ret v, elim0, elim0
-    simp only [true_and]; intro i; exact elim0 i
+  · exact PFunctor.M.bisim (fun t1 t2 => IEq t1 t2) key t1 t2
   · intro h; subst h
     apply IEq.coinduct Eq _
     · rfl

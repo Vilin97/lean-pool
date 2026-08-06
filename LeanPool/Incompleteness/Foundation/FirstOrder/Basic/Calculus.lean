@@ -9,7 +9,6 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Rew
 
 /-! # Calculus -/
 
-
 namespace LO
 
 namespace FirstOrder
@@ -391,7 +390,8 @@ lemma _root_.LO.FirstOrder.Derivation.provable_iff_inconsistent :
   constructor
   · rintro b
     exact Entailment.inconsistent_of_provable_of_unprovable
-      (Entailment.wk! (by simp) (Derivation.toClose! b)) (Entailment.by_axm _ (by simp))
+      (Entailment.wk! (fun _ hψ ↦ Set.mem_insert_of_mem _ hψ) (Derivation.toClose! b))
+      (Entailment.by_axm _ (Set.mem_insert _ _))
   · intro h
     rcases Tait.inconsistent_iff_provable.mp h with ⟨d⟩
     have :
@@ -517,10 +517,10 @@ end Derivation
 namespace Theory
 
 instance {T U : Theory L} : T wkn T + U :=
-  Entailment.Axiomatized.weakerThanOfSubset (by simp [add_def])
+  Entailment.Axiomatized.weakerThanOfSubset Set.subset_union_left
 
 instance {T U : Theory L} : U wkn T + U :=
-  Entailment.Axiomatized.weakerThanOfSubset (by simp [add_def])
+  Entailment.Axiomatized.weakerThanOfSubset Set.subset_union_right
 
 end Theory
 

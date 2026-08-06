@@ -22,6 +22,8 @@ classical `ComputableℝSeq.sign` and are `noncomputable`.
 def Computableℝ :=
   @Quotient ComputableℝSeq ComputableℝSeq.equiv
 
+attribute [local implicit_reducible] Computableℝ ComputableℝSeq.nzSeq
+
 namespace Computableℝ
 
 /-- Definition of `mk`. -/

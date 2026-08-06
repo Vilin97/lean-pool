@@ -34,6 +34,7 @@ abbrev n : Nat := N1000000Data.n
 abbrev SymN := Sym n
 
 /-- Symbols `≥ s` inside `Fin n`. -/
+@[implicit_reducible]
 def AvailFrom (s : Nat) : Type :=
   { x : SymN // s ≤ x.1 }
 

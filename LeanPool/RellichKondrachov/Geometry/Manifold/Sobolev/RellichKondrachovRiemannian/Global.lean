@@ -20,7 +20,7 @@ namespace Manifold
 namespace Sobolev
 
 open Set Filter Topology
-open scoped BigOperators ENNReal MeasureTheory Manifold NNReal
+open scoped BigOperators ENNReal MeasureTheory _root_.Manifold NNReal
 open MeasureTheory
 open _root_.Manifold _root_.Bundle
 

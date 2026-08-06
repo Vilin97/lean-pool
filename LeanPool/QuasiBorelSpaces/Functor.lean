@@ -203,6 +203,22 @@ lemma isHom_get {n} : IsHom (get (F := F) (n := n)) :=
 lemma isHom_mk {n} : IsHom (mk (F := F) (n := n)) := by
   simp only [isHom_to_lift, isHom_id']
 
+/-- The underlying-value projection as a quasi-Borel homomorphism. -/
+private def getHom {n} : Iter F n →𝒒 (Iter₀ F n).Carrier := .mk get
+
+/-- The wrapper constructor as a quasi-Borel homomorphism. -/
+private def mkHom {n} : (Iter₀ F n).Carrier →𝒒 Iter F n := .mk mk
+
+private lemma getHom_comp_mkHom {n} :
+    (getHom (F := F) (n := n)).comp (mkHom (F := F) (n := n)) = .id := by
+  ext
+  rfl
+
+private lemma mkHom_comp_getHom {n} :
+    (mkHom (F := F) (n := n)).comp (getHom (F := F) (n := n)) = .id := by
+  ext
+  rfl
+
 /-- Zero element constructor. -/
 def zero : Iter F 0 := .mk ()
 
@@ -213,27 +229,28 @@ instance : Subsingleton (Iter F 0) where
 
 /-- Successor element constructor. -/
 def succ {n} : F (Iter F n) →𝒒 Iter F (n + 1) where
-  toFun x := { get := Functor.map (.mk get) x }
+  toFun x := { get := Functor.map getHom x }
   property := by
     apply isHom_comp isHom_mk
     apply QuasiBorelHom.isHom_coe
 
 /-- Successor element destructor. -/
 def unsucc {n} : Iter F (n + 1) →𝒒 F (Iter F n) where
-  toFun x := Functor.map (.mk mk) x.get
+  toFun x := Functor.map mkHom x.get
 
 @[simp]
 lemma succ_unsucc {n} (x : Iter F (n + 1)) : succ (unsucc x) = x := by
-  cases x
-  simp only [
-    succ, unsucc, QuasiBorelHom.coe_mk, Functor.map_comp_coe, QuasiBorelHom.eq_comp,
-    QuasiBorelHom.eq_id, Functor.map_id, QuasiBorelHom.id_coe]
+  rcases x with ⟨x⟩
+  change F (Iter₀ F n).Carrier at x
+  change (⟨Functor.map getHom (Functor.map mkHom x)⟩ : Iter F (n + 1)) = ⟨x⟩
+  rw [Functor.map_comp_coe, getHom_comp_mkHom, Functor.map_id]
+  rfl
 
 @[simp]
 lemma unsucc_succ {n} (x : F (Iter F n)) : unsucc (succ x) = x := by
-  simp only [
-    unsucc, succ, QuasiBorelHom.coe_mk, Functor.map_comp_coe, QuasiBorelHom.eq_comp,
-    QuasiBorelHom.eq_id, Functor.map_id, QuasiBorelHom.id_coe]
+  change Functor.map mkHom (Functor.map getHom x) = x
+  rw [Functor.map_comp_coe, mkHom_comp_getHom, Functor.map_id]
+  rfl
 
 lemma succ_injective {n} {x y : F (Iter F n)} (h : succ x = succ y) : x = y := by
   rw [← unsucc_succ x, ← unsucc_succ y, h]

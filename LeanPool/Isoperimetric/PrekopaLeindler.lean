@@ -282,11 +282,8 @@ lemma prekopa_leindler_1d_normalized
       rw [lintegral_add_left (vol_superlevelset_measurable f)]
     _ ≤ ∫⁻ t in Ioo 0 1, vh t := by
       apply lintegral_mono_ae
-      rw [ae_restrict_iff (measurableSet_le
-        (Measurable.add (vol_superlevelset_measurable f) (vol_superlevelset_measurable g))
-        (vol_superlevelset_measurable h))]
-      filter_upwards
-      exact h_vol_ineq
+      filter_upwards [ae_restrict_mem measurableSet_Ioo] with t ht
+      exact h_vol_ineq t ht
     _ ≤ ∫⁻ t in Ioi 0, vh t := by apply lintegral_mono_set; grind
   -- "layer cake" formulas
   -- ∫ h = ∫_0^∞ vol({h>t}) dt, ∫ f = ∫_0^1 vol({f>t}) dt, ∫ g = ∫_0^1 vol({g>t}) dt

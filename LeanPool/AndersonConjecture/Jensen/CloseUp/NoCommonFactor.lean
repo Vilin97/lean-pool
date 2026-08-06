@@ -220,7 +220,8 @@ private def close_up_aux_no_common_nonzero_proof
       by_cases hR_le : Cardinal.mk R.carrier ≤ Cardinal.aleph0
       · haveI : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
         haveI : Countable (Polynomial R.carrier) := by
-          letI : Countable (AddMonoidAlgebra R.carrier ℕ) := instCountableFinsupp
+          letI : Countable (AddMonoidAlgebra R.carrier ℕ) :=
+            Countable.of_equiv _ AddMonoidAlgebra.coeffEquiv.symm
           exact Polynomial.toFinsupp_injective.countable
         right
         exact ⟨Set.Countable.union (Set.countable_iUnion fun r =>
@@ -310,7 +311,8 @@ private def close_up_aux_no_common_nonzero_proof
       by_cases hR_le : Cardinal.mk R.carrier ≤ Cardinal.aleph0
       · haveI : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
         haveI : Countable (Polynomial R.carrier) := by
-          letI : Countable (AddMonoidAlgebra R.carrier ℕ) := instCountableFinsupp
+          letI : Countable (AddMonoidAlgebra R.carrier ℕ) :=
+            Countable.of_equiv _ AddMonoidAlgebra.coeffEquiv.symm
           exact Polynomial.toFinsupp_injective.countable
         right
         have hC_countable : C.Countable :=

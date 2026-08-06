@@ -1525,7 +1525,7 @@ private theorem rawAll_eq_decide_subset (spec : FrameSpec)
     (hT : ∀ i : Fin spec.t, Tmask.testBit i.1 = decide (i ∈ T))
     (x : { s // s ∈ spec.rawSupports }) :
     x.1.all (fun i => Tmask.testBit i) =
-      decide ((supportPatternOfList x.1
+      decide ((supportPatternOfList (t := spec.t) x.1
         (fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi)
         (spec.rawSupports_ok x.1 x.2).1
         (spec.rawSupports_ok x.1 x.2).2.2).1 ⊆ T) := by
@@ -1538,7 +1538,7 @@ private theorem rawAll_eq_decide_subset (spec : FrameSpec)
     have hiList : i.1 ∈ x.1 :=
       (mem_supportPatternOfList_iff (hIn := hIn) (hNodup := hNodup) (hCard := hCard)).mp hi
     have hbit : Tmask.testBit i.1 = true := List.all_eq_true.mp hAll i.1 hiList
-    let i' : Fin spec.t := ⟨i.1, by rw [FrameSpec.t]; exact i.2⟩
+    let i' : Fin spec.t := ⟨i.1, i.2⟩
     have hbit' : Tmask.testBit i'.1 = true := by
       simpa [i'] using hbit
     have hmem : i' ∈ T := of_decide_eq_true <| by

@@ -615,7 +615,7 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
     have h_bound : RapidDecaySeq.rapidDecaySeminorm k (equiv f) ≤
         (C_nn : ℝ) * (s_fin.sup p) f := by
       have := hle f
-      simp only [Seminorm.smul_apply,
+      simp only [smul_apply,
         NNReal.smul_def, smul_eq_mul] at this
       exact this
     change |(RapidDecaySeq.coeffCLM m (equiv f))| * (1 + (m : ℝ)) ^ k ≤
@@ -998,7 +998,6 @@ def pureCLMRight (e₁ : E₁) : E₂ →L[ℝ] NuclearTensorProduct E₁ E₂ w
     obtain ⟨C, s₁, s₂, hbound⟩ := pure_seminorm_bound (E₁ := E₁) (E₂ := E₂) k
     refine ⟨s₂, ⟨C * (s₁.sup DyninMityaginSpace.p) e₁,
       mul_nonneg (NNReal.coe_nonneg C) (apply_nonneg _ _)⟩, fun e₂ => ?_⟩
-    simp only [Seminorm.comp_apply]
     exact hbound e₁ e₂
 
 /-- For fixed `e₂`, the map `e₁ ↦ pure e₁ e₂` is continuous. -/
@@ -1014,7 +1013,6 @@ theorem pure_continuous_left (e₂ : E₂) :
   obtain ⟨C, s₁, s₂, hbound⟩ := pure_seminorm_bound (E₁ := E₁) (E₂ := E₂) k
   refine ⟨s₁, ⟨C * (s₂.sup DyninMityaginSpace.p) e₂,
     mul_nonneg (NNReal.coe_nonneg C) (apply_nonneg _ _)⟩, fun e₁ => ?_⟩
-  simp only [Seminorm.comp_apply]
   calc RapidDecaySeq.rapidDecaySeminorm k (pure e₁ e₂)
       ≤ ↑C * (s₁.sup DyninMityaginSpace.p) e₁ * (s₂.sup DyninMityaginSpace.p) e₂ :=
         hbound e₁ e₂
@@ -1043,12 +1041,17 @@ private theorem finsetSup_seminorm_ball_mem_nhds
 theorem pure_continuous :
     Continuous (fun p : E₁ × E₂ => pure p.1 p.2) := by
   -- Package as AddMonoidHom for continuous_of_continuousAt_zero₂
-  set f : E₁ →+ E₂ →+ NuclearTensorProduct E₁ E₂ :=
+  set f : E₁ →+ E₂ →+ RapidDecaySeq :=
     { toFun := fun e₁ => (pureLin e₁).toAddMonoidHom
       map_zero' := by
         ext e₂ m; simp [pureLin, pure_val]; rfl
       map_add' := fun e₁ e₁' => by
-        ext e₂ m; simp [pureLin, pure_val, add_mul] }
+        ext e₂ m
+        change (pure (e₁ + e₁') e₂).val m =
+          ((show RapidDecaySeq from pure e₁ e₂) +
+            (show RapidDecaySeq from pure e₁' e₂)).val m
+        rw [RapidDecaySeq.add_val]
+        simp [pure_val, add_mul] }
   change Continuous (fun p : E₁ × E₂ => f p.1 p.2)
   apply continuous_of_continuousAt_zero₂ f
   · -- Continuity at (0, 0): use the seminorm bound
@@ -1067,7 +1070,11 @@ theorem pure_continuous :
     rw [nhds_prod_eq]
     apply Filter.mem_of_superset (Filter.prod_mem_prod h_mem₁ h_mem₂)
     intro ⟨e₁, e₂⟩ ⟨he₁, he₂⟩
-    simp only [Set.mem_setOf_eq, sub_zero] at he₁ he₂ ⊢
+    simp only [Set.mem_setOf_eq] at he₁ he₂ ⊢
+    have harg : f e₁ e₂ - 0 = pure e₁ e₂ := by
+      rw [sub_zero]
+      rfl
+    rw [harg]
     calc RapidDecaySeq.rapidDecaySeminorm k (pure e₁ e₂)
         ≤ ↑C * (s₁.sup DyninMityaginSpace.p) e₁ * (s₂.sup DyninMityaginSpace.p) e₂ :=
           hbound e₁ e₂
@@ -1279,8 +1286,7 @@ def lift
       (norm_withSeminorms ℝ G)
     intro _
     refine ⟨{N}, ⟨K, le_of_lt hK⟩, fun a => ?_⟩
-    simp only [Seminorm.comp_apply, Finset.sup_singleton,
-      coe_normSeminorm, liftLM]
+    simp only [Finset.sup_singleton, liftLM]
     exact hbound a
 
 /-- The lift factors through pure: `lift B (pure e₁ e₂) = B e₁ e₂`.

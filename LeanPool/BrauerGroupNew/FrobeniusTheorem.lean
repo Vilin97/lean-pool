@@ -754,7 +754,7 @@ abbrev AlgCA (A : Type) [DivisionRing A] [Algebra ℝ A]
     simp [Subalgebra.mem_center_iff.1 (e z).2]
   smul_def' _ _ := rfl
 
-lemma smulCRassoc (A : Type) [DivisionRing A] [Algebra ℝ A] [FiniteDimensional ℝ A]
+lemma smulCRassoc (A : Type) [DivisionRing A] [Algebra ℝ A]
     (e : ℂ ≃ₐ[ℝ] (Subalgebra.center ℝ A)) (r : ℝ) (z : ℂ) (a : A) : e (r • z) * a =
     r • (e z * a) := by
   have hz : e (r • z) = r • e z := map_smul e r z
@@ -799,7 +799,7 @@ lemma subfield_finrank_one_or_two (A : Type) [DivisionRing A] [Algebra ℝ A]
     exact Or.inr (hfinrank.trans Complex.finrank_real_complex)
 
 lemma not_real_subfield_of_finrank_two (A : Type) [DivisionRing A] [Algebra ℝ A]
-    [FiniteDimensional ℝ A] (L : SubField ℝ A) (h2 : Module.finrank ℝ L = 2)
+    (L : SubField ℝ A) (h2 : Module.finrank ℝ L = 2)
     (e1 : L ≃ₐ[ℝ] ℝ) : False := by
   have hfinrank := LinearEquiv.finrank_eq e1.toLinearEquiv
   simp_all

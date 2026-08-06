@@ -337,10 +337,12 @@ private lemma card_cycleMonoPairs_eq (f : Coloring9) :
           simpa [CycleMonoPairs, P] using (hEdge ▸ q.2)⟩
         left_inv := by
           intro p
-          simp_all
+          apply Subtype.ext
+          exact cyclePairEquiv.symm_apply_apply p.1
         right_inv := by
           intro q
-          simp_all }
+          apply Subtype.ext
+          exact cyclePairEquiv.apply_symm_apply q.1 }
   have hreassoc :
       Fintype.card {q : EdgeExtraK // P q}
         = Fintype.card (Σ e : {e : Edge n // Edge.monochromatic f e}, Extra e.1 × Fin 5) := by

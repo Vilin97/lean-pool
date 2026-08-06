@@ -72,14 +72,17 @@ theorem AddSubmonoid.mem_closure_pi {ι : Type _} {B : ι → Type _}
   simp_rw [AddSubmonoid.mem_closure]
   intro h i S hS
   specialize h (AddSubmonoid.pi Set.univ fun i => AddSubmonoid.closure (s i))
-  simp_rw [Set.subset_def, Set.mem_univ_pi, AddSubmonoid.pi, SetLike.mem_coe,
-    AddSubmonoid.mem_mk] at h
-  simp only [AddSubsemigroup.mem_mk, Set.mem_pi, Set.mem_univ, AddSubsemigroup.mem_carrier,
-    mem_toSubsemigroup, forall_true_left, AddSubmonoid.mem_closure] at h
-  exact h (fun y hy j K hK => hK (hy j)) i S hS
+  have hx : x ∈ AddSubmonoid.pi Set.univ (fun j => AddSubmonoid.closure (s j)) := by
+    apply h
+    intro y hy
+    change ∀ j ∈ (Set.univ : Set ι), y j ∈ AddSubmonoid.closure (s j)
+    intro j _
+    exact AddSubmonoid.subset_closure (hy j (Set.mem_univ j))
+  rw [AddSubmonoid.mem_pi] at hx
+  exact (AddSubmonoid.mem_closure.mp (hx i (Set.mem_univ i))) S hS
 
 theorem Pi.StarOrderedRing.nonneg_def {ι : Type _} {α : ι → Type _} [∀ i, NonUnitalSemiring (α i)]
-    [∀ i, PartialOrder (α i)] [∀ i, StarRing (α i)] [∀ i, StarOrderedRing (α i)]
+    [∀ i, PartialOrder (α i)] [∀ i, StarRing (α i)]
     (h : ∀ (i : ι) (x : α i), 0 ≤ x ↔ ∃ y, star y * y = x) (x : ∀ i, α i) :
     0 ≤ x ↔ ∃ y, star y * y = x := by
   simp_rw [Pi.le_def, Pi.zero_apply, funext_iff, Pi.mul_apply, Pi.star_apply, h]

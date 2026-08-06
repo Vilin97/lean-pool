@@ -46,8 +46,9 @@ def Literal.neg (l : Literal N) : Literal N :=
 /-- Negating a literal negates its evaluation. -/
 theorem Literal.eval_neg (l : Literal N) (x : BitString N) :
     l.neg.eval x = !(l.eval x) := by
+  obtain ⟨v, p⟩ := l
   simp only [Literal.neg, Literal.eval]
-  cases l.polarity <;> simp
+  cases p <;> simp
 
 /-! ## CNF -/
 

@@ -34,7 +34,7 @@ namespace Sobolev
 open Set Topology Filter
 open _root_.Manifold _root_.Bundle
 open RellichKondrachov.Geometry.Manifold.Riemannian
-open scoped Manifold NNReal ENNReal
+open scoped _root_.Manifold NNReal ENNReal
 
 universe uE uH uM
 

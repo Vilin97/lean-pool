@@ -64,6 +64,7 @@ lemma erase_degree_leq_n (R : Type) [CommRing R] (p : Polynomial R) (n : ℕ) (h
       omega
     have equal1 : (erase n p).toFinsupp = p.toFinsupp := by
       rw [toFinsupp_erase]
+      apply AddMonoidAlgebra.coeff_injective
       exact Finsupp.erase_of_notMem_support n_not_in_support
     rwa [toFinsupp_inj.mp equal1]
   · -- If the degree is n

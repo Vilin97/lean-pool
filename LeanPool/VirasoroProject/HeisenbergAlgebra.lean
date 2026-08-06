@@ -272,7 +272,11 @@ lemma _root_.VirasoroProject.HeisenbergAlgebra.toAbelianLieAlgebraOn_kgen :
     ⁅jgen 𝕜 k, jgen 𝕜 l⁆ = if k + l = 0 then (k : 𝕜) • kgen 𝕜 else 0 := by
   simp_rw [bracket_def']
   split_ifs with h
-  · apply ext' <;> simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, kgen_eq', h]
+  · apply ext'
+    · rw [smul_fst]
+      simp [kgen_eq']
+    · rw [smul_snd]
+      simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, kgen_eq', h]
   · apply ext'
     · rfl
     · change AbelianLieAlgebraOn.heisenbergCocycle 𝕜 (AbelianLieAlgebraOn.jgen 𝕜 k)
@@ -285,6 +289,11 @@ noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.jsection
     : AbelianLieAlgebraOn ℤ 𝕜 →ₗ[𝕜] HeisenbergAlgebra 𝕜 :=
   LieTwoCocycle.CentralExtension.stdSection (AbelianLieAlgebraOn.heisenbergCocycle 𝕜)
 
+lemma _root_.VirasoroProject.HeisenbergAlgebra.jsection_prop :
+    toAbelianLieAlgebraOn.toLinearMap ∘ₗ jsection 𝕜 = 1 := by
+  ext X
+  rfl
+
 @[simp] lemma _root_.VirasoroProject.HeisenbergAlgebra.jsection_jgen (l : ℤ) :
     jsection 𝕜 (AbelianLieAlgebraOn.jgen 𝕜 l) = jgen 𝕜 l :=
   rfl
@@ -293,7 +302,7 @@ noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.jsection
 and the central element `K`. (Lean notation: `jgen _ k` and `kgen _`, respectively.) -/
 noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.basisJK
     : Basis (Option ℤ) 𝕜 (HeisenbergAlgebra 𝕜) :=
-  ((isCentralExtension 𝕜).basis (jsection 𝕜) rfl
+  ((isCentralExtension 𝕜).basis (jsection 𝕜) (jsection_prop 𝕜)
         (Basis.singleton Unit 𝕜) (AbelianLieAlgebraOn.jgen 𝕜)).reindex
     { toFun uz := match uz with
         | Sum.inl _ => none
@@ -310,11 +319,20 @@ noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.basisJK
 
 @[simp] lemma _root_.VirasoroProject.HeisenbergAlgebra.basisJK_some (l : ℤ) :
     basisJK 𝕜 (some l) = jgen 𝕜 l := by
-  simp [basisJK]
+  unfold basisJK
+  rw [Basis.reindex_apply]
+  change ((isCentralExtension 𝕜).basis (jsection 𝕜) (jsection_prop 𝕜)
+    (Basis.singleton Unit 𝕜) (AbelianLieAlgebraOn.jgen 𝕜)) (Sum.inr l) = jgen 𝕜 l
+  rw [LieAlgebra.IsExtension.basis_eq_of_right, jsection_jgen]
 
 @[simp] lemma _root_.VirasoroProject.HeisenbergAlgebra.basisJK_none :
     basisJK 𝕜 none = kgen 𝕜 := by
-  simp [basisJK]
+  unfold basisJK
+  rw [Basis.reindex_apply]
+  change ((isCentralExtension 𝕜).basis (jsection 𝕜) (jsection_prop 𝕜)
+    (Basis.singleton Unit 𝕜) (AbelianLieAlgebraOn.jgen 𝕜)) (Sum.inl PUnit.unit) = kgen 𝕜
+  rw [LieAlgebra.IsExtension.basis_eq_of_left]
+  simp
 
 /-- J₀ is central -/
 @[simp] lemma _root_.VirasoroProject.HeisenbergAlgebra.lie_jgen_zero (Z : HeisenbergAlgebra 𝕜) :

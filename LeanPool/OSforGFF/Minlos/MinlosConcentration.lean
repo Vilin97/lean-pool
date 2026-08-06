@@ -308,7 +308,7 @@ omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
     of `h_cf_joint` and `integral_map`.
 -/
 lemma pushforward_charfun_eq
-    (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
+    (Φ : E → ℂ) (ν : Measure (E → ℝ))
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
       ∫ ω : E → ℝ, exp (I * ↑(∑ i, s i * ω (x i))) ∂ν =
         Φ (∑ i, s i • x i))
@@ -1648,7 +1648,6 @@ private lemma badSetN_bound_with_kernel
 theorem nuclear_cylindrical_concentration
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
-    [SeparableSpace E] [Nonempty E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_cont : Continuous Φ)
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -1786,7 +1785,7 @@ theorem nuclear_cylindrical_concentration
 /-- **Minlos concentration bound** — wrapper around
 `nuclear_cylindrical_concentration`.
 -/
-theorem minlos_concentration [SeparableSpace E] [Nonempty E]
+theorem minlos_concentration
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_cont : Continuous Φ)
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),

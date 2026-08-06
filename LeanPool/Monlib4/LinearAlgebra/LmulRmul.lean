@@ -195,7 +195,7 @@ theorem LinearMap.mulLeft_smul (x : H₁) (α : R) :
   lmul.map_smul _ _
 
 theorem LinearMap.mulLeft_comp_inj {H₁ H₂ : Type _} [Semiring H₁] [Module R H₁] [AddCommMonoid H₂]
-    [Module R H₂] [SMulCommClass R H₁ H₁] [IsScalarTower R H₁ H₁] (f g : H₁ →ₗ[R] H₂) (x : H₁)
+    [Module R H₂] [SMulCommClass R H₁ H₁] (f g : H₁ →ₗ[R] H₂) (x : H₁)
     [Invertible x] : f ∘ₗ LinearMap.mulLeft R x = g ∘ₗ LinearMap.mulLeft R x ↔ f = g := by
   refine ⟨?_, fun h => by rw [h]⟩
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, LinearMap.mulLeft_apply]
@@ -205,7 +205,7 @@ theorem LinearMap.mulLeft_comp_inj {H₁ H₂ : Type _} [Semiring H₁] [Module 
 
 theorem LinearMap.mulLeft_apply_inj {H₁ : Type _} [Semiring H₁] [Module R H₁]
     [SMulCommClass R H₁ H₁]
-    [IsScalarTower R H₁ H₁] (x : H₁) [Invertible x] (y z : H₁) :
+    (x : H₁) [Invertible x] (y z : H₁) :
     LinearMap.mulLeft R x y = LinearMap.mulLeft R x z ↔ y = z :=
   IsUnit.mul_right_inj (isUnit_of_invertible x)
 

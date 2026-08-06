@@ -112,7 +112,7 @@ divisible by p₀, contradicting WfDvdMonoid. Hence q = ⊥, giving the
 height bound contradiction. -/
 include T in theorem height_bound_wf_descent
     (R : NSubring T) (x₁ x₂ : T) (y₁ y₂ : R.carrier)
-    (S_sub : Subring T) [IsDomain S_sub] [WfDvdMonoid S_sub]
+    (S_sub : Subring T)
     (hR_le : R.carrier ≤ S_sub)
     (hRbar_le_S : ∀ t, t ∈ intersectionSet R x₁ x₂ y₁ y₂ →
       t ∈ (S_sub : Set T))
@@ -398,7 +398,6 @@ private def build_height_bound_proof
                        exact hRbar_add _ _ hf hg
     | monomial n r =>
       rw [Polynomial.aeval_monomial]
-      change (algebraMap R.carrier T r) * x₁ ^ n ∈ Rbar
       exact hRbar_mul _ _ (R_le_intersectionSet R x₁ x₂ y₁ y₂ r) (by
         induction n with
         | zero => simp only [pow_zero]
@@ -414,7 +413,6 @@ private def build_height_bound_proof
                        exact hRbar_add _ _ hf hg
     | monomial n r =>
       rw [Polynomial.aeval_monomial]
-      change (algebraMap R.carrier T r) * x₂ ^ n ∈ Rbar
       exact hRbar_mul _ _ (R_le_intersectionSet R x₁ x₂ y₁ y₂ r) (by
         induction n with
         | zero => simp only [pow_zero]

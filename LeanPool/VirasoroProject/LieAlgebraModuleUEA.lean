@@ -250,9 +250,8 @@ abbrev ιUEA := UniversalEnvelopingAlgebra.ι
 
 lemma UniversalEnvelopingAlgebra.mkAlgHom_range_eq_top :
     (UniversalEnvelopingAlgebra.mkAlgHom 𝕜 𝓰).range = ⊤ := by
-  simp only [UniversalEnvelopingAlgebra.mkAlgHom, RingQuot.mkAlgHom]
-  rw [AlgHom.range_eq_top]
-  exact RingQuot.mkRingHom_surjective (UniversalEnvelopingAlgebra.Rel 𝕜 𝓰)
+  apply (AlgHom.range_eq_top _).mpr
+  exact RingCon.mkₐ_surjective _
 
 variable {𝕜 𝓰} in
 lemma UniversalEnvelopingAlgebra.mkAlgHom_surjective :
@@ -330,7 +329,11 @@ def UniversalEnvelopingAlgebra.representation
   map_smul' r X := by
     ext v
     simp only [lsmul_apply, LinearMap.smul_apply, map_smul, RingHom.id_apply]
-    exact IsScalarTower.smul_assoc ((algebraMap 𝕜 (𝓤 𝕜 𝓰)) r) (ιUEA 𝕜 X) _
+    change (algebraMap 𝕜 (𝓤 𝕜 𝓰) r * ιUEA 𝕜 X) •
+        (unMkAddHom 𝕜 (𝓤 𝕜 𝓰) V v) =
+      algebraMap 𝕜 (𝓤 𝕜 𝓰) r •
+        (ιUEA 𝕜 X • unMkAddHom 𝕜 (𝓤 𝕜 𝓰) V v)
+    rw [mul_smul]
   map_lie' := by
     intro X Y
     ext v

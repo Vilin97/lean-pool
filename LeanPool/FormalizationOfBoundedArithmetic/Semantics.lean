@@ -20,6 +20,9 @@ import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
 -/
 
 namespace FirstOrder.Language
+
+attribute [local implicit_reducible] peano
+
 open BoundedFormula
 
 open Lean Elab Tactic Command
@@ -74,7 +77,6 @@ macro "realizeViaRelabel " target:ident : tactic =>
   `(tactic| (
     unfold Formula.Realize $target
     rw [realize_relabelEquiv]
-    dsimp only [Equiv.coe_fn_mk]
     exact Eq.to_iff rfl))
 
 @[delta0_simps]

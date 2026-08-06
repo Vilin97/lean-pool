@@ -247,12 +247,16 @@ lemma EQ1 (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) : ∑' (x : 
     have A3 := a1 k b z
     apply A3.subtype
   rw [sigmaAntidiagonalEquivProd.summable_iff.symm]
-  simp only [sigmaAntidiagonalEquivProd, divisorsAntidiagonalFactors, PNat.mk_coe, Equiv.coe_fn_mk]
   apply (summable_auxil_1 (k - 1) z).congr
   intro b
-  simp only [comp_apply, uncurry_apply_pair, PNat.mk_coe, mul_eq_mul_left_iff, pow_eq_zero_iff',
-    Nat.cast_eq_zero, ne_eq]
-  left
+  simp only [comp_apply]
+  rw [← Prod.eta (sigmaAntidiagonalEquivProd b)]
+  simp only [uncurry_apply_pair]
+  have firstFactor :
+      ((sigmaAntidiagonalEquivProd b).1.val : ℂ) = (b.snd.val.1 : ℂ) := rfl
+  have secondFactor :
+      ((sigmaAntidiagonalEquivProd b).2.val : ℂ) = (b.snd.val.2 : ℂ) := rfl
+  rw [firstFactor, secondFactor]
   ring_nf
 
 
@@ -344,9 +348,7 @@ lemma E_k_q_expansion (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) 
     ∑' (x : Fin 2 → ℤ), ((↑(x 0) * (↑z : ℂ) + ↑(x 1)) ^ k)⁻¹) =
     1 + (riemannZeta ↑k)⁻¹ * ((-(2 * ↑π * Complex.I)) ^ k / ↑(k - 1)!) *
       ∑' (n : ℕ+), ↑((σ (k - 1)) ↑n) * cexp (2 * ↑π * Complex.I * ↑z * ↑↑n) by
-    -- step.symm ▸ h gives the goal; `convert` handles alpha-equiv binder names
-    convert step.symm ▸ h using 2
-    rfl
+    exact step.trans h
   simp_rw [← mul_assoc]
   rw [HE1, mul_add]
   have : 2⁻¹ * (riemannZeta (k))⁻¹ * (2 * riemannZeta (k)) = 1 := by field_simp

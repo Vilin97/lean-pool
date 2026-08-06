@@ -734,7 +734,7 @@ open Derivation
 variable (T)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Arith.Language.Theory.Derivation : V → Prop := (construction T).Fixpoint ![]
+def _root_.LO.Arith.Language.Theory.Derivation : V → Prop := (construction T).fixedPoint ![]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.Arith.Language.Theory.DerivationOf (d s : V) : Prop := fstIdx d = s ∧ T.Derivation d

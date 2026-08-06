@@ -87,7 +87,7 @@ theorem linear_int (n : ℕ) : ∃ a b : ℕ → ℤ,
       simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, IsIntegrallyClosed.pow_dvd_pow_iff]
       norm_cast
       apply d_dvd_d_of_le
-      simp_all only [Finset.mem_range, Finset.le_eq_subset]
+      simp_all only [Finset.mem_range]
       intro a b
       simp_all only [Finset.mem_Icc, true_and]
       simp only [le_max_iff] at b

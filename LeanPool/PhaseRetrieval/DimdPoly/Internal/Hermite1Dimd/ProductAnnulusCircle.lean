@@ -288,7 +288,10 @@ private lemma localOrbit_norm_sq
     (G : FiniteHermiteSum d) (z : CSpace d) (t : Circle) :
     ‖evalHermiteSum κ (localPart j M G)
         (fun q => (fourier (1 : ℤ) t : ℂ) * z q)‖ ^ 2 =
-      ‖localOrbit κ j M G z t‖ ^ 2 := by simp [localOrbit, mul_comm]
+      ‖localOrbit κ j M G z t‖ ^ 2 := by
+  unfold localOrbit
+  rw [norm_mul, show ‖(fourier (totalDegree κ : ℤ) t : ℂ)‖ = 1 by
+    simp [fourier_apply, Circle.norm_coe], one_mul]
 
 /-- The defect term is invariant under the same unit-phase correction. -/
 private lemma localOrbit_defect_sq
@@ -304,7 +307,8 @@ private lemma localOrbit_defect_sq
   have hphase' :
       nuKappa κ (fun q => (fourier (1 : ℤ) t : ℂ) * z q) =
         (fourier (-(totalDegree κ : ℤ)) t : ℂ) * nuKappa κ z := by simpa [nuKappa, h0] using hphase
-  have hu : ‖(fourier (totalDegree κ : ℤ) t : ℂ)‖ = 1 := by simp
+  have hu : ‖(fourier (totalDegree κ : ℤ) t : ℂ)‖ = 1 := by
+    simp [fourier_apply, Circle.norm_coe]
   have hphaseρ :=
     rho_unit_mul
       (u := (fourier (totalDegree κ : ℤ) t : ℂ))
@@ -346,9 +350,10 @@ private lemma integrable_localOrbit_mass
       (fourier (1 : ℤ) t : ℂ) * z q) := by continuity
   have hcont : Continuous (fun t : Circle => ‖localOrbit κ j M G z t‖ ^ 2) := by
     unfold localOrbit
-    simpa [pow_two] using
-      (((fourier (totalDegree κ : ℤ)).continuous.mul
-        ((continuous_evalHermiteSum (κ := κ) (localPart j M G)).comp hrot)).norm.pow 2)
+    refine (((fourier (totalDegree κ : ℤ)).continuous.mul
+      ((continuous_evalHermiteSum (κ := κ) (localPart j M G)).comp hrot)).norm.pow 2).congr ?_
+    intro t
+    rfl
   simpa [MeasureTheory.integrableOn_univ] using
     (hcont.continuousOn.integrableOn_compact isCompact_univ :
       IntegrableOn (fun t : Circle => ‖localOrbit κ j M G z t‖ ^ 2) Set.univ
@@ -367,9 +372,10 @@ private lemma integrable_localOrbit_defect
     exact ((fourier (totalDegree κ : ℤ)).continuous.mul
       ((continuous_evalHermiteSum (κ := κ) (localPart j M G)).comp hrot))
   have hcont : Continuous (fun t : Circle => rho (nuKappa κ z) (localOrbit κ j M G z t) ^ 2) := by
-    unfold rho
-    simpa [pow_two] using
-      (((continuous_const.add hloc).norm.sub (continuous_const).norm).abs.pow 2)
+    have hnu : Continuous (fun _ : Circle => nuKappa κ z) := continuous_const
+    refine (((hnu.add hloc).norm.sub hnu.norm).abs.pow 2).congr ?_
+    intro t
+    rfl
   simpa [MeasureTheory.integrableOn_univ] using
     (hcont.continuousOn.integrableOn_compact isCompact_univ :
       IntegrableOn (fun t : Circle => rho (nuKappa κ z) (localOrbit κ j M G z t) ^ 2)

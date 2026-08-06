@@ -9879,8 +9879,10 @@ private lemma continuousDxuCandidate_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p < 2)
       rcases hz with ⟨hx, hy, hxy⟩
       exact ⟨by linarith, by linarith, by linarith⟩
     have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) := by continuity
-    simpa [Q1, Q2, Function.comp_def] using
-      ((continuousOn_DxauxFunction1_leTwo p hp1 hp2).comp hneg.continuousOn hmap).neg
+    have hbase : ContinuousOn (fun z : ℝ × ℝ => DxauxFunction1 p (-z.1) (-z.2)) Q2 := by
+      simpa [Q1, Q2, Function.comp_def] using
+        (continuousOn_DxauxFunction1_leTwo p hp1 hp2).comp hneg.continuousOn hmap
+    exact hbase.neg
   have hcont3 : ContinuousOn (fun z : ℝ × ℝ => DyauxFunction1 p z.2 z.1) Q3 := by
     have hmap : Set.MapsTo (fun z : ℝ × ℝ => (z.2, z.1)) Q3 Q1 := by
       intro z hz
@@ -9895,8 +9897,10 @@ private lemma continuousDxuCandidate_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p < 2)
       rcases hz with ⟨hy, hyx, hxn⟩
       exact ⟨by linarith, by linarith, by linarith⟩
     have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) := by continuity
-    simpa [Q1, Q4, Function.comp_def] using
-      ((continuousOn_DyauxFunction1_leTwo p hp1 hp2).comp hns.continuousOn hmap).neg
+    have hbase : ContinuousOn (fun z : ℝ × ℝ => DyauxFunction1 p (-z.2) (-z.1)) Q4 := by
+      simpa [Q1, Q4, Function.comp_def] using
+        (continuousOn_DyauxFunction1_leTwo p hp1 hp2).comp hns.continuousOn hmap
+    exact hbase.neg
   have hc1 : ContinuousOn (fun z : ℝ × ℝ => DxuCandidate p z.1 z.2) Q1 := by
     apply ContinuousOn.congr hcont1
     intro z hz

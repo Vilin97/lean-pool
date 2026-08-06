@@ -31,7 +31,7 @@ lemma F2.indicator_zero (a : F2) : (if a = 0 then 1 else 0) = 1 + a := by
   fin_cases a <;> decide
 
 lemma F2.mul_self (a : F2) : a * a = a := by
-  fin_cases a <;> decide
+  fin_cases a <;> rfl
 
 lemma F2.add_self (a : F2) : a + a = 0 := by
   fin_cases a <;> decide

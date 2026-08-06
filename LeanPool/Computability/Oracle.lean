@@ -167,7 +167,9 @@ protected theorem RecursiveIn.some : RecursiveIn O some :=
 
 theorem RecursiveIn.none : RecursiveIn O (fun _ => none) :=
   (RecursiveIn.of_primrec (Nat.Primrec.const 1)).rfind.of_eq fun _ =>
-    eq_none_iff.2 fun _ ⟨h, _⟩ => by simp at h
+    eq_none_iff.2 fun _ ⟨h, _⟩ => by
+      obtain ⟨_, hn, -⟩ := Nat.rfind_dom.1 h
+      simp at hn
 
 variable {α : Type*} {β : Type*} {γ : Type*} {σ : Type*}
 variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]

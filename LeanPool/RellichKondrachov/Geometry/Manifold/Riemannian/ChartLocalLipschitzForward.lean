@@ -243,7 +243,7 @@ theorem lipschitzOnWith_extChartAt_ofRiemannianMetric
               (mfderiv I (𝓘(ℝ, E)) (extChartAt I x) (γ t))
                 (mfderivWithin 𝓘(ℝ) I γ (Icc (0 : ℝ) 1) t 1) := congr($hcomp 1)
         rw [hcomp1]
-        apply (ContinuousLinearMap.le_opNorm_enorm _ _).trans
+        apply (ContinuousLinearMap.le_opENorm _ _).trans
         gcongr
         · have hlt : ‖mfderiv I (𝓘(ℝ, E)) (extChartAt I x) (γ t)‖ₑ < (C : ℝ≥0∞) := by
             have : γ t ∈ P := (hγ_mem t ht).1

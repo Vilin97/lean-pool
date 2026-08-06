@@ -27,7 +27,7 @@ lemma sum_over_subsets_containing_x (s : Finset ℕ) (x : ℕ) (hx : x ∉ s) (a
     rw [Finset.card_insert_of_notMem (hnotIn T hT), Finset.prod_insert (hnotIn T hT)]
   simp_rw [Finset.sum_congr rfl hstep, pow_succ]
   simp only [Finset.mul_sum]
-  ring
+  ring_nf
 
 lemma prod_one_sub_eq_sum_powerset (U : Finset ℕ) (a : ℕ → ℝ) :
     ∏ d ∈ U, (1 - a d) = ∑ T ∈ U.powerset, (-1 : ℝ) ^ T.card * ∏ d ∈ T, a d := by

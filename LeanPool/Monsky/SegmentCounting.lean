@@ -99,7 +99,9 @@ lemma glueChains_assoc {u v w x : ℝ²} (C₁ : Chain u v) (C₂ : Chain v w) (
   induction C₁ with
   | basic         => rfl
   | join h₃ C ih  =>
-    simpa only [glueChains, Chain.join.injEq, heq_eq_eq, true_and] using ih C₂ _ _
+    simp only [glueChains]
+    congr 1
+    exact ih C₂ _ h₂
 
 
 lemma reverseChain_glue {u v w : ℝ²} (h : colin u v w) (CL : Chain u v)
@@ -360,40 +362,65 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
     have ⟨CR,hSCR,hRSegUnion⟩ :=
       hm (filter (fun p ↦ p ∈ openHull Sright) X).card Srightcard
       (avoidingSegmentSet_sub_right hS hx.1 hx.2) rfl
-    use glueChains hcolin CL CR
-    simp only [chainToBigSegment_glue, segment_rfl, reverseChain_glue,
-        basic_segments_glue, true_and]
-    -- Membership characterisations of the two sub-chains, derived directly from
-    -- `hLSegUnion`/`hRSegUnion`. We avoid `rw`-ing the union *term* (whose `Finset`
-    -- instance no longer matches after associativity reshuffling) and work purely
-    -- at the level of `Finset.mem_union`, which matches up to instance defeq.
-    have hLmem : ∀ L, (L ∈ toBasicSegments CL ∨ L ∈ toBasicSegments (reverseChain CL)) ↔
-        (L ∈ basicAvoidingSegmentSet X A ∧ closedHull L ⊆ closedHull (toSegment (S 0) x)) :=
-      fun L ↦ by rw [← Finset.mem_union, ← hLSegUnion]; simp only [Finset.mem_filter]
-    have hRmem : ∀ L, (L ∈ toBasicSegments CR ∨ L ∈ toBasicSegments (reverseChain CR)) ↔
-        (L ∈ basicAvoidingSegmentSet X A ∧ closedHull L ⊆ closedHull (toSegment x (S 1))) :=
-      fun L ↦ by rw [← Finset.mem_union, ← hRSegUnion]; simp only [Finset.mem_filter]
-    ext L
-    simp only [Finset.mem_filter, Finset.mem_union]
+    have hLmemRaw : ∀ L,
+        (L ∈ toBasicSegments CL ∨ L ∈ toBasicSegments (reverseChain CL)) ↔
+          (L ∈ basicAvoidingSegmentSet X A ∧
+            closedHull L ⊆ closedHull (toSegment (S 0) x)) :=
+      fun L ↦ by
+        rw [← Finset.mem_union, ← hLSegUnion]
+        simp only [Finset.mem_filter]
+    have hRmemRaw : ∀ L,
+        (L ∈ toBasicSegments CR ∨ L ∈ toBasicSegments (reverseChain CR)) ↔
+          (L ∈ basicAvoidingSegmentSet X A ∧
+            closedHull L ⊆ closedHull (toSegment x (S 1))) :=
+      fun L ↦ by
+        rw [← Finset.mem_union, ← hRSegUnion]
+        simp only [Finset.mem_filter]
+    let CL' : Chain (S 0) x := CL
+    let CR' : Chain x (S 1) := CR
+    have hCL_eq : CL' = CL := rfl
+    have hCR_eq : CR' = CR := rfl
+    use glueChains hcolin CL' CR'
     constructor
-    · intro ⟨h , hLS⟩
-      rcases colin_sub hcolin (by convert hLS; exact segment_rfl)
-          ((Finset.mem_filter.mp h).2 x hx.1) with hLleft | hLright
-      · rcases (hLmem L).mpr ⟨h, hLleft⟩ with hCL | hrevCL
-        · exact Or.inl (Or.inl hCL)
-        · exact Or.inr (Or.inr hrevCL)
-      · rcases (hRmem L).mpr ⟨h, hLright⟩ with hCR | hrevCR
-        · exact Or.inl (Or.inr hCR)
-        · exact Or.inr (Or.inl hrevCR)
-    · rintro ((hCL | hCR) | (hrevCR | hrevCL))
-      · exact ⟨((hLmem L).mp (Or.inl hCL)).1,
-          subset_trans ((hLmem L).mp (Or.inl hCL)).2 (closedHull_convex hSlefti)⟩
-      · exact ⟨((hRmem L).mp (Or.inl hCR)).1,
-          subset_trans ((hRmem L).mp (Or.inl hCR)).2 (closedHull_convex hSrighti)⟩
-      · exact ⟨((hRmem L).mp (Or.inr hrevCR)).1,
-          subset_trans ((hRmem L).mp (Or.inr hrevCR)).2 (closedHull_convex hSrighti)⟩
-      · exact ⟨((hLmem L).mp (Or.inr hrevCL)).1,
-          subset_trans ((hLmem L).mp (Or.inr hrevCL)).2 (closedHull_convex hSlefti)⟩
+    · rw [chainToBigSegment_glue]
+      exact segment_rfl.symm
+    · rw [reverseChain_glue, basic_segments_glue, basic_segments_glue]
+      -- Membership characterisations of the two sub-chains, derived directly from
+      -- `hLSegUnion`/`hRSegUnion`. We avoid `rw`-ing the union *term* (whose `Finset`
+      -- instance no longer matches after associativity reshuffling) and work purely
+      -- at the level of `Finset.mem_union`, which matches up to instance defeq.
+      have hLmem : ∀ L,
+          (L ∈ toBasicSegments CL' ∨ L ∈ toBasicSegments (reverseChain CL')) ↔
+            (L ∈ basicAvoidingSegmentSet X A ∧
+              closedHull L ⊆ closedHull (toSegment (S 0) x)) :=
+        fun L ↦ hCL_eq.symm ▸ hLmemRaw L
+      have hRmem : ∀ L,
+          (L ∈ toBasicSegments CR' ∨ L ∈ toBasicSegments (reverseChain CR')) ↔
+            (L ∈ basicAvoidingSegmentSet X A ∧
+              closedHull L ⊆ closedHull (toSegment x (S 1))) :=
+        fun L ↦ hCR_eq.symm ▸ hRmemRaw L
+      ext L
+      simp only [Finset.mem_filter, Finset.mem_union]
+      constructor
+      · intro ⟨h , hLS⟩
+        rcases colin_sub hcolin (by convert hLS; exact segment_rfl)
+            ((Finset.mem_filter.mp h).2 x hx.1) with hLleft | hLright
+        · rcases (hLmem L).mpr ⟨h, hLleft⟩ with hCL | hrevCL
+          · exact Or.inl (Or.inl hCL)
+          · exact Or.inr (Or.inr hrevCL)
+        · rcases (hRmem L).mpr ⟨h, hLright⟩ with hCR | hrevCR
+          · exact Or.inl (Or.inr hCR)
+          · exact Or.inr (Or.inl hrevCR)
+      · rintro ((hCL | hCR) | (hrevCR | hrevCL))
+        · exact ⟨((hLmem L).mp (Or.inl hCL)).1,
+            subset_trans ((hLmem L).mp (Or.inl hCL)).2 (closedHull_convex hSlefti)⟩
+        · exact ⟨((hRmem L).mp (Or.inl hCR)).1,
+            subset_trans ((hRmem L).mp (Or.inl hCR)).2 (closedHull_convex hSrighti)⟩
+        · exact ⟨((hRmem L).mp (Or.inr hrevCR)).1,
+            subset_trans ((hRmem L).mp (Or.inr hrevCR)).2
+              (closedHull_convex hSrighti)⟩
+        · exact ⟨((hLmem L).mp (Or.inr hrevCL)).1,
+            subset_trans ((hLmem L).mp (Or.inr hrevCL)).2 (closedHull_convex hSlefti)⟩
 
 
 /-- A function on segments that is additive modulo 2 along collinear splits. -/
@@ -831,7 +858,7 @@ lemma segment_sum_splitting (A : Finset Segment) (AVOID : Set ℝ²) (X : Finset
       := by
     intro S hS T hT hST Y hY h
     have hDisj2 := hDisj S T hS hT hST
-    simp_all only [mem_coe, ne_eq, le_eq_subset, bot_eq_empty, subset_empty]
+    simp_all only [mem_coe, ne_eq, bot_eq_empty, subset_empty]
     have h_nontriv : ∀ L ∈ Y, L 0 ≠ L 1 := by
       intro L hL
       apply @segmentSet_vertex_distinct X L
@@ -1181,18 +1208,21 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : isTriangulation Δ)
     (isPurple_symmFunction v)]
   unfold squareBoundaryBigSet
   have hTop : (⊤ : Finset (Fin 4)) = {0, 1, 2, 3} := by rfl
-  have hDisjSum : (⊤ : Finset (Fin 4)).biUnion (fun i ↦ {squareBoundaryBig i}) =
-      Finset.disjiUnion (⊤ : Finset (Fin 4)) (fun i ↦ {squareBoundaryBig i}) ?_ := by
-    refine Eq.symm (disjiUnion_eq_biUnion ⊤ (fun i ↦ {squareBoundaryBig i}) ?_)
+  have hPairwise :
+      ((⊤ : Finset (Fin 4)) : Set (Fin 4)).PairwiseDisjoint
+        (fun i ↦ ({squareBoundaryBig i} : Finset Segment)) := by
     intro i _ j _ hij
     simp only [disjoint_singleton_right, mem_singleton]
     intro heq
     exact hij.symm (squareBoundaryBig_injective heq)
-  · intro i _ j _ hij
-    simp only [disjoint_singleton_right, mem_singleton]
-    intro heq
-    exact hij.symm (squareBoundaryBig_injective heq)
-  rw [hDisjSum, sum_disjiUnion]
+  have hDisjSum : (⊤ : Finset (Fin 4)).biUnion
+      (fun i ↦ ({squareBoundaryBig i} : Finset Segment)) =
+      Finset.disjiUnion (⊤ : Finset (Fin 4))
+        (fun i ↦ ({squareBoundaryBig i} : Finset Segment))
+        hPairwise := by
+    exact (disjiUnion_eq_biUnion ⊤
+      (fun i ↦ ({squareBoundaryBig i} : Finset Segment)) hPairwise).symm
+  rw [hDisjSum, Finset.sum_disjiUnion _ _ hPairwise]
   simp only [top_eq_univ, sum_singleton]
   simp_all only [ne_eq, top_eq_univ, Fin.isValue, biUnion_insert, singleton_biUnion,
     disjiUnion_eq_biUnion, mem_insert, zero_ne_one, Fin.reduceEq, mem_singleton, or_self,

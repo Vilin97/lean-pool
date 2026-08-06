@@ -33,18 +33,19 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - name: Restore caches
+      # Match Lean Action CI's cache lookup exactly. This workflow only needs
+      # compiled Lean artifacts; restoring doc-gen output here used to make a
+      # broad fallback pull an incompatible cache after every toolchain bump.
+      - name: Restore Lean build cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
             .lake/build
-            docbuild/.lake/build
-          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
-            Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-
-            Docs-Lake-${{ runner.os }}-
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -55,10 +56,13 @@ jobs:
 
       - name: Install Mathlib cache
         run: |
-          if [ ! -d ".lake/packages/mathlib" ]; then
-            ~/.elan/bin/lake exe cache get
-          else
-            echo "Mathlib already present from cache"
+          set -euo pipefail
+          ~/.elan/bin/lake exe cache get
+          expected=$(jq -r '.packages[] | select(.name == "mathlib") | .rev' lake-manifest.json)
+          actual=$(git -C .lake/packages/mathlib rev-parse HEAD)
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::Mathlib checkout $actual does not match lake-manifest.json ($expected)."
+            exit 1
           fi
 
       - name: Build pool

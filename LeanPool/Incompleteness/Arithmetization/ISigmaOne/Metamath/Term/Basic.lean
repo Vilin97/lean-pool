@@ -182,7 +182,7 @@ open FormalizedTerm
 variable (L)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Arith.Language.IsUTerm : V → Prop := (construction L).Fixpoint ![]
+def _root_.LO.Arith.Language.IsUTerm : V → Prop := (construction L).fixedPoint ![]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.LDef.isUTermDef (pL : LDef) : Dlt1.Semisentence 1 :=
@@ -537,7 +537,7 @@ instance : c.construction.Finite where
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def Graph (c : Construction V L β) (param : Fin arity → V) (x y : V) : Prop :=
-  c.construction.Fixpoint param ⟪x, y⟫
+  c.construction.fixedPoint param ⟪x, y⟫
 
 variable {param : Fin arity → V} {n : V}
 

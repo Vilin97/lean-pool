@@ -475,7 +475,7 @@ lemma QuantumSet.modAut_adjoint [QuantumSet A] (r : ℝ) :
   rw [← LinearMap.isSelfAdjoint_iff']
   exact QuantumSet.modAut_isSelfAdjoint r
 
-theorem QuantumSet.modAut_real [QuantumSet A] (r : ℝ) :
+theorem QuantumSet.modAut_real (r : ℝ) :
     (ha.modAut r).toLinearMap.real = (ha.modAut (-r)).toLinearMap := by
   ext
   simp_rw [LinearMap.real_apply, AlgEquiv.toLinearMap_apply, ha.modAut_star, star_star]
@@ -947,7 +947,7 @@ lemma Upsilon_symm_tmul [QuantumSet A] [QuantumSet B] (a : A) (b : B) :
     Upsilon.symm (a ⊗ₜ[ℂ] b) =
       (rankOne ℂ b (modAut (-k A - 1) (star a))).toLinearMap := by
   rw [Upsilon_symm_apply]
-  simp only [LinearEquiv.lTensor_symm_tmul, LinearEquiv.symm_symm, op_apply,
+  simp only [LinearEquiv.lTensor_tmul, op_apply,
     TensorProduct.map_tmul, LinearEquiv.coe_coe, unop_apply, MulOpposite.unop_op,
     TensorProduct.comm_tmul, QuantumSet.PsiInvFun_apply, starAlgebra.modAut_zero, neg_zero]
   ring_nf

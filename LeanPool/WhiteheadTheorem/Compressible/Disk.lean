@@ -142,7 +142,8 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
   let fb' : C(∂𝕀 (n + 1), A) := fb.comp ⟨ULift.down.{u}, continuous_uliftDown⟩
   let Hfj' : C((⊔𝕀 (n + 1)) × I, A) := Hfj.toContinuousMap.argSwap.comp <|
     ContinuousMap.prodMap ⟨ULift.down.{u}, continuous_uliftDown⟩ (ContinuousMap.id _)
-  have : ⇑fb' ∘ (cubeBoundaryJarInclToBoundary (n + 1)).hom = ⇑Hfj' ∘ fun x ↦ (x, 0) := by
+  have : ⇑fb' ∘ (cubeBoundaryJarInclToBoundary.{u} (n + 1)).hom =
+      ⇑Hfj' ∘ fun x ↦ (x, 0) := by
     unfold cubeBoundaryJarInclToBoundary boundaryJarInclToBoundary
     ext y
     simp only [ContinuousMap.coe_mk, Function.comp_apply]
@@ -152,21 +153,21 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
       ContinuousMap.prodSwap_apply, ContinuousMap.Homotopy.coe_toContinuousMap,
       ContinuousMap.Homotopy.apply_zero]
     rfl
-  obtain ⟨H1, H1prop⟩ := cubeBoundaryJarInclToBoundary_hasHEP n A fb' Hfj' this
+  obtain ⟨H1, H1prop⟩ := cubeBoundaryJarInclToBoundary_hasHEP.{u} n A fb' Hfj' this
   -- `fb : C(∂I^(n + 1), X)` is homotopic through `H1` to a map that sends `⊔I^(n + 1)` to `a₀`.
   let f' : C(𝕀 (n + 1), X) := f.comp ⟨ULift.down.{u}, continuous_uliftDown⟩
   let H1' : C((∂𝕀 (n + 1)) × I, X) := ContinuousMap.comp ⟨Subtype.val, continuous_subtype_val⟩ H1
-  have := cubeBoundaryIncl_hasHEP (n + 1) X f'
-  replace : ⇑f' ∘ (cubeBoundaryIncl (n + 1)).hom = ⇑H1' ∘ fun x ↦ (x, 0) := by
+  have := cubeBoundaryIncl_hasHEP.{u} (n + 1) X f'
+  replace : ⇑f' ∘ (cubeBoundaryIncl.{u} (n + 1)).hom = ⇑H1' ∘ fun x ↦ (x, 0) := by
     unfold cubeBoundaryIncl f' H1'
     ext ⟨y, hy⟩
-    simp only [ContinuousMap.coe_comp, ContinuousMap.coe_mk, Function.comp_apply]
-    change f y = _
-    have := congr_fun H1prop.left ⟨⟨y, hy⟩⟩
-    simp only [Function.comp_apply] at this
-    rw [← this]
-    rfl
-  obtain ⟨H2, H2prop⟩ := cubeBoundaryIncl_hasHEP (n + 1) X f' H1' this
+    simp only [ContinuousMap.coe_comp, ContinuousMap.coe_mk]
+    let yb : ∂𝕀 (n + 1) := ULift.up.{u} ⟨y, hy⟩
+    have hzero := congr_fun H1prop.left yb
+    change f y = ↑(H1 (yb, 0))
+    change (fb' yb : A) = H1 (yb, 0) at hzero
+    exact congrArg Subtype.val hzero
+  obtain ⟨H2, H2prop⟩ := cubeBoundaryIncl_hasHEP.{u} (n + 1) X f' H1' this
   -- `f : C(I^ Fin (n + 1), X)` is homotopic through `H2` to a map that
   -- sends `∂I^(n + 1)` to `A` and `⊔I^(n + 1)` to `a₀`.
   let g : C(I^ Fin (n + 1), X) := ⟨fun y ↦ H2 ⟨⟨y⟩, 1⟩, by fun_prop⟩
@@ -176,8 +177,7 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
     · intro y hy
       simp only [ContinuousMap.coe_mk]
       have := congr_fun H2prop.right ⟨⟨y, hy⟩, 1⟩
-      simp only [cubeBoundaryIncl, Function.comp_apply, Prod.map_apply,
-        id_eq] at this
+      simp only [cubeBoundaryIncl, Function.comp_apply] at this
       change _ = H2 ({ down := y }, 1) at this
       rw [← this]
       unfold H1'
@@ -186,40 +186,37 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
       have hy' := boundaryJar_subset_boundary _ hy
       simp only [ContinuousMap.coe_mk]
       have := congr_fun H2prop.right ⟨⟨y, hy'⟩, 1⟩
-      simp only [cubeBoundaryIncl, Function.comp_apply, Prod.map_apply,
-        id_eq] at this
+      simp only [cubeBoundaryIncl, Function.comp_apply] at this
       change _ = H2 ({ down := y }, 1) at this
       rw [← this]
       replace := congr_fun H1prop.right ⟨⟨y, hy⟩, 1⟩
       simp only [cubeBoundaryJarInclToBoundary, boundaryJarInclToBoundary,
-        ContinuousMap.coe_mk, Function.comp_apply, Prod.map_apply, id_eq] at this
+        ContinuousMap.coe_mk, Function.comp_apply] at this
       change _ = H1 ({ down := ⟨y, hy'⟩ }, 1) at this
       unfold H1'
       simp only [ContinuousMap.comp_apply, ContinuousMap.coe_mk]
       rw [← this]
-      unfold Hfj' ContinuousMap.argSwap a₀
-      simp only [ContinuousMap.coe_mk, ContinuousMap.comp_assoc, ContinuousMap.comp_apply,
-        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
-        ContinuousMap.prodSwap_apply, ContinuousMap.Homotopy.coe_toContinuousMap,
-        ContinuousMap.Homotopy.apply_one, ContinuousMap.const_apply]
+      have hHfj := congrArg Subtype.val (Hfj.apply_one ⟨y, hy⟩)
+      convert hHfj using 1 <;> rfl
   use ⟨g, gprop⟩
+  let iup : C(I^Fin (n + 1), 𝕀 (n + 1)) := ⟨ULift.up.{u}, continuous_uliftUp⟩
   exact Nonempty.intro <|
     { toContinuousMap := H2.argSwap.comp <|
-        (ContinuousMap.id _).prodMap ⟨ULift.up, continuous_uliftUp⟩
+        (ContinuousMap.id _).prodMap iup
       map_zero_left y := by
         unfold ContinuousMap.argSwap
         simp only [ContinuousMap.coe_mk, ContinuousMap.comp_assoc, ContinuousMap.toFun_eq_coe,
           ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
           Prod.map_apply, id_eq, ContinuousMap.prodSwap_apply]
-        have := congr_fun H2prop.left ⟨y⟩
-        change _ = H2 ({ down := y }, 0)  at this
-        rw [← this]
-        rfl
+        have hzero := congr_fun H2prop.left (iup y)
+        change f y = H2 (iup y, 0) at hzero
+        exact hzero.symm
       map_one_left y := by
         unfold ContinuousMap.argSwap g
         simp only [ContinuousMap.coe_mk, ContinuousMap.comp_assoc, ContinuousMap.toFun_eq_coe,
           ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
           Prod.map_apply, id_eq, ContinuousMap.prodSwap_apply]
+        rfl
       prop' t y hy := by
         unfold ContinuousMap.argSwap
         simp only [ContinuousMap.coe_mk, ContinuousMap.comp_assoc, ContinuousMap.toFun_eq_coe,
@@ -227,10 +224,10 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
           Prod.map_apply, id_eq, ContinuousMap.prodSwap_apply]
         have := congr_fun H2prop.right ⟨⟨y, hy⟩, t⟩
         simp only [ContinuousMap.comp_apply, ContinuousMap.coe_mk, cubeBoundaryIncl,
-          Function.comp_apply, Prod.map_apply, id_eq, H1'] at this
-        change _ = H2 ({ down := y }, t) at this
+          Function.comp_apply, H1'] at this
+        change _ = H2 (iup y, t) at this
         rw [← this]
-        exact Subtype.coe_prop (H1 ({ down := ⟨y, hy⟩ }, t)) }
+        exact Subtype.coe_prop (H1 (ULift.up.{u} ⟨y, hy⟩, t)) }
 
 lemma homotopicWith_isMapOfPairs_of_relGenLoop_homotopic
     {X : Type u} [TopologicalSpace X] {A : Set X}
@@ -319,7 +316,6 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
         have : ∀ z, idown (cubeBoundaryIncl (n + 1) z) ∈ ∂I^n + 1 := by
           intro ⟨z, hz⟩
           unfold idown cubeBoundaryIncl
-          simp only [ContinuousMap.coe_mk]
           simp_all only [Subtype.forall, ContinuousMap.comp_assoc, f', i_d, e,
             iup, d_i, idown]
           obtain ⟨val, property⟩ := a
@@ -332,73 +328,99 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
 /-- `stretchToWall` -/
 noncomputable def _root_.TopCat.Cyl.stretchToWall :
     C(I × (disk.{u} (n + 1)), I × (disk.{u} (n + 1))) := by
-  let β : C((disk.{u} (n + 1)) × I, ℝ) :=
-    { toFun := fun ⟨⟨x, hx⟩, t⟩ ↦ max (2 * ‖x‖) (2 - t)
-      continuous_toFun := by fun_prop }
   refine
     { toFun := fun ⟨t, ⟨x, hx⟩⟩ ↦
-        ⟨ ⟨2 - β ⟨⟨x, hx⟩, t⟩, ?_⟩, ⟨(2 / β ⟨⟨x, hx⟩, t⟩) • x, ?_⟩ ⟩
+        ⟨⟨2 - max (2 * ‖x‖) (2 - t), ?_⟩,
+          ⟨(2 / max (2 * ‖x‖) (2 - t)) • x, ?_⟩⟩
       continuous_toFun := ?_ }
-  · simp only [ContinuousMap.coe_mk, Set.mem_Icc, sub_nonneg, sup_le_iff, Nat.ofNat_pos,
-    mul_le_iff_le_one_right, tsub_le_iff_right, le_add_iff_nonneg_right, β]
-    have t1 : 1 ≤ ((2 : ℝ) - t.val) := by linarith only [t.property.right]
-    constructor
-    · constructor
-      · simp_all
-      · exact t.property.left
-    · by_cases hxt : 2 * ‖x‖ ≥ 2 - t
-      · simp only [hxt, sup_of_le_left]
-        linarith only [t1, hxt]
-      · replace hxt := le_of_not_ge hxt
-        simp only [hxt, sup_of_le_right, ge_iff_le]
-        linarith only [t1]
-  · simp only [ContinuousMap.coe_mk, Metric.mem_closedBall, dist_zero_right, β]
-    by_cases hxt : 2 * ‖x‖ ≥ 2 - t
-    · simp only [hxt, sup_of_le_left]
-      rw [div_mul_cancel_left₀ (by norm_num : (2 : ℝ) ≠ 0)]
-      rw [norm_smul, norm_inv, norm_norm]
-      exact inv_mul_le_one
-    · replace hxt := le_of_not_ge hxt
-      simp only [hxt, sup_of_le_right, ge_iff_le]
-      rw [norm_smul]
-      replace hxt := le_div_iff₀' (by norm_num : (2 : ℝ) > 0) |>.mpr hxt
-      replace hxt := mul_le_mul_of_nonneg_left hxt (norm_nonneg _ : ‖(2 : ℝ) / (2 - t)‖ ≥ 0)
-      refine hxt.trans_eq ?_
-      have : ‖(2 : ℝ) / (2 - t)‖ = (2 : ℝ) / (2 - t) := by
-        apply Real.norm_of_nonneg
-        exact div_nonneg (by norm_num : (0 : ℝ) ≤ 2) (by linarith only [t.property.right])
-      rw [this]
-      simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, div_mul_div_cancel₀']
-      apply div_self
-      linarith only [t.property.right]
-  · simp only [ContinuousMap.coe_mk, β]
-    apply Continuous.prodMk
+  · change 0 ≤ 2 - max (2 * ‖x‖) (2 - (t : ℝ)) ∧
+      2 - max (2 * ‖x‖) (2 - (t : ℝ)) ≤ 1
+    have hxnorm : ‖x‖ ≤ 1 := by
+      simpa only [Metric.mem_closedBall, dist_zero_right] using hx
+    have hmaxle : max (2 * ‖x‖) (2 - (t : ℝ)) ≤ 2 := by
+      apply max_le
+      · linarith only [hxnorm]
+      · linarith only [t.property.left]
+    have hmaxge : 1 ≤ max (2 * ‖x‖) (2 - (t : ℝ)) := by
+      have ht : 1 ≤ (2 : ℝ) - t := by linarith only [t.property.right]
+      exact ht.trans (le_max_right _ _)
+    constructor <;> linarith
+  · rw [Metric.mem_closedBall, dist_zero_right, norm_smul]
+    let b : ℝ := max (2 * ‖x‖) (2 - (t : ℝ))
+    have hbpos : 0 < b := by
+      have ht : 0 < (2 : ℝ) - t := by linarith only [t.property.right]
+      exact ht.trans_le (le_max_right _ _)
+    have hxb : 2 * ‖x‖ ≤ b := le_max_left _ _
+    rw [Real.norm_of_nonneg (div_nonneg (by norm_num) hbpos.le)]
+    change (2 / b) * ‖x‖ ≤ 1
+    rw [show (2 / b) * ‖x‖ = (2 * ‖x‖) / b by ring]
+    exact (div_le_one hbpos).2 hxb
+  · apply Continuous.prodMk
     · apply Continuous.subtype_mk
-      apply Continuous.sub
-      · exact continuous_const
-      · fun_prop
+      fun_prop
     · apply continuous_uliftUp.comp
       apply Continuous.subtype_mk
-      apply Continuous.smul
-      · apply Continuous.div
+      let scalar : I × disk.{u} (n + 1) → ℝ :=
+        fun ⟨t, ⟨x, _⟩⟩ ↦ 2 / max (2 * ‖x‖) (2 - t)
+      have hscalar : Continuous scalar := by
+        apply Continuous.div
         · exact continuous_const
-        · apply Continuous.max
-          · fun_prop
-          · fun_prop
+        · fun_prop
         · intro ⟨t, ⟨x, hx⟩⟩
-          dsimp only
-          have t1 : 0 < ((2 : ℝ) - t.val) := by linarith only [t.property.right]
-          apply ne_of_gt
-          exact lt_sup_of_lt_right t1
-      · fun_prop
+          have ht : 0 < (2 : ℝ) - t := by linarith only [t.property.right]
+          exact ne_of_gt (ht.trans_le (le_max_right _ _))
+      have hvector : Continuous
+          (fun z : I × disk.{u} (n + 1) ↦ z.2.down.val) := by
+        fun_prop
+      exact hscalar.smul hvector
+
+@[simp]
+lemma _root_.TopCat.Cyl.stretchToWall_fst_coe
+    {n : ℕ} (t : I) (x : EuclideanSpace ℝ (Fin (n + 1)))
+    (hx : x ∈ Metric.closedBall 0 1) :
+    ((Cyl.stretchToWall.{u} (t, ULift.up.{u} ⟨x, hx⟩)).1 : ℝ) =
+      2 - max (2 * ‖x‖) (2 - t) :=
+  rfl
+
+@[simp]
+lemma _root_.TopCat.Cyl.stretchToWall_snd_down_val
+    {n : ℕ} (t : I) (x : EuclideanSpace ℝ (Fin (n + 1)))
+    (hx : x ∈ Metric.closedBall 0 1) :
+    (Cyl.stretchToWall.{u} (t, ULift.up.{u} ⟨x, hx⟩)).2.down.val =
+      (2 / max (2 * ‖x‖) (2 - t)) • x :=
+  rfl
+
+lemma _root_.TopCat.Cyl.stretchToWall_zero
+    {n : ℕ} (x : disk.{u} (n + 1)) :
+    Cyl.stretchToWall.{u} (0, x) = (0, x) := by
+  obtain ⟨x, hx⟩ := x
+  have hxnorm : ‖x‖ ≤ 1 := by
+    simpa only [Metric.mem_closedBall, dist_zero_right] using hx
+  have hmax : max (2 * ‖x‖) 2 = 2 :=
+    max_eq_right (by linarith only [hxnorm])
+  apply Prod.ext
+  · apply Subtype.ext
+    simp only [Cyl.stretchToWall_fst_coe, Set.Icc.coe_zero, sub_zero, hmax, sub_self]
+  · apply ULift.ext
+    apply Subtype.ext
+    simp only [Cyl.stretchToWall_snd_down_val, Set.Icc.coe_zero, sub_zero, hmax,
+      div_self (by norm_num : (2 : ℝ) ≠ 0), one_smul]
 
 lemma _root_.TopCat.Cyl.stretchToWall_eq_zero_of_norm_eq_one
     {n : ℕ} {t : I} {x : EuclideanSpace ℝ (Fin (n + 1))} {hx : x ∈ Metric.closedBall 0 1}
-    (hx1 : ‖x‖ = 1) : Cyl.stretchToWall ⟨t, ⟨x, hx⟩⟩ = ⟨0, ⟨x, hx⟩⟩ := by
-  unfold Cyl.stretchToWall
-  simp only [ContinuousMap.coe_mk, hx1, mul_one, Prod.mk.injEq]
-  have : 2 ≥ 2 - t.val := by linarith only [t.property.left]
-  simp_all
+    (hx1 : ‖x‖ = 1) :
+    Cyl.stretchToWall.{u} (t, ULift.up.{u} ⟨x, hx⟩) =
+      (0, ULift.up.{u} ⟨x, hx⟩) := by
+  have hmax : max (2 * ‖x‖) (2 - (t : ℝ)) = 2 := by
+    rw [hx1, mul_one]
+    exact max_eq_left (sub_le_self 2 t.property.left)
+  apply Prod.ext
+  · apply Subtype.ext
+    simp only [Cyl.stretchToWall_fst_coe, hmax, sub_self, Set.Icc.coe_zero]
+  · apply ULift.ext
+    apply Subtype.ext
+    simp only [Cyl.stretchToWall_snd_down_val, hmax,
+      div_self (by norm_num : (2 : ℝ) ≠ 0), one_smul]
 
 /-- Suppose `n ≥ 1` and `f` is a continuous map of pairs from `(∂𝔻 n, 𝔻 n)` to `(X, A)`.
 If `f` is as a map of pairs homotopic to a map into `A`,
@@ -408,7 +430,7 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
     (H : ∃ g : C(disk.{u} (n + 1), X),
       Set.range g ⊆ A ∧ f.HomotopicWith g fun h ↦ IsMapOfPairs X A h) :
     ∃ l : C(disk.{u} (n + 1), X),
-      Set.range l ⊆ A ∧ f.HomotopicRel l (Set.range (diskBoundaryIncl _)) := by
+      Set.range l ⊆ A ∧ f.HomotopicRel l (Set.range (diskBoundaryIncl.{u} _)) := by
   obtain ⟨g, gA, H⟩ := H
   replace H := H.some
   let H' := H.toContinuousMap.comp Cyl.stretchToWall
@@ -418,40 +440,63 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
   constructor
   · apply Set.range_subset_iff.mpr
     intro ⟨x, hx⟩
-    unfold l H' Cyl.stretchToWall
-    simp only [ContinuousMap.coe_mk, ContinuousMap.comp_apply,
-      ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.HomotopyWith.coe_toHomotopy,
-      Set.Icc.coe_one]
-    simp only [(by norm_num : (2 : ℝ) - 1 = 1)]
+    let xd : disk.{u} (n + 1) := ULift.up.{u} ⟨x, hx⟩
+    change H (Cyl.stretchToWall.{u} (1, xd)) ∈ A
     by_cases hx1 : 2 * ‖x‖ ≥ 1
-    · simp only [hx1, sup_of_le_left]
-      simp only [div_mul_cancel_left₀ (by norm_num : (2 : ℝ) ≠ 0)]
-      generalize_proofs pf1 pf2
+    · have hxnorm : ‖x‖ ≤ 1 := by
+        simpa only [Metric.mem_closedBall, dist_zero_right] using hx
+      have hnorm : 0 < ‖x‖ := by linarith only [hx1]
+      let twall : I := ⟨2 - 2 * ‖x‖, by
+        constructor <;> linarith only [hx1, hxnorm]⟩
       have xmem : ‖x‖⁻¹ • x ∈ Metric.sphere 0 1 := by
         apply Metric.mem_sphere.mpr
         rw [dist_eq_norm, sub_zero, norm_smul, norm_inv, norm_norm]
         apply inv_mul_cancel₀
-        linarith only [hx1]
-      have : diskBoundaryIncl.{u} (n + 1) ⟨‖x‖⁻¹ • x, xmem⟩ = ⟨⟨‖x‖⁻¹ • x, pf2⟩⟩ := rfl
-      rw [← this]
-      have := H.prop' ⟨2 - 2 * ‖x‖, pf1⟩ ⟨⟨‖x‖⁻¹ • x, xmem⟩⟩
-      simp_all
+        exact ne_of_gt hnorm
+      let xb : diskBoundary.{u} (n + 1) := ULift.up.{u} ⟨‖x‖⁻¹ • x, xmem⟩
+      let xwall : disk.{u} (n + 1) :=
+        ULift.up.{u} ⟨‖x‖⁻¹ • x, Metric.sphere_subset_closedBall xmem⟩
+      have hincl : diskBoundaryIncl.{u} (n + 1) xb = xwall := rfl
+      have hmax : max (2 * ‖x‖) 1 = 2 * ‖x‖ := max_eq_left hx1
+      have hscalar : (2 : ℝ) / (2 * ‖x‖) = ‖x‖⁻¹ := by field_simp
+      have hone : (2 : ℝ) - ((1 : I) : ℝ) = 1 := by norm_num
+      have hstretch : Cyl.stretchToWall.{u} (1, xd) = (twall, xwall) := by
+        apply Prod.ext
+        · apply Subtype.ext
+          simp only [xd, Cyl.stretchToWall_fst_coe, twall]
+          rw [hone, hmax]
+        · apply ULift.ext
+          apply Subtype.ext
+          simp only [xd, Cyl.stretchToWall_snd_down_val, xwall]
+          rw [hone, hmax, hscalar]
+      rw [hstretch, ← hincl]
+      exact H.prop' twall xb
     · replace hx1 := le_of_not_ge hx1
-      simp only [hx1, sup_of_le_right, div_one, (by norm_num : (2 : ℝ) - 1 = 1)]
-      change H (1, _) ∈ A
-      rw [H.apply_one]
-      apply gA
-      simp_all only [Set.mem_range, exists_apply_eq_apply]
+      have hmax : max (2 * ‖x‖) 1 = 1 := max_eq_right hx1
+      have xtwice_mem : (2 : ℝ) • x ∈ Metric.closedBall 0 1 := by
+        rw [Metric.mem_closedBall, dist_zero_right, norm_smul,
+          Real.norm_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)]
+        exact hx1
+      let xtwice : disk.{u} (n + 1) := ULift.up.{u} ⟨(2 : ℝ) • x, xtwice_mem⟩
+      have hone : (2 : ℝ) - ((1 : I) : ℝ) = 1 := by norm_num
+      have hstretch : Cyl.stretchToWall.{u} (1, xd) = (1, xtwice) := by
+        apply Prod.ext
+        · apply Subtype.ext
+          simp only [xd, Cyl.stretchToWall_fst_coe]
+          rw [hone, hmax]
+          norm_num
+        · apply ULift.ext
+          apply Subtype.ext
+          simp only [xd, Cyl.stretchToWall_snd_down_val, xtwice]
+          rw [hone, hmax, div_one]
+      rw [hstretch, H.apply_one]
+      exact gA (Set.mem_range_self xtwice)
   · exact Nonempty.intro <|
       { toContinuousMap := H'
-        map_zero_left := fun ⟨x, hx⟩ ↦ by
-          unfold H' Cyl.stretchToWall
-          simp only [ContinuousMap.coe_mk, ContinuousMap.toFun_eq_coe, ContinuousMap.comp_apply,
-            Set.Icc.coe_zero, sub_zero, ContinuousMap.Homotopy.coe_toContinuousMap,
-            ContinuousMap.HomotopyWith.coe_toHomotopy]
-          have : 2 * ‖x‖ ≤ 2 := by
-            simp_all
-          simp_all
+        map_zero_left := fun x ↦ by
+          unfold H'
+          change H (Cyl.stretchToWall (0, x)) = f x
+          rw [Cyl.stretchToWall_zero, H.apply_zero]
         map_one_left x := by unfold l; rfl
         prop' t x hy := by
           unfold H'
@@ -469,7 +514,7 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
             convert Metric.mem_sphere.mp hy using 1
             exact Eq.symm (dist_zero_right y)
           rw [Cyl.stretchToWall_eq_zero_of_norm_eq_one hx1]
-          rw [H.apply_zero] }
+          exact H.apply_zero (⟨⟨x, hx⟩⟩ : disk.{u} (n + 1)) }
 
 /-- Suppose `n ≥ 1` and the relative homotopy group `π_rel n X A a` is zero for all `a : A`.
 If `f` is a continuous map of pairs from `(∂𝔻 n, 𝔻 n)` to `(X, A)`,
@@ -478,7 +523,7 @@ theorem homotopicRel_boundary_of_unique_pi
     (f : C(disk.{u} (n + 1), X)) (hf : IsMapOfPairs X A f)
     (hpi : ∀ a : A, Nonempty <| Unique <| π_rel (n + 1) X A a) :
     ∃ l : C(disk.{u} (n + 1), X),
-      Set.range l ⊆ A ∧ f.HomotopicRel l (Set.range (diskBoundaryIncl _)) := by
+      Set.range l ⊆ A ∧ f.HomotopicRel l (Set.range (diskBoundaryIncl.{u} _)) := by
   obtain ⟨a, H⟩ := homotopicWith_const_isMapOfPairs_of_unique_pi X A f hf hpi
   let g : C(disk.{u} (n + 1), X) := ContinuousMap.const (𝔻 (n + 1)) a
   have gr : Set.range g ⊆ A := Set.range_subset_iff.mpr fun _ ↦ a.property
@@ -505,7 +550,6 @@ theorem isCompressible_subtype_val_of_unique_pi
     refine Nonempty.intro ⟨ofHom l', ?_, ?_⟩
     · ext x
       unfold l'
-      simp only [hom_comp, ContinuousMap.comp_apply]
       let x' := diskBoundaryIncl (n + 1) x
       have x'r : x' ∈ Set.range (diskBoundaryIncl (n + 1)) := Set.mem_range_self x
       have := H.some.prop' 1 x' x'r
@@ -539,7 +583,10 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
   let β : π_ 0 X pt := ⟦β'⟧
   obtain ⟨α, iα⟩ := hbi.surjective β
   let α' := α.out
-  replace iα : iStar 0 X A pt ⟦α'⟧ = ⟦β'⟧ := by unfold α'; rwa [Quotient.out_eq]
+  have hα : (⟦α'⟧ : π_ 0 A pt) = α := Quotient.out_eq α
+  replace iα : iStar 0 X A pt ⟦α'⟧ = ⟦β'⟧ := by
+    rw [hα]
+    exact iα
   change iStar' .. = _ at iα
   have H : ContinuousMap.HomotopicRel .. := Quotient.eq.mp iα.symm
   replace H := H.some
@@ -565,7 +612,7 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
           unfold l a
           simp only [
             ContinuousMap.coe_mk, Function.comp_apply, ContinuousMap.HomotopyWith.apply_one,
-            Subtype.coe_eta, hom_comp, hom_ofHom,
+            Subtype.coe_eta,
             ]
           rfl
         prop' t x := by

@@ -101,7 +101,6 @@ In characteristic 0 over ℂ, this is essentially ℚ embedded in T.
 /-- The prime subring of T (image of ℤ → T), localized at its intersection with M,
 is an N-subring when T has depth ≥ 2 and no integer is a zero divisor. -/
 theorem initial_NSubring
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (hchar : ∀ (n : ℤ), n ≠ 0 → (algebraMap ℤ T n) ≠ 0) :
     ∃ N : NSubring T, Cardinal.mk N.carrier ≤ Cardinal.aleph0 := by
   set p : Ideal ℤ := (IsLocalRing.maximalIdeal T).comap (algebraMap ℤ T) with hp_def

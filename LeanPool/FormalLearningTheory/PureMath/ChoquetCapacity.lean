@@ -83,7 +83,7 @@ finite measures on closed sets. The instance that lets the abstract capacitabili
 machinery be applied to ordinary probability measures. -/
 theorem MeasureTheory.measure_isChoquetCapacity
     {α : Type*}
-    [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α] [PolishSpace α]
+    [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α]
     (μ : MeasureTheory.Measure α) [MeasureTheory.IsFiniteMeasure μ] :
     MeasureTheory.IsChoquetCapacity (fun s : Set α => μ s) := by
   constructor
@@ -295,7 +295,7 @@ private lemma iInter_closure_image_cyl_eq
     argument to show `⋂ closure(f '' Cyl N n) = f '' Bnd N` (compact). -/
 theorem MeasureTheory.AnalyticSet.cap_eq_iSup_isCompact
     {α : Type*}
-    [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α] [PolishSpace α]
+    [TopologicalSpace α] [PolishSpace α]
     {cap : Set α → ENNReal}
     (hcap : MeasureTheory.IsChoquetCapacity cap)
     {s : Set α} (hs : MeasureTheory.AnalyticSet s) :

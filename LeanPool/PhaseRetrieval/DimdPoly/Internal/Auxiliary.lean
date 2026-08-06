@@ -372,10 +372,13 @@ instance : CompactSpace UnitPhase := by
   change CompactSpace { θ : ℂ // ‖θ‖ = 1 }
   apply isCompact_iff_compactSpace.mp
   have h : IsCompact (Metric.sphere (0 : ℂ) 1) := isCompact_sphere (0 : ℂ) 1
-  convert h using 1
-  ext z
-  change (‖z‖ = 1) ↔ z ∈ Metric.sphere (0 : ℂ) 1
-  rw [Metric.mem_sphere, dist_zero_right]
+  have hset : {z : ℂ | ‖z‖ = 1} = Metric.sphere (0 : ℂ) 1 := by
+    ext z
+    change (‖z‖ = 1) ↔ z ∈ Metric.sphere (0 : ℂ) 1
+    rw [Metric.mem_sphere, dist_zero_right]
+  change IsCompact ({z : ℂ | ‖z‖ = 1} : Set ℂ)
+  rw [hset]
+  exact h
 
 instance : Inhabited UnitPhase :=
   ⟨⟨1, by simp⟩⟩

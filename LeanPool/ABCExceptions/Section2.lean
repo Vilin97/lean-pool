@@ -256,12 +256,16 @@ lemma tripleAt_mem_abcExceptions (n : ℕ) (hn : 0 < n) : tripleAt n ∈ abcExce
       _ ≡ 1 [MOD 9] := by simp [Nat.ModEq.refl]
   have h₄ : radical (2 ^ (6 * n) - 1) * 2 < 2 ^ (6 * n) := by
     obtain ⟨k, hk⟩ := h₃
+    have h₉ : radical 9 = 3 := by
+      rw [show (9 : ℕ) = 3 ^ 2 by norm_num, Nat.radical_eq_prod_primeFactors,
+        Nat.primeFactors_prime_pow (by norm_num) Nat.prime_three]
+      simp
     calc
     radical (2 ^ (6 * n) - 1) * 2 = radical (9 * k) * 2 := by rw [hk]
     _ ≤ (radical 9 * radical k) * 2 :=
       Nat.mul_le_mul_right 2 (Nat.le_of_dvd (by positivity) radical_mul_dvd)
     _ = 2 * radical 9 * radical k := by ring
-    _ = 6 * radical k := by simp +ground [radical, primeFactors_eq_natPrimeFactors]
+    _ = 6 * radical k := by rw [h₉]
     _ ≤ 9 * k := by
       gcongr
       · norm_num1

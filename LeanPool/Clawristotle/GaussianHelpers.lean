@@ -399,7 +399,7 @@ lemma cubic_coeff_zero (a : Fin 3 → ℝ) (h : ∀ v, dotProduct v a * normSq v
     At the minimum: Δ(log n) ≥ 0 → n ≥ ρIon.
     Reference: Proof of Lemma 21 (lem:density_constant). -/
 lemma poisson_boltzmann_max_principle
-    (X : Type*) [Nonempty X]
+    (X : Type*)
     (n : X → ℝ) (ρIon T_infty : ℝ)
     (laplacian : (X → ℝ) → X → ℝ)
     (_hn_pos : ∀ x, 0 < n x) (hT : 0 < T_infty) (_hρ : 0 < ρIon)

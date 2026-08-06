@@ -57,34 +57,20 @@ namespace Game
         simp [residual, hy, hx, hxy]
     · by_cases hx : x.length % 2 = 0
       · have hxy : (x.length + y.length) % 2 = 1 := by omega
-        conv => simp [residual, hy, hx, hxy]
+        simp only [residual, List.length_append, hxy, hy, hx, if_false, if_true, one_ne_zero]
         ext a
-        conv => simp
-        constructor
-        · rintro ⟨ha, hnot⟩
-          constructor
-          · exact ha
-          · intro ha' hpay
-            exact hnot hpay
-        · rintro ⟨ha, hnot⟩
-          refine ⟨ha, ?_⟩
-          intro hpay
-          exact hnot ha hpay
+        simp only [Set.preimage_compl, Set.image_val_compl, subAt_append, subAt_body,
+          Stream'.append_append_stream, subAt_body_image, subAtInf_append, Set.mem_sdiff,
+          Set.mem_preimage, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right,
+          not_exists]
       · have hx1 : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp hx
         have hy1 : y.length % 2 = 1 := Nat.mod_two_ne_zero.mp hy
         have hxy : (x.length + y.length) % 2 = 0 := by omega
-        conv => simp [residual, hy, hx, hxy]
+        simp only [residual, List.length_append, hxy, hy, hx, if_false, if_true]
         ext a
-        conv => simp
-        constructor
-        · rintro ⟨ha, hnn⟩
-          refine ⟨ha, ?_⟩
-          by_contra hnot
-          exact hnn fun hpay ↦ hnot (by simpa [body.append] using hpay)
-        · rintro ⟨ha, hpay⟩
-          refine ⟨ha, ?_⟩
-          intro hnot
-          exact hnot (by simpa [body.append] using hpay)
+        simp only [Set.preimage_compl, compl_compl, subAt_body_image, subAtInf_append,
+          Stream'.append_append_stream, Set.mem_preimage, Set.mem_image, Subtype.exists,
+          exists_and_right, exists_eq_right]
 lemma empty_of_tree (G : Game A) (h : G.tree = ⊥) : G = ⟨⊥, ∅⟩ := by
   ext1 <;> simp [Set.eq_empty_iff_forall_notMem, h]
 lemma residual_notMem (G : Game A) (x : List A) (h : x ∉ G.tree) : G.residual x = ⟨⊥, ∅⟩ := by
@@ -113,6 +99,7 @@ def payoff (p : Player) (G : Game A) : Set (body G.tree) := match p with
   by_cases h : x.length % 2 = 0
   · cases p
     · simp_all
+      rfl
     · unfold Player.payoff Player.residual
       rw [if_pos h, Game.residual_payoff_even G x h]
       ext y
@@ -120,6 +107,7 @@ def payoff (p : Player) (G : Game A) : Set (body G.tree) := match p with
   · have hodd : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp h
     cases p
     · simp_all
+      rfl
     · unfold Player.payoff Player.residual
       rw [if_neg h, Game.residual_payoff_odd G x hodd]
       exact compl_compl (body.append x ⁻¹' G.payoff)
@@ -127,15 +115,18 @@ end Player
 @[congr] lemma subtype_val_player_payoff {G' p'} (h : G = G') (hp : p = p') :
   Subtype.val '' (p.payoff G) = Subtype.val '' (p'.payoff G') := by congr!
 
-/-- a PreStrategy is winning if all compatible plays are won -/
-abbrev PreStrategy.IsWinning (s : PreStrategy G.tree p) := body s.subtree ⊆ p.payoff G
+/-- A pre-strategy is winning if all compatible plays are won. Keeping this as a definition
+lets API-level simp lemmas remain stated in terms of winning strategies. -/
+def PreStrategy.IsWinning (s : PreStrategy G.tree p) := body s.subtree ⊆ p.payoff G
 lemma PreStrategy.sub_winning {s t : PreStrategy G.tree p} (h : s ≤ t) (h' : t.IsWinning) :
   s.IsWinning := subset_trans (by gcongr) h'
 lemma PreStrategy.IsWinning.residual {s : PreStrategy G.tree p} (h : s.IsWinning)
   (x : s.subtree) : (s.residual x).IsWinning (G := G.residual x) := by
   have hpay : (p.residual x.val).payoff (G.residual x.val) = (body.append x.val)⁻¹' p.payoff G := by
     simp_all
-  rw [GaleStewartGame.PreStrategy.IsWinning, hpay]
+    rfl
+  change body _ ⊆ _
+  rw [hpay]
   simpa [PreStrategy.residual, Game.residual, subAt_body, subAt_body_image] using
     Set.preimage_mono (f := fun a ↦ x.val ++ₛ a) h
 lemma PreStrategy.IsWinning.choose (s : QuasiStrategy G.tree p) (h : s.1.IsWinning) :

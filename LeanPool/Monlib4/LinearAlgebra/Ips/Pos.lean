@@ -480,7 +480,7 @@ end LinearMap
 
 theorem rankOne_self_isPositive {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E]
-    [CompleteSpace E] {x : E} :
+    {x : E} :
   (_root_.rankOne 𝕜 x x).IsPositive := by
   refine ⟨rankOne_self_isSymmetric, ?_⟩
   intro y

@@ -48,6 +48,11 @@ open Domain.Neighborhood.Example43 (N natElem zeroElt succMap predMap zeroMap
 open Domain.Neighborhood.Exercise326 (cond)
 open Domain.Neighborhood.Exercise511 (head tail push)
 
+-- `PFun α β` is a plain `def` for `α → Part β`, so a `α →. β` argument passed where
+-- `α → Part β` is expected leaves goals that are not type-correct at `implicit`
+-- transparency, which blocks `rw`/`simp` on `>>=` and `Nat.rfind` below.
+attribute [local implicit_reducible] PFun
+
 /-- The universal argument domain `𝒩 = N^∞` (Exercise 3.16). All `k`-ary number
 functions are
 realised as approximable maps `𝒩 → N` depending only on coordinates `0..k-1`. -/

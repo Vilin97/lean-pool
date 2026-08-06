@@ -118,8 +118,16 @@ theorem QuantumGraph.Real.innerOne_map_one_eq_norm_pow_four_iff
   rw [QuantumSet.innerOne_map_one_toSubset_eq (- (1/2)) (- (1/2)), QuantumSet.normOne_toSubset]
   rw [QuantumGraph.Real.innerOne_map_one_eq_norm_pow_four_iff_of_kms
       ((QuantumGraph.real_toSubset_iff (-(1/2))).mpr h) (kms := kms)]
-  rw [LinearMap.toSubsetQuantumSet_eq_iff, rankOne_ofSubsetQuantumSet]
-  simp_rw [← QuantumSet.toSubsetAlgEquiv_symm_eq_toSubsetEquiv, map_one]
+  let g : QuantumSet.subset (-(1 / 2)) A →ₗ[ℂ] QuantumSet.subset (-(1 / 2)) A :=
+    (rankOne ℂ (1 : QuantumSet.subset (-(1 / 2)) A)
+      (1 : QuantumSet.subset (-(1 / 2)) A)).toLinearMap
+  change f.toSubsetQuantumSet (-(1 / 2)) (-(1 / 2)) = g ↔ _
+  refine (LinearMap.toSubsetQuantumSet_eq_iff (-(1 / 2)) (-(1 / 2)) f g).trans ?_
+  rw [show g.ofSubsetQuantumSet (-(1 / 2)) (-(1 / 2)) =
+      rankOne ℂ (1 : A) (1 : A) by
+    dsimp only [g]
+    rw [rankOne_ofSubsetQuantumSet]
+    simp_rw [← QuantumSet.toSubsetAlgEquiv_symm_eq_toSubsetEquiv, map_one]]
 
 /-- Out-degree operator of a quantum graph. -/
 @[simps]
@@ -290,18 +298,18 @@ open scoped InnerProductSpace
 
 lemma ContinuousLinearMap.isPositive_iff_complex' {E' :
     Type*} [NormedAddCommGroup E'] [InnerProductSpace ℂ E']
-  [CompleteSpace E'] (T : E' →L[ℂ] E') :
+  (T : E' →L[ℂ] E') :
   T.IsPositive ↔ ∀ (x : E'), 0 ≤ ⟪T x, x⟫_ℂ :=
 by simp [isPositive_iff_complex, RCLike.nonneg_def' (𝕜 := ℂ)]
 lemma ContinuousLinearMap.isPositive_iff_complex'' {E' :
     Type*} [NormedAddCommGroup E'] [InnerProductSpace ℂ E']
-  [CompleteSpace E'] (T : E' →L[ℂ] E') :
+  (T : E' →L[ℂ] E') :
   T.IsPositive ↔ ∀ (x : E'), 0 ≤ ⟪x, T x⟫_ℂ := by
   simp_rw [isPositive_iff_complex', ← inner_conj_symm (T _),
     Complex.nonneg_iff, Complex.conj_re, Complex.conj_im, zero_eq_neg, eq_comm]
 
 lemma ContinuousLinearMap.le_iff_complex_inner_le {E : Type*} [NormedAddCommGroup E]
-  [InnerProductSpace ℂ E] [CompleteSpace E] {p q : E →L[ℂ] E} :
+  [InnerProductSpace ℂ E] {p q : E →L[ℂ] E} :
   p ≤ q ↔ ∀ (x : E), ⟪x, p x⟫_ℂ ≤ ⟪x, q x⟫_ℂ := by
   rw [ContinuousLinearMap.le_def, isPositive_iff_complex'']
   simp only [sub_apply, inner_sub_right, sub_nonneg]
@@ -312,7 +320,7 @@ theorem isOrthogonalProjection_iff_exists {E : Type*} [NormedAddCommGroup E]
   rw [ContinuousLinearMap.isOrthogonalProjection_iff', and_comm, ← orthogonal_projection_iff]
 
 theorem orthogonalProjection'_le_one {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
-  [CompleteSpace E] [CompleteSpace (⊤ : Submodule ℂ E)]
+  [CompleteSpace (⊤ : Submodule ℂ E)]
   (U : Submodule ℂ E) [CompleteSpace U] :
   orthogonalProjection' U ≤ 1 := by
   rw [← orthogonalProjection_of_top, orthogonalProjection.is_le_iff_subset]
@@ -332,7 +340,7 @@ isOrthogonalProjection_le_one
   ((quantumGraphReal_iff_Upsilon_toBimodule_orthogonalProjection gns).mp hf)
 
 theorem QuantumGraph.Real.innerOne_map_one_le_norm_one_pow_four_of_gns
-  {A : Type*} [starAlgebra A] [QuantumSet A] [Nontrivial A]
+  {A : Type*} [starAlgebra A] [QuantumSet A]
   [PartialOrder A] [StarOrderedRing A]
   (gns : k A = 0)
   (h₁ : ∀ ⦃a : A⦄, 0 ≤ a ↔ ∃ (b : A), a = star b * b)
@@ -388,7 +396,7 @@ lemma QuantumGraph.zero_le_degree_le_norm_one_sq_of_gns
 
 theorem StarOrderedRing.nonneg_iff_toQuantumSetSubset
   {A : Type*} [NonUnitalSemiring A] [StarRing A]
-  [PartialOrder A] [StarOrderedRing A] (r : ℝ) :
+  [PartialOrder A] (r : ℝ) :
   (∀ ⦃a : A⦄, 0 ≤ a ↔ ∃ (b : A), a = star b * b) ↔
     ∀ ⦃a : QuantumSet.subset r A⦄, 0 ≤ a ↔ ∃ (b : QuantumSet.subset r A), a = star b * b :=
 Iff.rfl

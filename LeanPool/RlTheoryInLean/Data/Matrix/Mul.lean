@@ -29,12 +29,6 @@ lemma mul_diagonal_mulVec
   intro i hi
   ring_nf
 
-omit [Fintype m] in
-lemma mulVec_apply [Fintype n]
-  (A : Matrix m n ℝ) (x : n → ℝ) (j : m) :
-  (A *ᵥ x) j = ∑ i, A j i * x i := by
-  simp [mulVec, dotProduct]
-
 section square
 
 variable {A : Matrix m m ℝ}

@@ -91,9 +91,13 @@ variable (fs : TopCat.of (I × cubeBoundary.{u} n) ⟶ Z)  -- sides of `∂𝕀 
 /-- `mapVecOfBotTopSides` -/
 def mapVecOfBotTopSides : (k : Fin 3) → C(botTopSidesCover n k, Z) :=
   let g0 : C(botOrTop.{u} n 0, Z) :=
-    ⟨fun ⟨⟨y, _⟩, _⟩ ↦ f01 0 ⟨(Cube.splitAtLast y).snd⟩, by fun_prop⟩
+    ⟨fun ⟨⟨y, _⟩, _⟩ ↦ f01 0 ⟨(Cube.splitAtLast y).snd⟩, by
+      apply (f01 0).hom.continuous.comp
+      fun_prop⟩
   let g1 : C(botOrTop.{u} n 1, Z) :=
-    ⟨fun ⟨⟨y, _⟩, _⟩ ↦ f01 1 ⟨(Cube.splitAtLast y).snd⟩, by fun_prop⟩
+    ⟨fun ⟨⟨y, _⟩, _⟩ ↦ f01 1 ⟨(Cube.splitAtLast y).snd⟩, by
+      apply (f01 1).hom.continuous.comp
+      fun_prop⟩
   let gs : C(sides.{u} n, Z) :=
     { toFun := fun ⟨⟨y, _⟩, _⟩ ↦
         fs ⟨(Cube.splitAtLast y).fst,
@@ -113,7 +117,11 @@ lemma mapVecOfBotTopSides_compatible_botOrTop
   all_goals
     intro ⟨y, ⟨i, hi⟩⟩ hy01 hy2
     change f01 _ _ = fs _
-    rw [Cube.splitAtLast_fst_eq, hy01, ← h _]; rfl
+    rw [Cube.splitAtLast_fst_eq, hy01]
+    let z : ∂𝕀 n :=
+      ⟨⟨(Cube.splitAtLast y).snd, splitAtLast_snd_mem_boundary_of_mem_sides hy2⟩⟩
+    convert h _ z using 1
+    all_goals rfl
 
 theorem mapVecOfBotTopSides_compatible
     (h : ∀ t y, f01 t (cubeBoundaryIncl _ y) = fs ⟨zeroOneIncl t, y⟩) :

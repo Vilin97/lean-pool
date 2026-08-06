@@ -412,13 +412,13 @@ lemma mvPS_isPrecomplete : IsPrecomplete MPS (MvPowerSeries (Fin 3) ℂ) := by
   rw [isPrecomplete_iff]
   intro f hcauchy
   -- L(d) = coeff d (f(tdeg d + 1)); coefficients stabilize past tdeg d
-  refine ⟨fun d => coeff d (f (tdeg d + 1)), fun n => ?_⟩
+  let L : MvPowerSeries (Fin 3) ℂ := fun d => coeff d (f (tdeg d + 1))
+  have hL : ∀ d : Fin 3 →₀ ℕ, coeff d L = coeff d (f (tdeg d + 1)) := fun _ => rfl
+  refine ⟨L, fun n => ?_⟩
   rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top]
   apply mem_MPS_pow_of_coeff_vanish
   intro d hd
-  simp only [map_sub, MvPowerSeries.coeff_apply]
-  change coeff d (f n) - coeff d (f (tdeg d + 1)) = 0
-  rw [sub_eq_zero]
+  rw [map_sub, hL, sub_eq_zero]
   by_cases hn : tdeg d + 1 ≤ n
   · have h := hcauchy hn
     rw [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at h

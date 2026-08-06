@@ -67,14 +67,21 @@ theorem Module.Dual.apply (φ : Module.Dual R (Matrix n n R)) (a : Matrix n n R)
   simp_rw [Module.Dual.matrix, smul_single' _ _ (φ _)]
   simp_rw [Matrix.sum_mul, Matrix.smul_mul, trace_sum, trace_smul, Matrix.trace, Matrix.diag,
     mul_apply, single_eq, boole_mul, ite_and, Finset.sum_ite_irrel, Finset.sum_const_zero,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, ← ite_and, smul_eq_mul, mul_comm (φ _) _, ←
-    smul_eq_mul, ← _root_.map_smul, ← map_sum]
+    Finset.sum_ite_eq, Finset.mem_univ, if_true, ← ite_and, smul_eq_mul]
   have :
     ∀ ⦃i : n⦄ ⦃j : n⦄ ⦃a : R⦄,
       single i j (a : R) = fun k l => ite (i = k ∧ j = l) (a : R) (0 : R) :=
     fun i j a => rfl
-  simp_rw [← this, smul_single, smul_eq_mul, mul_one]
-  rw [← matrix_eq_sum_single a]
+  simp_rw [← this]
+  conv_lhs => rw [matrix_eq_sum_single a, map_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  rw [map_sum]
+  apply Finset.sum_congr rfl
+  intro j _
+  rw [show single i j (a i j) = a i j • single i j 1 by
+    rw [smul_single, smul_eq_mul, mul_one], map_smul]
+  simp [mul_comm]
 
 /--
 we linear maps `φ_i : M_[n_i] →ₗ[R] R`, we define its direct sum as the linear map `(Π i, M_[n_i])
@@ -121,11 +128,9 @@ lemma Module.Dual.eq_piOf_pi {k : Type _} [Fintype k] [DecidableEq k] {s : k →
     _ = trace (matrix (φ i) * y) := by simp only [includeBlock_apply_same]
 
 lemma Module.Dual.eq_pi_piOf {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
-  [∀ i, Finite (s i)]
   (φ : Module.Dual R (PiMat R k s)) :
   φ = pi (piOf φ) := by
   classical
-  letI : ∀ i, Fintype (s i) := fun i => Fintype.ofFinite (s i)
   rw [LinearMap.ext_iff]
   intro x
   simp_rw [Module.Dual.pi_apply, Module.Dual.piOf_apply, ← map_sum,
@@ -238,12 +243,11 @@ lemma Matrix.nonneg_iff {k : Type*} [Fintype k] {x : Matrix k k ℂ} :
   classical
   rw [Matrix.nonneg_def]
   simpa [Matrix.star_eq_conjTranspose] using (Matrix.posSemidef_iff x)
-lemma PiMat.nonneg_iff {k : Type _} [Finite k]
+lemma PiMat.nonneg_iff {k : Type _}
   {s : k → Type _} [Π i, Fintype (s i)]
   {x : PiMat ℂ k s} :
   0 ≤ x ↔ ∃ y : PiMat ℂ k s, x = star y * y := by
   classical
-  letI : Fintype k := Fintype.ofFinite k
   simp_rw [Pi.le_def, Pi.zero_apply, Pi.mul_def, Pi.star_apply, Matrix.nonneg_iff,
     funext_iff]
   exact ⟨fun h => ⟨(fun i => (h i).choose), fun _ => (h _).choose_spec⟩,
@@ -310,13 +314,10 @@ def Module.Dual.IsFaithful {A : Type _} [NonUnitalSemiring A] [StarRing A] [Modu
     (φ : Module.Dual 𝕜 A) : Prop :=
   ∀ a : A, φ (star a * a) = 0 ↔ a = 0
 
-lemma Matrix.includeBlock_eq_zero {k : Type _} [Finite k] [DecidableEq k] {s : k → Type _}
-  [∀ i, Finite (s i)] {i : k}
+lemma Matrix.includeBlock_eq_zero {k : Type _} [DecidableEq k] {s : k → Type _} {i : k}
   {x : Matrix (s i) (s i) R} :
   includeBlock x = 0 ↔ x = 0 := by
   classical
-  letI : Fintype k := Fintype.ofFinite k
-  letI : ∀ i, Fintype (s i) := fun i => Fintype.ofFinite (s i)
   simp_rw [funext_iff, Pi.zero_apply, includeBlock_apply,
     dite_eq_right_iff, eq_mp_eq_cast]
   exact ⟨fun h => (h i rfl), by rintro rfl a rfl; rfl⟩

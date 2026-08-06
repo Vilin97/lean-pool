@@ -247,9 +247,9 @@ lemma _root_.ProbabilityTheory.IsUniform.measure_preimage_ne_zero
     {H : Finset S} [NeZero μ] (h : IsUniform H X μ)
     (hX : Measurable X) {H' : Set S} (h' : (H' ∩ H).Nonempty) : μ (X ⁻¹' H') ≠ 0 := by
   have : Nonempty (H' ∩ H : Set S) := h'.to_subtype
-  simp_rw [h.measure_preimage hX H', ne_eq, ENNReal.div_eq_zero_iff, ENNReal.natCast_ne_top,
-    or_false, mul_eq_zero, NeZero.ne, false_or, Nat.cast_eq_zero, ← Nat.pos_iff_ne_zero,
-    Nat.card_pos]
+  simp only [h.measure_preimage hX H', ne_eq, ENNReal.div_eq_zero_iff, ENNReal.natCast_ne_top,
+    or_false, NeZero.ne]
+  exact not_false
 
 /-- If $X$ is uniform w.r.t. $\mu$ on $H$, then $X$ is uniform w.r.t. $\mu$ conditioned
 by

@@ -153,7 +153,7 @@ def timeReflectionLE : SpaceTime ≃ₗᵢ[ℝ] SpaceTime :=
 lemma timeReflection_measurePreserving :
     MeasurePreserving timeReflection volume volume := by
   -- Any linear isometry equivalence preserves the volume measure.
-  simpa [timeReflection, timeReflectionLE] using (timeReflectionLE).measurePreserving
+  exact timeReflectionLE.measurePreserving
 
 example (x : SpaceTime) :
     timeReflectionCLM x =

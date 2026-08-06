@@ -141,7 +141,7 @@ theorem q_bound (n : ℕ) (hn : n ≥ 1) : 6 * n^2 + 10 * n + 3 < q n := by
               linarith [ Finset.mem_Ico.mp hk ] ) )
               ( by rw [ pow_add ]; nlinarith [ Nat.pow_log_le_self 2 ( by linarith : n ≠ 0 ) ] )
           simp +zetaDelta only [ge_iff_le, not_lt, Nat.reducePow, not_le, gt_iff_lt, Finset.mem_Ico,
-            and_imp, Finset.le_eq_subset] at *
+            and_imp] at *
           exact Finset.image_subset_iff.mpr fun k hk => Finset.mem_filter.mpr
             ⟨ Finset.mem_range.mpr ( h_prime_bound k ( Finset.mem_Ico.mp hk |>.1 )
               ( Finset.mem_Ico.mp hk |>.2 ) ),

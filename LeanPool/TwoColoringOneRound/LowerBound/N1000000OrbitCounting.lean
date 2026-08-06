@@ -63,7 +63,7 @@ private lemma ge_three_of_ne_base (x : SymN)
           have hx1 : x.1 = 1 := by simp [hx0, hm0]
           have : x = (baseVertex.1 ⟨1, by decide⟩) := by
             apply Fin.ext
-            simp [baseVertex, baseTuple, hx1]
+            simp [baseVertex, baseTuple, hx1, n, N1000000Data.n]
           exact h1 this
       | succ m2 =>
           cases hm1 : m2 with
@@ -77,6 +77,7 @@ private lemma ge_three_of_ne_base (x : SymN)
                 simp_all
 
 /-- Free columns for a directed type `k`: coordinates not equal to any base symbol. -/
+@[implicit_reducible]
 def FreeCol (k : DirIdx) : Type :=
   { j : Fin 3 // colMatch (maskAt k) j = none }
 
@@ -332,7 +333,7 @@ private theorem decode_encode_id (k : DirIdx) :
           (decodeBaseOrbit k (encodeBaseOrbit k u)).1.1 j
             = (encodeBaseOrbit k u ⟨j, hcol'⟩).1 := by
         simpa [h0] using h1
-      simpa [encodeBaseOrbit] using hDec
+      exact hDec.trans (by rfl)
   | some i =>
       -- fixed coordinate
       have hi : colMatch (maskAt k) j = some i := by simp [hcol]
@@ -355,11 +356,11 @@ private theorem encode_decode_id (k : DirIdx) :
   have h0 : (decodeBaseOrbit k g).1.1 j.1 = decodeTuple (k := k) g j.1 := rfl
   have h1 : decodeTuple (k := k) g j.1 = (g ⟨j.1, j.2⟩).1 :=
     decodeTuple_of_colMatch_none (k := k) (g := g) (j := j.1) j.2
-  -- Unfold `encodeBaseOrbit` and use `h0,h1`.
-  have : ((encodeBaseOrbit k (decodeBaseOrbit k g)) j).1 = (g ⟨j.1, j.2⟩).1 := by
-    -- `encodeBaseOrbit` returns the underlying vertex value on its free columns.
-    simpa [encodeBaseOrbit, h0] using congrArg id h1
-  simpa using this
+  have hj : (⟨j.1, j.2⟩ : FreeCol k) = j := Subtype.ext rfl
+  rw [hj] at h1
+  change (decodeBaseOrbit k g).1.1 j.1 = (g j).1
+  rw [h0]
+  exact h1
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def baseOrbitEquivEmbedding (k : DirIdx) :

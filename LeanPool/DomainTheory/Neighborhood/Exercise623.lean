@@ -366,6 +366,7 @@ since
 `T(Exp) = Exp`). This realises Scott's "construe the initial solution as a
 syntactic domain of
 expressions": `Exp` is an algebra of `T(X) = N ⊕ ((X×X)+(X×X))`. -/
+@[instance_reducible]
 def ExpAlg (N : ScottSys) (hN : ([] : Str) ∈ N.sys.master) : TAlgebra (TexpF N) where
   carrier := Exp N hN
   str := (ExpIso N hN).hom

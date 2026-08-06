@@ -137,7 +137,7 @@ theorem ClosedUnderAddNat.has_add_neg {A : G → Prop} [ClosedUnderAddNat A] [Cl
   rwa [add_comm] at this
 
 theorem ClosedUnderAddNat.has_add_int {A :
-    G → Prop} [ClosedUnderAddNat A] [ClosedUnderNeg A] [HasInt A]
+    G → Prop} [ClosedUnderAddNat A] [ClosedUnderNeg A]
     {g : G} (hAg : A g) (n : ℤ) :
     A (g + n) := by
   match n with
@@ -153,7 +153,7 @@ theorem ClosedUnderAddNat.has_add_int {A :
     exact ClosedUnderAddNat.has_add_neg this k
 
 theorem ClosedUnderAddNat.has_add_int_neg {A :
-    G → Prop} [ClosedUnderAddNat A] [ClosedUnderNeg A] [HasInt A]
+    G → Prop} [ClosedUnderAddNat A] [ClosedUnderNeg A]
     {g : G} (hAg : A g) (n : ℤ) :
     A (g + (-n)) := by
   have := ClosedUnderNeg.neg_of (ClosedUnderAddNat.has_add_int (ClosedUnderNeg.neg_of hAg) n)

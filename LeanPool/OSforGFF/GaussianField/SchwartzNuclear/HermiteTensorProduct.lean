@@ -524,8 +524,7 @@ private lemma fromRapidDecay1DLM_isBounded :
   intro ⟨k, l⟩
   obtain ⟨C, hC, s, hbound⟩ := fromRapidDecay1DLM_bound k l
   exact ⟨{s}, ⟨C, hC.le⟩, fun a => by
-    simp only [Seminorm.comp_apply, schwartzSeminormFamily, Finset.sup_singleton,
-      Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+    simp only [Seminorm.comp_apply, schwartzSeminormFamily, Finset.sup_singleton]
     exact hbound a⟩
 
 /-- The backward CLM: `RapidDecaySeq → SchwartzMap ℝ ℝ` via Hermite expansion. -/
@@ -604,7 +603,7 @@ private lemma multiIndexEquiv_succ_apply (d : ℕ) (α : MultiIndex (d + 2)) :
     multiIndexEquiv (d + 1) α =
       Nat.pair (multiIndexEquiv d ((Fin.succFunEquiv ℕ (d + 1) α).1))
         ((Fin.succFunEquiv ℕ (d + 1) α).2) := by
-  simp [multiIndexEquiv, Equiv.trans_apply, Equiv.prodCongr_apply, Nat.pairEquiv]
+  simp [multiIndexEquiv, Equiv.trans_apply, Equiv.prodCongr_apply, Nat.pairEquiv_apply]
 
 /-- Auxiliary: `(multiIndexEquiv (d+1)).symm` unfolds through unpairing. -/
 private lemma multiIndexEquiv_succ_symm (d : ℕ) (n : ℕ) :
@@ -1223,7 +1222,7 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound (d : ℕ) (k' l' : �
     -- Evaluate: (c • D^l' g(y)) v = c * (D^l' g(y) v)
     have heval : ‖(c • iteratedFDeriv ℝ l' g y) v‖ =
         c * ‖iteratedFDeriv ℝ l' g y v‖ := by
-      rw [ContinuousMultilinearMap.smul_apply, norm_smul, Real.norm_of_nonneg hc_nonneg]
+      rw [_root_.smul_apply, norm_smul, Real.norm_of_nonneg hc_nonneg]
     rw [heval]
     -- Connect to 1D via schwartz_partial_hermiteCoeff_iteratedFDeriv
     have h_comm := schwartz_partial_hermiteCoeff_iteratedFDeriv d f n l' y v
@@ -1452,7 +1451,7 @@ private lemma hermiteCoeffNd_decay (d' : ℕ) (k : ℝ) :
         ((schwartz_withSeminorms ℝ ℝ ℝ).continuous_seminorm ⟨k', l'⟩).comp T.continuous
       obtain ⟨s, C, hCne, hle⟩ := Seminorm.bound_of_continuous hw_src p hp
       exact ⟨s, ↑C, by exact_mod_cast pos_iff_ne_zero.mpr hCne, fun f => by
-        have := hle f; simp only [Seminorm.smul_apply] at this; exact this⟩
+        have := hle f; simp only [smul_apply] at this; exact this⟩
     -- Package the per-index bounds into a finset bound
     have h_clm : ∃ (C₂ : ℝ) (q₂ : Finset (ℕ × ℕ)), 0 < C₂ ∧
         ∀ f, (Finset.Iic q₁).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) (T f) ≤
@@ -2060,7 +2059,7 @@ private lemma toRapidDecayNdLM_isBounded (d' : ℕ) :
   have h_rpow_sum := summable_one_add_rpow_neg_two
   set L := ∑' n : ℕ, (1 + (n : ℝ)) ^ ((-2) : ℝ)
   refine ⟨q, ⟨D * C₁ ^ (k + 2) * L, by positivity⟩, fun f => ?_⟩
-  simp only [Seminorm.comp_apply, Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+  simp only [Seminorm.comp_apply]
   set S := q.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d' + 1))) ℝ) f
   change ∑' n, |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + ↑n) ^ k ≤
     D * C₁ ^ (k + 2) * L * S
@@ -2287,8 +2286,7 @@ private lemma fromRapidDecayNdLM_isBounded (d : ℕ) :
   intro ⟨k, l⟩
   obtain ⟨C, hC, s, hbound⟩ := fromRapidDecayNdLM_bound d k l
   exact ⟨{s}, ⟨C, hC.le⟩, fun a => by
-    simp only [Seminorm.comp_apply, schwartzSeminormFamily, Finset.sup_singleton,
-      Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+    simp only [Seminorm.comp_apply, schwartzSeminormFamily, Finset.sup_singleton]
     exact hbound a⟩
 
 /-- The backward continuous linear map for the d-dimensional Hermite expansion.
@@ -2388,12 +2386,11 @@ theorem schwartzRapidDecayEquivNd_symm_apply (d' : ℕ) (a : RapidDecaySeq)
     ((schwartzRapidDecayEquivNd d').symm a) x =
       ∑' n, a.val n * hermiteFunctionNd (d' + 1) ((multiIndexEquiv d').symm n) x := by
   -- The symm of equivOfInverse f₁ f₂ h₁ h₂ applies f₂
-  simp only [schwartzRapidDecayEquivNd, ContinuousLinearEquiv.symm_equivOfInverse,
-    ContinuousLinearEquiv.equivOfInverse_apply]
+  simp only [schwartzRapidDecayEquivNd]
   -- Now the goal is fromRapidDecayNdCLM (d'+1) a x = tsum
   -- fromRapidDecayNdCLM (d'+1) for d'+1 ≥ 1 gives fromRapidDecayNdLM d' a
   -- which is rapidDecay_schwartzMapNd d' a
-  show fromRapidDecayNdCLM (d' + 1) a x = _
+  change fromRapidDecayNdCLM (d' + 1) a x = _
   -- Unfold fromRapidDecayNdCLM to fromRapidDecayNdLM, then to rapidDecay_schwartzMapNd
   change rapidDecay_schwartzMapNd d' a x = _
   -- By definition, this is ∑' n, a.val n * flatBasisNd d' n x

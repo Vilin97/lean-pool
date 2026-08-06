@@ -101,11 +101,8 @@ lemma append_con : Continuous (x ++ₛ ·) := by
 lemma hasBasis_principalOpen : (nhds a).HasBasis
   (fun x ↦ a ∈ principalOpen x) (fun x ↦ principalOpen x) := by
   rw [show @nhds (Stream' A) (prodDisc A) a =
-      Filter.pi (fun i : ℕ ↦ Pure.pure (f := Filter) (a i)) by
-    change @nhds (∀ _ : ℕ, A) (Pi.topologicalSpace) a =
-      Filter.pi (fun i : ℕ ↦ Pure.pure (f := Filter) (a i))
-    rw [nhds_pi]
-    simp [nhds_discrete]]
+      Filter.pi (fun i : ℕ ↦ Pure.pure (f := Filter) (a i)) from
+    (@nhds_pi ℕ (fun _ ↦ A) _ a).trans (by simp [nhds_discrete])]
   apply Filter.HasBasis.to_hasBasis (Filter.hasBasis_pi_pure (fun i : ℕ ↦ a i))
   · intro I hI
     have ⟨N, hN⟩ := hI.bddAbove

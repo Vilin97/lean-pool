@@ -50,7 +50,12 @@ abbrev toTensorMatrixToFunKlinear : K ⊗[F] Matrix n n A →ₗ[K] Matrix n n (
 
 /-- Algebra homomorphism from a tensor of matrices to matrices over the tensor product. -/
 abbrev toTensorMatrix : K ⊗[F] Matrix n n A →ₐ[K] Matrix n n (K ⊗[F] A) :=
-  .ofLinearMap (toTensorMatrixToFunKlinear K F A n) (by simp [Algebra.TensorProduct.one_def])
+  .ofLinearMap (toTensorMatrixToFunKlinear K F A n)
+    (by
+      simp only [Algebra.TensorProduct.one_def, LinearMap.coe_mk, LinearMap.coe_toAddHom,
+        TensorProduct.lift.tmul, toTensorMartrixToFunBilinear_apply, one_smul,
+        AlgHom.mapMatrix_apply]
+      exact Matrix.map_one _ (map_zero _) (map_one _))
     fun t1 t2 ↦ by
   induction t1 with
   | zero => simp

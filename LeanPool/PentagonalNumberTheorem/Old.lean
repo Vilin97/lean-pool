@@ -967,7 +967,9 @@ theorem getLast_lt_of_notToDown (hn : 0 < n) (x : FerrersDiagram n)
 
 theorem getLast_lt_of_notToDown' (hn : 0 < n) (x : FerrersDiagram n)
     (hdown : ¬ x.IsToDown hn) (hpospen : ¬ x.IsPosPentagonal hn) :
-    x.delta.getLast (x.delta_ne_nil hn) - 1 < (x.takeLast hn).delta.length := by
+    x.delta.getLast (x.delta_ne_nil hn) - 1 <
+      (takeLastFun x.delta (x.delta_ne_nil hn)).length := by
+  change x.delta.getLast (x.delta_ne_nil hn) - 1 < (x.takeLast hn).delta.length
   apply Nat.sub_one_lt_of_le (List.forall_iff_forall_mem.mp x.delta_pos _ (by simp))
   rw [length_takeLast]
   apply Nat.le_sub_one_of_lt
@@ -1096,7 +1098,7 @@ theorem diagSize_up (hn : 0 < n) (x : FerrersDiagram n)
   · suffices (takeLastFun x.delta (x.delta_ne_nil hn))[x.delta.getLast _ - 1]'_ ≠ 0 by simpa
     apply Nat.ne_zero_iff_zero_lt.mpr
     apply List.forall_iff_forall_mem.mp (x.takeLast hn).delta_pos
-    simp [takeLast]
+    exact List.getElem_mem ..
 
 theorem getLast_up (hn : 0 < n) (x : FerrersDiagram n)
     (hdown : ¬ x.IsToDown hn)
@@ -1175,7 +1177,7 @@ theorem up_notPentagonal (hn : 0 < n) (x : FerrersDiagram n)
     contrapose! h
     apply Nat.ne_zero_of_lt
     apply List.forall_iff_forall_mem.mp (x.takeLast hn).delta_pos
-    simp [takeLast]
+    exact List.getElem_mem ..
   have hsetlast' : x.delta.length - 1 = x.delta.getLast (x.delta_ne_nil hn) := by
     apply le_antisymm hsetlast
     apply Nat.le_sub_one_of_lt
@@ -2129,4 +2131,3 @@ theorem pentagonalNumberTheorem :
   simp_rw [← phiCoeff_eq]
   rw [← phi]
   exact hasSum_phi.tsum_eq
-

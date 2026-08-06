@@ -21,6 +21,8 @@ import LeanPool.LowDimSolvClassification.Classification1
 
 open Module
 open Submodule
+attribute [local implicit_reducible] LieAlgebra.mkAbelian LieAlgebra.Dim2.Affine
+
 namespace LieAlgebra
 
 section classification_dim_2
@@ -86,7 +88,6 @@ theorem classification (h : finrank K L = 2) :
         intro x y
         simp only [trivial_lie_zero, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom,
           LinearEquiv.coe_coe, Basis.equivFun_apply, map_zero]
-        rfl
     })
   · right
     constructor

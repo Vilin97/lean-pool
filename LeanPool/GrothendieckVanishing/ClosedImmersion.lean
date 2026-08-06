@@ -424,9 +424,11 @@ theorem closedIncl_unit_stalk_isIso
   let piF := pi.hom.app F
   let piT := pi.hom.app ((pb ⋙ Sheaf.pushforward C i).obj F)
   haveI hPiFHom : IsIso piF.hom :=
-    @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piF inferInstance
+    @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piF
+      (inferInstanceAs (IsIso (pi.hom.app F)))
   haveI hPiTHom : IsIso piT.hom :=
-    @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piT inferInstance
+    @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piT
+      (inferInstanceAs (IsIso (pi.hom.app ((pb ⋙ Sheaf.pushforward C i).obj F))))
   have hnat : (pb.map η).hom ≫ piT.hom = piF.hom ≫ sheafifyMap K (pull.map η.hom) :=
     congr_arg InducedCategory.Hom.hom (pi.hom.naturality η)
   have hnat_stalk : Tz.map (pb.map η).hom ≫ Tz.map piT.hom =
@@ -458,7 +460,9 @@ theorem closedIncl_unit_stalk_isIso
     stalkFunctor_map_iso_toSheafify P x
   haveI hPullComp :
       IsIso (Tz.map (pull.map η.hom) ≫ Tz.map (CategoryTheory.toSheafify K P₂)) := by
-    simp_all
+    rw [hts]
+    haveI := hToSheafifyIso P₁
+    infer_instance
   haveI hPullMap : IsIso (Tz.map (pull.map η.hom)) :=
     @IsIso.of_isIso_comp_right _ _ _ _ _ (Tz.map (pull.map η.hom))
       (Tz.map (CategoryTheory.toSheafify K P₂)) (hToSheafifyIso P₂) hPullComp

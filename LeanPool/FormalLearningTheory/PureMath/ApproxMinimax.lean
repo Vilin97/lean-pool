@@ -134,7 +134,6 @@ lemma minimax_value_le_one {R C : Type*} [Fintype C] [Nonempty C]
 
 /-- If minimax value > 0, every column has a row with M(r,c) = true. -/
 lemma exists_covering_row {R C : Type*} [Fintype C]
-    [Nonempty C]
     (M : R → C → Bool) (v : ℝ) (hv : 0 < v)
     (hrow : ∀ q : FinitePMF C, ∃ r : R,
       v ≤ ∑ c, q.prob c * (if M r c then (1 : ℝ) else 0)) :

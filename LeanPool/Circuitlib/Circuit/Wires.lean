@@ -40,4 +40,67 @@ lemma Wires.get_cast {n m : ℕ} (h : n = m) (v : Wires V n) (i : Fin m) :
     (v.cast h).get i = v.get ⟨i.val, h ▸ i.isLt⟩ := by
   subst h; rfl
 
+lemma Wires.get_append_left {n m : ℕ} (a : Wires V n) (b : Wires V m) (i : Fin n) :
+    (a.append b).get (Fin.castAdd m i) = a.get i := by
+  unfold Wires at a b
+  simp only [Vector.get, Fin.val_cast, Fin.val_castAdd, Vector.getElem_toArray]
+  exact Vector.getElem_append_left i.isLt
+
+lemma Wires.get_append_right {n m : ℕ} (a : Wires V n) (b : Wires V m) (i : Fin m) :
+    (a.append b).get (Fin.natAdd n i) = b.get i := by
+  unfold Wires at a b
+  simp only [Vector.get, Fin.val_cast, Fin.val_natAdd, Vector.getElem_toArray]
+  have h := Vector.getElem_append_right (xs := a) (ys := b) (i := n + i.val) (by omega) (by omega)
+  simp only [Nat.add_sub_cancel_left] at h
+  exact h
+
+lemma Wires.get_append {n m : ℕ} (a : Wires V n) (b : Wires V m) (i : Fin (n + m)) :
+    (a.append b).get i =
+      if h : i.val < n then a.get ⟨i.val, h⟩ else b.get ⟨i.val - n, by omega⟩ := by
+  refine Fin.addCases (fun j => ?_) (fun j => ?_) i
+  · simp [Wires.get_append_left, Fin.val_castAdd, j.isLt]
+  · rw [Wires.get_append_right, dif_neg (by simp : ¬ (Fin.natAdd n j).val < n)]
+    exact congrArg b.get (Fin.ext (by simp))
+
+lemma Wires.get_take {n k : ℕ} (a : Wires V n) (i : Fin (min k n)) :
+    (a.take k).get i = a.get ⟨i.val, by omega⟩ := by
+  unfold Wires at a
+  simp only [Vector.get, Fin.val_cast, Vector.getElem_toArray, Vector.getElem_take]
+
+lemma Wires.get_drop {n k : ℕ} (a : Wires V n) (i : Fin (n - k)) :
+    (a.drop k).get i = a.get ⟨k + i.val, by omega⟩ := by
+  unfold Wires at a
+  simp [Vector.get]
+
+/-! The lemmas above are stated for `Wires`. `Vector.cast`, `Vector.take`, `Vector.drop` and
+`Vector.append` all report their results at type `Vector`, and `simp` matches argument types up to
+reducible unfolding only, so the same facts are restated below for `Vector`-typed arguments. -/
+
+lemma Wires.get_cast_vector {n m : ℕ} (h : n = m) (v : Vector V n) (i : Fin m) :
+    (v.cast h).get i = v.get ⟨i.val, h ▸ i.isLt⟩ :=
+  Wires.get_cast h v i
+
+lemma Wires.get_append_vector {n m : ℕ} (a : Vector V n) (b : Vector V m) (i : Fin (n + m)) :
+    (a.append b).get i =
+      if h : i.val < n then a.get ⟨i.val, h⟩ else b.get ⟨i.val - n, by omega⟩ :=
+  Wires.get_append a b i
+
+lemma Wires.get_append_wires_vector {n m : ℕ} (a : Wires V n) (b : Vector V m) (i : Fin (n + m)) :
+    (a.append b).get i =
+      if h : i.val < n then a.get ⟨i.val, h⟩ else b.get ⟨i.val - n, by omega⟩ :=
+  Wires.get_append a b i
+
+lemma Wires.get_append_vector_wires {n m : ℕ} (a : Vector V n) (b : Wires V m) (i : Fin (n + m)) :
+    (a.append b).get i =
+      if h : i.val < n then a.get ⟨i.val, h⟩ else b.get ⟨i.val - n, by omega⟩ :=
+  Wires.get_append a b i
+
+lemma Wires.get_take_vector {n k : ℕ} (a : Vector V n) (i : Fin (min k n)) :
+    (a.take k).get i = a.get ⟨i.val, by omega⟩ :=
+  Wires.get_take a i
+
+lemma Wires.get_drop_vector {n k : ℕ} (a : Vector V n) (i : Fin (n - k)) :
+    (a.drop k).get i = a.get ⟨k + i.val, by omega⟩ :=
+  Wires.get_drop a i
+
 end Circuit

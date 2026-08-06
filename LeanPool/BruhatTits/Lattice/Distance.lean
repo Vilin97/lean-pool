@@ -117,7 +117,10 @@ lemma exists_normal_basis (M L : BruhatTits.Lattice R) :
   classical
   let bL : Basis (Fin 2) R L.M := L.basis
   let bM : Basis (Fin 2) R M.M := M.basis
-  obtain ⟨(k₁ : GL (Fin 2) R), (k₂ : GL (Fin 2) R), f, hf, hk⟩ :=
+  obtain ⟨k₁, k₂, f, hf, hk⟩ :
+      ∃ (k₁ k₂ : GL (Fin 2) R) (f : Fin 2 → ℤ), Antitone f ∧
+        GL.map R.subtype k₁ * cartanDiag ϖ hϖ f * GL.map R.subtype k₂ =
+          bM.toGL⁻¹ * bL.toGL :=
     cartan_decomposition' (k := 2) ϖ hϖ (bM.toGL⁻¹ * bL.toGL)
   let bM' : Basis (Fin 2) R M.M :=
     (MulOpposite.op k₁) • bM
@@ -139,7 +142,6 @@ lemma exists_normal_basis (M L : BruhatTits.Lattice R) :
             (cartanDiag (k := 2) ϖ hϖ f : GL (Fin 2) K) *
             GL.map R.subtype k₂) * (GL.map R.subtype k₂)⁻¹ := by
             rw [← hk]
-            rfl
       _ = bM.toGL * GL.map R.subtype k₁ *
             (cartanDiag (k := 2) ϖ hϖ f : GL (Fin 2) K) := by
             group
@@ -398,7 +400,7 @@ omit [IsDiscreteValuationRing ↥R] [IsFractionRing (↥R) K]
 omit [DecidableEq ι] [Fintype ι] in
 lemma mulBasisScalar_apply (a : Kˣ) (M : BruhatTits.Lattice R) (b : Basis ι R M.M) (i : ι) :
     (mulBasisScalar a b i).val = a.val • (b i).val := by
-  simp only [Lattice.smul_module, mulBasisScalar, equivSMul, Basis.map_apply]
+  simp only [Lattice.smul_module, mulBasisScalar, equivSMul]
   rfl
 
 lemma mulBasis_apply (g : GL ι K) {M : Submodule R (ι → K)} (b : Basis ι R M) (i : ι) :

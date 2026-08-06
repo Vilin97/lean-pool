@@ -201,7 +201,7 @@ lemma inconsistent_iff_provable [Tait.Cut F K] :
   ⟨fun b ↦ ⟨cut (inconsistent_iff_provable_bot.mp b).get (by simpa using verum _ _)⟩,
    fun h ↦ inconsistent_iff_provable_bot.mpr (wk! h (by simp))⟩
 
-lemma consistent_iff_unprovable [Tait.Axiomatized F K] [Tait.Cut F K] :
+lemma consistent_iff_unprovable [Tait.Cut F K] :
     Consistent 𝓚 ↔ IsEmpty (𝓚 ⟹ []) :=
   not_iff_not.mp <| by simp [not_consistent_iff_inconsistent, inconsistent_iff_provable]
 

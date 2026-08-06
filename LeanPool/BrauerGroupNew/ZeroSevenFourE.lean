@@ -633,8 +633,9 @@ lemma IsBalanced.congr {M N : Type v} [AddCommGroup M] [AddCommGroup N] [Module 
   · apply IsBalanced.congr_aux; exact l
   · apply IsBalanced.congr_aux; exact l.symm
 
-lemma isBalanced_of_simpleMod (M : Type v) [AddCommGroup M] [Module A M] [IsSimpleModule A M]
-    [Module k M] [IsScalarTower k A M] : IsBalanced A M := by
+lemma isBalanced_of_simpleMod (k : Type u) (A : Type v) [Field k] [Ring A] [Algebra k A]
+    [IsSimpleRing A] [FiniteDimensional k A] (M : Type v) [AddCommGroup M] [Module A M]
+    [IsSimpleModule A M] : IsBalanced A M := by
   classical
   obtain ⟨ι, ⟨e⟩⟩ := directSum_simple_module_over_simple_ring' k A A M
   haveI b : IsBalanced A (ι →₀ M) := by

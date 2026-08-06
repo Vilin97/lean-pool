@@ -47,7 +47,6 @@ Set.apply_rangeSplitting (fun x ↦ (TensorProduct.mapIncl V W) x) vw
 
 theorem TensorProduct.mapIncl_isInjective {R : Type*} {E F : Type*} [RCLike R]
   [NormedAddCommGroup E] [NormedAddCommGroup F] [InnerProductSpace R E] [InnerProductSpace R F]
-  [FiniteDimensional R E] [FiniteDimensional R F]
   {V : Submodule R E} {W : Submodule R F} :
   Function.Injective (TensorProduct.mapIncl V W : V ⊗[R] W → E ⊗[R] F) := by
   rw [injective_iff_map_eq_zero]
@@ -63,7 +62,6 @@ theorem TensorProduct.mapIncl_isInjective {R : Type*} {E F : Type*} [RCLike R]
 
 theorem Submodule.mapIncl_memTensorProduct {R : Type*} {E F : Type*} [RCLike R]
   [NormedAddCommGroup E] [NormedAddCommGroup F] [InnerProductSpace R E] [InnerProductSpace R F]
-  [FiniteDimensional R E] [FiniteDimensional R F]
   {V : Submodule R E} {W : Submodule R F} (v : V ⊗[R] W) :
   Submodule.memTensorProduct (⟨_, Submodule.tensorProduct_mem v⟩ : V.tensorProduct W) = v := by
   apply_fun (TensorProduct.mapIncl V W) using TensorProduct.mapIncl_isInjective
@@ -74,8 +72,8 @@ variable {𝕜 E F : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
 variable [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F]
 
 theorem norm_tmul {𝕜 B C : Type*} [RCLike 𝕜] [NormedAddCommGroup B]
-    [NormedAddCommGroup C] [InnerProductSpace 𝕜 B] [InnerProductSpace 𝕜 C] [FiniteDimensional 𝕜 B]
-    [FiniteDimensional 𝕜 C] (x : B) (y : C) : ‖x ⊗ₜ[𝕜] y‖ = ‖x‖ * ‖y‖ := by
+    [NormedAddCommGroup C] [InnerProductSpace 𝕜 B] [InnerProductSpace 𝕜 C]
+    (x : B) (y : C) : ‖x ⊗ₜ[𝕜] y‖ = ‖x‖ * ‖y‖ := by
   symm
   calc
     ‖x‖ * ‖y‖ = Real.sqrt (RCLike.re (inner 𝕜 x x)) * Real.sqrt (RCLike.re (inner 𝕜 y y)) := by
@@ -121,6 +119,7 @@ noncomputable def Submodule.tensorProductOrthonormalBasis {V : Submodule 𝕜 E}
   OrthonormalBasis (ι₁ × ι₂) 𝕜 (V.tensorProduct W) :=
 OrthonormalBasis.map (v.tensorProduct w) (Submodule.tensorProductLinearIsometryEquiv V W)
 
+omit [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F] in
 theorem Submodule.tensorProductOrthonormalBasis_apply {V : Submodule 𝕜 E} {W : Submodule 𝕜 F}
   {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂]
   (v : OrthonormalBasis ι₁ 𝕜 V) (w : OrthonormalBasis ι₂ 𝕜 W) (i : ι₁ × ι₂) :
@@ -130,6 +129,7 @@ theorem Submodule.tensorProductOrthonormalBasis_apply {V : Submodule 𝕜 E} {W 
   simp only [OrthonormalBasis.tensorProduct_apply']
   rfl
 
+omit [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F] in
 theorem Submodule.tensorProduct_finrank {V : Submodule 𝕜 E} {W : Submodule 𝕜 F} :
   Module.finrank 𝕜 (V.tensorProduct W) = Module.finrank 𝕜 V * Module.finrank 𝕜 W := by
   simp only [← Module.finrank_tensorProduct]
@@ -261,10 +261,7 @@ theorem replicateCol_hMul_replicateCol_conjTranspose_is_kronecker_of_vectors
         (Matrix.ofReplicateCol
           (matrixProdUnitRight (replicateCol Unit x ⊗ₖ replicateCol Unit y))) := by
   ext
-  simp_rw [reshape_symm_apply, Matrix.ofReplicateCol, matrixProdUnitRight, piProdUnitEquivPi,
-    LinearEquiv.trans_apply, LinearEquiv.coe_mk]
-  simp only [LinearMap.coe_mk, AddHom.coe_mk, kroneckerMap_apply, replicateCol_apply]
-  rw [reshape_apply, vecMulVec_apply]
+  rfl
 
 section
 
@@ -394,7 +391,6 @@ theorem TensorProduct.ring_tmul {R : Type*} [CommRing R] (x : R ⊗[R] R) :
 theorem submodule_neq_tensorProduct_of {R : Type*} [RCLike R]
   {E F : Type*} [NormedAddCommGroup E] [NormedAddCommGroup F]
   [InnerProductSpace R E] [InnerProductSpace R F]
-  [FiniteDimensional R E] [FiniteDimensional R F]
   (U : Submodule R (E ⊗[R] F))
   {p : ℕ} (hp : Nat.Prime p)
   (hU : Module.finrank R U = p) :

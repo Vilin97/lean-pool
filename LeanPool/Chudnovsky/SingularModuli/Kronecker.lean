@@ -332,7 +332,7 @@ theorem isIntegral_j_of_cm [Fact m.Prime] {PhiZ : Polynomial (Polynomial ℤ)}
     (hPhi : ∀ τ : ℍ, orbitPoly m τ = specializeZ (j τ) PhiZ)
     {τ : ℍ} {i : Option (ZMod m)} (hcm : j τ = f m i τ) : IsIntegral ℤ (j τ) := by
   haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
-  exact isIntegral_of_kronecker (m := m) (diagPhiZ_leadingCoeff_eq hPhi)
+  exact isIntegral_of_kronecker (diagPhiZ_leadingCoeff_eq hPhi)
     (diagPhiZ_eval_eq_zero hPhi hcm)
 
 end Chudnovsky

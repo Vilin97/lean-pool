@@ -35,6 +35,8 @@ local notation "v" => ValuationRing.valuation R K
 
 namespace BruhatTits
 
+attribute [local implicit_reducible] Vertices
+
 section «Action»
 
 lemma isSimilar_smul_of_isSimilar (g : GL (Fin 2) K) (L M : Lattice R) (h : L.IsSimilar R M) :
@@ -207,14 +209,14 @@ lemma stabilizer_standard_eq_range_map_subtype :
     rw [← h] at hg
     erw [mul_smul, GL_map_eq, GL_map_eq, map_subtype_smul_standard_eq_standard k₂, mul_smul] at hg
     apply_fun (Matrix.GeneralLinearGroup.map R.subtype k₁⁻¹ • ·) at hg
-    simp only [map_inv, ← mul_smul] at hg
+    simp only [map_inv] at hg
     rw [← map_inv, map_subtype_smul_standard_eq_standard] at hg
     have hmul : ((Matrix.GeneralLinearGroup.map R.subtype) k₁)⁻¹ *
         ((Matrix.GeneralLinearGroup.map R.subtype) k₁ * cartanDiag ϖ hϖ f) =
         cartanDiag ϖ hϖ f := by
       group
     have hg' : cartanDiag ϖ hϖ f • Lattice.standard R = Lattice.standard R := by
-      rw [← hmul]
+      rw [← hmul, mul_smul, mul_smul]
       exact hg
     have hdist : dist (Lattice.standard R) (cartanDiag ϖ hϖ f • Lattice.standard R) = 0 := by
       simp [hg']
@@ -275,14 +277,19 @@ lemma _root_.Matrix.GL.mem_range_map_iff {R K : Type*} [CommRing R]
         ↑g.det⁻¹ ∈ Set.range f := by
   refine ⟨fun ⟨k, hk⟩ ↦ hk ▸ by simp [Matrix.GeneralLinearGroup.map_det], fun ⟨h1, ⟨u, hu⟩⟩ ↦ ?_⟩
   choose r hr using h1
-  refine ⟨.mk'' r ?_, by ext; simp [Matrix.GeneralLinearGroup.mk'', Matrix.nonsingInvUnit, hr]⟩
+  refine ⟨.mk'' r ?_, by ext; simp [Matrix.GeneralLinearGroup.mk'', Matrix.nonsingInvUnit,
+    unitOfInvertible, hr]⟩
   rw [isUnit_iff_exists_inv]
   use u
   apply hf
-  simp only [map_mul, RingHom.map_det, RingHom.mapMatrix_apply, map_one]
+  simp only [map_mul, map_one]
   rw [hu]
   convert (Matrix.GeneralLinearGroup.det g).val_inv using 2
-  · congr; ext; simp [hr]
+  · change f (Matrix.det (Matrix.of r)) = _
+    rw [RingHom.map_det, Matrix.GeneralLinearGroup.val_det_apply]
+    congr 1
+    ext i j
+    simp [hr]
   · exact (Units.inv_eq_val_inv _).symm
 
 lemma mem_stabilizer_twist_iff_mem {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) R)

@@ -65,7 +65,6 @@ lemma lintegral_eq_measureOf
   simp only [lintegral_mk, measureOf_mk, ProbabilityMeasure.ennreal_coeFn_eq_coeFn_toMeasure]
   rw [←MeasureTheory.lintegral_indicator_one]
   · simp only [Set.indicator, Set.mem_setOf_eq, Pi.one_apply]
-    rfl
   · have := isHom_comp' hp φ.isHom_coe
     simpa only [measurableSet_setOf, isHom_ofMeasurableSpace] using this
 
@@ -448,20 +447,24 @@ lemma isHom_lintegral
   have : ProbabilityTheory.IsFiniteKernel κ := by
     constructor
     use 1
-    simp only [
-      ENNReal.one_lt_top, ProbabilityTheory.Kernel.coe_mk,
-      measure_univ, le_refl, implies_true, and_self, κ]
-  change Measurable fun x ↦ ∫⁻ x, _ ∂κ x
-  apply Measurable.lintegral_kernel_prod_left
-  unfold Function.uncurry
-  dsimp only
-  replace hk := hk
-    (φ := fun r ↦ (φ (unpack r : ℝ × ℝ).2, ((subeval fun x ↦ f (φ x)) (unpack r : ℝ × ℝ).1)))
-    (by fun_prop)
-  simp only [isHom_ofMeasurableSpace] at hk
-  have := Measurable.fun_comp hk (by fun_prop : Measurable (pack (A := ℝ × ℝ)))
-  simp only [unpack_pack] at this
-  exact this
+    refine ⟨ENNReal.one_lt_top, fun a ↦ ?_⟩
+    change (subbase (fun x ↦ f (φ x)) a : Measure ℝ) Set.univ ≤ 1
+    simp
+  have κ_apply (x : ℝ) : κ x = ↑(subbase (fun x ↦ f (φ x)) x) := rfl
+  have hmeas : Measurable fun x ↦
+      ∫⁻ y, k (φ x) ((subeval fun x ↦ f (φ x)) y) ∂κ x := by
+    apply Measurable.lintegral_kernel_prod_left
+    unfold Function.uncurry
+    dsimp only
+    replace hk := hk
+      (φ := fun r ↦
+        (φ (unpack r : ℝ × ℝ).2, ((subeval fun x ↦ f (φ x)) (unpack r : ℝ × ℝ).1)))
+      (by fun_prop)
+    simp only [isHom_ofMeasurableSpace] at hk
+    have := Measurable.fun_comp hk (by fun_prop : Measurable (pack (A := ℝ × ℝ)))
+    simp only [unpack_pack] at this
+    exact this
+  simpa only [κ_apply] using hmeas
 
 @[gcongr]
 lemma lintegral_congr
@@ -516,8 +519,9 @@ lemma apply_unit
     {φ : ℝ → A} (hφ : IsHom φ) (r : ℝ)
     : apply (unit hφ) r ≈ PreProbabilityMeasure.unit (φ r) := by
   intro ψ hψ
-  simp only [unit, measureOf_mk, diracProba, lintegral_mk, ProbabilityMeasure.coe_mk,
-    QuasiBorelHom.coe_mk, lintegral_dirac, lintegral_unit]
+  rw [PreProbabilityMeasure.lintegral_unit]
+  rw [show apply (unit hφ) r = ⟨⟨φ, hφ⟩, diracProba r⟩ by rfl]
+  simp [lintegral, diracProba]
 
 end Var
 
@@ -646,12 +650,12 @@ lemma apply_str
     {φ : ℝ → A} (hφ : IsHom φ) (ψ : Var B) (r : ℝ)
     : apply (str hφ ψ) r ≈ PreProbabilityMeasure.str (φ r) (ψ r) := by
   intro χ hχ
-  simp only [
-    str, measureOf_mk, lintegral_mk, ProbabilityMeasure.toMeasure_map,
-    QuasiBorelHom.coe_mk, lintegral_str]
+  rw [PreProbabilityMeasure.lintegral_str]
+  change lintegral χ (apply (str hφ ψ) r) = _
+  simp only [str, apply, lintegral, ProbabilityMeasure.toMeasure_map, QuasiBorelHom.coe_mk]
   rw [MeasureTheory.lintegral_map]
   · rcases ψ
-    simp only [measureOf_mk, unpack_pack, lintegral_mk]
+    simp only [unpack_pack]
   · apply measurable_of_isHom
     fun_prop
   · fun_prop
@@ -695,8 +699,8 @@ noncomputable def coin (p : I) : PreProbabilityMeasure Bool where
 lemma lintegral_coin
     (k : Bool → ENNReal) (p : I)
     : lintegral k (coin p) = ENNReal.ofReal p * k true + ENNReal.ofReal (1 - p) * k false := by
-  simp only [coin, unitInterval.coe_symm_eq, lintegral_mk, ProbabilityMeasure.coe_mk,
-    QuasiBorelHom.coe_mk, lintegral_add_measure, lintegral_smul_measure, lintegral_dirac,
-    decide_true, smul_eq_mul, one_ne_zero, decide_false]
+  change (∫⁻ r : ℝ, k ((coin p).eval r) ∂(coin p).base) = _
+  simp only [coin]
+  simp
 
 end QuasiBorelSpace.PreProbabilityMeasure

@@ -69,8 +69,7 @@ theorem hasProd_powerSeriesMk_card_partition [IsTopologicalSemiring R] :
   · simp
   · simp [restricted]
 
-theorem powerSeriesMk_card_partition_mul_tprod_one_sub_pow [Nontrivial R]
-    [IsTopologicalRing R] [NoZeroDivisors R] :
+theorem powerSeriesMk_card_partition_mul_tprod_one_sub_pow [IsTopologicalRing R] :
     (PowerSeries.mk fun n ↦ (Fintype.card n.Partition : R)) * ∏' i : ℕ, (1 - X ^ (i + 1)) = 1 := by
   rw [← (hasProd_powerSeriesMk_card_partition R).tprod_eq]
   rw [← (hasProd_powerSeriesMk_card_partition R).multipliable.tprod_mul

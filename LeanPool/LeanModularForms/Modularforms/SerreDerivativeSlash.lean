@@ -57,7 +57,7 @@ lemma D_D₂ (γ : SL(2, ℤ)) (z : ℍ) :
     simp only [comp_apply, ofComplex_apply_of_im_pos hw, D₂, EisensteinSeries.D2]
   simp only [D, hderiv, div_eq_mul_inv, ← zpow_neg_one]
   rw [deriv_const_mul _ (.zpow (differentiableAt_denom γ z) (.inl hz_ne)),
-      deriv_denom_zpow γ 1 z]
+      _root_.deriv_denom_zpow γ 1 z]
   simp only [Int.reduceNeg, Int.reduceSub, zpow_neg_one]; field_simp; ring
 
 /-! ## MDifferentiable infrastructure for D₂ -/

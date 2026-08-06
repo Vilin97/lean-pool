@@ -57,7 +57,7 @@ def spacetimeDecomp : SpaceTime ≃ᵐ ℝ × SpatialCoords :=
 lemma piLpMeasurableEquiv_measurePreserving (n : ℕ) :
     MeasurePreserving (piLpMeasurableEquiv n)
       (volume : Measure (PiLp 2 (fun _ : Fin n => ℝ))) volume := by
-  simp only [piLpMeasurableEquiv, MeasurableEquiv.coe_mk]
+  simp only [piLpMeasurableEquiv]
   exact PiLp.volume_preserving_ofLp (ι := Fin n)
 
 /-- The spacetime decomposition preserves measure. -/
@@ -79,7 +79,7 @@ theorem spacetimeDecomp_measurePreserving :
       (volume : Measure (ℝ × (Fin (STDimension - 1) → ℝ))) volume := by
     apply MeasurePreserving.prod
     · exact MeasurePreserving.id volume
-    · simp only [piLpMeasurableEquiv, MeasurableEquiv.symm_mk]
+    · simp only [piLpMeasurableEquiv]
       exact PiLp.volume_preserving_toLp (ι := Fin (STDimension - 1))
   exact h1.trans (h2.trans h3)
 

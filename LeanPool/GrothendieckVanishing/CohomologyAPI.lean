@@ -100,6 +100,18 @@ noncomputable instance sheafHasExt (X : TopCat.{u}) :
     HasExt.{u} (TopCat.Sheaf AddCommGrpCat.{u} X) :=
   inferInstanceAs (HasExt.{u} (TopCat.Sheaf AddCommGrpCat.{u} X))
 
+-- `TopCat.Sheaf` is a semireducible definition, so instance search cannot see through it to
+-- the site sheaves that `Ext` and `Sheaf.H` are stated for. These restate the relevant
+-- structures with `TopCat.Sheaf` in the head position.
+noncomputable instance sheafHAddCommGroup {X : TopCat.{u}}
+    (F : TopCat.Sheaf AddCommGrpCat.{u} X) (n : ℕ) :
+    AddCommGroup (Sheaf.H F n) :=
+  Ext.instAddCommGroup
+
+instance sheafPreadditive (X : TopCat.{u}) :
+    Preadditive (TopCat.Sheaf AddCommGrpCat.{u} X) :=
+  inferInstanceAs (Preadditive (CategoryTheory.Sheaf _ _))
+
 /-! ## Internal Ext helpers -/
 
 section ExtDimShift
@@ -220,7 +232,8 @@ private theorem sheafH_comp_extClass_naturality {X : TopCat.{u}}
     (y : Sheaf.H S₁.X₃ n) :
     (y.comp hS₁.extClass rfl).comp (Ext.mk₀ φ.τ₁) (add_zero (n + 1)) =
       (y.comp (Ext.mk₀ φ.τ₃) (add_zero n)).comp hS₂.extClass rfl := by
-  rw [Ext.comp_assoc_of_third_deg_zero, Ext.comp_assoc_of_second_deg_zero]
+  refine (Ext.comp_assoc_of_third_deg_zero y hS₁.extClass (Ext.mk₀ φ.τ₁) rfl).trans
+    (Eq.trans ?_ (Ext.comp_assoc_of_second_deg_zero y (Ext.mk₀ φ.τ₃) hS₂.extClass rfl).symm)
   exact congrArg (fun t ↦ y.comp t rfl) (extClass_naturality hS₁ hS₂ φ).symm
 
 /-- Successor connecting morphism attached to a short exact sequence of sheaves. -/
@@ -232,8 +245,7 @@ noncomputable def sheafHSuccMap {X : TopCat.{u}}
   AddCommGrpCat.ofHom <|
     AddMonoidHom.mk'
       (fun y ↦ y.comp hS.extClass rfl)
-      (by
-        simp_all)
+      (fun a b ↦ Ext.add_comp a b hS.extClass rfl)
 
 private theorem sheafH_succ_map_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
@@ -252,8 +264,7 @@ theorem sheafH_succ_map_exists_preimage_of_subsingleton_middle {X : TopCat.{u}}
     (x : Sheaf.H S.X₁ (n + 1)) :
     ∃ y : Sheaf.H S.X₃ n, ConcreteCategory.hom (sheafHSuccMap hS n) y = x := by
   obtain ⟨y, hy⟩ := Ext.covariant_sequence_exact₁ _ hS x (@Subsingleton.elim _ h₂H _ _) rfl
-  refine ⟨y, ?_⟩
-  rwa [sheafH_succ_map_apply]
+  exact ⟨y, (sheafH_succ_map_apply hS n y).trans hy⟩
 
 theorem sheaf_isZero_of_zero_stalks (X : TopCat.{u})
     {F : TopCat.Presheaf AddCommGrpCat.{u} X} (hF : F.IsSheaf)
@@ -386,34 +397,15 @@ theorem cokernel_stalk_zero_of_stalk_surj
 noncomputable def sheafH0EquivSections {X : TopCat.{u}}
     (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
     Sheaf.H F 0 ≃+ F.obj.obj (op ⊤) :=
-  Ext.addEquiv₀.trans
-    (((constantSheafAdj (Opens.grothendieckTopology X) AddCommGrpCat
-        Limits.isTerminalTop).homAddEquiv _ F).trans
-      ((@AddCommGrpCat.homAddEquiv (AddCommGrpCat.of (ULift ℤ)) (F.obj.obj (op ⊤))).trans
-        (AddEquiv.mk' (uliftZMultiplesHom (F.obj.obj (op ⊤))) (by
-          intro x y
-          ext
-          simp_all only [uliftZMultiplesHom_apply_apply, smul_add, AddMonoidHom.add_apply])).symm))
+  Sheaf.H.equiv₀ F Limits.isTerminalTop
 
 /-- Naturality of `sheafH0EquivSections`: composing `x` with `mk₀ f` at
     degree 0 corresponds to applying `f.app(⊤)` on sections. -/
 lemma sheafH0EquivSections_natural {X : TopCat.{u}}
     {F G : TopCat.Sheaf AddCommGrpCat.{u} X} (f : F ⟶ G) (x : Sheaf.H F 0) :
     sheafH0EquivSections G (x.comp (Ext.mk₀ f) (add_zero 0)) =
-    ConcreteCategory.hom (f.hom.app (op ⊤)) (sheafH0EquivSections F x) := by
-  conv_lhs => rw [show x = Ext.mk₀ (Ext.addEquiv₀ x) from
-    (Ext.mk₀_addEquiv₀_apply x).symm, Ext.mk₀_comp_mk₀]
-  unfold sheafH0EquivSections
-  erw [AddEquiv.trans_apply, AddEquiv.trans_apply,
-    AddEquiv.trans_apply, AddEquiv.trans_apply]
-  have key :
-      Ext.addEquiv₀ (Ext.mk₀ (Ext.addEquiv₀ x ≫ f)) = Ext.addEquiv₀ x ≫ f :=
-    by
-      change Ext.addEquiv₀ (Ext.addEquiv₀.symm (Ext.addEquiv₀ x ≫ f)) = Ext.addEquiv₀ x ≫ f
-      simpa using Ext.addEquiv₀.apply_symm_apply (Ext.addEquiv₀ x ≫ f)
-  erw [Adjunction.homAddEquiv_apply, Adjunction.homAddEquiv_apply, key,
-    Adjunction.homEquiv_naturality_right, Adjunction.homAddEquiv_apply]
-  rfl
+    ConcreteCategory.hom (f.hom.app (op ⊤)) (sheafH0EquivSections F x) :=
+  (Sheaf.H.equiv₀_naturality Limits.isTerminalTop f x).symm
 
 /-- `H¹(S.X₁)` as the cokernel of top sections for a short exact sequence of sheaves,
     assuming `H¹(S.X₂)` is subsingleton. -/
@@ -688,15 +680,12 @@ theorem sheafH1_cokernel_iso_of_subsingleton_middle_natural {X : TopCat.{u}}
     simpa using
       (sheafH0EquivSections_natural (f := φ.τ₃)
         (x := (sheafH0EquivSections S₁.X₃).symm s))
-  change ConcreteCategory.hom
-      (cokernel.π (S₂.g.hom.app (op ⊤)) ≫
-        (sheafH1CokernelIsoOfSubsingletonMiddle hS₂ h₂₂H).hom)
-      (ConcreteCategory.hom (φ.τ₃.hom.app (op ⊤)) s) =
-    ConcreteCategory.hom
-      ((sheafH1CokernelIsoOfSubsingletonMiddle hS₁ h₁₂H).hom ≫
-        (sheafCohomologyFunctor X 1).map φ.τ₁)
-      (ConcreteCategory.hom (cokernel.π (S₁.g.hom.app (op ⊤))) s)
-  simp only [ConcreteCategory.comp_apply]
+  change ConcreteCategory.hom (sheafH1CokernelIsoOfSubsingletonMiddle hS₂ h₂₂H).hom
+      (ConcreteCategory.hom (cokernel.π (S₂.g.hom.app (op ⊤)))
+        (ConcreteCategory.hom (φ.τ₃.hom.app (op ⊤)) s)) =
+    ConcreteCategory.hom ((sheafCohomologyFunctor X 1).map φ.τ₁)
+      (ConcreteCategory.hom (sheafH1CokernelIsoOfSubsingletonMiddle hS₁ h₁₂H).hom
+        (ConcreteCategory.hom (cokernel.π (S₁.g.hom.app (op ⊤))) s))
   rw [sheafH1_cokernel_iso_of_subsingleton_middle_hom_π,
     sheafH1_cokernel_iso_of_subsingleton_middle_hom_π]
   change (((sheafH0EquivSections S₂.X₃).symm
@@ -778,7 +767,6 @@ theorem sheafH_succ_iso_of_subsingleton_middle_natural {X : TopCat.{u}}
       (sheafCohomologyFunctor X n).map φ.τ₃ ≫
         (sheafHSuccIsoOfSubsingletonMiddle hS₂ n h₂₂n h₂₂succ).hom := by
   ext y
-  rw [AddCommGrpCat.hom_comp]
   change
       (ConcreteCategory.hom ((sheafCohomologyFunctor X (n + 1)).map φ.τ₁)
         (ConcreteCategory.hom ((sheafHSuccIsoOfSubsingletonMiddle
@@ -789,5 +777,4 @@ theorem sheafH_succ_iso_of_subsingleton_middle_natural {X : TopCat.{u}}
   rw [sheafH_succ_iso_of_subsingleton_middle_hom_apply,
     sheafCohomologyFunctor_map_apply, sheafCohomologyFunctor_map_apply,
     sheafH_succ_iso_of_subsingleton_middle_hom_apply]
-  rw [Ext.comp_assoc_of_third_deg_zero, Ext.comp_assoc_of_second_deg_zero]
-  exact congrArg (fun t ↦ y.comp t rfl) (extClass_naturality hS₁ hS₂ φ).symm
+  exact sheafH_comp_extClass_naturality hS₁ hS₂ φ n y

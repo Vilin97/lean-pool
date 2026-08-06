@@ -180,10 +180,8 @@ def mapFunctor {X Y : Type*} [DirectedSpace X] [DirectedSpace Y] (f : D(X,Y)) :
   obj x := ⟨f x.as⟩
   map {_ _} p := p.mapFn f
   map_id _ := rfl
-  map_comp {_ _ _} p q := by
-    refine Quotient.inductionOn₂ p q fun a b => ?_
-    simp only [comp_eq, ←Dipath.Dihomotopic.map_lift, ←Dipath.Dihomotopic.comp_lift,
-      Dipath.map_trans]
+  map_comp {_ _ _} p q :=
+    Quotient.inductionOn₂ p q fun a b => congrArg _ (Dipath.map_trans a b f)
 
 @[simp]
 protected theorem mapFunctor_id (X : Type*) [DirectedSpace X] :

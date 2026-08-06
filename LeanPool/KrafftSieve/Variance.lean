@@ -138,9 +138,7 @@ lemma orthogonality_x (n : ℕ) (k : ZMod (q n)) :
     ∑ x : ZMod (q n), Complex.exp (2 * Real.pi * Complex.I * k.val * x.val / (q n : ℂ)) =
       if k = 0 then (q n : ℂ) else 0 := by
   convert sum_exp_orthogonality n k using 1
-  rw [ ← Equiv.sum_comp ( Equiv.ofBijective ( fun x : ZMod ( q n ) => x ) ⟨ fun x y hxy => by
-    subst hxy; simp_all only, fun x => ⟨ x, by aesop ⟩ ⟩ ) ]
-  norm_num [ mul_assoc, mul_comm, mul_left_comm ]
+  exact Finset.sum_congr rfl fun x _ => by ring_nf
 
 /--
 Application of orthogonality to simplify the double

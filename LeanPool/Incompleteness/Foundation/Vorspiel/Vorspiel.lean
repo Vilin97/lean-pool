@@ -67,7 +67,7 @@ lemma eq_finZeroElim {α : Sort u} (x : Fin 0 → α) : x = finZeroElim :=
   funext (by rintro ⟨_, _⟩; contradiction)
 
 namespace Matrix
-open Fin
+open _root_.Matrix.Fin
 section «lp_section_1»
 variable {n : ℕ} {α : Type u}
 
@@ -766,7 +766,7 @@ namespace Part
   | n + 1, w, v => by
     suffices (∃ a ∈ v 0, ∃ u, (∀ (i : Fin n), u.get i ∈ v i.succ) ∧ w = a ::ᵥ u) ↔
       ∀ (i : Fin (n + 1)), w.get i ∈ v i by
-      simpa [List.Vector.mOfFn, @mem_vector_mOfFn _ n]
+      simpa [List.Vector.mOfFn, mem_vector_mOfFn (n := n) (v := fun i => v i.succ)]
     constructor
     · rintro ⟨a, ha, v, hv, rfl⟩ i; cases i using Fin.cases <;> simp [ha, hv]
     · intro h

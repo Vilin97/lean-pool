@@ -153,6 +153,7 @@ and its system
 is the
 function space `funSpace A.sys B.sys`. -/
 def Dom.arrow (A B : Dom) : Dom := ⟨ApproximableMap A.sys B.sys, funSpace A.sys B.sys⟩
+attribute [local implicit_reducible] Dom.arrow
 
 /-! ### The three combinators as elements of the appropriate function domains. -/
 

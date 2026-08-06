@@ -323,7 +323,7 @@ theorem _root_.MisereGames.PFreeDeadEnding.reduction_ab_int
   apply MisereEq.of_antisymm (reduction_ab_int.auxL h0 h1 h2) (reduction_ab_int.auxR a h1)
 
 lemma _root_.MisereGames.PFreeDeadEnding.strong_left_of_misereOutcome_L
-    {A : GameForm → Prop} [PFree A] [OutcomeStable A] {g : GameForm}
+    {A : GameForm → Prop} [OutcomeStable A] {g : GameForm}
     (h1 : (PFreeSubset A) g) (h2 : MisereOutcome g = .L) : Strong (PFreeSubset A) g .left := by
   intro x hx h3
   apply Or.elim (misereOutcome_of_isEnd_left hx (isEndLike_iff_isEnd.mp h3)) <;> intro h5
@@ -334,7 +334,7 @@ lemma _root_.MisereGames.PFreeDeadEnding.strong_left_of_misereOutcome_L
   · exact minsGoingFirst_left_of_misereOutcome_L (OutcomeStable.misereOutcome_of_add_LL h1 hx h2 h5)
 
 lemma _root_.MisereGames.PFreeDeadEnding.strong_right_of_misereOutcome_R
-    {A : GameForm → Prop} [PFree A] [OutcomeStable A] {g : GameForm}
+    {A : GameForm → Prop} [OutcomeStable A] {g : GameForm}
     (h1 : (PFreeSubset A) g) (h2 : MisereOutcome g = .R) : Strong (PFreeSubset A) g .right := by
   intro x hx h3
   apply Or.elim (misereOutcome_of_isEnd_right hx (isEndLike_iff_isEnd.mp h3)) <;> intro h5

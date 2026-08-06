@@ -121,9 +121,11 @@ end Int
 theorem square_free : ∀ {g : P}, g * g = (1 : P) → g = (1 : P)
   | ((p, q, r), .e) => by
       intro h
-      rw [sq_square] at h
-      change ((p + p, q + q, r + r), Q.e) = (((0, 0, 0) : K), Q.e) at h
-      injection h with hk _
+      let g : P := ((p, q, r), Q.e)
+      have hg : g * g = 1 := h
+      rw [sq_square] at hg
+      change ((p + p, q + q, r + r), Q.e) = (((0, 0, 0) : K), Q.e) at hg
+      injection hg with hk _
       injection hk with hp hqr
       injection hqr with hq hr
       have hp0 := Int.zero_of_twice_zero p hp
@@ -131,26 +133,33 @@ theorem square_free : ∀ {g : P}, g * g = (1 : P) → g = (1 : P)
       have hr0 := Int.zero_of_twice_zero r hr
       rw [P.one]
       simp [hp0, hq0, hr0]
+      rfl
   | ((p, q, r), .a) => by
       intro h
-      rw [sq_square] at h
-      change ((p + p + 1, 0, 0), Q.e) = (((0, 0, 0) : K), Q.e) at h
-      injection h with hk _
+      let g : P := ((p, q, r), Q.a)
+      have hg : g * g = 1 := h
+      rw [sq_square] at hg
+      change ((p + p + 1, 0, 0), Q.e) = (((0, 0, 0) : K), Q.e) at hg
+      injection hg with hk _
       injection hk with hp _
       exact False.elim (Int.odd_ne_zero p hp)
   | ((p, q, r), .b) => by
       intro h
-      rw [sq_square] at h
-      change ((0, q + q + 1, 0), Q.e) = (((0, 0, 0) : K), Q.e) at h
-      injection h with hk _
+      let g : P := ((p, q, r), Q.b)
+      have hg : g * g = 1 := h
+      rw [sq_square] at hg
+      change ((0, q + q + 1, 0), Q.e) = (((0, 0, 0) : K), Q.e) at hg
+      injection hg with hk _
       injection hk with _ hqr
       injection hqr with hq _
       exact False.elim (Int.odd_ne_zero q hq)
   | ((p, q, r), .c) => by
       intro h
-      rw [sq_square] at h
-      change ((0, 0, r + r + 1), Q.e) = (((0, 0, 0) : K), Q.e) at h
-      injection h with hk _
+      let g : P := ((p, q, r), Q.c)
+      have hg : g * g = 1 := h
+      rw [sq_square] at hg
+      change ((0, 0, r + r + 1), Q.e) = (((0, 0, 0) : K), Q.e) at hg
+      injection hg with hk _
       injection hk with _ hqr
       injection hqr with _ hr
       exact False.elim (Int.odd_ne_zero r hr)

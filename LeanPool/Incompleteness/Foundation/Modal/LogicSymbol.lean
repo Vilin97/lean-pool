@@ -326,11 +326,11 @@ protected abbrev Finset.dia [Dia F] : Finset F → Finset F := Finset.multidia (
 
 /-- Imported declaration from the Incompleteness formalization. -/
 protected noncomputable abbrev Finset.premultibox [Box F] (n : ℕ) : Finset F → Finset F :=
-  fun s => Finset.preimage s (□·)^[n] (by simp [Set.InjOn])
+  fun s => Finset.preimage s (□·)^[n] (Box.box_injective.iterate n).injOn
 
 /-- Imported declaration from the Incompleteness formalization. -/
 protected noncomputable abbrev Finset.premultidia [Dia F] (n : ℕ) : Finset F → Finset F :=
-  fun s => Finset.preimage s (◇·)^[n] (by simp [Set.InjOn])
+  fun s => Finset.preimage s (◇·)^[n] (Dia.dia_injective.iterate n).injOn
 
 /-- Imported declaration from the Incompleteness formalization. -/
 protected noncomputable abbrev Finset.prebox [Box F] : Finset F → Finset F :=

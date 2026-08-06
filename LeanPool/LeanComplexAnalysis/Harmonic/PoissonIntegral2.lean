@@ -366,7 +366,7 @@ lemma tendsto_integral_prod_of_continuousOn_circle_closedDisc
   -- We verify that the integrand is eventually bounded by the bound.
   · exact Eventually.of_forall fun n => Eventually.of_forall fun t ht =>
              bounds_of_continuousOn_circle_closedDisc hR (hr n) hf hk
-  · simp only [ne_eq, enorm_ne_top, not_false_eq_true, intervalIntegrable_const]
+  · simp only [intervalIntegrable_const]
   -- We verify the pointwise convergence of the integrand.
   · refine Eventually.of_forall fun x hx => Tendsto.smul tendsto_const_nhds ?_
     apply Tendsto.comp (hf.continuousWithinAt _)
@@ -391,7 +391,7 @@ theorem poisson_ker_continousOn_circle {z : ℂ} {R : ℝ} (hz : z ∈ ball 0 R)
 /-- If `rₙ` tends to `1`, then `f (rₙ * z)` tends to `f z`, for `z` in a disc centered at `0`,
 when `f` is continuous on the closed disc. -/
 lemma tendsto_of_radius_tendsto_one_of_continuousOn_closedDisc
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    {E : Type*} [NormedAddCommGroup E]
     {f : ℂ → E} {z : ℂ} {r : ℕ → ℝ} {R : ℝ}
     (hc : ContinuousOn f (closedBall 0 R)) (hr_lim : Tendsto r atTop (𝓝 1))
     (hz : z ∈ ball 0 R) : Tendsto (fun n => f (r n * z)) atTop (𝓝 (f z)) := by

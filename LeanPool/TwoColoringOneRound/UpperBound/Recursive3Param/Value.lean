@@ -6,7 +6,7 @@ Authors: Jukka Suomela
 
 import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.ComputeP
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.MeasureTheory.Measure.Typeclasses.NoAtoms
+import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Tactic.Common
 import Mathlib.Tactic.Linarith
@@ -445,7 +445,7 @@ lemma lintegral_ofReal_sub_id_Icc (r a b : ℝ) (hbr : b ≤ r) (hab : a ≤ b) 
   lintegral_ofReal_of_integral_eq hab (by continuity)
     (fun _ hx => sub_nonneg.2 (le_trans hx.2 hbr)) <| by
       have hconst : IntervalIntegrable (fun _x : ℝ => (r : ℝ)) (volume : Measure ℝ) a b :=
-        intervalIntegral.intervalIntegrable_const
+        intervalIntegrable_const
       have hid : IntervalIntegrable (fun x : ℝ => x) (volume : Measure ℝ) a b :=
         continuous_id.intervalIntegrable a b
       rw [intervalIntegral.integral_sub hconst hid]

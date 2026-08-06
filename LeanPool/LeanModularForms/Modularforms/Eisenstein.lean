@@ -309,12 +309,12 @@ lemma q_exp_unique (c : ℕ → ℂ) (f : ModularForm Γ(n) k) [hn : NeZero n]
     intro S
     congr
     ext b
-    simp only [smul_eq_mul, PowerSeries.coeff_mk, qq, qExpansion2]
+    simp only [smul_eq_mul]
     rw [mul_comm]
     congr
-    rw [FormalMultilinearSeries.coeff.eq_1 ]
-    simp only [ContinuousMultilinearMap.smul_apply, ContinuousMultilinearMap.mkPiAlgebraFin_apply,
-      smul_eq_mul]
+    rw [FormalMultilinearSeries.coeff.eq_1]
+    simp only [_root_.smul_apply, ContinuousMultilinearMap.mkPiAlgebraFin_apply,
+      smul_eq_mul, qq, qExpansion2, PowerSeries.coeff_mk]
     rw [@Fin.prod_ofFn]
     simp only [Pi.one_apply, Finset.prod_const_one, mul_one]
   have h3 : HasFPowerSeriesAt (cuspFunction n f) qq 0 := by
@@ -336,7 +336,7 @@ lemma q_exp_unique (c : ℕ → ℂ) (f : ModularForm Γ(n) k) [hn : NeZero n]
           by simp [FormalMultilinearSeries.ofScalars]
   have h6 := congrArg
     (fun g : ContinuousMultilinearMap ℂ (fun _ : Fin m => ℂ) ℂ => g (fun _ => (1 : ℂ))) htv
-  simpa [ContinuousMultilinearMap.smul_apply, ContinuousMultilinearMap.mkPiAlgebraFin_apply]
+  simpa [_root_.smul_apply, ContinuousMultilinearMap.mkPiAlgebraFin_apply]
     using h6
 
 lemma deriv_mul_eq (f g : ℂ → ℂ) (hf : Differentiable ℂ f) (hg : Differentiable ℂ g) :
@@ -591,12 +591,12 @@ theorem E4E6_coeff_zero_eq_zero :
   rw [hq4, hq6, ← Nat.cast_one (R := ℝ),
     qExpansion_mul_coeff, qExpansion_mul_coeff, qExpansion_mul_coeff, PowerSeries.coeff_mul,
     PowerSeries.coeff_mul]
-  simp only [Finset.antidiagonal_zero, Prod.mk_zero_zero, Finset.sum_singleton, Prod.fst_zero,
+  simp only [Finset.Nat.antidiagonal_zero, Prod.mk_zero_zero, Finset.sum_singleton, Prod.fst_zero,
     Prod.snd_zero]
   rw [Nat.cast_one]
   simp_rw [E4_q_exp_zero, E6_q_exp_zero]
   rw [PowerSeries.coeff_mul]
-  simp only [Finset.antidiagonal_zero, Prod.mk_zero_zero, Finset.sum_singleton, Prod.fst_zero,
+  simp only [Finset.Nat.antidiagonal_zero, Prod.mk_zero_zero, Finset.sum_singleton, Prod.fst_zero,
     Prod.snd_zero, one_mul, mul_one]
   rw [E4_q_exp_zero]
   simp

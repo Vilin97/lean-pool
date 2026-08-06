@@ -198,7 +198,10 @@ theorem dlaDim_diagonalFamily (n : ℕ) :
   have hLI : LinearIndependent ℂ g := by
     have hcomp : LinearIndependent ℂ (D ∘ g) := by
       have heq : (D ∘ g) = fun i : Fin n => Pi.single i (1 : ℂ) := by
-        funext i; simp [D, hg, Matrix.diag_diagonal]
+        funext i
+        change Matrix.diag (g i) = Pi.single i (1 : ℂ)
+        rw [hg]
+        exact Matrix.diag_diagonal _
       rw [heq]; exact hbasis
     exact hcomp.of_comp D
   rw [dlaDim, hcoe, finrank_span_eq_card hLI, Fintype.card_fin]

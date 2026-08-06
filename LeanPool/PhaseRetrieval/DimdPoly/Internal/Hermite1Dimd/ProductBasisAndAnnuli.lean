@@ -619,7 +619,10 @@ private def mulCircleLIE (ω : _root_.Circle) : ℂ ≃ₗᵢ[ℝ] ℂ := by
     · intro z
       refine ⟨((ω⁻¹ : _root_.Circle) : ℂ) * z, ?_⟩
       simp []
-  · simp_all
+  · intro x
+    change ‖(ω : ℂ) * x‖ = ‖x‖
+    have hω : ‖(ω : ℂ)‖ = 1 := Circle.norm_coe ω
+    rw [norm_mul, hω, one_mul]
 
 /-- A measure-preserving (for volume), measurable-embedding, density-preserving map
 preserves the Gaussian measure. -/
@@ -662,7 +665,8 @@ private lemma gaussian_lintegral_rotate_eq
   have hdens : ∀ z : CSpace d,
       ENNReal.ofReal (gaussianDensity d (f z)) = ENNReal.ofReal (gaussianDensity d z) := by
     intro z
-    simp [f, gaussianDensity]
+    have hω : ‖(ω : ℂ)‖ = 1 := Circle.norm_coe ω
+    simp [f, gaussianDensity, hω]
   have hgauss : MeasurePreserving f (gaussianMeasure d) (gaussianMeasure d) :=
     ⟨hmeas.measurable, gaussianMeasure_map_eq_of_density hvol hmeas hdens⟩
   simpa [f] using hgauss.lintegral_comp_emb hmeas g
@@ -778,7 +782,9 @@ private lemma rotate_one_gaussian_preserving
       refine Finset.sum_congr rfl ?_
       intro q hq
       by_cases h : q = q0
-      · simp_all
+      · subst q
+        have hω : ‖(ω : ℂ)‖ = 1 := Circle.norm_coe ω
+        simp [hω]
       · simp [Function.update, h]
     simp [f, gaussianDensity, hsum]
   exact ⟨hmeas.measurable, gaussianMeasure_map_eq_of_density hvol hmeas hdens⟩

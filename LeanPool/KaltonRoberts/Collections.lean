@@ -267,7 +267,7 @@ lemma DualCertificate.posCollection_itemFreq_le
     rw [show (∑ j, (cert.posCollection hp).weight j *
             if i ∈ (cert.posCollection hp).sets j then 1 else 0) =
           (∑ S : Finset U, if i ∈ S then max (cert.lam S) 0 else 0) by
-        simp [DualCertificate.posCollection, mul_ite]
+        simp only [mul_boole]
         rfl]
     simpa [Finset.sum_filter] using cert.pos_item_sum_le_negMass i) hp.le
 
@@ -320,7 +320,7 @@ lemma DualCertificate.negCollection_itemFreq_le
     rw [show (∑ j, (cert.negCollection hq).weight j *
             if i ∈ (cert.negCollection hq).sets j then 1 else 0) =
           (∑ S : Finset U, if i ∈ S then max (-cert.lam S) 0 else 0) by
-        simp [DualCertificate.negCollection, mul_ite]
+        simp only [mul_boole]
         rfl]
     simpa [Finset.sum_filter] using cert.neg_item_sum_le_posMass i) hq.le
 
@@ -429,7 +429,8 @@ lemma DualCertificate.augPosCollection_itemFreq
     (∑ j : Finset U ⊕ Finset U,
         augPosWeight cert j * if i ∈ augPosSets j then 1 else 0) = cert.negMass
   rw [Fintype.sum_sum_type]
-  simp only [augPosSets, augPosWeight, Finset.mem_compl, mul_ite, mul_one, mul_zero]
+  simp only [mul_boole]
+  simp only [augPosSets, augPosWeight, Finset.mem_compl]
   have h_marg :
       (∑ S : Finset U, if i ∈ S then max (cert.lam S) 0 else 0) =
         ∑ S : Finset U, if i ∈ S then max (-cert.lam S) 0 else 0 := by
@@ -459,6 +460,7 @@ lemma DualCertificate.augNegCollection_itemFreq
     = ∑ S : Finset U, (if i ∈ S then max (-cert.lam S) 0 else 0) + ∑ S : Finset U, (if i ∉ S then
       max (cert.lam S) 0 else 0) := by
     simp [augNegSets, augNegWeight]
+    rfl
   unfold WeightedCollection.itemFreq DualCertificate.posMass
   simp_all +decide only [mul_ite, mul_one, mul_zero]
   convert congr_arg ( fun x : ℝ => x / 1 ) h_split using 1;
@@ -592,8 +594,8 @@ lemma WeightedCollection.uniformOfFamily_itemFreq
     (sets : J → Finset U') (hJ : 0 < Fintype.card J) (i : U') :
     (uniformOfFamily sets hJ).itemFreq i =
       (Finset.univ.filter (fun j => i ∈ sets j)).card / (Fintype.card J : ℝ) := by
-  simp [itemFreq, uniformOfFamily, totalWeight]
-  rfl
+  change (∑ j : J, (1 : ℝ) * if i ∈ sets j then 1 else 0) / (∑ _j : J, (1 : ℝ)) = _
+  simp [Finset.card_univ]
 
 omit [Fintype U'] in
 /-- Average deficit of a uniform collection equals

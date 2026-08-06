@@ -37,7 +37,7 @@ lemma Measurable.congr
 lemma Integrable.measure_congr
   {α : Type*} {mα : MeasurableSpace α} {μ ν : Measure α}
   {β : Type*} {f : α → β}
-  [NormedAddCommGroup β] [NormedSpace ℝ β]
+  [NormedAddCommGroup β]
   {hμν : μ = ν}
   (hf : Integrable f μ) : Integrable f ν := by
   simp_all

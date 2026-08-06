@@ -38,7 +38,6 @@ theorem continuous_pos_lower_bound_compact {X : Type*} [TopologicalSpace X]
 /-- If g is continuous and g ≥ c on a compact set K, then g ≥ c - δ on a neighborhood
     of K for any δ > 0. (Open set version.) -/
 theorem continuous_lower_bound_neighborhood {X : Type*} [TopologicalSpace X]
-    [T2Space X]
     (g : X → ℝ) (K : Set X) (_hK : IsCompact K)
     (hg : Continuous g) (c : ℝ) (hc : ∀ x ∈ K, c ≤ g x) (δ : ℝ) (hδ : 0 < δ) :
     ∃ V : Set X, IsOpen V ∧ K ⊆ V ∧ ∀ x ∈ V, c - δ ≤ g x := by

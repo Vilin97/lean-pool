@@ -46,10 +46,10 @@ lemma mul_Delta_map_eq_mul (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 
   ext z
   rw [mulDeltaMap, mcast_apply ]
 
-lemma qExpansion_coe_smul {n : ℕ} [NeZero n] {k : ℤ} (a : ℂ) (f : ModularForm Γ(n) k) :
+lemma qExpansion_coe_smul {n : ℕ} {k : ℤ} (a : ℂ) (f : ModularForm Γ(n) k) :
     qExpansion n (⇑(a • f)) = qExpansion n (a • ⇑f) := rfl
 
-lemma qExpansion_coe_smul_cusp {n : ℕ} [NeZero n] {k : ℤ} (a : ℂ) (f : CuspForm Γ(n) k) :
+lemma qExpansion_coe_smul_cusp {n : ℕ} {k : ℤ} (a : ℂ) (f : CuspForm Γ(n) k) :
     qExpansion n (⇑(a • f)) = qExpansion n (a • ⇑f) := rfl
 
 lemma qExpansion_coe_sub {k : ℤ} (f g : ModularForm Γ(1) k) :
@@ -59,13 +59,13 @@ lemma mul_Delta_IsCuspForm (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 
   IsCuspForm (CongruenceSubgroup.Gamma 1) k (mulDeltaMap k f) := by
   rw [IsCuspForm_iff_coeffZero_eq_zero, qExpansion_ext2 _ _ (mul_Delta_map_eq_mul k f),
     ← Nat.cast_one (R := ℝ), qExpansion_mul_coeff]
-  simp only [PowerSeries.coeff_mul, Finset.antidiagonal_zero, Prod.mk_zero_zero,
+  simp only [PowerSeries.coeff_mul, Finset.Nat.antidiagonal_zero, Prod.mk_zero_zero,
     Finset.sum_singleton, Prod.fst_zero, Prod.snd_zero]
   simp only [mul_eq_zero]
   right
   rw [Nat.cast_one, ← IsCuspForm_iff_coeffZero_eq_zero, IsCuspForm, CuspFormSubmodule,
     CuspFormToModularForm]
-  simp
+  exact ⟨Delta, rfl⟩
 
 /-- Multiplication by the discriminant `Δ` packaged as a cusp form of weight `k`. -/
 def ModformMulDelta' (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 1) (k - 12)) :

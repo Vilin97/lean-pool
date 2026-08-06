@@ -87,7 +87,6 @@ theorem StarAlgEquiv.ofAlgEquiv_coe {R A B : Type _}
     ⇑(StarAlgEquiv.ofAlgEquiv f hf) = f :=
   rfl
 
-@[simp]
 theorem StarAlgEquiv.ofAlgEquiv_symm_coe {R A B : Type _}
     [CommSemiring R] [Semiring A] [Semiring B]
     [Algebra R A] [Algebra R B] [Star A] [Star B]

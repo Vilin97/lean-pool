@@ -119,7 +119,8 @@ lemma WeightedCollection.productInter_itemFreq
   unfold WeightedCollection.itemFreq;
   rw [ div_pow, WeightedCollection.productInter_totalWeight ];
   rw [ ← sum_prod_eq_pow ];
-  simp only [WeightedCollection.productInter, mul_ite, mul_one, mul_zero]
+  simp only [mul_boole]
+  simp only [WeightedCollection.productInter]
   gcongr;
   · exact pow_nonneg ( Finset.sum_nonneg fun _ _ => C.weight_nonneg _ ) _;
   · apply Finset.sum_le_sum

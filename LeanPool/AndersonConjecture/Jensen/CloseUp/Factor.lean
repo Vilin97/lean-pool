@@ -312,7 +312,7 @@ private def close_up_aux_factor_proof
         -- gcdComplexity (insert a t_set') ≤ gcdComplexity s
         show gcdComplexity (insert a t_set') ≤ gcdComplexity s
         letI : NormalizationMonoid R.carrier :=
-          UniqueFactorizationMonoid.normalizationMonoid
+          UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
         have ha_not_s' : a ∉ s' := by
           rw [hs'_def]
           simp [Finset.mem_erase]

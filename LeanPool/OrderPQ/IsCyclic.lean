@@ -78,7 +78,7 @@ lemma card_torsionBy' [Finite α] {d : ℕ} (hd : d ∣ Nat.card α) :
   exact card_orderOf_dvd_eq hd
 
 @[to_additive]
-lemma subgroup_eq [Finite α] (s : Subgroup α) [Finite s] :
+lemma subgroup_eq [Finite α] (s : Subgroup α) :
     s = Subgroup.torsionBy' α (Nat.card s) := by
   refine Subgroup.eq_of_le_of_card_ge ?_ (Nat.le_of_eq ?_)
   · exact fun a ha => orderOf_dvd_iff_pow_eq_one.mp <|
@@ -86,8 +86,7 @@ lemma subgroup_eq [Finite α] (s : Subgroup α) [Finite s] :
   · exact card_torsionBy' (Subgroup.card_subgroup_dvd_card s)
 
 @[to_additive]
-lemma subgroup_eq_of_card_eq [Finite α] (s t : Subgroup α) [Finite s] [Finite t]
-    (h : Nat.card s = Nat.card t) :
+lemma subgroup_eq_of_card_eq [Finite α] (s t : Subgroup α) (h : Nat.card s = Nat.card t) :
     s = t :=
   (subgroup_eq s).trans <| h ▸ (subgroup_eq t).symm
 

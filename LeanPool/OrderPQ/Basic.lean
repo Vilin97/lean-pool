@@ -12,6 +12,9 @@ import LeanPool.OrderPQ.SemidirectProduct
 # LeanPool.OrderPQ.Basic
 -/
 
+attribute [local implicit_reducible]
+  MulZMod instMulMulZMod instMulOneClassMulZMod instGroupMulZMod
+
 /-
 
 ## OrderPQ
@@ -202,7 +205,7 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
   obtain ⟨f, hf⟩ := IsCyclic.exists_mulEquiv_of_generators_and_card_eq (hg_gen hg1) (hg_gen hg2) rfl
   have hcompat (x : P) : φ1 x = φ2 (f x) := by
     rw [← (Subgroup.mem_zpowers_iff.mp (hg_gen hg1 x)).choose_spec]
-    simp_all
+    rw [map_zpow, map_zpow, map_zpow, hg1, hf, hg2]
   refine Nonempty.intro (SemidirectProduct.congr (MulEquiv.refl Q) f (fun x => ?_))
   ext y
   change (φ1 x) y = (φ2 (f x)) y

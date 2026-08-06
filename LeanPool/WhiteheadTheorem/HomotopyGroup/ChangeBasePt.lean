@@ -112,16 +112,18 @@ along a null-homotopic loop `p`, then `f` and `g` are homotopic as `GenLoop`s
 theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
     {p : Ω X x₀} (H : LevelHomotopy f g p) (pnull : Path.Homotopic p (Path.refl _)) :
     GenLoop.Homotopic f g := by
+  let pnullHomotopy : Path.Homotopy p (Path.refl _) := pnull.some
   let Fb : C((𝕀 n) × I, X) :=  -- bottom `fun ⟨⟨y⟩, t⟩ ↦ H.toFun ⟨t, y⟩`
     H.toContinuousMap.comp <|
     ((ContinuousMap.id _).prodMap ⟨ULift.down, continuous_uliftDown⟩).comp ContinuousMap.prodSwap
-  let Fs : C(((∂𝕀 n) × I) × I, X) := ⟨fun ⟨⟨⟨y⟩, t⟩, s⟩ ↦ pnull.some ⟨s, t⟩, by fun_prop⟩ -- sides
+  let Fs : C(((∂𝕀 n) × I) × I, X) :=
+    ⟨fun ⟨⟨⟨y⟩, t⟩, s⟩ ↦ pnullHomotopy ⟨s, t⟩, by fun_prop⟩
   have : Fb ∘ ((TopCat.cubeBoundaryIncl n).hom.prodMap (ContinuousMap.id I)) =
       Fs ∘ fun x ↦ (x, 0) := by
     funext ⟨y, t⟩
     simp only [ContinuousMap.coe_comp, ContinuousMap.Homotopy.coe_toContinuousMap,
       Function.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
-      ContinuousMap.coe_mk, Fb, Fs]
+      Fb, Fs]
     change H.toFun (t, ((TopCat.cubeBoundaryIncl n).hom y).down) = (Nonempty.some pnull) (0, t)
     rw [H.prop' t ((TopCat.cubeBoundaryIncl n).hom y).down y.down.property]
     simp_all
@@ -133,8 +135,9 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
     change _ = F ((⟨y.val⟩, t), s) at this
     rw [← this]
     dsimp only [Path.coe_toContinuousMap, ContinuousMap.coe_mk, Fs, Fb]
+    change pnullHomotopy (s, t) = x₀
     obtain ht | hs := hts
-    · have := pnull.some.prop' s t ht
+    · have := pnullHomotopy.prop' s t ht
       simp only [Path.coe_toContinuousMap, ContinuousMap.toFun_eq_coe,
         ContinuousMap.Homotopy.coe_toContinuousMap,
         ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this
@@ -142,7 +145,8 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
       cases ht with
       | inl ht0 => rw [ht0, p.source]
       | inr ht1 => rw [ht1, p.target]
-    · simp_all
+    · subst s
+      exact pnullHomotopy.map_one_left t
   let Fyts (t s : I) (hts : (t = 0 ∨ t = 1) ∨ s = 1) : Ω^ (Fin n) X x₀ :=
     ⟨⟨fun y ↦ F ((⟨y⟩, t), s), by fun_prop⟩, fun y hy ↦ Fyts_eq_x₀ ⟨y, hy⟩ t s hts⟩
   let Fy01 := Fyts 0 1 (Or.inr rfl)
@@ -160,7 +164,9 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
         rw [← h_fb]
         change H.toContinuousMap (0, y) = f y
         exact H.apply_zero y
-      map_one_left y := by dsimp [Fyts, Fy01]
+      map_one_left y := by
+        change F (({ down := y }, 0), 1) = F (({ down := y }, 0), 1)
+        rfl
       prop' s y hy := by
         change F (({ down := y }, 0), s) = f y
         rw [show (f y : X) = x₀ from f.property y hy]
@@ -194,7 +200,9 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
         rw [← h_fb]
         change H.toContinuousMap (1, y) = g y
         exact H.apply_one y
-      map_one_left y := by dsimp [Fyts, Fy11]
+      map_one_left y := by
+        change F (({ down := y }, 1), 1) = F (({ down := y }, 1), 1)
+        rfl
       prop' t y hy := by
         change F (({ down := y }, 1), t) = g y
         rw [show (g y : X) = x₀ from g.property y hy]
@@ -235,7 +243,8 @@ noncomputable def get
   have hep := TopCat.cubeBoundaryIncl_hasHEP n X f₀' h
   have : f₀' ∘ (TopCat.cubeBoundaryIncl n).hom = h ∘ fun x ↦ (x, 0) := by
     funext ⟨y, hy⟩
-    simp only [Function.comp_apply, ContinuousMap.coe_mk, Path.source, h]
+    change f₀ y = p 0
+    rw [p.source]
     exact f₀.property y hy
   let H' := Classical.choose (hep this)
   have H'_spec := Classical.choose_spec (hep this)
@@ -244,23 +253,22 @@ noncomputable def get
     ⟨ ⟨fun y ↦ H' ⟨⟨y⟩, 1⟩, by fun_prop⟩,  -- include to the top face, then apply `H'`
       fun y hy ↦ by  -- f₁ is a `GenLoop`
         change H' ⟨(TopCat.cubeBoundaryIncl n) ⟨y, hy⟩, 1⟩ = _
-        have := congr_fun H'_spec.right ⟨⟨y, hy⟩, 1⟩
-        dsimp only [Function.comp_apply, Prod.map_apply, id_eq, h] at this
-        rw [← this, ContinuousMap.coe_mk, Path.target] ⟩
+        have h_spec := congr_fun H'_spec.right ⟨⟨y, hy⟩, 1⟩
+        dsimp only [Function.comp_apply, Prod.map_apply, id_eq, h] at h_spec
+        exact h_spec.symm.trans p.target ⟩
   case levelHomotopy => exact
     { toContinuousMap := H'.comp <| ContinuousMap.prodSwap.comp <|
           ContinuousMap.prodMap (ContinuousMap.id _) ⟨ULift.up, continuous_uliftUp⟩
       map_zero_left y := by
         dsimp
         exact (congr_fun H'_spec.left ⟨y⟩).symm
-      map_one_left y := by simp
+      map_one_left y := by rfl
       prop' t y hy := by
         dsimp
         change H' ⟨(TopCat.cubeBoundaryIncl n).hom ⟨y, hy⟩, t⟩ = _
-        have := congr_fun H'_spec.right ⟨⟨y, hy⟩, t⟩
-        dsimp only [Function.comp_apply, Prod.map_apply, id_eq] at this
-        rw [← this]
-        dsimp only [ContinuousMap.coe_mk, h] }
+        have h_spec := congr_fun H'_spec.right ⟨⟨y, hy⟩, t⟩
+        dsimp only [Function.comp_apply, Prod.map_apply, id_eq] at h_spec
+        exact h_spec.symm }
 
 end ChangeBasePt
 
@@ -476,7 +484,7 @@ theorem inducedPointedHom_comp_pointedHomOfHomotopy_eq
   simp only [functorToType]
   rw [← Quotient.out_eq α]
   apply Quotient.sound
-  simp only [GenLoop.inducedMap', CategoryTheory.Under.homMk_right]
+  simp only [GenLoop.inducedMap']
   generalize_proofs fα_mem gα_mem
   let fα : Ω^ (Fin n) X (f x₀) := ⟨f.comp α.out, fα_mem⟩
   let gα : Ω^ (Fin n) X (g x₀) := ⟨g.comp α.out, gα_mem⟩
@@ -505,8 +513,7 @@ lemma injective_toFun_surjective_invFun_of_homotopyEquiv (n : ℕ) (x₀ : X) (E
   have : (inducedPointedHom n x₀ (E.invFun.comp E.toFun)).toFun =
       (inducedPointedHom n _ E.invFun).toFun ∘ (inducedPointedHom n _ E.toFun).toFun := by
     rw [inducedPointedHom_comp n x₀ E.toFun E.invFun]
-    simp only [ContinuousMap.comp_apply, ContinuousMap.HomotopyEquiv.coe_invFun,
-      Pointed.Hom.comp_toFun']
+    rfl
   replace bgf : Function.Bijective <|
       (inducedPointedHom n _ E.invFun).toFun ∘ (inducedPointedHom n x₀ E.toFun).toFun := by
     rw [← this]

@@ -91,13 +91,16 @@ def intermediateTensorEquiv' (L : IntermediateField K K_bar) :
     | tmul y a =>
       change (intermediateTensorEquiv K K_bar A L) ⟨↑(x * y) ⊗ₜ[K] a, _⟩ =
         x • (intermediateTensorEquiv K K_bar A L) ⟨↑y ⊗ₜ[K] a, _⟩
-      rw [intermediateTensorEquiv_apply_tmul, intermediateTensorEquiv_apply_tmul]
+      refine Eq.trans (intermediateTensorEquiv_apply_tmul K K_bar A L (x * y) a _) ?_
+      refine Eq.trans ?_
+        (congrArg (x • ·) (intermediateTensorEquiv_apply_tmul K K_bar A L y a _)).symm
       rfl
     | add y z hy hz =>
       simp only [LinearMap.coe_mk, LinearMap.coe_toAddHom, SetLike.mk_smul_mk, map_add,
         smul_add] at hy hz ⊢
       convert congr($hy + $hz) using 1
-      · rw [← (intermediateTensorEquiv K K_bar A L).map_add]; rfl
+      · symm
+        exact ((intermediateTensorEquiv K K_bar A L).map_add _ _).symm
       · erw [← smul_add, ← (intermediateTensorEquiv K K_bar A L).map_add]; rfl
   invFun := (intermediateTensorEquiv K K_bar A L).symm
   left_inv := (intermediateTensorEquiv K K_bar A L).left_inv
@@ -301,10 +304,8 @@ lemma comm_triangle :
     (inclusion n k k_bar A iso).toLinearMap := by
   ext a
   simp only [AlgebraTensorModule.curry_apply, curry_apply, LinearMap.coe_restrictScalars,
-    LinearMap.coe_comp, Submodule.coe_subtype, LinearEquiv.coe_coe, Function.comp_apply, inclusion,
-    AlgHom.toLinearMap_apply]
-  simp only [intermediateTensorEquiv', intermediateTensorEquiv, LinearEquiv.symm_symm,
-    LinearEquiv.coe_symm_mk]
+    LinearMap.coe_comp, Submodule.coe_subtype, LinearEquiv.coe_coe, Function.comp_apply, inclusion]
+  simp only [intermediateTensorEquiv', intermediateTensorEquiv]
   rfl
 
 /--
