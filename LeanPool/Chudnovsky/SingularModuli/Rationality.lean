@@ -322,7 +322,7 @@ lemma fixes_of_coset {e f g : ℤ} (γ : SL(2, ℤ)) {Aτ τ' : ℍ}
 lemma exists_fixes_of_coincidence [Fact m.Prime] {τ' : ℍ} {i : Option (ZMod m)}
     (h : f m i τ' = j τ') :
     ∃ p q r s : ℤ, QF.Fixes p q r s τ' ∧ p * s - q * r = (m : ℤ) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   have hmpos : 0 < m := (Fact.out : m.Prime).pos
   cases i with
   | none =>
@@ -395,9 +395,9 @@ theorem cm_bridge {τ' : ℍ}
     (h43 : ∃ i : Option (ZMod 43), f 43 i τ' = j τ')
     (h61 : ∃ i : Option (ZMod 61), f 61 i τ' = j τ') :
     ∃ M : SL(2, ℤ), M • τ' = τ₁₆₃ := by
-  haveI : Fact (Nat.Prime 41) := ⟨by norm_num⟩
-  haveI : Fact (Nat.Prime 43) := ⟨by norm_num⟩
-  haveI : Fact (Nat.Prime 61) := ⟨by norm_num⟩
+  have : Fact (Nat.Prime 41) := ⟨by norm_num⟩
+  have : Fact (Nat.Prime 43) := ⟨by norm_num⟩
+  have : Fact (Nat.Prime 61) := ⟨by norm_num⟩
   obtain ⟨i41, hi41⟩ := h41
   obtain ⟨i43, hi43⟩ := h43
   obtain ⟨i61, hi61⟩ := h61
@@ -455,12 +455,12 @@ lemma phi_coincidence (n : ℤ) (mm : ℕ) [NeZero mm] [Fact mm.Prime] (hm : (mm
 `j τ₁₆₃`, the value `j τ₁₆₃` is rational. -/
 theorem j_τ₁₆₃_rational_of (hsurj : Function.Surjective (j : ℍ → ℂ))
     (hint : IsIntegral ℤ (j τ₁₆₃)) : ∃ r : ℚ, j τ₁₆₃ = (r : ℂ) := by
-  haveI : NeZero (41 : ℕ) := ⟨by norm_num⟩
-  haveI : NeZero (43 : ℕ) := ⟨by norm_num⟩
-  haveI : NeZero (61 : ℕ) := ⟨by norm_num⟩
-  haveI : Fact (Nat.Prime 41) := ⟨by norm_num⟩
-  haveI : Fact (Nat.Prime 43) := ⟨by norm_num⟩
-  haveI : Fact (Nat.Prime 61) := ⟨by norm_num⟩
+  have : NeZero (41 : ℕ) := ⟨by norm_num⟩
+  have : NeZero (43 : ℕ) := ⟨by norm_num⟩
+  have : NeZero (61 : ℕ) := ⟨by norm_num⟩
+  have : Fact (Nat.Prime 41) := ⟨by norm_num⟩
+  have : Fact (Nat.Prime 43) := ⟨by norm_num⟩
+  have : Fact (Nat.Prime 61) := ⟨by norm_num⟩
   set j₀ : ℂ := j τ₁₆₃ with hj0
   -- `j₀` is integral (hence algebraic) over `ℚ`.
   have hintQ : IsIntegral ℚ j₀ := by

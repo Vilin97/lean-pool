@@ -32,7 +32,7 @@ macro_rules
   | `(tactic| withMatrixCoalgebraQuantumCtx[$φ]) =>
       `(tactic|
         withMatrixQuantumCtx[$φ];
-        letI : Coalgebra ℂ (Matrix n n ℂ) := Coalgebra.ofFiniteDimensionalHilbertAlgebra)
+        let : Coalgebra ℂ (Matrix n n ℂ) := Coalgebra.ofFiniteDimensionalHilbertAlgebra)
 
 theorem lmul_toMatrix (x : Matrix n n ℂ) :
   withMatrixQuantum[φ]
@@ -209,7 +209,7 @@ lemma QuantumGraph.Real.matrix_orthogonalProjection_eq
   intro A hA
   rw [matrixSubmodule]
   generalize_proofs
-  (expose_names; exact pf_24)
+  apply_assumption
 
 theorem StarAlgEquiv.lTensor_symm {R A B C : Type*}
   [RCLike R] [Ring A] [Ring B] [Ring C] [Algebra R A] [Algebra R B] [Algebra R C]
@@ -274,7 +274,7 @@ theorem orthogonalProjection'_of_finrank_eq_one
   letI : Module.Finite 𝕜 U := Module.finite_of_finrank_eq_succ hU;
   ∃ v : { x : E // ‖x‖ = 1 },
     orthogonalProjection' U = rankOne 𝕜 (v : E) (v : E) := by
-  letI : Module.Finite 𝕜 U := Module.finite_of_finrank_eq_succ hU
+  let : Module.Finite 𝕜 U := Module.finite_of_finrank_eq_succ hU
   let u : OrthonormalBasis (Fin 1) 𝕜 U := by
     rw [← hU]; exact stdOrthonormalBasis 𝕜 U
   rw [u.orthogonalProjection'_eq_sum_rankOne, Fin.sum_univ_one]
@@ -347,7 +347,7 @@ theorem
       (inner ℂ x φ.matrix⁻¹ = star (x : Matrix n n ℂ).trace) := by
   withMatrixQuantumCtx[φ]
   simp only [hφ.inner_eq']
-  letI := hφ.matrixIsPosDef.invertible
+  let := hφ.matrixIsPosDef.invertible
   rw [trace_mul_cycle, inv_mul_of_invertible, one_mul, trace_conjTranspose]
 
 theorem QuantumGraph.Real.ofNormOneMatrix_is_irreflexive_iff
@@ -367,7 +367,7 @@ theorem QuantumGraph.Real.ofNormOneMatrix_is_irreflexive_iff
     ContinuousLinearMap.coe_coe, rankOne_apply,
     ContinuousLinearMap.coe_eq_zero, rankOne.eq_zero_iff, smul_eq_zero,
     hφ.inner_dualMatrix_right, star_eq_zero]
-  letI := hφ.matrixIsPosDef.invertible
+  let := hφ.matrixIsPosDef.invertible
   simp only [Invertible.ne_zero, or_false, ne_zero_of_norm_ne_zero
       (a := (x : Matrix n n ℂ))
       (by simp only [x.property, ne_eq, one_ne_zero, not_false_eq_true])]
@@ -401,8 +401,8 @@ theorem QuantumGraph.Real.ofNormOneMatrix_eq_trivialGraph
         (hφ.matrixIsPosDef.inv.invertible.ne_zero))
     = Qam.trivialGraph (Matrix n n ℂ)) := by
   withMatrixCoalgebraQuantumCtx[φ]
-  letI : QuantumSetDeltaForm (Matrix n n ℂ) := Matrix.quantumSetDeltaForm (φ := φ)
-  letI := hφ.matrixIsPosDef.invertible
+  let : QuantumSetDeltaForm (Matrix n n ℂ) := Matrix.quantumSetDeltaForm (φ := φ)
+  let := hφ.matrixIsPosDef.invertible
   simp only [ofNormOneMatrix, normalizeOfNeZero,
     Qam.trivialGraph_eq, smul_mul_assoc,
     inv_mul_of_invertible, rmul_adjoint, StarMul.star_mul, star_smul,
@@ -430,7 +430,7 @@ theorem QuantumGraph.Real.ofNormOneMatrix_is_reflexive_iff
     rankOne_apply, ContinuousLinearMap.coe_inj, hφ.inner_dualMatrix_right]
   rw [← sub_eq_zero]
   simp_rw [← LinearMap.sub_apply, ← map_sub]
-  letI : Invertible (φ.matrix) := hφ.matrixIsPosDef.invertible
+  let : Invertible (φ.matrix) := hφ.matrixIsPosDef.invertible
   rw [rankOne.eq_zero_iff, sub_eq_zero]
   simp only [Invertible.ne_zero, or_false, ← trace_conjTranspose]
   constructor
@@ -565,12 +565,12 @@ theorem QuantumGraph.Real.reflexive_matrix_numOfEdges_eq_one_iff_eq_trivialGraph
       A •ₛ 1 = 1 →
       (QuantumGraph.NumOfEdges A = 1 ↔ A = Qam.trivialGraph _) := by
   withMatrixCoalgebraQuantumCtx[φ]
-  letI : QuantumSetDeltaForm (Matrix n n ℂ) := Matrix.quantumSetDeltaForm (φ := φ)
+  let : QuantumSetDeltaForm (Matrix n n ℂ) := Matrix.quantumSetDeltaForm (φ := φ)
   intro hc A hA hA₂
   constructor
   · rw [← matrixSubmodule_finrank_eq_numOfEdges_of_counit_eq_trace hc hA]
     simp only [Nat.cast_eq_one]
-    letI := hφ.matrixIsPosDef.invertible
+    let := hφ.matrixIsPosDef.invertible
     intro h
     let u : OrthonormalBasis (Fin 1) ℂ _ :=
       by rw [← h]; exact stdOrthonormalBasis ℂ (hA.matrixSubmodule (φ := φ))
@@ -616,7 +616,7 @@ theorem counit_eq_traceLinearMap_of_counit_eq_piMat_traceLinearMap
     ∀ i : ι,
       Coalgebra.counit (R := ℂ) (A := Mat ℂ (p i)) = traceLinearMap (p i) ℂ ℂ := by
   withPiBlockCoalgebraQuantumCtx[φ]
-  letI := fun i => (Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let := fun i => (Coalgebra.ofFiniteDimensionalHilbertAlgebra
     (R := ℂ) (A := Mat ℂ (p i)) : Coalgebra ℂ (Mat ℂ (p i)))
   intro hc i
   simp only [PiMat.counit_eq_dual, counit_eq_dual, LinearMap.ext_iff] at hc ⊢
@@ -653,10 +653,10 @@ theorem QuantumGraph.Real.PiMatFinTwo_same_isSelfAdjoint_reflexive_and_numOfEdge
     ∘ₗ Qam.trivialGraph (Mat ℂ (PiFinTwoSame n 1))
     ∘ₗ LinearMap.proj 1 := by
     withPiBlockCoalgebraQuantumCtx[φ]
-    letI := fun i => (Coalgebra.ofFiniteDimensionalHilbertAlgebra
+    let := fun i => (Coalgebra.ofFiniteDimensionalHilbertAlgebra
       (R := ℂ) (A := Mat ℂ (PiFinTwoSame n i)) :
         Coalgebra ℂ (Mat ℂ (PiFinTwoSame n i)))
-    letI := fun i => (Matrix.quantumSetDeltaForm (φ := φ i) :
+    let := fun i => (Matrix.quantumSetDeltaForm (φ := φ i) :
       QuantumSetDeltaForm (Mat ℂ (PiFinTwoSame n i)))
     intro hc A hA hA₂ hA₃ hA₄
     obtain (hf | hf) := hA.piFinTwo_same_exists_matrix_map_eq_map_of_adjoint_and_dim_eq_one hA₂
@@ -782,7 +782,7 @@ lemma PiMatFinTwoSameSwapStarAlgEquiv_isometry :
     (LinearMap.adjoint PiMatFinTwoSameSwapStarAlgEquiv.toLinearMap
       = (PiMatFinTwoSameSwapStarAlgEquiv (n := n)).symm.toLinearMap) := by
   let ψ := PiFinTwoSameFunctional φ
-  letI : ∀ i, (ψ i).IsFaithfulPosMap := fun _ => hφ
+  let : ∀ i, (ψ i).IsFaithfulPosMap := fun _ => hφ
   withPiBlockQuantumCtx[ψ]
   simp only [PiMatFinTwoSameSwapStarAlgEquiv_symm]
   apply LinearMap.ext
@@ -839,9 +839,9 @@ theorem
       QuantumGraph.NumOfEdges A = 1 →
       A = 0 := by
   let ψ := PiFinTwoSameFunctional φ
-  letI : ∀ i, (ψ i).IsFaithfulPosMap := fun _ => hφ
+  let : ∀ i, (ψ i).IsFaithfulPosMap := fun _ => hφ
   withPiBlockCoalgebraQuantumCtx[ψ]
-  letI := fun i => (Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let := fun i => (Coalgebra.ofFiniteDimensionalHilbertAlgebra
     (R := ℂ) (A := Mat ℂ (PiFinTwoSame n i)) :
       Coalgebra ℂ (Mat ℂ (PiFinTwoSame n i)))
   intro hc A hA hA₂ hA₃ hA₄

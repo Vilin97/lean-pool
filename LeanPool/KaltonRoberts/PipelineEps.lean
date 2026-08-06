@@ -370,7 +370,7 @@ theorem distToAdditive_le_C₂_from_pipeline
     (hexp3 : StrongExpandersExist α₂ 4 (2 / 7))
     (hexp4 : StrongExpandersExist (329 / 1250) 5 (5 / 11)) :
     distToAdditive f ≤ ↑C₂ := by
-  letI := Fintype.ofFinite U
+  let := Fintype.ofFinite U
   -- Handle M ≤ 0
   by_cases hM : distToAdditive f ≤ 0
   · exact le_trans hM (by exact_mod_cast (show (0 : ℚ) ≤ C₂ by unfold C₂; norm_num))

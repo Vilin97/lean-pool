@@ -49,7 +49,7 @@ theorem fdBoundary_H_avoids_interior (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : 
     (_hp_im_pos : 0 < p.im) {H : ℝ} (hp_im : p.im < H) :
     ∀ t ∈ Icc (0 : ℝ) 5, fdBoundaryH H t ≠ p := by
   intro t ht habs
-  simp only [Icc, mem_setOf_eq] at ht
+  simp only [Icc, mem_ofPred_eq] at ht
   by_cases h1 : t ≤ 1
   · have hre : (fdBoundaryH H t).re = 1 / 2 := by
       rw [fdBoundary_H_eq_seg1_H h1, fdBoundarySeg1H]

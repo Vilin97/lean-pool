@@ -122,7 +122,7 @@ https://math.stackexchange.com/questions/3906319/pushout-of-injective-is-injecti
 TODO: prove this in the category of types.
 -/
 lemma injective_pushoutInr' : Function.Injective <| pushoutInr' f g := by
-  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
+  have : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   obtain emp | nemp := Set.eq_empty_or_nonempty (Set.range g)ᶜ
   · have : IsEmpty {z | z ∉ Set.range g} := Set.isEmpty_coe_sort.mpr emp
     apply Function.injective_of_subsingleton
@@ -156,7 +156,7 @@ lemma injective_pushoutInr' : Function.Injective <| pushoutInr' f g := by
 
 lemma pushoutInr_neq_pushoutInr_of_mem_compl_range_of_mem_range :
     ∀ z ∈ (Set.range g)ᶜ, ∀ z' ∈ Set.range g, (pushout.inr f g) z ≠ (pushout.inr f g) z' := by
-  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
+  have : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   obtain emp | nemp := Set.eq_empty_or_nonempty (Set.range g)ᶜ
   · simp_all
   · have z₀ : {z | z ∉ Set.range g} := Nonempty.some <| Set.Nonempty.to_subtype nemp
@@ -182,7 +182,7 @@ lemma pushoutInr_neq_pushoutInr_of_mem_compl_range_of_mem_range :
 /-- TODO: re-use the code in `pushoutInr_neq_pushoutInr_of_mem_compl_range_of_mem_range` -/
 lemma pushoutInr_neq_pushoutInl_of_mem_compl_range :
     ∀ z ∈ (Set.range g)ᶜ, ∀ y : Y, (pushout.inr f g) z ≠ (pushout.inl f g) y := by
-  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
+  have : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   obtain emp | nemp := Set.eq_empty_or_nonempty (Set.range g)ᶜ
   · simp_all
   · have z₀ : {z | z ∉ Set.range g} := Nonempty.some <| Set.Nonempty.to_subtype nemp
@@ -211,15 +211,15 @@ lemma pushoutInr_neq_pushoutInl_of_mem_compl_range :
 
 lemma _root_.Function.Injective.preimage_image_of_restrict
     (X Y : Type u) (A : Set X) (s : Set A) (f : X → Y)
-    (inj_f : Function.Injective (Set.restrict A f)) (hf : ∀ a ∈ A, ∀ b ∉ A, f a ≠ f b) :
-    f ⁻¹' ((Set.restrict A f) '' s) = s := by
+    (inj_f : Function.Injective (Set.domRestrict A f)) (hf : ∀ a ∈ A, ∀ b ∉ A, f a ≠ f b) :
+    f ⁻¹' ((Set.domRestrict A f) '' s) = s := by
   apply Set.eq_of_subset_of_subset
   · intro x hx
     obtain ⟨a, has, ha⟩ := hx
     have hxA : x ∈ A := by
       by_contra hnxA
       exact hf a a.property x hnxA ha
-    rw [(by rfl : f x = Set.restrict A f ⟨x, hxA⟩)] at ha
+    rw [(by rfl : f x = Set.domRestrict A f ⟨x, hxA⟩)] at ha
     have hax := inj_f ha
     simp_all
   · intro x hx
@@ -242,7 +242,7 @@ Z ---inr---> pushout f g
 -/
 lemma isOpenMap_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
     IsOpenMap <| pushoutInr' f g := by
-  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
+  have : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   intro s hs
   apply TopCat.pushout_isOpen
   · simp only []
@@ -286,7 +286,7 @@ Z ---inr---> pushout f g
 -/
 theorem isOpenEmbedding_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
     Topology.IsOpenEmbedding <| pushoutInr' f g := by
-  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
+  have : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   exact Topology.IsOpenEmbedding.of_continuous_injective_isOpenMap
     (ContinuousMap.continuous _) (injective_pushoutInr' _ _) (isOpenMap_pushoutInr' _ _ hg)
 

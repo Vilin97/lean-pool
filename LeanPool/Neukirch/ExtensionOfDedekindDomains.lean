@@ -18,7 +18,8 @@ import Mathlib.Tactic.Bound
 import Mathlib.Tactic.Measurability
 import Mathlib.Tactic.Abel
 import Mathlib.NumberTheory.KummerDedekind
-import Mathlib.NumberTheory.RamificationInertia.Basic
+import Mathlib.LinearAlgebra.Dimension.DivisionRing
+import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 import Mathlib.NumberTheory.RamificationInertia.Ramification
 import Mathlib.NumberTheory.RamificationInertia.Inertia
 import Mathlib.RingTheory.DedekindDomain.Factorization

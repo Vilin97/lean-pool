@@ -50,7 +50,7 @@ theorem ABW.toNBW.lang_sub {S Q} {A : ABW S Q} {w : Nat → S} :
     edge_closure := by grind
     p_root := by grind [ABW.toNBW]
     p_sat := by
-      simp only [Set.mem_setOf_eq, Prod.mk.eta, Set.mem_sdiff, Set.mem_inter_iff, Set.mem_union,
+      simp only [Set.mem_ofPred_eq, Prod.mk.eta, Set.mem_sdiff, Set.mem_inter_iff, Set.mem_union,
         Prod.forall]
       intros q i h10
       specialize h2 i
@@ -211,7 +211,7 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
       next n IH =>
         rcases IH with ⟨h1, IH⟩
         constructor
-        · simp only [helper.p, level, ite_eq_left_iff, Set.mem_setOf_eq, p] at *
+        · simp only [helper.p, level, ite_eq_left_iff, Set.mem_ofPred_eq, p] at *
           intros q hinV
           obtain ⟨Y, p_sat, p_sub⟩ := G.p_sat _ hinV
           apply PositiveBool.Sat.monotone _ p_sat
@@ -226,7 +226,7 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
             · left
               rw [←Set.sdiff_eq_empty] at hinf
               refine ⟨hinf, ?_⟩
-              simp only [helper.p, level, hW, ↓reduceIte, Set.mem_sdiff, Set.mem_setOf_eq,
+              simp only [helper.p, level, hW, ↓reduceIte, Set.mem_sdiff, Set.mem_ofPred_eq,
                 ite_eq_left_iff, p] at hinf ⊢
               intros; contradiction
             · right
@@ -245,7 +245,7 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
               · simp [p, helper.p, level]
                 grind
               · intros q qp1 qp2
-                simp only [helper.p, level, Set.mem_setOf_eq, p] at qp1
+                simp only [helper.p, level, Set.mem_ofPred_eq, p] at qp1
                 obtain ⟨Y, p_sat, p_sub⟩ := G.p_sat _ qp1
                 apply PositiveBool.Sat.monotone _ p_sat
                 intros x xY
@@ -270,7 +270,7 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
               · simp [p, helper.p, level]
                 grind
               · intros q qp1
-                simp only [helper.p, level, hW, ↓reduceIte, Set.mem_setOf_eq, p] at qp1
+                simp only [helper.p, level, hW, ↓reduceIte, Set.mem_ofPred_eq, p] at qp1
                 obtain ⟨qp1, b, qp2, qp3, qp4, qp5⟩ := qp1
                 obtain ⟨Y, p_sat, p_sub⟩ := G.p_sat _ qp4
                 apply PositiveBool.Sat.monotone _ p_sat
@@ -284,7 +284,7 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
     intros i; cases i <;> simp [p, helper.p]; grind
   by_contra H
   unfold ABW.toNBW at H
-  simp only [ge_iff_le, ne_eq, Set.mem_setOf_eq, not_forall, not_exists, not_and] at H
+  simp only [ge_iff_le, ne_eq, Set.mem_ofPred_eq, not_forall, not_exists, not_and] at H
   rcases H with ⟨n, W_nonempty⟩
   let S' : LevelGraph := {
     level i := { v // v ∈ (p (n + i)).2 }
@@ -292,7 +292,7 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
     ex_parent i v := by
       specialize W_nonempty (n + i) (by omega)
       rcases v with ⟨v, vp⟩
-      simp only [helper.p, Nat.add_eq, W_nonempty, ↓reduceIte, Set.mem_setOf_eq, p] at vp
+      simp only [helper.p, Nat.add_eq, W_nonempty, ↓reduceIte, Set.mem_ofPred_eq, p] at vp
       obtain ⟨_, y, yW, yE⟩ := vp
       exists ⟨y, by assumption⟩
       apply yE.right.right

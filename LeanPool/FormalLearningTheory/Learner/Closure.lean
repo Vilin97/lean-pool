@@ -36,7 +36,7 @@ noncomputable def combineLearner
     h = fun x => F x (fun i => hs i x)}
   learn := fun {m} S x => F x (fun i => (L i).learn S x)
   output_in_H := fun {m} S => by
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     exact ⟨fun i => (L i).learn S, fun i => (L i).output_in_H S, rfl⟩
 
 /-! ## Part 2: Measurability of combineLearner -/

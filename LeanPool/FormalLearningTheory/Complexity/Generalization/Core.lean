@@ -194,7 +194,7 @@ theorem trueError_eq_genError (X : Type u) [MeasurableSpace X]
   have integrand_eq : (fun x => Set.indicator {x | h x ≠ c x} (1 : X → ℝ) x) =
       (fun x => zeroOneLoss Bool (h x) (c x)) := by
     ext x
-    simp only [Set.indicator, Set.mem_setOf_eq, Pi.one_apply, zeroOneLoss]
+    simp only [Set.indicator, Set.mem_ofPred_eq, Pi.one_apply, zeroOneLoss]
     split_ifs <;> simp_all
   rw [integrand_eq]
   have hphi : Measurable (fun x => (x, c x) : X → X × Bool) :=
@@ -260,7 +260,7 @@ theorem empiricalMeasureError_eq_empiricalError (X : Type u) [MeasurableSpace X]
   unfold EmpiricalError
   rw [if_neg hm', MeasureTheory.Measure.smul_apply,
       MeasureTheory.Measure.finsetSum_apply]
-  simp only [MeasureTheory.Measure.dirac_apply, Set.indicator, Set.mem_setOf_eq, Pi.one_apply]
+  simp only [MeasureTheory.Measure.dirac_apply, Set.indicator, Set.mem_ofPred_eq, Pi.one_apply]
   rw [smul_eq_mul]
   have hne_top : ∀ i ∈ Finset.univ, (if h (xs i) ≠ c (xs i) then (1 : ENNReal) else 0) ≠ ⊤ := by
     intro i _; split_ifs <;> simp
@@ -597,7 +597,7 @@ theorem vcdim_finite_imp_growth_bounded (X : Type u)
     rcases (WithTop.ne_top_iff_exists.mp (ne_of_lt hC)) with ⟨n, hn⟩
     exact ⟨n, hn.symm⟩
   -- Witness: d = v. Sauer-Shelah gives GrowthFunction(m) ≤ ∑_{i≤v} C(m,i) for all m.
-  haveI : DecidableEq X := Classical.decEq X
+  have : DecidableEq X := Classical.decEq X
   use v
   intro m hm
   have hvcdim_eq : VCDim X C = (v : WithTop ℕ) := hv
@@ -616,8 +616,8 @@ theorem vcdim_finite_imp_growth_bounded (X : Type u)
     Set.ncard_eq_toFinset_card RS hRS_finite
   rw [hRS_ncard]
   -- Build Finset (Finset ↥S) via f ↦ {x | f x = true}
-  haveI : DecidableEq ↥S := Classical.typeDecidableEq _
-  haveI : DecidableEq (Finset ↥S) := Classical.typeDecidableEq _
+  have : DecidableEq ↥S := Classical.typeDecidableEq _
+  have : DecidableEq (Finset ↥S) := Classical.typeDecidableEq _
   let toSub : (↥S → Bool) → Finset ↥S :=
     fun f => Finset.univ.filter (fun x => f x = true)
   have h_toSub_inj : Function.Injective toSub := by
@@ -835,7 +835,7 @@ theorem uc_imp_pac (X : Type u) [MeasurableSpace X]
   -- Now goal: Measure.pi {PAC set} ≥ Measure.pi {UC set}
   apply MeasureTheory.OuterMeasure.mono
   intro xs hxs
-  simp only [Set.mem_setOf_eq] at hxs ⊢
+  simp only [Set.mem_ofPred_eq] at hxs ⊢
   -- The learner's output on the labeled sample
   set S := (fun i => (xs i, c (xs i)) : Fin m → X × Bool) with hS_def
   set h₀ := L.learn S with hh₀_def
@@ -1440,7 +1440,7 @@ theorem nfl_core (X : Type u) [MeasurableSpace X] [Fintype X]
     -- Error set ⊇ unseen. For unseen x: c1(x) = !h0(x) ≠ h0(x).
     have herr_sup : (Set.range xs)ᶜ ⊆ {x : X | h0 x ≠ c1 x} := by
       intro x hx; simp only [Set.mem_compl_iff] at hx
-      simp only [Set.mem_setOf_eq, c1, if_neg hx]; cases h0 x <;> simp
+      simp only [Set.mem_ofPred_eq, c1, if_neg hx]; cases h0 x <;> simp
     -- D(error) >= D(unseen) by monotonicity
     apply lt_of_lt_of_le _ (MeasureTheory.measure_mono herr_sup)
     -- D(unseen) = 1 - D(seen). D(seen) <= m/n <= 1 / 2. So D(unseen) >= 1 / 2 > 1 / 8.
@@ -1526,8 +1526,8 @@ theorem pac_lower_bound_good_event_le_half
           D { x | L.learn (fun i => (xs i, c₀ (xs i))) x ≠ c₀ x }
             ≤ ENNReal.ofReal ε } ≤ ENNReal.ofReal (1 / 2 : ℝ) := by
   classical
-  letI msT : MeasurableSpace ↥T := ⊤
-  haveI : @MeasurableSingletonClass ↥T ⊤ :=
+  let msT : MeasurableSpace ↥T := ⊤
+  have : @MeasurableSingletonClass ↥T ⊤ :=
     ⟨fun _ => MeasurableSpace.measurableSet_top⟩
   have hTne_type : Nonempty ↥T := hTne.coe_sort
   have hTpos : 0 < Fintype.card ↥T := Fintype.card_pos_iff.mpr hTne_type
@@ -1565,7 +1565,7 @@ theorem pac_lower_bound_good_event_le_half
   have hpi_map : MeasureTheory.Measure.pi (fun _ : Fin m => D) =
       (@MeasureTheory.Measure.pi (Fin m) (fun _ => ↥T) _ (fun _ => ⊤)
         (fun _ => D_sub)).map valProd := by
-    letI : ∀ (_ : Fin m), MeasureTheory.SigmaFinite
+    let : ∀ (_ : Fin m), MeasureTheory.SigmaFinite
         (@MeasureTheory.Measure.map ↥T X ⊤ _ Subtype.val D_sub) := fun _ => by
       change MeasureTheory.SigmaFinite D; exact inferInstance
     conv_lhs =>
@@ -1594,12 +1594,12 @@ theorem pac_lower_bound_good_event_le_half
     ≤ T.card with count_finset_def
   have hgood_sub : good_X ⊆ good_quarter := by
     intro xs hxs
-    simp only [good_X_def, good_quarter_def, Set.mem_setOf_eq] at hxs ⊢
+    simp only [good_X_def, good_quarter_def, Set.mem_ofPred_eq] at hxs ⊢
     exact le_trans hxs (ENNReal.ofReal_le_ofReal hε1)
   have hpre_eq : valProd ⁻¹' good_quarter = (↑count_finset : Set (Fin m → ↥T)) := by
     ext xs_T
-    simp only [Set.mem_preimage, good_quarter_def, Set.mem_setOf_eq, valProd,
-      count_finset_def, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, good_quarter_def, Set.mem_ofPred_eq, valProd,
+      count_finset_def, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
     set h_val := L.learn (fun i => ((↑(xs_T i) : X), c₀ (↑(xs_T i))))
     have herr : D { x | h_val x ≠ c₀ x } =
         D_sub { t : ↥T | c₀ (↑t) ≠ h_val (↑t) } := by
@@ -1610,7 +1610,7 @@ theorem pac_lower_bound_good_event_le_half
       simp only [D_sub, uniformMeasure, MeasureTheory.Measure.smul_apply, smul_eq_mul]
       rw [@MeasureTheory.Measure.count_apply_finite' ↥T ⊤ _
         (Set.toFinite _) MeasurableSpace.measurableSet_top]
-      simp only [Fintype.card_coe, one_div, ne_eq, Set.Finite.toFinset_setOf,
+      simp only [Fintype.card_coe, one_div, ne_eq, Set.Finite.toFinset_ofPred,
         Finset.univ_eq_attach]
       rw [ENNReal.div_eq_inv_mul]
     rw [herr, hunif]
@@ -1645,13 +1645,13 @@ theorem pac_lower_bound_good_event_le_half
       (fun _ => D_sub) (↑count_finset) ≤ ENNReal.ofReal (1 / 2 : ℝ) := by
     set μ_pi := @MeasureTheory.Measure.pi (Fin m) (fun _ => ↥T) _ (fun _ => ⊤)
       (fun _ => D_sub) with hμ_pi_def
-    haveI inst_msc_pi : @MeasurableSingletonClass (Fin m → ↥T)
+    have inst_msc_pi : @MeasurableSingletonClass (Fin m → ↥T)
         (@MeasurableSpace.pi (Fin m) (fun _ => ↥T) (fun _ => ⊤)) :=
       @Pi.instMeasurableSingletonClass (Fin m) (fun _ => ↥T) (fun _ => ⊤)
         inferInstance (fun _ => ⟨fun _ => MeasurableSpace.measurableSet_top⟩)
-    haveI : @MeasureTheory.IsFiniteMeasure ↥T ⊤ D_sub := by
+    have : @MeasureTheory.IsFiniteMeasure ↥T ⊤ D_sub := by
       constructor; rw [hD_sub_prob.measure_univ]; exact ENNReal.one_lt_top
-    haveI : @MeasureTheory.SigmaFinite ↥T ⊤ D_sub :=
+    have : @MeasureTheory.SigmaFinite ↥T ⊤ D_sub :=
       @MeasureTheory.IsFiniteMeasure.toSigmaFinite ↥T ⊤ D_sub inferInstance
     have hD_sub_singleton : ∀ t : ↥T, D_sub {t} = 1 / (T.card : ENNReal) := by
       intro t
@@ -1910,7 +1910,7 @@ theorem compression_imp_vcdim_finite (X : Type u)
   set N := 2 * (k + 1) * (k + 1) with hN_def
   -- Get shattered T₀ with |T₀| ≥ N
   obtain ⟨T₀, hT₀_shatt, hT₀_card⟩ := h_large N
-  haveI : DecidableEq X := Classical.decEq X
+  have : DecidableEq X := Classical.decEq X
   -- Take subset T ⊆ T₀ with |T| = N exactly (by Finset.exists_subset_card_eq)
   obtain ⟨T, hT_sub, hT_card⟩ := Finset.exists_subset_card_eq hT₀_card
   -- T is shattered (subset of shattered set)
@@ -2057,7 +2057,7 @@ theorem growth_bounded_imp_vcdim_finite (X : Type u)
       change Set.ncard { f : ↥T → Bool | ∃ c ∈ C, ∀ x : ↥T, c ↑x = f x } = 2 ^ T.card
       have hset_eq : { f : ↥T → Bool | ∃ c ∈ C, ∀ x : ↥T, c ↑x = f x } =
           (Set.univ : Set (↥T → Bool)) := by
-        ext f; simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+        ext f; simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
         exact hTshat f
       rw [hset_eq, Set.ncard_univ, Nat.card_fun, Nat.card_eq_fintype_card,
           Fintype.card_bool, Nat.card_eq_fintype_card, Fintype.card_coe]

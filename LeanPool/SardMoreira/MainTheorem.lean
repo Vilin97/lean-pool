@@ -620,7 +620,7 @@ theorem hausdorffMeasure_image_nhdsWithin_null_of_finrank_eq
         Nat.add_sub_cancel_left]
     · exact hs a ha
     · simp [eDom]
-    · letI : CompleteSpace (fderiv ℝ f a).range := hrange.isClosed.completeSpace_coe
+    · let : CompleteSpace (fderiv ℝ f a).range := hrange.isClosed.completeSpace_coe
       let φ := hdf.implicitFunctionDataOfComplementedKerRange f (fderiv ℝ f a) hker hrange
       have hprod : (↑eDom : E → (fderiv ℝ f a).range × (fderiv ℝ f a).ker) = φ.prodFun := by
         rw [hdf.coe_implicitToOpenPartialHomeomorphOfComplementedKerRange hker hrange]
@@ -668,7 +668,7 @@ theorem hausdorffMeasure_image_nhdsWithin_null_of_finrank_eq
   · convert_to eDom.symm '' t ∈ Filter.map eDom.symm (𝓝[t] (eDom a))
     · rw [eDom.nhdsWithin_target_inter (eDom.mapsTo haeDom),
         eDom.symm.map_nhdsWithin_preimage_eq (eDom.mapsTo haeDom),
-        Set.setOf_and, eDom.leftInvOn haeDom, Set.setOf_mem_eq, nhdsWithin_inter_of_mem']
+        Set.ofPred_and, eDom.leftInvOn haeDom, Set.ofPred_mem_eq, nhdsWithin_inter_of_mem']
       apply mem_nhdsWithin_of_mem_nhds
       exact (hcdmh _ ha).contDiffAt.eventually_isInvertible_fderiv hinv (by positivity)
     · exact Filter.image_mem_map self_mem_nhdsWithin
@@ -729,7 +729,7 @@ theorem hausdorffMeasure_sardMoreiraBound_image_null_of_finrank_le
   -- we can use the countable subadditivity of the Hausdorff measure.
   have h_union : f '' s = ⋃ p' ≤ p, f '' {x ∈ s | dim (fderiv ℝ f x).range = p'} := by
     ext y
-    simp only [Set.mem_image, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+    simp only [Set.mem_image, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
     exact ⟨fun ⟨x, hx, hx'⟩ ↦ ⟨_, hs x hx, x, ⟨hx, rfl⟩, hx'⟩,
       fun ⟨i, hi, x, hx, hx'⟩ ↦ ⟨x, hx.1, hx'⟩⟩
   simp only [h_union, measure_iUnion_null_iff]

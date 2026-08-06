@@ -230,7 +230,7 @@ theorem exists_pos_forall_measure_le_toSphere_ge_le
       μ.toSphere {x | volume {t : ℝ | 0 ≤ t ∧ t • x.1 ∈ s} ≥ ε} ≤ μ.toSphere (T s)  := by
     refine fun s ↦ measure_mono fun x hx ↦ ?_
     simp only [T]
-    rw [mem_setOf_eq] at hx ⊢
+    rw [mem_ofPred_eq] at hx ⊢
     contrapose! hx
     apply hδ
     · exact fun _ ↦ And.left
@@ -244,7 +244,7 @@ theorem exists_pos_forall_measure_le_toSphere_ge_le
   wlog hsm : MeasurableSet s generalizing s
   · refine lt_of_le_of_lt ?_ (this (toMeasurable μ s) ?_ ?_)
     · refine measure_mono fun x hx ↦ ?_
-      rw [mem_setOf_eq] at hx ⊢
+      rw [mem_ofPred_eq] at hx ⊢
       exact le_trans hx <| measure_mono fun t ⟨ht₀, ht⟩ ↦ ⟨ht₀, subset_toMeasurable _ _ ht⟩
     · rwa [measure_toMeasurable]
     · measurability
@@ -266,7 +266,7 @@ theorem exists_pos_forall_measure_le_toSphere_ge_le
           refine MeasurableEquiv.measurable _ ?_
           exact hsm.preimage measurable_subtype_coe
         · intro x hx
-          simpa [T, homeomorphUnitSphereProd_symm_apply_coe, Set.preimage, Set.mem_setOf_eq]
+          simpa [T, homeomorphUnitSphereProd_symm_apply_coe, Set.preimage, Set.mem_ofPred_eq]
             using hx
       · refine MeasurableEquiv.measurable _ ?_
         exact hsm.preimage measurable_subtype_coe
@@ -293,7 +293,7 @@ theorem exists_pos_forall_measure_le_exists_mem_sphere_dist_lt_volume_smul_mem_l
     _ ≤ μ.toSphere {y : sphere (0 : E) 1 | volume {t : ℝ | 0 ≤ t ∧ t • y.1 ∈ s} ≥ min ↑δ ↑ε} := by
       gcongr μ.toSphere ?_
       intro y hy
-      rw [mem_setOf_eq]
+      rw [mem_ofPred_eq]
       exact (min_le_right _ _).trans <| hη _ y.2 hy
 
 theorem exists_pos_forall_measure_le_exists_mem_sphere_dist_lt_volume_lineMap_mem_lt

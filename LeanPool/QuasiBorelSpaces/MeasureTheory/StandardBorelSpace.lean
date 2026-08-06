@@ -30,7 +30,7 @@ lemma standardBorelSpace_iff (A : Type*) [MeasurableSpace A]
         constructor
         intro s
         have h₅ : MeasurableSet (h₄ '' s) := by
-          simp only [Set.image, measurableSet_setOf]
+          simp only [Set.image, measurableSet_setOfPred]
           fun_prop
         simp_all
       | inr h₃ =>
@@ -39,7 +39,7 @@ lemma standardBorelSpace_iff (A : Type*) [MeasurableSpace A]
         constructor
         intro s
         have h₅ : MeasurableSet (h₄ '' s) := by
-          simp only [Set.image, measurableSet_setOf]
+          simp only [Set.image, measurableSet_setOfPred]
           fun_prop
         simp_all
     · exact .inr ⟨PolishSpace.measurableEquivOfNotCountable h₂ not_countable⟩

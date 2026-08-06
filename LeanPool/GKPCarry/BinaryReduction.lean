@@ -27,7 +27,7 @@ open Nat
 theorem padicValNat_two_centralBinom (n : ℕ) :
     padicValNat 2 (Nat.centralBinom n) = (Nat.digits 2 n).sum := by
   rw [Nat.centralBinom_eq_two_mul_choose]
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have hn : n ≤ 2 * n := Nat.le_mul_of_pos_left n (by decide)
   have hkummer :=
     sub_one_mul_padicValNat_choose_eq_sub_sum_digits
@@ -156,7 +156,7 @@ theorem gkpPowerOfTwoConjecture_of_gkp (h : gkpConjecture) :
   rcases h (2 ^ k) hgt h64 h256 with h4 | h9
   · have hval : padicValNat 2 (Nat.centralBinom (2 ^ k)) = 1 := by
       rw [padicValNat_two_centralBinom, popcount_pow_two]
-    haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     have hge : 2 ≤ padicValNat 2 (Nat.centralBinom (2 ^ k)) := by
       apply (pow_dvd_iff_le_padicValNat
         (by decide : (2 : ℕ) ≠ 1) (Nat.centralBinom_ne_zero _)).mp

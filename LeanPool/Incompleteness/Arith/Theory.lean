@@ -174,7 +174,7 @@ def replace : FirstOrder.Theory.Delta1Definable {“∀ x y, x =
       ℕ))).df.iff,
       (Language.substs_defined (LOR (V := ℕ))).df.iff, (Language.imp_defined (LOR (V := ℕ))).df.iff]
     -/
-    simp only [Nat.reduceAdd, Fin.isValue, Nat.succ_eq_add_one, Set.mem_setOf_eq,
+    simp only [Nat.reduceAdd, Fin.isValue, Nat.succ_eq_add_one, Set.mem_ofPred_eq,
       HierarchySymbol.Semiformula.val_sigma, HierarchySymbol.Semiformula.val_mkDelta,
       HierarchySymbol.Semiformula.val_mkSigma, Semiformula.eval_bexLT, Semiterm.val_bvar,
       Matrix.cons_val_fin_one, LogicalConnective.HomClass.map_and, Semiformula.eval_substs,
@@ -261,7 +261,7 @@ def Ω₁ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ |
       ℕ))).df.iff,
       (Language.substs_defined (LOR (V := ℕ))).df.iff, (Language.imp_defined (LOR (V := ℕ))).df.iff]
     -/
-    simp only [Set.mem_setOf_eq, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue,
+    simp only [Set.mem_ofPred_eq, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue,
       HierarchySymbol.Semiformula.val_mkDelta, HierarchySymbol.Semiformula.val_mkSigma,
       Semiformula.eval_bexLT, Semiterm.val_bvar, Matrix.cons_val_fin_one, Matrix.cons_val_one,
       Matrix.vecHead, Semiformula.eval_ex, LogicalConnective.HomClass.map_and,
@@ -324,7 +324,7 @@ def Ω₂ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ |
       ℕ))).df.iff,
       (Language.substs_defined (LOR (V := ℕ))).df.iff, (Language.imp_defined (LOR (V := ℕ))).df.iff]
     -/
-    simp only [Set.mem_setOf_eq, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue,
+    simp only [Set.mem_ofPred_eq, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue,
       HierarchySymbol.Semiformula.val_mkDelta, HierarchySymbol.Semiformula.val_mkSigma,
       Semiformula.eval_bexLT, Semiterm.val_bvar, Matrix.cons_val_fin_one, Matrix.cons_val_one,
       Matrix.vecHead, Semiformula.eval_ex, LogicalConnective.HomClass.map_and,
@@ -375,7 +375,7 @@ def Ω₃ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ |
     /-
     simp?
     -/
-    simp only [ne_eq, Set.mem_setOf_eq, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue,
+    simp only [ne_eq, Set.mem_ofPred_eq, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue,
       HierarchySymbol.Semiformula.val_mkDelta, HierarchySymbol.Semiformula.val_mkSigma,
       Semiformula.eval_bexLT, Semiterm.val_bvar, Matrix.cons_val_fin_one, Matrix.cons_val_one,
       Matrix.vecHead, LogicalConnective.HomClass.map_and, LogicalConnective.HomClass.map_neg,
@@ -447,7 +447,7 @@ def Ω₄ : FirstOrder.Theory.Delta1Definable {(“∀ x, x < ↑n ↔
       (Language.substs_defined (LOR (V := ℕ))).df.iff, (Language.imp_defined (LOR (V := ℕ))).df.iff,
       (Language.iff_defined (LOR (V := ℕ))).df.iff]
     -/
-    simp only [Nat.reduceAdd, Fin.isValue, Set.mem_setOf_eq, Nat.succ_eq_add_one,
+    simp only [Nat.reduceAdd, Fin.isValue, Set.mem_ofPred_eq, Nat.succ_eq_add_one,
       HierarchySymbol.Semiformula.val_mkDelta, HierarchySymbol.Semiformula.val_mkSigma,
       Semiformula.eval_bexLT, Semiterm.val_bvar, Matrix.cons_val_fin_one, Semiformula.eval_ex,
       LogicalConnective.HomClass.map_and, Semiformula.eval_substs, Matrix.comp_vecCons',
@@ -575,7 +575,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.replace.proof (φ : ⌜ℒₒᵣ
     Language.TermRec.Construction.cons_app_9, Matrix.cons_app_eight,
     LogicalConnective.Prop.and_eq, exists_eq_left, Language.Semiformula.val_all,
     Language.Semiformula.val_imp, val_equals, Language.val_bvar, Language.Semiformula.val_substs,
-    Language.Semitermvec.val_cons, Language.Semitermvec.val_nil, Set.mem_setOf_eq,
+    Language.Semitermvec.val_cons, Language.Semitermvec.val_nil, Set.mem_ofPred_eq,
     qqAll_inj]
   refine ⟨φ.val, ?_, by simpa using φ.prop, rfl⟩
   · rw [subst_eq_self₁ (by simpa using φ.prop)]
@@ -600,7 +600,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₁.proof (n m : V) :
     eval_numeralDef, eval_qqAddDef, Semiterm.val_operator₂, Matrix.cons_app_five,
     Matrix.cons_app_four, Matrix.cons_app_three, Structure.Add.add, Matrix.cons_app_six,
     eval_qqEQDef, LogicalConnective.Prop.and_eq, exists_eq_left, val_equals, val_add,
-    val_numeral, Set.mem_setOf_eq]
+    val_numeral, Set.mem_ofPred_eq]
   refine ⟨n, ?_, m, ?_, rfl⟩
   · apply lt_trans ?_ (lt_qqEQ_left _ _)
     apply lt_of_le_of_lt (by simp) (lt_qqAdd_left _ _)
@@ -622,7 +622,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₂.proof (n m : V) :
     eval_numeralDef, eval_qqMulDef, Semiterm.val_operator₂, Matrix.cons_app_five,
     Matrix.cons_app_four, Matrix.cons_app_three, Structure.Mul.mul, Matrix.cons_app_six,
     eval_qqEQDef, LogicalConnective.Prop.and_eq, exists_eq_left, val_equals, val_mul,
-    val_numeral, Set.mem_setOf_eq]
+    val_numeral, Set.mem_ofPred_eq]
   refine ⟨n, ?_, m, ?_, rfl⟩
   · apply lt_trans ?_ (lt_qqEQ_left _ _)
     apply lt_of_le_of_lt (by simp) (lt_qqMul_left _ _)
@@ -645,7 +645,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₃.proof {n m : V} (ne : n �
     Matrix.comp_vecCons', Matrix.cons_val_fin_one, Matrix.cons_app_two,
     Matrix.constant_eq_singleton, eval_numeralDef, Matrix.cons_app_four,
     Matrix.cons_app_three, eval_qqNEQDef, LogicalConnective.Prop.and_eq, exists_eq_left,
-    val_notEquals, val_numeral, Set.mem_setOf_eq]
+    val_notEquals, val_numeral, Set.mem_ofPred_eq]
   refine ⟨n, ?_, m, ?_, ne, rfl⟩
   · exact lt_of_le_of_lt (by simp) (lt_qqNEQ_left _ _)
   · exact lt_of_le_of_lt (by simp) (lt_qqNEQ_right _ _)
@@ -672,7 +672,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₄.proof (n :
     LogicalConnective.Prop.and_eq, exists_eq_left, Language.Semiformula.val_all,
     Language.Semiformula.val_iff, val_lessThan, Language.val_bvar, val_numeral,
     Language.SemiformulaVec.val_disj, val_tSubstItr, Language.Semitermvec.val_cons,
-    Language.Semitermvec.val_nil, val_equals, Set.mem_setOf_eq, qqAll_inj]
+    Language.Semitermvec.val_nil, val_equals, Set.mem_ofPred_eq, qqAll_inj]
   refine ⟨n, ?_, rfl⟩
   apply lt_trans ?_ (lt_forall _)
   apply lt_trans ?_ (lt_iff_left _ _)

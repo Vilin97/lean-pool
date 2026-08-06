@@ -19,7 +19,10 @@ import Mathlib.Tactic.Measurability
 import Mathlib.Tactic.Abel
 import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.NumberTheory.NumberField.Norm
-import Mathlib.NumberTheory.RamificationInertia.Basic
+import Mathlib.LinearAlgebra.Dimension.DivisionRing
+import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+import Mathlib.RingTheory.RamificationInertia.Basic
+import Mathlib.FieldTheory.Galois.IsGaloisGroup
 import Mathlib.NumberTheory.RamificationInertia.Ramification
 import Mathlib.NumberTheory.RamificationInertia.Inertia
 
@@ -394,8 +397,8 @@ theorem unique_lies_over_Nonsplit {K L : Type*} [Field K] [Field L] [Algebra K L
     (p : Ideal (𝓞 K)) (P : Ideal (𝓞 L)) [hp : P unique_lies_over p] :
     Nonsplit (algebraMap (𝓞 K) (𝓞 L)) p where
   nonsplit Q1 _ hq1 Q2 _ hq2 := by
-    letI := over_def hq1
-    letI := over_def hq2
+    let := over_def hq1
+    let := over_def hq2
     rw [hp.unique Q1, hp.unique Q2]
 
 /-- Another form of the property `unique_lies_over`. -/
@@ -432,8 +435,8 @@ theorem ideal_unique_lies_over_tower_bot [hp : P unique_lies_over p] [hP : P lie
     unique := by
       intro 𝔔 _ _
       rcases exists_ideal_over_maximal_of_ringOfIntegers 𝔔 L with ⟨Q, ⟨hqm ,hq⟩⟩
-      letI := ideal_lies_over_trans p 𝔔 Q
-      letI := hp.unique Q
+      let := ideal_lies_over_trans p 𝔔 Q
+      let := hp.unique Q
       rw [hq.liesOver_eq, hp.unique Q, hP.liesOver_eq]
 }
 
@@ -442,7 +445,7 @@ theorem ideal_unique_lies_over_tower_top [𝔓.IsMaximal] [hP : P unique_lies_ov
   [𝔓 lies_over p] : P unique_lies_over 𝔓 where
     liesOver_eq := by
       rcases exists_ideal_over_maximal_of_ringOfIntegers 𝔓 L with ⟨Q, ⟨_ ,hq⟩⟩
-      letI := ideal_lies_over_trans p 𝔓 Q
+      let := ideal_lies_over_trans p 𝔓 Q
       rw [← hP.unique Q, hq.liesOver_eq]
     unique := fun Q _ _ ↦
       letI := ideal_lies_over_trans p 𝔓 Q
@@ -662,7 +665,7 @@ theorem ramificationIdx_eq_of_isGalois' [IsGalois K L] {P : Ideal (𝓞 L)} [P.I
     {Q : Ideal (𝓞 L)} [hqm : Q.IsMaximal] (h : IdealBelow K P = IdealBelow K Q) :
     ramificationIdx' (IdealBelow K P) P =
     ramificationIdx' (IdealBelow K Q) Q := by
-  letI := over_def h
+  let := over_def h
   rw [← h]
   exact ramificationIdx_eq_of_isGalois (IdealBelow K P) P Q
 
@@ -730,17 +733,36 @@ theorem inertiaDeg_eq_inertiaDegOfIsGalois [IsGalois K L] :
   rw [inertiaDegOfIsGalois]
   exact inertiaDeg_eq_of_isGalois p P _
 
+/-- The fundamental identity `∑ P, e_P * f_P = [L : K]` over the `Finset` of primes above `p`,
+in the Galois case. Restates the retired `Ideal.sum_ramification_inertia` via the current
+Mathlib form `Ideal.sum_ramification_inertia_eq_card` applied to the Galois group. -/
+private theorem sum_ramification_inertia_of_isGalois (L : Type*) [Field L] [NumberField L]
+    [Algebra K L] [IsGalois K L] (hp0 : p ≠ ⊥) :
+    ∑ P ∈ primesOver p L, ramificationIdx' p P * inertiaDeg' p P = Module.finrank K L := by
+  classical
+  have : Fintype (p.primesOver (𝓞 L)) := (Algebra.QuasiFinite.finite_primesOver p).fintype
+  rw [← IsGaloisGroup.card_eq_finrank (L ≃ₐ[K] L) K L,
+    ← Ideal.sum_ramification_inertia_eq_card p (𝓞 L) (G := L ≃ₐ[K] L),
+    ← Finset.sum_coe_sort (s := primesOver p L)]
+  refine Fintype.sum_equiv (Equiv.subtypeEquivRight fun Q => ?_) _ _ fun Q => ?_
+  · exact IsDedekindDomain.mem_primesOverFinset_iff hp0 (𝓞 L)
+  · obtain ⟨Q, hQ⟩ := Q
+    have h1 : Q.IsMaximal := ((primesOver_mem p Q).mp hQ).1
+    have h2 : Q lies_over p := ((primesOver_mem p Q).mp hQ).2
+    rw [ramificationIdx'_eq_ramificationIdx p Q hp0, inertiaDeg'_eq_inertiaDeg p Q]
+    rfl
+
 /-- The form of the **fundamental identity** in the case of Galois extension. -/
 theorem ramificationIdx_mul_inertiaDegOfIsGalois (L : Type*) [Field L] [NumberField L]
     [Algebra K L] [IsGalois K L] :
     Finset.card (primesOver p L) * (ramificationIdxOfIsGalois p L * inertiaDegOfIsGalois p L) =
     Module.finrank K L := by
   rw [← smul_eq_mul, ← Finset.sum_const,
-    ← sum_ramification_inertia (R := 𝓞 K) (S := 𝓞 L) (K := K) (L := L) (ne_bot_ofIsMaximal p)]
+    ← sum_ramification_inertia_of_isGalois p L (ne_bot_ofIsMaximal p)]
   apply Finset.sum_congr rfl
   intro P hp
-  letI := ((primesOver_mem p P).mp hp).1
-  letI := ((primesOver_mem p P).mp hp).2
+  let := ((primesOver_mem p P).mp hp).1
+  let := ((primesOver_mem p P).mp hp).2
   rw [ramificationIdx_eq_ramificationIdxOfIsGalois, inertiaDeg_eq_inertiaDegOfIsGalois]
 
 
@@ -981,7 +1003,7 @@ theorem ResidueGaloisHom_surjective [hn : Normal K L] :
     Function.Surjective (ResidueGaloisHom p P) := by
   let F := 𝓞 K ⧸ p
   let E := 𝓞 L ⧸ P
-  letI : Algebra E E := Algebra.id E
+  let : Algebra E E := Algebra.id E
   intro σ
   have e : PowerBasis F E := powerBasisOfResidue p P
   let β := (PowerBasis.liftEquiv e).toFun σ.toAlgHom
@@ -1139,7 +1161,7 @@ theorem finrank_eq_ramificationIdx_mul_inertiaDeg (P : Ideal (𝓞 L))
 /-- The extension degree `[InertiaField' p P : K]` is equal to the inertia degree of `p` in `L`. -/
 theorem finrank_bot_InertiaField_eq_inertiaDeg_of_unique :
     finrank K (InertiaField' K P) = inertiaDegOfIsGalois p L := by
-  letI := InertiaField_isGalois_of_unique p P
+  let := InertiaField_isGalois_of_unique p P
   rw [← inertiaDeg_eq_inertiaDegOfIsGalois p P, inertiaDeg', ← card_aut_eq_finrank,
     Nat.card_congr (InertiaFieldAutEquivResidueFieldAut p P).toEquiv,
     card_aut_eq_finrank, dif_pos hp.liesOver_eq.symm]
@@ -1171,8 +1193,8 @@ open Classical in
 theorem inertiaDeg_over_InertiaIdeal_eq_one_of_unique (p : Ideal (𝓞 K)) (P : Ideal (𝓞 L))
     [P.IsMaximal] [P unique_lies_over p] :
     inertiaDegOfIsGalois (InertiaIdeal' K P) L = 1 := by
-  letI := ideal_unique_lies_over_tower_top p (InertiaIdeal' K P) P
-  letI := InertiaGroup_Normal (InertiaIdeal' K P) P
+  let := ideal_unique_lies_over_tower_top p (InertiaIdeal' K P) P
+  let := InertiaGroup_Normal (InertiaIdeal' K P) P
   rw [← inertiaDeg_eq_inertiaDegOfIsGalois (InertiaIdeal' K P) P, inertiaDeg', dif_pos rfl,
     ← card_aut_eq_finrank, ← Nat.card_congr <| MulEquiv.toEquiv <|
     autQuoutientInertiaGroupEquivResidueFieldAut (InertiaIdeal' K P) P,
@@ -1185,7 +1207,7 @@ theorem inertiaDeg_over_InertiaIdeal_eq_one_of_unique (p : Ideal (𝓞 K)) (P : 
 
 theorem ramificationIdx_over_InertiaIdeal_eq_ramificationIdx_of_unique :
     ramificationIdxOfIsGalois (InertiaIdeal' K P) L = ramificationIdxOfIsGalois p L := by
-  letI := ideal_unique_lies_over_tower_top p (InertiaIdeal' K P) P
+  let := ideal_unique_lies_over_tower_top p (InertiaIdeal' K P) P
   rw [← finrank_InertiaField_top_eq_ramificationIdx_of_unique p P,
     finrank_eq_ramificationIdx_mul_inertiaDeg (InertiaIdeal' K P) P,
     inertiaDeg_over_InertiaIdeal_eq_one_of_unique p P, mul_one]
@@ -1194,7 +1216,7 @@ theorem ramificationIdx_below_InertiaIdeal_eq_one_of_unique :
     ramificationIdxOfIsGalois p (InertiaField' K P) = 1 := by
   let Pt := IdealBelow (InertiaField' K P) P
   let E := { x // x ∈ InertiaField' K P }
-  letI := InertiaField_isGalois_of_unique p P
+  let := InertiaField_isGalois_of_unique p P
   have h := ramificationIdx_algebra_tower_of_eq (map_isMaximal_ne_bot p E)
     (map_isMaximal_ne_bot Pt L)
     (map_isMaximal_ne_bot p L) (ne_bot_ofIsMaximal Pt) (ne_bot_ofIsMaximal P) rfl
@@ -1208,7 +1230,7 @@ theorem ramificationIdx_below_InertiaIdeal_eq_one_of_unique :
 
 theorem InertiaDeg_below_InertiaIdeal_eq_inertiaDeg_of_unique :
     inertiaDegOfIsGalois p (InertiaField' K P) = inertiaDegOfIsGalois p L := by
-  letI := InertiaField_isGalois_of_unique p P
+  let := InertiaField_isGalois_of_unique p P
   have h := inertiaDeg_algebra_tower_of_eq (Ideal_comap_IntermediateField p P (InertiaField' K P))
     (IdealBelow_def (InertiaField' K P) P)
   nth_rw 1 [inertiaDeg_eq_inertiaDegOfIsGalois (InertiaIdeal' K P) P,

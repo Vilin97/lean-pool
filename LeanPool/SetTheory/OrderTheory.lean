@@ -55,7 +55,7 @@ lemma map_sInf' (hne : s.Nonempty) (hbdd : BddBelow s) : f (sInf s) = sInf (f ''
   refine (IsGLB.csInf_eq ?_ (by simpa)).symm
   simpa only [
     IsGLB, IsGreatest, lowerBounds, mem_image, forall_exists_index, and_imp,
-    forall_apply_eq_imp_iff₂, mem_setOf_eq, upperBounds
+    forall_apply_eq_imp_iff₂, mem_ofPred_eq, upperBounds
   ] using ⟨
     fun _ hs => monotone (csInf_le hbdd hs),
     fun y hy => preimage_Ici_closed _ _ hy hne hbdd
@@ -96,7 +96,7 @@ instance : ContinuousOrderMapBounded (toDual ∘ f ∘ ofDual) where
 lemma bddBelow_iff : BddBelow (f '' s) ↔ BddBelow s := by
   refine ⟨fun | ⟨y, hy⟩ => ?_, fun | ⟨x, hx⟩ => ?_⟩
   · contrapose! hy
-    simp only [BddBelow, Set.Nonempty, lowerBounds, mem_setOf_eq, not_exists, not_forall,
+    simp only [BddBelow, Set.Nonempty, lowerBounds, mem_ofPred_eq, not_exists, not_forall,
       exists_prop, mem_image, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂] at hy ⊢
     obtain ⟨b, hb⟩ := bounded_preimage_Ici (f := f) y

@@ -84,7 +84,7 @@ theorem aut_iter_deriv (d : ℤ) (k : ℕ) :
     rw [←H]
     apply derivWithin_congr
     · norm_cast at *
-      simp only [mem_setOf_eq, one_div, Int.reduceNegSucc, Int.reduceNeg, Int.cast_mul,
+      simp only [mem_ofPred_eq, one_div, Int.reduceNegSucc, Int.reduceNeg, Int.cast_mul,
         Int.cast_pow, Int.cast_neg, Int.cast_one, Int.cast_natCast, Nat.cast_mul, Nat.cast_add,
         Nat.cast_one, Int.cast_add] at *
       intro r hr

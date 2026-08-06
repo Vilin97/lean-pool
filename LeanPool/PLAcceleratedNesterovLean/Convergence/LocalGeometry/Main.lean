@@ -417,7 +417,7 @@ private abbrev localFiberwiseGeometryProof
       exact ((hDgrad_cont.comp continuousOn_fst (fun p hp => hp.1)).clm_apply
         continuousOn_snd).inner continuousOn_snd
     -- ── Local compactness: S ∩ closedBall(m⋆, r_loc) is compact ──
-    haveI : ProperSpace (E d) := FiniteDimensional.proper ℝ (E d)
+    have : ProperSpace (E d) := FiniteDimensional.proper ℝ (E d)
     have hm_star_U := hTub_sub.subset hm_star
     obtain ⟨r_U, hr_U_pos, hr_U_sub⟩ := Metric.isOpen_iff.mp hTub_sub.isOpen m_star hm_star_U
     set r_loc := min 1 (r_U / 2) with hr_loc_def
@@ -553,7 +553,7 @@ private abbrev localFiberwiseGeometryProof
       exact ((hDgrad_cont.comp continuousOn_fst (fun p hp => hp.1)).clm_apply
         continuousOn_snd).inner continuousOn_snd
     -- Step 3: S_loc₂ = S ∩ closedBall(m⋆, r_loc₂) is compact (local compactness)
-    haveI : ProperSpace (E d) := FiniteDimensional.proper ℝ (E d)
+    have : ProperSpace (E d) := FiniteDimensional.proper ℝ (E d)
     have hm_star_U₂ := hTub_sub.subset hm_star
     obtain ⟨r_U₂, hr_U₂_pos, hr_U₂_sub⟩ := Metric.isOpen_iff.mp hTub_sub.isOpen m_star hm_star_U₂
     set r_loc₂ := min 1 (r_U₂ / 2) with hr_loc₂_def

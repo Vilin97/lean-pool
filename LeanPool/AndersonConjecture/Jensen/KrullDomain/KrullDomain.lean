@@ -36,8 +36,8 @@ include T in private theorem ker_pf_span_eq
     (hp_ne : (↑p : T) ≠ 0) :
     P ∈ associatedPrimes T (T ⧸ Ideal.span {(↑p : T)}) ∧
       Ideal.span {p} = P.comap R.carrier.subtype := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   have hP_minimal : P ∈ (Ideal.span {(↑p : T)}).minimalPrimes := by
     refine ⟨⟨hP_prime, Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hp_P)⟩, ?_⟩
     intro Q ⟨hQ_prime, hQ_le⟩ hQ_le_P
@@ -64,13 +64,13 @@ include T in private theorem ker_pf_span_eq
     apply Module.associatedPrimes.minimalPrimes_annihilator_subset_associatedPrimes
     rwa [Ideal.annihilator_quotient]
   have hht := R.height_bound (↑p : T) hp_ne P hP_ass
-  haveI : P.IsPrime := hP_prime
-  haveI : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := hP_prime
+  have : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
   have hspan_le : Ideal.span {p} ≤ P.comap R.carrier.subtype :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr (show (↑p : T) ∈ P from hp_P))
   have hspan_ne : Ideal.span {p} ≠ (⊥ : Ideal R.carrier) :=
     Ideal.span_singleton_eq_bot.not.mpr hp.ne_zero
-  haveI : (Ideal.span {p}).IsPrime :=
+  have : (Ideal.span {p}).IsPrime :=
     (Ideal.span_singleton_prime (α := R.carrier) hp.ne_zero).mpr hp
   refine ⟨hP_ass, ?_⟩
   by_contra hne
@@ -111,8 +111,8 @@ private def intersection_close_up_proof_ker_pf₁
     (f : Polynomial R.carrier)
     (hf_mem : aeval (t₁ + u * (↑y₂ : T)) f ∈ P) : PLift (
     (Polynomial.C p : Polynomial R.carrier) ∣ f ) := ⟨by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   by_contra h_ndvd
   have hp_ne : (↑p : T) ≠ 0 := fun h => hp.ne_zero (R.carrier.subtype_injective h)
   have hP_ne_bot : P ≠ ⊥ := by
@@ -162,7 +162,7 @@ private def intersection_close_up_proof_ker_pf₁
   have hv₀_root : v₀ ∈ {v : T ⧸ P |
       (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
         (Ideal.Quotient.mk P t₁ + v * Ideal.Quotient.mk P (↑y₂ : T)) = 0} := by
-    simpa only [Set.mem_setOf_eq] using heval_zero
+    simpa only [Set.mem_ofPred_eq] using heval_zero
   have hf_ne : f ≠ 0 := by
     intro h
     simp_all
@@ -233,8 +233,8 @@ include T in theorem intersection_close_up_ker_pf₂
     (f : Polynomial R.carrier)
     (hf_mem : aeval (t₂ - u * (↑y₁ : T)) f ∈ P) :
     (Polynomial.C p : Polynomial R.carrier) ∣ f := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   by_contra h_ndvd
   have hp_ne : (↑p : T) ≠ 0 := fun h => hp.ne_zero (R.carrier.subtype_injective h)
   have hP_ne_bot : P ≠ ⊥ := by
@@ -284,7 +284,7 @@ include T in theorem intersection_close_up_ker_pf₂
   have hv₀_root : v₀ ∈ {v : T ⧸ P |
       (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
         (Ideal.Quotient.mk P t₂ - v * Ideal.Quotient.mk P (↑y₁ : T)) = 0} := by
-    simpa only [Set.mem_setOf_eq] using heval_zero
+    simpa only [Set.mem_ofPred_eq] using heval_zero
   have hf_ne : f ≠ 0 := by
     intro h
     simp_all
@@ -316,8 +316,8 @@ private def intersection_close_up_proof
       ∃ (hle : R.carrier ≤ S.carrier) (x₁ : S.carrier),
         (⟨(c : T), hle c.2⟩ : S.carrier) - x₁ * ⟨(y₁ : T), hle y₁.2⟩ ∈
           Ideal.span {⟨(y₂ : T), hle y₂.2⟩}) := ⟨by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   -- Write c = t₁·y₁ + t₂·y₂ with t₁, t₂ ∈ T from the membership in (y₁,y₂)T
   obtain ⟨t₁, t₂, hc_eq⟩ := Submodule.mem_span_pair.mp hc
   -- Key algebraic identity: c = (t₁ + u·y₂)·y₁ + (t₂ - u·y₁)·y₂ for any u ∈ T
@@ -359,10 +359,10 @@ private def intersection_close_up_proof
         (fun u => t₁ + u * (↑y₂ : T)) ⁻¹'
           {x : T | (Polynomial.map R.carrier.subtype f).IsRoot x} from by
       ext u
-      simp only [Set.mem_preimage, Set.mem_setOf_eq,
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq,
         Polynomial.IsRoot, Polynomial.eval_map, Polynomial.aeval_def,
         show algebraMap R.carrier T = R.carrier.subtype from rfl]]
-    exact (Polynomial.finite_setOf_isRoot hmap_ne).preimage
+    exact (Polynomial.finite_setOfPred_isRoot hmap_ne).preimage
       (Set.InjOn.mono (Set.subset_univ _) h_inj.injOn)
   have hD₂_fiber_finite : ∀ (f : Polynomial R.carrier), f ≠ 0 →
       {u : T | (aeval (t₂ - u * (↑y₁ : T)) f : T) = 0}.Finite := by
@@ -377,10 +377,10 @@ private def intersection_close_up_proof
         (fun u => t₂ - u * (↑y₁ : T)) ⁻¹'
           {x : T | (Polynomial.map R.carrier.subtype f).IsRoot x} from by
       ext u
-      simp only [Set.mem_preimage, Set.mem_setOf_eq,
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq,
         Polynomial.IsRoot, Polynomial.eval_map, Polynomial.aeval_def,
         show algebraMap R.carrier T = R.carrier.subtype from rfl]]
-    exact (Polynomial.finite_setOf_isRoot hmap_ne).preimage
+    exact (Polynomial.finite_setOfPred_isRoot hmap_ne).preimage
       (Set.InjOn.mono (Set.subset_univ _) h_inj.injOn)
   -- C_ext = {(0)} ∪ all associated primes of T/(r) for r ∈ R nonzero (the primes to avoid)
   set C_ext : Set (Ideal T) := {⊥} ∪
@@ -426,14 +426,14 @@ private def intersection_close_up_proof
         {v : T ⧸ P | (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
           (Ideal.Quotient.mk P t₁ + v * Ideal.Quotient.mk P (↑y₂ : T)) = 0}).Finite := by
     intro f _ P hP hP_ne hmap_ne hy₂_ne
-    haveI : P.IsPrime := hC_ext_prime P hP
-    haveI : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
+    have : P.IsPrime := hC_ext_prime P hP
+    have : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
     have h_inj : Function.Injective
         fun (v : T ⧸ P) => Ideal.Quotient.mk P t₁ + v * Ideal.Quotient.mk P (↑y₂ : T) := by
       intro v₁ v₂ h
       simp_all
     apply Set.Finite.image
-    exact (Polynomial.finite_setOf_isRoot hmap_ne).preimage
+    exact (Polynomial.finite_setOfPred_isRoot hmap_ne).preimage
       (Set.InjOn.mono (Set.subset_univ _) h_inj.injOn)
   have hD_mod₂_fiber_finite : ∀ (f : Polynomial R.carrier) (_ : f ≠ 0)
       (P : Ideal T) (_ : P ∈ C_ext) (_ : P ≠ ⊥)
@@ -443,14 +443,14 @@ private def intersection_close_up_proof
         {v : T ⧸ P | (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
           (Ideal.Quotient.mk P t₂ - v * Ideal.Quotient.mk P (↑y₁ : T)) = 0}).Finite := by
     intro f _ P hP hP_ne hmap_ne hy₁_ne
-    haveI : P.IsPrime := hC_ext_prime P hP
-    haveI : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
+    have : P.IsPrime := hC_ext_prime P hP
+    have : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
     have h_inj : Function.Injective
         fun (v : T ⧸ P) => Ideal.Quotient.mk P t₂ - v * Ideal.Quotient.mk P (↑y₁ : T) := by
       intro v₁ v₂ h
       simp_all
     apply Set.Finite.image
-    exact (Polynomial.finite_setOf_isRoot hmap_ne).preimage
+    exact (Polynomial.finite_setOfPred_isRoot hmap_ne).preimage
       (Set.InjOn.mono (Set.subset_univ _) h_inj.injOn)
   -- Cardinal bound for avoidance: |C_ext × D_ext| < |residue field| or both countable
   have hCD_bound : Cardinal.mk (↑C_ext × ↑D_ext) <
@@ -458,8 +458,8 @@ private def intersection_close_up_proof
       (C_ext.Countable ∧ D_ext.Countable) := by
     by_cases hR_le : Cardinal.mk R.carrier ≤ Cardinal.aleph0
     · -- R countable: use countable avoidance branch
-      haveI : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
-      haveI : Countable (Polynomial R.carrier) :=
+      have : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
+      have : Countable (Polynomial R.carrier) :=
         Countable.of_equiv _ ((Polynomial.toFinsuppIso R.carrier).toEquiv.trans
           AddMonoidAlgebra.coeffEquiv).symm
       -- C_ext is countable: countable union of finite associated prime sets

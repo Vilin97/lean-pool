@@ -71,7 +71,7 @@ lemma _root_.LO.Modal.Kripke.FilterEqvQuotient.finite (T_finite : T.Finite) :
       exact this φ hp hpx |>.2;
     · intro hpy;
       have := h.symm.subset;
-      simp only [Set.setOf_subset_setOf, and_imp] at this;
+      simp only [Set.ofPred_subset_ofPred, and_imp] at this;
       exact this φ hp hpy |>.2;
   exact Finite.of_injective f hf
 

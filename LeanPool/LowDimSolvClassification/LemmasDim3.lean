@@ -1085,7 +1085,7 @@ lemma finrank_com_eq2_from_basis_bracket
       · simp only [smul_eq_mul,Fin.isValue, neg_mul, mul_one,smul_eq_mul]
       · simp only [Fin.isValue, smul_eq_mul, neg_mul, mul_one]
     · have h1 :  B 1 ∈  {x | ∃ (y z:L), ⁅y, z⁆ = x} :=by
-        rw [Set.mem_setOf_eq]
+        rw [Set.mem_ofPred_eq]
         use α⁻¹ • B 0
         use B 2 - β • B 1
         simp_all only [Fin.isValue, ne_eq, lie_sub, smul_lie, smul_add, not_false_eq_true,
@@ -1093,12 +1093,12 @@ lemma finrank_com_eq2_from_basis_bracket
         rw [smul_comm]
         simp
       have h2 :  B 2 ∈  {x | ∃ (y z:L), ⁅y, z⁆ = x} :=by
-        rw [Set.mem_setOf_eq]
+        rw [Set.mem_ofPred_eq]
         use B 0
         use B 1
       apply  Submodule.span_monotone
       intro x hx
-      simp_all only [Fin.isValue, ne_eq, Set.mem_setOf_eq, Set.mem_insert_iff,
+      simp_all only [Fin.isValue, ne_eq, Set.mem_ofPred_eq, Set.mem_insert_iff,
         Set.mem_singleton_iff]
       cases hx with
         | inl eq =>
@@ -1190,7 +1190,7 @@ lemma case2 : Module.finrank K L = 3 ∧ Module.finrank K (commutator K L) = 2 �
           · rw [span_le]
             trans {x | ∃ (y z:L), ⁅y, z⁆ = x}
             · intro Bi hBi
-              simp_all only [Set.mem_insert_iff, Set.mem_singleton_iff, Set.mem_setOf_eq]
+              simp_all only [Set.mem_insert_iff, Set.mem_singleton_iff, Set.mem_ofPred_eq]
               cases hBi with
               | inl h => subst h; exact ⟨_, _, hB01⟩
               | inr h => subst h; exact ⟨_, _, hB02⟩

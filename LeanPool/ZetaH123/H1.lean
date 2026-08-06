@@ -142,7 +142,7 @@ lemma admissible_finite (q d k : ℕ) (hq : 1 ≤ q) :
     (s := ↑(Fintype.piFinset (fun _ : Fin (d + 1) => Finset.range (k + 1))))
   · exact (Fintype.piFinset _).finite_toSet
   · intro kk hkk
-    simp only [Set.mem_setOf_eq] at hkk
+    simp only [Set.mem_ofPred_eq] at hkk
     simp only [Finset.mem_coe, Fintype.mem_piFinset,
       Finset.mem_range]
     intro i

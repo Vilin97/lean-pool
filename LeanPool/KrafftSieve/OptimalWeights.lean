@@ -322,7 +322,7 @@ def kernelQ1Perp (n : ℕ) : Submodule ℝ (Idx n → ℝ) :=
       simp [dotProduct],
     smul_mem' := by
       -- By definition of dot product, we have dotProduct n u (c • x) = c * dotProduct n u x.
-      simp only [dotProduct, Set.mem_setOf_eq, Pi.smul_apply, smul_eq_mul]
+      simp only [dotProduct, Set.mem_ofPred_eq, Pi.smul_apply, smul_eq_mul]
       exact fun c x hx u hu => by
         simpa [ mul_left_comm, Finset.mul_sum _ _ _ ] using
           mul_eq_zero_of_right c ( hx u hu )
@@ -459,7 +459,7 @@ lemma decomposition (n : ℕ) (x : Idx n → ℝ) :
         refine ⟨ fun i => y i, ?_, fun i => z i, ?_, ?_ ⟩
         · refine Submodule.span_induction ?_ ?_ ?_ ?_ hy
           · intro x_2 h_2
-            simp_all only [WithLp.equiv_symm_apply, Set.mem_setOf_eq]
+            simp_all only [WithLp.equiv_symm_apply, Set.mem_ofPred_eq]
             exact h_2
           · exact show q1 n ( fun _ => 0 ) = 0 from by unfold q1; norm_num
           · exact fun x y hx hy hx' hy' => Submodule.add_mem _ hx' hy'
@@ -494,7 +494,7 @@ lemma sphere_perp_compact (n : ℕ) : IsCompact (spherePerp n) := by
   · -- Closed
     apply IsClosed.inter
     · -- kernelQ1Perp is closed
-      haveI : FiniteDimensional ℝ (Idx n → ℝ) := by infer_instance
+      have : FiniteDimensional ℝ (Idx n → ℝ) := by infer_instance
       exact (kernelQ1Perp n).complete_of_finiteDimensional.isClosed
     · -- sphere is closed
       apply isClosed_eq

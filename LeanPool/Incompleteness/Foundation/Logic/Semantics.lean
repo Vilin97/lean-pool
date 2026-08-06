@@ -178,7 +178,7 @@ instance empty' (𝓜 : M) : 𝓜 ⊧* (∅ : Set F) := ⟨by simp⟩
     𝓜 ⊧* Set.range f ↔ ∀ i, 𝓜 ⊧ (f i) := by simp [realizeSet_iff]
 
 @[simp] lemma setOf_iff {P : F → Prop} {𝓜 : M} :
-    𝓜 ⊧* setOf P ↔ ∀ f, P f → 𝓜 ⊧ f := by simp [realizeSet_iff]
+    𝓜 ⊧* Set.ofPred P ↔ ∀ f, P f → 𝓜 ⊧ f := by simp [realizeSet_iff]
 
 end RealizeSet
 
@@ -261,7 +261,7 @@ lemma subset_of_le {T : ℕ → Set F} (H : Cumulative T)
 
 lemma finset_mem {T : ℕ → Set F}
     (H : Cumulative T) {u : Finset F} (hu : ↑u ⊆ ⋃ s, T s) : ∃ s, ↑u ⊆ T s := by
-  haveI := Classical.decEq
+  have := Classical.decEq
   induction u using Finset.induction
   case empty => exact ⟨0, by simp⟩
   case insert f u _ ih =>

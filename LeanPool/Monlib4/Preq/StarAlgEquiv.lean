@@ -73,12 +73,6 @@ def StarAlgEquiv.toLinearEquiv {R A B : Type*} [Semiring R] [AddCommMonoid A]
     map_add' _ _ := by simp only [map_add]
     map_smul' _ _ := by simp only [map_smul, RingHom.id_apply]
 
-theorem StarAlgEquiv.symm_apply_eq {R A B : Type _}
-  [Add A] [Add B] [Mul A] [Mul B] [SMul R A] [SMul R B] [Star A] [Star B]
-  (f : A ≃⋆ₐ[R] B) (x : A) (y : B) :
-    f.symm y = x ↔ y = f x :=
-  EquivLike.inv_apply_eq (e := f)
-
 @[simp]
 theorem StarAlgEquiv.ofAlgEquiv_coe {R A B : Type _}
     [CommSemiring R] [Semiring A] [Semiring B]

@@ -159,7 +159,7 @@ lemma determinantBound_set_finite :
       Set.image2 (fun p q ↦ 1 + δ - a p - b q + min (a p / q) (b q / p))
         (Set.Ioc 1 d) (Set.Ioc 1 d) := by
     ext x
-    simp only [exists_prop, exists_and_left, Set.mem_setOf_eq, Set.mem_image2]
+    simp only [exists_prop, exists_and_left, Set.mem_ofPred_eq, Set.mem_image2]
   exact this ▸ Set.Finite.image2 _ (Set.finite_Ioc 1 d) (Set.finite_Ioc 1 d)
 
 include hdab
@@ -305,7 +305,7 @@ lemma geometryBound_set_finite :
       (fun x ↦ f x.1 x.2.1 x.2.2) ''
         ((Finset.Icc 1 d).powerset ×ˢ (Finset.Icc 1 d).powerset ×ˢ (Finset.Icc 1 d).powerset) := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_image, Set.mem_prod, Finset.mem_coe, Finset.mem_powerset,
+    simp only [Set.mem_ofPred_eq, Set.mem_image, Set.mem_prod, Finset.mem_coe, Finset.mem_powerset,
       Prod.exists]
     constructor
     · rintro ⟨I, hI, I', hI', I'', hI'', rfl⟩

@@ -158,13 +158,13 @@ private lemma avg_corrEmb_eq_avg_over_all_embeddings (f : Coloring n) (b : Emb4)
     (∑ σ : G, corrEmb f (σ • b)) / (Fintype.card G : Q)
       = (∑ x : Emb4, corrEmb f x) / (Fintype.card Emb4 : Q) := by
   classical
-  haveI : Nonempty Emb4 := ⟨b⟩
+  have : Nonempty Emb4 := ⟨b⟩
   -- The action on `Emb4` is pretransitive, so the orbit of `b` is all of `Emb4`.
-  letI : MulAction.IsMultiplyPretransitive G (Sym n) 4 :=
+  let : MulAction.IsMultiplyPretransitive G (Sym n) 4 :=
     Equiv.Perm.isMultiplyPretransitive (α := Sym n) 4
   have hpre : MulAction.orbit G b = (Set.univ : Set Emb4) := by
     simpa using (MulAction.orbit_eq_univ (M := G) (a := b))
-  letI : Fintype (↑(MulAction.orbit G b)) := Fintype.ofFinite _
+  let : Fintype (↑(MulAction.orbit G b)) := Fintype.ofFinite _
   have hbmem : ∀ x : Emb4, x ∈ MulAction.orbit G b := by
     simp_all
   let hOrbitEquiv : (↑(MulAction.orbit G b)) ≃ Emb4 :=

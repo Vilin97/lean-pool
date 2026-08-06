@@ -37,13 +37,13 @@ lemma pointDual.h (p : {p : E // p ≠ 0}) :
 
 lemma pointDual_origin (p : {p : E // p ≠ 0}) :
   (0 : E) ∈ (SetLike.coe <| pointDual p) := by
-  rw [pointDual.h, map_smulₛₗ, map_inv₀, RCLike.conj_to_real, Set.preimage_setOf_eq,
-    Set.mem_setOf_eq, map_zero, ← one_div]
+  rw [pointDual.h, map_smulₛₗ, map_inv₀, RCLike.conj_to_real, Set.preimage_ofPred_eq,
+    Set.mem_ofPred_eq, map_zero, ← one_div]
   simp_all
 
 lemma mem_pointDual (p : {p : E // p ≠ 0}) (x : E) :
   x ∈ (SetLike.coe <| pointDual p) ↔ inner ℝ p.1 x ≤ (1:ℝ) := by
-  rw [pointDual.h, Set.mem_preimage, InnerProductSpace.toDual_apply_apply, Set.mem_setOf,
+  rw [pointDual.h, Set.mem_preimage, InnerProductSpace.toDual_apply_apply, Set.mem_ofPred,
     inner_smul_left, RCLike.conj_to_real,
     ← mul_le_mul_iff_of_pos_left (by rw [norm_pos_iff]; exact p.2 : 0 < norm p.1),
     ← mul_assoc, mul_inv_cancel₀ (norm_ne_zero_iff.mpr p.2), one_mul]

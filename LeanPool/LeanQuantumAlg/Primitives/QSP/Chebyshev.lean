@@ -579,7 +579,7 @@ theorem qsp_normalization_iff (P Q : ℂ[X]) :
       Complex.ofReal_injective.injOn).mono ?_)
     rintro z ⟨x, hx, rfl⟩
     have h := hpt x hx
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     simpa [conjP_eval_ofReal] using h
 
 /-- **Quantum signal processing, reflection convention**

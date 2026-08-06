@@ -262,7 +262,7 @@ theorem D_qexp_tsum (a : ℕ → ℂ) (z : ℍ)
     apply Summable.of_norm_bounded_eventually (g := fun n => u n / (2 * π)) (hu_sum.div_const _)
     rw [Filter.eventually_cofinite]
     refine Set.Finite.subset (Set.finite_singleton 0) fun n hn => ?_
-    simp only [Set.mem_setOf_eq, not_le] at hn
+    simp only [Set.mem_ofPred_eq, not_le] at hn
     by_contra h_ne
     have h_deriv_bound := hu_bound n ⟨y, Set.mem_singleton y⟩
     have h_n_ge_1 : (1 : ℝ) ≤ n := Nat.one_le_cast.mpr (Nat.one_le_iff_ne_zero.mpr h_ne)

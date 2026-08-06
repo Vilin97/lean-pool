@@ -125,7 +125,7 @@ lemma Coalgebra.inner_eq_counit' [RCLike R] [NormedAddCommGroupOfRing A] [InnerP
 lemma Coalgebra.counit_eq_bra_one [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A] :
   Coalgebra.counit = (bra R (1 : A)).toLinearMap := by
-  haveI := FiniteDimensional.complete R A
+  have := FiniteDimensional.complete R A
   rw [counit_eq_unit_adjoint, ← algebraMapCLM_adjoint_eq_bra_one]
   rfl
 
@@ -164,8 +164,8 @@ theorem Coalgebra.lTensor_mul_comp_rTensor_comul_of
   (lT A (m A)) ∘ₗ (ϰ A A A).toLinearMap ∘ₗ (rT A comul) = comul ∘ₗ (m A) := by
   apply_fun adjoint using LinearEquiv.injective _
   simp_rw [comul_eq_mul_adjoint]
-  letI : NormedAddCommGroup (A ⊗[R] A) := by infer_instance
-  letI : InnerProductSpace R (A ⊗[R] A) := by infer_instance
+  let : NormedAddCommGroup (A ⊗[R] A) := by infer_instance
+  let : InnerProductSpace R (A ⊗[R] A) := by infer_instance
   simp_rw [LinearMap.adjoint_comp]
   simp_rw [lTensor_adjoint, rTensor_adjoint,adjoint_adjoint,
     TensorProduct.assoc_adjoint, LinearMap.comp_assoc]

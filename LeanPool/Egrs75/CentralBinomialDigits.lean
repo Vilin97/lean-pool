@@ -299,9 +299,9 @@ A030979 — not the open infinitude claim.) -/
 theorem centralBinom_coprime_105_iff (n : ℕ) :
     Nat.Coprime (Nat.centralBinom n) 105 ↔
       LowDoubleDigits 3 n ∧ LowDoubleDigits 5 n ∧ LowDoubleDigits 7 n := by
-  haveI : Fact (Nat.Prime 3) := ⟨by decide⟩
-  haveI : Fact (Nat.Prime 5) := ⟨by decide⟩
-  haveI : Fact (Nat.Prime 7) := ⟨by decide⟩
+  have : Fact (Nat.Prime 3) := ⟨by decide⟩
+  have : Fact (Nat.Prime 5) := ⟨by decide⟩
+  have : Fact (Nat.Prime 7) := ⟨by decide⟩
   have h105 : (105 : ℕ) = 3 * (5 * 7) := by norm_num
   rw [h105, Nat.coprime_mul_iff_right, Nat.coprime_mul_iff_right,
     coprime_centralBinom_prime_iff (p := 3),

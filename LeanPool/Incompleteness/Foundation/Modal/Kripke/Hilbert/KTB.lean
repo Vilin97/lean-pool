@@ -57,7 +57,7 @@ instance _root_.LO.Modal.Hilbert.KTB.Kripke.finiteComplete :
   apply hp (by
     suffices Finite (FilterEqvQuotient M φ.subformulas) by
       simp only [FiniteFrameClass.toFrameClass, ReflexiveSymmetricFiniteFrameClass,
-        Set.mem_image, Set.mem_setOf_eq];
+        Set.mem_image, Set.mem_ofPred_eq];
       use ⟨FM.toFrame⟩;
       refine ⟨⟨?_, ?_⟩, ?_⟩;
       · apply reflexive_filterOf_of_reflexive (finestFilterationModel.filterOf);

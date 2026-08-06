@@ -247,7 +247,7 @@ lemma lmarginal_AD (x : Samples 4) :
         ENNReal.ofReal (1 - (z0I (x 1) (x 2) : ℝ)) *
           (volume : Measure Rand) (aSlice (x 1) (x 2))ᶜ := by
   classical
-  haveI : ∀ i : Fin 4, SigmaFinite (μ4 i) := fun _ => by
+  have : ∀ i : Fin 4, SigmaFinite (μ4 i) := fun _ => by
     dsimp [μ4]
     infer_instance
   have hunion :
@@ -325,7 +325,7 @@ lemma p_eq_lintegral_innerBC :
     ClassicalAlgorithm.p recursive3ParamAlg =
       ∫⁻ b : Rand, ∫⁻ c : Rand, innerBC b c ∂(volume : Measure Rand) ∂(volume : Measure Rand) := by
   classical
-  haveI : ∀ i : Fin 4, SigmaFinite (μ4 i) := fun _ => by
+  have : ∀ i : Fin 4, SigmaFinite (μ4 i) := fun _ => by
     dsimp [μ4]
     infer_instance
   -- Start from the definition of `p` as a `lintegral` on `Samples 4` (with an explicit product

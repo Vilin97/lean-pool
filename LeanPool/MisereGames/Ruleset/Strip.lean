@@ -440,7 +440,7 @@ protected def moves : Player → R → Set R :=
 
 theorem mem_moves_iff (p : Player) (s s' : R) :
     s' ∈ Strip.moves p s ↔ ∃ n, board s n = Piece.ofPlayer p ∧ s' = push s n := by
-  simp only [Strip.moves, Set.mem_image, Set.mem_setOf_eq]
+  simp only [Strip.moves, Set.mem_image, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨n, hn, rfl⟩; exact ⟨n, hn, rfl⟩
   · rintro ⟨n, hn, rfl⟩; exact ⟨n, hn, rfl⟩
@@ -483,7 +483,7 @@ theorem toGameForm_zero_iff (g : R) :
       Set.image_eq_empty, Player.forall]
   · unfold Strip.moves; aesop
   · unfold Strip.moves at h
-    simp_all +decide only [board_def, Set.ext_iff, Set.mem_image, Set.mem_setOf_eq,
+    simp_all +decide only [board_def, Set.ext_iff, Set.mem_image, Set.mem_ofPred_eq,
       Set.mem_empty_iff_false, iff_false, not_exists, not_and, forall_apply_eq_imp_iff₂,
       imp_false]
     exact fun n => Piece.eq_none_of_ne_ofPlayer ( h.1 n ) ( h.2 n )

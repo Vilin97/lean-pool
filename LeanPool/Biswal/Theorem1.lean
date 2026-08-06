@@ -1927,10 +1927,10 @@ lemma poly_eq_of_eventually_eq (q₁ q₂ : Polynomial ℝ) (N : ℕ)
       apply Set.Infinite.mono (s := Set.range fun r : ℕ => ((N + r + 1 : ℕ) : ℝ))
       · intro x hx
         rcases hx with ⟨r, rfl⟩
-        simp only [Set.mem_setOf_eq, Polynomial.eval_sub]
+        simp only [Set.mem_ofPred_eq, Polynomial.eval_sub]
         linarith [h (N + r + 1) (by omega : N < N + r + 1)]
       · exact Set.infinite_range_of_injective (fun r₁ r₂ h₉ => by simp_all [add_assoc])
-    exact this.not_finite (Polynomial.finite_setOf_isRoot (by simp_all))
+    exact this.not_finite (Polynomial.finite_setOfPred_isRoot (by simp_all))
   exact eq_of_sub_eq_zero (by simpa using h₁)
 
 theorem scaled_coeff_poly_degree_ge

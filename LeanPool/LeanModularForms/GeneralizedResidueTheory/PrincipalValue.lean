@@ -64,8 +64,8 @@ lemma measurableSet_pv_support (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ)
   have h_norm_cont : ContinuousOn (fun t => ‖γ t - z₀‖) (Icc a b) :=
     (hγ_cont.sub continuousOn_const).norm
   have h_open_sub :
-      IsOpen ((Icc a b).restrict (fun t => ‖γ t - z₀‖) ⁻¹' Ioi ε) :=
-    isOpen_Ioi.preimage h_norm_cont.restrict
+      IsOpen ((Icc a b).domRestrict (fun t => ‖γ t - z₀‖) ⁻¹' Ioi ε) :=
+    isOpen_Ioi.preimage h_norm_cont.domRestrict
   rw [isOpen_induced_iff] at h_open_sub
   obtain ⟨U, hU_open, hU_eq⟩ := h_open_sub
   have h_eq : {t | ε < ‖γ t - z₀‖} ∩ Icc a b = U ∩ Icc a b := by
@@ -73,13 +73,14 @@ lemma measurableSet_pv_support (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ)
     · intro ⟨hx_far, hx_Icc⟩
       exact ⟨by
         have : (⟨x, hx_Icc⟩ : ↑(Icc a b)) ∈
-            (Icc a b).restrict (fun t => ‖γ t - z₀‖) ⁻¹' Ioi ε := by
-          simp only [mem_preimage, restrict_apply, mem_Ioi]; exact hx_far
+            (Icc a b).domRestrict (fun t => ‖γ t - z₀‖) ⁻¹' Ioi ε := by
+          simp only [mem_preimage, mem_Ioi]; exact hx_far
         rwa [← hU_eq] at this, hx_Icc⟩
     · intro ⟨hx_U, hx_Icc⟩
       exact ⟨by
         have : (⟨x, hx_Icc⟩ : ↑(Icc a b)) ∈ Subtype.val ⁻¹' U := hx_U
-        simp_all, hx_Icc⟩
+        rw [hU_eq] at this
+        exact this, hx_Icc⟩
   rw [h_eq]
   exact hU_open.measurableSet.inter isClosed_Icc.measurableSet
 

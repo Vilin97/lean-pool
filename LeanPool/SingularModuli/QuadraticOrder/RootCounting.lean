@@ -836,7 +836,7 @@ theorem cardSqrts_prime_pow_even_val (hp2 : p ≠ 2) (n r : ℕ)
       exact Nat.eq_of_mul_eq_mul_left hp_pos h_mod_eq
     have hy_eq' : y1 = y2 := by
       have hp_pow_pos : 0 < p ^ (n - 2 * r) := pow_pos hp.out.pos (n - 2 * r)
-      haveI : NeZero (p ^ (n - 2 * r)) := ⟨hp_pow_pos.ne'⟩
+      have : NeZero (p ^ (n - 2 * r)) := ⟨hp_pow_pos.ne'⟩
       exact ZMod.val_injective _ hy_eq
     have hk_eq : k1 = k2 := by
       have h_subst : p ^ r * y1.val + k1 * p ^ (n - r) = p ^ r * y1.val + k2 * p ^ (n - r) := by

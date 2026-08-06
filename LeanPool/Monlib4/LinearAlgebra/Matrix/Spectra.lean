@@ -106,7 +106,7 @@ theorem _root_.Matrix.IsHermitian.spectra_set_eq_spectrum {A : Matrix n n 𝕜}
     {x : 𝕜 | x ∈ (hA.spectra : Multiset 𝕜)} = _root_.spectrum 𝕜 (toLin' A) := by
   ext x
   rw [IsHermitian.spectra_coe]
-  simp only [Set.mem_setOf, Multiset.mem_map, Finset.mem_univ_val, true_and, exists_exists_eq_and]
+  simp only [Set.mem_ofPred, Multiset.mem_map, Finset.mem_univ_val, true_and, exists_exists_eq_and]
   rw [spectrum_toLin', hA.spectrum_eq_image_range]
   simp [Set.mem_image, Set.mem_range]
 

@@ -108,7 +108,7 @@ lemma arg_pow2 (n : ℕ) (f : ℍ → ℂ) (hf : Tendsto f atImInfty (𝓝 0)) :
       refine ⟨?_, ?_⟩
       · use 1
         simp_all
-      simp only [preimage_setOf_eq, subset_refl]
+      simp only [preimage_ofPred_eq, subset_refl]
     · have hpi : 0 < π / n := div_pos Real.pi_pos (by exact_mod_cast Nat.pos_of_ne_zero hn0)
       have hA1 := h3 (π / n) hpi
       have hA2 := hf (1/2) (one_half_pos)
@@ -140,7 +140,7 @@ lemma clog_pow2 (n : ℕ) (f : ℍ → ℂ) (hf : Tendsto f atImInfty (𝓝 0)) 
   use a
   refine ⟨ha0, fun b hb => ?_⟩
   have h2 := ha hb
-  simp only [mem_atTop_sets, mem_preimage, mem_setOf_eq] at *
+  simp only [mem_atTop_sets, mem_preimage, mem_ofPred_eq] at *
   rw [h2]; simp only [norm_pow, Real.log_pow, ofReal_mul, ofReal_natCast]; ring
 
 

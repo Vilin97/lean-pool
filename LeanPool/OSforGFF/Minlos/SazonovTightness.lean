@@ -118,7 +118,7 @@ lemma tail_bound_from_exp_integral {V : Type*} [NormedAddCommGroup V]
     rw [Real.exp_zero] at this; linarith
   have hf_ge_δ : ∀ y ∈ A, δ ≤ f y := by
     intro y hy
-    simp only [A, mem_setOf_eq] at hy; simp only [f, hδ_def]
+    simp only [A, mem_ofPred_eq] at hy; simp only [f, hδ_def]
     have : σ ^ 2 * R ^ 2 / 2 ≤ σ ^ 2 * ‖y‖ ^ 2 / 2 := by
       apply div_le_div_of_nonneg_right _ (by positivity : (0:ℝ) ≤ 2)
       exact mul_le_mul_of_nonneg_left (sq_le_sq' (by linarith) hy) (by positivity)
@@ -723,7 +723,7 @@ theorem gaussian_averaging_bound
     · push Not at hqf
       have hre_le : (φ x).re ≤ ‖φ x‖ := le_trans (le_abs_self _) (abs_re_le_norm _)
       have hnorm_le : ‖φ x‖ ≤ 1 := by
-        rw [← hφ]; haveI : IsProbabilityMeasure μ.toMeasure := inferInstance
+        rw [← hφ]; have : IsProbabilityMeasure μ.toMeasure := inferInstance
         exact norm_charFun_le_one x
       have hneg_re : -(φ x).re ≤ ‖φ x‖ := le_trans (neg_le_abs _) (abs_re_le_norm _)
       linarith
@@ -739,7 +739,7 @@ theorem gaussian_averaging_bound
       (((gaussDensity_continuous' σ).measurable.mul
         (measurable_const.sub hφ_meas)).aestronglyMeasurable)
     filter_upwards with x
-    haveI : IsProbabilityMeasure μ.toMeasure := inferInstance
+    have : IsProbabilityMeasure μ.toMeasure := inferInstance
     have hg_nn := gaussDensity_nonneg' σ x
     have hre := le_trans (le_abs_self (charFun μ.toMeasure x).re) (abs_re_le_norm _)
     have hnre := le_trans (neg_le_abs (charFun μ.toMeasure x).re) (abs_re_le_norm _)
@@ -1007,7 +1007,7 @@ lemma restrictOp_trace_le (S : H →L[ℝ] H) (hS : S.IsPositive)
       ∑ i, @inner ℝ (EuclideanSpace ℝ (Fin n)) _ (b' i) (restrictOp S v (b' i)) ≤
         ∑' i, @inner ℝ H _ (b i) (S (b i)) := by
   intro ι' _ b'
-  haveI : DecidableEq ι' := Classical.decEq _
+  have : DecidableEq ι' := Classical.decEq _
   rw [restrictOp_trace_eq_diag S v hv ι' b']
   exact orthonormal_diag_le_hilbert_trace S hS v hv b hsum
 

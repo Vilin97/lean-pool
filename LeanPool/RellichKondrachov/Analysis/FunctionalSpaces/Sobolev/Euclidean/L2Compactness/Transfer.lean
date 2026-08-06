@@ -61,15 +61,15 @@ private lemma dist_smoothL2_le_mul_dist_smoothBCF (hK : IsCompact K) (hKm : Meas
           dist (smoothBCF (E := E) (K := K) (ψ := ψ) hK hKm hψc hψcs u)
               (smoothBCF (E := E) (K := K) (ψ := ψ) hK hKm hψc hψcs v) := by
   classical
-  letI : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
+  let : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
   let s : Set E := Kψ (K := K) (ψ := ψ)
   have hs_compact : IsCompact s := isCompact_Kψ (K := K) (ψ := ψ) hK hψcs
   have hs : MeasurableSet s := hs_compact.measurableSet
   have hs_lt_top : (volume : Measure E) s < ∞ :=
     hs_compact.measure_lt_top (μ := (volume : Measure E))
   let μs : Measure E := (volume : Measure E).restrict s
-  haveI : Fact ((volume : Measure E) s < ∞) := ⟨hs_lt_top⟩
-  haveI : IsFiniteMeasure μs := by
+  have : Fact ((volume : Measure E) s < ∞) := ⟨hs_lt_top⟩
+  have : IsFiniteMeasure μs := by
     infer_instance
   let mS : ℝ := (MeasureTheory.measureUnivNNReal μs) ^ ((2 : ℝ≥0∞).toReal⁻¹)
   intro u v
@@ -241,15 +241,15 @@ theorem smoothL2_image_closedBall_isCompact (hK : IsCompact K) (hKm : Measurable
         (closure
           (smoothL2 (E := E) (K := K) ψ hK hKm hψc hψcs '' Metric.closedBall (0 : _) R)) := by
   classical
-  letI : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
+  let : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
   let s : Set E := Kψ (K := K) (ψ := ψ)
   have hs_compact : IsCompact s := isCompact_Kψ (K := K) (ψ := ψ) hK hψcs
   have hs : MeasurableSet s := hs_compact.measurableSet
   have hs_lt_top : (volume : Measure E) s < ∞ :=
     hs_compact.measure_lt_top (μ := (volume : Measure E))
   let μs : Measure E := (volume : Measure E).restrict s
-  haveI : Fact ((volume : Measure E) s < ∞) := ⟨hs_lt_top⟩
-  haveI : IsFiniteMeasure μs := by
+  have : Fact ((volume : Measure E) s < ∞) := ⟨hs_lt_top⟩
+  have : IsFiniteMeasure μs := by
     infer_instance
   let mS : ℝ := (MeasureTheory.measureUnivNNReal μs) ^ ((2 : ℝ≥0∞).toReal⁻¹)
   have hmS : 0 ≤ mS := by

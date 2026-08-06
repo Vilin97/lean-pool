@@ -38,13 +38,13 @@ lemma mcast_apply {a b : ℤ} {Γ : Subgroup SL(2, ℤ)} (h : a = b) (f : Modula
 
 lemma mul_Delta_map_eq (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 1) (k - 12)) (z : ℍ) :
   (mulDeltaMap k f) z = f z * Delta z := by
-  rw [mulDeltaMap, mcast_apply ]
+  rw [mulDeltaMap, _root_.mcast_apply]
   rfl
 
 lemma mul_Delta_map_eq_mul (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 1) (k - 12)) :
   ((mulDeltaMap k f) : ℍ → ℂ) = (f.mul (ModFormMk _ 12 Delta)) := by
   ext z
-  rw [mulDeltaMap, mcast_apply ]
+  rw [mulDeltaMap, _root_.mcast_apply]
 
 lemma qExpansion_coe_smul {n : ℕ} {k : ℤ} (a : ℂ) (f : ModularForm Γ(n) k) :
     qExpansion n (⇑(a • f)) = qExpansion n (a • ⇑f) := rfl
@@ -95,8 +95,8 @@ def CuspFormsIsoModforms (k : ℤ) : CuspForm (CongruenceSubgroup.Gamma 1) k ≃
       map_smul' := by
         intro m a
         ext z
-        simp only [CuspForm_div_Discriminant_apply, CuspForm.IsGLPos.smul_apply, smul_eq_mul,
-          RingHom.id_apply, IsGLPos.smul_apply]
+        simp only [CuspForm_div_Discriminant_apply, _root_.smul_apply, smul_eq_mul,
+          RingHom.id_apply]
         exact mul_div_assoc m (a z) (Δ z)
       invFun := ModformMulDelta' k
       left_inv := by
@@ -140,7 +140,7 @@ lemma IsCuspForm_weight_lt_eq_zero (k : ℤ) (hk : k < 12) (f : ModularForm Γ(1
     (hf : IsCuspForm Γ(1) k f) : f = 0 := by
   have hfc2:= CuspForm_to_ModularForm_coe _ _ f hf
   ext z
-  simp only [ModularForm.zero_apply] at *
+  simp only [_root_.zero_apply] at *
   have hy := congr_arg (fun x ↦ x.1) hfc2
   have hz := congr_fun hy z
   simp only [SlashInvariantForm.toFun_eq_coe, CuspForm.toSlashInvariantForm_coe,
@@ -358,12 +358,12 @@ f^3 = a^3 E₆, but now this would mean that Δ = 0 or a = 0, which is a contrad
         DirectSum.of_mul_of,DirectSum.of_mul_of]
       simp only [one_div, Int.reduceAdd, DirectSum.sub_apply]
       ext y
-      simp only [IsGLPos.smul_apply, sub_apply, smul_eq_mul]
+      simp only [_root_.smul_apply, sub_apply, smul_eq_mul]
       ring_nf
       rfl
     have ht : (1 / 1728 : ℂ) • ((((F^2)^3) 12) - (((F^3)^2) 12)) = 0 := by
       ext y
-      simp only [one_div, IsGLPos.smul_apply, sub_apply, smul_eq_mul, zero_apply, mul_eq_zero,
+      simp only [one_div, _root_.smul_apply, sub_apply, smul_eq_mul, zero_apply, mul_eq_zero,
         inv_eq_zero, OfNat.ofNat_ne_zero, false_or, F]
       ring_nf
     simp_all

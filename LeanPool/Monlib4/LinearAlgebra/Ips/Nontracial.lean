@@ -86,7 +86,7 @@ theorem Nontracial.inner_symm [hφ : φ.IsFaithfulPosMap] (x y : ℍ) :
     (Matrix.PosDef.rpow.isPosDef hφ.matrixIsPosDef _).1.eq,
     Matrix.conjTranspose_conjTranspose, PosDef.rpow_one_eq_self,
     PosDef.rpow_neg_one_eq_inv_self]
-  haveI := hφ.matrixIsPosDef.invertible
+  have := hφ.matrixIsPosDef.invertible
   calc
     (φ.matrix * xᴴ * y).trace = (y * φ.matrix * xᴴ).trace := by
       rw [Matrix.trace_mul_cycle]
@@ -112,9 +112,9 @@ local syntax "withPiInnerTac" "[" term "]" : tactic
 local macro_rules
   | `(tactic| withPiInnerTac[$ψ]) =>
       `(tactic|
-        letI : _root_.NormedAddCommGroup (PiMat ℂ _ _) :=
+        let : _root_.NormedAddCommGroup (PiMat ℂ _ _) :=
           Module.Dual.PiNormedAddCommGroup (φ := $ψ);
-        letI : _root_.InnerProductSpace ℂ (PiMat ℂ _ _) :=
+        let : _root_.InnerProductSpace ℂ (PiMat ℂ _ _) :=
           Module.Dual.pi.InnerProductSpace (φ := $ψ))
 
 /-- Introduce the per-block inner-product instances for a `PiMat` family in a proof. -/
@@ -123,9 +123,9 @@ local macro_rules
   | `(tactic| withPiBlockInnerTac[$ψ]) =>
       `(tactic|
         withPiInnerTac[$ψ];
-        letI : ∀ i, _root_.NormedAddCommGroup (Matrix _ _ ℂ) :=
+        let : ∀ i, _root_.NormedAddCommGroup (Matrix _ _ ℂ) :=
           fun i => Module.Dual.NormedAddCommGroup ($ψ i);
-        letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix _ _ ℂ) :=
+        let : ∀ i, _root_.InnerProductSpace ℂ (Matrix _ _ ℂ) :=
           fun i => Module.Dual.InnerProductSpace (φ := $ψ i))
 
 /-- Introduce the topological/seminormed inner-product instances for a `PiMat` family. -/
@@ -133,14 +133,14 @@ local syntax "withPiFullInnerTac" "[" term "]" : tactic
 local macro_rules
   | `(tactic| withPiFullInnerTac[$ψ]) =>
       `(tactic|
-        letI : _root_.NormedAddCommGroup (PiMat ℂ _ _) :=
+        let : _root_.NormedAddCommGroup (PiMat ℂ _ _) :=
           Module.Dual.PiNormedAddCommGroup (φ := $ψ);
-        letI : _root_.TopologicalSpace (PiMat ℂ _ _) :=
+        let : _root_.TopologicalSpace (PiMat ℂ _ _) :=
           (Module.Dual.PiNormedAddCommGroup (φ :=
             $ψ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace;
-        letI : _root_.SeminormedAddCommGroup (PiMat ℂ _ _) :=
+        let : _root_.SeminormedAddCommGroup (PiMat ℂ _ _) :=
           (Module.Dual.PiNormedAddCommGroup (φ := $ψ)).toSeminormedAddCommGroup;
-        letI : _root_.InnerProductSpace ℂ (PiMat ℂ _ _) :=
+        let : _root_.InnerProductSpace ℂ (PiMat ℂ _ _) :=
           Module.Dual.pi.InnerProductSpace (φ := $ψ))
 
 /-- Introduce the inner-product instances for a single matrix functional in a proof. -/
@@ -148,8 +148,8 @@ local syntax "withMatrixInnerTac" "[" term "]" : tactic
 local macro_rules
   | `(tactic| withMatrixInnerTac[$φ]) =>
       `(tactic|
-        letI : _root_.NormedAddCommGroup (Matrix _ _ ℂ) := Module.Dual.NormedAddCommGroup $φ;
-        letI : _root_.InnerProductSpace ℂ (Matrix _ _ ℂ) := Module.Dual.InnerProductSpace (φ := $φ))
+        let : _root_.NormedAddCommGroup (Matrix _ _ ℂ) := Module.Dual.NormedAddCommGroup $φ;
+        let : _root_.InnerProductSpace ℂ (Matrix _ _ ℂ) := Module.Dual.InnerProductSpace (φ := $φ))
 
 open scoped Classical in
 omit [DecidableEq k] in
@@ -540,7 +540,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.psiToFun'_apply [hψ : ∀ i, (ψ i).IsF
       Module.Dual.pi.IsFaithfulPosMap.sig hψ₂ t a ⊗ₜ[ℂ]
         ((op ℂ).toLinearMap : PiMat ℂ k s →ₗ[ℂ] (PiMat ℂ k s)ᵐᵒᵖ)
           (star (Module.Dual.pi.IsFaithfulPosMap.sig hψ r b))) := by
-  letI : ∀ i, StarModule ℂ (Matrix ((fun i : k => s i) i) ((fun i : k => s i) i) ℂ) := by
+  let : ∀ i, StarModule ℂ (Matrix ((fun i : k => s i) i) ((fun i : k => s i) i) ℂ) := by
     intro i
     infer_instance
   simp_rw [Module.Dual.pi.IsFaithfulPosMap.psiToFun', LinearMap.coe_mk,

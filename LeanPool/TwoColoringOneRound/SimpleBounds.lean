@@ -185,7 +185,7 @@ lemma pEvent_inter_cell_of_not_good {w : Fin 4 → Color} (hw : ¬ good w) :
 theorem p_simpleUpperAlg : ClassicalAlgorithm.p simpleUpperAlg = (1 / 4 : ENNReal) := by
   classical
   let all : Finset (Fin 4 → Color) := Finset.univ
-  letI : DecidablePred good := fun w => by
+  let : DecidablePred good := fun w => by
     simpa [good] using
       (decEq (g (w 0) (w 1) (w 2)) (g (w 1) (w 2) (w 3)))
   have hcover :

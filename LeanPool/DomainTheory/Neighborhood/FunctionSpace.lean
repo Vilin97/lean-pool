@@ -337,7 +337,7 @@ theorem mem_interYs {m : Set β} {L : List (Set α × Set β)} {X : Set α} {z :
   | nil => simp
   | cons p L ih =>
     rw [interYs_cons]
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, ih, List.mem_cons]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, ih, List.mem_cons]
     constructor
     · simp_all
     · simp_all

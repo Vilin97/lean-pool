@@ -281,7 +281,7 @@ theorem besselK1_tendsto_atTop_at_zero :
   have h_open : IsOpen {z : ℝ | M < T * Real.exp (-z * Real.cosh T)} :=
     isOpen_lt continuous_const (by fun_prop)
   have h_zero_mem : (0 : ℝ) ∈ {z : ℝ | M < T * Real.exp (-z * Real.cosh T)} := by
-    simp only [Set.mem_setOf_eq, neg_zero, zero_mul, Real.exp_zero, mul_one]; exact hT_gt_M
+    simp only [Set.mem_ofPred_eq, neg_zero, zero_mul, Real.exp_zero, mul_one]; exact hT_gt_M
   exact ((Filter.Eventually.filter_mono nhdsWithin_le_nhds
     (h_open.mem_nhds h_zero_mem)).and self_mem_nhdsWithin).mono
     fun z ⟨hz1, hz2⟩ => le_trans hz1.le (h_lower z hz2)

@@ -567,7 +567,7 @@ theorem g_finiteness (g : ℕ) (hBlock : BlockRadLBg g) (hg : 3 ≤ g) {k : ℕ}
     {n : ℕ | 1 ≤ n ∧ Powerful (F k n)}.Finite := by
   apply Set.Finite.subset (Set.finite_Iic (Mg g k))
   intro n hn
-  simp only [Set.mem_setOf_eq] at hn
+  simp only [Set.mem_ofPred_eq] at hn
   simp only [Set.mem_Iic]
   exact powerful_bound_g g hBlock hg hk hn.1 hn.2
 
@@ -717,7 +717,7 @@ theorem crude_g_finiteness (g : ℕ) (hBlock : BlockRadLBg g) (hg : 3 ≤ g) {k 
     {n : ℕ | 1 ≤ n ∧ Powerful (F k n)}.Finite := by
   apply Set.Finite.subset (Set.finite_Iic (k ^ (2 * g)))
   intro n hn
-  simp only [Set.mem_setOf_eq] at hn
+  simp only [Set.mem_ofPred_eq] at hn
   simp only [Set.mem_Iic]
   exact powerful_bound_crude_g g hBlock hg hk hn.1 hn.2
 

@@ -572,7 +572,7 @@ lemma payoff_clopen : IsClopen (game hyp).payoff := by
   have : DiscreteTopology (List (upA hyp)) := ⟨rfl⟩
   apply continuous_bot.comp
   rw [(isTopologicalBasis_singletons _).continuous_iff]
-  simp only [Set.mem_setOf_eq, forall_exists_index, forall_eq_apply_imp_iff]
+  simp only [Set.mem_ofPred_eq, forall_exists_index, forall_eq_apply_imp_iff]
   intro x
   by_cases h : x.length = 2 * k + 2
   · convert principalOpen_isOpen x

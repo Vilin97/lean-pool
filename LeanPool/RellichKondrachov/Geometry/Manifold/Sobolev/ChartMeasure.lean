@@ -81,8 +81,8 @@ lemma aemeasurable_extChartAt (μ : Measure M) (i : d.ι) :
       MeasurableSet (extChartAt I (d.center i)).source :=
     (isOpen_extChartAt_source (I := I) (x := d.center i)).measurableSet
   have hcont :
-      Continuous ((extChartAt I (d.center i)).source.restrict (extChartAt I (d.center i))) :=
-    (continuousOn_iff_continuous_restrict).1 (continuousOn_extChartAt (I := I) (x := d.center i))
+      Continuous ((extChartAt I (d.center i)).source.domRestrict (extChartAt I (d.center i))) :=
+    (continuousOn_iff_continuous_domRestrict).1 (continuousOn_extChartAt (I := I) (x := d.center i))
   exact aemeasurable_restrict_of_measurable_subtype (μ := μ) hs hcont.measurable
 
 end

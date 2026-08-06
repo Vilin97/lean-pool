@@ -165,7 +165,7 @@ theorem sq_eq_on_preconnected_eq {X : Type*} [TopologicalSpace X] {s : Set X}
   -- `A ∪ B = univ` since `(f - g)(f + g) = f² - g² = 0`.
   have hcover : A ∪ B = Set.univ := by
     ext x
-    simp only [Set.mem_union, hA, hB, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+    simp only [Set.mem_union, hA, hB, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
     have hprod : (f x - g x) * (f x + g x) = 0 := by
       have h := hfg x x.2; linear_combination h
     rcases mul_eq_zero.mp hprod with h | h
@@ -175,7 +175,7 @@ theorem sq_eq_on_preconnected_eq {X : Type*} [TopologicalSpace X] {s : Set X}
   have hdisj : Disjoint A B := by
     rw [Set.disjoint_iff]
     rintro x ⟨hxA, hxB⟩
-    simp only [hA, hB, Set.mem_setOf_eq] at hxA hxB
+    simp only [hA, hB, Set.mem_ofPred_eq] at hxA hxB
     exact absurd (by linear_combination (hxB - hxA) / (2 : ℂ)) (hg0 x x.2)
   -- Hence `Aᶜ = B`, so `A` is clopen; being nonempty (`x₀`) it is everything.
   have hAc : Aᶜ = B := by
@@ -198,7 +198,7 @@ theorem isPreconnected_Region : IsPreconnected (Region : Set ℍ) := by
   rw [← (UpperHalfPlane.isEmbedding_coe.toIsInducing).isPreconnected_image]
   have himg : ((↑) : ℍ → ℂ) '' Region = {z : ℂ | (5 : ℝ) / 4 < z.im} := by
     ext z
-    simp only [Set.mem_image, Set.mem_setOf_eq]
+    simp only [Set.mem_image, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨τ, hτ, rfl⟩
       rw [UpperHalfPlane.coe_im]; exact hτ
@@ -559,7 +559,7 @@ private lemma E2_mul_eq_of_mem_Region {τ : ℍ} (hτ : τ ∈ Region) :
   have hopen : IsOpen {z : ℂ | 5 / 4 < z.im} :=
     isOpen_lt continuous_const Complex.continuous_im
   have hmem : (↑τ : ℂ) ∈ {z : ℂ | 5 / 4 < z.im} := by
-    simpa only [Region, Set.mem_setOf_eq, UpperHalfPlane.coe_im] using hτ
+    simpa only [Region, Set.mem_ofPred_eq, UpperHalfPlane.coe_im] using hτ
   have hev : (⇑E₄ ∘ ofComplex) =ᶠ[nhds (↑τ : ℂ)]
       fun z => hyp2F1 (((J ∘ ofComplex) z)⁻¹) ^ 4 := by
     filter_upwards [hopen.mem_nhds hmem] with z hz

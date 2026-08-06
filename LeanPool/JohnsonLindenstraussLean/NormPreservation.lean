@@ -31,7 +31,7 @@ theorem chiSq_concentration (k : ℕ) {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1) :
     (gaussianVec k).real
         {ω | (1 + ε) * (k : ℝ) ≤ chiSq k ω ∨ chiSq k ω ≤ (1 - ε) * (k : ℝ)}
       ≤ 2 * rexp (-(ε ^ 2 - ε ^ 3) * (k : ℝ) / 4) := by
-  rw [Set.setOf_or]
+  rw [Set.ofPred_or]
   refine (measureReal_union_le _ _).trans ?_
   have hu := chiSq_upper_tail k h0
   have hl := chiSq_lower_tail k h0 h1
@@ -48,7 +48,7 @@ theorem jl_norm_preservation (k : ℕ) (hk : 0 < k) {ε : ℝ} (h0 : 0 < ε) (h1
   have hset : {ω : Fin k → ℝ | ε ≤ |chiSq k ω / (k : ℝ) - 1|}
       = {ω | (1 + ε) * (k : ℝ) ≤ chiSq k ω ∨ chiSq k ω ≤ (1 - ε) * (k : ℝ)} := by
     ext ω
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     have hrw : chiSq k ω / (k : ℝ) - 1 = (chiSq k ω - (k : ℝ)) / (k : ℝ) := by
       rw [sub_div, div_self hkne]
     rw [hrw, abs_div, abs_of_pos hkR, le_div_iff₀ hkR, le_abs]

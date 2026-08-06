@@ -249,7 +249,7 @@ private lemma sign_correct_unit_transform (A : Matrix (Fin n) (Fin n) ℤ) (d : 
   · exfalso; nlinarith [hLQ_one]
   · have hn : 0 < n := by
       by_contra h; push Not at h; interval_cases n; simp [Matrix.det_isEmpty] at hLd
-    haveI : NeZero n := ⟨by omega⟩
+    have : NeZero n := ⟨by omega⟩
     set flip : Matrix (Fin n) (Fin n) ℤ := Matrix.diagonal (Function.update 1 0 (-1))
     have hflip_det : flip.det = -1 := by
       rw [Matrix.det_diagonal, Finset.prod_update_of_mem (Finset.mem_univ 0)]; simp

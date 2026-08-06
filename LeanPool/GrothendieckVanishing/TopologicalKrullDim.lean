@@ -175,7 +175,7 @@ theorem topologicalKrullDim_add_one_eq_iSup_height_add_one (X : Type u) [Topolog
       rw [topologicalKrullDim_eq_iSup_height]
       simp_all
   | inr h =>
-      letI := h
+      let := h
       rw [topologicalKrullDim_eq_iSup_height]
       have bdd :
           BddAbove (Set.range (fun S : IrreducibleCloseds X ↦ IrreducibleCloseds.height S)) :=

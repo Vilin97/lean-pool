@@ -212,12 +212,12 @@ lemma heckeMultiplicity_mul_one (g₁ d : P.Δ) :
   · intro h
     have hg₁d : dcRel P g₁ d := (HeckeCoset.eq_iff g₁ d).mp h
     simp only [heckeMultiplicity]; norm_cast; rw [Nat.card_eq_one_iff_unique]
-    haveI : Subsingleton (decompQuot P (HeckeCoset.one P).rep) :=
+    have : Subsingleton (decompQuot P (HeckeCoset.one P).rep) :=
       subsingleton_decompQuot_T_one P
     refine ⟨⟨?_⟩, ?_⟩
     · intro ⟨⟨i₁, j₁⟩, h₁⟩ ⟨⟨i₂, j₂⟩, h₂⟩
       have hj : j₁ = j₂ := Subsingleton.elim j₁ j₂; subst hj
-      simp only [Set.mem_setOf_eq] at h₁ h₂
+      simp only [Set.mem_ofPred_eq] at h₁ h₂
       exact Subtype.ext (Prod.ext
         (decompQuot_fst_eq_of_snd_mem_H P g₁ (HeckeCoset.one P).rep d i₁ i₂ j₁
           (Subgroup.mul_mem _ (SetLike.coe_mem j₁.out)
@@ -234,7 +234,7 @@ lemma heckeMultiplicity_mul_one (g₁ d : P.Δ) :
       rw [smul_eq_singleton_mul] at hk
       obtain ⟨j₀⟩ := one_in_decompQuot_T_one P
       refine ⟨⟨(k, j₀), ?_⟩⟩
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       have hmem : (j₀.out : G) * ((HeckeCoset.one P).rep : G) ∈ P.H :=
         Subgroup.mul_mem _ (SetLike.coe_mem j₀.out) (HeckeCoset.one_rep_mem_H P)
       rw [mul_assoc, Subgroup.singleton_mul_subgroup hmem]
@@ -323,7 +323,7 @@ lemma heckeMultiplicity_pos_of_mem_mulSupport (g₁ g₂ : P.Δ) (d : HeckeCoset
     have h := hκ₂_eq; apply_fun (↑· : ↥P.H → G) at h
     simp only [Subgroup.coe_mul] at h; exact h
   refine ⟨⟨(i', j'), ?_⟩⟩
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   have hprod_main : (↑i'.out : G) * α * ((↑j'.out : G) * β) =
       (HeckeCoset.rep d : G) * (h₂⁻¹ * (β⁻¹ * (κ₂.val : G) * β)) := by
     rw [hi'_coe, hj'_coe]
@@ -421,12 +421,12 @@ lemma heckeMultiplicity_one_mul (g₁ d : P.Δ) :
   · intro h
     have hg₁d : dcRel P g₁ d := (HeckeCoset.eq_iff g₁ d).mp h
     simp only [heckeMultiplicity]; norm_cast; rw [Nat.card_eq_one_iff_unique]
-    haveI : Subsingleton (decompQuot P (HeckeCoset.one P).rep) :=
+    have : Subsingleton (decompQuot P (HeckeCoset.one P).rep) :=
       subsingleton_decompQuot_T_one P
     refine ⟨⟨?_⟩, ?_⟩
     · intro ⟨⟨i₁, j₁⟩, h₁⟩ ⟨⟨i₂, j₂⟩, h₂⟩
       have hi : i₁ = i₂ := Subsingleton.elim i₁ i₂; subst hi
-      simp only [Set.mem_setOf_eq] at h₁ h₂
+      simp only [Set.mem_ofPred_eq] at h₁ h₂
       exact Subtype.ext (Prod.ext rfl
         (decompQuot_snd_eq_of_fst_eq P (HeckeCoset.one P).rep g₁ d i₁ j₁ j₂ h₁ h₂))
     · -- d ∈ Hg₁H, find j' such that d ∈ {j'.out * g₁} * H
@@ -457,7 +457,7 @@ lemma heckeMultiplicity_one_mul (g₁ d : P.Δ) :
           ConjAct.smul_def] at this
         simpa [ConjAct.ofConjAct_toConjAct] using this
       exact ⟨⟨(i₀, j₀), by
-        simp only [Set.mem_setOf_eq, Set.singleton_mul_singleton]
+        simp only [Set.mem_ofPred_eq, Set.singleton_mul_singleton]
         apply (leftCoset_eq_of_not_disjoint (H := P.H) _ _ _).symm
         rw [not_disjoint_iff]
         refine ⟨↑d, Set.mem_smul_set.mpr ⟨1, P.H.one_mem, by simp⟩, ?_⟩

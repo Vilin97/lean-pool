@@ -55,20 +55,21 @@ private lemma measurableSet_norm_gt_of_continuousOn {f : ℝ → ℂ} {s : Set �
     (hf : ContinuousOn f s) (hs : MeasurableSet s) :
     MeasurableSet ({t | ε < ‖f t‖} ∩ s) := by
   have h_norm_cont : ContinuousOn (fun t => ‖f t‖) s := hf.norm
-  have h_open_sub : IsOpen ((s.restrict (fun t => ‖f t‖)) ⁻¹' Set.Ioi ε) :=
-    isOpen_Ioi.preimage h_norm_cont.restrict
+  have h_open_sub : IsOpen ((s.domRestrict (fun t => ‖f t‖)) ⁻¹' Set.Ioi ε) :=
+    isOpen_Ioi.preimage h_norm_cont.domRestrict
   rw [isOpen_induced_iff] at h_open_sub
   obtain ⟨U, hU_open, hU_eq⟩ := h_open_sub
   have h_eq : {t | ε < ‖f t‖} ∩ s = U ∩ s := by
     ext x; constructor
     · intro ⟨hx_far, hx_s⟩; refine ⟨?_, hx_s⟩
       have h1 : (⟨x, hx_s⟩ : ↑s) ∈
-          (s.restrict (fun t => ‖f t‖)) ⁻¹' Set.Ioi ε := by
-        simp only [Set.mem_preimage, Set.restrict_apply, Set.mem_Ioi]; exact hx_far
+          (s.domRestrict (fun t => ‖f t‖)) ⁻¹' Set.Ioi ε := by
+        simp only [Set.mem_preimage, Set.domRestrict_apply, Set.mem_Ioi]; exact hx_far
       rw [← hU_eq] at h1; exact h1
     · intro ⟨hx_U, hx_s⟩; refine ⟨?_, hx_s⟩
       have h1 : (⟨x, hx_s⟩ : ↑s) ∈ Subtype.val ⁻¹' U := hx_U
-      simp_all
+      rw [hU_eq] at h1
+      exact h1
   rw [h_eq]; exact hU_open.measurableSet.inter hs
 
 private lemma measurableSet_norm_gt_Icc {f : ℝ → ℂ} {a b : ℝ} (ε : ℝ)
@@ -101,7 +102,7 @@ private lemma measurableSet_multipoint_condition {γ : ℝ → ℂ} {a b ε : �
     MeasurableSet ({t | ∃ s ∈ S, ‖γ t - s‖ ≤ ε} ∩ Icc a b) := by
   have h_eq : {t | ∃ s ∈ S, ‖γ t - s‖ ≤ ε} ∩ Icc a b =
       ⋃ s ∈ S, ({t | ‖γ t - s‖ ≤ ε} ∩ Icc a b) := by
-    ext t; simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_iUnion, exists_prop]
+    ext t; simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_iUnion, exists_prop]
     constructor
     · intro ⟨⟨s, hs, h_norm⟩, ht_Icc⟩; exact ⟨s, hs, h_norm, ht_Icc⟩
     · intro ⟨s, hs, h_norm, ht_Icc⟩; exact ⟨⟨s, hs, h_norm⟩, ht_Icc⟩
@@ -110,7 +111,7 @@ private lemma measurableSet_multipoint_condition {γ : ℝ → ℂ} {a b ε : �
     measurableSet_norm_gt_Icc ε (hγ.sub continuousOn_const)
   have h_eq' : {t | ‖γ t - s‖ ≤ ε} ∩ Icc a b =
       Icc a b \ ({t | ε < ‖γ t - s‖} ∩ Icc a b) := by
-    ext t; simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_sdiff, not_and]
+    ext t; simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_sdiff, not_and]
     constructor
     · intro ⟨h_le, ht_Icc⟩; exact ⟨ht_Icc, fun h_gt => absurd h_gt (not_lt.mpr h_le)⟩
     · intro ⟨ht_Icc, h_not⟩; simp_all
@@ -133,7 +134,7 @@ private lemma goodset_piecewise_ae_eq_multipoint {g : ℂ → ℂ} {γ : ℝ →
     ({t : ℝ | ∀ s ∈ S, ε < ‖γ t - s‖} ∩ Icc a b).piecewise
       (fun t => g (γ t) * deriv γ t) (fun _ => 0) := by
   filter_upwards [ae_restrict_mem isClosed_Icc.measurableSet] with t ht
-  simp only [Set.piecewise, Set.mem_inter_iff, Set.mem_setOf_eq]
+  simp only [Set.piecewise, Set.mem_inter_iff, Set.mem_ofPred_eq]
   by_cases ht_good : (∀ s ∈ S, ε < ‖γ t - s‖) ∧ t ∈ Icc a b
   · simp_all
   · simp_all
@@ -210,7 +211,7 @@ private theorem
   filter_upwards [ae_restrict_mem
     isClosed_Icc.measurableSet] with t ht
   simp only [Set.piecewise, Set.mem_inter_iff,
-    Set.mem_setOf_eq, gt_iff_lt]
+    Set.mem_ofPred_eq, gt_iff_lt]
   simp_all
 
 private lemma aEStronglyMeasurable_singularSum_on_goodset
@@ -260,7 +261,7 @@ private lemma goodset_piecewise_ae_eq_decomposed {g_reg : ℂ → ℂ} {γ : ℝ
       (fun t => (g_reg (γ t) + ∑ s ∈ S, coeffs s / (γ t - s)) * deriv γ t)
       (fun _ => 0) := by
   filter_upwards [ae_restrict_mem isClosed_Icc.measurableSet] with t ht
-  simp only [Set.piecewise, Set.mem_inter_iff, Set.mem_setOf_eq]
+  simp only [Set.piecewise, Set.mem_inter_iff, Set.mem_ofPred_eq]
   by_cases ht_good : (∀ s ∈ S, ε < ‖γ t - s‖) ∧ t ∈ Icc a b
   · simp_all
   · simp_all

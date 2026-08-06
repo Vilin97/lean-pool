@@ -454,7 +454,7 @@ private lemma integrableOn_polar_rho {D : ℕ} (a : Fin D → ℂ) :
     apply Filter.mem_inf_of_right
     apply Filter.mem_principal.mpr
     intro ⟨r, θ⟩ ⟨hr, _⟩
-    simp only [Set.mem_Ioi, Set.mem_setOf_eq] at hr ⊢
+    simp only [Set.mem_Ioi, Set.mem_ofPred_eq] at hr ⊢
     simp only [Real.norm_eq_abs, abs_mul]
     rw [abs_of_pos hr]
     apply mul_le_mul_of_nonneg_left _ hr.le

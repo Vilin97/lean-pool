@@ -192,7 +192,7 @@ by π/4 radians. No offset translation is needed.
        simp only [Fin.isValue, cons_val_zero, neg_sub, Fin.zero_eta, Set.mem_image]
        use !₂[√2, 0]
        constructor
-       · rw [Set.mem_setOf]
+       · rw [Set.mem_ofPred]
          use 3; simp
        · ext i
          fin_cases i <;> simp
@@ -200,7 +200,7 @@ by π/4 radians. No offset translation is needed.
         cons_val_one, neg_sub, Fin.mk_one, Set.mem_image, outerShadow]
        use !₂[-√2, 0]
        constructor
-       · rw [Set.mem_setOf]
+       · rw [Set.mem_ofPred]
          use 0
          simp [vecHead, vecTail]
          ring_nf
@@ -250,7 +250,7 @@ by π/4 radians. No offset translation is needed.
      · simp
  -- we have y ∈ ℝ³ that came from the square, which after being rotated by
  -- innerRot and projected, is x
- rw [Set.mem_setOf] at hx
+ rw [Set.mem_ofPred] at hx
  obtain ⟨y, proj_rot_y_eq_x⟩ := hx
  rw [← proj_rot_y_eq_x]
  unfold innerOffset

@@ -40,15 +40,15 @@ include T in theorem derive_mod_principal_trans
     (f : Polynomial R.carrier)
     (hf_mem : aeval x f ∈ Ideal.span {(↑p : T)}) :
     (C p : Polynomial R.carrier) ∣ f := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   -- Lift nonzero-ness of the prime p from R to T via the subring injection
   have hp_ne : (↑p : T) ≠ 0 := fun h => hp.ne_zero (R.carrier.subtype_injective h)
   have hnt : Nontrivial (T ⧸ Ideal.span {(↑p : T)}) := by
     rw [Ideal.Quotient.nontrivial_iff, Ne, Ideal.eq_top_iff_one, Ideal.mem_span_singleton]
     intro ⟨c', hc'⟩
     have hmem : p ∈ IsLocalRing.maximalIdeal R.carrier :=
-      (IsLocalRing.mem_maximalIdeal _).mpr hp.not_unit
+      (IsLocalRing.mem_maximalIdeal _).mpr hp.not_isUnit
     rw [R.maximal_ideal_eq, Ideal.mem_comap] at hmem
     exact (IsLocalRing.mem_maximalIdeal _).mp hmem (isUnit_of_dvd_one ⟨c', hc'⟩)
   -- Pick an associated prime P of T/(p); it contains span{p} and has height ≤ 1
@@ -61,12 +61,12 @@ include T in theorem derive_mod_principal_trans
   have hP_ne_top : P ≠ ⊤ := hP_prime.ne_top
   have hP_ht : P.height ≤ 1 := hAss_ht _ hp_ne P hP_mem
   have hR_ht := R.height_bound _ hp_ne P hP_mem
-  haveI : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
+  have : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
   have hspan_le : Ideal.span {p} ≤ P.comap R.carrier.subtype :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr (show (↑p : T) ∈ P from hp_P))
   have hspan_ne : Ideal.span {p} ≠ (⊥ : Ideal R.carrier) :=
     Ideal.span_singleton_eq_bot.not.mpr hp.ne_zero
-  haveI : (Ideal.span {p}).IsPrime :=
+  have : (Ideal.span {p}).IsPrime :=
     (Ideal.span_singleton_prime (α := R.carrier) hp.ne_zero).mpr hp
   -- Since R is a UFD and P∩R has height ≤ 1, the prime ideal (p) must equal P∩R
   have hspan_eq : Ideal.span {p} = P.comap R.carrier.subtype := by
@@ -145,16 +145,16 @@ include T in theorem height_bound_wf_descent
     (hq_lt : q < Ideal.comap S_sub.subtype P)
     (s : S_sub) (hs_ne : s ≠ 0) (hs_q : s ∈ q) :
     False := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
-  haveI : (Ideal.comap R.carrier.subtype P).IsPrime := Ideal.comap_isPrime _ _
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : (Ideal.comap R.carrier.subtype P).IsPrime := Ideal.comap_isPrime _ _
   -- Since P∩R ≠ ⊥ and R is a UFD, pick a prime generator p₀ of P∩R
   obtain ⟨p₀, hp₀_prime, hp₀_mem⟩ :=
     exists_prime_mem_of_ne_bot (Ideal.comap R.carrier.subtype P) hPR_bot
   have hspan_ne_bot : Ideal.span {p₀} ≠ ⊥ := by
     rw [ne_eq, Ideal.span_singleton_eq_bot]
     exact hp₀_prime.ne_zero
-  haveI : (Ideal.span {p₀}).IsPrime :=
+  have : (Ideal.span {p₀}).IsPrime :=
     Ideal.span_singleton_prime hp₀_prime.ne_zero |>.mpr hp₀_prime
   have hspan_le : Ideal.span {p₀} ≤ Ideal.comap R.carrier.subtype P :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hp₀_mem)
@@ -314,8 +314,8 @@ private def build_height_bound_proof
     ∀ (t : T), t ≠ 0 →
       ∀ P ∈ associatedPrimes T (T ⧸ Ideal.span {t}),
         Ideal.height (P.comap S_sub.subtype) ≤ 1 ) := ⟨by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   -- Set up Rbar = R[x₁,y₂⁻¹] ∩ R[x₂,y₁⁻¹] and its localization S = Rbar[units⁻¹]
   set Rbar := intersectionSet R x₁ x₂ y₁ y₂
   set S_carrier : Set T :=
@@ -366,7 +366,7 @@ private def build_height_bound_proof
   -- Main argument: show (P∩S) has height ≤ 1 for each associated prime P of T/(t)
   intro t ht_ne P hP
   have hP_prime : P.IsPrime := hP.isPrime
-  haveI : (Ideal.comap S_sub.subtype P).IsPrime := hP_prime.comap _
+  have : (Ideal.comap S_sub.subtype P).IsPrime := hP_prime.comap _
   have hP_ht : P.height ≤ 1 := hAss_ht t ht_ne P hP
   have hP_ne_M : P ≠ IsLocalRing.maximalIdeal T := fun h =>
     hM_not_assoc t ht_ne (h ▸ hP)
@@ -468,8 +468,8 @@ private def build_height_bound_proof
   -- Pull back primes to R[X]: J = φ⁻¹(P∩S) and J_q = φ⁻¹(q) with J_q < J
   set J := Ideal.comap φ (Ideal.comap S_sub.subtype P)
   set J_q := Ideal.comap φ q
-  haveI hJ_prime : J.IsPrime := (hP_prime.comap S_sub.subtype).comap _
-  haveI hJ_q_prime : J_q.IsPrime := hq_prime.comap _
+  have hJ_prime : J.IsPrime := (hP_prime.comap S_sub.subtype).comap _
+  have hJ_q_prime : J_q.IsPrime := hq_prime.comap _
   have hJJ_q : J_q ≤ J := fun f hf => hq_lt.le hf
   have hs_P : (s : T) ∈ P := hq_lt.le hs_q
   have has_P : as ∈ P := hsb_eq ▸ P.mul_mem_right _ hs_P
@@ -553,12 +553,12 @@ private def build_height_bound_proof
       intro f hfM hfJ
       obtain ⟨c, hc_nzd, rfl⟩ := hfM
       exact (nonZeroDivisors.ne_zero hc_nzd) (hJ_q_const_zero c hfJ)
-    letI : Algebra (Polynomial R.carrier) (Polynomial K) := ψ.toAlgebra
-    haveI : IsLocalization M' (Polynomial K) :=
+    let : Algebra (Polynomial R.carrier) (Polynomial K) := ψ.toAlgebra
+    have : IsLocalization M' (Polynomial K) :=
       Polynomial.isLocalization (nonZeroDivisors R.carrier) K
-    haveI : (Ideal.map (algebraMap _ (Polynomial K)) J).IsPrime :=
+    have : (Ideal.map (algebraMap _ (Polynomial K)) J).IsPrime :=
       IsLocalization.isPrime_of_isPrime_disjoint M' (Polynomial K) J hJ_prime hJ_disj
-    haveI : (Ideal.map (algebraMap _ (Polynomial K)) J_q).IsPrime :=
+    have : (Ideal.map (algebraMap _ (Polynomial K)) J_q).IsPrime :=
       IsLocalization.isPrime_of_isPrime_disjoint
         M' (Polynomial K) J_q hJ_q_prime hJ_q_disj
     have hJ_q_map_ne :
@@ -572,7 +572,7 @@ private def build_height_bound_proof
           Ideal.comap_bot_of_injective (algebraMap (Polynomial R.carrier) (Polynomial K)) hψ_inj
       rw [hbot] at hsat
       exact hJ_q_ne hsat.symm
-    haveI : Ring.DimensionLEOne (Polynomial K) :=
+    have : Ring.DimensionLEOne (Polynomial K) :=
       Ring.DimensionLEOne.principal_ideal_ring _
     -- In the PID K[X], two nonzero primes with J_q ≤ J forces J_q = J
     have hmap_eq : Ideal.map (algebraMap _ (Polynomial K)) J_q =
@@ -659,8 +659,8 @@ private def build_intersection_nsubring_proof
       ∀ (f : Polynomial R.carrier),
         aeval x₂ f ∈ P → (C p : Polynomial R.carrier) ∣ f) : PLift (
     ∃ S : NSubring T, IsAExtension R S ∧ x₁ ∈ S.carrier ∧ x₂ ∈ S.carrier ) := ⟨by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   -- Derive mod-principal transcendence for both x₁ (mod y₂) and x₂ (mod y₁)
   have hx₁_mod_trans := derive_mod_principal_trans R x₁ y₂ hAss_ht hx₁_ker
   have hx₂_mod_trans := derive_mod_principal_trans R x₂ y₁ hAss_ht hx₂_ker
@@ -828,8 +828,8 @@ private def build_intersection_nsubring_proof
     · left
       exact hinv a ham
   -- WfDvdMonoid for S: divisibility in S embeds into divisibility in T (which is Noetherian)
-  haveI : IsDomain S_sub := inferInstance
-  haveI : WfDvdMonoid S_sub := by
+  have : IsDomain S_sub := inferInstance
+  have : WfDvdMonoid S_sub := by
     constructor
     apply Subrelation.wf (r := InvImage DvdNotUnit (fun (a : S_sub) => (a : T)))
     · intro a b ⟨ha_ne, c, hc_nu, hab_eq⟩
@@ -1026,7 +1026,7 @@ private def build_intersection_nsubring_proof
   exact {
     le := hR_le
     primes_preserved := by
-      haveI := hUFD
+      have := hUFD
       exact build_primes_preserved R x₁ x₂ y₁ y₂ S_sub hR_le hx₁_trans hx₂_trans hcoprime
         hmax_eq hS_sub_eq hR_prime_div_Rbar
     card_le := hCard_S

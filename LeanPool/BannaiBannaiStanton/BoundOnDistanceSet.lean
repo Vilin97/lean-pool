@@ -201,7 +201,7 @@ lemma finite_distance_set_imp_finite_set
   have zero_not_in : 0 ∉ D := by simp [D, distanceSet]
   -- Any distance dist(p y, p x) is in D when x ≠ y and x,y ∈ S.
   have dist_in_D (x : S) (y : S) (hxy : x ≠ y) : dist (p x) (p y) ∈ D := by
-    simp only [distanceSet, ne_eq, Set.Finite.mem_toFinset, Set.mem_setOf_eq, D, p]
+    simp only [distanceSet, ne_eq, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, D, p]
     refine ⟨x.1, x.2, y.1, y.2, Subtype.coe_ne_coe.mpr hxy, rfl⟩
   -- Prove linear independence of f_sub using the diagonal argument.
   have h_li : LinearIndependent ℝ f := by
@@ -990,7 +990,7 @@ theorem bannai_bannai_stanton_bound {d s : ℕ} (S : Set (EuclideanSpace ℝ (Fi
       have h_dist_in_D : dist a.1 b.1 ∈ D := by
         obtain ⟨a_val, a_property⟩ := a
         obtain ⟨b_val, b_property⟩ := b
-        simp only [distanceSet, ne_eq, Set.Finite.mem_toFinset, Set.mem_setOf_eq, D]
+        simp only [distanceSet, ne_eq, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, D]
         simp only [Set.Finite.mem_toFinset, Subtype.mk.injEq, A] at a_property b_property hab
         use a_val, a_property, b_val, b_property
       exact h_dist_in_D

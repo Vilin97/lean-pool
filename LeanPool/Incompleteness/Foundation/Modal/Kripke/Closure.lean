@@ -41,7 +41,7 @@ namespace RelReflTransGen
   ⟨fun _ _ _ hxy hyz => ReflTransGen.trans hxy hyz⟩
 
 @[simp] lemma symmetric : IsSymmetric F.Rel → IsSymmetric F.RelReflTransGen := fun h => by
-  letI : Std.Symm F.Rel := ⟨fun _ _ => @h _ _⟩
+  let : Std.Symm F.Rel := ⟨fun _ _ => @h _ _⟩
   exact fun _ _ hxy => Std.Symm.symm (r := F.RelReflTransGen) _ _ hxy
 
 end RelReflTransGen

@@ -115,7 +115,7 @@ theorem exp_decay_atImInfty_of_width_dvd [ModularFormClass F Γ k]
   rcases eq_or_ne h 0 with rfl | hΓ'
   · simp only [Nat.cast_zero, div_zero, Real.exp_zero]
     exact hf.isBoundedAtImInfty
-  · haveI : NeZero h := ⟨hΓ'⟩
+  · have : NeZero h := ⟨hΓ'⟩
     simpa [comp_def] using
       ((periodic_comp_ofComplex' f hΓ).exp_decay_of_zero_at_inf
         (mod_cast (Nat.pos_iff_ne_zero.mpr (NeZero.ne _)))

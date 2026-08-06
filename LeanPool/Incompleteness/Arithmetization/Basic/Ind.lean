@@ -82,7 +82,7 @@ lemma induction_h {P : V → Prop} (hP : Γ-[m].BoldfacePred P)
     (zero : P 0) (succ : ∀ x, P x → P (x + 1)) : ∀ x, P x :=
   induction (P := P) (C := Hierarchy Γ m) (by
     rcases hP with ⟨φ, hp⟩
-    haveI : Inhabited V := Classical.inhabited_of_nonempty'
+    have : Inhabited V := Classical.inhabited_of_nonempty'
     exact ⟨φ.val.fvarEnumInv, (Rew.rewriteMap φ.val.fvarEnum) ▹ φ.val, by simp [],
       by  intro x; simp [Semiformula.eval_rewriteMap]
           have : (Semiformula.Evalm V ![x] fun x ↦ φ.val.fvarEnumInv (φ.val.fvarEnum x)) φ.val ↔

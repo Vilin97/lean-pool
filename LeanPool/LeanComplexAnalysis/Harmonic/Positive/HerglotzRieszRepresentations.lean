@@ -156,7 +156,7 @@ lemma herglotz_hasDerivAt (μ : ProbabilityMeasure (sphere (0 : ℂ) 1))
           Filter.eventually_of_mem (MeasureTheory.measure_eq_zero_iff_ae_notMem.mp (
             show μ.toMeasure (μ.toMeasure.supportᶜ) = 0 from by simp)) fun x hx =>
               h_bound x (by simp_all [Subtype.forall, mem_sphere_iff_norm, sub_zero,
-                mem_compl_iff, mem_singleton_iff, not_not, setOf_mem_eq]) n
+                mem_compl_iff, mem_singleton_iff, not_not]) n
                 (by rwa [dist_eq_norm] at hn)⟩
       · norm_num
       · have h_tendsto : ∀ x ∈ μ.toMeasure.support,
@@ -545,8 +545,8 @@ lemma K_eq_polar : KWeak = WeakDual.polar ℝ (ball (0 : CUnitCircle) 1) := by
   ext Λ
   simp only [KWeak, K, WeakDual.polar, ball, dist_eq_norm, sub_zero, mem_preimage]
   constructor
-  · intro h f hf; apply h; simp only [mem_setOf_eq] at hf; exact hf
-  · intro h f hf; apply h; simp only [mem_setOf_eq]; exact hf
+  · intro h f hf; apply h; simp only [mem_ofPred_eq] at hf; exact hf
+  · intro h f hf; apply h; simp only [mem_ofPred_eq]; exact hf
 
 /-- We apply the Banach-Alaoglu theorem to show that `K` is compact in the weak* topology. -/
 lemma K_weak_compact : CompactSpace KWeak := by
@@ -1024,7 +1024,7 @@ theorem HerglotzRiesz_representation_harmonic
     exists_analytic_of_harmonic_unitDisc u h_harmonic
   have h_real_pos : MapsTo F unitDisc {w : ℂ | 0 < w.re} := by
     intro z hz
-    simp only [Set.mem_setOf]
+    simp only [Set.mem_ofPred]
     rw [hF_re.1 z hz]
     exact h_pos z hz
   have hF0 : F 0 = 1 := by simp [hF_re.2, h_u_zero]

@@ -361,7 +361,7 @@ theorem subsheaf_contains_zeroOutsideInt
         ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map j)) := by
     simpa [j] using hbij
   refine ⟨V', hle, hne, j, ?_, hj_bij⟩
-  haveI : ∀ x, Mono ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
+  have : ∀ x, Mono ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
       j) := fun y ↦ by
     apply (ConcreteCategory.mono_iff_injective_of_preservesPullback _).mpr
     by_cases hy : y ∈ V'
@@ -415,7 +415,7 @@ theorem closedComplementVanishing
   have hSX₁_zero : IsZero S.X₁ :=
     sheaf_isZero_of_zero_stalks X S.X₁.property (fun x a ↦ by
       by_cases hxY : x ∈ Y
-      · haveI : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
+      · have : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
           change IsIso
             ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
               ((ConcreteCategory.hom (TopCat.closedIncl hYcl)) ⟨x, hxY⟩)).map S.g.hom)
@@ -509,10 +509,10 @@ theorem subsheaf_zeroOutsideInt_vanishing
         hR (IsZero.of_full_of_faithful_of_isZero
           (TopCat.Sheaf.forget AddCommGrpCat.{u} X)
           (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) hR0))
-    haveI : Mono j := hj_mono
+    have : Mono j := hj_mono
     let jsh : TopCat.Sheaf.zeroOutsideInt V' ⟶
         (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) := ObjectProperty.homMk j
-    haveI : Mono jsh :=
+    have : Mono jsh :=
       (Sheaf.Hom.mono_iff_presheaf_mono
         (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) jsh).2
         (inferInstanceAs (Mono j))
@@ -553,7 +553,7 @@ theorem epiImage_zeroOutsideInt_vanishing_of_locallySurjective
     (ih : VanishingIH.{u} (topologicalKrullDim X))
     (m : ℕ) (hm : m > topologicalKrullDim X) :
     Subsingleton (Sheaf.H (TopCat.Presheaf.sheafOfIsSheaf hG) m) := by
-  letI : Balanced (CategoryTheory.Sheaf (Opens.grothendieckTopology X)
+  let : Balanced (CategoryTheory.Sheaf (Opens.grothendieckTopology X)
       AddCommGrpCat.{u}) := balanced_of_strongEpiCategory
   by_cases hV : V = ⊥
   · subst hV
@@ -572,7 +572,7 @@ theorem epiImage_zeroOutsideInt_vanishing_of_locallySurjective
       have hMonoKernel : Mono (kernel.ι fsh) := by
         change Mono (equalizer.ι fsh 0)
         infer_instance
-      letI : Mono (kernel.ι fsh).hom :=
+      let : Mono (kernel.ι fsh).hom :=
         (Sheaf.Hom.mono_iff_presheaf_mono
           (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u})
           (kernel.ι fsh)).1 hMonoKernel

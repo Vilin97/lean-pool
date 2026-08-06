@@ -83,7 +83,7 @@ theorem finite_setOf_subposition {x : G} (hx : IsShort x) : {y | Moves.Subpositi
   have : {y | Moves.Subposition y x} = {y | Moves.IsOption y x} ∪
       ⋃ y ∈ {y | Moves.IsOption y x}, {z | Moves.Subposition z y} := by
     ext
-    rw [Set.mem_setOf_eq, Moves.Subposition, Relation.transGen_iff]
+    rw [Set.mem_ofPred_eq, Moves.Subposition, Relation.transGen_iff]
     simp [and_comm]
   rw [this]
   refine (finite_setOf_isOption hx).union <| (finite_setOf_isOption hx).biUnion fun y hy ↦ ?_

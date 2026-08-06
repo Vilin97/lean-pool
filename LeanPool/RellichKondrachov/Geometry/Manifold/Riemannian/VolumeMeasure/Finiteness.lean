@@ -51,9 +51,9 @@ omit [IsManifold I n∞ M] in
 theorem riemannianVolumeMeasure_isFiniteMeasureOnCompacts :
     IsFiniteMeasureOnCompacts (riemannianVolumeMeasure (I := I) (M := M)) := by
   classical
-  letI : EMetricSpace M := EMetricSpace.ofRiemannianMetric I M
-  letI : BorelSpace M := ⟨rfl⟩
-  haveI : IsRiemannianManifold I M := by infer_instance
+  let : EMetricSpace M := EMetricSpace.ofRiemannianMetric I M
+  let : BorelSpace M := ⟨rfl⟩
+  have : IsRiemannianManifold I M := by infer_instance
   have hμ : IsFiniteMeasureOnCompacts (μH[Module.finrank ℝ E] : Measure M) := by
     refine ⟨?_⟩
     intro K hK
@@ -89,7 +89,7 @@ theorem riemannianVolumeMeasure_isFiniteMeasureOnCompacts :
               Metric.closedBall (extChartAt I x x) r) hy.1
         have hclosed :
             (μH[Module.finrank ℝ E] : Measure E) (Metric.closedBall (extChartAt I x x) r) < ∞ := by
-          haveI : IsFiniteMeasureOnCompacts
+          have : IsFiniteMeasureOnCompacts
               (μH[Module.finrank ℝ E] : Measure E) := by
             infer_instance
           simpa using
@@ -118,7 +118,7 @@ theorem riemannianVolumeMeasure_isFiniteMeasure [CompactSpace M] :
     IsFiniteMeasure (riemannianVolumeMeasure (I := I) (M := M)) := by
   classical
   -- `IsFiniteMeasureOnCompacts` implies finiteness on `univ` in a compact space.
-  letI : IsFiniteMeasureOnCompacts (riemannianVolumeMeasure (I := I) (M := M)) :=
+  let : IsFiniteMeasureOnCompacts (riemannianVolumeMeasure (I := I) (M := M)) :=
     riemannianVolumeMeasure_isFiniteMeasureOnCompacts (I := I) (M := M)
   infer_instance
 

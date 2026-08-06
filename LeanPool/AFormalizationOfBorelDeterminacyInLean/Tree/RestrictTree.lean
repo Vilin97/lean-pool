@@ -126,7 +126,7 @@ lemma fixing_iff_forget_isIso k (f : S ⟶ T) :
   constructor
   · intro _; exact Functor.map_isIso (forget Trees) ((res k).map f)
   · intro h
-    haveI : IsIso ((forget Trees).map ((res k).map f)) := h
+    have : IsIso ((forget Trees).map ((res k).map f)) := h
     constructor
     exact isIso_of_reflects_iso ((res k).map f) (forget Trees)
 lemma Fixing.bijective {k} {f : S ⟶ T} (h : Fixing k f) :

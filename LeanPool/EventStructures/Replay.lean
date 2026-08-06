@@ -72,13 +72,13 @@ lemma downset_closed {e x y : es.Event} (hxy : x ≤ y) (hy : y ∈ downset es e
 /-- The minimum replay set contains the log. -/
 lemma minReplaySet_contains_log {l : Set es.Event} : l ⊆ minReplaySet es l := by
   intro e he
-  simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+  simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
   exact ⟨e, he, le_rfl⟩
 
 /-- The minimum replay set is closed under predecessors. -/
 lemma minReplaySet_closed {l : Set es.Event} {x y : es.Event}
     (hy : y ≤ x) (hx : x ∈ minReplaySet es l) : y ∈ minReplaySet es l := by
-  simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hx ⊢
+  simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop] at hx ⊢
   obtain ⟨e, he, hxe⟩ := hx
   exact ⟨e, he, le_trans hy hxe⟩
 
@@ -102,7 +102,7 @@ lemma minReplaySet_compatible_with_log {l : Set es.Event}
     (hl_conflict_free : ∀ {e₁ e₂}, e₁ ∈ l → e₂ ∈ l → ¬(e₁ # e₂)) :
     ∀ x ∈ minReplaySet es l, ∀ e ∈ l, ¬(x # e) := by
   intro x hx e he
-  simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hx
+  simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop] at hx
   obtain ⟨e', he', hxe'⟩ := hx
   exact downset_compatible_with_log es he' hxe' hl_conflict_free e he
 
@@ -115,7 +115,7 @@ lemma minReplaySet_is_minimal_replay {l : Set es.Event} {σ : Computations es}
   refine ⟨h_compat, fun σ' h'_compat => ?_⟩
   rw [h_conf]
   intro x hx
-  simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hx
+  simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop] at hx
   obtain ⟨e, he, hxe⟩ := hx
   -- x ≤ e and e ∈ l; σ' ⊨ l puts e ∈ σ', then downward closure gives x ∈ σ'.
   exact (conf es σ').2.2 (h'_compat.1 e he) hxe

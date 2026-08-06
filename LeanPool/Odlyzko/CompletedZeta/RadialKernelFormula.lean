@@ -240,9 +240,9 @@ theorem fundamentalConeZeta_eq_integral_tsum_nonzeroIdealElement_radial
   have huniv : (Set.univ : Set (idealSet K J)).Countable := by
     rw [← hsupp]
     exact hidealSum.countable_support
-  letI : Countable (idealSet K J) :=
+  let : Countable (idealSet K J) :=
     Set.countable_univ_iff.mp huniv
-  letI : Countable (nonzeroIdealElement K J) :=
+  let : Countable (nonzeroIdealElement K J) :=
     Function.Injective.countable e.symm.injective
   apply integral_tsum_of_summable_integral_norm
   · intro x
@@ -307,9 +307,9 @@ theorem integrableOn_logarithmicMellinWeight_mul_nonzeroIdealShapeTheta
   have huniv : (Set.univ : Set (idealSet K J)).Countable := by
     rw [← hsupp]
     exact hidealSum.countable_support
-  letI : Countable (idealSet K J) :=
+  let : Countable (idealSet K J) :=
     Set.countable_univ_iff.mp huniv
-  letI : Countable (nonzeroIdealElement K J) :=
+  let : Countable (nonzeroIdealElement K J) :=
     Function.Injective.countable e.symm.injective
   have hsum :
       Summable fun x : nonzeroIdealElement K J ↦

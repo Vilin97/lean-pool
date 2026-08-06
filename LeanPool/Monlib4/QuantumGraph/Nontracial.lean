@@ -121,7 +121,7 @@ theorem Qam.symm'_symm_real_apply_adjoint_tFAE [hφ : φ.IsFaithfulPosMap] (A : 
           ∀ x y, φ (A x * y) = φ (x * A y)]) := by
   classical
   exact withMatrixQuantum[φ] (by
-    letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+    let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
     suffices φ = Coalgebra.counit by
       simp_rw [this]
       exact symmMap_eq_self_tfae _ rfl

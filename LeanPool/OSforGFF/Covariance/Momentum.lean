@@ -1494,7 +1494,7 @@ lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
       rw [Filter.EventuallyEq, Filter.eventually_iff_exists_mem]
       refine ⟨Set.univ, Filter.univ_mem, ?_⟩
       intro x _
-      simp only [Set.diagonal, Set.preimage, Set.mem_setOf_eq, Pi.zero_apply]
+      simp only [Set.diagonal, Set.preimage, Set.mem_ofPred_eq, Pi.zero_apply]
       simp_all
   -- Step 3: Helper lemma - AEStronglyMeasurable on a conull set implies full AEStronglyMeasurable
   have h_lift : ∀ {f : SpaceTime × SpaceTime → ℂ} {s : Set (SpaceTime × SpaceTime)},
@@ -1863,7 +1863,7 @@ lemma freeCovarianceKernel_continuousOn (m : ℝ) (hm : 0 < m) :
   have h_eq : ∀ z ∈ ({z : SpaceTime | z ≠ 0} : Set SpaceTime),
       freeCovarianceKernel m z = (m / (4 * Real.pi^2 * ‖z‖)) * besselK1 (m * ‖z‖) := by
     intro z hz
-    simp only [Set.mem_setOf_eq] at hz
+    simp only [Set.mem_ofPred_eq] at hz
     unfold freeCovarianceKernel freeCovariance freeCovarianceBessel
     simp_all
   apply ContinuousOn.congr _ h_eq

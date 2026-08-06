@@ -582,7 +582,7 @@ lemma exists_trafo_isDiag (g : Matrix (Fin k) (Fin k) K) :
   induction k using PNat.recOn with
   | one =>
       refine ⟨1, 1, ?_⟩
-      haveI : Unique (Fin (1 : ℕ+)) := inferInstanceAs <| Unique (Fin 1)
+      have : Unique (Fin (1 : ℕ+)) := inferInstanceAs <| Unique (Fin 1)
       refine ⟨⟨isDiag_of_subsingleton _, Subsingleton.monotone _⟩, ?_⟩
       rw [Matrix.coeffs_sup_unique v, Matrix.coeffs_sup_unique v]
       congr 1

@@ -154,9 +154,9 @@ lemma field_isUnit_or_isUnit {K : Type*} [Field K] {a b : K} (hab : a + b = 1) :
 
 theorem adicCompletion_isLocalRing :
     IsLocalRing (AdicCompletion (M' R) R) := by
-  letI := adicCompletion_nontrivial R
+  let := adicCompletion_nontrivial R
   refine .of_is_unit_or_is_unit_of_add_one fun {a b} hab => ?_
-  letI : Field (R ⧸ M' R) := Ideal.Quotient.field (M' R)
+  let : Field (R ⧸ M' R) := Ideal.Quotient.field (M' R)
   have hab' : evalOneₐ (M' R) a + evalOneₐ (M' R) b = 1 := by
     rw [← map_add, hab, map_one]
   rcases field_isUnit_or_isUnit hab' with hu | hu

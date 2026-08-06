@@ -278,8 +278,8 @@ theorem _root_.ZhangYeung.theorem5
   have hZU : Measurable ZU := hZ.prodMk hU
   obtain ⟨Ω', mΩ', Xprime, Xstar, V, ν, hν, hXprime, hXstar, hV, hCond, hFirst, hSecond⟩ :=
     condIndep_copies Xtuple ZU hXtuple hZU μ
-  letI : MeasurableSpace Ω' := mΩ'
-  letI : IsProbabilityMeasure ν := hν
+  let : MeasurableSpace Ω' := mΩ'
+  let : IsProbabilityMeasure ν := hν
   let Z' : Ω' → S_Z := fun ω => (V ω).1
   let U' : Ω' → S_U := fun ω => (V ω).2
   let X' : ∀ j : Fin n, Ω' → S j := fun j ω => Xprime ω j

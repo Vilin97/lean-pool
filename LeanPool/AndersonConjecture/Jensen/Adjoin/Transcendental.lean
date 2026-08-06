@@ -130,8 +130,8 @@ lemma adjoin_height_case_bot
     exact (transcendental_iff_injective.mp hx_trans) (congrArg Subtype.val hfg)
   set J := Ideal.comap φ q
   set J' := Ideal.comap φ (Ideal.comap S_sub.subtype P)
-  haveI hJ_prime : J.IsPrime := hq_prime.comap _
-  haveI hJ'_prime : J'.IsPrime := (hP_prime.comap S_sub.subtype).comap _
+  have hJ_prime : J.IsPrime := hq_prime.comap _
+  have hJ'_prime : J'.IsPrime := (hP_prime.comap S_sub.subtype).comap _
   have hJJ' : J ≤ J' := fun f hf => hq_lt.le hf
   obtain ⟨ps, qs, hqs, heqs⟩ : (s : T) ∈ adjoinLocSet R x := hS_eq ▸ s.2
   have hps_J : ps ∈ J := show φ ps ∈ q from by
@@ -194,12 +194,12 @@ lemma adjoin_height_case_bot
     intro f hfM hfJ'
     obtain ⟨c, hc_nzd, rfl⟩ := hfM
     exact (nonZeroDivisors.ne_zero hc_nzd) (hJ'_const_zero c hfJ')
-  letI : Algebra (Polynomial R.carrier) (Polynomial K) := ψ.toAlgebra
-  haveI : IsLocalization M' (Polynomial K) :=
+  let : Algebra (Polynomial R.carrier) (Polynomial K) := ψ.toAlgebra
+  have : IsLocalization M' (Polynomial K) :=
     Polynomial.isLocalization (nonZeroDivisors R.carrier) K
-  haveI : (Ideal.map (algebraMap _ (Polynomial K)) J).IsPrime :=
+  have : (Ideal.map (algebraMap _ (Polynomial K)) J).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint M' (Polynomial K) J hJ_prime hJ_disj
-  haveI : (Ideal.map (algebraMap _ (Polynomial K)) J').IsPrime :=
+  have : (Ideal.map (algebraMap _ (Polynomial K)) J').IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint M' (Polynomial K) J' hJ'_prime hJ'_disj
   have hJ_map_ne : Ideal.map (algebraMap _ (Polynomial K)) J ≠ ⊥ := by
     intro h
@@ -234,12 +234,12 @@ lemma adjoin_height_case_ne_bot
     (Ideal.comap S_sub.subtype P).height ≤ ↑(1 : ℕ) := by
   -- Step 1: Extract a prime generator p₀ of P ∩ R
   obtain ⟨a₀, ha₀_mem, ha₀_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hPR
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   obtain ⟨p₀, hp₀_prime_R, hp₀_dvd, hp₀_mem_PR⟩ : ∃ p₀ : R.carrier,
       Prime p₀ ∧ p₀ ∣ a₀ ∧ p₀ ∈ P.comap R.carrier.subtype := by
     obtain ⟨factors, hfp, hassoc⟩ :=
       UniqueFactorizationMonoid.exists_prime_factors a₀ ha₀_ne
-    haveI : (P.comap R.carrier.subtype).IsPrime := hP_prime.comap _
+    have : (P.comap R.carrier.subtype).IsPrime := hP_prime.comap _
     have hprod_in : factors.prod ∈ P.comap R.carrier.subtype := by
       obtain ⟨u, hu⟩ := hassoc
       rw [← hu] at ha₀_mem
@@ -280,10 +280,10 @@ lemma adjoin_height_case_ne_bot
         refine lt_of_le_of_ne (Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hp₀_mem_PR)) ?_
         intro heq
         exact h_not_dvd (heq ▸ hr |> Ideal.mem_span_singleton.mp)
-      haveI : (Ideal.span {p₀}).IsPrime := by
+      have : (Ideal.span {p₀}).IsPrime := by
         rw [Ideal.span_singleton_prime (show p₀ ≠ 0 from hp₀_ne)]
         exact hp₀_prime_R
-      haveI : (P.comap R.carrier.subtype).IsPrime := hP_prime.comap _
+      have : (P.comap R.carrier.subtype).IsPrime := hP_prime.comap _
       have hbot_lt_span : (⊥ : Ideal R.carrier) < Ideal.span {p₀} := by
         rw [bot_lt_iff_ne_bot, ne_eq, Ideal.span_singleton_eq_bot]
         exact hp₀_ne
@@ -342,7 +342,7 @@ lemma adjoin_height_case_ne_bot
   suffices q = ⊥ by simp_all
   by_contra hq_ne
   obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
-  haveI : q.IsPrime := hq_prime
+  have : q.IsPrime := hq_prime
   have hp₀_not_q : p₀_S ∉ q := by
     intro hp₀q
     have hsub : Ideal.comap S_sub.subtype P ≤ q := by
@@ -408,15 +408,15 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
     (S_sub : Subring T) (hS_eq : (S_sub : Set T) = adjoinLocSet R x)
     (hinv : ∀ (s : S_sub), (s : T) ∉ IsLocalRing.maximalIdeal T → IsUnit s) :
     UniqueFactorizationMonoid S_sub := by
-  haveI : IsDomain S_sub := inferInstance
-  haveI : UniqueFactorizationMonoid (R.carrier)[X] := Polynomial.uniqueFactorizationMonoid
+  have : IsDomain S_sub := inferInstance
+  have : UniqueFactorizationMonoid (R.carrier)[X] := Polynomial.uniqueFactorizationMonoid
   have eval_mem : ∀ f : (R.carrier)[X], (aeval x f : T) ∈ S_sub := by
     intro f
     change (aeval x f : T) ∈ (S_sub : Set T)
     rw [hS_eq]
     exact ⟨f, 1, by simp_all,
       by rw [map_one, mul_one]⟩
-  haveI : WfDvdMonoid S_sub := by
+  have : WfDvdMonoid S_sub := by
     constructor
     apply Subrelation.wf (r := InvImage DvdNotUnit (fun (a : S_sub) => (a : T)))
     · intro a b ⟨ha_ne, c, hc_nu, hab_eq⟩
@@ -556,7 +556,7 @@ private lemma adjoinLoc_prime_of_prime
   · intro h
     exact hr.ne_zero (Subtype.ext (show r.1 = 0 from congrArg Subtype.val h))
   · intro hr_unit
-    have hr_not_unit_R : ¬ IsUnit r := hr.not_unit
+    have hr_not_unit_R : ¬ IsUnit r := hr.not_isUnit
     have hr_mem_maxR : r ∈ IsLocalRing.maximalIdeal R.carrier :=
       (IsLocalRing.mem_maximalIdeal _).mpr hr_not_unit_R
     have hr_mem_M : r.1 ∈ IsLocalRing.maximalIdeal T := by
@@ -594,7 +594,7 @@ private lemma adjoinLoc_prime_of_prime
                                                            ring⟩
     have hr_mem_M : r.1 ∈ IsLocalRing.maximalIdeal T := by
       have hmem : r ∈ IsLocalRing.maximalIdeal R.carrier :=
-        (IsLocalRing.mem_maximalIdeal _).mpr hr.not_unit
+        (IsLocalRing.mem_maximalIdeal _).mpr hr.not_isUnit
       rw [R.maximal_ideal_eq, Ideal.mem_comap] at hmem
       exact hmem
     rcases hCr_prime.dvd_or_dvd
@@ -688,7 +688,7 @@ theorem adjoin_transcendental_isNSubring
     adjoinLoc_isUnit_of_notMem_maximalIdeal R x S_sub hS_eq
   -- Step 2: S is a local ring
   have hLocal : IsLocalRing S_sub := by
-    haveI : Nontrivial S_sub := inferInstance
+    have : Nontrivial S_sub := inferInstance
     apply IsLocalRing.of_isUnit_or_isUnit_one_sub_self
     intro ⟨a, ha⟩
     by_cases ham : (a : T) ∈ IsLocalRing.maximalIdeal T

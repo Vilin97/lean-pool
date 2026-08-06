@@ -96,7 +96,7 @@ theorem fiber_single_ne {n i : ℕ} (h : i ≠ n) (X : Set α) : fiber (single V
 
 theorem single_mono {n : ℕ} {X X' : Set α} (h : X ⊆ X') : single V n X ⊆ single V n X' := by
   intro p hp
-  simp only [single, Set.mem_setOf_eq] at hp ⊢
+  simp only [single, Set.mem_ofPred_eq] at hp ⊢
   by_cases hc : p.1 = n
   · rw [if_pos hc] at hp ⊢; exact h hp
   · rw [if_neg hc] at hp ⊢; exact hp
@@ -157,7 +157,7 @@ theorem single_master (n : ℕ) : single V n V.master = (iterSys V).master := by
 theorem subset_single {W : Set (ℕ × α)} (hW : (iterSys V).mem W) (i : ℕ) :
     W ⊆ single V i (fiber W i) := by
   rintro ⟨j, a⟩ ha
-  simp only [single, Set.mem_setOf_eq]
+  simp only [single, Set.mem_ofPred_eq]
   by_cases h : j = i
   · rw [if_pos h]; subst h; exact ha
   · rw [if_neg h]; exact V.sub_master (hW.1 j) ha

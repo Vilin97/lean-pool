@@ -57,7 +57,7 @@ def gammaSetNMap (N : ℕ) (v : gammaSetN N) : gammaSet 1 1 0 := by
 
 lemma gammaSet_top_mem (v : Fin 2 → ℤ) : v ∈ gammaSet 1 1 0 ↔ IsCoprime (v 0) (v 1) := by
   rw [gammaSet]
-  simp only [Fin.isValue, mem_setOf_eq, ←Int.isCoprime_iff_gcd_eq_one, and_iff_right_iff_imp]
+  simp only [Fin.isValue, mem_ofPred_eq, ←Int.isCoprime_iff_gcd_eq_one, and_iff_right_iff_imp]
   exact fun _ => Subsingleton.eq_zero (Int.cast ∘ v)
 
 lemma gammaSetN_map_eq (N : ℕ) (v : gammaSetN N) : v.1 = N • gammaSetNMap N v := by
