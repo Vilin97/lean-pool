@@ -22,7 +22,11 @@ development:
   universal-in-`t` bridge to `IsLagrangianVlasovSolution`;
 * the §10 marquee results: `vlasovWellPosedness` (forward-in-time existence),
   `vlasovWellPosedness_uniqueness`, `dobrushin` (W₁ stability, proved by
-  coupling the two flows and a Grönwall estimate), and the mean-field limit.
+  coupling the two flows and a Grönwall estimate), and the mean-field limit;
+* the wiring layer `dobrushin_on` / `dobrushin_forward` /
+  `vlasovWellPosedness_stability`: the window and forward-global stability
+  forms with the explicit uniform constant `C = 2 · max 1 L`, whose
+  hypotheses are exactly the clauses `vlasovWellPosedness` emits.
 
 See `formalize/DESIGN.md` (in the source repository) for the overall design.
 -/
@@ -5619,7 +5623,6 @@ theorem vlasovWellPosedness_uniqueness
     (gradW : PhysSpace d → PhysSpace d)
     (_hgradW : ∀ x, gradW x = gradient W x)
     (L : NNReal) (hL : LipschitzWith L gradW)
-    (_hL_pos : (0 : ℝ) < L)
     (f₀ : Measure (PhaseSpace d))
     (_hf₀ : HasFiniteFirstMoment f₀)
     {T_target : ℝ} (hT_target : 0 < T_target)
@@ -5772,7 +5775,7 @@ theorem vlasovWellPosedness_universal_existence
     have h_sol_m_on_n : IsLagrangianVlasovSolutionOn gradW (sol m) ((n : ℝ) + 1) :=
       (h_sol_lag m).mono_window hnm_cast
     -- Apply vlasovWellPosedness_uniqueness on window [0, n+1]
-    exact vlasovWellPosedness_uniqueness W gradW hgradW L hL hL_pos f₀ hf₀
+    exact vlasovWellPosedness_uniqueness W gradW hgradW L hL f₀ hf₀
       (by linarith [Nat.cast_nonneg (α := ℝ) n] : (0 : ℝ) < (n : ℝ) + 1)
       (sol n) (sol m) (h_sol_init n) (h_sol_init m)
       (h_sol_mom n)
@@ -6318,7 +6321,12 @@ eq:vlasov,
 
 where W_1 is the Wasserstein-1 distance.
 The proof uses a coupling via the characteristic flows eq:char and a Gronwall
-inequality; the key estimate is |∇W * ρ − ∇W * σ|_∞ ≤ L · W_1(ρ, σ). -/
+inequality; the key estimate is |∇W * ρ − ∇W * σ|_∞ ≤ L · W_1(ρ, σ).
+
+The `[AssW W]` instance and `hgradW` record the standing setup ass:W (∇W the
+gradient of an even C^{1,1} potential); the inequality itself consumes only
+the Lipschitz bound `hL` — see `dobrushin_on` below for the minimal-hypothesis
+window form with the explicit constant `C = 2 · max 1 L`. -/
 theorem dobrushin
     {d : ℕ} [NeZero d]
     (W : PhysSpace d → ℝ) [hW : AssW W]
@@ -6352,6 +6360,99 @@ theorem dobrushin
     simpa only [dist_zero_right] using (hg_prob 0).2
   rw [wasserstein1_eq_coupling (f 0) (g 0) 0 hfm0 hgm0]
   exact hC_bound t ht
+
+/-- **Dobrushin stability on the window `[0, T]`** — the public form of the
+uniform-constant estimate, with the dual `W₁` metric on both sides.
+
+Unlike the marquee `dobrushin` (global two-sided solutions, existential
+constant), this form (i) consumes exactly what `vlasovWellPosedness` emits —
+per-window `IsLagrangianVlasovSolutionOn` plus window moments — and (ii)
+exposes the **explicit constant** `C = 2 · max 1 L`, which depends only on
+the force's Lipschitz bound, not on the solution pair.  That uniformity is
+what a mean-field argument quantifying over a family of solutions (e.g.
+empirical curves, once their flow witnesses are formalized) needs. -/
+theorem dobrushin_on
+    {d : ℕ} [NeZero d]
+    (gradW : PhysSpace d → PhysSpace d)
+    (L : NNReal) (hL : LipschitzWith L gradW)
+    (f g : ℝ → Measure (PhaseSpace d))
+    (T : ℝ) (hT : 0 < T)
+    (hf : IsLagrangianVlasovSolutionOn gradW f T)
+    (hg : IsLagrangianVlasovSolutionOn gradW g T)
+    (hf_mom : ∀ t ∈ Set.Icc (0 : ℝ) T, HasFiniteFirstMoment (f t))
+    (hg_mom : ∀ t ∈ Set.Icc (0 : ℝ) T, HasFiniteFirstMoment (g t)) :
+    ∀ t ∈ Set.Icc (0 : ℝ) T,
+      wasserstein1 (f t) (g t) ≤
+        ENNReal.ofReal (Real.exp (2 * ((max 1 L : NNReal) : ℝ) * t)) *
+          wasserstein1 (f 0) (g 0) := by
+  intro t ht
+  have h0 : (0 : ℝ) ∈ Set.Icc (0 : ℝ) T := ⟨le_refl 0, hT.le⟩
+  haveI : IsProbabilityMeasure (f 0) := (hf_mom 0 h0).1
+  haveI : IsProbabilityMeasure (g 0) := (hg_mom 0 h0).1
+  have hfm0 : Integrable (fun y => dist y (0 : PhaseSpace d)) (f 0) := by
+    simpa only [dist_zero_right] using (hf_mom 0 h0).2
+  have hgm0 : Integrable (fun y => dist y (0 : PhaseSpace d)) (g 0) := by
+    simpa only [dist_zero_right] using (hg_mom 0 h0).2
+  rw [wasserstein1_eq_coupling (f 0) (g 0) 0 hfm0 hgm0]
+  exact dobrushin_meanfield_On gradW L hL f g T hT hf hg hf_mom hg_mom t ht
+
+/-- **Forward-global Dobrushin stability with the explicit uniform constant.**
+
+Stability for the solution class `vlasovWellPosedness` constructs: the
+hypotheses are verbatim the existence theorem's conclusion clauses (the
+per-window `IsLagrangianVlasovSolutionOn` family on every horizon, moments on
+`Set.Ici 0`), and the estimate holds for all `t ≥ 0` with the
+pair-independent constant `C = 2 · max 1 L`.  This is the arrow that lets the
+existence output feed a Dobrushin-type stability input; see
+`vlasovWellPosedness_stability` for the packaged composition. -/
+theorem dobrushin_forward
+    {d : ℕ} [NeZero d]
+    (gradW : PhysSpace d → PhysSpace d)
+    (L : NNReal) (hL : LipschitzWith L gradW)
+    (f g : ℝ → Measure (PhaseSpace d))
+    (hf : ∀ T : ℝ, 0 < T → IsLagrangianVlasovSolutionOn gradW f T)
+    (hg : ∀ T : ℝ, 0 < T → IsLagrangianVlasovSolutionOn gradW g T)
+    (hf_mom : ∀ t ∈ Set.Ici (0 : ℝ), HasFiniteFirstMoment (f t))
+    (hg_mom : ∀ t ∈ Set.Ici (0 : ℝ), HasFiniteFirstMoment (g t)) :
+    ∀ t : ℝ, 0 ≤ t →
+      wasserstein1 (f t) (g t) ≤
+        ENNReal.ofReal (Real.exp (2 * ((max 1 L : NNReal) : ℝ) * t)) *
+          wasserstein1 (f 0) (g 0) := by
+  intro t ht
+  exact dobrushin_on gradW L hL f g (t + 1) (by linarith)
+    (hf (t + 1) (by linarith)) (hg (t + 1) (by linarith))
+    (fun s hs => hf_mom s hs.1) (fun s hs => hg_mom s hs.1) t ⟨ht, by linarith⟩
+
+/-- **Well-posedness package: existence + stability, chained.**
+
+For any two initial data `f₀, g₀ ∈ 𝒫₁`, the curves produced by
+`vlasovWellPosedness` satisfy the Dobrushin estimate with the explicit
+constant `C = 2 · max 1 L` at every `t ≥ 0` — the composition of the two
+headline theorems, recorded so that the existence output demonstrably feeds
+the stability input (`dobrushin_forward`). -/
+theorem vlasovWellPosedness_stability
+    {d : ℕ} [NeZero d]
+    (W : PhysSpace d → ℝ) [AssW W]
+    (gradW : PhysSpace d → PhysSpace d)
+    (hgradW : ∀ x, gradW x = gradient W x)
+    (L : NNReal) (hL : LipschitzWith L gradW)
+    (f₀ g₀ : Measure (PhaseSpace d))
+    (hf₀ : HasFiniteFirstMoment f₀) (hg₀ : HasFiniteFirstMoment g₀) :
+    ∃ f g : ℝ → Measure (PhaseSpace d),
+      f 0 = f₀ ∧ g 0 = g₀ ∧
+      (∀ T : ℝ, 0 < T → IsLagrangianVlasovSolutionOn gradW f T) ∧
+      (∀ T : ℝ, 0 < T → IsLagrangianVlasovSolutionOn gradW g T) ∧
+      ∀ t : ℝ, 0 ≤ t →
+        wasserstein1 (f t) (g t) ≤
+          ENNReal.ofReal (Real.exp (2 * ((max 1 L : NNReal) : ℝ) * t)) *
+            wasserstein1 f₀ g₀ := by
+  obtain ⟨f, hf_init, hf_mom, hf_lag, _⟩ :=
+    vlasovWellPosedness W gradW hgradW L hL f₀ hf₀
+  obtain ⟨g, hg_init, hg_mom, hg_lag, _⟩ :=
+    vlasovWellPosedness W gradW hgradW L hL g₀ hg₀
+  refine ⟨f, g, hf_init, hg_init, hf_lag, hg_lag, ?_⟩
+  have h := dobrushin_forward gradW L hL f g hf_lag hg_lag hf_mom hg_mom
+  simpa only [hf_init, hg_init] using h
 
 /-- **Coupling-metric Dobrushin stability estimate** — the `wasserstein1Coupling`
 (primal) analogue of `DobrushinStabilityEstimate` (Basic).  LHS is the genuine

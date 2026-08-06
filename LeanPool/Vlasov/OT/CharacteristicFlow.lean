@@ -1193,10 +1193,10 @@ norm bound into a per-window `IsPicardLindelof`, invokes the vendored
 Picard-Lindelöf (`exists_vlasov_extend_one_window`), and stitches
 `N = ⌈T/δ⌉` windows per-`z` via `HasDerivWithinAt.union` under the
 position/velocity inductive invariant.  Downstream callers discharge its
-`hR`/`hbound` hypotheses; the single-ball-over-`[0,T+1]` `hR` discharge in
+`hR`/`hbound` hypotheses; the single-ball `hR` discharge in
 `exists_vlasov_trajectory` is what introduces the
-`LocalSmallnessPLBuffer L T := L·(T+1)² < 1` constraint — see that
-theorem's docstring for the `+1`-offset / arbitrary-`L` discussion. -/
+`LocalSmallnessPLBuffer L T := L·T² < 1` constraint — see that
+theorem's docstring for the arbitrary-`L` discussion. -/
 
 /-- Localized variant of `IsCharacteristicFlow` from `Basic.lean`:
 the same initial condition + position/velocity ODEs, but quantified
@@ -4507,7 +4507,7 @@ theorem exists_vlasov_trajectory
     have := mul_nonneg h1 hT1nn
     have := mul_nonneg h2 hT1sq
     rw [hN_z_def]; positivity
-  -- R_real := N(z) / (1 - L·(T+1)²)
+  -- R_real := N(z) / (1 - L·T²)
   set R_real : ℝ := N_z / (1 - (L : ℝ) * T ^ 2) with hR_real_def
   have hR_real_nn : 0 ≤ R_real := div_nonneg hN_z_nn (le_of_lt hTL_pos)
   set R : NNReal := Real.toNNReal R_real with hR_def
@@ -4525,10 +4525,10 @@ theorem exists_vlasov_trajectory
   set M : NNReal := Real.toNNReal M_real with hM_def
   have hM_eq : (M : ℝ) = M_real := Real.coe_toNNReal _ hM_real_nn
   -- ============================================================
-  -- Verify hR_local: 2·a + (‖z.2‖ + a/2)(T+1) + M·(T+1)² ≤ R
+  -- Verify hR_local: 2·a + (‖z.2‖ + a/2)·T + M·T² ≤ R
   -- with a = 1.
-  -- After substitution: this is N_z ≤ R = R_real * (1 - L·(T+1)²) + correction.
-  -- The construction gives R · (1 - L·(T+1)²) = N_z, so the inequality is tight.
+  -- After substitution: this is N_z ≤ R = R_real * (1 - L·T²) + correction.
+  -- The construction gives R · (1 - L·T²) = N_z, so the inequality is tight.
   -- ============================================================
   have ha : (0 : NNReal) < 1 := by norm_num
   have hR_local : 2 * ((1 : NNReal) : ℝ)
@@ -4552,7 +4552,7 @@ theorem exists_vlasov_trajectory
     rw [hM_eq, hR_eq, h_one]
     linarith [h_real]
   -- ============================================================
-  -- Verify hbound_local: force bound on closedBall z.1 R for t ∈ Icc 0 (T+1).
+  -- Verify hbound_local: force bound on closedBall z.1 R for t ∈ Icc 0 T.
   -- Uses ‖conv(ρ t, x)‖ ≤ ‖gradW(0)‖ + L · ∫‖x-y‖ dρ_t ≤ ‖gradW(0)‖ + L·(‖x‖ + M_ρ).
   -- For x ∈ closedBall z.1 R: ‖x‖ ≤ R + ‖z.1‖, so bound ≤ M_real = M.
   -- ============================================================
