@@ -68,4 +68,9 @@ MSC: 70F07, 37J30, 37J40
 
 This project formalizes the analytic and perturbative ingredients of Poincaré's classical
 nonintegrability theorem for the planar circular restricted three-body problem.
+
+The source states the classical planar result as Theorem 1.1 on page 2 of arXiv:2111.11031v2
+and gives its precise local meromorphic resonant-orbit obstruction in Theorem 3.1 on page 8.
+The final Lean theorem is the fixed-coordinate, global uniform-domain special case: a global
+real-analytic family restricts and complexifies on the local neighborhoods used by the source.
 -/

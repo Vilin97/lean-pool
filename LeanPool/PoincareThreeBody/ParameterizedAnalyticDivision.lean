@@ -278,7 +278,7 @@ theorem HasFPowerSeriesOnBall.hasSum_parameterizedMassIntegral
       fderiv ℝ f (base + massScale t (base + x - base)) massDirection
     rw [HasFPowerSeriesOnBall.tsum_massPartialTerm_eq_massDerivative hp hx]
     · congr 3
-      abel
+      abel_nf
     · rw [← Set.uIcc_of_le zero_le_one]
       exact ht
   rwa [hintegral] at hsum

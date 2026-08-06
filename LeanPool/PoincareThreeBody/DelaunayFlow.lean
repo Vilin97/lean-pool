@@ -136,7 +136,7 @@ theorem hasDerivAt_liftedDelaunayFlowLine_position
         inertialEllipseVelocity, Matrix.cons_val_zero, Matrix.cons_val_one]
       dsimp [xInertial, yInertial, vxInertial, vyInertial, denominator,
         anomaly, angle, meanMotion]
-      ring
+      ring_nf
   · have hraw := (hsin.neg.mul hxInertial).add (hcos.mul hyInertial)
     apply (hraw.congr_deriv ?_).congr_of_eventuallyEq
     · filter_upwards [] with t
@@ -146,7 +146,7 @@ theorem hasDerivAt_liftedDelaunayFlowLine_position
         positionMomentumPhasePoint, positionInRotatingFrame, inertialEllipsePosition,
         inertialEllipseVelocity, Matrix.cons_val_zero, Matrix.cons_val_one]
       dsimp [xInertial, yInertial, anomaly, angle]
-      congr 3 <;> ring
+      congr 3 <;> ring_nf
     · simp only [liftedDelaunayFlowLine, liftedDelaunayPhasePoint,
         liftedDelaunayPosition, liftedDelaunayMomentum,
         liftedDelaunayEccentricAnomaly_flow_argument,
@@ -154,7 +154,7 @@ theorem hasDerivAt_liftedDelaunayFlowLine_position
         inertialEllipseVelocity, Matrix.cons_val_zero, Matrix.cons_val_one]
       dsimp [xInertial, yInertial, vxInertial, vyInertial, denominator,
         anomaly, angle, meanMotion]
-      ring
+      ring_nf
 
 /-- In inertial coordinates, a general Delaunay ellipse satisfies the inverse-square acceleration
 law. -/
@@ -294,7 +294,7 @@ theorem hasDerivAt_liftedDelaunayFlowLine_momentum
         positionMomentumPhasePoint, positionInRotatingFrame,
         Matrix.cons_val_zero, Matrix.cons_val_one]
       dsimp [xInertial, yInertial, vxInertial, vyInertial, anomaly, radius, angle]
-      ring
+      ring_nf
   · have hraw := (hsin.neg.mul hvx).add (hcos.mul hvy)
     apply (hraw.congr_deriv ?_).congr_of_eventuallyEq
     · filter_upwards [] with t
@@ -304,14 +304,14 @@ theorem hasDerivAt_liftedDelaunayFlowLine_momentum
         positionMomentumPhasePoint, positionInRotatingFrame,
         Matrix.cons_val_zero, Matrix.cons_val_one]
       dsimp [vxInertial, vyInertial, anomaly, angle]
-      congr 3 <;> ring
+      congr 3 <;> ring_nf
     · simp only [liftedDelaunayFlowLine, liftedDelaunayPhasePoint,
         liftedDelaunayPosition, liftedDelaunayMomentum,
         liftedDelaunayEccentricAnomaly_flow_argument,
         positionMomentumPhasePoint, positionInRotatingFrame,
         Matrix.cons_val_zero, Matrix.cons_val_one]
       dsimp [xInertial, yInertial, vxInertial, vyInertial, anomaly, radius, angle]
-      ring
+      ring_nf
 
 /-- The position norm of a lifted Delaunay flow point is its eccentric radius. -/
 lemma sqrt_positionSq_liftedDelaunayFlowLine

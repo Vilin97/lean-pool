@@ -101,7 +101,7 @@ theorem eq_of_same_second_of_rotatingAngleFlow_invariant
     exact hfiberDense n
   have hsurjective : Function.Surjective (fun shift : AngleCircle ↦ first + shift) := by
     intro target
-    exact ⟨target - first, by abel⟩
+    exact ⟨target - first, by abel_nf⟩
   obtain ⟨shift, hshift⟩ := hsurjective second
   have hvalue := congrFun hfiberConstant shift
   dsimp only [fiber] at hvalue

@@ -5616,7 +5616,9 @@ projects:
       domain, proves logarithmic blow-up of the resonant disturbing average at
       an apoapsis collision boundary, and analytically propagates the resulting
       dense resonant obstruction to exclude an additional analytic first
-      integral.
+      integral. The final statement is the fixed-coordinate, global
+      uniform-domain special case of the planar part of Yagasaki's Theorem 1.1;
+      his local meromorphic resonant-orbit obstruction is Theorem 3.1.
     branch: dynamical systems
     entry_module: LeanPool.PoincareThreeBody
     authors:
@@ -5641,6 +5643,14 @@ projects:
           first integral of the planar circular restricted three-body
           Hamiltonian with phase differential independent from the Hamiltonian
           differential anywhere on the uniform collision-free domain.
+        source_ref: >-
+          Kazuyuki Yagasaki, "A new proof of Poincaré's result on the
+          restricted three-body problem," Theorem 1.1 (p. 2), planar case;
+          compare the precise local meromorphic obstruction near resonant
+          unperturbed elliptic orbits in Theorem 3.1 (p. 8). The Lean result is
+          the fixed-coordinate global uniform-domain special case: a global
+          real-analytic family restricts and complexifies on the local
+          neighborhoods used in the source theorem.
       - declaration: LeanPool.PoincareThreeBody.delaunayHomological_obstruction
         informal: >-
           If the first homological equation holds and its perturbing Fourier

@@ -41,7 +41,7 @@ theorem dense_nonzero_of_analyticOnNhd
   rw [mem_closure_iff_nhdsWithin_neBot]
   have himage : ((↑) '' {x : U | f x.1 ≠ 0}) = f ⁻¹' {0}ᶜ ∩ U := by
     ext y
-    simp only [mem_image, mem_setOf_eq, Subtype.exists, exists_and_right,
+    simp only [mem_image, mem_ofPred_eq, Subtype.exists, exists_and_right,
       exists_eq_right, mem_inter_iff, mem_preimage, mem_compl_iff, mem_singleton_iff]
     tauto
   exact (inferInstance : NeBot (𝓝[≠] x)).mono (by
