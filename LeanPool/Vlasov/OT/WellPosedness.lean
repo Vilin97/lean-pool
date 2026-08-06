@@ -111,7 +111,7 @@ private lemma envelopeStep_contractionInputs {d : ℕ} [NeZero d]
       HasDerivWithinAt (fun s' => (cX s' z, cV s' z))
         (vlasovVectorField gradW (ν.extend) s (cX s z, cV s z))
         (Set.Ici s) s) := by
-  haveI : ∀ t, IsProbabilityMeasure (ν.extend t) := VlasovMeasureCurve.extend_isProb ν
+  have : ∀ t, IsProbabilityMeasure (ν.extend t) := VlasovMeasureCurve.extend_isProb ν
   obtain ⟨h_init, h_cont, h_deriv⟩ :=
     characteristicFlow_boundary_regularity gradW ν.extend cX cV T hT hflow hbdry
   have h_meas : ∀ t ∈ Set.Icc (0 : ℝ) T,
@@ -252,7 +252,7 @@ private lemma vlasovWellPosedness_local_picard_sequence
       Phi_step_envelope W gradW hgradW L hL f₀ hf₀_int hT.le m hm_mono hm_nn hm_inv hTL_PL
         ν (h_int_ext_gen ν)
     exact ⟨σ, cX, cV, hσ, hflow, hbdry⟩
-  haveI hμ₀_prob_inst : IsProbabilityMeasure (spatialMarginal f₀) := hμ₀_prob
+  have hμ₀_prob_inst : IsProbabilityMeasure (spatialMarginal f₀) := hμ₀_prob
   let base : VlasovMeasureCurve d T m := constantCurve (spatialMarginal f₀) hμ₀_int hμ₀_le_m
   let x : ℕ → VlasovMeasureCurve d T m :=
     fun n => Nat.rec base (fun _ ν => Classical.choose (step ν)) n
@@ -333,7 +333,7 @@ private lemma vlasovWellPosedness_local_picard_sequence
           wasserstein1 ((x k).extend s) ((x (k+1)).extend s) ≠ ⊤ := by
         intro s hs
         rw [he (x k) s hs, he (x (k+1)) s hs]
-        haveI := (x k).isProb s; haveI := (x (k+1)).isProb s
+        have := (x k).isProb s; have := (x (k+1)).isProb s
         exact wasserstein1_ne_top_of_finite_moment _ _
           ((x k).yIntegrable s hs) ((x (k+1)).yIntegrable s hs)
       have h_W1_bound : ∀ s ∈ Set.Icc (0 : ℝ) T,
@@ -344,7 +344,7 @@ private lemma vlasovWellPosedness_local_picard_sequence
             ≤ ENNReal.ofReal D :=
           le_trans (wasserstein1_le_supW1On _ _ _ s hs) ih
         have h_ne : wasserstein1 ((x k).ρ s) ((x (k+1)).ρ s) ≠ ⊤ := by
-          haveI := (x k).isProb s; haveI := (x (k+1)).isProb s
+          have := (x k).isProb s; have := (x (k+1)).isProb s
           exact wasserstein1_ne_top_of_finite_moment _ _
             ((x k).yIntegrable s hs) ((x (k+1)).yIntegrable s hs)
         calc (wasserstein1 ((x k).ρ s) ((x (k+1)).ρ s)).toReal
@@ -478,8 +478,8 @@ private lemma picardLimit_fixed_point_eq
                     (Measure.map (fun z => charX t z) f₀)).toReal ≤ Dn n * q) :
     ∀ t ∈ Set.Icc (0 : ℝ) T, ρl.ρ t = Measure.map (fun z => charX t z) f₀ := by
   intro t ht
-  haveI hP1 : IsProbabilityMeasure (ρl.ρ t) := ρl.isProb t
-  haveI hP2 : IsProbabilityMeasure (Measure.map (fun z => charX t z) f₀) :=
+  have hP1 : IsProbabilityMeasure (ρl.ρ t) := ρl.isProb t
+  have hP2 : IsProbabilityMeasure (Measure.map (fun z => charX t z) f₀) :=
     Measure.isProbabilityMeasure_map (h_aem_lim t ht)
   refine (wasserstein1_eq_zero_iff_measure_eq (ρl.ρ t)
     (Measure.map (fun z => charX t z) f₀)).mp ?_
@@ -499,7 +499,7 @@ private lemma picardLimit_fixed_point_eq
           rw [h_mid]
           have h_fin : wasserstein1 (Measure.map (fun z => charXs n t z) f₀)
               (Measure.map (fun z => charX t z) f₀) ≠ ⊤ := by
-            haveI : IsProbabilityMeasure (Measure.map (fun z => charXs n t z) f₀) :=
+            have : IsProbabilityMeasure (Measure.map (fun z => charXs n t z) f₀) :=
               Measure.isProbabilityMeasure_map (h_aem_n n t ht)
             exact wasserstein1_ne_top_of_finite_moment _ _
               (h_mom_n n t ht) (h_mom_lim t ht)
@@ -635,7 +635,7 @@ private lemma picardFlow_clamp_bundle
     exact VlasovMeasureCurve.extend_yIntegrable hT.le ρ_lim s
   · intro s
     rw [h_rho_clamp s]
-    haveI : IsProbabilityMeasure (ρ_lim.extend (clampToIcc T s)) :=
+    have : IsProbabilityMeasure (ρ_lim.extend (clampToIcc T s)) :=
       VlasovMeasureCurve.extend_isProb ρ_lim (clampToIcc T s)
     exact (convolveFunctionMeasure_lipschitz_in_x gradW L hL
       (ρ_lim.extend (clampToIcc T s)) (h_int_ρ_lim (clampToIcc T s))).continuous
@@ -752,7 +752,7 @@ private lemma picardLimit_self_consistency
       wasserstein1 ((x n).extend s) (ρ_lim.extend s) ≠ ⊤ := by
     intro n s hs
     rw [he (x n) s hs, he ρ_lim s hs]
-    haveI := (x n).isProb s; haveI := ρ_lim.isProb s
+    have := (x n).isProb s; have := ρ_lim.isProb s
     exact wasserstein1_ne_top_of_finite_moment _ _
       ((x n).yIntegrable s hs) (ρ_lim.yIntegrable s hs)
   have h_W1_bound_curve : ∀ n, ∀ s ∈ Set.Icc (0 : ℝ) T,
@@ -1120,7 +1120,7 @@ theorem vlasovWellPosedness_local_moment
   -- spatialMarginal μ = Measure.map Prod.fst μ, so IsProbabilityMeasure_map needs
   -- AEMeasurable Prod.fst (Measure.map ... f₀). Since Prod.fst is measurable,
   -- it is AEMeasurable wrt any measure.
-  haveI hρ_prob : ∀ s, IsProbabilityMeasure
+  have hρ_prob : ∀ s, IsProbabilityMeasure
       (spatialMarginal (vlasovSolutionViaPushforward charX charV f₀ s)) := by
     intro s
     unfold spatialMarginal vlasovSolutionViaPushforward
@@ -1241,7 +1241,7 @@ theorem vlasovWellPosedness_local_isLagrangian
     IsLagrangianVlasovSolutionOn gradW
       (vlasovSolutionViaPushforward charX charV f₀) T := by
   -- IsProbabilityMeasure for the spatial marginal (needed for the target typeclass).
-  haveI hρ_prob : ∀ s, IsProbabilityMeasure
+  have hρ_prob : ∀ s, IsProbabilityMeasure
       (spatialMarginal (vlasovSolutionViaPushforward charX charV f₀ s)) := by
     intro s
     unfold spatialMarginal vlasovSolutionViaPushforward
@@ -1393,7 +1393,7 @@ theorem vlasovWellPosedness_local
   --     `vlasovSolutionViaPushforward_isLagrangianVlasovSolutionOn`.
   --   * This body invokes both, derives `f 0 = f₀` inline, and assembles.
   obtain ⟨hf₀_prob, hf₀_int⟩ := hf₀
-  haveI : IsProbabilityMeasure f₀ := hf₀_prob
+  have : IsProbabilityMeasure f₀ := hf₀_prob
   -- Sub-helper invocation: produces the self-consistent flow + regularity
   -- + AEMeasurable witness + universal-in-s convolution integrability.
   obtain ⟨charX, charV, _M_ρ, _hM_ρ_nn, _hflow_on, _h_boundary,
@@ -2070,8 +2070,8 @@ private lemma dobrushinFlow_marginal_gradW_integrable
     ∀ t ∈ Set.Icc (0 : ℝ) T, ∀ (x_pt : PhysSpace d),
       Integrable (fun y => gradW (x_pt - y)) (spatialMarginal (μ t)) := by
   intro t ht x_pt
-  haveI : IsProbabilityMeasure (μ t) := (hμ_mom t ht).1
-  haveI : IsProbabilityMeasure (spatialMarginal (μ t)) :=
+  have : IsProbabilityMeasure (μ t) := (hμ_mom t ht).1
+  have : IsProbabilityMeasure (spatialMarginal (μ t)) :=
     Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
   have h_y_int : Integrable (fun y : PhysSpace d => ‖y‖) (spatialMarginal (μ t)) := by
     unfold spatialMarginal
@@ -2091,7 +2091,7 @@ private lemma vlasovGlue_marginal_norm_integrable
     {d : ℕ} [NeZero d]
     (μ : Measure (PhaseSpace d)) (hμ : HasFiniteFirstMoment μ) :
     Integrable (fun y : PhysSpace d => ‖y‖) (spatialMarginal μ) := by
-  haveI : IsProbabilityMeasure μ := hμ.1
+  have : IsProbabilityMeasure μ := hμ.1
   unfold spatialMarginal
   rw [integrable_map_measure
     (by exact (continuous_norm.measurable).aestronglyMeasurable)
@@ -2296,9 +2296,9 @@ private lemma vlasovGlue_flow_growthBound
     simp only [hclampT_def, min_eq_left ht.2, max_eq_right ht.1]
   set ρc : ℝ → Measure (PhysSpace d) :=
     fun t => spatialMarginal (μ (clampT t)) with hρc_def
-  haveI hρc_isProb : ∀ t, IsProbabilityMeasure (ρc t) := by
+  have hρc_isProb : ∀ t, IsProbabilityMeasure (ρc t) := by
     intro t
-    haveI : IsProbabilityMeasure (μ (clampT t)) :=
+    have : IsProbabilityMeasure (μ (clampT t)) :=
       (hμ_mom (clampT t) (hclampT_mem t)).1
     exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
   have hM_ρ : ∀ t ∈ Set.Icc (0 : ℝ) T, ∫ y, ‖y‖ ∂(ρc t) ≤ M := by
@@ -2398,7 +2398,7 @@ private lemma vlasovGlue_seam_forceIntegral_cont
       ‖convolveFunctionMeasure gradW (ρ s) x‖
         ≤ ‖gradW 0‖ + (L : ℝ) * ‖x‖ + (L : ℝ) * M := by
     intro s hs x
-    haveI := hρ_prob s hs
+    have := hρ_prob s hs
     exact vlasovGlue_conv_force_bound gradW L hL (ρ s) M (hM s hs)
       (h_y_int s hs) (h_int s hs) x
   have hB : ∀ s ∈ W, ∀ z : PhaseSpace d,
@@ -2462,7 +2462,7 @@ private lemma vlasovGlue_seam_forceIntegral_cont
           (fun z : PhaseSpace d => convolveFunctionMeasure gradW (ρ s) (X s z)) f₀ := by
         have hconv_cont' : Continuous (fun x : PhysSpace d =>
             convolveFunctionMeasure gradW (ρ s) x) := by
-          haveI := hρ_prob s hs
+          have := hρ_prob s hs
           exact (convolveFunctionMeasure_lipschitz_in_x gradW L hL
             (ρ s) (h_int s hs)).continuous
         exact hconv_cont'.measurable.comp_aemeasurable h_aem_X
@@ -2580,8 +2580,8 @@ private lemma vlasovGlue_seam_contLeft
       Continuous (fun z : PhaseSpace d =>
         convolveFunctionMeasure gradW (spatialMarginal (f_prev s)) z.1) := by
     intro s hs
-    haveI : IsProbabilityMeasure (f_prev s) := (h_prev_mom s hs).1
-    haveI : IsProbabilityMeasure (spatialMarginal (f_prev s)) :=
+    have : IsProbabilityMeasure (f_prev s) := (h_prev_mom s hs).1
+    have : IsProbabilityMeasure (spatialMarginal (f_prev s)) :=
       Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
     exact (convolveFunctionMeasure_lipschitz_in_x gradW L hL
       (spatialMarginal (f_prev s)) (h_int_marg s hs)).continuous.comp continuous_fst
@@ -2661,7 +2661,7 @@ private lemma vlasovGlue_seam_contLeft
       (fun s => spatialMarginal (f_prev s)) charX_prev charV_prev
       T (Set.Iic T) (Set.Icc 0 T) h_nhd_L
       (fun s hs => by
-        haveI : IsProbabilityMeasure (f_prev s) := (h_prev_mom s hs).1
+        have : IsProbabilityMeasure (f_prev s) := (h_prev_mom s hs).1
         exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable)
       M_ρ hM_ρ h_y_int_marg h_int_marg C_T hC_T_pair
       (fun s hs => h_prev_init ▸ h_prev_aemeas s hs)
@@ -3019,8 +3019,8 @@ private lemma vlasovGlue_seam_contRight
       Continuous (fun z : PhaseSpace d =>
         convolveFunctionMeasure gradW (spatialMarginal (g τ)) z.1) := by
     intro τ hτ
-    haveI : IsProbabilityMeasure (g τ) := (hg_mom τ hτ).1
-    haveI : IsProbabilityMeasure (spatialMarginal (g τ)) :=
+    have : IsProbabilityMeasure (g τ) := (hg_mom τ hτ).1
+    have : IsProbabilityMeasure (spatialMarginal (g τ)) :=
       Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
     exact (convolveFunctionMeasure_lipschitz_in_x gradW L hL
       (spatialMarginal (g τ)) (h_int_marg_g τ hτ)).continuous.comp continuous_fst
@@ -3083,7 +3083,7 @@ private lemma vlasovGlue_seam_contRight
       (fun s hs => by
         have hsT_Icc : s - T ∈ Set.Icc (0 : ℝ) T_0 :=
           ⟨by linarith [hs.1], by linarith [hs.2]⟩
-        haveI : IsProbabilityMeasure (g (s - T)) := (hg_mom (s - T) hsT_Icc).1
+        have : IsProbabilityMeasure (g (s - T)) := (hg_mom (s - T) hsT_Icc).1
         exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable)
       M_g
       (fun s hs => hM_g_bd (s - T) ⟨by linarith [hs.1], by linarith [hs.2]⟩)
@@ -3939,7 +3939,7 @@ theorem vlasovWellPosedness_glue
             have hφ_cont : Continuous φ := hφ_smooth.continuous
             obtain ⟨Cφ, hCφ⟩ := hφ_cont.bounded_above_of_compact_support hφ_compact
             obtain ⟨hf₀_prob, hf₀_int⟩ := hf₀
-            haveI : IsProbabilityMeasure f₀ := hf₀_prob
+            have : IsProbabilityMeasure f₀ := hf₀_prob
             -- LEFT side: substantive close via DCT on f_prev's pushforward.
             have h_cont_f_left : ContinuousWithinAt (fun s => ∫ z, φ z ∂f_next s)
                 (Set.Iic T) T :=
@@ -4556,7 +4556,7 @@ private lemma dobrushinFlow_field_continuous
       dist z₁ z₂ * Real.exp (((K : NNReal) : ℝ) * (s - 0))) :
     ∀ ω, Continuous (fun s => b s (X s ω)) := by
   intro ω
-  haveI := hν_prob
+  have := hν_prob
   set EKT : ℝ := Real.exp (((K : NNReal) : ℝ) * T) with hEKT_def
   have hΦnorm : ∀ s : ℝ, ∀ z : PhaseSpace d,
       ‖(charX (clampT s) z, charV (clampT s) z)‖ ≤ EKT * ‖z‖ + Kc := by
@@ -4903,8 +4903,8 @@ private lemma dobrushinFlow_cross_field_bound
       ‖b_f s (X_g s ω) - b_g s (X_g s ω)‖ ≤
         ((max 1 L : NNReal) : ℝ) * ∫ ω', ‖X_f s ω' - X_g s ω'‖ ∂π₀ := by
   intro ω s hs
-  haveI : IsProbabilityMeasure (f s) := (hf_mom s hs).1
-  haveI : IsProbabilityMeasure (g s) := (hg_mom s hs).1
+  have : IsProbabilityMeasure (f s) := (hf_mom s hs).1
+  have : IsProbabilityMeasure (g s) := (hg_mom s hs).1
   have hL_le_max : (L : ℝ) ≤ ((max 1 L : NNReal) : ℝ) := by
     rw [NNReal.coe_max, NNReal.coe_one]; exact le_max_right _ _
   set x : PhysSpace d := (X_g s ω).1 with hx_def
@@ -5172,8 +5172,8 @@ private theorem dobrushin_integrated_flow_bound_On
     fun t ht => (hf_mom t ht).1
   have hg_isProb : ∀ t ∈ Set.Icc (0 : ℝ) T, IsProbabilityMeasure (g t) :=
     fun t ht => (hg_mom t ht).1
-  haveI hf0_prob : IsProbabilityMeasure (f 0) := (hf_mom 0 ⟨le_refl 0, hT.le⟩).1
-  haveI hg0_prob : IsProbabilityMeasure (g 0) := (hg_mom 0 ⟨le_refl 0, hT.le⟩).1
+  have hf0_prob : IsProbabilityMeasure (f 0) := (hf_mom 0 ⟨le_refl 0, hT.le⟩).1
+  have hg0_prob : IsProbabilityMeasure (g 0) := (hg_mom 0 ⟨le_refl 0, hT.le⟩).1
   -- Clamp into [0, T].
   set clampT : ℝ → ℝ := (fun s => max 0 (min s T)) with hclampT_def
   have hclampT_mem : ∀ s, clampT s ∈ Set.Icc (0 : ℝ) T := by
@@ -5203,11 +5203,11 @@ private theorem dobrushin_integrated_flow_bound_On
   have hgc_int : ∀ s (x : PhysSpace d),
       Integrable (fun y => gradW (x - y)) (spatialMarginal (g (clampT s))) :=
     fun s x => h_int_g (clampT s) (hclampT_mem s) x
-  haveI hfc_isProb : ∀ s, IsProbabilityMeasure (spatialMarginal (f (clampT s))) := by
-    intro s; haveI := hf_isProb (clampT s) (hclampT_mem s)
+  have hfc_isProb : ∀ s, IsProbabilityMeasure (spatialMarginal (f (clampT s))) := by
+    intro s; have := hf_isProb (clampT s) (hclampT_mem s)
     exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
-  haveI hgc_isProb : ∀ s, IsProbabilityMeasure (spatialMarginal (g (clampT s))) := by
-    intro s; haveI := hg_isProb (clampT s) (hclampT_mem s)
+  have hgc_isProb : ∀ s, IsProbabilityMeasure (spatialMarginal (g (clampT s))) := by
+    intro s; have := hg_isProb (clampT s) (hclampT_mem s)
     exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
   -- Universal (max 1 L)-Lipschitz of the clamped vector fields.
   have hL_f : ∀ s, LipschitzWith (max 1 L) (b_f s) := fun s =>
@@ -5424,7 +5424,7 @@ private theorem dobrushin_uniqueness_On
   -- Then the RHS base integral `∫ ‖id ω − id ω‖ = 0`, so the integrated bound
   -- forces `Φ_f t = Φ_g t` `f 0`-a.e., hence
   -- `f t = (Φ_f t)_# (f 0) = (Φ_g t)_# (f 0) = g t`.
-  haveI hf0_prob : IsProbabilityMeasure (f 0) := (hf_mom 0 ⟨le_refl 0, hT.le⟩).1
+  have hf0_prob : IsProbabilityMeasure (f 0) := (hf_mom 0 ⟨le_refl 0, hT.le⟩).1
   obtain ⟨_, charX_f, charV_f, hflow_f, hpush_f, haem_f, hcontIcc_f⟩ := hf
   obtain ⟨_, charX_g, charV_g, hflow_g, hpush_g, haem_g, hcontIcc_g⟩ := hg
   obtain ⟨hinit_f, hflow_f_x, hflow_f_v⟩ := hflow_f
@@ -5496,15 +5496,15 @@ private theorem dobrushin_meanfield_On
       wasserstein1 (f t) (g t)
         ≤ ENNReal.ofReal (Real.exp (2 * ((max 1 L : NNReal) : ℝ) * t))
             * wasserstein1Coupling (f 0) (g 0) := by
-  haveI hf0_prob : IsProbabilityMeasure (f 0) := (hf_mom 0 ⟨le_refl 0, hT.le⟩).1
-  haveI hg0_prob : IsProbabilityMeasure (g 0) := (hg_mom 0 ⟨le_refl 0, hT.le⟩).1
+  have hf0_prob : IsProbabilityMeasure (f 0) := (hf_mom 0 ⟨le_refl 0, hT.le⟩).1
+  have hg0_prob : IsProbabilityMeasure (g 0) := (hg_mom 0 ⟨le_refl 0, hT.le⟩).1
   obtain ⟨_, charX_f, charV_f, hflow_f, hpush_f, haem_f, hcontIcc_f⟩ := hf
   obtain ⟨_, charX_g, charV_g, hflow_g, hpush_g, haem_g, hcontIcc_g⟩ := hg
   obtain ⟨hinit_f, hflow_f_x, hflow_f_v⟩ := hflow_f
   obtain ⟨hinit_g, hflow_g_x, hflow_g_v⟩ := hflow_g
   intro t ht
-  haveI hft_prob : IsProbabilityMeasure (f t) := (hf_mom t ht).1
-  haveI hgt_prob : IsProbabilityMeasure (g t) := (hg_mom t ht).1
+  have hft_prob : IsProbabilityMeasure (f t) := (hf_mom t ht).1
+  have hgt_prob : IsProbabilityMeasure (g t) := (hg_mom t ht).1
   have hft : Measure.map (fun z => (charX_f t z, charV_f t z)) (f 0) = f t :=
     (hpush_f t ht).symm
   have hgt : Measure.map (fun z => (charX_g t z, charV_g t z)) (g 0) = g t :=
@@ -5525,7 +5525,7 @@ private theorem dobrushin_meanfield_On
         ≤ ENNReal.ofReal (Real.exp (2 * ((max 1 L : NNReal) : ℝ) * t))
             * ∫⁻ z, edist z.1 z.2 ∂π := by
     intro π hπ
-    haveI hπ_prob : IsProbabilityMeasure π := by
+    have hπ_prob : IsProbabilityMeasure π := by
       constructor
       have hmap : (Measure.map Prod.fst π) Set.univ = (1 : ENNReal) := by
         rw [hπ.1, measure_univ]
@@ -5869,7 +5869,7 @@ theorem vlasovWellPosedness_universal_existence
     intro g hg_cont hg_bdd
     -- Extract probability measure structure from hf₀
     obtain ⟨hf₀_prob, hf₀_int⟩ := hf₀
-    haveI hf₀_prob_inst : IsProbabilityMeasure f₀ := hf₀_prob
+    have hf₀_prob_inst : IsProbabilityMeasure f₀ := hf₀_prob
     -- Extract a uniform bound C for g from the bounded-range hypothesis
     obtain ⟨C, hg_range⟩ := hg_bdd.subset_closedBall (0 : ℝ)
     -- C is a non-negative bound: ∀ z, ‖g z‖ ≤ C
@@ -5980,7 +5980,7 @@ private lemma vlasovWellPosedness_zeroForce_solutionOn {d : ℕ} [NeZero d]
     (T : ℝ) (hT : 0 < T) :
     IsLagrangianVlasovSolutionOn gradW f_sol T := by
   subst hf_sol
-  haveI := hf₀.1
+  have := hf₀.1
   let charX : ℝ → PhaseSpace d → PhysSpace d := fun t z => z.1 + t • z.2
   let charV : ℝ → PhaseSpace d → PhysSpace d := fun _ z => z.2
   have hconv_zero : ∀ (ρ : Measure (PhysSpace d)) (x : PhysSpace d),
@@ -6035,7 +6035,7 @@ private lemma vlasovWellPosedness_zeroForce_solutionOn {d : ℕ} [NeZero d]
     have h_zero : (fun y : PhysSpace d => gradW (x - y)) = fun _ => (0 : PhysSpace d) := by
       funext y; exact hgradW_zero (x - y)
     rw [h_zero]; exact integrable_zero _ _ _
-  haveI hspatial_prob : ∀ s, IsProbabilityMeasure
+  have hspatial_prob : ∀ s, IsProbabilityMeasure
       (spatialMarginal (vlasovSolutionViaPushforward charX charV f₀ s)) := by
     intro s
     unfold spatialMarginal vlasovSolutionViaPushforward
@@ -6207,11 +6207,11 @@ theorem vlasovWellPosedness
       intro t
       constructor
       · -- IsProbabilityMeasure: pushforward of a probability measure under measurable map.
-        haveI := hf₀.1
+        have := hf₀.1
         apply Measure.isProbabilityMeasure_map
         fun_prop
       · -- Integrable ‖·‖: reduce to f₀ via integral_map, then bound by (1+|t|)·‖z‖.
-        haveI := hf₀.1
+        have := hf₀.1
         rw [integrable_map_measure (by fun_prop) (by fun_prop)]
         apply Integrable.mono' (hf₀.2.const_mul (1 + |t|))
         · fun_prop
@@ -6246,7 +6246,7 @@ theorem vlasovWellPosedness
         rw [integral_map (by fun_prop) (by fun_prop)]
       simp_rw [h_rw]
       -- Apply continuous_of_dominated.
-      haveI := hf₀.1
+      have := hf₀.1
       apply continuous_of_dominated
       · intro t; exact (hg_cont.comp (by fun_prop)).aestronglyMeasurable
       · intro t; apply Filter.Eventually.of_forall; intro z
@@ -6352,8 +6352,8 @@ theorem dobrushin
   obtain ⟨C, hC_pos, hC_bound⟩ :=
     dobrushin_package_exists W gradW hgradW L hL f g hf hg hf_prob hg_prob
   refine ⟨C, hC_pos, fun t ht => ?_⟩
-  haveI : IsProbabilityMeasure (f 0) := (hf_prob 0).1
-  haveI : IsProbabilityMeasure (g 0) := (hg_prob 0).1
+  have : IsProbabilityMeasure (f 0) := (hf_prob 0).1
+  have : IsProbabilityMeasure (g 0) := (hg_prob 0).1
   have hfm0 : Integrable (fun y => dist y (0 : PhaseSpace d)) (f 0) := by
     simpa only [dist_zero_right] using (hf_prob 0).2
   have hgm0 : Integrable (fun y => dist y (0 : PhaseSpace d)) (g 0) := by
@@ -6387,8 +6387,8 @@ theorem dobrushin_on
           wasserstein1 (f 0) (g 0) := by
   intro t ht
   have h0 : (0 : ℝ) ∈ Set.Icc (0 : ℝ) T := ⟨le_refl 0, hT.le⟩
-  haveI : IsProbabilityMeasure (f 0) := (hf_mom 0 h0).1
-  haveI : IsProbabilityMeasure (g 0) := (hg_mom 0 h0).1
+  have : IsProbabilityMeasure (f 0) := (hf_mom 0 h0).1
+  have : IsProbabilityMeasure (g 0) := (hg_mom 0 h0).1
   have hfm0 : Integrable (fun y => dist y (0 : PhaseSpace d)) (f 0) := by
     simpa only [dist_zero_right] using (hf_mom 0 h0).2
   have hgm0 : Integrable (fun y => dist y (0 : PhaseSpace d)) (g 0) := by
