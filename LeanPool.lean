@@ -795,6 +795,14 @@ import LeanPool.Erdos403
 import LeanPool.Erdos403.Basic
 import LeanPool.Erdos403.FactBase
 import LeanPool.Erdos403.Sharp
+import LeanPool.Erdos865
+import LeanPool.Erdos865.Defs
+import LeanPool.Erdos865.FoldedAux
+import LeanPool.Erdos865.FoldedMain
+import LeanPool.Erdos865.Folding
+import LeanPool.Erdos865.Main
+import LeanPool.Erdos865.Sharpness
+import LeanPool.Erdos865.UpperBound
 import LeanPool.ErdosMoser
 import LeanPool.ErdosMoser.Basic
 import LeanPool.ErdosMoser.Bounds
