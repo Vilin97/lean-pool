@@ -77,7 +77,7 @@ lemma IsSimpleRing.right_of_tensor (B C : Type u)
     [Ring B] [Ring C] [Algebra K C] [Algebra K B]
     [hbc : IsSimpleRing (B ⊗[K] C)] :
     IsSimpleRing C := by
-  haveI : IsSimpleRing (C ⊗[K] B) := by
+  have : IsSimpleRing (C ⊗[K] B) := by
     let e : C ⊗[K] B ≃ₐ[K] (B ⊗[K] C) := Algebra.TensorProduct.comm _ _ _
     have := TwoSidedIdeal.orderIsoOfRingEquiv e.toRingEquiv
     exact ⟨(OrderIso.isSimpleOrder_iff this).mpr hbc.1⟩

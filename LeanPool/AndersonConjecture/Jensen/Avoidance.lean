@@ -688,7 +688,7 @@ theorem avoidance
     ∃ u ∈ I, ∀ P ∈ C, ∀ r ∈ D, (u : T) ∉ (P : Set T) + ({r} : Set T) := by
   rcases hCD_bound with h | ⟨hC_count, hD_count⟩
   · exact uncountable_avoidance hC_prime h hI
-  · letI : TopologicalSpace T := (IsLocalRing.maximalIdeal T).adicTopology
+  · let : TopologicalSpace T := (IsLocalRing.maximalIdeal T).adicTopology
     have _ : IsTopologicalRing T := inferInstance
     exact countable_avoidance hC_count hC_prime hC_ne_max hD_count hI
 

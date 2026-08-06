@@ -605,7 +605,7 @@ lemma generic_minimality (α β : ℕ) (ω : ℝ) (seq : ℤ → ℤ) [NeZero (�
     let D := α ^ 2 + β ^ 2
     ¬ (D ∣ N) → ∀ L > 0, IsPeriod seq L → N ≤ L := by
   intro N D hdvd L hL_pos hL_period
-  haveI hD : NeZero D := inferInstance
+  have hD : NeZero D := inferInstance
   have h_sigma := sigma_of_period (α:=α) (β:=β) (ω:=ω) (s:=seq) L hL_pos hL_period
   rcases h_sigma with ⟨σ, h_sigma_eq, r0, h_inv_count⟩
   let q := N / D
@@ -2014,7 +2014,7 @@ theorem main_theorem (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (_
       norm_num
     · have : 0 < α ^ 2 := by positivity
       omega
-  haveI hD : NeZero D := ⟨_root_.ne_of_gt h_D_pos⟩
+  have hD : NeZero D := ⟨_root_.ne_of_gt h_D_pos⟩
   by_cases h_dvd : D ∣ N
   · have h_L : L = N / D := if_pos h_dvd
     rw [h_L]
@@ -2376,7 +2376,7 @@ theorem main_theorem_concrete
       (if (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat then
         (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
        else (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) := by
-  haveI : GeometricProjection α β ω (differenceSequence α β ω) :=
+  have : GeometricProjection α β ω (differenceSequence α β ω) :=
     GeometricProjectionConcrete α β h_coprime ω h_ω
   exact main_theorem α β h_coprime ω h_ω
 
@@ -2666,7 +2666,7 @@ theorem set_main_theorem_concrete
       (if (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2 then
         (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
        else 1) := by
-  haveI : GeometricProjection α β ω (differenceSequence α β ω) :=
+  have : GeometricProjection α β ω (differenceSequence α β ω) :=
     GeometricProjectionConcrete α β h_coprime ω h_ω
   exact set_main_theorem α β h_coprime ω h_ω (setDifferenceSequence α β ω)
     (set_difference_sequence_eq_of_lt α β ω)

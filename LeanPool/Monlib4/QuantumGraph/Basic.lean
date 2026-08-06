@@ -473,7 +473,7 @@ theorem Coalgebra.comul_mul (a b : A) :
     = ∑ i, (a * (modAut ((k A / 2)) (hA.onb i)))
         ⊗ₜ[ℂ] (star (modAut ((k A / 2)) (hA.onb i)) * b) := by
   rw [QuantumSet.comul_of_subset 0]
-  letI := hA.instSubset 0
+  let := hA.instSubset 0
   simp only [LinearMap.comp_apply, AlgEquiv.toLinearMap_apply, map_mul]
   rw [Coalgebra.comul_mul_of_gns rfl]
   simp only [map_sum]
@@ -717,7 +717,7 @@ Classical.choose
 instance QuantumGraph.Real.upsilonSubmodule.hasOrthogonalProjection {f : A →ₗ[ℂ] A}
     (gns : hA.k = 0) (hf : QuantumGraph.Real A f) :
     (upsilonSubmodule gns hf).HasOrthogonalProjection := by
-  letI : CompleteSpace (upsilonSubmodule gns hf) :=
+  let : CompleteSpace (upsilonSubmodule gns hf) :=
     FiniteDimensional.complete ℂ (upsilonSubmodule gns hf)
   infer_instance
 

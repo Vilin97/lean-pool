@@ -55,13 +55,13 @@ lemma normalizedFactors_card_inclusion
     (UniqueFactorizationMonoid.normalizedFactors
       (Subring.inclusion hle x)).card =
     (UniqueFactorizationMonoid.normalizedFactors x).card := by
-  letI : IsDomain R.carrier := NSubring.isDomain R
-  letI : UniqueFactorizationMonoid R.carrier := R.isUFD
-  letI : IsDomain S₁.carrier := NSubring.isDomain S₁
-  letI : UniqueFactorizationMonoid S₁.carrier := S₁.isUFD
-  letI : NormalizationMonoid R.carrier :=
+  let : IsDomain R.carrier := NSubring.isDomain R
+  let : UniqueFactorizationMonoid R.carrier := R.isUFD
+  let : IsDomain S₁.carrier := NSubring.isDomain S₁
+  let : UniqueFactorizationMonoid S₁.carrier := S₁.isUFD
+  let : NormalizationMonoid R.carrier :=
     UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
-  letI : NormalizationMonoid S₁.carrier :=
+  let : NormalizationMonoid S₁.carrier :=
     UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
   have h_inj : Function.Injective (Subring.inclusion hle) :=
     Subring.inclusion_injective hle
@@ -173,16 +173,16 @@ lemma nzd_element_in_span_prime
       IsLocalRing.maximalIdeal T ∉ associatedPrimes T (T ⧸ Ideal.span {r}))
     (t_val : T) (h_at_mem : (a : T) * t_val ∈ Ideal.span {(q : T)}) :
     ∃ t' : T, t_val = (q : T) * t' := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
+  have : IsDomain R.carrier := NSubring.isDomain R
   have hq_ne : (q : T) ≠ 0 := fun h => hq_prime.ne_zero (Subtype.val_injective h)
   have hnt : Nontrivial (T ⧸ Ideal.span {(q : T)}) := by
     rw [Ideal.Quotient.nontrivial_iff, Ne, Ideal.eq_top_iff_one, Ideal.mem_span_singleton]
     intro ⟨c'', hc''⟩
     have hmem : q ∈ IsLocalRing.maximalIdeal R.carrier :=
-      (IsLocalRing.mem_maximalIdeal _).mpr hq_prime.not_unit
+      (IsLocalRing.mem_maximalIdeal _).mpr hq_prime.not_isUnit
     rw [R.maximal_ideal_eq, Ideal.mem_comap] at hmem
     exact (IsLocalRing.mem_maximalIdeal _).mp hmem (isUnit_of_dvd_one ⟨c'', hc''⟩)
-  haveI := hnt
+  have := hnt
   have ha_not_in_P : ∀ P ∈ associatedPrimes T (T ⧸ Ideal.span {(q : T)}),
       (a : T) ∉ P := by
     intro P hP_mem ha_in_P
@@ -240,7 +240,7 @@ lemma gcdComplexity_div_le {R₀ : Subring T}
     (hdiv : ∀ x ∈ s, x = q * div_f x)
     (hinj : Set.InjOn div_f ↑s) :
     gcdComplexity (s.image div_f) ≤ gcdComplexity s := by
-  letI : NormalizationMonoid R₀ :=
+  let : NormalizationMonoid R₀ :=
     UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
   unfold gcdComplexity
   rw [Finset.sum_image hinj]

@@ -1029,7 +1029,7 @@ private theorem G_diff_tendsto_zero (r : ℝ) (G : ℂ → ℂ)
   set a : ℂ := -1 + ↑δ * ((1 : ℂ) + I)
   set dir : ℂ := -(↑δ : ℂ)
   have ha_uhp : a ∈ {z : ℂ | 0 < z.im} := by
-    simp only [a, Set.mem_setOf_eq, Complex.add_im, Complex.neg_im, Complex.one_im,
+    simp only [a, Set.mem_ofPred_eq, Complex.add_im, Complex.neg_im, Complex.one_im,
       Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.add_re, Complex.one_re,
       Complex.I_re, Complex.I_im]; nlinarith
   have hb_uhp := neg_one_add_delta_I_mem_uhp hδ_pos

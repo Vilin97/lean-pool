@@ -335,7 +335,7 @@ noncomputable def SlipValley (s t : SlipFace) (a b : ℤ) : Valley where
       apply Set.Finite.subset _ this
       simp_all
     intro n hn
-    simp only [Set.mem_setOf_eq] at hn
+    simp only [Set.mem_ofPred_eq] at hn
     suffices n ≥ L ∧ n ≤ R by simpa
     constructor
     · linarith [t.nonneg n b, s.ge_diff a n]
@@ -1779,7 +1779,7 @@ def Γ : Set (ℤ × ℤ) := {(a, b) | sf.Δ a b = 1}
 
 lemma Γ_dual : ∀ (a b : ℤ), (a, b) ∈ sf.Γ ↔ (b, a) ∈ sf.dual.Γ := by
   intro a b
-  simp only [Γ, Set.mem_setOf_eq, sf.Δ_dual]
+  simp only [Γ, Set.mem_ofPred_eq, sf.Δ_dual]
 
 /-! ## The essential set of a slipface
 

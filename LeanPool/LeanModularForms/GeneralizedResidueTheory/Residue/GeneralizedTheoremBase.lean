@@ -539,7 +539,7 @@ private lemma residueAt_eq_of_simple_pole_decomp (f : ℂ → ℂ) (z₀ c : ℂ
     have h_mem : z ∈ Metric.ball z₀ rf ∩ {z₀}ᶜ :=
       ⟨Metric.mem_ball.mpr h_in, Set.mem_compl_singleton_iff.mpr h_ne⟩
     have := hrf_eq h_mem
-    simp only [Set.mem_setOf_eq] at this
+    simp only [Set.mem_ofPred_eq] at this
     rw [this, div_eq_mul_inv]
   have h_g_cont : ContinuousOn g (Metric.closedBall z₀ r) :=
     hg_ball.continuousOn.mono (Metric.closedBall_subset_ball hr_lt_rg)

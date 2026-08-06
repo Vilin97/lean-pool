@@ -209,10 +209,10 @@ private lemma theorem2_shannon_identity
     (μ : Measure Ω) [IsProbabilityMeasure μ] :
     I[X : Y | ⟨Z, U⟩; μ] - I[Z : U | ⟨X, Y⟩; μ] - I[X : Y | U; μ]
       = delta Z U X Y μ + I[X : Y | Z; μ] - I[X : Y; μ] := by
-  letI := Fintype.ofFinite S₁
-  letI := Fintype.ofFinite S₂
-  letI := Fintype.ofFinite S₃
-  letI := Fintype.ofFinite S₄
+  let := Fintype.ofFinite S₁
+  let := Fintype.ofFinite S₂
+  let := Fintype.ofFinite S₃
+  let := Fintype.ofFinite S₄
   have hZU : Measurable (fun ω => (Z ω, U ω)) := hZ.prodMk hU
   have hXY : Measurable (fun ω => (X ω, Y ω)) := hX.prodMk hY
   rw [delta_def, condMutualInfo_eq hX hY hZU μ, condMutualInfo_eq hZ hU hXY μ,
@@ -562,7 +562,7 @@ private lemma sum_mul_proj_eq_of_marginal_eq
     (h_marg : ∀ b : β, (∑ a ∈ Finset.univ.filter (fun a => proj a = b), f a)
                      = (∑ a ∈ Finset.univ.filter (fun a => proj a = b), g a)) :
     ∑ a : α, f a * φ (proj a) = ∑ a : α, g a * φ (proj a) := by
-  letI := Fintype.ofFinite β
+  let := Fintype.ofFinite β
   conv_lhs => rw [← Finset.sum_fiberwise (s := Finset.univ) (g := proj)
     (f := fun a => f a * φ (proj a))]
   conv_rhs => rw [← Finset.sum_fiberwise (s := Finset.univ) (g := proj)
@@ -853,7 +853,7 @@ private lemma ptilde_sum_eq_one
     (μ : Measure Ω) [IsProbabilityMeasure μ] :
     ∑ t : S₁ × S₂ × S₃ × S₄, ptilde X Y Z U μ t = 1 := by
   have hZU_meas : Measurable (fun ω => (Z ω, U ω)) := hZ.prodMk hU
-  haveI : IsProbabilityMeasure (μ.map (fun ω => (Z ω, U ω))) :=
+  have : IsProbabilityMeasure (μ.map (fun ω => (Z ω, U ω))) :=
     Measure.isProbabilityMeasure_map hZU_meas.aemeasurable
   let e : S₃ × S₄ × S₁ × S₂ ≃ S₁ × S₂ × S₃ × S₄ :=
     { toFun := fun ⟨z, u, x, y⟩ => (x, y, z, u)
@@ -1150,7 +1150,7 @@ private lemma phat_sum_eq_one
     rw [sum_map_pair_first hY hU μ u]
     field_simp
   simp_rw [h_sum_y, sum_map_pair_first hX hU μ]
-  haveI : IsProbabilityMeasure (μ.map U) := Measure.isProbabilityMeasure_map hU.aemeasurable
+  have : IsProbabilityMeasure (μ.map U) := Measure.isProbabilityMeasure_map hU.aemeasurable
   simp_all
 
 /-! ### Δ-to-log-ratio identities -/
@@ -1181,7 +1181,7 @@ private lemma entropy_eq_sum_joint
           * Real.log ((μ.map (fun ω => proj (F ω))).real {proj t}) := by
   have hcomp : Measurable (fun ω => proj (F ω)) := hproj.comp hF
   classical
-  letI := Fintype.ofFinite β
+  let := Fintype.ofFinite β
   have hA : (μ.map (fun ω => proj (F ω))) ((Finset.univ : Finset β) : Set β)ᶜ = 0 := by simp
   rw [entropy_eq_sum_finset hA]
   -- Goal: (∑ b : β, negMulLog (p_f b)) = -∑ t : α, p_F(t) * log (p_f (π t))
@@ -1971,10 +1971,10 @@ private lemma theorem2_delta_le_zero
     (μ : Measure Ω) [IsProbabilityMeasure μ]
     (h₁ : mutualInfo X Y μ = 0) (h₂ : I[X : Y|Z;μ] = 0) :
     delta Z U X Y μ ≤ 0 := by
-  letI := Fintype.ofFinite S₁
-  letI := Fintype.ofFinite S₂
-  letI := Fintype.ofFinite S₃
-  letI := Fintype.ofFinite S₄
+  let := Fintype.ofFinite S₁
+  let := Fintype.ofFinite S₂
+  let := Fintype.ofFinite S₃
+  let := Fintype.ofFinite S₄
   set s : Finset (S₁ × S₂ × S₃ × S₄) := Finset.univ
   have h_ptilde_sum : ∑ t ∈ s, ptilde X Y Z U μ t = 1 :=
     ptilde_sum_eq_one hX hY hZ hU μ

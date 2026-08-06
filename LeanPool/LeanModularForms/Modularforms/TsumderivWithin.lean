@@ -71,7 +71,6 @@ theorem der_iter_eq_der2 (k n : ℕ) (r : ℍ') :
       derivWithin (iteratedDerivWithin k (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ')
         ℍ'
         ↑r := by
-  simp only [mem_setOf_eq]
   apply symm
   apply DifferentiableAt.derivWithin
   · apply der_iter_eq_der_aux2
@@ -115,7 +114,7 @@ theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
         ∀ (n : ℕ) (r : K),
         ‖(derivWithin (iteratedDerivWithin k
           (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ') ℍ' r)‖ ≤ u n := by
-  haveI : CompactSpace K := isCompact_univ_iff.mp (isCompact_iff_isCompact_univ.mp hK2)
+  have : CompactSpace K := isCompact_univ_iff.mp (isCompact_iff_isCompact_univ.mp hK2)
   set r : ℝ := ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖
   have hr : ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖ < 1 := by
     rw [BoundedContinuousFunction.norm_lt_iff_of_compact]
@@ -202,7 +201,7 @@ theorem iter_deriv_comp_bound3 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
       Summable u ∧
         ∀ (n : ℕ) (r : K),
           (2 * |π| * n) ^ k * ‖(Complex.exp (2 * ↑π * Complex.I * n * r))‖ ≤ u n := by
-  haveI : CompactSpace K := isCompact_univ_iff.mp (isCompact_iff_isCompact_univ.mp hK2)
+  have : CompactSpace K := isCompact_univ_iff.mp (isCompact_iff_isCompact_univ.mp hK2)
   set r : ℝ := ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖
   have hr : ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖ < 1 := by
     rw [BoundedContinuousFunction.norm_lt_iff_of_compact]

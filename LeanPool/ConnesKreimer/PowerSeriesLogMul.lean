@@ -55,7 +55,7 @@ theorem deriv_logOf_mul {h : A⟦X⟧} (hh : constantCoeff h = 1) :
   have hS : HasSubst (h - 1 : A⟦X⟧) :=
     HasSubst.of_constantCoeff_zero' (by simp [hh])
   have hd : d⁄dX A (logOf h) = (d⁄dX A (log A)).subst (h - 1) * d⁄dX A h := by
-    rw [logOf_eq, derivative_subst A hS, map_sub, Derivation.map_one_eq_zero, sub_zero]
+    rw [logOf_eq, derivative_subst hS, map_sub, Derivation.map_one_eq_zero, sub_zero]
   rw [hd, mul_right_comm, deriv_log_subst_mul hh, one_mul]
 
 /-- **Logarithm of a product** at the power-series level:

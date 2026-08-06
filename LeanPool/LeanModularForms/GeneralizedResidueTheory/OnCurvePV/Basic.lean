@@ -155,8 +155,8 @@ lemma pv_limit_via_dyadic {γ : ℝ → ℂ} {a b t₀ : ℝ} {L : ℂ}
 lemma measurableSet_norm_gt_of_continuousOn {f : ℝ → ℂ} {s : Set ℝ}
     (ε : ℝ) (hf : ContinuousOn f s) (hs : MeasurableSet s) :
     MeasurableSet ({t | ε < ‖f t‖} ∩ s) := by
-  have h_open_sub : IsOpen ((s.restrict (fun t => ‖f t‖)) ⁻¹' Ioi ε) :=
-    isOpen_Ioi.preimage hf.norm.restrict
+  have h_open_sub : IsOpen ((s.domRestrict (fun t => ‖f t‖)) ⁻¹' Ioi ε) :=
+    isOpen_Ioi.preimage hf.norm.domRestrict
   rw [isOpen_induced_iff] at h_open_sub
   obtain ⟨U, hU_open, hU_eq⟩ := h_open_sub
   have h_eq : {t | ε < ‖f t‖} ∩ s = U ∩ s := by
@@ -164,14 +164,14 @@ lemma measurableSet_norm_gt_of_continuousOn {f : ℝ → ℂ} {s : Set ℝ}
     constructor
     · intro ⟨hx_far, hx_s⟩
       refine ⟨?_, hx_s⟩
-      have h1 : (⟨x, hx_s⟩ : ↑s) ∈ (s.restrict (fun t => ‖f t‖)) ⁻¹' Ioi ε := by
-        simp only [mem_preimage, restrict_apply, mem_Ioi]; exact hx_far
+      have h1 : (⟨x, hx_s⟩ : ↑s) ∈ (s.domRestrict (fun t => ‖f t‖)) ⁻¹' Ioi ε := by
+        simp only [mem_preimage, mem_Ioi]; exact hx_far
       rw [← hU_eq] at h1; exact h1
     · intro ⟨hx_U, hx_s⟩
       refine ⟨?_, hx_s⟩
       have h1 : (⟨x, hx_s⟩ : ↑s) ∈ Subtype.val ⁻¹' U := hx_U
       rw [hU_eq] at h1
-      simp only [mem_preimage, restrict_apply, mem_Ioi] at h1; exact h1
+      simp only [mem_preimage, mem_Ioi] at h1; exact h1
   rw [h_eq]; exact hU_open.measurableSet.inter hs
 
 lemma measurableSet_norm_gt_Icc {f : ℝ → ℂ} {a b : ℝ}
@@ -193,7 +193,7 @@ theorem aEStronglyMeasurable_pv_integrand_piecewiseC1
       ((S ∩ Icc a b) \ P) := by
     intro t ⟨⟨ht_S, ht_Icc⟩, ht_nP⟩
     have hγt_not_ball : γ t ∉ Metric.ball z₀ ε := by
-      simp only [S, mem_setOf_eq] at ht_S
+      simp only [S, mem_ofPred_eq] at ht_S
       simp only [Metric.mem_ball, not_lt, dist_eq_norm]; exact le_of_lt ht_S
     have hγt_in : γ t ∈ γ '' Icc a b \ Metric.ball z₀ ε :=
       ⟨mem_image_of_mem γ ht_Icc, hγt_not_ball⟩
@@ -201,7 +201,7 @@ theorem aEStronglyMeasurable_pv_integrand_piecewiseC1
         (γ '' Icc a b \ Metric.ball z₀ ε) := by
       intro s ⟨⟨hs_S, hs_Icc⟩, _⟩
       refine ⟨mem_image_of_mem γ hs_Icc, ?_⟩
-      simp only [S, mem_setOf_eq] at hs_S
+      simp only [S, mem_ofPred_eq] at hs_S
       simp only [Metric.mem_ball, not_lt, dist_eq_norm]; exact le_of_lt hs_S
     exact ((hf (γ t) hγt_in).comp
       ((hγ t ht_Icc).mono (sdiff_subset.trans inter_subset_right)) h_maps).mul
@@ -237,7 +237,7 @@ theorem aEStronglyMeasurable_pv_integrand_piecewiseC1
     · simp only [show t ∈ S ∩ Icc a b from ⟨ht_S, ht⟩, ↓reduceIte,
         show ε < ‖γ t - z₀‖ from ht_S, ↓reduceIte]
     · simp only [show t ∉ S ∩ Icc a b from fun h => ht_S h.1, ↓reduceIte, S,
-        mem_setOf_eq, not_lt] at ht_S ⊢
+        mem_ofPred_eq, not_lt] at ht_S ⊢
       simp only [not_lt.mpr ht_S, ↓reduceIte]
   exact (h_piecewise.mono_measure Measure.restrict_le_self).congr h_eq.symm
 

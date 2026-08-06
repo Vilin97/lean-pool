@@ -212,7 +212,7 @@ theorem bandLowerTri_diag (m c : ℕ) (hc0 : 0 < c) (i : Fin m) :
     determinant (product of the all-`1` diagonal). -/
 theorem det_bandLowerTri (m c : ℕ) (hc0 : 0 < c) :
     (bandLowerTri m c).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular (bandLowerTri m c) (bandLowerTri_blockTriangular m c)]
+  rw [Matrix.det_of_isLowerTriangular (bandLowerTri m c) (bandLowerTri_blockTriangular m c)]
   apply Finset.prod_eq_one
   intro i _
   exact bandLowerTri_diag m c hc0 i

@@ -96,7 +96,7 @@ private lemma qExpFMS_order_eq (hf : f ≠ 0) :
   unfold orderAtCusp'
   simp only [Int.toNat_natCast]
   have hps_order : ps.order = ↑ps.order.toNat :=
-    (ENat.coe_toNat_eq_self.mpr (PowerSeries.order_eq_top.not.mpr hps_ne)).symm
+    (ENat.natCast_toNat_eq_self.mpr (PowerSeries.order_eq_top.not.mpr hps_ne)).symm
   set m := ps.order.toNat
   have hm := (PowerSeries.order_eq_nat.mp (by exact_mod_cast hps_order) :
     ps.coeff m ≠ 0 ∧ ∀ i, i < m → ps.coeff i = 0)

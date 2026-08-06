@@ -52,7 +52,7 @@ theorem sInf_closed {S : Set (G → Prop)}
   has_add g h hg hh := by
     simp only [sInf_apply, iInf_Prop_eq] at hg hh ⊢
     intro P
-    haveI : ClosedUnderAdd (fun x => P.1 x) := hS P P.2
+    have : ClosedUnderAdd (fun x => P.1 x) := hS P P.2
     exact ClosedUnderAdd.has_add g h (hg P) (hh P)
 
 /--
@@ -105,7 +105,7 @@ theorem sInf_closed {S : Set (G → Prop)}
   has_option hg h := by
     simp only [sInf_apply, iInf_Prop_eq] at hg ⊢
     intro P
-    haveI : Hereditary (fun x => P.1 x) := hS P P.2
+    have : Hereditary (fun x => P.1 x) := hS P P.2
     exact Hereditary.has_option (hg P) h
 
 /--
@@ -156,7 +156,7 @@ theorem sInf_closed {S : Set (G → Prop)}
   neg_of hg := by
     simp only [sInf_apply, iInf_Prop_eq] at hg ⊢
     intro P
-    haveI : ClosedUnderNeg (fun x => P.1 x) := hS P P.2
+    have : ClosedUnderNeg (fun x => P.1 x) := hS P P.2
     exact ClosedUnderNeg.neg_of (hg P)
 
 /--
@@ -209,7 +209,7 @@ theorem sInf_closed (IsAmbient : G → Prop) {S : Set (G → Prop)}
   closed_dicotic B C _ _ hB hC hBne hCne hAmbient := by
     simp only [sInf_apply, iInf_Prop_eq] at hB hC ⊢
     intro P
-    haveI : ClosedUnderDicotic IsAmbient (fun x => P.1 x) := hS P P.2
+    have : ClosedUnderDicotic IsAmbient (fun x => P.1 x) := hS P P.2
     exact ClosedUnderDicotic.closed_dicotic B C
       (fun b hb => hB b hb P) (fun c hc => hC c hc P) hBne hCne hAmbient
 

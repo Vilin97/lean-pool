@@ -84,7 +84,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
     induction n with
     | zero =>
       use {0}
-      simp only [Nat.reduceAdd, isValue, Set.mem_setOf_eq, card_singleton, true_and]
+      simp only [Nat.reduceAdd, isValue, Set.mem_ofPred_eq, card_singleton, true_and]
       use 1
       simp only [isValue, one_smul]
       ext x
@@ -182,7 +182,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
       have := hi (f := g) (Nat.succ_pos n) hgeq' (by assumption)
       obtain ⟨S, hS1, hS2⟩ := this
       obtain ⟨c, hc⟩ := hS2
-      simp only [Set.mem_setOf_eq] at hS1
+      simp only [Set.mem_ofPred_eq] at hS1
       obtain ⟨i₁, hi₁⟩ := card_eq_one.mp hS1
       use {Fin.succAbove i₀ i₁}
       constructor

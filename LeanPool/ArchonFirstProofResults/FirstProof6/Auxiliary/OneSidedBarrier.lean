@@ -58,7 +58,7 @@ lemma one_sided_barrier
     barrierPotential u' (M + B) ≤ barrierPotential u M := by
   by_cases hne : IsEmpty V
   · simp only [barrierPotential, Matrix.trace]; simp
-  · haveI : Nonempty V := not_isEmpty_iff.mp hne
+  · have : Nonempty V := not_isEmpty_iff.mp hne
     set U := (u' • (1 : Matrix V V ℝ) - M)⁻¹ with hU_def
     set trBU := (B * U).trace with htrBU_def
     set trBU2 := (B * U * U).trace with htrBU2_def

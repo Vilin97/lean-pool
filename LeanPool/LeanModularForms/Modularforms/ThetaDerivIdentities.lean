@@ -624,13 +624,13 @@ theorem E₄_eq_H_sum_sq : _root_.E₄.toFun = HSumSq := by
   have h_cusp : IsCuspForm (Γ 1) 4 (_root_.E₄ - H_sum_sq_MF) := by
     rw [IsCuspForm_iff_coeffZero_eq_zero,
       UpperHalfPlane.qExpansion_coeff]; simp only [Nat.factorial_zero, Nat.cast_one, inv_one,
-        ModularForm.coe_sub, iteratedDeriv_zero, one_mul]
+        FunLike.coe_sub, iteratedDeriv_zero, one_mul]
     exact IsZeroAtImInfty.cuspFunction_apply_zero h_diff_tendsto (by norm_num : (0 : ℝ) < 1)
   have h_zero := IsCuspForm_weight_lt_eq_zero 4 (by norm_num) (_root_.E₄ - H_sum_sq_MF) h_cusp
   funext z
   have hz := DFunLike.congr_fun h_zero z
   have h2 : (_root_.E₄ - H_sum_sq_MF) z = _root_.E₄.toFun z - HSumSq z := congrFun h_toFun z
-  rw [h2, ModularForm.zero_apply, sub_eq_zero] at hz
+  rw [h2, _root_.zero_apply, sub_eq_zero] at hz
   exact hz
 
 /-!

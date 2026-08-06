@@ -182,7 +182,7 @@ lemma outerMeasure_le_mul' {μ : Measure α} [ClosedBallCoveringMeasure μ]
       (nhdsGT_basis (0 : ℝ))).frequently_iff] at h
     rcases h x hx (ε, δ) ⟨hε, hδ⟩ with ⟨⟨ε', r⟩, ⟨⟨-, hε'⟩, hr⟩, hle⟩
     refine ⟨r, ?_, hr⟩
-    simp_all only [mem_setOf_eq]
+    simp_all only [mem_ofPred_eq]
     refine hle.trans ?_
     gcongr
   have := htc.to_subtype
@@ -236,7 +236,7 @@ lemma outerMeasure_null_of_forall_le_mul_ae_null {μ : Measure α} [SigmaFinite 
       _ = 0 := zero_mul _
   · set t := s \ {x | C x = 0}
     have hμt : μ t = 0 := by
-      simpa [t, ae_iff, Set.sdiff_eq, Set.compl_setOf, Set.inter_def, Set.mem_setOf_eq] using hC
+      simpa [t, ae_iff, Set.sdiff_eq, Set.compl_ofPred, Set.inter_def, Set.mem_ofPred_eq] using hC
     calc
       ν t = ν (⋃ n : ℕ, {x ∈ t | C x ≤ n}) := by
         congr with x

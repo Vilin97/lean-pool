@@ -47,7 +47,7 @@ lemma measurable_elim
       MeasurableSpace.measurableSet_iInf]
   intro i
   rw [MeasurableSpace.map_def]
-  simp only [Set.preimage, Set.mem_setOf_eq]
+  simp only [Set.preimage, Set.mem_ofPred_eq]
   apply hf
   exact hX
 
@@ -66,7 +66,7 @@ lemma measurable_fst [MeasurableSpace I] : Measurable (Sigma.fst : Sigma P → I
       MeasurableSpace.measurableSet_iInf]
   intro i
   rw [MeasurableSpace.map_def]
-  simp only [Set.preimage, Set.mem_setOf_eq, measurableSet_setOf, measurable_const]
+  simp only [Set.preimage, Set.mem_ofPred_eq, measurableSet_setOfPred, measurable_const]
 
 lemma measurable_cast
     (ix : A → I) (i : I)
@@ -88,10 +88,10 @@ lemma measurable_cast
   · subst h
     simp only [
       Set.preimage, Set.mem_image, Sigma.mk.injEq, heq_eq_eq,
-      true_and, exists_eq_right, Set.setOf_mem_eq, hX]
+      true_and, exists_eq_right, Set.ofPred_mem_eq, hX]
   · simp only [
       Set.preimage, Set.mem_image, Sigma.mk.injEq, h, false_and,
-      and_false, exists_false, Set.setOf_false, MeasurableSet.empty]
+      and_false, exists_false, Set.ofPred_false, MeasurableSet.empty]
 
 lemma measurable_eq_rec
     (ix : A → I) (i : I)

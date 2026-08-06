@@ -245,8 +245,8 @@ theorem Pi.tensor_ext_iff {R : Type _} [CommRing R] {ι₁ : Type _} {ι₂ : Ty
     (y w : ∀ i, M₂ i) :
     x ⊗ₜ[R] y = z ⊗ₜ[R] w ↔ ∀ i j, x i ⊗ₜ[R] y j = z i ⊗ₜ[R] w j := by
   classical
-  letI := Fintype.ofFinite ι₁
-  letI := Fintype.ofFinite ι₂
+  let := Fintype.ofFinite ι₁
+  let := Fintype.ofFinite ι₂
   rw [← Function.Injective.eq_iff directSumTensor.injective]
   simp_rw [funext_iff, directSumTensor_apply, directSumTensorToFun_apply, Prod.forall]
 

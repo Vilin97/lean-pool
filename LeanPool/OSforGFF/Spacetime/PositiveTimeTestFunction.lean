@@ -46,7 +46,7 @@ lemma is_open_positiveTimeSet : IsOpen positiveTimeSet :=
 def PositiveTimeTestFunctions.submodule : Submodule ℝ TestFunction where
   carrier := { f : TestFunction | tsupport f ⊆ positiveTimeSet }
   zero_mem' := by
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     suffices h : tsupport (0 : TestFunction) = ∅ by rw [h]; apply Set.empty_subset
     rw [tsupport_eq_empty_iff]; rfl
   add_mem' := fun {f g} hf hg => Set.Subset.trans (tsupport_add f g) (Set.union_subset hf hg)
@@ -74,7 +74,7 @@ lemma PositiveTimeTestFunction.sum_smul_mem
 def PositiveTimeTestFunctionsℂ.submodule : Submodule ℂ TestFunctionℂ where
   carrier := { f : TestFunctionℂ | tsupport f ⊆ positiveTimeSet }
   zero_mem' := by
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     suffices h : tsupport (0 : TestFunctionℂ) = ∅ by rw [h]; apply Set.empty_subset
     rw [tsupport_eq_empty_iff]; rfl
   add_mem' := fun {f g} hf hg => Set.Subset.trans (tsupport_add f g) (Set.union_subset hf hg)

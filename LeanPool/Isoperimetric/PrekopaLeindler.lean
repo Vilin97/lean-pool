@@ -139,7 +139,7 @@ lemma vol_superlevelset_measurable (f : ℝ → ENNReal)
   apply Antitone.measurable
   intro a b hab
   apply measure_mono
-  simp only [setOf_subset_setOf]
+  simp only [ofPred_subset_ofPred]
   intro z hz
   calc
     ENNReal.ofReal a ≤ ENNReal.ofReal b := ENNReal.ofReal_le_ofReal hab
@@ -242,7 +242,7 @@ lemma prekopa_leindler_1d_normalized
     intro t ht
     rw [add_subset_iff]
     intro x hx y hy
-    simp only [mem_setOf_eq] at hx hy ⊢
+    simp only [mem_ofPred_eq] at hx hy ⊢
     calc
       ENNReal.ofReal t = (ENNReal.ofReal t) ^ (1 - θ) * (ENNReal.ofReal t) ^ θ := by
         rw [← ENNReal.rpow_add (1-θ) θ (ne_of_gt (ENNReal.ofReal_pos.mpr ht)) ENNReal.ofReal_ne_top]
@@ -262,11 +262,11 @@ lemma prekopa_leindler_1d_normalized
         : {x | ENNReal.ofReal t ≤ f x}.Nonempty := by
       apply nonempty_def.mpr
       suffices ∃ x, x ∈ {x | ENNReal.ofReal t < f x} by
-        simp only [mem_setOf_eq] at this ⊢
+        simp only [mem_ofPred_eq] at this ⊢
         rcases this with ⟨x, hx⟩
         use x
         exact le_of_lt hx
-      simp only [mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       apply exists_lt_of_lt_ciSup
       simp only [hf_sup1, ENNReal.ofReal_lt_one, ht.2]
     exact brunn_minkowski_1d

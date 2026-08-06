@@ -159,7 +159,7 @@ theorem card_ternaryBlock_valuation_lt_two (length : ℕ) :
     Fintype.card (OddPrimeBlockWithValuation 1 (length + 2) 0) +
         Fintype.card (OddPrimeBlockWithValuation 1 (length + 2) 1) =
       (length + 7) * 2 ^ length := by
-  letI : Fact (oddBase 1).Prime := ⟨by decide⟩
+  let : Fact (oddBase 1).Prime := ⟨by decide⟩
   rw [card_oddPrimeBlock_valuation_zero 1 (by decide) (length + 2)]
   rw [card_oddPrimeBlock_valuation_one 1 (by decide) length]
   norm_num

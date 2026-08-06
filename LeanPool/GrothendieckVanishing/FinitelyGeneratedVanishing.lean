@@ -93,11 +93,11 @@ noncomputable def finsetGenCoconeIsColimit :
   -- desc is mono: natural transformation to const K has all components mono (image.ι),
   -- and in a Grothendieck abelian category filtered colimits preserve monos
   haveI hd_mono : Mono d := by
-    haveI : IsConnected
+    have : IsConnected
         (Finset (TopCat.Presheaf.SectionIndex K)) := IsFiltered.isConnected _
-    haveI : ∀ j, Mono ((finsetGenCocone hK).ι.app j) := fun j ↦
+    have : ∀ j, Mono ((finsetGenCocone hK).ι.app j) := fun j ↦
       show Mono (Limits.image.ι (TopCat.Presheaf.finsetGeneratorMap hK j)) from inferInstance
-    haveI := NatTrans.mono_of_mono_app (finsetGenCocone hK).ι
+    have := NatTrans.mono_of_mono_app (finsetGenCocone hK).ι
     exact colim.map_mono' (finsetGenCocone hK).ι (colimit.isColimit _)
       (isColimitConstCocone _ _) d (fun j ↦ by
         change colimit.ι (finsetGenFunctor hK) j ≫
@@ -159,7 +159,7 @@ theorem cohomology_vanishing_of_finitelyGenerated_vanishing
   have hZeroDiagram : IsZero (finsetGenFunctor hK ⋙ sheafCohomologyFunctor X m) := by
     refine Functor.isZero _ ?_
     intro S
-    haveI : Subsingleton (Sheaf.H (TopCat.Presheaf.finsetGeneratedSheaf hK S) m) := hfg S
+    have : Subsingleton (Sheaf.H (TopCat.Presheaf.finsetGeneratedSheaf hK S) m) := hfg S
     change IsZero
       (AddCommGrpCat.of (Sheaf.H (TopCat.Presheaf.finsetGeneratedSheaf hK S) m))
     exact AddCommGrpCat.isZero_of_subsingleton
@@ -213,7 +213,7 @@ theorem finsetGeneratedSheaf_vanishing
     let g : TopCat.Sheaf.zeroOutsideInt σ₀.1 ⟶ cokernel f :=
       Sigma.ι (fun σ : {σ // σ ∈ insert σ₀ S'} ↦ TopCat.Sheaf.zeroOutsideInt σ.1.1)
         ⟨σ₀, Finset.mem_insert_self σ₀ S'⟩ ≫ qIns ≫ cokernel.π f
-    haveI : Epi g := by
+    have : Epi g := by
       refine epi_of_epi_fac
         (f := Sigma.desc fun σ ↦ if h : σ.1 = σ₀ then eqToHom (by rw [h]) else 0)
         (h := qIns ≫ cokernel.π f) ?_

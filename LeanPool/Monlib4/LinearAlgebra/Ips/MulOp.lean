@@ -100,7 +100,7 @@ theorem MulOpposite.opLinearEquiv_adjoint {𝕜 A : Type*} [RCLike 𝕜] [Normed
   [InnerProductSpace 𝕜 A] [FiniteDimensional 𝕜 A] :
     LinearMap.adjoint (MulOpposite.opLinearEquiv 𝕜 (M:=A)).toLinearMap
       = (MulOpposite.opLinearEquiv 𝕜 (M:=A)).symm.toLinearMap := by
-  haveI : CompleteSpace A := FiniteDimensional.complete 𝕜 A
+  have : CompleteSpace A := FiniteDimensional.complete 𝕜 A
   calc LinearMap.adjoint (MulOpposite.opLinearEquiv 𝕜 (M:=A)).toLinearMap
         = ContinuousLinearMap.adjoint
         (MulOpposite.opContinuousLinearEquiv 𝕜 (M:=A)).toContinuousLinearMap := rfl

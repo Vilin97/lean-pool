@@ -88,7 +88,7 @@ theorem gaussianMatrix_map_dotProduct {k n : ℕ} (u : Fin n → ℝ) (hu : ∑ 
   have hAE : AEMeasurable (fun row : Fin n → ℝ => ∑ j, row j * u j) (gaussianVec n) :=
     (by fun_prop : Measurable (fun row : Fin n → ℝ => ∑ j, row j * u j)).aemeasurable
   have hrow := map_dotProduct_gaussianReal u hu
-  haveI : IsProbabilityMeasure ((gaussianVec n).map (fun row : Fin n → ℝ => ∑ j, row j * u j)) := by
+  have : IsProbabilityMeasure ((gaussianVec n).map (fun row : Fin n → ℝ => ∑ j, row j * u j)) := by
     rw [hrow]; infer_instance
   have e1 : (Measure.pi (fun _ : Fin k => gaussianVec n)).map
         (fun A i => (fun row : Fin n → ℝ => ∑ j, row j * u j) (A i))
@@ -155,7 +155,7 @@ theorem jlMap_concentration {k n : ℕ} (hk : 0 < k) (w : Fin n → ℝ)
   have hsetEq : {A : Fin k → Fin n → ℝ | ε * Nw ≤ |(∑ i, (jlMap k n A w i) ^ 2) - Nw|}
       = gmap ⁻¹' {ω : Fin k → ℝ | ε ≤ |chiSq k ω / (k : ℝ) - 1|} := by
     ext A
-    simp only [Set.mem_setOf_eq, Set.mem_preimage]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage]
     rw [hchidiv,
       show Nw⁻¹ * (∑ i, (jlMap k n A w i) ^ 2) - 1
           = ((∑ i, (jlMap k n A w i) ^ 2) - Nw) / Nw by field_simp,

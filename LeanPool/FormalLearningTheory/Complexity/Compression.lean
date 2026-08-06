@@ -207,7 +207,7 @@ theorem vcdim_finite_imp_proper_finite_support_learner
   obtain ⟨T, hTpos, hApprox⟩ := finite_support_vc_approx d (1 / 3) (by norm_num)
   exact ⟨⟨T, learn, @learn_mem, fun c hc Y q => by
     classical
-    haveI : DecidableEq X := Classical.decEq X
+    have : DecidableEq X := Classical.decEq X
     -- Build the disagreement family
     let A := disagreementFamily C c Y
     have hA : A.boolVCDim ≤ d := disagreementFamily_boolVCDim_le C c Y (le_of_eq hd.symm)
@@ -816,7 +816,7 @@ private theorem moran_yehudayoff_forward_construction
     (_K : ℕ) :
     ∃ (k : ℕ) (cs : CompressionSchemeWithInfo0 X Bool C), cs.size = k := by
   classical
-  haveI : DecidableEq X := Classical.decEq X
+  have : DecidableEq X := Classical.decEq X
   obtain ⟨d, hd⟩ := WithTop.ne_top_iff_exists.mp (ne_of_lt hC)
   let s := L.sampleBound
   -- Parameter choice: ε_minimax = 1 / 12, ε_sparsify = 1 / 24.
@@ -995,12 +995,12 @@ private theorem moran_yehudayoff_forward_construction
         if (mkReps S hreal hm t).val (S i).1 = hreal.choose (S i).1
         then (1 : ℝ) else 0) / ↑Tvc ≥ 13 / 24 by linarith
     -- Re-derive the pipeline guarantees (same objects as mkReps by let-transparency)
-    haveI hYne : Nonempty ↥(pointSupport S) := pointSupportNonempty S hm
+    have hYne : Nonempty ↥(pointSupport S) := pointSupportNonempty S hm
     let c' := hreal.choose
     let Y' := pointSupport S
     let HY' := hypothesisEnvelope L c' Y'
     let hrow' := good_on_support_gives_row_response L c' hreal.choose_spec.1 Y' HY' rfl
-    haveI hHYne : Nonempty ↥HY' := let ⟨h, _⟩ := hrow' (uniformPMF ↥Y'); ⟨h⟩
+    have hHYne : Nonempty ↥HY' := let ⟨h, _⟩ := hrow' (uniformPMF ↥Y'); ⟨h⟩
     let M' : ↥HY' → ↥Y' → Bool := fun h y => decide (h.val (y : X) = c' (y : X))
     -- MWU: mixed strategy p with game value ≥ 7 / 12 at every column
     let mwu_result := mwu_approx_minimax M' (2 / 3) (1 / 12) (by norm_num) hrow'
@@ -1172,7 +1172,7 @@ theorem compression_with_info_imp_vcdim_finite
   set s := K + I with hs_def
   set N := 2 * (s + 1) * (s + 1) with hN_def
   obtain ⟨T₀, hT₀_shatt, hT₀_card⟩ := h_large N
-  haveI : DecidableEq X := Classical.decEq X
+  have : DecidableEq X := Classical.decEq X
   obtain ⟨T, hT_sub, hT_card⟩ := Finset.exists_subset_card_eq hT₀_card
   have hT_shatt : Shatters X C T := shatters_subset_compression hT_sub hT₀_shatt
   set n := T.card with hn_def

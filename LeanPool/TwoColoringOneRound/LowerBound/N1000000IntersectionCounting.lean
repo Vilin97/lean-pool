@@ -675,7 +675,7 @@ theorem card_inter_eq_N {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) :
         Fintype.card_congr (interEquivEmbedding (u := u) (a := a) (d := d) hcons)
     simpa [N, hcons, card_embedding_freeCoord_availFor (u := u)] using hcard
   · -- In the inconsistent case, `Inter u a d` is empty.
-    haveI : IsEmpty (Inter u a d) :=
+    have : IsEmpty (Inter u a d) :=
       ⟨fun w => (hcons (consistent_of_inter (k := k) u a d w)).elim⟩
     simp [N, hcons, Fintype.card_eq_zero]
 

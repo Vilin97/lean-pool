@@ -2212,7 +2212,7 @@ private lemma rapidDecay_schwartzMapNd_apply (d : ℕ) (a : RapidDecaySeq)
 
 private noncomputable instance schwartzMapNd_T2Space (d : ℕ) :
     T2Space (SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ) := by
-  haveI : T1Space (SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ) :=
+  have : T1Space (SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ) :=
     WithSeminorms.T1_of_separating (schwartz_withSeminorms ℝ _ ℝ) fun f hf =>
       ⟨⟨0, 0⟩, fun h => hf (SchwartzMap.ext fun x =>
         norm_le_zero_iff.mp ((SchwartzMap.norm_le_seminorm ℝ f x).trans (le_of_eq h)))⟩

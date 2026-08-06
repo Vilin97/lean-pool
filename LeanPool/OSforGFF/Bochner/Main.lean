@@ -390,7 +390,7 @@ private lemma gaussian_eq_charFun (ε : ℝ) (hε : 0 < ε) :
 lemma isPositiveDefinite_gaussian (ε : ℝ) (hε : 0 < ε) :
     IsPositiveDefinite (fun x : V => cexp (-(ε : ℂ) * ↑(‖x‖ ^ 2))) := by
   obtain ⟨μ, hfin, hcharFun⟩ := gaussian_eq_charFun (V := V) ε hε
-  haveI := hfin
+  have := hfin
   have hpd := isPositiveDefinite_charFun μ
   convert hpd using 1; ext t; exact (hcharFun t).symm
 
@@ -428,7 +428,7 @@ lemma gaussianRegularize_pd (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
     -- So gaussianRegularize φ ε t = φ t * charFun μ t
     -- and isPositiveDefinite_mul_charFun gives the result
     obtain ⟨μ, hfin, hcharFun⟩ := gaussian_eq_charFun (V := V) ε hε
-    haveI := hfin
+    have := hfin
     have hmul := isPositiveDefinite_mul_charFun hpd μ
     have heq : ∀ t, gaussianRegularize φ ε t = φ t * charFun μ t := by
       intro t; simp only [gaussianRegularize]; rw [← hcharFun t]
@@ -1102,7 +1102,7 @@ theorem gaussianRegularize_measures_tight (φ : V → ℂ)
   have hmu_bound : ∀ μ ∈ S, μ {x | r < ‖⟪y, x⟫_ℝ‖} ≤ ENNReal.ofReal δ := by
     intro μ hμS
     obtain ⟨ε, hε, hε1, hprob, hcf⟩ := hμS
-    haveI := hprob
+    have := hprob
     -- Convert ‖⟪y,x⟫_ℝ‖ = |⟪y,x⟫_ℝ| for real scalars
     have hset_eq : {x : V | r < ‖⟪y, x⟫_ℝ‖} = {x | r < |⟪y, x⟫_ℝ|} := by
       ext x; simp [Real.norm_eq_abs]
@@ -1225,7 +1225,7 @@ private theorem bochner_mem_tight (φ : V → ℂ) {μ_seq : ℕ → Probability
       = gaussianRegularize φ (1 / (↑n + 1)) ξ) (n : ℕ) :
     (μ_seq n : Measure V) ∈ {(μ : Measure V) | ∃ ε, 0 < ε ∧ ε ≤ 1 ∧
       ∃ (_ : IsProbabilityMeasure μ), ∀ ξ, charFun μ ξ = gaussianRegularize φ ε ξ} := by
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   refine ⟨1 / (↑n + 1), ?_, ?_, ?_, ?_⟩
   · positivity
   · have h1 : (0 : ℝ) < (n : ℝ) + 1 := by positivity

@@ -755,7 +755,7 @@ private theorem pv_cutoff_integral_eq_mid (r : ℝ) (hr : 0 < r) (α : ℝ) (n :
     rw [ae_iff]
     apply measure_mono_null (t := {3 - δ})
     · intro x hx
-      simp only [mem_setOf_eq] at hx; push Not at hx
+      simp only [mem_ofPred_eq] at hx; push Not at hx
       obtain ⟨hx_ioc, hx_ne⟩ := hx
       by_contra hne_3δ
       simp only [mem_singleton_iff] at hne_3δ

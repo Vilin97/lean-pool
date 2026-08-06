@@ -50,7 +50,7 @@ theorem mixed_intersection_weighted
     ∃ C' : WeightedCollection U,
       (∀ i : U, C'.itemFreq i ≤ (1 - τ_mix) * t ^ ℓ + τ_mix * t ^ (ℓ + 1)) ∧
       C'.avgDeficit f M ≤ ℓ * D + 2 * ((ℓ : ℝ) - 1) + τ_mix * (D + 2) := by
-  letI := Fintype.ofFinite U
+  let := Fintype.ofFinite U
   exact ⟨C.mixedInter ℓ τ_mix hτ hτ1,
     WeightedCollection.mixedInter_itemFreq_le C ℓ hℓ τ_mix hτ hτ1 t ht ht1 hfreq,
     WeightedCollection.mixedInter_avgDeficit_le C ℓ hℓ τ_mix hτ hτ1
@@ -71,7 +71,7 @@ theorem mixed_intersection_weighted_surplus
     ∃ C' : WeightedCollection U,
       (∀ i : U, C'.itemFreq i ≤ (1 - τ_mix) * t ^ ℓ + τ_mix * t ^ (ℓ + 1)) ∧
       C'.avgSurplus f M ≤ ℓ * S_val + 2 * ((ℓ : ℝ) - 1) + τ_mix * (S_val + 2) := by
-  letI := Fintype.ofFinite U
+  let := Fintype.ofFinite U
   -- Apply the deficit version to g := -f
   have hg : IsApproxAdditive (fun S => -f S) 1 := by
     constructor
@@ -202,7 +202,7 @@ lemma best_approx_property [Finite U] (g : Finset U → ℝ) (M : ℝ)
     ∀ a : U → ℝ, ∃ S : Finset U,
       |g S - additiveFunction a S| ≥ M := by
   classical
-  letI := Fintype.ofFinite U
+  let := Fintype.ofFinite U
   -- By definition of infimum, for any a, the supremum of |g S - additiveFunction a S| over all S is
   -- at least M.
   have h_sup_ge_M : ∀ a : U → ℝ, ⨆ S : Finset U, |g S - additiveFunction a S| ≥ M := by

@@ -187,7 +187,7 @@ lemma map_sat_le
   {T} {Q Q' : T} [Preorder T] (hle : Q' ≤ Q) {ψ : PositiveBool (Iic Q')} {Y : Set (Iic Q)}
   (Hsat : (ψ.mapSubtypeImp (fun _ qp => qp.trans hle)).Sat Y)
     : ψ.Sat { q | q.embedLe hle ∈ Y } := by
-  induction ψ <;> simp only [mapSubtypeImp, Functor.map, map, Sat, Set.mem_setOf_eq] at Hsat ⊢
+  induction ψ <;> simp only [mapSubtypeImp, Functor.map, map, Sat, Set.mem_ofPred_eq] at Hsat ⊢
   next a => exact Hsat
   next f g f_ih g_ih => exact ⟨f_ih Hsat.left, g_ih Hsat.right⟩
   next f g f_ih g_ih => exact Hsat.imp f_ih g_ih
@@ -522,13 +522,13 @@ def dag : DAG (Iic Φ) := {
       · right
         simp only [Set.mem_image, Set.mem_sdiff]
         exists (⟨q, qp⟩, l)
-        simp only [hV₂, Set.mem_setOf_eq, not_and, not_or, true_and, and_true]
+        simp only [hV₂, Set.mem_ofPred_eq, not_and, not_or, true_and, and_true]
         rintro rfl
         grind
       · simp only [Set.singleton_union, Set.mem_union, Set.mem_insert_iff,
           Set.mem_image, Set.mem_sdiff, Set.mem_singleton_iff]
         grind
-    · simp only [exists_prop, Subtype.exists, Set.mem_setOf_eq] at he
+    · simp only [exists_prop, Subtype.exists, Set.mem_ofPred_eq] at he
       rcases he with ⟨q, pq, he, rfl⟩
       simp only [Set.mem_union, Set.mem_image, Set.mem_sdiff]
       grind
@@ -620,9 +620,9 @@ lemma runDag_p_sat
         exact p_sat₁
       · rw [Set.subset_def]
         simp only [dag, base]
-        simp only [Set.mem_image, Subtype.exists, Set.mem_union, Prod.exists, Set.mem_setOf_eq]
+        simp only [Set.mem_image, Subtype.exists, Set.mem_union, Prod.exists, Set.mem_ofPred_eq]
         grind
-    · simp only [Set.mem_image, Set.mem_sdiff, Set.mem_setOf_eq, not_and, not_or, Prod.exists,
+    · simp only [Set.mem_image, Set.mem_sdiff, Set.mem_ofPred_eq, not_and, not_or, Prod.exists,
       Subtype.exists] at hv
       rcases hv with ⟨q, pq, l, ⟨hV₂, not_root⟩, rfl⟩
       by_cases H₁ : (q, l) ∈ (Subtype.val <$> G₁.toDAG).V
@@ -713,7 +713,7 @@ def shiftConjoinDag.runDag
         simp only [
           conjoinDag.dag, conjoinDag.base, shiftDag.dag,
           Set.mem_image, Subtype.exists, Set.singleton_union,
-          Prod.exists, exists_prop, Set.mem_union, Set.mem_setOf_eq
+          Prod.exists, exists_prop, Set.mem_union, Set.mem_ofPred_eq
         ]
         grind
     · simp only [Set.mem_sdiff, Set.mem_singleton_iff, Prod.exists, Prod.mk.injEq, not_and,
@@ -732,7 +732,7 @@ def shiftConjoinDag.runDag
           Prod.mk.injEq, Prod.exists, Set.mem_union, Prod.forall, Set.mem_prod
         ]
         grind
-    · simp only [Subtype.coe_eta, Set.singleton_union, Set.mem_setOf_eq, or_true, and_self,
+    · simp only [Subtype.coe_eta, Set.singleton_union, Set.mem_ofPred_eq, or_true, and_self,
       Set.insert_sdiff_of_mem, Set.mem_sdiff, Set.mem_image, Prod.exists, Subtype.exists, not_and,
       not_or, Prod.mk.eta, exists_eq_right] at hv
       rcases hv with ⟨⟨q, pq, l, hV₂, rfl⟩, not_root⟩
@@ -770,7 +770,7 @@ def shiftConjoinDag.runDag
           simp only [Subtype.coe_eta, Set.singleton_union, Set.mem_insert_iff, Prod.mk.injEq,
             Set.mem_image, Prod.exists, Subtype.exists, Functor.map, exists_eq_right_right,
             exists_and_right, exists_eq_right, not_exists, ne_eq, not_and, exists_prop,
-            Subtype.mk.injEq, Set.mem_setOf_eq]
+            Subtype.mk.injEq, Set.mem_ofPred_eq]
           simp at he
           exists q, pq, l + 1, e.2.val, e.2.prop
           simp [Functor.map] at H₁
@@ -821,7 +821,7 @@ def runDag
   p_root := by simp [dag]
   p_sat := by
     intros v hv
-    simp only [dag, Set.union_singleton, Set.mem_insert_iff, Set.mem_setOf_eq] at hv
+    simp only [dag, Set.union_singleton, Set.mem_insert_iff, Set.mem_ofPred_eq] at hv
     rcases hv with rfl|hv
     · grind [dag]
     · obtain ⟨Y, p_sat, p_sub⟩ := G.p_sat _ hv
@@ -861,7 +861,7 @@ noncomputable def mini (v : Iic φ × ℕ) : ℕ := sInf { i | i ≤ v.2 ∧ (v.
 
 lemma mini_le q l (H : (q, l) ∈ Vb G) : mini G (q, l) ≤ l := by
   simp only [mini]
-  simp only [Vb, exists_prop, Subtype.exists, Set.mem_iUnion, Set.mem_setOf_eq, Prod.mk.injEq] at H
+  simp only [Vb, exists_prop, Subtype.exists, Set.mem_iUnion, Set.mem_ofPred_eq, Prod.mk.injEq] at H
   rcases H with ⟨i, q, pq, l, hV, rfl, rfl⟩
   apply (show ∀ x y z, x ≤ z → x ≤ y + z by omega)
   apply csInf_le ⟨0, by intro i _; exact Nat.zero_le i⟩
@@ -869,7 +869,7 @@ lemma mini_le q l (H : (q, l) ∈ Vb G) : mini G (q, l) ≤ l := by
 
 lemma mini_in q l (H : (q, l) ∈ Vb G) : let i' := mini G (q, l); (q, l - i') ∈ (G i').V := by
   have hne : Set.Nonempty { i | i ≤ l ∧ (q, l - i) ∈ (G i).V } := by
-    simp only [Vb, exists_prop, Subtype.exists, Set.mem_iUnion, Set.mem_setOf_eq, Prod.mk.injEq
+    simp only [Vb, exists_prop, Subtype.exists, Set.mem_iUnion, Set.mem_ofPred_eq, Prod.mk.injEq
       ] at H
     rcases H with ⟨i, q, pq, l, hV, rfl, rfl⟩
     simp [Set.Nonempty]
@@ -908,7 +908,7 @@ def dag : DAG (Iic Φ) := {
   base ltφ G with
   edge_closure := by
     rintro ⟨⟨q, l⟩, q'⟩ he
-    simp only [base, V, E, Set.mem_setOf, Set.mem_union] at he
+    simp only [base, V, E, Set.mem_ofPred, Set.mem_union] at he
     rcases he with ⟨rfl, he⟩|⟨h_not_root, qp, q'p, qvb, he⟩
     · rcases he with rfl|⟨q'p, he⟩
       · simp [base, V]
@@ -918,22 +918,22 @@ def dag : DAG (Iic Φ) := {
           right
           simp only [Set.mem_image, Vb]
           exists (⟨q', q'p⟩, l + 1)
-          simp only [exists_prop, Subtype.exists, Set.mem_iUnion, Set.mem_setOf_eq, Prod.mk.injEq,
+          simp only [exists_prop, Subtype.exists, Set.mem_iUnion, Set.mem_ofPred_eq, Prod.mk.injEq,
             Subtype.mk.injEq, Subtype.coe_eta, and_true]
           exists l, q'.val, q'p, 1
           have := (G l).edge_closure _ he
           grind
     · constructor
-      · simp only [base, V, Set.mem_union, Set.mem_setOf_eq, h_not_root, Set.mem_image,
+      · simp only [base, V, Set.mem_union, Set.mem_ofPred_eq, h_not_root, Set.mem_image,
         Prod.mk.injEq, Prod.exists, exists_eq_right_right, Subtype.exists, false_or]
         exists q, qp
-      · simp only [base, V, Set.mem_union, Set.mem_setOf_eq, Set.mem_image, Prod.mk.injEq,
+      · simp only [base, V, Set.mem_union, Set.mem_ofPred_eq, Set.mem_image, Prod.mk.injEq,
         Prod.exists, exists_eq_right_right, Subtype.exists]; right
         exists q', q'p
         simp only [Subtype.coe_eta, and_true]
         obtain ⟨-, ec⟩ := DAG.edge_closure _ _ he
         simp only at ec
-        simp only [Vb, exists_prop, Subtype.exists, Set.mem_iUnion, Set.mem_setOf_eq,
+        simp only [Vb, exists_prop, Subtype.exists, Set.mem_iUnion, Set.mem_ofPred_eq,
           Prod.mk.injEq, Subtype.mk.injEq]
         exists mini _ _, _, q'p, _, ec
         have := mini_le G ⟨q, qp⟩ l
@@ -976,7 +976,7 @@ lemma preserves_path
   specialize op_path (bp + sp + l)
   have not_root : op (bp + sp + l) ≠ ⟨Φ, le_refl _⟩ := by
     grind [pres_branch bp_branch (bp + sp + l) (by omega)]
-  simp only [ne_eq, exists_prop, exists_and_left, Set.mem_union, Set.mem_setOf_eq, not_root,
+  simp only [ne_eq, exists_prop, exists_and_left, Set.mem_union, Set.mem_ofPred_eq, not_root,
     false_and, not_false_eq_true, true_and, false_or] at op_path
   rcases op_path with ⟨p1, _, p2, he⟩
   exists p1, p2
@@ -998,11 +998,11 @@ def runDag
       M.δ (q.embedLe ltφ.le) (w i) = (M'.δ q (w i)).mapSubtypeImp (fun _ q => q.trans ltφ.le))
     : RunDAG M w := {
   dag ltφ (fun i => (G i).toDAG) with
-  p_root := by simp only [dag, base, V, Set.mem_union, Set.mem_setOf_eq, Set.mem_image,
+  p_root := by simp only [dag, base, V, Set.mem_union, Set.mem_ofPred_eq, Set.mem_image,
     Prod.mk.injEq, Prod.exists, exists_eq_right_right, Subtype.exists]; left; exact h_M_root
   p_sat := by
     rintro ⟨q, l⟩ hv
-    simp only [dag, base, V, Set.mem_union, Set.mem_setOf_eq, Set.mem_image, Prod.mk.injEq,
+    simp only [dag, base, V, Set.mem_union, Set.mem_ofPred_eq, Set.mem_image, Prod.mk.injEq,
       Prod.exists, exists_eq_right_right, Subtype.exists] at hv
     rcases hv with rfl|⟨q, pq, ⟨hv, rfl⟩⟩
     · obtain ⟨Y, p_sat, p_sub⟩ := (G l).p_sat _ (G l).p_root
@@ -1016,7 +1016,7 @@ def runDag
           = Set.mem_prod,
           = Set.mem_singleton_iff,
           = Set.mem_image,
-          usr Set.mem_setOf_eq
+          usr Set.mem_ofPred_eq
         ]
     · let i' := mini (fun i => (G i).toDAG) (⟨q, pq⟩, l)
       obtain ⟨Y, p_sat, _⟩ := (G i').p_sat (⟨q, pq⟩,
@@ -1033,7 +1033,7 @@ def runDag
           = Set.mem_prod,
           = Set.mem_singleton_iff,
           = Set.mem_image,
-          usr Set.mem_setOf_eq
+          usr Set.mem_ofPred_eq
         ]
 }
 
@@ -1184,7 +1184,7 @@ lemma subformula_toABW_lang
         simp only [Subtype.embedLe]
         exact PositiveBool.mapSubtype_restrict (delta_forall.imp (by grind))
           delta_forall (by grind) p_sat
-      · simp only [Set.setOf_subset_setOf, Subtype.forall]
+      · simp only [Set.ofPred_subset_ofPred, Subtype.forall]
         intros _ _ _
         apply p_sub
         grind
@@ -1201,7 +1201,7 @@ if the χ-state recovered from `v.val` is accepting, so is `v` itself. Used to t
 the acceptance of a component automaton into acceptance of the combined one. -/
 private lemma mem_F_of_invFun {S} {Φ χ : NNF S} {v : Iic Φ}
     (hχ : v.val ≤ χ) (H : Function.invFun Subtype.val v.val ∈ χ.toABW.F) : v ∈ Φ.toABW.F := by
-  simp only [NNF.toABW, Set.mem_setOf_eq] at H ⊢
+  simp only [NNF.toABW, Set.mem_ofPred_eq] at H ⊢
   rwa [Function.invFun_eq (f := Subtype.val) ⟨⟨v.val, hχ⟩, rfl⟩] at H
 
 lemma and_mp.left {S} {φ₁ φ₂ : NNF S} {w} : (φ₁.and φ₂).toABW.language w → φ₁.toABW.language w := by
@@ -1315,7 +1315,7 @@ lemma next_mpr {AP : Type} {φ : NNF AP} {w} : (φ.toABW.language fun j =>
   exists shiftDag.runDag (sub.next sub.refl) G
     (by simp [NNF.toABW, delta, PositiveBool.mapSubtype, PositiveBool.Sat])
     (by simp [NNF.toABW])
-  simp only [RunDAG.accepting, NNF.toABW, ge_iff_le, Set.mem_setOf_eq, shiftDag.runDag] at G_acc ⊢
+  simp only [RunDAG.accepting, NNF.toABW, ge_iff_le, Set.mem_ofPred_eq, shiftDag.runDag] at G_acc ⊢
   intros p p_path i
   have p_path := shiftDag.preserves_path _ _ _ _ _ _ p_path
   specialize G_acc _ p_path i
@@ -1472,7 +1472,7 @@ lemma always
     (by simp [NNF.toABW])
   intros op op_path
   rcases alwaysDag.preserves_path _ _ _ op_path with rfl|⟨i, k, p_path⟩
-  · simp only [ge_iff_le, NNF.toABW, Set.mem_setOf_eq, and_true]; intros i; exists i
+  · simp only [ge_iff_le, NNF.toABW, Set.mem_ofPred_eq, and_true]; intros i; exists i
   · have Gi_path := DAG.path_mapped (G i).toDAG _ subtype_val_injective _ p_path
     intros l
     have ⟨j, Hj, H⟩ := (hg i).choose_spec _ Gi_path l

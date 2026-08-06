@@ -204,7 +204,7 @@ theorem Q_height_one : Q.height = 1 := by
       simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at ha
       rcases ha with rfl | rfl <;> assumption)
   have hne : Q.height ≠ 0 := by
-    haveI := Q_isPrime
+    have := Q_isPrime
     rw [ne_eq, Ideal.height_eq_zero_iff,
       IsDomain.minimalPrimes_eq_singleton_bot, Set.mem_singleton_iff]
     intro hQ_bot
@@ -490,7 +490,7 @@ lemma mk_X2_not_mem_Q :
 /-- T has Krull dimension 2. -/
 theorem T_ringKrullDim : ringKrullDim T = 2 := by
   apply le_antisymm
-  · haveI : IsNoetherianRing (MvPowerSeries (Fin 3) ℂ) := mvPowerSeries_fin3_isNoetherianRing
+  · have : IsNoetherianRing (MvPowerSeries (Fin 3) ℂ) := mvPowerSeries_fin3_isNoetherianRing
     have hdim_eq : ringKrullDim T + 1 = ringKrullDim (MvPowerSeries (Fin 3) ℂ) :=
       ringKrullDim_quotient_span_singleton_succ_eq_ringKrullDim_of_mem_nonZeroDivisors
         gen_mem_nonZeroDivisors gen_mem_maximalIdeal
@@ -509,8 +509,8 @@ theorem T_ringKrullDim : ringKrullDim T = 2 := by
       | coe n =>
         rw [show (↑n : ℕ∞) + 1 = ↑(n + 1) by
               simp_all,
-            show (3 : ℕ∞) = ↑(3 : ℕ) from rfl, ENat.coe_le_coe] at h3
-        rw [show (2 : ℕ∞) = ↑(2 : ℕ) from rfl, ENat.coe_le_coe]
+            show (3 : ℕ∞) = ↑(3 : ℕ) from rfl, ENat.natCast_le_natCast] at h3
+        rw [show (2 : ℕ∞) = ↑(2 : ℕ) from rfl, ENat.natCast_le_natCast]
         omega
   · -- Lower bound: chain ⊥ < Q < ⊤ gives length 2
     have hbot_lt_Q : (⊥ : PrimeSpectrum T) < ⟨Q, Q_isPrime⟩ := by

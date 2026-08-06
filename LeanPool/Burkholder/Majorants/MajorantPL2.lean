@@ -9651,7 +9651,7 @@ private lemma continuousOn_auxFunction1_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p <
   have hcover : S ⊆ S1 ∪ S2 := by
     intro ⟨x, y⟩ hz
     simp only [QuarterPlane, closureA1, closureA2, S, S1, S2,
-      Set.mem_union, Set.mem_setOf_eq] at *
+      Set.mem_union, Set.mem_ofPred_eq] at *
     rcases hz with ⟨hx, hyx, hneg⟩
     by_cases h : a p * x ≤ y
     · exact Or.inr ⟨hx, h, hyx⟩
@@ -9668,13 +9668,13 @@ private lemma continuousOn_auxFunction1_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p <
     exact auxFunction1_eq_vLeTwo_leTwo p hp1 hp2 z.1 z.2 hz.2
   have hcl1 : IsClosed (S ∩ S1) := by
     apply IsClosed.inter _ (isClosed_closureA1_set_leTwo p)
-    simp only [QuarterPlane, S, Set.setOf_and]
+    simp only [QuarterPlane, S, Set.ofPred_and]
     exact (isClosed_le continuous_const continuous_fst).inter
       ((isClosed_le continuous_snd continuous_fst).inter
         (isClosed_le continuous_fst.neg continuous_snd))
   have hcl2 : IsClosed (S ∩ S2) := by
     apply IsClosed.inter _ (isClosed_closureA2_set_leTwo p)
-    simp only [QuarterPlane, S, Set.setOf_and]
+    simp only [QuarterPlane, S, Set.ofPred_and]
     exact (isClosed_le continuous_const continuous_fst).inter
       ((isClosed_le continuous_snd continuous_fst).inter
         (isClosed_le continuous_fst.neg continuous_snd))
@@ -9692,7 +9692,7 @@ private lemma continuousOn_DxauxFunction1_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p
   have hcover : S ⊆ S1 ∪ S2 := by
     intro ⟨x, y⟩ hz
     simp only [QuarterPlane, closureA1, closureA2, S, S1, S2,
-      Set.mem_union, Set.mem_setOf_eq] at *
+      Set.mem_union, Set.mem_ofPred_eq] at *
     rcases hz with ⟨hx, hyx, hneg⟩
     by_cases h : a p * x ≤ y
     · exact Or.inr ⟨hx, h, hyx⟩
@@ -9709,13 +9709,13 @@ private lemma continuousOn_DxauxFunction1_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p
     exact auxFunction1_Dx_eq_DxvLeTwo_leTwo p hp1 hp2 z.1 z.2 hz.2
   have hcl1 : IsClosed (S ∩ S1) := by
     apply IsClosed.inter _ (isClosed_closureA1_set_leTwo p)
-    simp only [QuarterPlane, S, Set.setOf_and]
+    simp only [QuarterPlane, S, Set.ofPred_and]
     exact (isClosed_le continuous_const continuous_fst).inter
       ((isClosed_le continuous_snd continuous_fst).inter
         (isClosed_le continuous_fst.neg continuous_snd))
   have hcl2 : IsClosed (S ∩ S2) := by
     apply IsClosed.inter _ (isClosed_closureA2_set_leTwo p)
-    simp only [QuarterPlane, S, Set.setOf_and]
+    simp only [QuarterPlane, S, Set.ofPred_and]
     exact (isClosed_le continuous_const continuous_fst).inter
       ((isClosed_le continuous_snd continuous_fst).inter
         (isClosed_le continuous_fst.neg continuous_snd))
@@ -9733,7 +9733,7 @@ private lemma continuousOn_DyauxFunction1_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p
   have hcover : S ⊆ S1 ∪ S2 := by
     intro ⟨x, y⟩ hz
     simp only [QuarterPlane, closureA1, closureA2, S, S1, S2,
-      Set.mem_union, Set.mem_setOf_eq] at *
+      Set.mem_union, Set.mem_ofPred_eq] at *
     rcases hz with ⟨hx, hyx, hneg⟩
     by_cases h : a p * x ≤ y
     · exact Or.inr ⟨hx, h, hyx⟩
@@ -9750,13 +9750,13 @@ private lemma continuousOn_DyauxFunction1_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p
     exact auxFunction1_Dy_eq_DyvLeTwo_leTwo p hp1 hp2 z.1 z.2 hz.2
   have hcl1 : IsClosed (S ∩ S1) := by
     apply IsClosed.inter _ (isClosed_closureA1_set_leTwo p)
-    simp only [QuarterPlane, S, Set.setOf_and]
+    simp only [QuarterPlane, S, Set.ofPred_and]
     exact (isClosed_le continuous_const continuous_fst).inter
       ((isClosed_le continuous_snd continuous_fst).inter
         (isClosed_le continuous_fst.neg continuous_snd))
   have hcl2 : IsClosed (S ∩ S2) := by
     apply IsClosed.inter _ (isClosed_closureA2_set_leTwo p)
-    simp only [QuarterPlane, S, Set.setOf_and]
+    simp only [QuarterPlane, S, Set.ofPred_and]
     exact (isClosed_le continuous_const continuous_fst).inter
       ((isClosed_le continuous_snd continuous_fst).inter
         (isClosed_le continuous_fst.neg continuous_snd))
@@ -9766,25 +9766,25 @@ private lemma continuousOn_DyauxFunction1_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p
   exact hc1.union_of_isClosed hc2 hcl1 hcl2
 
 private lemma isClosed_Q1_leTwo : IsClosed {z : ℝ × ℝ | QuarterPlane z.1 z.2} := by
-  simp only [QuarterPlane, Set.setOf_and]
+  simp only [QuarterPlane, Set.ofPred_and]
   exact (isClosed_le continuous_const continuous_fst).inter
     ((isClosed_le continuous_snd continuous_fst).inter
       (isClosed_le continuous_fst.neg continuous_snd))
 
 private lemma isClosed_Q2_leTwo : IsClosed {z : ℝ × ℝ | QuarterPlane2 z.1 z.2} := by
-  simp only [QuarterPlane2, Set.setOf_and]
+  simp only [QuarterPlane2, Set.ofPred_and]
   exact (isClosed_le continuous_fst continuous_const).inter
     ((isClosed_le continuous_snd continuous_fst.neg).inter
       (isClosed_le continuous_fst continuous_snd))
 
 private lemma isClosed_Q3_leTwo : IsClosed {z : ℝ × ℝ | QuarterPlane3 z.1 z.2} := by
-  simp only [QuarterPlane3, Set.setOf_and]
+  simp only [QuarterPlane3, Set.ofPred_and]
   exact (isClosed_le continuous_const continuous_snd).inter
     ((isClosed_le continuous_snd.neg continuous_fst).inter
       (isClosed_le continuous_fst continuous_snd))
 
 private lemma isClosed_Q4_leTwo : IsClosed {z : ℝ × ℝ | QuarterPlane4 z.1 z.2} := by
-  simp only [QuarterPlane4, Set.setOf_and]
+  simp only [QuarterPlane4, Set.ofPred_and]
   exact (isClosed_le continuous_snd continuous_const).inter
     ((isClosed_le continuous_snd continuous_fst).inter
       (isClosed_le continuous_fst continuous_snd.neg))

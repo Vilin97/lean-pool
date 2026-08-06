@@ -95,7 +95,7 @@ theorem singleton_badEvent_eq_preimage_planar
     singletonBadEvent A = samplePair1ToPlane ⁻¹' planarWitnessEvent A := by
   ext p
   simp only [singletonBadEvent, singletonClassOn, planarWitnessEvent, samplePair1ToPlane,
-    Set.mem_setOf_eq, Set.mem_preimage]
+    Set.mem_ofPred_eq, Set.mem_preimage]
   constructor
   · rintro ⟨h, hh, hgap⟩
     rcases hh with rfl | ⟨a, haA, rfl⟩
@@ -181,7 +181,7 @@ theorem planarWitnessEvent_not_measurable
     Measurable.prod (by exact measurable_const) (by exact measurable_id)
   have hpre : (fun y : ℝ => (a, y)) ⁻¹' planarWitnessEvent A = A := by
     ext y
-    simp only [Set.mem_preimage, planarWitnessEvent, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, planarWitnessEvent, Set.mem_ofPred_eq]
     constructor
     · exact fun ⟨hy, _⟩ => hy
     · exact fun hy => ⟨hy, fun hay => ha (hay ▸ hy)⟩
@@ -241,9 +241,9 @@ theorem analytic_nonborel_set_gives_measTarget_separation
   rcases MeasureTheory.analyticSet_iff_exists_polishSpace_range.mp hA_an with
     ⟨β, hτ, hP, g, hg_cont, hg_range⟩
   -- Equip β with Borel σ-algebra to get MeasurableSpace and StandardBorelSpace
-  letI : MeasurableSpace β := @borel β hτ
-  haveI : @BorelSpace β hτ (@borel β hτ) := ⟨rfl⟩
-  haveI : @StandardBorelSpace β (@borel β hτ) := ⟨⟨hτ, ⟨rfl⟩, hP⟩⟩
+  let : MeasurableSpace β := @borel β hτ
+  have : @BorelSpace β hτ (@borel β hτ) := ⟨rfl⟩
+  have : @StandardBorelSpace β (@borel β hτ) := ⟨⟨hτ, ⟨rfl⟩, hP⟩⟩
   have hg_meas : Measurable g := hg_cont.measurable
   -- Step 2: A is nonempty
   have hA_ne : A.Nonempty := by
@@ -309,7 +309,7 @@ theorem analytic_nonborel_set_gives_measTarget_separation
     rw [hsuff]; exact hpre
   -- Prove the set equality
   ext p
-  simp only [singletonBadEvent, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_Ici,
+  simp only [singletonBadEvent, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_Ici,
     ghostGapSup, ghostGapVals, oneSidedGhostGap]
   -- C is nonempty (contains zeroConcept)
   have hC_ne : C.Nonempty := ⟨e (false, θ0), ⟨(false, θ0), rfl⟩⟩

@@ -151,7 +151,7 @@ theorem entropyFnN_restrictFirstFour
     (μ : Measure Ω) (hn : 4 ≤ n) :
     restrictFirstFour hn (entropyFnN X μ) =
       entropyFnN (fun i : Fin 4 => X (Fin.castLE hn i)) μ := by
-  letI : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
+  let : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
   ext α
   let e : Fin 4 ↪ Fin n := Fin.castLEEmb hn
   let π : (∀ j : α.map e, S j.1) → (∀ i : α, S (e i.1)) :=
@@ -178,11 +178,11 @@ theorem restrictFirstFour_mem_entropyRegionN
     (hF : F ∈ entropyRegionN.{u} n) :
     restrictFirstFour hn F ∈ entropyRegionN.{u} 4 := by
   rcases hF with ⟨Ω, hΩ, μ, hμ, S, hS, hFin, hMSC, X, hX, rfl⟩
-  letI : MeasurableSpace Ω := hΩ
-  letI : IsProbabilityMeasure μ := hμ
-  letI : ∀ i, MeasurableSpace (S i) := hS
-  letI : ∀ i, Fintype (S i) := hFin
-  letI : ∀ i, MeasurableSingletonClass (S i) := hMSC
+  let : MeasurableSpace Ω := hΩ
+  let : IsProbabilityMeasure μ := hμ
+  let : ∀ i, MeasurableSpace (S i) := hS
+  let : ∀ i, Fintype (S i) := hFin
+  let : ∀ i, MeasurableSingletonClass (S i) := hMSC
   refine ⟨Ω, inferInstance, μ, inferInstance, (fun i : Fin 4 => S (Fin.castLE hn i)),
     inferInstance,
     inferInstance, inferInstance, (fun i : Fin 4 => X (Fin.castLE hn i)),

@@ -149,7 +149,7 @@ private noncomputable def mk_union_nsub_aux
   · -- Height ≤ 1 for primes in the chain ring
     intro t ht P hP
     have hP_prime := hP.isPrime
-    haveI : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
+    have : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
     change (Ideal.comap U.subtype P).height ≤ ↑(1 : ℕ)
     rw [Ideal.height_le_iff]
     intro q hq_prime hq_lt
@@ -163,7 +163,7 @@ private noncomputable def mk_union_nsub_aux
     set γ := max αs αx
     have hγ_lt : γ < α := max_lt hαs_lt hαx_lt
     set inclγ := Subring.inclusion (hU_le ⟨γ, hγ_lt⟩)
-    haveI : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
+    have : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
     set s' : (rings γ hγ_lt).carrier :=
       ⟨(s : T), hmono hαs_lt hγ_lt (le_max_left ..) hαs⟩
     have hs'_ne : s' ≠ 0 := fun h => hs_ne (Subtype.ext (congrArg
@@ -184,11 +184,11 @@ private noncomputable def mk_union_nsub_aux
       lt_of_le_of_ne
         (fun r hr => (hq_lt.le (show inclγ r ∈ q from hr) : (inclγ r : T) ∈ P))
         (fun h => hx'_nq (h ▸ (hx_P : (x : T) ∈ P)))
-    haveI : (Ideal.comap (rings γ hγ_lt).carrier.subtype P).IsPrime :=
+    have : (Ideal.comap (rings γ hγ_lt).carrier.subtype P).IsPrime :=
       hP_prime.comap _
     have hq'_ht := (Ideal.height_le_iff (n := 1)).mp
       ((rings γ hγ_lt).height_bound t ht P hP) _ inferInstance hq'_lt
-    haveI : IsDomain (rings γ hγ_lt).carrier := inferInstance
+    have : IsDomain (rings γ hγ_lt).carrier := inferInstance
     exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
       lift (Ideal.comap inclγ q).height to ℕ using ne_top_of_lt hq'_ht with n hn
       simp only [Nat.cast_lt] at hq'_ht
@@ -332,10 +332,10 @@ private def transfinite_construction_proof
     obtain ⟨A, hA_surj, hA_closed, hA_primes⟩ := this
     exact ⟨A, fun ℓ => hA_surj ℓ, hA_closed, hA_primes⟩
   let κ := Cardinal.ord (Cardinal.mk V)
-  haveI : Nonempty V :=
+  have : Nonempty V :=
     ⟨⟨⟨IsLocalRing.maximalIdeal T,
        (IsLocalRing.maximalIdeal.isMaximal (R := T)).isPrime, hM_ne_bot⟩, 0⟩⟩
-  haveI : Nonempty κ.ToType := by
+  have : Nonempty κ.ToType := by
     rw [← Cardinal.mk_ne_zero_iff, Cardinal.mk_ord_toType]
     exact Cardinal.mk_ne_zero V
   obtain ⟨enum⟩ := Cardinal.eq.mp (Cardinal.mk_ord_toType (Cardinal.mk V))
@@ -656,7 +656,7 @@ private def transfinite_construction_proof
   have hU_le : ∀ α, (chain.ring α).carrier ≤ U := chain.le_union
   have hU_mem : ∀ x : ↥U, ∃ α, (x : T) ∈ (chain.ring α).carrier :=
     fun x => chain.mem_union_iff.mp x.2
-  haveI hU_local : IsLocalRing U := by
+  have hU_local : IsLocalRing U := by
     apply IsLocalRing.of_isUnit_or_isUnit_one_sub_self
     intro a
     obtain ⟨α, hα⟩ := hU_mem a
@@ -716,7 +716,7 @@ private def transfinite_construction_proof
         Ideal.height (P.comap U.subtype) ≤ 1 := by
     intro t ht P hP
     have hP_prime := hP.isPrime
-    haveI : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
+    have : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
     change (Ideal.comap U.subtype P).height ≤ ↑(1 : ℕ)
     rw [Ideal.height_le_iff]
     intro q hq_prime hq_lt
@@ -729,7 +729,7 @@ private def transfinite_construction_proof
     obtain ⟨αx, hαx⟩ := hU_mem x
     set γ := max αs αx
     set inclγ := Subring.inclusion (hU_le γ)
-    haveI : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
+    have : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
     set s' : (chain.ring γ).carrier := ⟨(s : T), chain.mono (le_max_left ..) hαs⟩
     have hs'_ne : s' ≠ 0 := fun h => hs_ne (Subtype.ext (congrArg
       (fun (x : (chain.ring γ).carrier) => (x : T)) h))
@@ -749,11 +749,11 @@ private def transfinite_construction_proof
       lt_of_le_of_ne
         (fun r hr => (hq_lt.le (show inclγ r ∈ q from hr) : (inclγ r : T) ∈ P))
         (fun h => hx'_nq (h ▸ (hx_P : (x : T) ∈ P)))
-    haveI : (Ideal.comap (chain.ring γ).carrier.subtype P).IsPrime :=
+    have : (Ideal.comap (chain.ring γ).carrier.subtype P).IsPrime :=
       hP_prime.comap _
     have hq'_ht := (Ideal.height_le_iff (n := 1)).mp
       ((chain.ring γ).height_bound t ht P hP) _ inferInstance hq'_lt
-    haveI : IsDomain (chain.ring γ).carrier := inferInstance
+    have : IsDomain (chain.ring γ).carrier := inferInstance
     exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
       lift (Ideal.comap inclγ q).height to ℕ using ne_top_of_lt hq'_ht with n hn
       simp only [Nat.cast_lt] at hq'_ht

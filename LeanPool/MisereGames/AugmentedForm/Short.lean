@@ -52,7 +52,7 @@ theorem moves_toForm (p : Player) (L R : List ShortTree) (tL tR : Bool) :
     moves p (toForm (.mk L R tL tR)) = toForm '' {y | y ∈ p.cases L R} := by
   rw [toForm, AugmentedForm.moves_ofSetsWithTombs]
   ext x
-  simp only [Set.mem_range, Set.mem_image, Set.mem_setOf_eq]
+  simp only [Set.mem_range, Set.mem_image, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨i, rfl⟩
     exact ⟨_, List.get_mem _ _, rfl⟩

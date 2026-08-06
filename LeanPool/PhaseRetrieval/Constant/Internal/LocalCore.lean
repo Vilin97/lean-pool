@@ -1091,7 +1091,7 @@ private lemma integrable_sq_gaussianMeasure_real_const_add_polyEval {D : ℕ}
 private lemma integrable_sq_gaussianMeasure_rho_real_const_add_polyEval {D : ℕ}
     (a : Fin D → ℂ) (u : ℝ) :
     Integrable (fun z : ℂ => rho ((u : ℂ) + polyEval a z) ^ 2) gaussianMeasure := by
-  haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
+  have : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   refine MeasureTheory.Integrable.mono'
     (integrable_sq_gaussianMeasure_real_const_add_polyEval a u)
     (((rho_continuous.comp
@@ -1108,7 +1108,7 @@ private lemma integrable_sq_gaussianMeasure_norm_add_one_real_const_add_polyEval
     Integrable
       (fun z : ℂ => (‖(1 : ℂ) + ((u : ℂ) + polyEval a z)‖ + 1) ^ 2)
       gaussianMeasure := by
-  haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
+  have : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   refine MeasureTheory.Integrable.mono'
     ((MeasureTheory.integrable_const (8 : ℝ)).add
       ((integrable_sq_gaussianMeasure_real_const_add_polyEval a u).const_mul 2))
@@ -1137,7 +1137,7 @@ private lemma integrable_of_sq_gaussian {f : ℂ → ℝ}
     (hfm : AEStronglyMeasurable f gaussianMeasure)
     (hf2 : Integrable (fun z => f z ^ 2) gaussianMeasure) :
     Integrable f gaussianMeasure := by
-  haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
+  have : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   refine MeasureTheory.Integrable.mono'
     ((MeasureTheory.integrable_const (1 : ℝ)).add hf2) hfm ?_
   filter_upwards with z
@@ -1161,7 +1161,7 @@ private lemma gaussian_l1_sq_le {f : ℂ → ℝ}
     (hfm : AEStronglyMeasurable f gaussianMeasure)
     (hf2 : Integrable (fun z => f z ^ 2) gaussianMeasure) :
     (∫ z, f z ∂gaussianMeasure) ^ 2 ≤ ∫ z, f z ^ 2 ∂gaussianMeasure := by
-  haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
+  have : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   have hf : Integrable f gaussianMeasure := integrable_of_sq_gaussian hfm hf2
   have h1 : Integrable (fun _ : ℂ => (1 : ℝ)) gaussianMeasure := MeasureTheory.integrable_const 1
   have h1sq : Integrable (fun _ : ℂ => (1 : ℝ) ^ 2) gaussianMeasure := by
@@ -1212,7 +1212,7 @@ private lemma rho_centered_integral_bound
     (hm_mu : ∫ z, R z ^ 2 ∂gaussianMeasure = m ^ 2)
     (hR_l1_le : ∫ z, R z ∂gaussianMeasure ≤ m) :
     rq2 ≤ (|u| + m) ^ 2 := by
-  haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
+  have : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   have hsum_sq_int : Integrable (fun z => (|u| + R z) ^ 2) gaussianMeasure := by
     refine MeasureTheory.Integrable.mono'
       ((MeasureTheory.integrable_const (2 * |u| ^ 2)).add (hR2_int.const_mul 2))
@@ -1274,7 +1274,7 @@ private lemma scalar_raw_bound {D : ℕ} (a : Fin D → ℂ) {u x2 q2 : ℝ}
     |2 * u + x2| ≤
       ∫ z, rho ((u : ℂ) + polyEval a z) *
         (‖(1 : ℂ) + ((u : ℂ) + polyEval a z)‖ + 1) ∂gaussianMeasure := by
-  haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
+  have : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   set G : ℂ → ℂ := fun z => (u : ℂ) + polyEval a z with hG
   have hOne2_int : Integrable (fun z => ‖(1 : ℂ) + G z‖ ^ 2) gaussianMeasure := by
     simpa [G, add_assoc, add_left_comm, add_comm] using
@@ -1319,7 +1319,7 @@ private lemma s2_le_aux {N B : ℂ → ℝ} {x2 : ℝ}
     (hx_mu : ∫ z, N z ^ 2 ∂gaussianMeasure = x2)
     (hB_le : ∀ z, B z ≤ 2 + N z) (hB_nonneg : ∀ z, 0 ≤ B z) :
     ∫ z, B z ^ 2 ∂gaussianMeasure ≤ 4 + 4 * ∫ z, N z ∂gaussianMeasure + x2 := by
-  haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
+  have : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   have hrhs_int : Integrable (fun z => 4 + 4 * N z + N z ^ 2) gaussianMeasure := by
     have h := (MeasureTheory.integrable_const (4 : ℝ)).add ((hN_int.const_mul 4).add hN2_int)
     simp_all
@@ -1435,7 +1435,7 @@ theorem LocalFockSPR_of_small_norm
     ∫ z : ℂ, ‖p.eval z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ≤
       23003 ^ 2 *
         ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-  haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
+  have : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   set u : ℝ := (p.eval 0).re
   have hp0 : p.eval 0 = (u : ℂ) := by apply Complex.ext <;> simp [u, hp_real]
   set q : Polynomial ℂ := p - Polynomial.C (u : ℂ)

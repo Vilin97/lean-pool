@@ -186,7 +186,7 @@ theorem not_powerful_finite (hBlock : BlockRadLB) {k : ℕ} (hk : 3 ≤ k) :
     {n : ℕ | 1 ≤ n ∧ Powerful (F k n)}.Finite := by
   apply Set.Finite.subset (Set.finite_Iic (k ^ 6))
   intro n hn
-  simp only [Set.mem_setOf_eq] at hn
+  simp only [Set.mem_ofPred_eq] at hn
   simp only [Set.mem_Iic]
   by_contra hcon
   push Not at hcon

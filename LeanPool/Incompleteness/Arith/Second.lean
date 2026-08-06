@@ -141,7 +141,7 @@ theorem _root_.LO.FirstOrder.Arith.multidiagonal (θ : Fin k → Semisentence �
     T ⊢!. multifixpoint θ i <=> (Rew.substs fun j ↦ ⌜multifixpoint θ j⌝) ▹ (θ i) :=
   haveI : 𝐄𝐐 wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐈Sg1) inferInstance inferInstance
   complete (T := T) <| oRing_consequence_of _ _ fun (V : Type) _ _ ↦ by
-    haveI : V ⊧ₘ* 𝐈Sg1 := ModelsTheory.of_provably_subtheory V 𝐈Sg1 T inferInstance
+    have : V ⊧ₘ* 𝐈Sg1 := ModelsTheory.of_provably_subtheory V 𝐈Sg1 T inferInstance
     suffices V ⊧/![] (multifixpoint θ i) ↔
       V ⊧/(fun i ↦ ⌜multifixpoint θ i⌝) (θ i) by simpa [models_iff]
     let t : Fin k → V := fun i ↦ ⌜multidiag (θ i)⌝
@@ -207,16 +207,16 @@ variable {U : Theory ℒₒᵣ} [U.Delta1Definable]
 
 theorem _root_.LO.FirstOrder.Arith.provableₐ_D1 {σ} : U ⊢!. σ → T ⊢!. U.bewₐ σ := by
   intro h
-  haveI : 𝐄𝐐 wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐈Sg1) inferInstance inferInstance
+  have : 𝐄𝐐 wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐈Sg1) inferInstance inferInstance
   apply complete (T := T) <| oRing_consequence_of _ _ fun (V : Type) _ _ ↦ by
-    haveI : V ⊧ₘ* 𝐈Sg1 := ModelsTheory.of_provably_subtheory V _ T inferInstance
+    have : V ⊧ₘ* 𝐈Sg1 := ModelsTheory.of_provably_subtheory V _ T inferInstance
     simpa [models_iff] using provableₐ_of_provable (T := U) (V := V) h
 
 theorem _root_.LO.FirstOrder.Arith.provableₐ_D2 {σ π} :
     T ⊢!. U.bewₐ (σ ==> π) ==> U.bewₐ σ ==> U.bewₐ π :=
   haveI : 𝐄𝐐 wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐈Sg1) inferInstance inferInstance
   complete (T := T) <| oRing_consequence_of _ _ fun (V : Type) _ _ ↦ by
-    haveI : V ⊧ₘ* 𝐈Sg1 := ModelsTheory.of_provably_subtheory V _ T inferInstance
+    have : V ⊧ₘ* 𝐈Sg1 := ModelsTheory.of_provably_subtheory V _ T inferInstance
     simp only [LogicalConnective.HomClass.map_imply, models_iff, Semiformula.eval_emb,
       Semiformula.eval_substs, Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.cons_val_fin_one,
       val_quote, Matrix.constant_eq_singleton, eval_provableₐ, Fin.isValue,
@@ -229,7 +229,7 @@ lemma _root_.LO.FirstOrder.Arith.provableₐ_sigma₁_complete {σ : Sentence �
     T ⊢!. σ ==> U.bewₐ σ :=
   haveI : 𝐄𝐐 wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐈Sg1) inferInstance inferInstance
   complete (T := T) <| oRing_consequence_of _ _ fun (V : Type) _ _ ↦ by
-    haveI : V ⊧ₘ* 𝐈Sg1 := ModelsTheory.of_provably_subtheory V _ T inferInstance
+    have : V ⊧ₘ* 𝐈Sg1 := ModelsTheory.of_provably_subtheory V _ T inferInstance
     simpa [models_iff] using sigma₁_complete (T := U) (V := V) hσ
 
 theorem _root_.LO.FirstOrder.Arith.provableₐ_D3 {σ : Sentence ℒₒᵣ} :
@@ -287,7 +287,7 @@ lemma _root_.LO.FirstOrder.Arith.goedel_unprovable [Entailment.Consistent T] : T
     inferInstance
 
 lemma _root_.LO.FirstOrder.Arith.not_goedel_unprovable [ℕ ⊧ₘ* T] : T ⊬ ∼↑Gd := fun h ↦ by
-  haveI : 𝐑₀ wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐈Sg1) inferInstance inferInstance
+  have : 𝐑₀ wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐈Sg1) inferInstance inferInstance
   have : T ⊢!. □Gd :=
     Entailment.contra₂'! (and_right! goedel_iff_unprovable_goedel) ⨀ (by simpa [provable₀_iff]
       using h)
@@ -325,7 +325,7 @@ theorem _root_.LO.FirstOrder.Arith.inconsistent_unprovable [ℕ ⊧ₘ* T] : T �
 
 theorem _root_.LO.FirstOrder.Arith.inconsistent_undecidable [ℕ ⊧ₘ* T] :
     Entailment.Undecidable T ↑Con := by
-  haveI : Consistent T := Sound.consistent_of_satisfiable ⟨_, (inferInstance : ℕ ⊧ₘ* T)⟩
+  have : Consistent T := Sound.consistent_of_satisfiable ⟨_, (inferInstance : ℕ ⊧ₘ* T)⟩
   constructor
   · exact goedel_second_incompleteness T
   · exact inconsistent_unprovable T
@@ -338,7 +338,7 @@ instance [Entailment.Consistent T] : ℕ ⊧ₘ* 𝐂𝐨𝐧[T] := by
   suffices ℕ ⊧ₘ₀ T.consistentₐ by simpa [Models₀] using this
   suffices ¬T.Provableₐ ⌜⊥⌝ by simpa [models₀_iff] using  this
   intro H
-  haveI : 𝐑₀ wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐈Sg1) inferInstance inferInstance
+  have : 𝐑₀ wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐈Sg1) inferInstance inferInstance
   have : T ⊢! ⊥ := Arith.provableₐ_iff_provable₀.mp H
   have : Entailment.Inconsistent T := inconsistent_iff_provable_bot.mpr this
   exact Consistent.not_inconsistent this

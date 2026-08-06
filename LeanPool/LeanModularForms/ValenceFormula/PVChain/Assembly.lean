@@ -230,7 +230,7 @@ private lemma integral_neg_of_pw_neg (g : ℝ → ℂ)
   rw [Filter.Eventually, MeasureTheory.mem_ae_iff]
   apply measure_mono_null (t := {(1 : ℝ)})
   · intro u hu
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_forall] at hu
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_forall] at hu
     obtain ⟨hu_mem, hu_ne⟩ := hu
     rw [Set.uIoc_of_le (show (0 : ℝ) ≤ 1 from by norm_num)] at hu_mem
     rw [Set.mem_singleton_iff]
@@ -421,7 +421,7 @@ private lemma integrableOn_logDeriv_mul_deriv_farSet
     have hset : {t : ℝ | ∀ s ∈ S₀, ε ≤ ‖γ t - s‖} =
         ⋂ (s : ℂ) (_ : s ∈ S₀), {t : ℝ | ε ≤ ‖γ t - s‖} := by
       ext t
-      simp only [mem_iInter, mem_setOf_eq]
+      simp only [mem_iInter, mem_ofPred_eq]
     rw [hset]
     exact this
   have hK'_meas : MeasurableSet K' := hK'_compact.isClosed.measurableSet
@@ -514,7 +514,7 @@ private lemma pvIntegrand_intervalIntegrable
       have hset : {t : ℝ | ∃ s ∈ (S₀ : Set ℂ), ‖γ t - s‖ ≤ ε} =
           ⋃ s ∈ (S₀ : Set ℂ), {t : ℝ | ‖γ t - s‖ ≤ ε} := by
         ext t
-        simp only [mem_iUnion, mem_setOf_eq, Finset.mem_coe, exists_prop]
+        simp only [mem_iUnion, mem_ofPred_eq, Finset.mem_coe, exists_prop]
       rw [hset]
       exact h.measurableSet
     exact S₀.finite_toSet.isClosed_biUnion fun s _ =>

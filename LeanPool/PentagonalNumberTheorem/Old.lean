@@ -1406,8 +1406,8 @@ theorem card_eq (hn : 0 < n) :
     {x : FerrersDiagram n |
       (¬ x.IsPosPentagonal hn ∧ ¬ x.IsNegPentagonal hn) ∧ ¬ Even x.delta.length}.ncard := by
   convert NpFerrers_card_eq hn
-  · rw [NpEven_eq, Set.ncard_subtype, Set.inter_comm, ← Set.setOf_and]
-  · rw [NpOdd_eq, Set.ncard_subtype, Set.inter_comm, ← Set.setOf_and]
+  · rw [NpEven_eq, Set.ncard_subtype, Set.inter_comm, ← Set.ofPred_and]
+  · rw [NpOdd_eq, Set.ncard_subtype, Set.inter_comm, ← Set.ofPred_and]
 
 /-! # Translate Ferrers diagram to distinct partition -/
 
@@ -1696,7 +1696,7 @@ theorem card_sub (hn : 0 < n) :
       (x.IsPosPentagonal hn ∨ x.IsNegPentagonal hn) ∧ Even x.delta.length} ∪
     {x : FerrersDiagram n |
       ¬ (x.IsPosPentagonal hn ∨ x.IsNegPentagonal hn) ∧ Even x.delta.length} := by
-    rw [← Set.setOf_or]
+    rw [← Set.ofPred_or]
     simp_rw [← or_and_right, or_not]
     simp
   have hodd : {x : FerrersDiagram n | ¬ Even x.delta.length} =
@@ -1704,13 +1704,13 @@ theorem card_sub (hn : 0 < n) :
       (x.IsPosPentagonal hn ∨ x.IsNegPentagonal hn) ∧ ¬ Even x.delta.length} ∪
     {x : FerrersDiagram n |
       ¬ (x.IsPosPentagonal hn ∨ x.IsNegPentagonal hn) ∧ ¬ Even x.delta.length} := by
-    rw [← Set.setOf_or]
+    rw [← Set.ofPred_or]
     simp_rw [← or_and_right, or_not]
     simp
   have hdisj (p : FerrersDiagram n → Prop) : Disjoint {x : FerrersDiagram n |
       (x.IsPosPentagonal hn ∨ x.IsNegPentagonal hn) ∧ p x}
       {x : FerrersDiagram n | ¬ (x.IsPosPentagonal hn ∨ x.IsNegPentagonal hn) ∧ p x} := by
-    rw [Set.disjoint_iff, ← Set.setOf_and]
+    rw [Set.disjoint_iff, ← Set.ofPred_and]
     simp_rw [← and_and_right, and_not_self]
     simp
   rw [heven, hodd, Set.ncard_union_eq (hdisj _), Set.ncard_union_eq (hdisj _)]
@@ -1895,7 +1895,7 @@ theorem pentagonal_of_exists_k (hn : 0 < n) {k : ℤ} (h : 2 * n = k * (3 * k - 
 theorem pentagonal_subsingleton (hn : 0 < n) :
     {x : FerrersDiagram n | (x.IsPosPentagonal hn ∨ x.IsNegPentagonal hn)}.Subsingleton := by
   intro a ha b hb
-  rw [Set.mem_setOf_eq] at ha hb
+  rw [Set.mem_ofPred_eq] at ha hb
   obtain ha | ha := ha <;> obtain hb | hb := hb
   · obtain ha' := IsPosPentagonal.two_n_eq hn a ha
     obtain hb' := IsPosPentagonal.two_n_eq hn b hb
@@ -1969,11 +1969,11 @@ theorem phiCoeff_eq_card_sub (hn : 0 < n) :
           Even x.delta.length}.ncard = 1 := by
         rw [Set.ncard_eq_one]
         use x
-        rw [← hsingle, Set.setOf_and]
+        rw [← hsingle, Set.ofPred_and]
         simp_all
       have hnodd : ↑{x | (IsPosPentagonal hn x ∨ IsNegPentagonal hn x) ∧
           ¬Even x.delta.length}.ncard = 0 := by
-        rw [Set.ncard_eq_zero, Set.setOf_and, Disjoint.inter_eq]
+        rw [Set.ncard_eq_zero, Set.ofPred_and, Disjoint.inter_eq]
         simp_all
       rw [Int.negOnePow_even _ (hkeven.mp heven), hneven, hnodd]
       simp
@@ -1981,28 +1981,28 @@ theorem phiCoeff_eq_card_sub (hn : 0 < n) :
           ¬ Even x.delta.length}.ncard = 1 := by
         rw [Set.ncard_eq_one]
         use x
-        rw [← hsingle, Set.setOf_and]
+        rw [← hsingle, Set.ofPred_and]
         simp_all
       have hneven : ↑{x | (IsPosPentagonal hn x ∨ IsNegPentagonal hn x) ∧
           Even x.delta.length}.ncard = 0 := by
-        rw [Set.ncard_eq_zero, Set.setOf_and, Disjoint.inter_eq]
+        rw [Set.ncard_eq_zero, Set.ofPred_and, Disjoint.inter_eq]
         simp_all
       rw [Int.negOnePow_odd _ (by simpa using hkeven.not.mp heven), hneven, hnodd]
       simp
   · rw [(phiCoeff_eq_zero_iff _).mpr hpen]
     convert (show (0 : ℤ) = 0 - 0 by simp)
     all_goals
-    · rw [Set.setOf_and]
+    · rw [Set.ofPred_and]
       norm_cast
       apply Nat.eq_zero_of_le_zero
       apply (Set.ncard_inter_le_ncard_left _ _).trans
-      rw [Set.setOf_or]
+      rw [Set.ofPred_or]
       apply (Set.ncard_union_le _ _).trans
       rw [nonpos_iff_eq_zero, Nat.add_eq_zero_iff, Set.ncard_eq_zero, Set.ncard_eq_zero]
       constructor
       all_goals
       · ext x
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         contrapose! hpen
         obtain ⟨k, hk, _⟩ := pentagonal_exists_k hn x (by simp [hpen])
         use k

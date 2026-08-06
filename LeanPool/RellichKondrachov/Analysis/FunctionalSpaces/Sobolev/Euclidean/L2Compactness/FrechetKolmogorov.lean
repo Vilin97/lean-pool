@@ -126,7 +126,7 @@ theorem totallyBounded_extendByZeroL2_image_of_forall_exists_translationIntegral
   rcases Set.mem_iUnion.1 hSu_cover with ⟨y, hy⟩
   rcases Set.mem_iUnion.1 hy with ⟨hyT, hyBall⟩
   have hyDist : dist (smoothL2 (E := E) (K := K) ψ hK hKm hψc hψcs u) y < ε / 2 := by
-    simpa [Metric.ball, Set.mem_setOf_eq] using hyBall
+    simpa [Metric.ball, Set.mem_ofPred_eq] using hyBall
   have hdist_smooth_ext :
       dist (extendByZeroL2 (E := E) (K := K) hKm u)
           (smoothL2 (E := E) (K := K) ψ hK hKm hψc hψcs u) ≤ ε / 2 := by
@@ -157,7 +157,7 @@ theorem totallyBounded_extendByZeroL2_image_of_forall_exists_translationIntegral
       lt_of_le_of_lt htri hlt
     simpa [add_halves ε] using htmp
   have hxBall : extendByZeroL2 (E := E) (K := K) hKm u ∈ Metric.ball y ε := by
-    simpa [Metric.ball, Set.mem_setOf_eq] using hxDist
+    simpa [Metric.ball, Set.mem_ofPred_eq] using hxDist
   exact Set.mem_iUnion.2 ⟨y, Set.mem_iUnion.2 ⟨hyT, hxBall⟩⟩
 
 theorem isCompact_closure_extendByZeroL2_image_of_forall_exists_translationIntegral_small

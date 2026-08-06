@@ -41,7 +41,7 @@ lemma isIso_inducedPointedHom'_mapCyl_domIncl_of_isIso
     (hf : IsIso <| inducedPointedHom' n x₀ f) :
     IsIso <| inducedPointedHom' n x₀ (MapCyl.domIncl f) := by
   have f_i_r := inducedPointedHom'_comp_isoTarget_eq_comp n x₀ (MapCyl.domIncl_retr_eq f).symm
-  haveI iso_r : IsIso <| inducedPointedHom'
+  have iso_r : IsIso <| inducedPointedHom'
       n (ConcreteCategory.hom (MapCyl.domIncl f) x₀) (MapCyl.retr f) := by
     apply isIso_inducedPointedHom'_of_isHomotopyEquiv
     exact MapCyl.isHomotopyEquiv_retr f
@@ -50,7 +50,7 @@ lemma isIso_inducedPointedHom'_mapCyl_domIncl_of_isIso
   have h_isoTarget : IsIso
       (inducedPointedHom'.isoTarget n x₀ (MapCyl.domIncl_retr_eq f).symm).hom :=
     Iso.isIso_hom _
-  haveI : IsIso (inducedPointedHom' n x₀ f ≫
+  have : IsIso (inducedPointedHom' n x₀ f ≫
       (inducedPointedHom'.isoTarget n x₀ (MapCyl.domIncl_retr_eq f).symm).hom) :=
     @IsIso.comp_isIso _ _ _ _ _ _ _ hf h_isoTarget
   exact @IsIso.of_isIso_fac_right _ _ _ _ _ _ _ _ iso_r (by assumption) f_i_r.symm
@@ -65,7 +65,7 @@ lemma isIso_inducedPointedHom_mapCyl_domInclFromTop_of_isIso
   have hf' : IsIso (inducedPointedHom n x₀ (Hom.hom (MapCyl.domIncl f))) := hf
   have i_it_if := inducedPointedHom_comp_isoTarget_eq_comp n x₀
     (MapCyl.domIncl_hom_eq_domInclFromTop_comp_domInclToTop f)
-  haveI iso_it : IsIso <| inducedPointedHom n x₀ (MapCyl.domInclToTop f) := by
+  have iso_it : IsIso <| inducedPointedHom n x₀ (MapCyl.domInclToTop f) := by
     apply HomotopyGroup.isIso_inducedPointedHom'_of_isHomeomorph
     exact MapCyl.isHomeomorph_domInclToTop f
   -- `(domIncl).hom ≫ isoTarget.hom = domInclToTop ≫ domInclFromTop` ⇒ `domInclFromTop` iso.
@@ -73,7 +73,7 @@ lemma isIso_inducedPointedHom_mapCyl_domInclFromTop_of_isIso
       (inducedPointedHom.isoTarget n x₀
         (MapCyl.domIncl_hom_eq_domInclFromTop_comp_domInclToTop f)).hom :=
     Iso.isIso_hom _
-  haveI : IsIso (inducedPointedHom n x₀ (Hom.hom (MapCyl.domIncl f)) ≫
+  have : IsIso (inducedPointedHom n x₀ (Hom.hom (MapCyl.domIncl f)) ≫
       (inducedPointedHom.isoTarget n x₀
         (MapCyl.domIncl_hom_eq_domInclFromTop_comp_domInclToTop f)).hom) :=
     @IsIso.comp_isIso _ _ _ _ _ _ _ hf' h_isoTarget
@@ -435,7 +435,7 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
   replace H := H.some
   let H' := H.toContinuousMap.comp Cyl.stretchToWall
   let l : C(disk.{u} (n + 1), X) := ⟨fun x ↦ H' ⟨1, x⟩, by
-    haveI := ContinuousMap.continuous H'; fun_prop ⟩
+    have := ContinuousMap.continuous H'; fun_prop ⟩
   use l
   constructor
   · apply Set.range_subset_iff.mpr
@@ -546,7 +546,7 @@ theorem isCompressible_subtype_val_of_unique_pi
     obtain ⟨l, lA, H⟩ := disk.homotopicRel_boundary_of_unique_pi X A F.hom F_pair hpi
     replace lA := Set.range_subset_iff.mp lA
     let l' :  C(disk.{u} (n + 1), A) := ⟨fun x ↦ ⟨l x, lA x⟩, by
-      haveI := ContinuousMap.continuous l; fun_prop⟩
+      have := ContinuousMap.continuous l; fun_prop⟩
     refine Nonempty.intro ⟨ofHom l', ?_, ?_⟩
     · ext x
       unfold l'
@@ -602,7 +602,7 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
   · exact Nonempty.intro
       { toFun := fun ⟨t, _⟩ ↦ H ⟨t, ![]⟩
         continuous_toFun := by
-          haveI : Continuous H := ContinuousMap.HomotopyWith.continuous H
+          have : Continuous H := ContinuousMap.HomotopyWith.continuous H
           fun_prop
         map_zero_left y := by
           simp only [ContinuousMap.const_apply, ContinuousMap.HomotopyWith.apply_zero, β', x]

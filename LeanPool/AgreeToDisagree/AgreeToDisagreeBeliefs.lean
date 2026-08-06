@@ -49,7 +49,7 @@ lemma Partition.belief_eq_biUnion {P : Partition Ω}
     (p : ENNReal) (X : Set Ω) :
     P.belief μ p X = ⋃ s ∈ {s : Set Ω | s ∈ P ∧ p ≤ μ (X ∩ s) / μ s}, s := by
   ext ω
-  simp only [Partition.belief, Partition.probabilityAt, Set.mem_setOf_eq,
+  simp only [Partition.belief, Partition.probabilityAt, Set.mem_ofPred_eq,
     Set.mem_iUnion, exists_prop]
   refine ⟨fun hω ↦ ⟨P.class ω, ⟨P.class_mem ω, hω⟩, P.mem_class ω⟩, ?_⟩
   rintro ⟨s, ⟨hs, hps⟩, hωs⟩
@@ -71,7 +71,7 @@ lemma Partition.belief_belief_subset {P : Partition Ω}
     P.belief μ p (P.belief μ p X) ⊆ P.belief μ p X := by
   intro ω hω
   rw [Partition.belief_eq_biUnion] at hω ⊢
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hω ⊢
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop] at hω ⊢
   obtain ⟨s, ⟨hsP, hs_prob⟩, hωs⟩ := hω
   refine ⟨s, ⟨hsP, ?_⟩, hωs⟩
   by_contra h_not
@@ -117,7 +117,7 @@ lemma probabilityAt_eq_of_belief_const
   intro ω hω
   have hbel := hA hω
   rw [Partition.belief_eq_biUnion] at hbel
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hbel
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop] at hbel
   obtain ⟨s, ⟨hsP, hps⟩, hωs⟩ := hbel
   obtain ⟨ω₀, hω₀S, hω₀s⟩ := nonempty_of_measure_pos (ennreal_num_pos_of_ratio_ge hp hps)
   change μ (E ∩ P.class ω) / μ (P.class ω) = r
@@ -217,7 +217,7 @@ lemma core_bound.atom_real_bound {P : Partition Ω} (hP' : ∀ s ∈ P, μ s > 0
 lemma core_bound.tsum_decomp_A {P : Partition Ω} (hP : P.Measurable)
     (hP' : ∀ s ∈ P, μ s > 0) {A : Set Ω} (hA : MeasurableSet A) :
     μ A = ∑' (s : P.val), μ (A ∩ s.1) := by
-  haveI : Countable P.val := (Partition.countable_of_measure_pos hP hP').to_subtype
+  have : Countable P.val := (Partition.countable_of_measure_pos hP hP').to_subtype
   have hUnion : A = ⋃ (s : P.val), A ∩ s.1 := by
     ext ω
     simp only [mem_iUnion, mem_inter_iff]

@@ -56,8 +56,8 @@ theorem complete {φ : SyntacticFormula L} : T ⊨ φ → T ⊢! φ := fun h ↦
   have : ∃ u : Finset (SyntacticFormula L), ↑u ⊆ insert (∼∀∀φ) T ∧ ¬Satisfiable (u : Theory L) := by
     simpa using compact.not.mp (consequence_iff_unsatisfiable.mp h)
   rcases this with ⟨u, ssu, hu⟩
-  haveI : ∀ k, Encodable ((languageFinset u).Func k) := fun _ ↦ Fintype.toEncodable _
-  haveI : ∀ k, Encodable ((languageFinset u).Rel k) := fun _ ↦ Fintype.toEncodable _
+  have : ∀ k, Encodable ((languageFinset u).Func k) := fun _ ↦ Fintype.toEncodable _
+  have : ∀ k, Encodable ((languageFinset u).Rel k) := fun _ ↦ Fintype.toEncodable _
   let u' : Finset (SyntacticFormula (languageFinset u)) :=
     Finset.imageOfFinset u (fun _ hp ↦ toSubLanguageFinsetSelf hp)
   have image_u' : u'.image (Semiformula.lMap L.ofSubLanguage) = u := by

@@ -123,13 +123,13 @@ theorem subsingleton_sheafH_of_closedImmersion_middle
         (ConcreteCategory.bijective_of_isIso (PushforwardHIso Z hZ FZ n).hom)
     simpa [S, closedImmersionSES, closedIncl, FZ] using
       (e.subsingleton_congr).mp h₃'
-  haveI : Mono S.f := hSE.mono_f
+  have : Mono S.f := hSE.mono_f
   have hCok : Subsingleton (Sheaf.H (cokernel S.f) n) := by
     let hSgCok : IsColimit (CokernelCofork.ofπ S.g S.zero) := hSE.gIsCokernel
     let e :=
       (sheafCohomologyFunctor X n).mapIso
         ((cokernelIsCokernel S.f).coconePointUniqueUpToIso hSgCok)
-    haveI :
+    have :
         Subsingleton ↑((sheafCohomologyFunctor X n).obj
           (CokernelCofork.ofπ S.g S.zero).pt) := by
       change Subsingleton (Sheaf.H S.X₃ n)

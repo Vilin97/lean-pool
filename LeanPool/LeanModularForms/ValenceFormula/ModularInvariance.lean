@@ -284,7 +284,7 @@ theorem modularForm_finitely_many_zeros_in_fdBox (hf : f ≠ 0) {M : ℝ} (hM : 
   have h_preconn : IsPreconnected U := (Complex.isConnected_of_upperHalfPlane (r := 0)
       (fun z (hz : 0 < z.im) => hz) (fun z (hz : 0 < z.im) => le_of_lt hz)).isPreconnected
   apply hf; ext z
-  simpa only [ModularForm.coe_zero, Pi.zero_apply, modularFormCompOfComplex,
+  simpa only [FunLike.coe_zero, Pi.zero_apply, modularFormCompOfComplex,
       Function.comp_apply, UpperHalfPlane.ofComplex_apply] using
     (h_analOn.eqOn_zero_of_preconnected_of_frequently_eq_zero
       h_preconn hz₀_pos h_freq) z.im_pos
@@ -304,7 +304,7 @@ theorem cuspFunction_not_eventually_zero (hf : f ≠ 0) :
     h_anal.eqOn_zero_of_preconnected_of_eventuallyEq_zero
       (convex_ball 0 1).isPreconnected (Metric.mem_ball_self (by norm_num : (0 : ℝ) < 1)) h_freq
   apply hf; ext τ
-  simp only [ModularForm.coe_zero, Pi.zero_apply]
+  simp only [FunLike.coe_zero, Pi.zero_apply]
   rw [← SlashInvariantFormClass.eq_cuspFunction f τ (by simp)
     (by norm_num : (1 : ℝ) ≠ 0)]
   have h_qmem : Function.Periodic.qParam (1 : ℝ) (↑τ : ℂ) ∈

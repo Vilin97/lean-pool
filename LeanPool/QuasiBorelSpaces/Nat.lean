@@ -74,7 +74,7 @@ lemma isHom_find
   have : (fun r ↦ Nat.find (q (φ r))) ⁻¹' X
        = {r | ∃n ∈ X, p (φ r) n ∧ ∀{m}, m < n → ¬p (φ r) m} := by
     ext r
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     apply Iff.intro
     · intro h
       use Nat.find (q (φ r))
@@ -85,7 +85,7 @@ lemma isHom_find
       suffices Nat.find (q (φ r)) = n by simp_all only [MeasurableSpace.measurableSet_top]
       rw [Nat.find_eq_iff]
       grind
-  rw [this, measurableSet_setOf, ←isHom_iff_measurable]
+  rw [this, measurableSet_setOfPred, ←isHom_iff_measurable]
   apply Prop.isHom_exists fun n ↦ Prop.isHom_and ?_ (Prop.isHom_and ?_ ?_)
   · simp only [isHom_const']
   · fun_prop

@@ -38,7 +38,7 @@ theorem huang_finset {m : ℕ} (H : Finset (Fin (m + 1) → Bool))
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl }
   let HQ : Set (Sensitivity.Q m.succ) := {x | e x ∈ H}
-  letI : DecidablePred (fun a : Sensitivity.Q m.succ => a ∈ HQ) :=
+  let : DecidablePred (fun a : Sensitivity.Q m.succ => a ∈ HQ) :=
     Classical.decPred _
   have hmap : HQ.toFinset.map e.toEmbedding = H := by
     ext x
@@ -71,7 +71,7 @@ theorem huang_finset {m : ℕ} (H : Finset (Fin (m + 1) → Bool))
   simp only [Set.mem_toFinset, Set.mem_inter_iff] at hp
   rw [Finset.mem_filter]
   refine ⟨hp.1, ?_⟩
-  simp only [Sensitivity.Q.adjacent, Set.mem_setOf_eq] at hp
+  simp only [Sensitivity.Q.adjacent, Set.mem_ofPred_eq] at hp
   obtain ⟨i, hne, huniq⟩ := hp.2
   have e_apply (x : Sensitivity.Q m.succ) (j : Fin m.succ) : e x j = x j := rfl
   exact ⟨i, funext fun j => by

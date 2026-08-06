@@ -57,7 +57,7 @@ include T in theorem build_union_isNSubring
   have hU_mem : ∀ x : U, ∃ α, (x : T) ∈ (chain.ring α).carrier :=
     fun x => chain.mem_union_iff.mp x.2
   -- Locality of the union: each element lives in some chain.ring α, which is local
-  haveI hU_local : IsLocalRing U := by
+  have hU_local : IsLocalRing U := by
     apply IsLocalRing.of_isUnit_or_isUnit_one_sub_self
     intro a
     obtain ⟨α, hα⟩ := hU_mem a
@@ -108,7 +108,7 @@ include T in theorem build_union_isNSubring
   · -- Height bound: any prime of U lying over (t) has height ≤ 1
     intro t ht P hP
     have hP_prime := hP.isPrime
-    haveI : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
+    have : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
     change (Ideal.comap U.subtype P).height ≤ ↑(1 : ℕ)
     -- Suffices to show every prime q ⊊ P∩U is zero
     rw [Ideal.height_le_iff]
@@ -123,7 +123,7 @@ include T in theorem build_union_isNSubring
     obtain ⟨αx, hαx⟩ := hU_mem x
     set γ := max αs αx
     set inclγ := Subring.inclusion (hU_le γ)
-    haveI : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
+    have : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
     set s' : (chain.ring γ).carrier := ⟨(s : T), chain.mono (le_max_left ..) hαs⟩
     have hs'_ne : s' ≠ 0 := fun h => hs_ne (Subtype.ext (congrArg
       (fun (x : (chain.ring γ).carrier) => (x : T)) h))
@@ -140,11 +140,11 @@ include T in theorem build_union_isNSubring
       lt_of_le_of_ne
         (fun r hr => (hq_lt.le (show inclγ r ∈ q from hr) : (inclγ r : T) ∈ P))
         (fun h => hx'_nq (h ▸ (hx_P : (x : T) ∈ P)))
-    haveI : (Ideal.comap (chain.ring γ).carrier.subtype P).IsPrime := hP_prime.comap _
+    have : (Ideal.comap (chain.ring γ).carrier.subtype P).IsPrime := hP_prime.comap _
     -- R_γ is an NSubring so ht(P∩R_γ) ≤ 1, forcing ht(q∩R_γ) = 0, contradicting q ≠ 0
     have hq'_ht := (Ideal.height_le_iff (n := 1)).mp
       ((chain.ring γ).height_bound t ht P hP) _ inferInstance hq'_lt
-    haveI : IsDomain (chain.ring γ).carrier := inferInstance
+    have : IsDomain (chain.ring γ).carrier := inferInstance
     exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
       simp_all
     ) ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot
@@ -169,7 +169,7 @@ include T in private theorem close_up_all_mk_next
         ∃ (hle : R'.carrier ≤ Sk1.carrier),
           (⟨(c_R' : T), hle c_R'.2⟩ : Sk1.carrier) ∈
             Ideal.map (Subring.inclusion hle) (Ideal.span ↑gens)) := by
-  haveI : DecidableEq Sk.carrier := Classical.decEq _
+  have : DecidableEq Sk.carrier := Classical.decEq _
   -- Reindex the generators from R' into Sk via the inclusion R' ≤ Sk
   set inclR'Sk := Subring.inclusion hle_k
   set I_Sk := Ideal.span (↑(gens.image inclR'Sk) : Set Sk.carrier)
@@ -241,9 +241,9 @@ private def close_up_all_one_pass_aux_proof
   have mk_next := close_up_all_mk_next hM_not_assoc hAss_ht hT_card hT_aleph0 R'
   -- Index the transfinite recursion by pairs (generators, element) from R'
   set Pairs := Finset R'.carrier × R'.carrier with Pairs_def
-  haveI cdec : ∀ (p : Prop), Decidable p := Classical.propDecidable
-  letI pairLO : LinearOrder Pairs := IsWellOrder.linearOrder WellOrderingRel
-  letI pairWF : WellFoundedLT Pairs := ⟨WellOrderingRel.isWellOrder.wf⟩
+  have cdec : ∀ (p : Prop), Decidable p := Classical.propDecidable
+  let pairLO : LinearOrder Pairs := IsWellOrder.linearOrder WellOrderingRel
+  let pairWF : WellFoundedLT Pairs := ⟨WellOrderingRel.isWellOrder.wf⟩
   -- #Pairs ≤ max(ℵ₀, #R'): for infinite R', #(Finset R' × R') = #R'
   have hPairs_card : Cardinal.mk Pairs ≤ max Cardinal.aleph0 (Cardinal.mk R'.carrier) := by
     by_cases hfin : Finite R'.carrier
@@ -361,7 +361,7 @@ private def close_up_all_one_pass_aux_proof
     by_cases hne : ∃ q, q < p
     · -- p has predecessors: build the union of all f(q) for q < p, then extend
       rw [dif_pos hne]
-      haveI hne_inst : Nonempty {q // q < p} := ⟨⟨hne.choose, hne.choose_spec⟩⟩
+      have hne_inst : Nonempty {q // q < p} := ⟨⟨hne.choose, hne.choose_spec⟩⟩
       let ichain : NSubringChain T {q // q < p} :=
         { ring := fun x => f x.1
           mono := fun x y h12 => hcheck1 x.1 y.1 x.2 y.2 h12
@@ -419,7 +419,7 @@ private def close_up_all_one_pass_aux_proof
       refine ⟨⟨mk_res.choose_spec.2.2.1, fun r hr => hAext.primes_preserved r hr⟩,
         hAext.card_le, fun q hq => absurd ⟨q, hq⟩ hne, mk_res.choose_spec.2.2.2⟩
   -- Assembly: form the full chain {f(p)} indexed by Pairs and take its union
-  haveI : Nonempty Pairs := ⟨⟨∅, ⟨0, R'.carrier.zero_mem⟩⟩⟩
+  have : Nonempty Pairs := ⟨⟨∅, ⟨0, R'.carrier.zero_mem⟩⟩⟩
   have hf_mono : ∀ ⦃a b : Pairs⦄, a ≤ b → (f a).carrier ≤ (f b).carrier := by
     intro a b hab
     rcases eq_or_lt_of_le hab with rfl | hlt
@@ -528,7 +528,7 @@ include T in theorem build_union_isNSubring_nat
   have hU_mem : ∀ x : U, ∃ n, (x : T) ∈ (chain.ring n).carrier :=
     fun x => chain.mem_union_iff.mp x.2
   -- Locality: lift the unit/non-unit dichotomy from each stage to the union
-  haveI hU_local : IsLocalRing U := by
+  have hU_local : IsLocalRing U := by
     apply IsLocalRing.of_isUnit_or_isUnit_one_sub_self
     intro a
     obtain ⟨α, hα⟩ := hU_mem a
@@ -581,7 +581,7 @@ include T in theorem build_union_isNSubring_nat
   · -- Height bound: pull q ⊊ P back to a finite stage γ and use the NSubring property there
     intro t ht P hP
     have hP_prime := hP.isPrime
-    haveI : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
+    have : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
     change (Ideal.comap U.subtype P).height ≤ ↑(1 : ℕ)
     rw [Ideal.height_le_iff]
     intro q hq_prime hq_lt
@@ -593,7 +593,7 @@ include T in theorem build_union_isNSubring_nat
     obtain ⟨αx, hαx⟩ := hU_mem x
     set γ := max αs αx
     set inclγ := Subring.inclusion (hU_le γ)
-    haveI : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
+    have : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
     set s' : (chain.ring γ).carrier := ⟨(s : T), chain.mono (le_max_left ..) hαs⟩
     have hs'_ne : s' ≠ 0 := fun h => hs_ne (Subtype.ext (congrArg
       (fun (x : (chain.ring γ).carrier) => (x : T)) h))
@@ -609,10 +609,10 @@ include T in theorem build_union_isNSubring_nat
       lt_of_le_of_ne
         (fun r hr => (hq_lt.le (show inclγ r ∈ q from hr) : (inclγ r : T) ∈ P))
         (fun h => hx'_nq (h ▸ (hx_P : (x : T) ∈ P)))
-    haveI : (Ideal.comap (chain.ring γ).carrier.subtype P).IsPrime := hP_prime.comap _
+    have : (Ideal.comap (chain.ring γ).carrier.subtype P).IsPrime := hP_prime.comap _
     have hq'_ht := (Ideal.height_le_iff (n := 1)).mp
       ((chain.ring γ).height_bound t ht P hP) _ inferInstance hq'_lt
-    haveI : IsDomain (chain.ring γ).carrier := inferInstance
+    have : IsDomain (chain.ring γ).carrier := inferInstance
     exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
       simp_all
     ) ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot
@@ -723,8 +723,8 @@ include T in theorem close_up_all_omega
           Finset.le_sup (f := idxOf) (Finset.mem_attach gens ⟨g, hg⟩)
         exact hpass_mono (le_trans h1 le_sup_left) (h_gens_in g hg).choose_spec
       have hc_N : (c : T) ∈ (pass N).carrier := hpass_mono le_sup_right hnc
-      haveI : ∀ (x : T), Decidable (x ∈ (pass N).carrier) := fun _ => Classical.dec _
-      haveI : DecidableEq (pass N).carrier := Classical.decEq _
+      have : ∀ (x : T), Decidable (x ∈ (pass N).carrier) := fun _ => Classical.dec _
+      have : DecidableEq (pass N).carrier := Classical.decEq _
       -- Pull the generators down to pass(N) and form the ideal J there
       let toPassN : S.carrier → (pass N).carrier := fun g =>
         if h : (g : T) ∈ (pass N).carrier then ⟨(g : T), h⟩

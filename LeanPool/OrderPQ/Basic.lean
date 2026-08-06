@@ -160,7 +160,7 @@ lemma nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
       -- add lemma for `Nat.ModEq`
       rw [← Nat.mod_eq_of_lt hq.elim.one_lt, ← Nat.mod_eq_of_lt hpq, ← Nat.ModEq, ← h]
       exact card_sylow_modEq_one q G
-  let φ : P →* MulAut Q := MonoidHom.restrict MulAut.conjNormal P
+  let φ : P →* MulAut Q := MonoidHom.domRestrict MulAut.conjNormal P
   use MonoidHom.comp (MulAut.congr zQ) (φ.comp zP.symm)
   refine Nonempty.intro <| MulEquiv.trans ?_ <| SemidirectProduct.congr' zQ zP
   symm at hP hQ h

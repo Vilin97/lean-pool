@@ -1111,7 +1111,7 @@ theorem exists_nice_factorization
   let data : NiceFactorization.ProofData := ⟨
     ε, hε_pos, hε, d, hd, n, X, h1n, hnX
   ⟩
-  letI : NiceFactorization.ProofData := data
+  let : NiceFactorization.ProofData := data
   change ∃ (x : (Fin ProofData.d) → ℕ), ∃ c : ℕ,
     ProofData.n = c * ∏ j, x j ^ (j.val + 1 : ℕ) ∧
     c ≤ (ProofData.X : ℝ) ^ ProofData.ε ∧

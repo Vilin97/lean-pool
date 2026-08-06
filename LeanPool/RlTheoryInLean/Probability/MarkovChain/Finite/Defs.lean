@@ -91,11 +91,11 @@ lemma integral_fintype_kernel_iter
     simp only [pow_succ']
     -- iter (n+1) = (iter n).comp κ = iter n ∘ₖ κ
     -- M.kernel is a Markov kernel
-    haveI hmarkovK : IsMarkovKernel M.kernel := M.markov_kernel
+    have hmarkovK : IsMarkovKernel M.kernel := M.markov_kernel
     -- M.kernel.iter (n+1) is also a Markov kernel (by the instance in Kernel.Basic)
-    haveI hmarkovIter : IsMarkovKernel (M.kernel.iter (n + 1)) :=
+    have hmarkovIter : IsMarkovKernel (M.kernel.iter (n + 1)) :=
       ProbabilityTheory.Kernel.instIsMarkovKernelIter (n + 1) M.kernel
-    haveI hprob : IsProbabilityMeasure ((M.kernel.iter (n + 1)) s) :=
+    have hprob : IsProbabilityMeasure ((M.kernel.iter (n + 1)) s) :=
       hmarkovIter.isProbabilityMeasure s
     have hInt : Integrable f ((M.kernel.iter (n + 1)) s) := Integrable.of_finite
     -- Rewrite using the definitional equality
@@ -103,7 +103,7 @@ lemma integral_fintype_kernel_iter
     rw [Kernel.integral_comp hInt]
     simp_rw [fun x => ih x]
     simp only [Matrix.mul_apply]
-    haveI hprob' : IsProbabilityMeasure (M.kernel s) := M.markov_kernel.isProbabilityMeasure s
+    have hprob' : IsProbabilityMeasure (M.kernel s) := M.markov_kernel.isProbabilityMeasure s
     have hfInt : Integrable (fun s' => ∑ s'', (kernelMat M ^ n) s' s'' • f s'') (M.kernel s) :=
       Integrable.of_finite
     rw [integral_fintype hfInt]

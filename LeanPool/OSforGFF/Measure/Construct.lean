@@ -146,9 +146,9 @@ theorem gff_real_characteristic (m : ℝ) [Fact (0 < m)] :
   have ex1 := sqrtPropagatorEmbedding m
   let H : Type := Classical.choose ex1
   have ex2 := Classical.choose_spec ex1
-  letI hNorm : NormedAddCommGroup H := Classical.choose ex2
+  let hNorm : NormedAddCommGroup H := Classical.choose ex2
   have ex3 := Classical.choose_spec ex2
-  letI hInner : InnerProductSpace ℝ H := Classical.choose ex3
+  let hInner : InnerProductSpace ℝ H := Classical.choose ex3
   have ex4 := Classical.choose_spec ex3
   let T : TestFunction →ₗ[ℝ] H := Classical.choose ex4
   have h_eq : ∀ f : TestFunction,
@@ -221,7 +221,7 @@ private lemma gff_pushforward_charFun
   (m : ℝ) [Fact (0 < m)] (φ : TestFunction) (t : ℝ) :
   charFun ((gaussianFreeFieldFree m).toMeasure.map (distributionPairingCLM φ)) t =
     Complex.exp (-(1/2 : ℂ) * t^2 * (freeCovarianceFormR m φ φ : ℝ)) := by
-  haveI : IsProbabilityMeasure
+  have : IsProbabilityMeasure
       ((gaussianFreeFieldFree m).toMeasure.map (distributionPairingCLM φ)) :=
     Measure.isProbabilityMeasure_map ((distributionPairingCLM_measurable φ).aemeasurable)
   rw [charFun_eq_GJGeneratingFunctional]
@@ -239,7 +239,7 @@ theorem gff_pairing_is_gaussian
   (m : ℝ) [Fact (0 < m)] (φ : TestFunction) :
   (gaussianFreeFieldFree m).toMeasure.map (distributionPairingCLM φ)
     = gaussianReal 0 (freeCovarianceFormR m φ φ).toNNReal := by
-  haveI : IsProbabilityMeasure
+  have : IsProbabilityMeasure
       ((gaussianFreeFieldFree m).toMeasure.map (distributionPairingCLM φ)) :=
     Measure.isProbabilityMeasure_map ((distributionPairingCLM_measurable φ).aemeasurable)
   apply charFun_implies_gaussian
@@ -331,9 +331,9 @@ lemma freeCovarianceFormR_gaussian_cf_pd (m : ℝ) [Fact (0 < m)] :
   have ex1 := sqrtPropagatorEmbedding m
   let H : Type := Classical.choose ex1
   have ex2 := Classical.choose_spec ex1
-  letI hNorm : NormedAddCommGroup H := Classical.choose ex2
+  let hNorm : NormedAddCommGroup H := Classical.choose ex2
   have ex3 := Classical.choose_spec ex2
-  letI hInner : InnerProductSpace ℝ H := Classical.choose ex3
+  let hInner : InnerProductSpace ℝ H := Classical.choose ex3
   have ex4 := Classical.choose_spec ex3
   let T : TestFunction →ₗ[ℝ] H := Classical.choose ex4
   have h_eq : ∀ f : TestFunction,

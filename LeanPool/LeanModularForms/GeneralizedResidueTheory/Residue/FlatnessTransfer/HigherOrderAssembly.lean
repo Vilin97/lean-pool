@@ -195,7 +195,7 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
         ⟨Metric.mem_ball.mpr (by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rp),
          Set.mem_compl_singleton_iff.mpr hne⟩
       have hfpp := hrp_eq h_in
-      simp only [Set.mem_setOf_eq] at hfpp
+      simp only [Set.mem_ofPred_eq] at hfpp
       simp only
       change meromorphicPrincipalPart f s z - residueAt f s / (z - s) =
         f z - residueAt f s / (z - s) - g_rp z

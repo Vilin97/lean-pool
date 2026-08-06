@@ -44,7 +44,7 @@ open scoped Matrix
 theorem SimpleGraph.toQuantumGraph {V : Type*} [Fintype V] [DecidableEq V] (G : SimpleGraph V) :
   letI : DecidableRel G.Adj := Classical.decRel G.Adj
   QuantumGraph _ (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G)) := by
-  letI : DecidableRel G.Adj := Classical.decRel G.Adj
+  let : DecidableRel G.Adj := Classical.decRel G.Adj
   let e : ∀ _ : V, EuclideanSpace ℂ V := fun i => PiLp.single 2 i (1 : ℂ)
   have he : ∀ i, e i = PiLp.single 2 i (1 : ℂ) := fun _ => rfl
   have : ∀ (i : V) (a : Matrix V V ℂ),
@@ -98,7 +98,7 @@ theorem SimpleGraph.adjMatrix_irreflexive
   {V : Type*} [Fintype V] [DecidableEq V] (G : SimpleGraph V) :
   letI : DecidableRel G.Adj := Classical.decRel G.Adj
   (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G)) •ₛ 1 = 0 := by
-  letI : DecidableRel G.Adj := Classical.decRel G.Adj
+  let : DecidableRel G.Adj := Classical.decRel G.Adj
   ext1 x
   simp only [schurMul_apply_apply, LinearMap.comp_apply]
   rw [EuclideanSpace.comul_eq]

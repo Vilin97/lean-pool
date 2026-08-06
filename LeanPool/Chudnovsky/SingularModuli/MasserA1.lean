@@ -166,8 +166,8 @@ lemma E₄_τ₁₆₃_ne_zero : E₄ τ₁₆₃ ≠ 0 := by
 to fill its `s₂_τ₁₆₃_rational` pin — importing it here would be a cycle). -/
 lemma j₀_rational : ∃ r : ℚ, (1728 : ℂ) * J τ₁₆₃ = (r : ℂ) := by
   have hint : IsIntegral ℤ ((1728 : ℂ) * J τ₁₆₃) := by
-    haveI : Fact (Nat.Prime 41) := ⟨by norm_num⟩
-    haveI : NeZero (41 : ℕ) := ⟨by norm_num⟩
+    have : Fact (Nat.Prime 41) := ⟨by norm_num⟩
+    have : NeZero (41 : ℕ) := ⟨by norm_num⟩
     obtain ⟨PhiZ, hPhi⟩ := exists_PhiZ_closed (m := 41)
     obtain ⟨i, hi⟩ := cm_coset_rel (m := 41) 0 (by norm_num)
     exact isIntegral_j_of_cm hPhi hi.symm

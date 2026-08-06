@@ -156,7 +156,7 @@ def extensionInv [FiniteDimensional k A]
         simp only [map_one, one_ne_zero] at this
       simp only [nezero, false_or] at this
       exact this
-    haveI : FiniteDimensional k (K ⊗[k] A) := Module.Finite.trans (R := k) K (K ⊗[k] A)
+    have : FiniteDimensional k (K ⊗[k] A) := Module.Finite.trans (R := k) K (K ⊗[k] A)
     exact FiniteDimensional.of_injective (K := k) to_ten.toLinearMap Isinj
 
 theorem CSA_iff_exist_split (k_bar : Type u) [Field k_bar] [Algebra k k_bar]
@@ -166,7 +166,7 @@ theorem CSA_iff_exist_split (k_bar : Type u) [Field k_bar] [Algebra k k_bar]
         Nonempty (L ⊗[k] A ≃ₐ[L] Matrix (Fin n) (Fin n) L) := by
   constructor
   · rintro ⟨_, _⟩
-    haveI := hk_bar.1
+    have := hk_bar.1
     obtain ⟨n, hn, ⟨iso⟩⟩ := simple_eq_matrix_algClosed k_bar (k_bar ⊗[k] A)
     refine ⟨n, hn, ?_⟩
     use lemmaTto.ℒℒ n k k_bar A iso
@@ -181,7 +181,7 @@ theorem CSA_iff_exist_split (k_bar : Type u) [Field k_bar] [Algebra k k_bar]
 lemma dim_is_sq (k_bar : Type u) [Field k_bar] [Algebra k k_bar] [hk_bar : IsAlgClosure k k_bar]
     [Algebra.IsCentral k A] [IsSimpleRing A] [FiniteDimensional k A] :
     IsSquare (Module.finrank k A) := by
-  haveI := hk_bar.1
+  have := hk_bar.1
   obtain ⟨n, _, ⟨iso⟩⟩ := simple_eq_matrix_algClosed k_bar (k_bar ⊗[k] A)
   refine ⟨n, ?_⟩
   have := Module.finrank_matrix k_bar k_bar (Fin n) (Fin n)

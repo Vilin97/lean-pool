@@ -94,7 +94,7 @@ private lemma cofinite_norm_ge (r : ℝ) :
     isCompact_iff_finite.mp (isCompact_closedBall _ _)
   refine Set.Finite.subset (hfin.preimage (Subtype.val_injective.injOn)) ?_
   intro l hl
-  simp only [Set.mem_setOf_eq, not_le] at hl
+  simp only [Set.mem_ofPred_eq, not_le] at hl
   rw [Set.mem_preimage, Metric.mem_closedBall, Subtype.dist_eq]
   simp only [ZeroMemClass.coe_zero, dist_zero_right]
   exact hl.le

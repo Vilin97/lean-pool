@@ -44,10 +44,10 @@ theorem hasSum_inversePower_eq_lSeries_fiberCard
           (fun n ↦ (Nat.card {a : α // ν a = n} : ℂ)) s n := by
     by_cases hn : n = 0
     · subst n
-      haveI : IsEmpty {a : α // ν a = 0} :=
+      have : IsEmpty {a : α // ν a = 0} :=
         ⟨fun a ↦ (hν a.1) a.2⟩
       simp
-    · letI : Fintype {a : α // ν a = n} := Fintype.ofFinite _
+    · let : Fintype {a : α // ν a = n} := Fintype.ofFinite _
       rw [tsum_fintype, LSeries.term_of_ne_zero hn]
       simp_rw [show ∀ a : {a : α // ν a = n}, ν a.1 = n from fun a ↦ a.2]
       rw [Finset.sum_const, nsmul_eq_mul, Nat.card_eq_fintype_card,
@@ -94,10 +94,10 @@ theorem summable_inversePower_of_lSeriesSummable_fiberCard
       funext n
       by_cases hn : n = 0
       · subst n
-        haveI : IsEmpty {a : α // ν a = 0} :=
+        have : IsEmpty {a : α // ν a = 0} :=
           ⟨fun a ↦ (hν a.1) a.2⟩
         simp
-      · letI : Fintype {a : α // ν a = n} := Fintype.ofFinite _
+      · let : Fintype {a : α // ν a = n} := Fintype.ofFinite _
         rw [tsum_fintype, LSeries.term_of_ne_zero hn]
         simp_rw [show ∀ a : {a : α // ν a = n}, ν a.1 = n from
           fun a ↦ a.2]

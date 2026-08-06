@@ -81,7 +81,7 @@ lemma krafft_algebraic_equivalence (p : ℕ) (hp : p.Prime) (h_ge_5 : p ≥ 5) (
     (x : ZMod p) = r ∨ (x : ZMod p) = -r ↔ (p : ℤ) ∣ (6 * x - 1) ∨ (p : ℤ) ∣ (6 * x + 1) := by
   simp_all +decide only [ge_iff_le, ← ZMod.intCast_zmod_eq_zero_iff_dvd, Int.cast_sub,
     Int.cast_mul, Int.cast_ofNat, Int.cast_one, Int.cast_add]
-  haveI := Fact.mk hp; norm_num [eq_comm, sub_eq_zero, add_eq_zero_iff_eq_neg]
+  have := Fact.mk hp; norm_num [eq_comm, sub_eq_zero, add_eq_zero_iff_eq_neg]
   have h_6r : (6 * ((p + 1) / 6 : ℕ) : ZMod p) = 1 ∨ (6 * ((p + 1) / 6 : ℕ) : ZMod p) = -1 := by
     have h_mod_equiv : (6 * ((p + 1) / 6 : ℕ) : ℕ) ≡ 1 [ZMOD p] ∨
         (6 * ((p + 1) / 6 : ℕ) : ℕ) ≡ -1 [ZMOD p] := by

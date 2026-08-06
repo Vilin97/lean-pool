@@ -118,7 +118,7 @@ theorem q_bound (n : ℕ) (hn : n ≥ 1) : 6 * n^2 + 10 * n + 3 < q n := by
           show Finset.filter ( fun p => 5 ≤ p ∧ Nat.Prime p ) ( Finset.range ( 6 * n + 2 ) ) ≥
           Finset.image (fun k => Nat.nth Nat.Prime k) (Finset.Ico 2 ( Nat.log 2 n + 2 )) from ?_ )
         · rw [ Finset.card_image_of_injective _ fun a b h =>
-            Nat.nth_injective ( Nat.infinite_setOf_prime ) h ]
+            Nat.nth_injective ( Nat.infinite_setOfPred_prime ) h ]
           simp +arith +decide
         · have h_prime_bound :
           ∀ k ∈ Finset.Ico 2 (Nat.log 2 n + 2), Nat.nth Nat.Prime k < 6 * n + 2 := by
@@ -147,7 +147,7 @@ theorem q_bound (n : ℕ) (hn : n ≥ 1) : 6 * n^2 + 10 * n + 3 < q n := by
               ( Finset.mem_Ico.mp hk |>.2 ) ),
               by linarith [ Nat.Prime.two_le ( Nat.prime_nth_prime k ),
                 show Nat.nth Nat.Prime k ≥ 5 from
-                  Nat.le_trans ( by norm_num ) ( Nat.nth_monotone ( Nat.infinite_setOf_prime )
+                  Nat.le_trans ( by norm_num ) ( Nat.nth_monotone ( Nat.infinite_setOfPred_prime )
                     ( show k ≥ 2 from Finset.mem_Ico.mp hk |>.1 ) ) ], Nat.prime_nth_prime k ⟩
       refine lt_of_lt_of_le ?_ h_q_large
       have h_exp_growth : ∀ n ≥ 1000000000, 5 ^ (Nat.log 2 n) > 6 * n ^ 2 + 10 * n + 3 := by

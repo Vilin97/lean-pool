@@ -144,9 +144,9 @@ lemma ift_gives_graph_impl (f : E → ℝ) (μ : ℝ) (x₀ : E) (hμ : 0 < μ)
   set T := hessianKer f x₀ with hT_def
   set N := T.orthogonal with hN_def
   set H := hessian f x₀ with hH_def
-  haveI : CompleteSpace ↥T := FiniteDimensional.complete ℝ ↥T
-  haveI : CompleteSpace ↥N := FiniteDimensional.complete ℝ ↥N
-  haveI : CompleteSpace (↥N →L[ℝ] ℝ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace ↥T := FiniteDimensional.complete ℝ ↥T
+  have : CompleteSpace ↥N := FiniteDimensional.complete ℝ ↥N
+  have : CompleteSpace (↥N →L[ℝ] ℝ) := FiniteDimensional.complete ℝ _
   -- ═══ The product-decomposition map F : T × N → (N →L[ℝ] ℝ) ═══
   let compR := (ContinuousLinearMap.compL ℝ ↥N E ℝ).flip N.subtypeL
   have hcompR_eq : ∀ (L : E →L[ℝ] ℝ) (w : ↥N), compR L w = L ↑w :=
@@ -348,9 +348,9 @@ lemma ift_gives_graph_impl₂ (f : E → ℝ) (μ : ℝ) (x₀ : E) (hμ : 0 < �
   set T := hessianKer f x₀ with hT_def
   set N := T.orthogonal with hN_def
   set H := hessian f x₀ with hH_def
-  haveI : CompleteSpace ↥T := FiniteDimensional.complete ℝ ↥T
-  haveI : CompleteSpace ↥N := FiniteDimensional.complete ℝ ↥N
-  haveI : CompleteSpace (↥N →L[ℝ] ℝ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace ↥T := FiniteDimensional.complete ℝ ↥T
+  have : CompleteSpace ↥N := FiniteDimensional.complete ℝ ↥N
+  have : CompleteSpace (↥N →L[ℝ] ℝ) := FiniteDimensional.complete ℝ _
   let compR := (ContinuousLinearMap.compL ℝ ↥N E ℝ).flip N.subtypeL
   have hcompR_eq : ∀ (L : E →L[ℝ] ℝ) (w : ↥N), compR L w = L ↑w :=
     fun L w => restrictToN_apply N L w

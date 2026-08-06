@@ -106,7 +106,7 @@ lemma denormMatrixOfQuat_has_correct_det (q : Quaternion ℝ)
    : (denormMatrixOfQuat q).det = (Quaternion.normSq q)^3 := by
  rw [Quaternion.normSq_def']
  let ⟨r, x, y, z⟩ := q
- have hdet : Matrix.det (![] : Matrix (Fin 0) (Fin 0) ℝ) = 1 := Matrix.det_isEmpty
+ have hdet : Matrix.det (!![] : Matrix (Fin 0) (Fin 0) ℝ) = 1 := Matrix.det_isEmpty
  simp only [Matrix.det_succ_row_zero, Fin.sum_univ_succ, denormMatrixOfQuat]
  simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue, Fin.val_zero, pow_zero,
    Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, one_mul,

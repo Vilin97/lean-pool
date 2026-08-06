@@ -552,7 +552,7 @@ lemma predIn_level_lt (hd : 0 < d) (hm : 0 < m) {P : Finset (Finset (ZMod (d * m
     (hP : Portrait d m P) {x : ZMod (d * m)} (hx : x ∈ T P) :
     haveI : NeZero (d*m) := ⟨by positivity⟩
     (predIn P x hx).val / m < x.val / m := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   have hsame := predIn_sameFiber hP hx
   have hvlt := predIn_val_lt hx
   rcases lt_or_eq_of_le ((val_le_iff_level_le_of_sameFiber hsame).mp hvlt.le) with hlt | heq
@@ -842,7 +842,7 @@ noncomputable def survivorFamily [NeZero (d * m)] (hd : 0 < d) (hm : 0 < m)
 theorem T_levelCanonical {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {P : Finset (Finset (ZMod (d * m)))} (hP : Portrait d m P) :
     LevelCanonical d m (T P) := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   intro j hj
   -- The LevelCanonical filter equals `contained (survivorFamily) 0 j`.
   have hfilter : (T P).filter (fun i => i.val / m ≤ j)

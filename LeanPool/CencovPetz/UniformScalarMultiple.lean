@@ -360,7 +360,7 @@ lemma B_eq_smul_fisherBilin_uniform (i0 i1 : Fin n) (hi01 : i0 ≠ i1) :
       (B (G := G) (n := n) (dij (n := n) i0 i1) (dij (n := n) i0 i1) /
           (2 * (Fintype.card (Fin n) : ℝ))) • fisherBilin (Simplex.uniform (α := Fin n)) := by
   classical
-  haveI : Nonempty (Fin n) := ⟨i0⟩
+  have : Nonempty (Fin n) := ⟨i0⟩
   set c : ℝ := B (G := G) (n := n) (dij (n := n) i0 i1) (dij (n := n) i0 i1) with hc
   have hcard_ne : (Fintype.card (Fin n) : ℝ) ≠ 0 := by
     exact_mod_cast (Nat.ne_of_gt Fintype.card_pos)

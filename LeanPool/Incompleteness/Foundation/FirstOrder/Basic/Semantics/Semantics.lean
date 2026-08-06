@@ -582,7 +582,7 @@ lemma eval_close {ε} (φ : SyntacticFormula L) :
 
 lemma eval_close₀ [Nonempty M] (φ : SyntacticFormula L) :
     Evalb s ![] (∀∀₀φ) ↔ ∀ f, Evalf s f φ := by
-  haveI : Inhabited M := Classical.inhabited_of_nonempty inferInstance
+  have : Inhabited M := Classical.inhabited_of_nonempty inferInstance
   simp [Semiformula.close₀, ←eval_toEmpty (f := default), eval_close]
 
 end «lp_section_4»
@@ -689,7 +689,7 @@ lemma models_iff {φ} : M ⊧ₘ φ ↔ ∀ f, Semiformula.Evalf s f φ := by si
 lemma models₀_iff {σ : Sentence L} : M ⊧ₘ₀ σ ↔ Semiformula.Evalb s ![] σ := by simp [models_iff]
 
 lemma models_iff₀ {φ} : M ⊧ₘ φ ↔ Semiformula.Evalb s ![] ∀∀₀φ := by
-  haveI : Inhabited M := Classical.inhabited_of_nonempty inferInstance
+  have : Inhabited M := Classical.inhabited_of_nonempty inferInstance
   simp [models_def, Semiformula.eval_close₀]
 
 lemma modelsTheory_iff : M ⊧ₘ* T ↔ (∀ {φ}, φ ∈ T → M ⊧ₘ φ) := Semantics.realizeSet_iff

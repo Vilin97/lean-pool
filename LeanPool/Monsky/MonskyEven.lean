@@ -288,7 +288,7 @@ lemma zig_zag_covers_square {n : ℕ} (hn : n ≠ 0)
     : covers ((zigPartCover n ∪ zagPartCover n) : Set Triangle) (closedHull unitSquare)
       closedHull := by
   ext x
-  simp only [closed_unitSquare_eq, Fin.forall_fin_two, Fin.isValue, Set.mem_setOf_eq,
+  simp only [closed_unitSquare_eq, Fin.forall_fin_two, Fin.isValue, Set.mem_ofPred_eq,
     Set.mem_union, SetLike.mem_coe, Set.mem_iUnion, exists_prop]
   constructor
   · intro hx

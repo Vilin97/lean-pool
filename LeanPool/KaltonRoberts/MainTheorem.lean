@@ -123,7 +123,7 @@ lemma exists_additive_approx (U : Type*) [Finite U]
     (f : Finset U → ℝ) (C : ℝ) (hC : distToAdditive f ≤ C) :
     ∃ a : U → ℝ, ∀ S : Finset U, |f S - additiveFunction a S| ≤ C := by
   classical
-  letI := Fintype.ofFinite U
+  let := Fintype.ofFinite U
   have h_exists_a : ∃ a : U → ℝ, ∀ S : Finset U, |f S - additiveFunction a S| ≤ distToAdditive f :=
     by
     by_contra h_contra;
@@ -221,7 +221,7 @@ instantiate those hypotheses from the concrete theorems. -/
 lemma distToAdditive_le_C₂ (U : Type*) [DecidableEq U] [Finite U]
     (f : Finset U → ℝ) (hf : IsApproxAdditive f 1) :
     distToAdditive f ≤ ↑C₂ := by
-  letI := Fintype.ofFinite U
+  let := Fintype.ofFinite U
   exact distToAdditive_le_C₂_from_pipeline f hf
     (exists_additive_approx U f (distToAdditive f) (le_refl _))
     (fun g hg M hM => mixed_intersection_weighted g hg M hM)

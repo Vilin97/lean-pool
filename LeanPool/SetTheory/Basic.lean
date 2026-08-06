@@ -135,7 +135,7 @@ successor-limit case and discharging the `V` case, then registering the limit fa
 macro "split_vonNeumann" h:ident : tactic => do
   let μ := Lean.mkIdent `μ
   let hμ := Lean.mkIdent `hμ
-  `(tactic | (rcases $h:ident with ⟨$μ, $hμ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; haveI _ := Fact.mk $hμ))
+  `(tactic | (rcases $h:ident with ⟨$μ, $hμ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; have _ := Fact.mk $hμ))
 
 /-- Like `split_vonNeumann`, but for `IsVonNeumannWithOmega M`, additionally
 introducing the hypothesis `omega_lt_μ` that `ω < μ`. -/
@@ -143,7 +143,7 @@ macro "split_vonNeumann_omega" h:ident : tactic => do
   let μ := Lean.mkIdent `μ
   let hμ := Lean.mkIdent `hμ
   let omega_lt_μ := Lean.mkIdent `omega_lt_μ
-  `(tactic | (rcases $h:ident with ⟨$μ, $hμ, $omega_lt_μ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; haveI _ := Fact.mk $hμ))
+  `(tactic | (rcases $h:ident with ⟨$μ, $hμ, $omega_lt_μ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; have _ := Fact.mk $hμ))
 
 namespace SetTheory
 
@@ -255,7 +255,7 @@ lemma ext_of_subset {X A B : M}
 instance instSetLike : SetLike M M where
   coe := fun x => {y | y ∈ x}
   coe_injective := fun x y eq => by
-    simp only [Set.ext_iff, Set.mem_setOf_eq] at eq
+    simp only [Set.ext_iff, Set.mem_ofPred_eq] at eq
     exact ext eq
 
 instance instPartialOrderM : PartialOrder M := PartialOrder.ofSetLike M M
@@ -319,7 +319,7 @@ instance : HasEmpty M where
   exists_empty := by
     simp only [← iff_false]
     change IsSet {x | False}
-    simp only [isSet_iff, Set.mem_setOf_eq, IsEmpty.forall_iff, implies_true,
+    simp only [isSet_iff, Set.mem_ofPred_eq, IsEmpty.forall_iff, implies_true,
       exists_const_iff, and_true]
     split_vonNeumann hM
     · refine ⟨∅, mem_vonNeumann.mpr ?_⟩
@@ -478,7 +478,7 @@ def ExistsUniqueAt {α : Type*} (x : α) (p : α → Prop) := p x ∧ ∀ y, p y
 
 @[formula_builder] lemma isGLB_iff {C : Set M} {x : M} :
     IsGLB C x ↔ ∀ y, y ∈ x ↔ ∀ t ∈ C, y ∈ t := by
-  simp only [IsGLB, IsGreatest, lowerBounds, Set.mem_setOf_eq, upperBounds]
+  simp only [IsGLB, IsGreatest, lowerBounds, Set.mem_ofPred_eq, upperBounds]
   exact ⟨
     fun | ⟨is_bound, greatest⟩, y => ⟨
       fun y t ht => is_bound ht y,
@@ -491,7 +491,7 @@ def ExistsUniqueAt {α : Type*} (x : α) (p : α → Prop) := p x ∧ ∀ y, p y
   ⟩
 
 lemma isLUB_iff {C : Set M} {x : M} : IsLUB C x ↔ ∀ y, y ∈ x ↔ ∃ t ∈ C, y ∈ t := by
-  simp only [IsLUB, IsLeast, upperBounds, Set.mem_setOf_eq, lowerBounds]
+  simp only [IsLUB, IsLeast, upperBounds, Set.mem_ofPred_eq, lowerBounds]
   refine ⟨
     fun | ⟨is_bound, least⟩, y => ⟨
       fun hy => ?_,
@@ -550,7 +550,7 @@ lemma toZFSet_enoughTransitive {x : M} : ⇓(enoughTransitive x).1 = V_ (⇓x).r
 lemma mem_trcl_iff {x y : M} : y ∈ trcl x ↔ ∀ t : M, IsTransitive t ∧ x ⊆ t → y ∈ t := by
   revert y
   change ∀ y : M, _
-  simpa only [isGLB_iff, Set.mem_setOf_eq] using trcl.spec x
+  simpa only [isGLB_iff, Set.mem_ofPred_eq] using trcl.spec x
 
 lemma isTransitive_trcl {x : M} : IsTransitive (trcl x) := by
   intro y hy z hz
@@ -624,7 +624,7 @@ instance instConditionallyCompleteLatticeM : ConditionallyCompleteLattice M :=
     (fun s _ hs => by
       simp only [sInf, hs, ↓reduceDIte]
       conv_lhs => rw [show s = {x | x ∈ s} by simp]
-      simpa only [isGLB_iff, Set.mem_setOf_eq, mem_separate_iff, and_iff_right_iff_imp]
+      simpa only [isGLB_iff, Set.mem_ofPred_eq, mem_separate_iff, and_iff_right_iff_imp]
         using fun y hy => hy _ hs.some_mem)
 
 instance instOrderBotM : OrderBot M where

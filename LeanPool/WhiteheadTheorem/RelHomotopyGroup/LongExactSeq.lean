@@ -287,7 +287,7 @@ theorem kerBdSubsetImJStar (f : π_rel (n + 1) X A a) :
         · simp only [comp_apply, prodMap_apply, coe_id, Prod.map_apply,
             id_eq, coe_mk]
           intro y hy  -- `y` is in the top face
-          simp only [Cube.boundaryLid, Set.mem_setOf_eq] at hy
+          simp only [Cube.boundaryLid, Set.mem_ofPred_eq] at hy
           by_cases hyn : (Cube.splitAtLast y).fst.val ≤ (1 + t) / 2
           · -- `f'` maps the top face into `A`
             simp only [kerBdSubsetImJStar.G'', ContinuousMap.coe_mk, dite_eq_ite, hyn,
@@ -409,7 +409,7 @@ theorem ker_iStar_subset_im_bd (f : π_ n A a) :
         apply RelGenLoop.mem_of_boundaryLid_and_boundaryJar
         · -- `H'` maps the top face into `A`
           intro y hy
-          simp only [Cube.boundaryLid, Set.mem_setOf_eq] at hy
+          simp only [Cube.boundaryLid, Set.mem_ofPred_eq] at hy
           change H' ⟨(Cube.splitAtLast y).1, (Cube.splitAtLast y).2⟩ ∈ A
           rw [Cube.splitAtLast_fst_eq, hy, H'.apply_one]
           simp only [coe_mk, Function.comp_apply, Subtype.coe_prop]

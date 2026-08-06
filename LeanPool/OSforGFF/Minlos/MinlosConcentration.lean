@@ -153,7 +153,7 @@ lemma cf_nhds_ball
   have h_nhds : {x | ‖1 - Φ x‖ < ε} ∈ nhds (0 : E) := by
     have hsub : Φ ⁻¹' Metric.ball 1 ε ⊆ {x : E | ‖1 - Φ x‖ < ε} := by
       intro x hx; simp only [Set.mem_preimage, Metric.mem_ball, dist_eq_norm] at hx
-      simp only [Set.mem_setOf_eq]; rwa [norm_sub_rev]
+      simp only [Set.mem_ofPred_eq]; rwa [norm_sub_rev]
     exact Filter.mem_of_superset
       (h_cont_at (Metric.isOpen_ball.mem_nhds (by simp [Metric.mem_ball, dist_self, hε]))) hsub
   rw [hp_top.hasBasis_zero_ball.mem_iff] at h_nhds
@@ -452,7 +452,7 @@ omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 lemma concentrationBadSet_eq_iUnion (d : ℕ → E) (p : Seminorm ℝ E) (C : ℝ) :
     concentrationBadSet d p C = ⋃ N, concentrationBadSetN d p C N := by
   ext ω
-  simp only [concentrationBadSet, concentrationBadSetN, Set.mem_setOf_eq, Set.mem_iUnion]
+  simp only [concentrationBadSet, concentrationBadSetN, Set.mem_ofPred_eq, Set.mem_iUnion]
   constructor
   · rintro ⟨c, hc⟩
     refine ⟨c.support.sup id + 1, c, ?_, hc⟩
@@ -765,7 +765,7 @@ lemma concentrationBadSetN_measure_bound
     by_contra h_not
     simp only [Set.mem_union, not_or] at h_not
     obtain ⟨h_not_tail, h_not_null⟩ := h_not
-    simp only [tail, null_set, Set.mem_setOf_eq, not_lt, not_not] at h_not_tail h_not_null
+    simp only [tail, null_set, Set.mem_ofPred_eq, not_lt, not_not] at h_not_tail h_not_null
     -- h_not_tail: Σ ω(e_j)² ≤ R²
     -- h_not_null: ∀ c, ω(x_c) = Σ α(c)_j ω(e_j)
     obtain ⟨c, _, hc_bad⟩ := hω
@@ -850,7 +850,7 @@ private lemma joint_kernel_bound_finite
   have h_meas_z : Measurable eval_z :=
     toLp.measurable.comp (measurable_pi_lambda _ (fun j => measurable_pi_apply (z j)))
   let μ := ν.map eval_z
-  haveI h_prob : IsProbabilityMeasure μ :=
+  have h_prob : IsProbabilityMeasure μ :=
     Measure.isProbabilityMeasure_map h_meas_z.aemeasurable
   let μ' : ProbabilityMeasure V := ⟨μ, h_prob⟩
   -- Step 1: Coordinate access: (eval_z ω) i = ω (z i)
@@ -913,14 +913,14 @@ private lemma joint_kernel_bound_finite
   -- Step 7: Conclude via level sets + Chebyshev + continuity from below
   set S : (E → ℝ) → ℝ := fun ω => ∑ i, ω (z i) ^ 2
   have h_bad_eq : {ω : E → ℝ | ∃ i, ω (z i) ≠ 0} = {ω | 0 < S ω} := by
-    ext ω; simp only [S, Set.mem_setOf_eq]
+    ext ω; simp only [S, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨i, hi⟩
       exact Finset.sum_pos' (fun j _ => sq_nonneg _) ⟨i, Finset.mem_univ _, by positivity⟩
     · intro hS; by_contra h_all; simp_all
   have h_union : {ω : E → ℝ | 0 < S ω} =
       ⋃ m : ℕ, {ω | (1 : ℝ) / (↑m + 1) ≤ S ω} := by
-    ext ω; simp only [Set.mem_setOf_eq, Set.mem_iUnion]
+    ext ω; simp only [Set.mem_ofPred_eq, Set.mem_iUnion]
     constructor
     · intro hS
       obtain ⟨m, hm⟩ := exists_nat_gt (1 / S ω)
@@ -930,7 +930,7 @@ private lemma joint_kernel_bound_finite
       linarith
     · rintro ⟨m, hm⟩; exact lt_of_lt_of_le (by positivity) hm
   have h_mono : Monotone (fun m : ℕ => {ω : E → ℝ | (1 : ℝ) / (↑m + 1) ≤ S ω}) := by
-    intro m₁ m₂ h ω hω; simp only [Set.mem_setOf_eq] at hω ⊢
+    intro m₁ m₂ h ω hω; simp only [Set.mem_ofPred_eq] at hω ⊢
     exact le_trans (div_le_div_of_nonneg_left zero_le_one (by positivity : (0 : ℝ) < ↑m₁ + 1)
       (by exact_mod_cast Nat.add_le_add_right h 1)) hω
   have h_level : ∀ m : ℕ,
@@ -969,7 +969,7 @@ private lemma joint_kernel_bound_finite
             apply setIntegral_mono_on (integrable_const _) h_f_int.integrableOn
               (measurableSet_le measurable_const h_S_meas)
               fun ω hω => by
-                simp only [Set.mem_setOf_eq] at hω
+                simp only [Set.mem_ofPred_eq] at hω
                 have : Real.exp (-(σ ^ 2 * (S ω) / 2)) ≤ Real.exp (-(σ ^ 2 * δ / 2)) :=
                   Real.exp_le_exp_of_le (by nlinarith [sq_nonneg σ])
                 linarith
@@ -1127,7 +1127,7 @@ private lemma kernel_concentration_bound
     -- Write z_bad = ⋃_c {ω(z c) ≠ 0}, a countable union (restricted to supp ⊆ range N)
     -- Use tendsto_measure_iUnion via an enumeration
     -- Since ℕ →₀ ℚ is countable, enumerate as f : ℕ → (ℕ →₀ ℚ)
-    haveI : Countable (ℕ →₀ ℚ) := inferInstance
+    have : Countable (ℕ →₀ ℚ) := inferInstance
     -- Define the sets for finite prefixes
     -- For M, consider the first M elements of the enumeration
     -- The monotone sequence {∃ c ∈ {f(0),...,f(M-1)}, ...} increases to z_bad
@@ -1151,7 +1151,7 @@ private lemma kernel_concentration_bound
     -- z(c) for c outside range N is not constrained, but z_bad already restricts)
     -- For each c in z_bad, we have c.support ⊆ range N, so z(c) ∈ ker(p_m)
     -- Enumerate ℕ →₀ ℚ
-    haveI : Nonempty (ℕ →₀ ℚ) := ⟨0⟩
+    have : Nonempty (ℕ →₀ ℚ) := ⟨0⟩
     obtain ⟨f, hf_surj⟩ := exists_surjective_nat (ℕ →₀ ℚ)
     -- Define increasing sets S_M
     let S (M : ℕ) : Set (E → ℝ) := {ω | ∃ i : Fin M,
@@ -1163,7 +1163,7 @@ private lemma kernel_concentration_bound
     -- z_bad = ⋃_M S_M
     have h_union : z_bad = ⋃ M, S M := by
       ext ω
-      simp only [z_bad, S, Set.mem_setOf_eq, Set.mem_iUnion]
+      simp only [z_bad, S, Set.mem_ofPred_eq, Set.mem_iUnion]
       constructor
       · rintro ⟨c, hsupp, hne⟩
         obtain ⟨i, rfl⟩ := hf_surj c
@@ -1179,7 +1179,7 @@ private lemma kernel_concentration_bound
       -- S M = {∃ i ∈ good, ω(z(f i)) ≠ 0}
       have h_S_eq : S M = {ω | ∃ i ∈ good, ω (z (f i)) ≠ 0} := by
         ext ω
-        simp only [S, good, Set.mem_setOf_eq, Finset.mem_filter, Finset.mem_univ,
+        simp only [S, good, Set.mem_ofPred_eq, Finset.mem_filter, Finset.mem_univ,
           true_and]
       rw [h_S_eq]
       -- Now apply h_finite_bound with the filtered list
@@ -1193,7 +1193,7 @@ private lemma kernel_concentration_bound
       have h_set_eq : {ω : E → ℝ | ∃ i ∈ good, ω (z (f i)) ≠ 0} =
           {ω | ∃ j : Fin n, ω (z (c_list j)) ≠ 0} := by
         ext ω
-        simp only [Set.mem_setOf_eq, c_list]
+        simp only [Set.mem_ofPred_eq, c_list]
         constructor
         · rintro ⟨i, hi, hne⟩
           exact ⟨good.equivFin ⟨i, hi⟩, by rwa [Equiv.symm_apply_apply]⟩
@@ -1295,7 +1295,7 @@ private lemma tail_bound_uniform_gaussian_average
   have h_meas_e : Measurable eval_e :=
     toLp.measurable.comp (measurable_pi_lambda _ (fun j => measurable_pi_apply (e j)))
   let μ := ν.map eval_e
-  haveI h_prob : IsProbabilityMeasure μ :=
+  have h_prob : IsProbabilityMeasure μ :=
     Measure.isProbabilityMeasure_map h_meas_e.aemeasurable
   let μ' : ProbabilityMeasure V := ⟨μ, h_prob⟩
   have h_coord : ∀ (ω : E → ℝ) (i : Fin (k + 1)), (eval_e ω) i = ω (e i) := fun _ _ => rfl
@@ -1538,7 +1538,7 @@ private lemma tail_bound_uniform
           apply setIntegral_mono_on (integrable_const _) h_f_int.integrableOn
             (measurableSet_le measurable_const h_T_meas)
             fun ω hω => by
-              simp only [Set.mem_setOf_eq] at hω
+              simp only [Set.mem_ofPred_eq] at hω
               have : Real.exp (-(σ₀ ^ 2 * (T ω) / 2)) ≤ Real.exp (-(σ₀ ^ 2 * R ^ 2 / 2)) :=
                 Real.exp_le_exp_of_le (by nlinarith [sq_nonneg σ₀])
               linarith
@@ -1611,7 +1611,7 @@ private lemma badSetN_bound_with_kernel
     by_contra h_not
     simp only [Set.mem_union, not_or] at h_not
     obtain ⟨h_not_tail, h_not_ker⟩ := h_not
-    simp only [tail, kernel_bad, Set.mem_setOf_eq, not_lt, not_exists, not_and,
+    simp only [tail, kernel_bad, Set.mem_ofPred_eq, not_lt, not_exists, not_and,
       ne_eq, not_not] at h_not_tail h_not_ker
     -- h_not_tail: ∑ ω(e_j)² ≤ R²
     -- h_not_ker: ∀ c, c.support ⊆ range N → ω(x_c) = ∑ α_j(c) ω(e_j)

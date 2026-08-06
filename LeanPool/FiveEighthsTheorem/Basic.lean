@@ -76,8 +76,8 @@ theorem center_index_ne_prime (h : ¬IsMulCommutative G) {p : ℕ} (hp : p.Prime
     (Subgroup.center G).index ≠ p := by
   intro heq
   have hcard : Nat.card (G ⧸ Subgroup.center G) = p := heq
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : IsCyclic (G ⧸ Subgroup.center G) := isCyclic_of_prime_card hcard
+  have : Fact p.Prime := ⟨hp⟩
+  have : IsCyclic (G ⧸ Subgroup.center G) := isCyclic_of_prime_card hcard
   exact h (MonoidHom.isMulCommutative_of_isCyclic_of_ker_le_center
     (QuotientGroup.mk' (Subgroup.center G)) (QuotientGroup.ker_mk' _).le)
 
@@ -154,7 +154,7 @@ local notation "Z(" G ")" => Subgroup.center G
 private theorem commProb_le_five_eighths_of_finite (G : Type*) [Group G] [Finite G]
     (h : ¬IsMulCommutative G) : commProb G ≤ 5 / 8 := by
   classical
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Fintype G := Fintype.ofFinite G
   calc
     commProb G
     _ = #ₛ{ (g, h) : G × G | g * h = h * g } / #ₜG ^ 2 := by
@@ -243,9 +243,9 @@ Gustafson's theorem. -/
 theorem commProb_le_five_eighths (G : Type*) [Group G] (h : ¬IsMulCommutative G) :
     commProb G ≤ 5 / 8 := by
   rcases finite_or_infinite G with hfinite | hinfinite
-  · letI := hfinite
+  · let := hfinite
     exact commProb_le_five_eighths_of_finite G h
-  · letI := hinfinite
+  · let := hinfinite
     rw [commProb_eq_zero_of_infinite]
     norm_num
 

@@ -270,7 +270,7 @@ theorem erdos137_finite (k : ℕ) (hk : 3 ≤ k) (hRadLB : RadLB k) :
   obtain ⟨N₀, hN₀⟩ := erdos137_eventually_not_powerful k hk hRadLB
   apply Set.Finite.subset (Set.finite_Iio N₀)
   intro n hn
-  simp only [Set.mem_setOf_eq] at hn
+  simp only [Set.mem_ofPred_eq] at hn
   simp only [Set.mem_Iio]
   by_contra hcontra
   simp_all

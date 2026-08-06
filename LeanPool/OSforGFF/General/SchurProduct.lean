@@ -70,7 +70,7 @@ If A B are positive definite matrices over ℝ, then the Hadamard product is pos
   (hA : A.PosDef) (hB : B.PosDef) :
   (A ∘ₕ B).PosDef := by
   classical
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   -- Use the characterization via dotProduct_mulVec
   rw [Matrix.posDef_iff_dotProduct_mulVec]
   constructor

@@ -111,7 +111,7 @@ def PMorphism (F : Frame) (r : F) : F.TreeUnravelling r →ₚ F where
     have hcy := List.getLast?_eq_getLast_of_ne_nil (l := cy.1) (by aesop)
     simp_all
   back {cx y} h := by
-    simp_all only [Set.mem_setOf_eq];
+    simp_all only [Set.mem_ofPred_eq];
     use ⟨cx.1 ++ [y], ?_⟩;
     · constructor;
       · simp;
@@ -191,7 +191,7 @@ lemma rel_def {x y : (F.TransitiveTreeUnravelling r).World} :
       use z;
       simp_all only [List.cons_append, List.nil_append];
     | hcons z zs h ih =>
-      simp_all only [Set.mem_setOf_eq, List.cons_append, List.nil_append];
+      simp_all only [Set.mem_ofPred_eq, List.cons_append, List.nil_append];
       refine TransGen.head ?h₁ <| ih (ws ++ [z]) vs ?h₂ ?h₃ ?h₄ ?h₅;
       · use z; simp;
       · apply List.IsChain.prefix hy₂;

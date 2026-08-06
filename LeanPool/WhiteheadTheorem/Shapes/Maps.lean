@@ -78,9 +78,9 @@ lemma set_neq_zero_eq_compl_range_i₀ (X : TopCat.{u}) :
   apply Set.eq_of_subset_of_subset
   · intro z hz x heq
     subst heq
-    simp only [Set.mem_setOf_eq, not_true_eq_false] at hz
+    simp only [Set.mem_ofPred_eq, not_true_eq_false] at hz
   · intro z hz
-    simp only [Set.mem_setOf_eq] at hz ⊢
+    simp only [Set.mem_ofPred_eq] at hz ⊢
     obtain ⟨fst, snd⟩ := z
     obtain ⟨val, property⟩ := snd
     simp only [Prod.mk.injEq, not_and, forall_eq] at hz ⊢
@@ -101,7 +101,7 @@ lemma isClosed_range_i₀ (X : TopCat.{u}) :
     apply compl_inj_iff.mp
     rw [← Cyl.set_neq_zero_eq_compl_range_i₀ X]
     ext ⟨fst, t⟩
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq]
   rw [← this]
   exact isClosed_eq continuous_snd continuous_const
 

@@ -52,9 +52,9 @@ theorem close_up_aux_wf
   induction m using Nat.strongRecOn with
   | ind m ih_m =>
   intro R hR_card
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
-  haveI : DecidableEq R.carrier := Classical.decEq _
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : DecidableEq R.carrier := Classical.decEq _
   intro a
   apply wellFounded_dvdNotUnit.induction a
   intro a ih_a s hs_gcd hs_eq ha_mem c hc
@@ -160,7 +160,7 @@ theorem close_up_aux_wf
               (Ideal.subset_span (Finset.mem_coe.mpr ha'_mem)) ha'_unit]
           exact Submodule.mem_top
         · have hdvd : DvdNotUnit (div_p a) a :=
-            ⟨ha'_zero, ⟨p, hp.not_unit,
+            ⟨ha'_zero, ⟨p, hp.not_isUnit,
               (hdiv_spec a ha_mem).trans (mul_comm p (div_p a))⟩⟩
           have ht_card : t_set.card = n'' + 1 + 1 + 1 := by
             have hinj : Set.InjOn div_p ↑s := fun x hx y hy hxy => by
@@ -220,7 +220,7 @@ theorem close_up_aux
       by simp_all⟩
   | succ n ih =>
     intro R hR_card s hs_card c hc
-    haveI : DecidableEq R.carrier := Classical.decEq _
+    have : DecidableEq R.carrier := Classical.decEq _
     by_cases hn : s.card ≤ n
     · exact ih R hR_card s hn c hc
     · have hs_eq : s.card = n + 1 := by omega
@@ -240,8 +240,8 @@ theorem close_up_aux
           rw [Finset.coe_pair, Ideal.map_span, Set.image_pair]
           exact hcS⟩
       · -- n >= 2: Heitmann general case via WF on (gcdComplexity, dvdNotUnit).
-        haveI : IsDomain R.carrier := NSubring.isDomain R
-        haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+        have : IsDomain R.carrier := NSubring.isDomain R
+        have : UniqueFactorizationMonoid R.carrier := R.isUFD
         have hs_ne : s.Nonempty := Finset.card_pos.mp (by omega)
         obtain ⟨a₀, ha₀_mem⟩ := hs_ne
         suffices h_wf : ∀ (m : ℕ) (R : NSubring T)

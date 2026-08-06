@@ -49,7 +49,7 @@ instance instFiniteCanonical (d m : ℕ) :
         simp_all
     exact Finite.of_injective (fun _ => (0 : Unit)) (by
       intro a b _; exact Subtype.ext ((hsub a).trans (hsub b).symm))
-  · haveI : NeZero (d * m) := ⟨hpos.ne'⟩
+  · have : NeZero (d * m) := ⟨hpos.ne'⟩
     infer_instance
 
 noncomputable instance instFintypeCanonical (d m : ℕ) :
@@ -61,7 +61,7 @@ noncomputable instance instFintypeCanonical (d m : ℕ) :
 /-- Every level is `< d` (when `N = d*m`, `m > 0`). -/
 lemma level_lt {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (i : ZMod (d * m)) :
     i.val / m < d := by
-  haveI : NeZero (d * m) := ⟨by positivity⟩
+  have : NeZero (d * m) := ⟨by positivity⟩
   have hi : i.val < d * m := ZMod.val_lt i
   have hi' : i.val < m * d := by rw [Nat.mul_comm m d]; exact hi
   exact Nat.div_lt_of_lt_mul hi'
@@ -82,7 +82,7 @@ lemma shift_val_lt {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (t : ℕ) :
     cyclically. -/
 lemma level_add {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (t : ℕ) (i : ZMod (d * m)) :
     (i + ((t * m : ℕ) : ZMod (d * m))).val / m = (i.val / m + t % d) % d := by
-  haveI : NeZero (d * m) := ⟨by positivity⟩
+  have : NeZero (d * m) := ⟨by positivity⟩
   set t' := t % d with ht'
   have ht'd : t' < d := Nat.mod_lt _ hd
   have hcval : (((t * m : ℕ) : ZMod (d * m))).val = t' * m := by
@@ -231,7 +231,7 @@ lemma cnt_rhoPow {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (t : ℕ) (S : Finset (ZM
     (j : ℕ) (hj : j < d) :
     cnt (rhoPow t S) j = cnt S ((j + (d - t % d)) % d) := by
   classical
-  haveI : NeZero (d * m) := ⟨by positivity⟩
+  have : NeZero (d * m) := ⟨by positivity⟩
   have ht'd : t % d < d := Nat.mod_lt _ hd
   unfold cnt
   have hcancel_ts : ∀ y : ZMod (d * m),
@@ -621,7 +621,7 @@ noncomputable def equivCanFin (hd : 0 < d) (hm : 0 < m) : Asub d m ≃ Csub d m 
 theorem card_levelCanonical_mul (d m : ℕ) (hd : 0 < d) (hm : 0 < m) :
     d * Fintype.card {S : Finset (ZMod (d * m)) // S.card = d - 1 ∧ LevelCanonical d m S}
       = (d * m).choose (d - 1) := by
-  haveI : NeZero (d * m) := ⟨by positivity⟩
+  have : NeZero (d * m) := ⟨by positivity⟩
   -- card Asub = card Csub * d  via the bijection
   have hbij : Fintype.card (Asub d m) = Fintype.card (Csub d m × Fin d) :=
     Fintype.card_congr (equivCanFin hd hm)

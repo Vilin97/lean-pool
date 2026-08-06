@@ -236,8 +236,8 @@ private lemma measurableSet_productAnnulus
       measurableSet_le measurable_const (measurable_norm.comp (continuous_apply q).measurable)
     have hlt : MeasurableSet {z : CSpace d | ‖z q‖ < (j q : ℝ) + 1} :=
       measurableSet_lt (measurable_norm.comp (continuous_apply q).measurable) measurable_const
-    simpa [Set.setOf_and] using hge.inter hlt
-  simpa [productAnnulus, Set.setOf_forall] using h
+    simpa [Set.ofPred_and] using hge.inter hlt
+  simpa [productAnnulus, Set.ofPred_forall] using h
 
 private lemma continuous_PhiKappaAlpha
     {d : ℕ} (κ α : MultiIndex d) :
