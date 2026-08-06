@@ -910,7 +910,7 @@ theorem Sdk_coeff_per_theta (Fq : Type) [Field Fq] (d k : ℕ) (θ : Fin d → F
     have hset : {m : Fin d → ℕ | ((d * k : ℕ) + weight d m : ℤ) = n} = ↑FS := by
       ext m
       rw [Finset.mem_coe, hFS, Finset.mem_filter, Fintype.mem_piFinset]
-      simp only [Set.mem_setOf_eq, Finset.mem_range]
+      simp only [Set.mem_ofPred_eq, Finset.mem_range]
       constructor
       · intro hm
         have hw : weight d m = e := by
@@ -992,7 +992,7 @@ theorem Sdk_coeff_per_theta (Fq : Type) [Field Fq] (d k : ℕ) (θ : Fin d → F
     symm
     apply finsum_mem_eq_zero_of_forall_eq_zero
     intro x hx
-    simp only [Set.mem_setOf_eq] at hx
+    simp only [Set.mem_ofPred_eq] at hx
     exfalso
     push_cast at hx h
     omega
@@ -1073,7 +1073,7 @@ theorem Sdk_coeff_eq_finsum (Fq : Type) [Field Fq] [Fintype Fq]
   have hset : {m : Fin d → ℕ | ((d * k : ℕ) + weight d m : ℤ) = n} = ↑FS := by
     ext m
     rw [Finset.mem_coe, hFS, Finset.mem_filter, Fintype.mem_piFinset]
-    simp only [Set.mem_setOf_eq, Finset.mem_range]
+    simp only [Set.mem_ofPred_eq, Finset.mem_range]
     constructor
     · intro hm
       refine ⟨fun i => ?_, hm⟩
@@ -1088,7 +1088,7 @@ theorem Sdk_coeff_eq_finsum (Fq : Type) [Field Fq] [Fintype Fq]
           = ↑(FS.filter (Tindex p (Fintype.card Fq) d (k - 1))) := by
     ext m
     rw [Finset.mem_coe, Finset.mem_filter, hFS, Finset.mem_filter, Fintype.mem_piFinset]
-    simp only [Set.mem_setOf_eq, Finset.mem_range]
+    simp only [Set.mem_ofPred_eq, Finset.mem_range]
     constructor
     · rintro ⟨hT, hm⟩
       refine ⟨⟨fun i => ?_, hm⟩, hT⟩

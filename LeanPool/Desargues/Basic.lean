@@ -151,12 +151,12 @@ theorem p_2 :
   intro a b
   unfold star
   obtain rfl | _ := eq_or_ne a b
-  · simp only [↓reduceIte, setOf_eq_eq_singleton, mem_singleton_iff]
+  · simp only [↓reduceIte, ofPred_eq_eq_singleton, mem_singleton_iff]
   · split
     case inr.isTrue eq =>
       simp_all
     case inr.isFalse _ =>
-      simp only [mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       apply rel_sym_bca a b a PG.l1 PG.l2 (PG.l1 a b)
 
 theorem star_imp_ell
@@ -169,7 +169,7 @@ theorem star_imp_ell
     split at x_in_yz
     case inr.isTrue eq => apply yz_neq at eq; contradiction
     case inr.isFalse _ =>
-      simp only [mem_setOf_eq] at x_in_yz
+      simp only [mem_ofPred_eq] at x_in_yz
       relSym
 
 theorem p_3
@@ -183,7 +183,7 @@ theorem p_3
   · have b_in_inter :
         b ∈ star ell a c ∩ star ell b d := by
       rw [inter_def]
-      simp only [star, mem_setOf_eq, if_true_left]
+      simp only [star, mem_ofPred_eq, if_true_left]
       constructor
       · split
         case left.isTrue eq =>
@@ -222,7 +222,7 @@ theorem p_3
       have q_in_inter :
           q ∈ star ell a c ∩ star ell b d := by
         rw [inter_def]
-        simp only [star, mem_setOf_eq]
+        simp only [star, mem_ofPred_eq]
         constructor
         · split
           case left.isTrue ac_eq =>
@@ -261,7 +261,7 @@ theorem p_5
       · simp_all
       · obtain rfl | pc_neq := eq_or_ne p c
         · unfold star
-          simp only [mem_setOf_eq]
+          simp only [mem_ofPred_eq]
           split
           · simp_all
           · apply rel_sym_bca p b p PG.l1 PG.l2 (PG.l1 p b)
@@ -329,7 +329,7 @@ theorem p_9
     constructor
     · exact a_in_bp
     · unfold star
-      simp only [mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       split
       case h.right.isTrue ca_eq =>
         exact id ca_eq.symm
@@ -340,11 +340,11 @@ theorem p_9
       use b
       constructor
       · unfold star
-        simp only [mem_setOf_eq, if_true_left]
+        simp only [mem_ofPred_eq, if_true_left]
         intro _
         apply PG.l1 b d
       · unfold star
-        simp only [mem_setOf_eq, if_true_left]
+        simp only [mem_ofPred_eq, if_true_left]
         intro _
         apply PG.l1 a b
     · -- So we may assume that c ∉ b ⋆ d and a ≠ c.
@@ -364,7 +364,7 @@ theorem p_9
         · exact q_in_bd
         · obtain rfl | qa_neq := eq_or_ne q a
           · unfold star
-            simp only [mem_setOf_eq]
+            simp only [mem_ofPred_eq]
             split
             case h.right.inl.isTrue cq_eq =>
               exact id cq_eq.symm
@@ -433,7 +433,7 @@ theorem abc_inter_sing
         have b_in_ab := by apply p_2 (ell := ell) b a
         rw [p_6 a b] at b_in_ab
         rw [<- ax_eq_ba] at b_in_ab
-        simp only [star, mem_setOf_eq] at b_in_ab
+        simp only [star, mem_ofPred_eq] at b_in_ab
         cases neq with
         | intro _ rest =>
           cases rest with
@@ -448,7 +448,7 @@ theorem abc_inter_sing
       simp_all
   · intro x x_in_a; simp only [mem_singleton_iff] at x_in_a; rw [x_in_a]
     rw [inter_def]
-    simp only [star, mem_setOf_eq, if_true_left]
+    simp only [star, mem_ofPred_eq, if_true_left]
     constructor
     all_goals intro _
     · apply PG.l1 a b
@@ -577,7 +577,7 @@ theorem cen_proj_arg_col :
 theorem shadow_in_light :
     (cenProjMap a b c z x).val ∈ star ell x z := by
   have xz_neq := elbow_center_neq (x := x) (z := z)
-  simp only [star, mem_setOf_eq]
+  simp only [star, mem_ofPred_eq]
   split
   next xz_eq =>
     exact False.elim (xz_neq xz_eq)
@@ -623,7 +623,7 @@ theorem cen_proj_left :
     simp only [preimage] at yy_sing
     have x_in_yy : x ∈ ({yy} : Set _)  := by
       rw [<- yy_sing]
-      simp only [star, coe_setOf, mem_setOf_eq, mem_inter_iff, Subtype.coe_prop, and_true]
+      simp only [star, mem_ofPred_eq, mem_inter_iff, Subtype.coe_prop, and_true]
       split
       next yz_eq => exact False.elim (yz_neq yz_eq)
       next _ =>
@@ -631,7 +631,7 @@ theorem cen_proj_left :
         relSym
     have ψy_in_yy : ψ y ∈ ({yy} : Set _)  := by
       rw [<- yy_sing]
-      simp only [star, coe_setOf, mem_setOf_eq, mem_inter_iff, Subtype.coe_prop, and_true]
+      simp only [star, mem_ofPred_eq, mem_inter_iff, Subtype.coe_prop, and_true]
       split
       next yz_eq => exact False.elim (yz_neq yz_eq)
       next _ =>
@@ -679,7 +679,7 @@ theorem φc_eq_c :
     apply abc_inter_sing c z b
     intro czb_col
     have z_in_bc : z.val ∈ star ell b c := by
-      simp only [star, mem_setOf_eq]
+      simp only [star, mem_ofPred_eq]
       split
       next bc_eq =>
         have abc_neq := by apply ncol_imp_neq a b c CPQ.abc_ncol
@@ -694,7 +694,7 @@ theorem φc_eq_c :
     have z_in_inter : z.val ∈ star ell b a ∩ star ell b c := by
       constructor <;> assumption
     rw [b_inter] at z_in_inter
-    simp only [star, mem_setOf_eq, mem_singleton_iff] at z_in_inter
+    simp only [star, mem_singleton_iff] at z_in_inter
     apply CPQ.bz_neq
     exact id (Eq.symm z_in_inter)
   rw [p_6 c b] at c_inter

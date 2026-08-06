@@ -124,7 +124,7 @@ theorem chain_union_card_lt
   have hU_mem : ∀ x : ↥U, ∃ α, (x : T) ∈ (chain.ring α).carrier :=
     fun x => chain.mem_union_iff.mp x.2
   -- U is local: each element lives in some R_α which is local, so unit-or-complement lifts
-  haveI hU_local : IsLocalRing U := by
+  have hU_local : IsLocalRing U := by
     apply IsLocalRing.of_isUnit_or_isUnit_one_sub_self
     intro a
     obtain ⟨α, hα⟩ := hU_mem a
@@ -185,7 +185,7 @@ theorem chain_union_card_lt
         Ideal.height (P.comap U.subtype) ≤ 1 := by
     intro t ht P hP
     have hP_prime := hP.isPrime
-    haveI : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
+    have : (Ideal.comap U.subtype P).IsPrime := hP_prime.comap _
     change (Ideal.comap U.subtype P).height ≤ ↑(1 : ℕ)
     rw [Ideal.height_le_iff]
     intro q hq_prime hq_lt
@@ -199,7 +199,7 @@ theorem chain_union_card_lt
     -- Pull back to a single ring R_γ containing both witnesses s ∈ q and x ∈ P \ q
     set γ := max αs αx
     set inclγ := Subring.inclusion (hU_le γ)
-    haveI : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
+    have : (Ideal.comap inclγ q).IsPrime := hq_prime.comap _
     set s' : (chain.ring γ).carrier := ⟨(s : T), chain.mono (le_max_left ..) hαs⟩
     have hs'_ne : s' ≠ 0 := fun h => hs_ne (Subtype.ext (congrArg
       (fun (x : (chain.ring γ).carrier) => (x : T)) h))
@@ -219,11 +219,11 @@ theorem chain_union_card_lt
         (fun r hr => (hq_lt.le (show inclγ r ∈ q from hr) : (inclγ r : T) ∈ P))
         (fun h => hx'_nq (h ▸ (hx_P : (x : T) ∈ P)))
     -- Use the height bound in R_γ to get ht(q ∩ R_γ) = 0, contradicting q ∩ R_γ ≠ ⊥
-    haveI : (Ideal.comap (chain.ring γ).carrier.subtype P).IsPrime :=
+    have : (Ideal.comap (chain.ring γ).carrier.subtype P).IsPrime :=
       hP_prime.comap _
     have hq'_ht := (Ideal.height_le_iff (n := 1)).mp
       ((chain.ring γ).height_bound t ht P hP) _ inferInstance hq'_lt
-    haveI : IsDomain (chain.ring γ).carrier := inferInstance
+    have : IsDomain (chain.ring γ).carrier := inferInstance
     exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
       simp_all
     ) ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot

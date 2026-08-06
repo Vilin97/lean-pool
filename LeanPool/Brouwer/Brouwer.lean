@@ -71,9 +71,9 @@ variable {n l} in
 def TTtostdSimplex (x : TT n l) : stdSimplex ℝ (Fin n) := ⟨fun i => x i / l, by
   rw [stdSimplex]
   constructor
-  · intro;simp only[Set.coe_setOf]
+  · intro;simp only[]
     apply div_nonneg <;> simp
-  · simp only [Set.coe_setOf];
+  · simp only [];
     rw [<-Finset.sum_div, div_eq_one_iff_eq]
     · exact_mod_cast x.2
     · exact Iff.mpr Nat.cast_ne_zero (PNat.ne_zero l)
@@ -184,7 +184,7 @@ lemma size_bound_key (σ : Finset (TT n l)) (C : Finset (Fin n)) (h : TT.ILO.isD
   obtain ⟨M, hM⟩ := h_exists_point
   have h_contradiction : ∀ k ∈ C, ∃ x_min ∈ σ, x_min <[k] M := by
     intro k hk_in_C
-    letI : LinearOrder (TT n l) := IndexedLOrder.IST k
+    let : LinearOrder (TT n l) := IndexedLOrder.IST k
     let x_min := σ.min' h2
     use x_min
     constructor
@@ -214,7 +214,7 @@ lemma size_bound_key (σ : Finset (TT n l)) (C : Finset (Fin n)) (h : TT.ILO.isD
     intro h_dom
     rcases h_dom M with ⟨k, hk, h_all⟩
     rcases h_contradiction k hk with ⟨x, hx, hlt⟩
-    letI : LinearOrder (TT n l) := IndexedLOrder.IST k
+    let : LinearOrder (TT n l) := IndexedLOrder.IST k
     exact not_lt.mpr (h_all x hx) hlt
   exact h_not_dominant h
 
@@ -242,7 +242,7 @@ theorem size_bound_in (σ : Finset (TT n l)) (C : Finset (Fin n)) (h : TT.ILO.is
     have h_bound : ∀ z ∈ σ, (z i : ℕ) - m' i < C.card := by
       intro z hz
       by_cases hi_in_C : i ∈ C
-      · simp only [Set.coe_setOf, dite_eq_ite, hi_in_C, ↓reduceIte, m']
+      · simp only [dite_eq_ite, hi_in_C, ↓reduceIte, m']
         have h_diff_bound : (z i : ℕ) - m i ≤ l - ∑ k ∈ C, m k := by
           calc
           (z i : ℕ) - m i ≤ ∑ k ∈ C, ((z k : ℕ) - m k) :=
@@ -258,7 +258,7 @@ theorem size_bound_in (σ : Finset (TT n l)) (C : Finset (Fin n)) (h : TT.ILO.is
                   := Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ C) (by simp)
               _ = l := z.2
         exact lt_of_le_of_lt h_diff_bound h_le_l_sub_sum
-      · simp only [Set.coe_setOf, dite_eq_ite, hi_in_C, ↓reduceIte, tsub_zero, m']
+      · simp only [dite_eq_ite, hi_in_C, ↓reduceIte, tsub_zero, m']
         have h_sum_le : (z i : ℕ) + ∑ k ∈ C, (z k : ℕ) ≤ l := by
           calc
             (z i : ℕ) + ∑ k ∈ C, (z k : ℕ) = ∑ k ∈ insert i C, (z k : ℕ) := by
@@ -275,7 +275,7 @@ theorem size_bound_in (σ : Finset (TT n l)) (C : Finset (Fin n)) (h : TT.ILO.is
     have h_nonneg : ∀ z ∈ σ, 0 ≤ (z i : ℤ) - (m' i : ℤ) := by
       intro z hz
       by_cases hi_in_C : i ∈ C
-      · simp only [Set.coe_setOf, dite_eq_ite, hi_in_C, ↓reduceIte, Int.sub_nonneg, Nat.cast_le, m']
+      · simp only [dite_eq_ite, hi_in_C, ↓reduceIte, Int.sub_nonneg, Nat.cast_le, m']
         exact_mod_cast (Finset.min'_le _ _ (Finset.mem_image_of_mem _ hz) : m i ≤ (z i : ℕ))
       · simp [m', hi_in_C]
     have h_abs_lt_2_card : abs ((x i : ℤ) - (y i : ℤ)) < 2 * (C.card : ℤ) := by

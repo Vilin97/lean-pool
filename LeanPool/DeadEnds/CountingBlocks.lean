@@ -99,7 +99,7 @@ lemma filter_mapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ)
     Set.MapsTo (· % M) ((completeBlock M k).filter P : Set ℕ) ((Finset.range M).filter P : Set ℕ) :=
         by
   intro M P N hN
-  simp only [Finset.coe_filter, Set.mem_setOf_eq] at hN ⊢
+  simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hN ⊢
   obtain ⟨hNblock, hPN⟩ := hN
   constructor
   · have hM : 0 < M := primeSquareProduct_pos S
@@ -128,7 +128,7 @@ lemma filter_surjOn (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ)
     Set.SurjOn (· % M) ((completeBlock M k).filter P : Set ℕ) ((Finset.range M).filter P : Set ℕ) :=
         by
   intro M P r hr
-  simp only [Finset.coe_filter, Set.mem_setOf_eq] at hr
+  simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hr
   obtain ⟨hr_range, hr_P⟩ := hr
   have hM : 0 < M := primeSquareProduct_pos S
   obtain ⟨N, hN_block, hN_mod⟩ := completeBlock_surjOn M k hM hr_range
@@ -136,7 +136,7 @@ lemma filter_surjOn (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ)
     have : N % M = r := hN_mod
     rw [this, Nat.mod_eq_of_lt (Finset.mem_range.mp hr_range)]
   refine ⟨N, ?_, hN_mod⟩
-  simp only [Finset.coe_filter, Set.mem_setOf_eq]
+  simp only [Finset.coe_filter, Set.mem_ofPred_eq]
   exact ⟨hN_block, (condition_mod_invariant b T S N r hmod_eq).mpr hr_P⟩
 
 lemma filter_card_eq_of_bijOn_filter (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ) :

@@ -194,7 +194,7 @@ lemma det_fallingFactorial_eq_det_vandermonde (c : Fin (k + 1) → ℕ) :
         simp_all only [sum_const, card_range, smul_eq_mul, mul_one, Fin.val_fin_lt]
     -- Since $M$ is upper triangular with ones on the diagonal, its determinant is 1.
     have h_det_M : Matrix.det M = 1 := by
-      rw [Matrix.det_of_upperTriangular]
+      rw [Matrix.det_of_isUpperTriangular]
       · simp_all only [gt_iff_lt, prod_const_one]
       · simp_all only [gt_iff_lt]
         obtain ⟨left, right⟩ := hM

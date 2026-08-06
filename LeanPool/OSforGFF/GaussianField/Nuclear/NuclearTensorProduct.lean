@@ -194,7 +194,7 @@ private theorem cauchySeq_seminorm_bound
       (IsTopologicalAddGroup.rightUniformSpace RapidDecaySeq) _ u)
     (k : ℕ) (ε : ℝ) (hε : 0 < ε) :
     ∃ N, ∀ n m, N ≤ n → N ≤ m → rapidDecaySeminorm k (u n - u m) < ε := by
-  letI : UniformSpace RapidDecaySeq := IsTopologicalAddGroup.rightUniformSpace RapidDecaySeq
+  let : UniformSpace RapidDecaySeq := IsTopologicalAddGroup.rightUniformSpace RapidDecaySeq
   -- The Cauchy condition says differences u n - u m are eventually in any nhds 0 set.
   -- We use the additive Cauchy characterization via entourages.
   -- The set {(x,y) | seminorm k (x - y) < ε} is an entourage because
@@ -219,13 +219,13 @@ private theorem cauchySeq_seminorm_bound
 
 instance instCompleteSpace :
     @CompleteSpace RapidDecaySeq (IsTopologicalAddGroup.rightUniformSpace RapidDecaySeq) := by
-  letI : UniformSpace RapidDecaySeq := IsTopologicalAddGroup.rightUniformSpace RapidDecaySeq
-  haveI : IsUniformAddGroup RapidDecaySeq := isUniformAddGroup_of_addCommGroup
-  haveI : (nhds (0 : RapidDecaySeq)).IsCountablyGenerated := by
+  let : UniformSpace RapidDecaySeq := IsTopologicalAddGroup.rightUniformSpace RapidDecaySeq
+  have : IsUniformAddGroup RapidDecaySeq := isUniformAddGroup_of_addCommGroup
+  have : (nhds (0 : RapidDecaySeq)).IsCountablyGenerated := by
     rw [(SeminormFamily.withSeminorms_iff_nhds_eq_iInf rapidDecaySeminorm).1
       rapidDecay_withSeminorms]
     exact Filter.iInf.isCountablyGenerated _
-  haveI : (uniformity RapidDecaySeq).IsCountablyGenerated :=
+  have : (uniformity RapidDecaySeq).IsCountablyGenerated :=
     IsUniformAddGroup.uniformity_countably_generated
   apply UniformSpace.complete_of_cauchySeq_tendsto
   intro u hu
@@ -566,11 +566,11 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
   h_completeSpace := by
     -- Transfer CompleteSpace from RapidDecaySeq to E via the CLE.
     -- Set up uniform spaces on both sides from rightUniformSpace.
-    letI uE : UniformSpace E := IsTopologicalAddGroup.rightUniformSpace E
-    haveI : IsUniformAddGroup E := isUniformAddGroup_of_addCommGroup
-    letI uR : UniformSpace RapidDecaySeq :=
+    let uE : UniformSpace E := IsTopologicalAddGroup.rightUniformSpace E
+    have : IsUniformAddGroup E := isUniformAddGroup_of_addCommGroup
+    let uR : UniformSpace RapidDecaySeq :=
       IsTopologicalAddGroup.rightUniformSpace RapidDecaySeq
-    haveI : IsUniformAddGroup RapidDecaySeq := isUniformAddGroup_of_addCommGroup
+    have : IsUniformAddGroup RapidDecaySeq := isUniformAddGroup_of_addCommGroup
     exact (completeSpace_congr (e := equiv.toLinearEquiv.toEquiv)
       equiv.isUniformEmbedding).2 RapidDecaySeq.instCompleteSpace
   basis m := equiv.symm (RapidDecaySeq.basisVec m)
@@ -1032,7 +1032,7 @@ private theorem finsetSup_seminorm_ball_mem_nhds
       (show (0 : F) ∈ {x | q i x < ε} by simp [map_zero, hε])
   apply Filter.mem_of_superset hmem
   intro x hx
-  simp only [Set.mem_iInter, Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_iInter, Set.mem_ofPred_eq] at hx ⊢
   rcases Seminorm.zero_or_exists_apply_eq_finset_sup q t x with h | ⟨i, hi, heq⟩
   · linarith
   · linarith [hx i hi]
@@ -1070,7 +1070,7 @@ theorem pure_continuous :
     rw [nhds_prod_eq]
     apply Filter.mem_of_superset (Filter.prod_mem_prod h_mem₁ h_mem₂)
     intro ⟨e₁, e₂⟩ ⟨he₁, he₂⟩
-    simp only [Set.mem_setOf_eq] at he₁ he₂ ⊢
+    simp only [Set.mem_ofPred_eq] at he₁ he₂ ⊢
     have harg : f e₁ e₂ - 0 = pure e₁ e₂ := by
       rw [sub_zero]
       rfl

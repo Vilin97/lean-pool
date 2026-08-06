@@ -387,7 +387,7 @@ private noncomputable def AspValley (α β : AspPerm) (a b : ℤ) : Valley where
         intro x
         simp only [Finset.mem_Icc, Finset.coe_Icc, Set.mem_Icc]
       intro n hn
-      simp only [Set.mem_setOf_eq] at hn
+      simp only [Set.mem_ofPred_eq] at hn
       suffices n ≥ L ∧ n ≤ R by simpa
       constructor
       · linarith [β.s_nonneg n b, α.s_ge a n]

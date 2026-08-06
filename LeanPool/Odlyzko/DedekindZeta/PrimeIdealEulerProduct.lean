@@ -167,8 +167,8 @@ variable (K : Type*) [Field K] [NumberField K]
 
 noncomputable instance countableIdealRingOfIntegers :
     Countable (Ideal (𝓞 K)) := by
-  letI (n : ℕ) : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
-    (Ideal.finite_setOf_absNorm_eq n).fintype
+  let (n : ℕ) : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
+    (Ideal.finite_setOfPred_absNorm_eq n).fintype
   exact Countable.of_equiv
     ((n : ℕ) × {I : Ideal (𝓞 K) // absNorm I = n})
     (Equiv.sigmaFiberEquiv (absNorm : Ideal (𝓞 K) → ℕ))
@@ -187,11 +187,11 @@ noncomputable def primeIdealCode (P : HeightOneSpectrum (𝓞 K)) : ℕ :=
 
 lemma prime_primeIdealCode (P : HeightOneSpectrum (𝓞 K)) :
     Nat.Prime (primeIdealCode K P) :=
-  Nat.nth_mem_of_infinite Nat.infinite_setOf_prime _
+  Nat.nth_mem_of_infinite Nat.infinite_setOfPred_prime _
 
 lemma primeIdealCode_injective :
     Function.Injective (primeIdealCode K) :=
-  (Nat.nth_strictMono Nat.infinite_setOf_prime).injective.comp
+  (Nat.nth_strictMono Nat.infinite_setOfPred_prime).injective.comp
     Encodable.encode_injective
 
 /-- A prime ideal code embedding used in the Odlyzko-bound argument. -/

@@ -321,7 +321,7 @@ lemma limsup_birkhoffAverage_nonpos_of_condexp_neg (hf : MeasurePreserving f μ 
     ∀ᵐ x ∂μ, Tendsto (birkhoffAverage ℝ f φ · x) atTop nonneg := by
   apply Eventually.mono _ fun _ ↦ birkhoffAverage_tendsto_nonpos_of_not_mem_divergentSet
   apply ae_iff.mpr
-  simp only [not_not, Set.setOf_mem_eq]
+  simp only [not_not, Set.ofPred_mem_eq]
   exact divergentSet_zero_meas_of_condexp_neg μ h hf hφ hφ'
 
 /-- Conditional expectation of an observable onto the invariant measurable space of `f`. -/

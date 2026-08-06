@@ -184,7 +184,7 @@ lemma condKernel_map_prodMk_left {V : Type*} [Nonempty V] [MeasurableSpace V]
     refine fun h_zero ↦ hy.2 ?_
     refine measure_mono_null ?_ h_zero
     intro p
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_singleton_iff]
     conv_lhs => rw [← Prod.eta x, Prod.mk_inj]
     exact fun h ↦ h.2
   have h_preimage : (fun p ↦ (p.1,
@@ -200,7 +200,7 @@ lemma condKernel_map_prodMk_left {V : Type*} [Nonempty V] [MeasurableSpace V]
   congr
   ext p
   simp only [Set.singleton_prod, Set.mem_preimage, Set.mem_image, Prod.mk.injEq,
-    exists_eq_right_right, Set.mem_setOf_eq]
+    exists_eq_right_right, Set.mem_ofPred_eq]
   refine ⟨fun h ↦ ⟨p.2, ?_, ?_⟩, fun ⟨p2, h_mem, h_eq⟩ ↦ ?_⟩
   · simp_all
   · rw [h.2, Prod.mk.eta]
@@ -619,7 +619,7 @@ def _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.mk
   exact (fun _ : AEFiniteKernelSupport κ μ =>
     if hS : Nonempty S then
       κ.piecewise (s := {t | ∃ A : Finset S, κ t Aᶜ = 0})
-        (by rw [Set.setOf_exists]; measurability)
+        (by rw [Set.ofPred_exists]; measurability)
         (.const _ <| .dirac hS.some)
     else 0) hκ
 
@@ -640,7 +640,7 @@ open Classical in
 lemma _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.mk_eq
     [hS : Nonempty S] {κ : Kernel T S} (hκ : AEFiniteKernelSupport κ μ) :
     hκ.mk = κ.piecewise (s := {t | ∃ A : Finset S, κ t Aᶜ = 0})
-      (by rw [Set.setOf_exists]; measurability) (.const _ <| .dirac hS.some) := by
+      (by rw [Set.ofPred_exists]; measurability) (.const _ <| .dirac hS.some) := by
   simp [AEFiniteKernelSupport.mk, hS]
 
 lemma _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.finiteKernelSupport_mk
@@ -796,7 +796,7 @@ lemma _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.comap_equiv
   rw [ae_map_iff f.symm.measurable.aemeasurable]
   · simp only [MeasurableEquiv.apply_symm_apply]
     exact hκ
-  · rw [Set.setOf_exists]
+  · rw [Set.ofPred_exists]
     measurability
 
 /-- Projecting a kernel to first coordinate preserves finite kernel support. -/
@@ -955,7 +955,7 @@ protected lemma _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.prodMkRigh
   rw [Measure.ae_prod_mem_iff_ae_ae_mem]
   · filter_upwards [hκ.ae_eq_mk] with x hx
     simp [hx]
-  · simp only [prodMkRight_apply, measurableSet_setOf]
+  · simp only [prodMkRight_apply, measurableSet_setOfPred]
     exact .of_discrete
 
 /-- prodMkLeft preserves finite kernel support. -/

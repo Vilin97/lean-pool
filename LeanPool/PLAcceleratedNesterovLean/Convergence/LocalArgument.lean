@@ -62,7 +62,7 @@ private abbrev localConvergenceAtBasePointProof
         (∀ k, (nesterovSeq f η ρ x₁ k).lookahead η ∈ U) ∧
         HasAcceleratedRate f
           (fun k => (nesterovSeq f η ρ x₁ k).lookahead η) (↑L) ((1 - θ) ^ 2 * μ_minus) := by
-  haveI : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
+  have : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
   let η := 1 / (L : ℝ)
   let ρ := (1 - Real.sqrt (μ_minus * η)) / (1 + Real.sqrt (μ_minus * η))
   have hS_argmin : S = argminSet f := hrange

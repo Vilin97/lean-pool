@@ -455,8 +455,8 @@ private lemma chebyshev_seven_twelfths_bound
   have hcompl_sub : {ω | (7 : ℝ) * ↑k / 12 ≤ S ω}ᶜ ⊆
       {ω | ↑k / 12 ≤ |S ω - ∫ ω, S ω ∂μ|} := by
     intro ω hω
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_le] at hω
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_le] at hω
+    simp only [Set.mem_ofPred_eq]
     have hgap : ∫ ω, S ω ∂μ - S ω ≥ ↑k / 12 := by linarith
     calc ↑k / 12 ≤ ∫ ω, S ω ∂μ - S ω := hgap
       _ ≤ |S ω - ∫ ω, S ω ∂μ| := by rw [abs_sub_comm]; exact le_abs_self _
@@ -480,7 +480,7 @@ private lemma chebyshev_seven_twelfths_bound
   apply le_trans hgood
   apply μ.mono
   intro ω hω
-  simp only [Set.mem_setOf_eq] at hω ⊢
+  simp only [Set.mem_ofPred_eq] at hω ⊢
   rw [hS_count ω] at hω
   have : (7 : ℝ) * ↑k ≤ 12 * ↑(univ.filter (fun j => ω ∈ events j)).card := by
     linarith
@@ -508,7 +508,7 @@ private lemma majority_error_le_seven_rate_of_good_fraction
     intro j
     change MeasurableSet {x : X | hs j x ≠ c x}
     have : {x : X | hs j x ≠ c x} = {x : X | hs j x = c x}ᶜ := by
-      ext x; simp [ne_eq, Set.mem_compl_iff, Set.mem_setOf_eq]
+      ext x; simp [ne_eq, Set.mem_compl_iff]
     rw [this]
     exact (measurableSet_eq_fun (hhs_meas j) hc_meas).compl
   let G : X → ENNReal := fun x =>
@@ -527,7 +527,7 @@ private lemma majority_error_le_seven_rate_of_good_fraction
       {x : X | boosted_majority k (fun j => hs j x) ≠ c x}
         ⊆ {x : X | threshold ≤ G x} := by
     intro x hx
-    simp only [Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_ofPred_eq] at hx ⊢
     set wrongAll : ℕ := (Finset.univ.filter (fun j => hs j x ≠ c x)).card with hwrongAll_def
     set wrongGood : ℕ := (good.filter (fun j => hs j x ≠ c x)).card with hwrongGood_def
     have hwrong_all : k ≤ 2 * wrongAll := by
@@ -606,7 +606,7 @@ private lemma majority_error_le_seven_rate_of_good_fraction
         ∑ j ∈ good, (bad j).indicator (fun _ => (2 : ENNReal)) x
       have hsum_eq : ∑ j ∈ good, (bad j).indicator (fun _ => (2 : ENNReal)) x
           = ↑(2 * wrongGood) := by
-        simp only [bad, Set.indicator_apply, Set.mem_setOf_eq]
+        simp only [bad, Set.indicator_apply, Set.mem_ofPred_eq]
         trans (∑ j ∈ good, if hs j x ≠ c x then (2 : ENNReal) else 0)
         · rfl
         have hcast : ∀ j ∈ good, (if hs j x ≠ c x then (2 : ENNReal) else 0)
@@ -698,7 +698,7 @@ private lemma boosted_sample_error_le_of_good_blocks
     Finset.univ.filter (fun j => ω ∈ goodBlockEvent L D c rate k n j)
   have hhs_meas : ∀ j : Fin k, Measurable (hs j) := by
     intro j
-    haveI : MeasurableBatchLearner X L := ⟨hL_meas⟩
+    have : MeasurableBatchLearner X L := ⟨hL_meas⟩
     exact learn_measurable_fixed L
       (fun i => (blockExtract k n ω j i, c (blockExtract k n ω j i)))
   have hgooderr :
@@ -888,7 +888,7 @@ private theorem boost_two_thirds_to_pac (X : Type u) [MeasurableSpace X]
       (Finset.univ.filter (fun j => ω ∈ goodBlockEvent L D c rate (n + 1) n j)).card} ⊆
       {xs | D {x | L'.learn (fun i => (xs i, c (xs i))) x ≠ c x} ≤ ENNReal.ofReal ε} := by
     intro ω hω
-    rw [Set.mem_setOf_eq, herr_set_eq ω]
+    rw [Set.mem_ofPred_eq, herr_set_eq ω]
     have hbound := boosted_sample_error_le_of_good_blocks D c (hc_meas c hcC) L
       rate (n + 1) n ω (by omega) hω
     exact le_trans hbound (ENNReal.ofReal_le_ofReal h7rate)
@@ -910,7 +910,7 @@ theorem universal_imp_pac (X : Type u) [MeasurableSpace X]
     PACLearnable X C := by
   have hc_meas : ∀ c ∈ C, Measurable c := MeasurableHypotheses.mem_measurable (C := C)
   obtain ⟨L, rate, hrate, huniv⟩ := hul
-  haveI : MeasurableBatchLearner X L := ⟨hL_meas L⟩
+  have : MeasurableBatchLearner X L := ⟨hL_meas L⟩
   exact boost_two_thirds_to_pac X C L rate hrate huniv
 
 -- PAC does not imply mistake-bounded.
@@ -1180,7 +1180,7 @@ theorem ex_not_implies_pac :
         change Set.Finite { x | (if h : x ∈ Finset.range (n + 1) then f ⟨x, h⟩ else false) = true }
         apply Set.Finite.subset (Finset.range (n + 1)).finite_toSet
         intro x hx
-        simp only [Set.mem_setOf_eq] at hx
+        simp only [Set.mem_ofPred_eq] at hx
         simp only [Finset.mem_coe]
         by_contra hx'
         simp [hx'] at hx

@@ -214,7 +214,7 @@ lemma reindex_left_inv {n : ℕ} (eI : G.I ≃ Fin n) :
 def mapSimplex {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) :
     stdSimplex ℝ n → stdSimplex ℝ m :=
   fun x => ⟨fun i => x.1 (e.symm i), by
-    simp only [stdSimplex, Set.mem_setOf_eq]
+    simp only [stdSimplex, Set.mem_ofPred_eq]
     constructor
     · intro i; exact x.2.1 (e.symm i)
     · have h_sum : ∑ i : m, x.1 (e.symm i) = ∑ j : n, x.1 j := by
@@ -269,9 +269,9 @@ theorem Brouwer.mixedGame (f : G.mixedS → G.mixedS) (hf : Continuous f) : ∃ 
   let n : ℕ := Fintype.card G.I
   let eI : G.I ≃ Fin n := Fintype.equivFin (G.I)
   have n_pos : 0 < n := Fintype.card_pos_iff.mpr (by infer_instance)
-  letI : Inhabited (Fin n) := ⟨⟨0, n_pos⟩⟩
+  let : Inhabited (Fin n) := ⟨⟨0, n_pos⟩⟩
   have card_pos (i : G.I) : 0 < Fintype.card (G.SS i) := by
-    haveI : Inhabited (G.SS i) := inferInstance
+    have : Inhabited (G.SS i) := inferInstance
     exact Fintype.card_pos_iff.mpr inferInstance
   let card' : Fin n → ℕ+ := fun k => ⟨Fintype.card (G.SS (eI.symm k)), card_pos (eI.symm k)⟩
   let reindex : G.mixedS → ((k : Fin n) → stdSimplex ℝ (G.SS (eI.symm k))) :=

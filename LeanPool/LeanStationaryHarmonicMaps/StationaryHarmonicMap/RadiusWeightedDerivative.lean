@@ -738,7 +738,7 @@ of the ball integral radius function on the whole radius interval. -/
 theorem ballIntegralRadiusDerivativeIdentificationForWeights (n : ℕ) :
     BallIntegralRadiusDerivativeIdentificationForWeights n := by
   intro hne f R0 D hf hD_loc hweighted
-  letI : NeZero n := hne
+  let : NeZero n := hne
   dsimp [radiusIntervalMeasure]
   refine ae_restrict_of_ae_restrict_inter_Ioo
     (μ := volume) (s := Ioo (0 : ℝ) R0) ?_
@@ -764,7 +764,7 @@ identification, by forgetting the restriction on test weights. -/
 theorem ballIntegralRadiusDerivativeIdentification (n : ℕ) :
     BallIntegralRadiusDerivativeIdentification n := by
   intro hne f R0 D hf hD_loc hweighted
-  letI : NeZero n := hne
+  let : NeZero n := hne
   exact
     ballIntegralRadiusDerivativeIdentificationForWeights
       (n := n) (f := f) (R0 := R0) (D := D)

@@ -100,7 +100,7 @@ theorem one_add_offDiagEmb_posSemidef (v : Fin r → ℂ)
   have hBh : (Matrix.of fun (k : Fin r) (_ : Fin 1) => starRingEnd ℂ (v k))
       = (Matrix.of fun (_ : Fin 1) (k : Fin r) => v k)ᴴ := by
     ext k i; simp [Matrix.conjTranspose_apply, Matrix.of_apply]
-  haveI : Invertible (1 : Matrix (Fin r) (Fin r) ℂ) := invertibleOne
+  have : Invertible (1 : Matrix (Fin r) (Fin r) ℂ) := invertibleOne
   rw [one_add_offDiagEmb_eq, hBh, Matrix.PosDef.fromBlocks₂₂ _ _ Matrix.PosDef.one]
   simp only [inv_one, Matrix.mul_one]
   -- goal: (1 - B * Bᴴ).PosSemidef, a 1×1 matrix [1 - ∑ normSq (v k)]

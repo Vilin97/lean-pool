@@ -130,8 +130,8 @@ lemma chebyshev_majority_bound
   have hcompl_sub : {ω | ↑k / 2 < S ω}ᶜ ⊆
       {ω | ↑k / 6 ≤ |S ω - ∫ ω, S ω ∂μ|} := by
     intro ω hω
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_lt] at hω
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_lt] at hω
+    simp only [Set.mem_ofPred_eq]
     calc ↑k / 6 ≤ ∫ ω, S ω ∂μ - S ω := by linarith
       _ ≤ |S ω - ∫ ω, S ω ∂μ| := by rw [abs_sub_comm]; exact le_abs_self _
   have hcompl_le : μ {ω | ↑k / 2 < S ω}ᶜ ≤ ENNReal.ofReal δ :=
@@ -150,7 +150,7 @@ lemma chebyshev_majority_bound
   apply le_trans hgood
   apply μ.mono
   intro ω hω
-  simp only [Set.mem_setOf_eq] at hω ⊢
+  simp only [Set.mem_ofPred_eq] at hω ⊢
   rw [hS_count ω] at hω
   have : (↑k : ℝ) < 2 * ↑(univ.filter (fun j => ω ∈ events j)).card := by linarith
   exact_mod_cast this

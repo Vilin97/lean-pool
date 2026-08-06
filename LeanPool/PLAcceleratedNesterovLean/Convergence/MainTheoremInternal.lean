@@ -465,7 +465,7 @@ private theorem nesterov_pl_accelerated_rate_theta_tubular
     exists_total_nearest_projection hTub_sub hS_ne
   have hgrad_zero : ∀ x ∈ S, gradient f x = 0 :=
     gradient_eq_zero_on_argmin hS_argmin
-  haveI : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
+  have : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
   have hlocal : ∀ mstar ∈ S, ∃ (α : ℝ), 0 < α ∧
       Metric.ball mstar α ⊆ U ∧
       ∀ x₀ ∈ Metric.ball mstar α,

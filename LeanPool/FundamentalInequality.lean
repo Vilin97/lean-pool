@@ -141,7 +141,7 @@ lemma Valuation.linearIndependent_of_val_distinct_coset
     use x
     rw [hs_nz, Finset.mem_filter]
     exact ⟨hx, hgx⟩
-  haveI : Nonempty s_nz := h_snz_nonempty.to_subtype
+  have : Nonempty s_nz := h_snz_nonempty.to_subtype
   let f : s_nz → L := fun ⟨i, _⟩ => (algebraMap K L (g i)) * z i
   have hf_sum : ∑ i : s_nz, f i = 0 := by
     have h1 : ∑ i : s_nz, f i = ∑ i ∈ s_nz, (algebraMap K L (g i) * z i) :=
@@ -224,7 +224,7 @@ lemma Valuation.valuation_independence
       ∀ j, vL (algebraMap K L (d j) * u j) ≤ vL (algebraMap K L (d j0) * u j0)) :
     LinearIndependent K (fun (ij : I × J) ↦ z ij.1 * u ij.2) := by
   classical
-  haveI : Fintype I := Fintype.ofFinite I
+  have : Fintype I := Fintype.ofFinite I
   rw [Fintype.linearIndependent_iff]
   intro c hc
   by_contra h_not_zero
@@ -258,7 +258,7 @@ lemma Valuation.valuation_independence
     use i_nz
     rw [hs_I, Finset.mem_filter]
     exact ⟨Finset.mem_univ _, ⟨j_nz, hc_nz⟩⟩
-  haveI : Nonempty s_I := hs_I_nonempty.to_subtype
+  have : Nonempty s_I := hs_I_nonempty.to_subtype
   let f : s_I → L := fun ⟨i, _⟩ => z i * g i
   have hf_sum : ∑ i : s_I, f i = 0 := by
     have hs1 : ∑ i : s_I, f i = ∑ i ∈ s_I, z i * g i := Finset.sum_attach s_I (fun i => z i * g i)
@@ -495,7 +495,7 @@ theorem Valuation.fundamentalInequality [FiniteDimensional K L] :
   · rw [hf, mul_zero]
     exact Nat.zero_le _
   have h_f_pos : 0 < f := Nat.pos_of_ne_zero hf
-  haveI h_fin_Kv_Lv : Module.Finite (IsLocalRing.ResidueField vK.valuationSubring)
+  have h_fin_Kv_Lv : Module.Finite (IsLocalRing.ResidueField vK.valuationSubring)
       (IsLocalRing.ResidueField vL.valuationSubring) :=
     Module.finite_of_finrank_pos h_f_pos
   let Kv := IsLocalRing.ResidueField vK.valuationSubring
@@ -507,7 +507,7 @@ theorem Valuation.fundamentalInequality [FiniteDimensional K L] :
   let B := MonoidWithZeroHom.valueGroup (.ofClass vL)
   let Q := B ⧸ A.comap B.subtype
   have hQ_fin : Finite Q := Nat.finite_of_card_ne_zero he
-  haveI : Fintype Q := Fintype.ofFinite Q
+  have : Fintype Q := Fintype.ofFinite Q
   have h_card' : Fintype.card Q = e := by
     rw [← Nat.card_eq_fintype_card]
     exact rfl
@@ -599,8 +599,8 @@ theorem Valuation.fundamentalInequality [FiniteDimensional K L] :
     rw [h_val_sub] at hx
     have h_equiv := Valuation.isEquiv_valuation_valuationSubring vL
     exact h_equiv.eq_one_iff_eq_one.mpr hx
-  haveI : Nonempty (Fin e) := Fin.pos_iff_nonempty.mp (Nat.pos_of_ne_zero he)
-  haveI : Nonempty (Fin f) := Fin.pos_iff_nonempty.mp (Nat.pos_of_ne_zero hf)
+  have : Nonempty (Fin e) := Fin.pos_iff_nonempty.mp (Nat.pos_of_ne_zero he)
+  have : Nonempty (Fin f) := Fin.pos_iff_nonempty.mp (Nat.pos_of_ne_zero hf)
   have hu_res_indep : LinearIndependent Kv
       (fun j => IsLocalRing.residue vL.valuationSubring (u_sub j)) := by
     have h_eq : (fun j => IsLocalRing.residue vL.valuationSubring (u_sub j)) = b_res := by

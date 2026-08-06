@@ -55,7 +55,7 @@ theorem primesBetween_eq_ncard {a b : ℝ} (hb : 0 ≤ b) :
   congr
   ext p
   simp only [Finset.coe_filter, Finset.mem_Icc, Nat.ceil_le, Nat.le_floor_iff hb,
-    Set.mem_setOf_eq, and_assoc]
+    Set.mem_ofPred_eq, and_assoc]
 
 variable (x y z : ℝ) (hx : 0 < x) (hy : 0 < y) (hz : 1 ≤ z)
 

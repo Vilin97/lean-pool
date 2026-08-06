@@ -185,7 +185,7 @@ theorem exists_PhiZ [Fact m.Prime]
       IsCuspMeroR (fun τ : ℍ ↦ (orbitPoly m τ).coeff n) N (⊥ : Subring ℂ)) :
     ∃ PhiZ : Polynomial (Polynomial ℤ),
       ∀ τ : ℍ, orbitPoly m τ = specializeZ (j τ) PhiZ := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   choose Q hQ using orbitPoly_coeff_intPoly hZ
   refine ⟨∑ n ∈ Finset.range (m + 2), C (Q n) * X ^ n, ?_⟩
   have hPcoeff : ∀ k : ℕ, (∑ n ∈ Finset.range (m + 2), C (Q n) * X ^ n).coeff k
@@ -799,7 +799,7 @@ cusp-meromorphic of finite order with coefficients in `⊥ ⊆ ℂ` (the integer
 and an algebraic integer (the `ℤ[ζ_m]` `w`-expansion), hence in `⊥`. -/
 theorem orbitPoly_coeff_isCuspMeroR_bot [Fact m.Prime] (n : ℕ) :
     ∃ N : ℕ, IsCuspMeroR (fun τ : ℍ ↦ (orbitPoly m τ).coeff n) N (⊥ : Subring ℂ) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   obtain ⟨P, hP⟩ := mem_polyJ_iff.mp (orbitPoly_coeff_mem_polyJ (m := m) n)
   refine ⟨P.natDegree + (m ^ 2 + m), ?_⟩
   set N := P.natDegree + (m ^ 2 + m) with hNdef
@@ -840,7 +840,7 @@ theorem exists_PhiQ_j_root [Fact m.Prime] {τ σ : ℍ} {i : Option (ZMod m)} (h
     ∃ PhiQ : Polynomial (Polynomial ℚ),
       (∀ ρ : ℍ, orbitPoly m ρ = specializeY (j ρ) PhiQ) ∧
         (specializeY (j τ) PhiQ).eval (j σ) = 0 := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   obtain ⟨PhiQ, hPhiQ⟩ := exists_PhiQ_closed (m := m)
   exact ⟨PhiQ, hPhiQ, PhiQ_eval_j_root PhiQ hPhiQ h⟩
 

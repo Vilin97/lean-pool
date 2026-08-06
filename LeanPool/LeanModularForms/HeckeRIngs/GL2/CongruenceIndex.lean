@@ -32,7 +32,7 @@ namespace HeckeRing.GL2
 
 private lemma ZMod_inv_mul_cancel (p : ℕ) (hp : Nat.Prime p) (a : ℤ)
     (h : (a : ZMod p) ≠ 0) : (a : ZMod p)⁻¹ * (a : ZMod p) = 1 := by
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   apply ZMod.coe_int_inv_mul_eq_one
   rw [isCoprime_comm, Int.isCoprime_iff_gcd_eq_one]
   change Nat.Coprime p a.natAbs
@@ -72,7 +72,7 @@ private noncomputable def Gamma0Rep (j : Fin (p + 1)) : SL(2, ℤ) :=
 private lemma Gamma0_prime_index_inj :
     Function.Injective (fun j : Fin (p + 1) => QuotientGroup.mk (Gamma0Rep p j) :
       Fin (p + 1) → SL(2, ℤ) ⧸ (Gamma0 p)) := by
-  haveI : Fact (Nat.Prime p) := ⟨hp⟩
+  have : Fact (Nat.Prime p) := ⟨hp⟩
   intro ⟨j₁, hj₁⟩ ⟨j₂, hj₂⟩ hf
   rw [QuotientGroup.eq, Gamma0_mem] at hf
   simp only [Gamma0Rep] at hf
@@ -95,7 +95,7 @@ private lemma Gamma0_prime_index_inj :
 private lemma Gamma0_prime_index_surj :
     Function.Surjective (fun j : Fin (p + 1) => QuotientGroup.mk (Gamma0Rep p j) :
       Fin (p + 1) → SL(2, ℤ) ⧸ (Gamma0 p)) := by
-  haveI : Fact (Nat.Prime p) := ⟨hp⟩
+  have : Fact (Nat.Prime p) := ⟨hp⟩
   intro x
   obtain ⟨σ, rfl⟩ := QuotientGroup.mk_surjective x
   by_cases h : ((σ 1 0 : ℤ) : ZMod p) = 0
@@ -161,8 +161,8 @@ private lemma Gamma0_relindex_step_inj (k : ℕ) (hk : 0 < k) :
     Function.Injective (fun c : Fin p =>
       (QuotientGroup.mk (relindexRep p k hk c) :
         ↥(Gamma0 (p ^ k)) ⧸ (Gamma0 (p ^ (k + 1))).subgroupOf (Gamma0 (p ^ k)))) := by
-  haveI : Fact (Nat.Prime p) := ⟨hp⟩
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : Fact (Nat.Prime p) := ⟨hp⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   intro ⟨c₁, hc₁⟩ ⟨c₂, hc₂⟩ hf
   rw [QuotientGroup.eq, Subgroup.mem_subgroupOf, Gamma0_mem] at hf
   simp only [InvMemClass.coe_inv, MulMemClass.coe_mul, relindexRep] at hf
@@ -189,8 +189,8 @@ private lemma Gamma0_relindex_step_surj (k : ℕ) (hk : 0 < k) :
     Function.Surjective (fun c : Fin p =>
       (QuotientGroup.mk (relindexRep p k hk c) :
         ↥(Gamma0 (p ^ k)) ⧸ (Gamma0 (p ^ (k + 1))).subgroupOf (Gamma0 (p ^ k)))) := by
-  haveI : Fact (Nat.Prime p) := ⟨hp⟩
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : Fact (Nat.Prime p) := ⟨hp⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   intro x
   obtain ⟨⟨σ, hσ_K⟩, rfl⟩ := QuotientGroup.mk_surjective x
   have h_dvd : (↑(p ^ k) : ℤ) ∣ σ.1 1 0 := by

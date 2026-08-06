@@ -159,10 +159,10 @@ theorem exists_riemannianFiniteChartData :
   classical
   -- Build the emetric structure induced by the Riemannian metric, so `riemannianEDist` is the
   -- `edist`.
-  haveI : T3Space M := by infer_instance
-  letI : EMetricSpace M := EMetricSpace.ofRiemannianMetric I M
-  letI : BorelSpace M := ⟨rfl⟩
-  haveI : IsRiemannianManifold I M := by infer_instance
+  have : T3Space M := by infer_instance
+  let : EMetricSpace M := EMetricSpace.ofRiemannianMetric I M
+  let : BorelSpace M := ⟨rfl⟩
+  have : IsRiemannianManifold I M := by infer_instance
   -- Choose a Lipschitz neighborhood for each point (for the chart inverse in chart coordinates).
   have hLipData :
       ∀ x : M, ∃ (C : ℝ≥0), 0 < C ∧ ∃ (r : ℝ), 0 < r ∧
@@ -214,7 +214,7 @@ theorem exists_riemannianFiniteChartData :
     have : x ∈ ⋃ y ∈ (t : Finset M), U y := ht hx
     rcases mem_iUnion₂.1 this with ⟨y, hy, hxy⟩
     exact mem_iUnion_of_mem ⟨y, hy⟩ hxy
-  haveI : SigmaCompactSpace M := by infer_instance
+  have : SigmaCompactSpace M := by infer_instance
   have hU'_open : ∀ i : ι', IsOpen (U (i : M)) := fun i => hU_open (i : M)
   rcases SmoothPartitionOfUnity.exists_isSubordinate (ι := ι') (I := I) (M := M)
       (s := (univ : Set M)) isClosed_univ (fun i => U (i : M)) hU'_open hU' with

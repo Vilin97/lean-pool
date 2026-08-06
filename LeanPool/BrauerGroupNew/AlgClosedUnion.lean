@@ -142,7 +142,7 @@ omit [IsAlgClosure K K_bar] in
 lemma SetOfFinite_nonempty : (Set.range fun (L : SetOfFinite K K_bar) ↦
     intermediateTensor K K_bar A L).Nonempty := by
   refine ⟨intermediateTensor K K_bar A ⊥, ⟨⟨⊥, ?_⟩, rfl⟩⟩
-  simp only [SetOfFinite, Set.mem_setOf_eq]
+  simp only [SetOfFinite, Set.mem_ofPred_eq]
   infer_instance
 
 /-- K_bar ⊗[K] A = union of all finite subextension of K ⊗ A -/

@@ -125,8 +125,8 @@ private lemma smoothFun_image_mem_closedBall (hK : IsCompact K)
   classical
   have hR : 0 ≤ R := hRpos.le
   have hμK : (volume : Measure E) K < ∞ := hK.measure_lt_top (μ := (volume : Measure E))
-  haveI : Fact ((volume : Measure E) K < ∞) := ⟨hμK⟩
-  haveI : IsFiniteMeasure ((volume : Measure E).restrict K) := by infer_instance
+  have : Fact ((volume : Measure E) K < ∞) := ⟨hμK⟩
+  have : IsFiniteMeasure ((volume : Measure E).restrict K) := by infer_instance
   let μ : Measure E := (volume : Measure E).restrict K
   have hmK : 0 ≤ mK := by
     have : 0 ≤ (MeasureTheory.measureUnivNNReal (volume.restrict K)) := by simp
@@ -215,8 +215,8 @@ private lemma uniformEquicontinuous_smoothBCF_closedBall (hK : IsCompact K)
   have hR : 0 ≤ R := hRpos.le
   have hR0 : R ≠ 0 := ne_of_gt hRpos
   have hμK : (volume : Measure E) K < ∞ := hK.measure_lt_top (μ := (volume : Measure E))
-  haveI : Fact ((volume : Measure E) K < ∞) := ⟨hμK⟩
-  haveI : IsFiniteMeasure ((volume : Measure E).restrict K) := by infer_instance
+  have : Fact ((volume : Measure E) K < ∞) := ⟨hμK⟩
+  have : IsFiniteMeasure ((volume : Measure E).restrict K) := by infer_instance
   let μ : Measure E := (volume : Measure E).restrict K
   let mK : ℝ :=
     (MeasureTheory.measureUnivNNReal (volume.restrict K)) ^ ((2 : ℝ≥0∞).toReal⁻¹)
@@ -432,15 +432,15 @@ theorem smoothBCF_image_closedBall_isCompact (hK : IsCompact K) (hKm : Measurabl
     simp [hball]
   · have hRpos : 0 < R := lt_of_le_of_ne hR (Ne.symm hR0)
     -- Compactness of the codomain.
-    letI : CompactSpace ↥(Kψ (K := K) (ψ := ψ)) :=
+    let : CompactSpace ↥(Kψ (K := K) (ψ := ψ)) :=
       isCompact_iff_compactSpace.1 (isCompact_Kψ (K := K) (ψ := ψ) hK hψcs)
     let A :
         Set (BoundedContinuousFunction (↥(Kψ (K := K) (ψ := ψ))) ℝ) :=
       smoothBCF (E := E) (K := K) (ψ := ψ) hK hKm hψc hψcs '' Metric.closedBall (0 : _) R
     -- `volume.restrict K` is finite since `K` is compact.
     have hμK : (volume : Measure E) K < ∞ := hK.measure_lt_top (μ := (volume : Measure E))
-    letI : Fact ((volume : Measure E) K < ∞) := ⟨hμK⟩
-    haveI : IsFiniteMeasure (volume.restrict K) := by
+    let : Fact ((volume : Measure E) K < ∞) := ⟨hμK⟩
+    have : IsFiniteMeasure (volume.restrict K) := by
       infer_instance
     let μ : Measure E := (volume : Measure E).restrict K
     let mK : ℝ :=

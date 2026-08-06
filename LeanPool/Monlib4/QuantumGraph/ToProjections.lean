@@ -77,7 +77,7 @@ macro_rules
   | `(tactic| withProjectionMatrixCoalgebraQuantumCtx[$φ]) =>
       `(tactic|
         withMatrixQuantumCtx[$φ];
-        letI : Coalgebra ℂ (Matrix p p ℂ) := Coalgebra.ofFiniteDimensionalHilbertAlgebra)
+        let : Coalgebra ℂ (Matrix p p ℂ) := Coalgebra.ofFiniteDimensionalHilbertAlgebra)
 
 namespace FiniteDimensional
 
@@ -92,17 +92,16 @@ namespace Qam
 
 /-- The reflexive idempotent product used in older Monlib quantum-graph files. -/
 noncomputable abbrev reflIdempotent (hφ : φ.IsFaithfulPosMap) (A : l(ℍ)) :
-    l(ℍ) →ₗ[ℂ] l(ℍ) := by
+    l(ℍ) →ₗ[ℂ] l(ℍ) :=
   letI : φ.IsFaithfulPosMap := hφ
-  withProjectionMatrixCoalgebraQuantumCtx[φ]
-  exact schurMul A
+  withProjectionMatrixCoalgebraQuantum[φ] (schurMul A)
 
 theorem isReal_and_idempotent_iff_psi_orthogonal_projection
     (hφ : φ.IsFaithfulPosMap) (A : l(ℍ)) :
     Qam.reflIdempotent hφ A A = A ∧ LinearMap.IsReal A ↔
       IsIdempotentElem ((hφ.psi (ψ := φ) 0 (1 / 2)) A) ∧
         IsSelfAdjoint ((hφ.psi (ψ := φ) 0 (1 / 2)) A) := by
-  letI : φ.IsFaithfulPosMap := hφ
+  let : φ.IsFaithfulPosMap := hφ
   withProjectionMatrixCoalgebraQuantumCtx[φ]
   change A •ₛ A = A ∧ LinearMap.IsReal A ↔
     IsIdempotentElem ((QuantumSet.Psi (A := ℍ) (B := ℍ) 0 (1 / 2)) A) ∧
@@ -141,7 +140,7 @@ theorem toMatrix_mulLeft_mulRight_adjoint {φ : ∀ i, Module.Dual ℂ (Matrix (
     ((Module.Dual.pi.IsFaithfulPosMap.toMatrix fun i => (hφ i))
         (LinearMap.mulLeft ℂ x * (LinearMap.adjoint (LinearMap.mulRight ℂ y) : l(∀ i, ℍ_ i))) =
       blockDiagonal' fun i => x i ⊗ₖ ((hφ i).sig (1 / 2) (y i))ᴴᵀ) := by
-  letI : ∀ i, (φ i).IsFaithfulPosMap := hφ
+  let : ∀ i, (φ i).IsFaithfulPosMap := hφ
   withPiBlockQuantumCtx[φ]
   simp_rw [_root_.map_mul, ← lmul_eq_mul, ← rmul_eq_mul, rmul_adjoint, pi_lmul_toMatrix,
     pi_rmul_toMatrix, ← blockDiagonal'_mul, ← mul_kronecker_mul]
@@ -323,7 +322,7 @@ theorem orthogonal_projection_iff_lm {𝕜 E : Type _} [RCLike 𝕜] [NormedAddC
     [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] {p : E →ₗ[𝕜] E} :
     (∃ U : Submodule 𝕜 E, (orthogonalProjection' U : E →ₗ[𝕜] E) = p) ↔
       IsSelfAdjoint p ∧ IsIdempotentElem p := by
-  letI : CompleteSpace E := FiniteDimensional.complete 𝕜 E
+  let : CompleteSpace E := FiniteDimensional.complete 𝕜 E
   have := @orthogonal_projection_iff 𝕜 E _ _ _ _ _ (toContinuousLinearMap p)
   simp_rw [is_idempotent_elem_to_clm, is_self_adjoint_to_clm] at this ⊢
   rw [← this]
@@ -444,14 +443,14 @@ theorem Qam.fdOrthogonalProjection_eq_sum_rankOne [hφ : φ.IsFaithfulPosMap]
           ∑ i : ι, ((rankOne ℂ (b i).1 (b i).1 : L(ℍ)) : l(ℍ))) := by
   withMatrixQuantumCtx[φ]
   intro b
-  letI : AddCommGroup U := Submodule.addCommGroup U
-  letI : NormedAddCommGroup U := Submodule.normedAddCommGroup U
-  letI : NormedSpace ℂ U := Submodule.normedSpace U
-  letI : FiniteDimensional ℂ U :=
+  let : AddCommGroup U := Submodule.addCommGroup U
+  let : NormedAddCommGroup U := Submodule.normedAddCommGroup U
+  let : NormedSpace ℂ U := Submodule.normedSpace U
+  let : FiniteDimensional ℂ U :=
     Submodule.finiteDimensional_of_le (show U ≤ (⊤ : Submodule ℂ ℍ) from le_top)
-  letI : ProperSpace U := FiniteDimensional.proper ℂ U
+  let : ProperSpace U := FiniteDimensional.proper ℂ U
   let completeU : @CompleteSpace U PseudoMetricSpace.toUniformSpace := complete_of_proper
-  letI : U.HasOrthogonalProjection :=
+  let : U.HasOrthogonalProjection :=
     @Submodule.HasOrthogonalProjection.ofCompleteSpace ℂ ℍ _ _ _ U completeU
   unfold Qam.fdOrthogonalProjection
   change ((orthogonalProjection' U : L(ℍ)) : l(ℍ)) =
@@ -518,10 +517,10 @@ theorem Qam.IdempotentAndReal.eq [hφ : φ.IsFaithfulPosMap]
                 (Qam.onbOfIdempotentAndReal hA1 hA2 i).1)))) := by
   withMatrixQuantumCtx[φ]
   let U := Qam.submoduleOfIdempotentAndReal hA1 hA2
-  letI : AddCommGroup U := Submodule.addCommGroup U
-  letI : NormedAddCommGroup U := Submodule.normedAddCommGroup U
-  letI : NormedSpace ℂ U := Submodule.normedSpace U
-  letI : FiniteDimensional ℂ U :=
+  let : AddCommGroup U := Submodule.addCommGroup U
+  let : NormedAddCommGroup U := Submodule.normedAddCommGroup U
+  let : NormedSpace ℂ U := Submodule.normedSpace U
+  let : FiniteDimensional ℂ U :=
     Submodule.finiteDimensional_of_le
       (show U ≤ (⊤ : Submodule ℂ ℍ) from le_top)
   simp_rw [← rankOne_toMatrix_transpose_psi_symm, ← map_sum, ←
@@ -578,8 +577,8 @@ noncomputable def RealQam.edges [hφ : φ.IsFaithfulPosMap] {x : l(ℍ)} (hx : R
 noncomputable def RealQam.edges' [hφ : φ.IsFaithfulPosMap] : { x :
     ℍ →ₗ[ℂ] ℍ // RealQam hφ x } → ℕ := fun x =>
   FiniteDimensional.finrank ℂ
-    (Qam.submoduleOfIdempotentAndReal (Set.mem_setOf.mp (Subtype.mem x)).1
-      (Set.mem_setOf.mp (Subtype.mem x)).2)
+    (Qam.submoduleOfIdempotentAndReal (Set.mem_ofPred.mp (Subtype.mem x)).1
+      (Set.mem_ofPred.mp (Subtype.mem x)).2)
 
 theorem RealQam.edges_eq [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : RealQam hφ A) :
     withMatrixQuantum[φ]
@@ -639,7 +638,7 @@ theorem Qam.completeGraph_edges [hφ : φ.IsFaithfulPosMap] :
   withProjectionMatrixCoalgebraQuantumCtx[φ]
   have this : (RealQam.edges completeGraphRealQam : ℂ) =
     (Qam.completeGraph ℍ ℍ φ.matrix⁻¹).trace := RealQam.edges_eq _
-  haveI ig := hφ.matrixIsPosDef.invertible
+  have ig := hφ.matrixIsPosDef.invertible
   simp_rw [Qam.completeGraph, ContinuousLinearMap.coe_coe, rankOne_apply,
     Module.Dual.IsFaithfulPosMap.inner_eq', conjTranspose_one, Matrix.mul_one,
     mul_inv_of_invertible, trace_smul, smul_eq_mul, trace_one,
@@ -654,7 +653,7 @@ theorem Qam.trivialGraphRealQam [hφ : φ.IsFaithfulPosMap] [Nonempty p] :
     (letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
      RealQam hφ (Qam.trivialGraph ℍ)) := by
   withProjectionMatrixCoalgebraQuantumCtx[φ]
-  letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
+  let : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
   exact ⟨Qam.Nontracial.TrivialGraph.qam, Qam.Nontracial.trivialGraph.isReal⟩
 
 theorem Qam.trivialGraph_edges [hφ : φ.IsFaithfulPosMap] [Nonempty p] :
@@ -662,7 +661,7 @@ theorem Qam.trivialGraph_edges [hφ : φ.IsFaithfulPosMap] [Nonempty p] :
     (letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
      (@Qam.trivialGraphRealQam p _ _ φ hφ _).edges = 1) := by
   withProjectionMatrixCoalgebraQuantumCtx[φ]
-  letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
+  let : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
   have := RealQam.edges_eq (@Qam.trivialGraphRealQam p _ _ φ hφ _)
   nth_rw 2 [Qam.trivialGraph_eq] at this
   simp_rw [LinearMap.smul_apply, Module.End.one_apply, trace_smul, smul_eq_mul] at this
@@ -804,7 +803,7 @@ theorem RealQam.edges_eq_one_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : 
     unfold Qam.fdOrthogonalProjection
     rfl
   · rintro ⟨x, rfl⟩
-    letI := hφ.matrixIsPosDef.invertible
+    let := hφ.matrixIsPosDef.invertible
     have ugh : ((x : ℍ) * φ.matrix * (x : ℍ)ᴴ).trace = ‖(x : ℍ)‖ ^ 2 := by
       rw [← trace_mul_cycle, ← Module.Dual.IsFaithfulPosMap.inner_eq' hφ,
         inner_self_eq_norm_sq_to_K]

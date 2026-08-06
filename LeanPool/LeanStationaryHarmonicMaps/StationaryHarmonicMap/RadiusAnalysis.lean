@@ -312,7 +312,7 @@ theorem ballIntegralRadiusDerivativeRepresentation_of_weightedRepresentation
     (hidentify : BallIntegralRadiusDerivativeIdentification n) :
     BallIntegralRadiusDerivativeRepresentation n := by
   intro hne f R0 hf
-  letI : NeZero n := hne
+  let : NeZero n := hne
   rcases hweighted (f := f) (R0 := R0) hf with ⟨D, hD_loc, hD_weighted⟩
   exact ⟨D, hD_loc,
     hidentify (f := f) (R0 := R0) (D := D) hf hD_loc hD_weighted, hD_weighted⟩
@@ -325,7 +325,7 @@ theorem ballIntegralRadiusDerivativeRepresentationForWeights_of_weightedRepresen
     (hidentify : BallIntegralRadiusDerivativeIdentificationForWeights n) :
     BallIntegralRadiusDerivativeRepresentationForWeights n := by
   intro hne f R0 hf
-  letI : NeZero n := hne
+  let : NeZero n := hne
   rcases hweighted (f := f) (R0 := R0) hf with ⟨D, hD_loc, hD_weighted⟩
   exact ⟨D, hD_loc,
     hidentify (f := f) (R0 := R0) (D := D) hf hD_loc hD_weighted, hD_weighted⟩
@@ -336,7 +336,7 @@ theorem ballIntegralRadiusDerivativeFormula_of_representation {n : ℕ}
     (hrep : BallIntegralRadiusDerivativeRepresentation n) :
     BallIntegralRadiusDerivativeFormula n := by
   intro hne f R0 hf c
-  letI : NeZero n := hne
+  let : NeZero n := hne
   rcases hrep (f := f) (R0 := R0) hf with ⟨D, _hD_loc, hD_deriv, hD_weighted⟩
   rw [hD_weighted c]
   apply integral_congr_ae
@@ -350,7 +350,7 @@ theorem ballIntegralRadiusDerivativeFormulaForWeights_of_representation
     (hrep : BallIntegralRadiusDerivativeRepresentationForWeights n) :
     BallIntegralRadiusDerivativeFormulaForWeights n := by
   intro hne f R0 hf c hc
-  letI : NeZero n := hne
+  let : NeZero n := hne
   rcases hrep (f := f) (R0 := R0) hf with ⟨D, _hD_loc, hD_deriv, hD_weighted⟩
   rw [hD_weighted c hc]
   apply integral_congr_ae

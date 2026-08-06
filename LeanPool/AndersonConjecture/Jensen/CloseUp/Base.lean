@@ -59,10 +59,10 @@ theorem close_up_principal
     rw [Ideal.Quotient.nontrivial_iff, Ne, Ideal.eq_top_iff_one, Ideal.mem_span_singleton]
     intro ⟨c', hc'⟩
     have hmem : y ∈ IsLocalRing.maximalIdeal R.carrier :=
-      (IsLocalRing.mem_maximalIdeal _).mpr hy.not_unit
+      (IsLocalRing.mem_maximalIdeal _).mpr hy.not_isUnit
     rw [R.maximal_ideal_eq, Ideal.mem_comap] at hmem
     exact (IsLocalRing.mem_maximalIdeal _).mp hmem (isUnit_of_dvd_one ⟨c', hc'⟩)
-  haveI := hnt
+  have := hnt
   obtain ⟨P, hP_mem⟩ :=
     associatedPrimes.nonempty (R := T) (M := T ⧸ Ideal.span {(y : T)})
   have hy_in_P : (y : T) ∈ P := by
@@ -110,8 +110,8 @@ Proved by induction on prime factorization. -/
 theorem close_up_dvd
     (R : NSubring T) (y c : R.carrier)
     (hc : (c : T) ∈ Ideal.span {(y : T)}) : c ∈ Ideal.span {y} := by
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
-  haveI : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
   revert c
   refine UniqueFactorizationMonoid.induction_on_prime y ?_ ?_ ?_
   · simp_all

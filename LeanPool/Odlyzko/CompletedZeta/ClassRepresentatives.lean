@@ -51,9 +51,9 @@ open Classical in
 theorem sum_classIdealNormCount {n : ℕ} (hn : n ≠ 0) :
     ∑ C : ClassGroup (𝓞 K), classIdealNormCount K C n =
       idealNormCount K n := by
-  letI : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
-    (Ideal.finite_setOf_absNorm_eq n).fintype
-  letI : Fintype {I : (Ideal (𝓞 K))⁰ //
+  let : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
+    (Ideal.finite_setOfPred_absNorm_eq n).fintype
+  let : Fintype {I : (Ideal (𝓞 K))⁰ //
       absNorm (I : Ideal (𝓞 K)) = n} :=
     Fintype.ofEquiv _ (idealNormFiberEquivNonzero K hn)
   let e := fun C : ClassGroup (𝓞 K) ↦
@@ -88,8 +88,8 @@ open Classical in
 theorem classIdealNormCount_le_idealNormCount
     (C : ClassGroup (𝓞 K)) (n : ℕ) :
     classIdealNormCount K C n ≤ idealNormCount K n := by
-  letI : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
-    (Ideal.finite_setOf_absNorm_eq n).fintype
+  let : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
+    (Ideal.finite_setOfPred_absNorm_eq n).fintype
   rw [classIdealNormCount, idealNormCount]
   let f :
       {I : (Ideal (𝓞 K))⁰ //
@@ -130,8 +130,8 @@ private noncomputable instance finite_classIdealNormFiber
     Finite
       {I : {I : (Ideal (𝓞 K))⁰ // ClassGroup.mk0 I = C} //
         absNorm (I.1 : Ideal (𝓞 K)) = n} := by
-  letI : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
-    (Ideal.finite_setOf_absNorm_eq n).fintype
+  let : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
+    (Ideal.finite_setOfPred_absNorm_eq n).fintype
   let f :
       {I : (Ideal (𝓞 K))⁰ //
         ClassGroup.mk0 I = C ∧ absNorm (I : Ideal (𝓞 K)) = n} →
@@ -139,7 +139,7 @@ private noncomputable instance finite_classIdealNormFiber
     fun I ↦ ⟨I.1.1, I.2.2⟩
   have hf : Function.Injective f := fun I I' h ↦ by
     grind
-  letI : Finite
+  let : Finite
       {I : (Ideal (𝓞 K))⁰ //
         ClassGroup.mk0 I = C ∧ absNorm (I : Ideal (𝓞 K)) = n} :=
     Finite.of_injective f hf
@@ -294,8 +294,8 @@ private noncomputable instance finite_principalIdealAboveNormFiber
     (J : (Ideal (𝓞 K))⁰) (n : ℕ) :
     Finite {I : PrincipalIdealAbove K J //
       absNorm I.1.1 = n} := by
-  letI : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
-    (Ideal.finite_setOf_absNorm_eq n).fintype
+  let : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
+    (Ideal.finite_setOfPred_absNorm_eq n).fintype
   let f :
       {I : (Ideal (𝓞 K))⁰ //
         (J : Ideal (𝓞 K)) ∣ I ∧ IsPrincipal (I : Ideal (𝓞 K)) ∧
@@ -304,7 +304,7 @@ private noncomputable instance finite_principalIdealAboveNormFiber
     fun I ↦ ⟨I.1.1, I.2.2.2⟩
   have hf : Function.Injective f := fun I I' h ↦ by
     grind
-  letI : Finite
+  let : Finite
       {I : (Ideal (𝓞 K))⁰ //
         (J : Ideal (𝓞 K)) ∣ I ∧ IsPrincipal (I : Ideal (𝓞 K)) ∧
           absNorm (I : Ideal (𝓞 K)) = n} :=

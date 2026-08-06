@@ -271,7 +271,7 @@ private def jensen_construction_p0_uncountable_proof
     -- push forward to Q in T and derive contradiction
     by_contra hP_ne
     set Q := P.map φ_equiv.toRingHom with hQ_def
-    haveI : Q.IsPrime := Ideal.map_isPrime_of_equiv φ_equiv
+    have : Q.IsPrime := Ideal.map_isPrime_of_equiv φ_equiv
     have hQ_ne : Q ≠ ⊥ := by
       intro h
       apply hP_ne

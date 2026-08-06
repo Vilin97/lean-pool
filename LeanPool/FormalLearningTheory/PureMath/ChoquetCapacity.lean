@@ -156,7 +156,7 @@ private abbrev Bnd (N : ℕ → ℕ) : Set (ℕ → ℕ) :=
 private lemma isCompact_bnd (N : ℕ → ℕ) : IsCompact (Bnd N) := by
   have : Bnd N = Set.pi Set.univ (fun i => Set.Iic (N i)) := by
     ext g
-    simp only [Bnd, Set.mem_setOf_eq, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_Iic]
+    simp only [Bnd, Set.mem_ofPred_eq, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_Iic]
   rw [this]
   exact isCompact_univ_pi fun i => (Set.finite_Iic (N i)).isCompact
 
@@ -165,7 +165,7 @@ private lemma bnd_subset_cyl (N : ℕ → ℕ) (n : ℕ) : Bnd N ⊆ Cyl N n :=
 
 private lemma cyl_succ_eq (N : ℕ → ℕ) (n : ℕ) :
     Cyl N n = ⋃ k : ℕ, (Cyl N n ∩ {g | g (n + 1) ≤ k}) := by
-  ext g; simp only [Cyl, Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_inter_iff]
+  ext g; simp only [Cyl, Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_inter_iff]
   exact ⟨fun h => ⟨g (n + 1), h, le_refl _⟩, fun ⟨_, h, _⟩ => h⟩
 
 private lemma monotone_cyl_split (N : ℕ → ℕ) (n : ℕ) :
@@ -176,7 +176,7 @@ private lemma monotone_cyl_split (N : ℕ → ℕ) (n : ℕ) :
 private lemma cyl_inter_eq_cyl_update (N : ℕ → ℕ) (n k : ℕ) :
     Cyl N n ∩ {g : ℕ → ℕ | g (n + 1) ≤ k} = Cyl (Function.update N (n + 1) k) (n + 1) := by
   ext g
-  simp only [Cyl, Set.mem_inter_iff, Set.mem_setOf_eq, Function.update]
+  simp only [Cyl, Set.mem_inter_iff, Set.mem_ofPred_eq, Function.update]
   constructor
   · rintro ⟨hg, hgk⟩ i hi
     by_cases heq : i = n + 1
@@ -213,11 +213,11 @@ private lemma iInter_closure_image_cyl_eq
     {α : Type*} [TopologicalSpace α] [PolishSpace α]
     {f : (ℕ → ℕ) → α} (hf : Continuous f) (N : ℕ → ℕ) :
     ⋂ n, closure (f '' Cyl N n) = f '' Bnd N := by
-  haveI : T2Space α := inferInstance
+  have : T2Space α := inferInstance
   apply Set.Subset.antisymm
   · -- Hard direction: ⋂ closure(f '' Cyl N n) ⊆ f '' Bnd N
     -- Use metrizable structure for sequential arguments
-    letI := TopologicalSpace.upgradeIsCompletelyMetrizable α
+    let := TopologicalSpace.upgradeIsCompletelyMetrizable α
     intro y hy
     simp only [Set.mem_iInter] at hy
     -- For each n, y ∈ closure(f '' Cyl N n), so pick z_n ∈ f '' Cyl N n close to y
@@ -314,7 +314,7 @@ theorem MeasureTheory.AnalyticSet.cap_eq_iSup_isCompact
         rw [← Set.image_univ,
           show (Set.univ : Set (ℕ → ℕ)) = ⋃ k, {g : ℕ → ℕ | g 0 ≤ k} from by
             ext g
-            simp only [Set.mem_univ, Set.mem_iUnion, Set.mem_setOf_eq, true_iff]
+            simp only [Set.mem_univ, Set.mem_iUnion, Set.mem_ofPred_eq, true_iff]
             exact ⟨g 0, le_refl _⟩,
           Set.image_iUnion]
       have hmono_base : Monotone (fun k => f '' {g : ℕ → ℕ | g 0 ≤ k}) := by

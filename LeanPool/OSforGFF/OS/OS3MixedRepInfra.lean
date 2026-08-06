@@ -1186,7 +1186,7 @@ lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
       -- g ∘ φ = indicator of square
       have h_eq : g ∘ φ = (Set.Ioi 0 ×ˢ Set.Ioi 0).indicator (fun q => f q.1 (q.1 + q.2)) := by
         ext ⟨x, y⟩
-        simp only [g, T, φ, Set.indicator_apply, Set.mem_prod, Set.mem_Ioi, Set.mem_setOf_eq,
+        simp only [g, T, φ, Set.indicator_apply, Set.mem_prod, Set.mem_Ioi, Set.mem_ofPred_eq,
           Function.comp_apply]
         split_ifs <;> simp_all
       -- Apply transfer
@@ -1220,11 +1220,11 @@ lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
         -- T = {p | 0 < p.1 ∧ p.1 < p.2}, so (x, u) ∈ T iff 0 < x ∧ x < u
         -- Set.Ioo 0 u = {x | 0 < x ∧ x < u}
         -- These are the same condition!
-        simp only [g, T, Set.indicator_apply, Set.mem_Ioo, Set.mem_setOf_eq]
+        simp only [g, T, Set.indicator_apply, Set.mem_Ioo, Set.mem_ofPred_eq]
       · symm
         apply MeasureTheory.integral_eq_zero_of_ae
         filter_upwards with x
-        simp only [g, T, Set.indicator_apply, Set.mem_setOf_eq]
+        simp only [g, T, Set.indicator_apply, Set.mem_ofPred_eq]
         split_ifs with hcond
         · exfalso; exact hu (lt_trans hcond.1 hcond.2)
         · rfl
@@ -2460,7 +2460,7 @@ lemma s_xy_swap_bound_integrable (f : TestFunctionℂ) (m : ℝ) [Fact (0 < m)] 
     have h_inner : Integrable (fun s => s ^ (-(1:ℝ)/2) * Real.exp (-m^2 * s)) (volume.restrict
       (Set.Ioi 0)) := by
       have hr : (-1 : ℝ) < -(1:ℝ)/2 := by norm_num
-      have hp : (1 : ℝ) ≤ 1 := le_refl 1
+      have hp : (0 : ℝ) < 1 := one_pos
       have h := integrableOn_rpow_mul_exp_neg_mul_rpow hr hp hm2
       simp only [Real.rpow_one] at h
       exact h

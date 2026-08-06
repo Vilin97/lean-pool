@@ -473,7 +473,7 @@ theorem commutator_eq_span :
   rw [LieAlgebra.derivedSeries_succ_is_span (k := 0) (K := K) (L := L)]
   congr 1
   ext x
-  simp only [Set.mem_setOf_eq, LieIdeal.coe_bracket_of_module, Subtype.exists]
+  simp only [Set.mem_ofPred_eq, LieIdeal.coe_bracket_of_module, Subtype.exists]
   exact ⟨fun ⟨a, _, b, _, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨a, trivial, b, trivial, h⟩⟩
 
 /-- Lie brackets are contained in the commutator ideal. -/
@@ -756,7 +756,7 @@ theorem LieAlgebra.ad_into_commutator' (x : L) :
   rw [LieDerivation.ad_apply_apply]
   simp only [derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_zero, LieSubmodule.mem_toSubmodule]
   apply LieSubmodule.subset_lieSpan
-  simp only [Subtype.exists, LieSubmodule.mem_top, exists_const, Set.mem_setOf_eq,
+  simp only [Subtype.exists, LieSubmodule.mem_top, exists_const, Set.mem_ofPred_eq,
     exists_apply_eq_apply2]
 
 /-- The adjoint action of a Lie algebra on itself maps everything into the commutator. -/

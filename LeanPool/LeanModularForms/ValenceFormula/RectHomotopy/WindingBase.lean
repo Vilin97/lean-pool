@@ -318,9 +318,9 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
     simp_all
   rw [hgoal_eq]
   suffices hw_slit : w ∈ Complex.slitPlane by
-    simp only [Complex.slitPlane, Set.mem_setOf_eq] at hw_slit ⊢
+    simp only [Complex.slitPlane, Set.mem_ofPred_eq] at hw_slit ⊢
     simp_all
-  simp only [Complex.slitPlane, Set.mem_setOf_eq]
+  simp only [Complex.slitPlane, Set.mem_ofPred_eq]
   have ref_re : refP₀.re = 0 := refP₀_re_eq_zero
   have ref_im : refP₀.im = refY₀ := refP₀_im_eq
   have hw_re : w.re = (fdPolygon t).re := by simp only [hw_def, Complex.sub_re, ref_re, sub_zero]
@@ -408,7 +408,7 @@ lemma fdPolygon_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5
     unfold fdPolygonRadialCircle polygonToCircleRadial
     simp_all
   rw [hrc_eq] at hw
-  simp only [Complex.slitPlane, Set.mem_setOf_eq] at hw ⊢
+  simp only [Complex.slitPlane, Set.mem_ofPred_eq] at hw ⊢
   simp_all
 
 /-- w = fdPolygon · - refP₀ is continuous. -/

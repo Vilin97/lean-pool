@@ -61,7 +61,7 @@ private lemma strict_convex_comb_ub {a b x y U : ℝ} (ha : 0 ≤ a) (hb : 0 ≤
 
 lemma fdBox_convex (M : ℝ) : Convex ℝ (fdBox M) := by
   intro x hx y hy a b ha hb hab
-  simp only [fdBox, Set.mem_setOf_eq] at hx hy ⊢
+  simp only [fdBox, Set.mem_ofPred_eq] at hx hy ⊢
   have hre : (a • x + b • y).re = a * x.re + b * y.re := by simp [add_re]
   have him : (a • x + b • y).im = a * x.im + b * y.im := by simp [add_im]
   exact ⟨hre ▸ strict_convex_comb_lb ha hb hab hx.1 hy.1,
@@ -107,7 +107,7 @@ private lemma modform_not_locally_zero (s : ℍ) :
   have h_zero_on := h_analOn.eqOn_zero_of_preconnected_of_frequently_eq_zero
     h_preconn s.im_pos (h_top.filter_mono nhdsWithin_le_nhds).frequently
   apply hf; ext z
-  simpa only [ModularForm.coe_zero, Pi.zero_apply, modularFormCompOfComplex,
+  simpa only [FunLike.coe_zero, Pi.zero_apply, modularFormCompOfComplex,
     Function.comp_apply, UpperHalfPlane.ofComplex_apply] using h_zero_on z.im_pos
 
 include hf in
@@ -226,7 +226,7 @@ private lemma orderOfVanishingAt'_eq_analyticOrderNatAt (s : ℍ) (_hs : f s = 0
     (analyticAt_modform f (s : ℂ) s.im_pos).meromorphicOrderAt_eq]
   cases h : analyticOrderAt g₂ (s : ℂ) with
   | top => exact absurd h (modform_not_locally_zero f hf s)
-  | coe n => simp only [analyticOrderNatAt, h, ENat.toNat_coe]; norm_cast
+  | coe n => simp only [analyticOrderNatAt, h, ENat.toNat_natCast]; norm_cast
 
 /-! ### residueSimplePole lemmas -/
 

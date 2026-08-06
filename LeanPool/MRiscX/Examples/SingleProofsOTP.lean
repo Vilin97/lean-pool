@@ -514,10 +514,10 @@ theorem j_otp : ∀ (p k c l : UInt64),
             simp only [
               MState.getMemoryAt_def, MState.getRegisterAt_def,
               ne_eq,
-              Bool.not_eq_true, Set.mem_setOf_eq, Decidable.not_not] at pre
+              Bool.not_eq_true, Set.mem_ofPred_eq, Decidable.not_not] at pre
             rcases pre with ⟨⟨⟨h_var, h_I⟩, h_terminated, _⟩, _⟩
             simp only [ne_eq, MState.getRegisterAt_def, MState.getMemoryAt_def, Bool.not_eq_true,
-              Set.mem_setOf_eq, Decidable.not_not]
+              Set.mem_ofPred_eq, Decidable.not_not]
             simp at h_weak
             exists s'
     apply this
@@ -557,7 +557,7 @@ theorem beqz_otp : ∀ (p k c l : UInt64),
   rw [←h_code']
   have: ({n | n ≤ 4} ∪ {n | n > 5}) = {n:UInt64| n ≠ 4 + 1} := by
     ext a
-    simp only [gt_iff_lt, Set.mem_union, Set.mem_setOf_eq, UInt64.reduceAdd, ne_eq]
+    simp only [gt_iff_lt, Set.mem_union, Set.mem_ofPred_eq, UInt64.reduceAdd, ne_eq]
     grind
   rw [this]
   apply specification_JumpEqZero_false (pc := 4) (reg := 3) (label := "finish")

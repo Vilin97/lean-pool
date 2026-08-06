@@ -347,7 +347,7 @@ lemma lMap_models_lMap_iff
   · intro h s₁ hs₁
     exact (Structure.extendStructure.models_lMap s₁.struc Φ injf injr φ).mp <| h
         (by simp only [Semantics.models, Theory.lMap, Semantics.realizeSet_iff, Set.mem_image,
-            forall_exists_index, and_imp, forall_apply_eq_imp_iff₂, Set.mem_setOf_eq]
+            forall_exists_index, and_imp, forall_apply_eq_imp_iff₂, Set.mem_ofPred_eq]
             intro φ hp
             exact (Structure.extendStructure.models_lMap s₁.struc Φ injf injr φ).mpr
               (hs₁.realize _ hp))

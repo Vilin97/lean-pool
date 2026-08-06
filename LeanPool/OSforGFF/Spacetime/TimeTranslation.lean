@@ -400,7 +400,7 @@ private lemma schwartz_timeTranslation_mvt_bound
             rintro _ ⟨⟨s, _⟩, rfl⟩
             have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f (x + s • y)
             simpa only [pow_zero, one_mul] using this
-          haveI : Nonempty ↑(Set.Icc (0 : ℝ) 1) := ⟨⟨0, by simp⟩⟩
+          have : Nonempty ↑(Set.Icc (0 : ℝ) 1) := ⟨⟨0, by simp⟩⟩
           have h_sSup_le : sSup (∅ : Set ℝ) ≤ ⨆ i : ↑(Set.Icc (0 : ℝ) 1), D i.1 := by
             simp only [Real.sSup_empty]
             apply le_ciSup_of_le h_bdd ⟨0, by simp⟩
@@ -644,7 +644,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
           by_cases hxk : ‖x‖ ^ k = 0
           · simp only [hxk, zero_mul]; positivity
           · -- ‖x‖^k > 0 case
-            haveI : Nonempty ↑(Set.Icc (0 : ℝ) 1) := ⟨⟨0, by simp⟩⟩
+            have : Nonempty ↑(Set.Icc (0 : ℝ) 1) := ⟨⟨0, by simp⟩⟩
             -- BddAbove for the original sup
             have h_bdd : BddAbove (Set.range fun t : ↑(Set.Icc (0 : ℝ) 1) =>
                 ‖iteratedFDeriv ℝ (n + 1) f (x + t.1 • y)‖) := by
@@ -737,9 +737,9 @@ lemma continuous_timeTranslationSchwartz (f : TestFunction) :
   rw [nhds_iInf, Filter.tendsto_iInf]
   intro i
   -- For each seminorm i = (k, n), show T_h f → f in the seminorm topology
-  letI : SeminormedAddCommGroup TestFunction :=
+  let : SeminormedAddCommGroup TestFunction :=
     (schwartzSeminormFamily ℝ SpaceTime ℝ i).toSeminormedAddCommGroup
-  letI : PseudoMetricSpace TestFunction :=
+  let : PseudoMetricSpace TestFunction :=
     (schwartzSeminormFamily ℝ SpaceTime ℝ i).toSeminormedAddCommGroup.toPseudoMetricSpace
   rw [Metric.tendsto_nhds]
   intro ε hε

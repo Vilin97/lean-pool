@@ -82,7 +82,7 @@ Kernel-clean: assembled from `coprime_centralBinom_prime_iff` + odd-prime digit
 arithmetic. This is the per-prime Kummer fact the two-prime target stands on. -/
 theorem not_dvd_centralBinom_iff_lowDigits {p : ℕ} (hp : p.Prime) (hpodd : Odd p)
     (n : ℕ) : ¬ p ∣ Nat.centralBinom n ↔ LowDigits p n := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hp2 : 2 ≤ p := hp.two_le
   have hcop := Egrs75.Erdos376.coprime_centralBinom_prime_iff (p := p) n
   -- `Coprime (centralBinom n) p ↔ ¬ p ∣ centralBinom n`

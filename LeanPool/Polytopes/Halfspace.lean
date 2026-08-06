@@ -90,13 +90,13 @@ instance Halfspace.SetLike : SetLike (Halfspace E) E where
       have hv'1out : ∃ M1 : ℝ, ∀ m > M1, (m • v') ∉ f1.1 ⁻¹' {x | x ≤ α1} := by
         use α1 / f1.1 v'
         intro m hm hmem
-        rw [Set.mem_preimage, Set.mem_setOf, ContinuousLinearMap.map_smul, smul_eq_mul,
+        rw [Set.mem_preimage, Set.mem_ofPred, ContinuousLinearMap.map_smul, smul_eq_mul,
           ← le_div_iff₀ hv'1] at hmem
         exact not_lt_of_ge hmem hm
       have hv'2in : ∃ M2 : ℝ, ∀ m > M2, (m • v') ∈ f2.1 ⁻¹' {x | x ≤ α2} := by
         use α2 / f2.1 v'
         intro m hm
-        rw [Set.mem_preimage, Set.mem_setOf, ContinuousLinearMap.map_smul, smul_eq_mul]
+        rw [Set.mem_preimage, Set.mem_ofPred, ContinuousLinearMap.map_smul, smul_eq_mul]
         have : m * f2.1 v' ≤ α2 / f2.1 v' * f2.1 v' := by
           rw [← neg_le_neg_iff, ← mul_neg, ← mul_neg,
             mul_le_mul_iff_of_pos_right (neg_pos_of_neg hv'2)]
@@ -122,14 +122,14 @@ instance Halfspace.SetLike : SetLike (Halfspace E) E where
     rw [Set.mem_symmDiff]
     rcases (max_choice α1 α2) with hmax1 | hmax2
     · left
-      rw [hmax1, Set.mem_preimage, Set.mem_setOf, ContinuousLinearMap.map_smul, smul_eq_mul,
-        Set.mem_preimage, Set.mem_setOf, ContinuousLinearMap.map_smul, smul_eq_mul, ← hfeq, hf1p1,
+      rw [hmax1, Set.mem_preimage, Set.mem_ofPred, ContinuousLinearMap.map_smul, smul_eq_mul,
+        Set.mem_preimage, Set.mem_ofPred, ContinuousLinearMap.map_smul, smul_eq_mul, ← hfeq, hf1p1,
         mul_one]
       rw [max_eq_left_iff] at hmax1
       exact ⟨ le_refl _, not_le_of_gt <| lt_of_le_of_ne hmax1 h.symm ⟩
     · right
-      rw [hmax2, Set.mem_preimage, Set.mem_setOf, ContinuousLinearMap.map_smul, smul_eq_mul,
-        Set.mem_preimage, Set.mem_setOf, ContinuousLinearMap.map_smul, smul_eq_mul, ← hfeq, hf1p1,
+      rw [hmax2, Set.mem_preimage, Set.mem_ofPred, ContinuousLinearMap.map_smul, smul_eq_mul,
+        Set.mem_preimage, Set.mem_ofPred, ContinuousLinearMap.map_smul, smul_eq_mul, ← hfeq, hf1p1,
         mul_one]
       rw [max_eq_right_iff] at hmax2
       exact ⟨ le_refl _, not_le_of_gt <| lt_of_le_of_ne hmax2 h ⟩
@@ -214,7 +214,7 @@ lemma Hyperplane_affineClosed (Hi_ : Halfspace E) :
     → ∀ a : Fin n → ℝ, Finset.univ.sum a = 1 →
     Finset.affineCombination ℝ Finset.univ s a ∈ {x : E | Hi_.f.1 x = Hi_.α } := by
   intro s hs a ha
-  rw [Finset.affineCombination_eq_linear_combination _ _ _ ha, Set.mem_setOf, map_sum]
+  rw [Finset.affineCombination_eq_linear_combination _ _ _ ha, Set.mem_ofPred, map_sum]
   have hg : (fun i => Hi_.f.1 (a i • s i)) = fun i => a i * Hi_.α := by
     ext i
     rw [Set.range_subset_iff] at hs

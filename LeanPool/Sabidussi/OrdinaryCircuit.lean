@@ -317,7 +317,7 @@ private theorem Cycle.card_edges_le_card_support (C : G.Cycle) :
   let S := ↑(G.edgeSupport C.edges)
   let A := G.incidenceMap C.edges
   let σ : (S → F₂) →ₗ[F₂] F₂ := coordinateSum
-  letI : Nonempty S := C.support_nonempty
+  let : Nonempty S := C.support_nonempty
   have hrange : LinearMap.range A ≤ LinearMap.ker σ := by
     rintro y ⟨x, rfl⟩
     rw [LinearMap.mem_ker]

@@ -760,7 +760,7 @@ private lemma prod_diagonal_null :
     (volume.prod volume) {p : SpaceTime × SpaceTime | p.1 = p.2} = 0 := by
   have h_meas : MeasurableSet {p : SpaceTime × SpaceTime | p.1 = p.2} := measurableSet_diagonal
   rw [MeasureTheory.Measure.prod_apply h_meas]
-  simp only [Set.preimage_setOf_eq]
+  simp only [Set.preimage_ofPred_eq]
   have h_slice : ∀ x, (volume : Measure SpaceTime) {y : SpaceTime | x = y} = 0 := fun x => by
     rw [show {y : SpaceTime | x = y} = {x} from by ext y; simp [eq_comm]]
     exact MeasureTheory.measure_singleton x
@@ -772,7 +772,7 @@ private lemma ae_fst_ne_snd :
   have h := prod_diagonal_null
   rw [MeasureTheory.measure_eq_zero_iff_ae_notMem] at h
   filter_upwards [h] with p hp
-  exact fun heq => hp (Set.mem_setOf.mpr heq)
+  exact fun heq => hp (Set.mem_ofPred.mpr heq)
 
 /-- For complex test functions `f g`, the integrand `p ↦ f p.1 * ⟨middle p⟩ * conj (g p.2)`
     is a.e. strongly measurable whenever the middle factor is. -/

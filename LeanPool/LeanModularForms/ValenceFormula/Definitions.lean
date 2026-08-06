@@ -83,14 +83,14 @@ theorem ellipticPointRho_norm : ‖ellipticPointRho‖ = 1 := by
   change Real.sqrt (Complex.normSq _) = 1; rw [rho_normSq_eq_one, Real.sqrt_one]
 
 theorem ellipticPointI_mem_fd : ellipticPointI' ∈ 𝒟 := by
-  simp only [ModularGroup.fd, ellipticPointI', mem_setOf_eq]
+  simp only [ModularGroup.fd, ellipticPointI', mem_ofPred_eq]
   constructor
   · norm_num [Complex.normSq]
   · change |(I : ℂ).re| ≤ (1 : ℝ) / 2
     norm_num
 
 theorem ellipticPointRho_mem_fd : ellipticPointRho' ∈ 𝒟 := by
-  simp only [ModularGroup.fd, ellipticPointRho', mem_setOf_eq]
+  simp only [ModularGroup.fd, ellipticPointRho', mem_ofPred_eq]
   exact ⟨rho_normSq_eq_one ▸ le_refl _, by simp only [UpperHalfPlane.re]; norm_num⟩
 
 lemma ellipticPointI_ne_rho : ellipticPointI' ≠ ellipticPointRho' := by

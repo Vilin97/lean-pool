@@ -103,7 +103,7 @@ theorem linear_proj_IsPositive'_iff {U V : Submodule 𝕜 E} (hUV : IsCompl U V)
 theorem _root_.ContinuousLinearMap.IsPositive.toLinearMap' [FiniteDimensional 𝕜 E] (T : E →L[𝕜] E) :
   letI : CompleteSpace E := FiniteDimensional.complete 𝕜 E
   T.IsPositive ↔ T.toLinearMap.IsPositive' := by
-  letI : CompleteSpace E := FiniteDimensional.complete 𝕜 E
+  let : CompleteSpace E := FiniteDimensional.complete 𝕜 E
   simp_rw [LinearMap.IsPositive', ContinuousLinearMap.coe_coe, ContinuousLinearMap.IsPositive,
     ← ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric,
     ContinuousLinearMap.reApplyInnerSelf_apply T, and_congr_right_iff, ← @zero_le_real 𝕜]
@@ -115,7 +115,7 @@ theorem _root_.ContinuousLinearMap.IsPositive.toLinearMap' [FiniteDimensional �
 lemma isPositive'_iff_isPositive
   [FiniteDimensional 𝕜 E] (T : E →ₗ[𝕜] E) :
   T.IsPositive' ↔ T.IsPositive := by
-  letI : CompleteSpace E := FiniteDimensional.complete 𝕜 E
+  let : CompleteSpace E := FiniteDimensional.complete 𝕜 E
   rw [← T.isPositive_toContinuousLinearMap_iff, ContinuousLinearMap.IsPositive.toLinearMap']
   rfl
 
@@ -138,14 +138,14 @@ open scoped ComplexOrder
 omit [FiniteDimensional 𝕜 E] in
 private theorem _root_.spec_subseteq_nonneg :
   (spectrum 𝕜 T) ⊆ { x : 𝕜 | 0 ≤ x } ↔ ∀ x ∈ spectrum 𝕜 T, 0 ≤ x := by
-  simp_rw [Set.subset_def, Set.mem_setOf_eq]
+  simp_rw [Set.subset_def, Set.mem_ofPred_eq]
 
 /-- the spectrum of a positive linear map is non-negative -/
 theorem _root_.LinearMap.IsPositive'.nonneg_spectrum (h : T.IsPositive') :
   (spectrum 𝕜 T) ⊆ { x : 𝕜 | 0 ≤ x } := by
   intro μ hμ
   simp_rw [← Module.End.hasEigenvalue_iff_mem_spectrum] at hμ
-  simp only [Set.mem_setOf_eq, @RCLike.nonneg_def' 𝕜]
+  simp only [Set.mem_ofPred_eq, @RCLike.nonneg_def' 𝕜]
   have : ↑(re μ) = μ := by
     simp_rw [← conj_eq_iff_re]
     exact IsSymmetric.conj_eigenvalue_eq_self h.1 hμ
@@ -528,7 +528,7 @@ theorem LinearMap.IsSymmetric.rePowIsPositive'OfIsPositive' {𝕜 E : Type _} [R
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E]
     {T : E →ₗ[𝕜] E} (hT : T.IsPositive') (r : ℝ) :
     (T.rePow hT.1 r).IsPositive' := by
-  haveI := FiniteDimensional.complete 𝕜 E
+  have := FiniteDimensional.complete 𝕜 E
   simp_rw [LinearMap.IsSymmetric.rePow_eq_rankOne, ContinuousLinearMap.toLinearMap_sum]
   apply LinearMap.IsPositive'.sum
   intro i

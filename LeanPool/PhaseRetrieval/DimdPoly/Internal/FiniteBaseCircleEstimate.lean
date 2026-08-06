@@ -669,7 +669,7 @@ private theorem defect_setIntegral_const_center_compare_fast
           (‖c + circleChar N x * u‖ - ‖c‖) ^ 2) μCircle := by
     simpa [μCircle] using
       hconst_cont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  haveI : MeasureTheory.IsFiniteMeasure μCircle := by
+  have : MeasureTheory.IsFiniteMeasure μCircle := by
     dsimp [μCircle]
     infer_instance
   have herr_int :
@@ -2305,7 +2305,7 @@ private theorem carrierIocImage_union_mu_real_eq_card_inv_nat
     μCircle.real (⋃ k ∈ K, carrierIocImage k) =
       (K.card : ℝ) * (N : ℝ)⁻¹ := by
   classical
-  haveI : MeasureTheory.IsFiniteMeasure μCircle := by
+  have : MeasureTheory.IsFiniteMeasure μCircle := by
     dsimp [μCircle]
     infer_instance
   let U : Set Circle := ⋃ k ∈ K, carrierIocImage k
@@ -2355,7 +2355,7 @@ private theorem carrierIocImage_card_invNat_le_closedBall_ratio
     (K.card : ℝ) * (N : ℝ)⁻¹ <=
       min (2 * Real.pi) (2 * R) / (2 * Real.pi) := by
   classical
-  haveI : MeasureTheory.IsFiniteMeasure μCircle := by
+  have : MeasureTheory.IsFiniteMeasure μCircle := by
     dsimp [μCircle]
     infer_instance
   let U : Set Circle := ⋃ k ∈ K, carrierIocImage k
@@ -2570,10 +2570,10 @@ private theorem carrierAverage_sub_mean_integral_zero
     simp only [Set.univ_inter]
     change μCircle.real s = (N : ℝ)⁻¹
     simpa [s] using carrierArc_mu_real_eq_inv_nat k
-  haveI : MeasureTheory.IsFiniteMeasure μCircle := by
+  have : MeasureTheory.IsFiniteMeasure μCircle := by
     dsimp [μCircle]
     infer_instance
-  haveI : MeasureTheory.IsFiniteMeasure (μCircle.restrict s) :=
+  have : MeasureTheory.IsFiniteMeasure (μCircle.restrict s) :=
     MeasureTheory.isFiniteMeasureRestrict μCircle s
   have hconst :
       MeasureTheory.Integrable
@@ -2594,7 +2594,7 @@ private theorem setIntegral_bias_variance_of_mean_zero
     (∫ x in s, ‖f x‖ ^ 2 ∂ μ) =
       μ.real s * ‖c‖ ^ 2 +
         ∫ x in s, ‖f x - c‖ ^ 2 ∂ μ := by
-  haveI : MeasureTheory.IsFiniteMeasure (μ.restrict s) :=
+  have : MeasureTheory.IsFiniteMeasure (μ.restrict s) :=
     MeasureTheory.isFiniteMeasureRestrict μ s
   have hconst : MeasureTheory.Integrable (fun _x : α => c) μ := MeasureTheory.integrable_const _
   have hgc : MeasureTheory.Integrable (fun x => f x - c) μ :=
@@ -2664,7 +2664,7 @@ private theorem carrierAverage_bias_variance
     hf_cont.norm.pow 2
   have hgc_sq_cont : Continuous fun x : Circle => ‖f x - c‖ ^ 2 :=
     (hf_cont.sub continuous_const).norm.pow 2
-  haveI : MeasureTheory.IsFiniteMeasure μCircle := by
+  have : MeasureTheory.IsFiniteMeasure μCircle := by
     dsimp [μCircle]
     infer_instance
   have hf : MeasureTheory.Integrable f μCircle := by
@@ -3200,7 +3200,7 @@ private theorem carrier_fast_theta_error_le_half_base
             ‖slowBandPoly p (carrierBase k)‖ ^ 2) := by
   let u : ℂ := slowBandPoly p (carrierBase k)
   let s : Set Circle := arcSet (carrierArc N k)
-  haveI : MeasureTheory.IsFiniteMeasure μCircle := by
+  have : MeasureTheory.IsFiniteMeasure μCircle := by
     dsimp [μCircle]
     infer_instance
   have hconst :
@@ -3892,7 +3892,7 @@ private theorem slowBandPoly_carrier_variance_le_measure
       abs_of_nonneg (sq_nonneg ‖slowBandPoly p x - slowBandPoly p (carrierBase k)‖)]
     simpa [C] using
       slowBandPoly_sub_carrierBase_sq_le_L_cubed_l2_length_sq k p x hx
-  haveI : MeasureTheory.IsFiniteMeasure μCircle := by
+  have : MeasureTheory.IsFiniteMeasure μCircle := by
     dsimp [μCircle]
     infer_instance
   have hsfin : μCircle (arcSet (carrierArc N k)) < ⊤ :=
@@ -3983,7 +3983,7 @@ private theorem bandPoly_setIntegral_norm_sq_le_measure
     intro x hx
     rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg ‖bandPoly N p x‖)]
     exact bandPoly_norm_sq_le_L_circleL2Sq N p x
-  haveI : MeasureTheory.IsFiniteMeasure μCircle := by
+  have : MeasureTheory.IsFiniteMeasure μCircle := by
     dsimp [μCircle]
     infer_instance
   have hsfin : μCircle s < ⊤ := by exact MeasureTheory.measure_lt_top μCircle s

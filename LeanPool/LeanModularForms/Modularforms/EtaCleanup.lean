@@ -322,7 +322,7 @@ lemma eta_logderivs_const' : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn 
         have hx2 := ne_zero (⟨x, hx⟩ : ℍ)
         norm_cast at *
     · intro y hy
-      simp only [mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       have := UpperHalfPlane.im_inv_neg_coe_pos (⟨y, hy⟩ : ℍ)
       conv =>
         enter [2,1]
@@ -330,14 +330,14 @@ lemma eta_logderivs_const' : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn 
         simp
       simp_all
   · apply DifferentiableOn.mul
-    · simp only [DifferentiableOn, mem_setOf_eq]
+    · simp only [DifferentiableOn, mem_ofPred_eq]
       intro x hx
       apply (csqrt_differentiableAt ⟨x, hx⟩).differentiableWithinAt
-    · simp only [DifferentiableOn, mem_setOf_eq]
+    · simp only [DifferentiableOn, mem_ofPred_eq]
       intro x hx
       apply (eta_DifferentiableAt_UpperHalfPlane' ⟨x, hx⟩).differentiableWithinAt
   · exact isOpen_lt continuous_const Complex.continuous_im
-  · haveI : IsBoundedSMul ℝ ℂ := NormedSpace.toIsBoundedSMul
+  · have : IsBoundedSMul ℝ ℂ := NormedSpace.toIsBoundedSMul
     refine Convex.isPreconnected ?_
     exact convex_halfSpace_im_gt 0
   · intro x hx

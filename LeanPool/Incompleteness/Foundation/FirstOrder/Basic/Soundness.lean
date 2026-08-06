@@ -68,7 +68,7 @@ end Derivation
 variable {φ : SyntacticFormula L}
 
 theorem sound : T ⊢ φ → T ⊨[Struc.{v, u} L] φ := fun b s hT f ↦ by
-  haveI : s.Dom ⊧ₘ* T := hT
+  have : s.Dom ⊧ₘ* T := hT
   rcases Derivation.sound s.Dom f b with ⟨ψ, hp, h⟩
   have : ψ = φ := by simpa using hp
   rcases this

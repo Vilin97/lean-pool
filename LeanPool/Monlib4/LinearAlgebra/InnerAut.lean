@@ -429,13 +429,13 @@ theorem _root_.StarAlgEquiv.of_matrix_is_inner
     (f : Matrix n n 𝕜 ≃⋆ₐ[𝕜] Matrix n n 𝕜) :
     ∃ U : unitaryGroup n 𝕜, innerAutStarAlg U = f := by
   by_cases h : IsEmpty n
-  · haveI := h
+  · have := h
     use 1
     ext a
     have : a = 0 := by simp only [eq_iff_true_of_subsingleton]
     simp_rw [this, map_zero]
   rw [not_isEmpty_iff] at h
-  haveI := h
+  have := h
   let f' := f.toAlgEquiv
   obtain ⟨y', hy⟩ := aut_mat_inner f'
   let y := LinearMap.toMatrix' (y'.toLinearMap)
@@ -549,7 +549,7 @@ theorem _root_.Matrix.diagonal.spectrum {𝕜 n : Type _} [Field 𝕜] [Fintype 
   simp_rw [Set.ext_iff, ← Module.End.hasEigenvalue_iff_mem_spectrum, ←
     Module.End.has_eigenvector_iff_hasEigenvalue, toLin'_apply, funext_iff, mulVec,
     diagonal_dotProduct, Pi.smul_apply, smul_eq_mul, mul_eq_mul_right_iff, ne_eq,
-    Set.mem_setOf_eq, funext_iff, Pi.zero_apply, Classical.not_forall]
+    Set.mem_ofPred_eq, funext_iff, Pi.zero_apply, Classical.not_forall]
   intro x
   constructor
   · rintro ⟨v, ⟨h, ⟨j, hj⟩⟩⟩
@@ -578,7 +578,7 @@ theorem _root_.Matrix.IsHermitian.spectrum {x : Matrix n n 𝕜}
 theorem _root_.Matrix.IsHermitian.hasEigenvalue_iff {x : Matrix n n 𝕜}
     (hx : x.IsHermitian) (α : 𝕜) :
     Module.End.HasEigenvalue (toLin' x) α ↔ ∃ i, (hx.eigenvalues i : 𝕜) = α := by
-  rw [Module.End.hasEigenvalue_iff_mem_spectrum, hx.spectrum, Set.mem_setOf]
+  rw [Module.End.hasEigenvalue_iff_mem_spectrum, hx.spectrum, Set.mem_ofPred]
 
 theorem _root_.Matrix.IsAlmostHermitian.schur_decomp {A : Matrix n n 𝕜}
     (hA : A.IsAlmostHermitian) :

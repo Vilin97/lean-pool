@@ -92,7 +92,7 @@ lemma range_largeEigenspaceProjector
     LinearMap.range (largeEigenspaceProjector (𝕜 := 𝕜) (E := E) T hT hTc hε).toLinearMap =
       largeEigenspace (𝕜 := 𝕜) (E := E) T ε := by
   classical
-  haveI :
+  have :
       FiniteDimensional 𝕜 (largeEigenspace (𝕜 := 𝕜) (E := E) T ε) :=
     finiteDimensional_largeEigenspace_of_isCompactOperator_of_isSelfAdjoint
       (𝕜 := 𝕜) (E := E) T hT hTc hε
@@ -112,9 +112,9 @@ lemma largeEigenspaceProjector_comp
     simpa [t] using
       finite_set_hasEigenvalue_norm_ge_of_isCompactOperator_of_isSelfAdjoint
         (𝕜 := 𝕜) (E := E) T hT hTc hε
-  letI : Fintype ι := hsFin.fintype
+  let : Fintype ι := hsFin.fintype
   let U : Submodule 𝕜 E := largeEigenspace (𝕜 := 𝕜) (E := E) T ε
-  haveI : FiniteDimensional 𝕜 U :=
+  have : FiniteDimensional 𝕜 U :=
     finiteDimensional_largeEigenspace_of_isCompactOperator_of_isSelfAdjoint
       (𝕜 := 𝕜) (E := E) T hT hTc hε
   -- Unfold the cutoff projector as the orthogonal projection onto `U`.

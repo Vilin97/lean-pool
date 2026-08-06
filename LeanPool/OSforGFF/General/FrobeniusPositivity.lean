@@ -109,7 +109,7 @@ lemma psd_offdiag_zero_of_diag_zero
   [Finite ι]
   (H : Matrix ι ι ℝ) (hH_psd : H.PosSemidef) {i j : ι}
   (hii : H i i = 0) (hjj : H j j = 0) : H i j = 0 := by
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   classical
   -- Apply Cauchy–Schwarz with x = e_i, y = e_j
   have hcs := psd_cauchy_schwarz H hH_psd (Pi.single i (1 : ℝ)) (Pi.single j (1 : ℝ))
@@ -121,7 +121,7 @@ lemma posSemidef_diag_pos_exists_of_ne_zero
   [Finite ι]
   (H : Matrix ι ι ℝ) (hH_psd : H.PosSemidef) (hH_ne_zero : H ≠ 0) :
   ∃ i, 0 < H i i := by
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   classical
   -- Suppose all diagonal entries are ≤ 0; PSD gives ≥ 0, hence all zeros
   by_contra h

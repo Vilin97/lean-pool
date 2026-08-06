@@ -318,7 +318,7 @@ lemma wellBehaved_event_eq_preimage_gapSup
       oneSidedGhostGap h c m p ≥ ε / 2}
     = ghostGapSup C c m ⁻¹' Set.Ici (ε / 2) := by
   ext p
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_Ici, ghostGapSup]
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_Ici, ghostGapSup]
   constructor
   · rintro ⟨h_wit, hh_wit, hge⟩
     calc ε / 2 ≤ oneSidedGhostGap h_wit c m p := hge
@@ -355,7 +355,7 @@ theorem KrappWirthWellBehaved.toWellBehavedVC
     have : {p : (Fin m → X) × (Fin m → X) | ∃ h ∈ C,
       EmpiricalError X Bool h (fun i => (p.2 i, c (p.2 i))) (zeroOneLoss Bool) -
       EmpiricalError X Bool h (fun i => (p.1 i, c (p.1 i))) (zeroOneLoss Bool) ≥ ε / 2} = ∅ := by
-      ext p; simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      ext p; simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       rintro ⟨h, hh, -⟩; exact hC ⟨h, hh⟩
     rw [this]; exact MeasureTheory.nullMeasurableSet_empty
 

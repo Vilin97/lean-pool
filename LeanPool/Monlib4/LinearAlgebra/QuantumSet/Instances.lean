@@ -83,10 +83,10 @@ theorem Matrix.PosDef.rpow_neg_eq_inv_rpow {𝕜 : Type*} [RCLike 𝕜] {n :
     Type _} [Fintype n] [DecidableEq n]
   {Q : Matrix n n 𝕜} (hQ : Q.PosDef) (r : ℝ) :
   hQ.rpow (-r) = (hQ.rpow r)⁻¹ := by
-  haveI := (PosDef.rpow.isPosDef hQ r).invertible
-  letI :=  Matrix.PosDef.eigenvaluesInvertible' hQ
+  have := (PosDef.rpow.isPosDef hQ r).invertible
+  let :=  Matrix.PosDef.eigenvaluesInvertible' hQ
   simp_rw [rpow_eq, innerAut.map_inv]
-  haveI : Invertible (RCLike.ofReal ∘ (hQ.1.eigenvalues ^ r) : n → 𝕜) :=
+  have : Invertible (RCLike.ofReal ∘ (hQ.1.eigenvalues ^ r) : n → 𝕜) :=
   { invOf := (RCLike.ofReal ∘ (hQ.1.eigenvalues ^ (-r)) : n → 𝕜)
     invOf_mul_self := by
       ext
@@ -130,7 +130,7 @@ theorem _root_.Matrix.smulPosDef_isPosDef_iff {𝕜 : Type*} [RCLike 𝕜] {n :
   {Q : Matrix n n 𝕜} (hQ : Q.PosDef) (r : 𝕜) :
   (r • Q).PosDef ↔ 0 < r := by
   classical
-  letI : Fintype n := Fintype.ofFinite n
+  let : Fintype n := Fintype.ofFinite n
   let j : n := H.some
   let a : n → 𝕜 := fun i => if i = j then 1 else 0
   have ha2 : a ≠ 0 := by
@@ -168,7 +168,7 @@ theorem _root_.Matrix.smulPosSemidef_isPosSemidef_iff {𝕜 : Type*} [RCLike �
   {Q : Matrix n n 𝕜} (hQ : Q.PosSemidef) (r : 𝕜) :
   (r • Q).PosSemidef ↔ 0 ≤ r ∨ Q = 0 := by
   classical
-  letI : Fintype n := Fintype.ofFinite n
+  let : Fintype n := Fintype.ofFinite n
   by_cases hr : r = 0
   · simp only [hr, zero_smul, le_refl, true_or, PosSemidef.zero]
   · by_cases hQQ : Q = 0
@@ -216,7 +216,7 @@ theorem _root_.Matrix.smulOneInv {𝕜 : Type*} [RCLike 𝕜]
     ((((s : NNReal) : ℝ) : 𝕜) • (1 : Matrix n n 𝕜))⁻¹
       = (((s⁻¹ : NNReal) : ℝ) : 𝕜) • 1 := by
   simp only [NNReal.coe_inv, RCLike.ofReal_inv]
-  letI : Invertible (((s : NNReal) : ℝ) : 𝕜) := by
+  let : Invertible (((s : NNReal) : ℝ) : 𝕜) := by
     use (((s⁻¹ : NNReal) : ℝ) : 𝕜) <;> aesop
   rw [Matrix.inv_smul]
   · simp only [invOf_eq_inv, inv_one]
@@ -312,7 +312,7 @@ theorem sig_eq_id_iff [hφ : φ.IsFaithfulPosMap] (k : ℝ) :
       · have this1 := calc (∀ x, Commute x (hφ.matrixIsPosDef.rpow k))
           ↔ (∀ x, x * hφ.matrixIsPosDef.rpow k = hφ.matrixIsPosDef.rpow k * x) := Iff.rfl
           _ ↔ (∀ x, hφ.matrixIsPosDef.rpow (-k) * x * hφ.matrixIsPosDef.rpow k = x) := by
-            haveI := (PosDef.rpow.isPosDef hφ.matrixIsPosDef k).invertible
+            have := (PosDef.rpow.isPosDef hφ.matrixIsPosDef k).invertible
             simp_rw [PosDef.rpow_neg_eq_inv_rpow,
               ← Matrix.inv_mul_eq_iff_eq_mul_of_invertible, mul_assoc]
           _ ↔ (∀ x, sig hφ k x = x) := Iff.rfl
@@ -513,9 +513,9 @@ def Module.Dual.pi.IsFaithfulPosMap.innerProductAlgebra
       inner := fun x y => @inner ℂ (PiMat ℂ k s) _ x y
       norm_smul_le := by
         intro c x
-        letI : InnerProductSpace.Core ℂ (PiMat ℂ k s) :=
+        let : InnerProductSpace.Core ℂ (PiMat ℂ k s) :=
           Module.Dual.PiInnerProductCore (φ := ψ)
-        letI : NormedSpace ℂ (PiMat ℂ k s) :=
+        let : NormedSpace ℂ (PiMat ℂ k s) :=
           InnerProductSpace.Core.toNormedSpace
         exact NormedSpace.norm_smul_le c x
       norm_sq_eq_inner := norm_sq_eq_re_inner (𝕜 := ℂ)
@@ -538,8 +538,8 @@ noncomputable instance Module.Dual.pi.IsFaithfulPosMap.quantumSet
       rw [inner_pi_eq_sum, inner_pi_eq_sum]
       apply Finset.sum_congr rfl
       intro i _
-      letI : starAlgebra (Matrix (s i) (s i) ℂ) := Matrix.isStarAlgebra (φ := ψ i)
-      letI : QuantumSet (Matrix (s i) (s i) ℂ) :=
+      let : starAlgebra (Matrix (s i) (s i) ℂ) := Matrix.isStarAlgebra (φ := ψ i)
+      let : QuantumSet (Matrix (s i) (s i) ℂ) :=
         Module.Dual.IsFaithfulPosMap.quantumSet (φ := ψ i)
       exact QuantumSet.modAut_isSymmetric (A := Matrix (s i) (s i) ℂ) r (x i) (y i)
     inner_star_left x y z := by
@@ -590,12 +590,12 @@ theorem LinearMap.mul'_comp_mul'_adjoint_of_delta_form {φ : Module.Dual ℂ (Ma
       Module.Dual.IsFaithfulPosMap.quantumSet (φ := φ)
     letI : Coalgebra ℂ (Matrix n n ℂ) := Coalgebra.ofFiniteDimensionalHilbertAlgebra
     LinearMap.mul' ℂ (Matrix n n ℂ) ∘ₗ Coalgebra.comul = φ.matrix⁻¹.trace • 1 := by
-  letI : starAlgebra (Matrix n n ℂ) := Matrix.isStarAlgebra (φ := φ)
-  letI : QuantumSet (Matrix n n ℂ) :=
+  let : starAlgebra (Matrix n n ℂ) := Matrix.isStarAlgebra (φ := φ)
+  let : QuantumSet (Matrix n n ℂ) :=
     Module.Dual.IsFaithfulPosMap.quantumSet (φ := φ)
-  letI : Coalgebra ℂ (Matrix n n ℂ) := Coalgebra.ofFiniteDimensionalHilbertAlgebra
-  letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
-  letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) :=
+  let : Coalgebra ℂ (Matrix n n ℂ) := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
+  let : _root_.InnerProductSpace ℂ (Matrix n n ℂ) :=
     Module.Dual.InnerProductSpace (φ := φ)
   change LinearMap.mul' ℂ (Matrix n n ℂ) ∘ₗ
     LinearMap.adjoint (LinearMap.mul' ℂ (Matrix n n ℂ)) = φ.matrix⁻¹.trace • 1
@@ -615,26 +615,26 @@ theorem LinearMap.pi_mul'_comp_mul'_adjoint_of_delta_form {δ : ℂ}
       fun _ => Coalgebra.ofFiniteDimensionalHilbertAlgebra
     letI : CoalgebraStruct ℂ (PiMat ℂ k s) := inferInstance
     LinearMap.mul' ℂ (PiMat ℂ k s) ∘ₗ Coalgebra.comul = δ • 1 := by
-  letI : starAlgebra (PiMat ℂ k s) := PiMat.isStarAlgebra (ψ := φ)
-  letI : QuantumSet (PiMat ℂ k s) :=
+  let : starAlgebra (PiMat ℂ k s) := PiMat.isStarAlgebra (ψ := φ)
+  let : QuantumSet (PiMat ℂ k s) :=
     Module.Dual.pi.IsFaithfulPosMap.quantumSet (ψ := φ)
-  letI : ∀ i, starAlgebra (Matrix (s i) (s i) ℂ) :=
+  let : ∀ i, starAlgebra (Matrix (s i) (s i) ℂ) :=
     fun i => Matrix.isStarAlgebra (φ := φ i)
-  letI : ∀ i, QuantumSet (Matrix (s i) (s i) ℂ) :=
+  let : ∀ i, QuantumSet (Matrix (s i) (s i) ℂ) :=
     fun i => Module.Dual.IsFaithfulPosMap.quantumSet (φ := φ i)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) :=
+  let : _root_.NormedAddCommGroup (PiMat ℂ k s) :=
     Module.Dual.PiNormedAddCommGroup (φ := φ)
-  letI : _root_.SeminormedAddCommGroup (PiMat ℂ k s) :=
+  let : _root_.SeminormedAddCommGroup (PiMat ℂ k s) :=
     (Module.Dual.PiNormedAddCommGroup (φ := φ)).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) :=
+  let : _root_.InnerProductSpace ℂ (PiMat ℂ k s) :=
     Module.Dual.pi.InnerProductSpace (φ := φ)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
+  let : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
     fun i => Module.Dual.NormedAddCommGroup (φ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
+  let : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
     fun i => Module.Dual.InnerProductSpace (φ := φ i)
-  letI : ∀ i, Coalgebra ℂ (Matrix (s i) (s i) ℂ) :=
+  let : ∀ i, Coalgebra ℂ (Matrix (s i) (s i) ℂ) :=
     fun _ => Coalgebra.ofFiniteDimensionalHilbertAlgebra
-  letI : CoalgebraStruct ℂ (PiMat ℂ k s) := inferInstance
+  let : CoalgebraStruct ℂ (PiMat ℂ k s) := inferInstance
   ext i a j r c
   rw [LinearMap.comp_assoc, Pi.comul_comp_single]
   simp_rw [LinearMap.comp_apply]

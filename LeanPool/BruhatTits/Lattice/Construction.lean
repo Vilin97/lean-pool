@@ -61,10 +61,10 @@ open Classical in
 lemma toSubmodule_isLattice [Finite ι] (b : Basis ι K (ι → K)) :
     IsLattice (R := R) b.toSubmodule where
   isFG := by
-    letI : Fintype ι := Fintype.ofFinite ι
+    let : Fintype ι := Fintype.ofFinite ι
     exact ⟨Finset.image b Finset.univ, by simp [toSubmodule]⟩
   spans := by
-    letI : Fintype ι := Fintype.ofFinite ι
+    let : Fintype ι := Fintype.ofFinite ι
     rw [_root_.eq_top_iff]
     rw [← b.span_eq]
     apply Submodule.span_mono

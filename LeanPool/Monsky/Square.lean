@@ -103,7 +103,7 @@ lemma element_in_boundary_square {x : ℝ²} (hx : x ∈ boundary unitSquare) :
 
 lemma boundary_unitSquare_eq :
     boundary unitSquare = { x | (∀ i, 0 ≤ x i ∧ x i ≤ 1) ∧ (∃ i, x i = 0 ∨ x i = 1)} := by
-  rw [Set.setOf_and, ←closed_unitSquare_eq]
+  rw [Set.ofPred_and, ←closed_unitSquare_eq]
   ext
   refine ⟨fun hx ↦ ⟨boundary_sub_closed _ hx, element_in_boundary_square hx⟩,
           fun ⟨hc, ⟨i, hno⟩⟩ ↦ (Set.mem_sdiff _).mpr ⟨hc, ?_⟩⟩
@@ -568,7 +568,7 @@ lemma squareBoundaryBig_inter_seg {S : Segment} {x : ℝ²} {i : Fin 4} (hx : x 
   clear hαx
   -- Unfortunately I couldn't get the simp to close it all, so there is a nonterminating simp here.
   fin_cases i <;> fin_cases j <;>
-    simp_all only [Fin.forall_fin_two, Fin.isValue, Set.mem_setOf_eq, and_self, Fin.mk_one,
+    simp_all only [Fin.forall_fin_two, Fin.isValue, Set.mem_ofPred_eq, and_self, Fin.mk_one,
       boundaryLine_rw, Fin.reduceAdd, boundary_constant_rw, PiLp.add_apply, PiLp.smul_apply,
       smul_eq_mul, Fin.zero_eta, true_and, Fin.reduceFinMk, zero_add]
   · exact (squareBoundaryBig_inter_seg_aux₁ (hα.1 0) hS.1.2.1 (hα.1 1) hS.2.2.1 hxi.2.2).1

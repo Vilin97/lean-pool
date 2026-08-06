@@ -89,7 +89,7 @@ include T in theorem no_common_I_not_le_assoc
       Finset.card_le_one.mpr fun x hx y hy => by
         rw [hall_zero x hx, hall_zero y hy]
     simp_all
-  · haveI : (P.comap R.carrier.subtype).IsPrime :=
+  · have : (P.comap R.carrier.subtype).IsPrime :=
       hP_mem.isPrime.comap R.carrier.subtype
     obtain ⟨q, hq_prime, hq_Q⟩ :=
       exists_prime_mem_of_ne_bot_closeup (P.comap R.carrier.subtype) hcomap
@@ -194,7 +194,7 @@ private def close_up_aux_no_common_nonzero_proof
           Polynomial.eval_map,
           show algebraMap R.carrier T = R.carrier.subtype from rfl]
       rw [h_eq]
-      exact (Polynomial.finite_setOf_isRoot hmap_ne).countable
+      exact (Polynomial.finite_setOfPred_isRoot hmap_ne).countable
     have hC_prime : ∀ P ∈ C, P.IsPrime := by
       intro P hP
       rcases (Set.mem_union _ _ _).mp hP with h | h
@@ -218,9 +218,9 @@ private def close_up_aux_no_common_nonzero_proof
         Cardinal.mk (IsLocalRing.ResidueField T) ∨
         (C.Countable ∧ D.Countable) := by
       by_cases hR_le : Cardinal.mk R.carrier ≤ Cardinal.aleph0
-      · haveI : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
-        haveI : Countable (Polynomial R.carrier) := by
-          letI : Countable (AddMonoidAlgebra R.carrier ℕ) :=
+      · have : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
+        have : Countable (Polynomial R.carrier) := by
+          let : Countable (AddMonoidAlgebra R.carrier ℕ) :=
             Countable.of_equiv _ AddMonoidAlgebra.coeffEquiv.symm
           exact Polynomial.toFinsupp_injective.countable
         right
@@ -309,9 +309,9 @@ private def close_up_aux_no_common_nonzero_proof
         Cardinal.mk (IsLocalRing.ResidueField T) ∨
         (C.Countable ∧ D'.Countable) := by
       by_cases hR_le : Cardinal.mk R.carrier ≤ Cardinal.aleph0
-      · haveI : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
-        haveI : Countable (Polynomial R.carrier) := by
-          letI : Countable (AddMonoidAlgebra R.carrier ℕ) :=
+      · have : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
+        have : Countable (Polynomial R.carrier) := by
+          let : Countable (AddMonoidAlgebra R.carrier ℕ) :=
             Countable.of_equiv _ AddMonoidAlgebra.coeffEquiv.symm
           exact Polynomial.toFinsupp_injective.countable
         right
@@ -336,14 +336,14 @@ private def close_up_aux_no_common_nonzero_proof
             intro hfne
             apply Set.Finite.countable
             apply Set.Finite.image
-            haveI : P.IsPrime := by
+            have : P.IsPrime := by
               rw [Set.mem_iUnion] at hPC
               obtain ⟨r, hPC'⟩ := hPC
               rw [Set.mem_iUnion] at hPC'
               obtain ⟨_, hPmem⟩ := hPC'
               exact hPmem.isPrime
-            haveI : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
-            letI : DecidableEq (T ⧸ P) := Classical.decEq _
+            have : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
+            let : DecidableEq (T ⧸ P) := Classical.decEq _
             apply Set.Finite.subset (f.map (φ P)).roots.toFinset.finite_toSet
             intro α hα
             exact Multiset.mem_toFinset.mpr ((Polynomial.mem_roots hfne).mpr hα)
@@ -439,13 +439,13 @@ private def close_up_aux_no_common_nonzero_proof
                           apply Cardinal.mk_le_aleph0_iff.mpr
                           by_cases hfne : Polynomial.map (φ P) f = 0
                           · exact Set.Countable.to_subtype (by simp [hfne])
-                          · haveI : P.IsPrime := by
+                          · have : P.IsPrime := by
                               rw [Set.mem_iUnion] at hP
                               obtain ⟨r, hP'⟩ := hP
                               rw [Set.mem_iUnion] at hP'
                               obtain ⟨_, hPmem⟩ := hP'
                               exact hPmem.isPrime
-                            haveI : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
+                            have : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
                             exact (Set.Finite.subset
                               ((Polynomial.rootSet_finite
                                 (Polynomial.map (φ P) f)
@@ -529,7 +529,7 @@ private def close_up_aux_no_common_nonzero_proof
           prime_height_le_one_mem_assoc P hP_prime hP_ht hPR_ne
         exact Set.mem_iUnion.mpr ⟨r₀, Set.mem_iUnion.mpr ⟨hr₀T_ne, hP_assoc⟩⟩
       -- mk P (t+δ) is a root of f.map (φ P) in T/P
-      haveI := hP_prime
+      have := hP_prime
       have ht_root : (f.map (φ P)).IsRoot (Ideal.Quotient.mk P (t + δ)) := by
         rw [Polynomial.IsRoot, Polynomial.eval_map]
         rw [show φ P = (Ideal.Quotient.mk P).comp R.carrier.subtype from rfl,
@@ -565,7 +565,7 @@ private def close_up_aux_no_common_nonzero_proof
   have hrem_in_S₁ : (c : T) - t' * (a : T) ∈ S₁.carrier :=
     S₁.carrier.sub_mem (hle₁ c.2) (S₁.carrier.mul_mem ht'_S₁ (hle₁ a.2))
   let rem₁ : S₁.carrier := ⟨(c : T) - t' * (a : T), hrem_in_S₁⟩
-  haveI : DecidableEq S₁.carrier := Classical.decEq _
+  have : DecidableEq S₁.carrier := Classical.decEq _
   let liftR₁ := Subring.inclusion hle₁
   let s₁ : Finset S₁.carrier := s'.image liftR₁
   have hs₁_eq : s₁ = s'.image liftR₁ := rfl

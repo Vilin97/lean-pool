@@ -116,7 +116,7 @@ lemma Hpolytope.I_mem {H_ : Set (Halfspace E)} (x : E) :
   ∀ Hi_, Hi_ ∈ Hpolytope.I H_ x ↔ Hi_ ∈ H_ ∧ x ∈ (frontier <| SetLike.coe Hi_) := by
   rintro Hi_
   unfold I
-  rw [Set.mem_setOf]
+  rw [Set.mem_ofPred]
 
 lemma Hpolytope.I_sub {H_ : Set (Halfspace E)} (x : E) :
   Hpolytope.I H_ x ⊆ H_ := by
@@ -234,7 +234,7 @@ lemma ExtremePointsofHpolytope {H_ : Set (Halfspace E)} (hH_ : H_.Finite) :
       have : x ∈ ({x} : Set E) := rfl
       rw [← hinterx, Set.mem_sInter] at this
       specialize this (frontier <| SetLike.coe Hi_) ⟨ Hi_, hHi_, rfl ⟩
-      rwa [frontierHalfspace_Hyperplane, Set.mem_setOf] at this
+      rwa [frontierHalfspace_Hyperplane, Set.mem_ofPred] at this
     clear hinterx hxH
     -- unpacking the fact that x1, x2 are in Hpolytope
     rw [mem_Hpolytope] at hx1 hx2
@@ -247,7 +247,7 @@ lemma ExtremePointsofHpolytope {H_ : Set (Halfspace E)} (hH_ : H_.Finite) :
     rw [convex_iff_segment_subset] at this
     apply this <;>
     clear this <;>
-    rw [Set.mem_setOf] <;>
+    rw [Set.mem_ofPred] <;>
     by_contra h <;>
     -- Since dual is linear map, if one end is less than α, with equality at x in the middle,
     -- then the other end must be greater than α, contradition!

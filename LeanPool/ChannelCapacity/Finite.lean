@@ -632,17 +632,17 @@ theorem exists_unique_capacity_achieving_prior_of_finite [Finite β]
     [Nonempty α] (k : Kernel α β) [IsMarkovKernel k]
     (hRank : ChannelCapacity.Kernel.RowMatrixFullRank k) :
     ∃! p : ProbabilityMeasure α, mutualInformation p k = channelCapacity k := by
-  letI : Fintype β := Fintype.ofFinite β
-  letI : TopologicalSpace α := ⊥
-  letI : TopologicalSpace β := ⊥
-  letI : DiscreteTopology α := ⟨rfl⟩
-  letI : DiscreteTopology β := ⟨rfl⟩
-  letI : T2Space α := by infer_instance
-  letI : T2Space β := by infer_instance
-  letI : BorelSpace α := by infer_instance
-  letI : BorelSpace β := by infer_instance
-  letI : CompactSpace α := Finite.compactSpace
-  letI : CompactSpace β := Finite.compactSpace
+  let : Fintype β := Fintype.ofFinite β
+  let : TopologicalSpace α := ⊥
+  let : TopologicalSpace β := ⊥
+  let : DiscreteTopology α := ⟨rfl⟩
+  let : DiscreteTopology β := ⟨rfl⟩
+  let : T2Space α := by infer_instance
+  let : T2Space β := by infer_instance
+  let : BorelSpace α := by infer_instance
+  let : BorelSpace β := by infer_instance
+  let : CompactSpace α := Finite.compactSpace
+  let : CompactSpace β := Finite.compactSpace
   exact exists_unique_capacity_achieving_prior_of_finite_aux k hRank
 
 end

@@ -67,7 +67,7 @@ lemma hyperplane_cutSpace (f : {f : (StrongDual ℝ E) // norm f = 1}) (c : ℝ)
   ∃ (H_ : Set (Halfspace E)), cutSpace H_ = {x | f.1 x = c} := by
   refine ⟨ {Halfspace.mk f c, Halfspace.mk (-f) (-c)}, ?_ ⟩
   ext x
-  rw [mem_cutSpace, Set.mem_setOf]
+  rw [mem_cutSpace, Set.mem_ofPred]
   constructor
   · -- 1.
     intro h

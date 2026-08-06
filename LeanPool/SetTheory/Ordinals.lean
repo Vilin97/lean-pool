@@ -151,7 +151,7 @@ lemma rankAux_eq_rank {x : M} : rankAux x = rank x := by
   refine ⟨⟨funcToSet (rankFunc x), isRankFunction_rankFunc, ?_⟩, ?_⟩
   · have : x ∈ trcl ({x} : M) := sub_trcl (by simp)
     simp [this, apply_funcToSet, rankFunc]
-  · simp only [lowerBounds, IsRankFunction, Set.mem_setOf_eq, forall_exists_index, and_imp]
+  · simp only [lowerBounds, IsRankFunction, Set.mem_ofPred_eq, forall_exists_index, and_imp]
     rintro x f ord_val dom_trans hx preserve_mem ⟨_⟩
     induction x using rank_induction with
     | _ x ind =>
@@ -273,7 +273,7 @@ instance comOrdinals : ContinuousOrderMapBounded (Subtype.val : Ordinals M → M
   bounded_preimage_Ici := fun x => by simp
   bounded_preimage_Iic := by
     refine fun x => ⟨⟨rank x, isOrdinal_rank⟩, ?_⟩
-    simp only [upperBounds, Set.mem_preimage, Set.mem_Iic, Subtype.forall, Set.mem_setOf_eq,
+    simp only [upperBounds, Set.mem_preimage, Set.mem_Iic, Subtype.forall, Set.mem_ofPred_eq,
       Subtype.mk_le_mk]
     intro y y_ord le
     rw [← rank_ordinal y_ord]

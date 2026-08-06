@@ -968,7 +968,7 @@ theorem _root_.LieAlgebra.Dim3.Family.commutator_is_span_e₂e₃ (hα : α ≠ 
   · rw [span_le]
     trans {x | ∃ (y z: Family K α β), ⁅y, z⁆ = x}
     · intro e Be
-      simp_all only [Set.mem_insert_iff, Set.mem_singleton_iff, Set.mem_setOf_eq]
+      simp_all only [Set.mem_insert_iff, Set.mem_singleton_iff, Set.mem_ofPred_eq]
       cases Be with
       | inl h => subst h; exact ⟨_, _, e₂_bracket⟩
       | inr h => subst h; exact ⟨_, _, e₃_bracket⟩
@@ -1081,7 +1081,7 @@ noncomputable def _root_.LieAlgebra.Dim3.Family.commutatorBasis (α β : K) (hα
     ext j
     constructor
     · intro j_in
-      simp only [Fin.exists_fin_two, Fin.isValue, Set.mem_setOf_eq] at j_in
+      simp only [Fin.exists_fin_two, Fin.isValue, Set.mem_ofPred_eq] at j_in
       rcases j_in with hy | hy
       · have := Set.map_into_subtype_apply (↑(commutator K (Family K α β))) (B α β)
           (B_setrange (hα:=hα)) 0
@@ -1105,7 +1105,7 @@ noncomputable def _root_.LieAlgebra.Dim3.Family.commutatorBasis (α β : K) (hα
       simp_all only [Set.mem_insert_iff, Set.mem_singleton_iff, e₁, e₂β, e₁α]
       rcases e with (e0 | e1)
       · subst e0
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         use 0
         apply Subtype.ext
         rw [Set.map_into_subtype_apply (↑(commutator K (Family K α β))) (B α β) (B_setrange) (0)]
@@ -1116,7 +1116,7 @@ noncomputable def _root_.LieAlgebra.Dim3.Family.commutatorBasis (α β : K) (hα
           rfl
         · exact hα
       · subst e1
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         use 1
         apply Subtype.ext
         rw [Set.map_into_subtype_apply (↑(commutator K (Family K α β))) (B α β) (B_setrange) (1)]

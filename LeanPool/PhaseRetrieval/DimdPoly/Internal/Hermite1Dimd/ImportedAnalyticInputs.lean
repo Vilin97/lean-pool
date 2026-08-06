@@ -110,7 +110,7 @@ private lemma measurableSet_complex_annulus
     measurableSet_le measurable_const measurable_norm
   have hlt : MeasurableSet {z : ℂ | ‖z‖ < (j : ℝ) + 1} :=
     measurableSet_lt measurable_norm measurable_const
-  simpa [HermiteLEAN.annulus, Set.setOf_and] using hge.inter hlt
+  simpa [HermiteLEAN.annulus, Set.ofPred_and] using hge.inter hlt
 
 private lemma integrable_oneDimPhi_cross_gaussian
     (k m n : ℕ) :
@@ -286,7 +286,7 @@ private theorem annulusMass_oneDimPhi_eq_annulusIntegralSq
                 else 0))
           have he : ∀ z : CSpace 1, e z = z 0 := fun _ => rfl
           have h := congrArg ((1 / Real.pi) * ·) hEq0
-          simp only [productAnnulus, HermiteLEAN.annulus, he, Set.mem_setOf_eq,
+          simp only [productAnnulus, HermiteLEAN.annulus, he, Set.mem_ofPred_eq,
             Fin.forall_fin_one, Nat.cast_add, Nat.cast_one] at h ⊢
           exact h
     _ =

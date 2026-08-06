@@ -85,7 +85,7 @@ theorem integral_norm_sq_translateL2_sub_le_sq_of_tsupport_subset_ball
       ∂kernelMeasure (E := E) ψ ≤ η ^ 2 := by
   classical
   let μ : Measure E := kernelMeasure (E := E) ψ
-  haveI : MeasureTheory.IsProbabilityMeasure μ :=
+  have : MeasureTheory.IsProbabilityMeasure μ :=
     ⟨kernelMeasure_univ (E := E) (ψ := ψ) hψc hψcs hψ0 hψint⟩
   have hμzero : μ ((Metric.ball (0 : E) δ)ᶜ) = 0 := by
     simpa [μ] using kernelMeasure_compl_ball_eq_zero_of_tsupport_subset (E := E) (ψ := ψ) hψsupp

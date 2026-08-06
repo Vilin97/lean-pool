@@ -41,7 +41,7 @@ lemma sides_eq_union_iUnion (n : ℕ) :
       (⋃ (i : Fin n), {⟨⟨y, _⟩⟩ | y i.castSucc = 1}) := by
   rw [sides_eq_iUnion]
   ext x
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_union]
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_union]
   constructor
   · intro ⟨i, h⟩
     split

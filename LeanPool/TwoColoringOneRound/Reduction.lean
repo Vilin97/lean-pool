@@ -69,10 +69,10 @@ lemma measurePreserving_pick4 {n : ℕ} (emb : Fin 4 ↪ Fin n) :
   classical
   let f : Fin 4 → Fin n := fun i => emb i
   let p : Fin n → Prop := fun j => j ∈ Set.range f
-  haveI : DecidablePred p := Classical.decPred _
+  have : DecidablePred p := Classical.decPred _
   -- Avoid using the `Set.range`-specialized fintype instance: use the default one for subtypes.
   -- This keeps definitional equalities for `volume` / product measures stable.
-  letI : Fintype (Subtype p) := Subtype.fintype p
+  let : Fintype (Subtype p) := Subtype.fintype p
   -- Split `Samples n` into the coordinates in `range f` and its complement.
   let eSplit :
       Samples n ≃ᵐ (∀ i : { j // p j }, Rand) × ∀ i : { j // ¬ p j }, Rand :=

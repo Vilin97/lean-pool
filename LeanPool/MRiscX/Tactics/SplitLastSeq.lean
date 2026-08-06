@@ -113,7 +113,7 @@ def getNeSet (n : UInt64) : Expr :=
   let lam := Expr.lam `n (.const `UInt64 []) (mkAppN (.const `Ne [Level.one])
       #[(Expr.const `UInt64 []), (.bvar 0), mkUInt64Lit n])
     BinderInfo.default
-  mkAppN (.const `setOf [Level.zero]) #[(mkConst `UInt64), lam]
+  mkAppN (.const ``Set.ofPred [Level.zero]) #[(mkConst `UInt64), lam]
 
 
 

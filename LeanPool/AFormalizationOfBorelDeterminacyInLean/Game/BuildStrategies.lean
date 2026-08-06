@@ -297,7 +297,7 @@ def defensivePre (G : Game A) (p : Player) : PreStrategy G.tree p :=
   (defensivePre G p).residual x = defensivePre (G.residual x) (p.residual x) := by
   ext y hp a
   simp [PreStrategy.residual, defensivePre, preserveProp, ExtensionsAt.valT'_coe,
-    ExtensionsAt.val', List.append_assoc, Set.mem_setOf_eq, winningPosition_residual]
+    ExtensionsAt.val', List.append_assoc, Set.mem_ofPred_eq, winningPosition_residual]
   rfl
 @[congr] lemma defensivePre_subtree {hG : G = G'} {hp : p = p'} :
   (defensivePre G p).subtree = (defensivePre G' p').subtree := by congr!

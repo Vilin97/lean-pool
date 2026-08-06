@@ -62,7 +62,7 @@ theorem localization_away_UFD (y : R₀) (hy : y ≠ 0) :
     exact pow_ne_zero n hy hn
   have hle : Submonoid.powers y ≤ nonZeroDivisors R₀ :=
     le_nonZeroDivisors_of_noZeroDivisors hpow_ne
-  haveI : IsDomain (Localization.Away y) :=
+  have : IsDomain (Localization.Away y) :=
     IsLocalization.isDomain_localization hle
   have hinj : Function.Injective (algebraMap R₀ (Localization.Away y)) :=
     IsLocalization.injective _ hle
@@ -139,7 +139,7 @@ theorem localization_submonoid_UFD {S : Type*} [CommRing S]
     (hM : M ≤ nonZeroDivisors R₀) :
     UniqueFactorizationMonoid S := by
   open Classical in
-  haveI : IsDomain S :=
+  have : IsDomain S :=
     IsLocalization.isDomain_of_le_nonZeroDivisors _ hM
   have hinj : Function.Injective (algebraMap R₀ S) :=
     IsLocalization.injective _ hM
