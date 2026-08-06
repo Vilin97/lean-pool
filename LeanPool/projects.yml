@@ -5562,3 +5562,42 @@ projects:
     msc:
       - "11R29"
       - "11R42"
+  - slug: vlasov-mean-field
+    title: Mean-field derivation and well-posedness of the Vlasov equation
+    summary: Formalizes the mean-field limit, Dobrushin stability, and forward-in-time well-posedness for the Vlasov equation via Wasserstein-1 optimal transport.
+    branch: kinetic theory
+    entry_module: LeanPool.Vlasov
+    authors:
+      - Joseph K. Miller
+    source:
+      title: A Formalization of the Mean-Field Derivation of the Vlasov Equation
+      authors:
+        - Joseph K. Miller
+      arxiv: "2607.08986"
+      github_repo: Hydrodynamical/Vlasov_Meanfield_Formalization
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Vlasov.vlasovWellPosedness
+      - Vlasov.dobrushin
+      - Vlasov.meanFieldLimit
+    main_results:
+      - declaration: Vlasov.vlasovWellPosedness
+        informal: Forward-in-time existence of a Lagrangian solution to the Vlasov equation on any finite horizon, for interaction forces that are Lipschitz gradients of an even pair potential (class AssW) — with no smallness restriction on the Lipschitz constant.
+      - declaration: Vlasov.dobrushin
+        informal: A Wasserstein-1 form of Dobrushin's 1979 stability estimate (the original uses a truncated metric) - two Lagrangian Vlasov solutions with finite first moments at every time separate at most at an exponential Gronwall rate.
+      - declaration: Vlasov.meanFieldLimit
+        informal: Conditional mean-field limit - given Wasserstein-1 convergence of the initial empirical data and a uniform Dobrushin stability estimate for the empirical curves, the N-particle empirical measures converge to the Vlasov solution uniformly on any finite horizon.
+      - declaration: Vlasov.weak_isLagrangianVlasovSolutionOn
+        informal: On a time window with L * T^2 < 1, a weak solution with the standing regularity (even C^2 pair potential AssW2, finite first moments, narrow continuity, time-continuity of the convolution force at each point, continuity of the convolution-derivative field, and a uniform spatial first-moment bound on the window) is Lagrangian - the pushforward of its initial datum along the characteristic flow.
+    tags:
+      - kinetic-theory
+      - mean-field-limit
+      - optimal-transport
+      - wasserstein-distance
+      - pde
+    msc:
+      - "35Q83"
+      - "82C22"
+      - "49Q22"
