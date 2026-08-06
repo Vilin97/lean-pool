@@ -833,6 +833,50 @@ projects:
       - erdos-problems
     msc:
       - "11B83"
+  - slug: erdos865
+    title: "A sharp 5/8 bound for Erdős Problem 865"
+    summary: >-
+      Formalizes the resolution of Erdős Problem 865 on pairwise sums. For A ⊆ {1,…,N}, a
+      pairwise-sum triple is a set of distinct a, b, c ∈ A with a+b, a+c, b+c all in A, and A
+      is triple-free when it has none. The development proves that every triple-free A ⊆ [1,N]
+      satisfies 8·|A| ≤ 5·N + 53, that any A exceeding this bound contains a triple, and — via
+      the construction A = [M,2M] ∪ [4M,8M] for N = 8M — that the constant 5/8 is optimal, so
+      f₃(N) = 5N/8 + O(1). The upper bound runs through a folded additive lemma over ℤ/mℤ (a
+      four-set union bound) and a folding lemma, closed by strong induction on N.
+    branch: additive combinatorics
+    entry_module: LeanPool.Erdos865
+    authors:
+      - Ricky Cipollini
+    source:
+      title: "A sharp 5/8 bound for an Erdős–Sós pairwise-sums problem"
+      url: "https://github.com/mrricky22/erdos-865-lean"
+      github_repo: mrricky22/erdos-865-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Erdos865.erdos865_upper_bound
+      - Erdos865.sharpness
+    main_results:
+      - declaration: Erdos865.erdos865_upper_bound
+        informal: >-
+          Every triple-free set A ⊆ [1,N] satisfies 8·|A| ≤ 5·N + 53, i.e. |A| ≤ (5/8)·N + O(1).
+      - declaration: Erdos865.erdos865_contains_triple
+        informal: >-
+          Every A ⊆ [1,N] with 5·N + 53 < 8·|A| contains a pairwise-sum triple (the paper's
+          Theorem 1.1 form).
+      - declaration: Erdos865.sharpness
+        informal: >-
+          For N = 8M with M ≥ 1 there is a triple-free A ⊆ [1,N] with 8·|A| = 5·N + 16, so the
+          constant 5/8 is optimal.
+    tags:
+      - additive-combinatorics
+      - erdos-problems
+      - sum-free-sets
+      - combinatorics
+    msc:
+      - "11B75"
+      - "11B13"
   - slug: erdos137
     title: "Erdős Problem #137: powerful products of consecutive integers"
     summary: >-
