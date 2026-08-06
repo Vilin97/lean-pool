@@ -112,7 +112,7 @@ lemma measurable_quantile
     {f : A → I} (hf : Measurable f)
     : Measurable (fun x ↦ quantile (μ x) (f x)) := by
   unfold quantile
-  simp only [sInf_eq_iInf, Set.mem_setOf_eq, iInf_eq_if]
+  simp only [sInf_eq_iInf, Set.mem_ofPred_eq, iInf_eq_if]
   have {i x}
       : (⨅ j : I, if i ≤ cdf (μ x) j then j else ⊤)
       = (⨅ j : unitIntervalRat, if i ≤ cdf (μ x) j then ↑j else ⊤) := by
@@ -133,7 +133,7 @@ lemma measurable_quantile
   simp only [this]
   apply Measurable.iInf fun i ↦ ?_
   apply Measurable.ite
-  · simp only [measurableSet_setOf]
+  · simp only [measurableSet_setOfPred]
     apply Measurable.le'
     · fun_prop
     · apply measurable_cdf <;> fun_prop
@@ -143,15 +143,15 @@ lemma measurable_quantile
 private lemma le_cdf_quantile (u μ) [IsProbabilityMeasure μ] : u ≤ cdf μ (quantile μ u) := by
   simp only [quantile]
   rw [MonotoneOn.map_sInf_of_continuousWithinAt (f := cdf μ)]
-  · simp only [le_sInf_iff, Set.mem_image, Set.mem_setOf_eq, forall_exists_index, and_imp]
+  · simp only [le_sInf_iff, Set.mem_image, Set.mem_ofPred_eq, forall_exists_index, and_imp]
     rintro j k h rfl
     exact h
   · have := cdf_continuous μ (sInf {r | u ≤ cdf μ r})
     apply ContinuousWithinAt.mono this
     intro j hj
-    simp only [Set.mem_setOf_eq, Set.mem_Ici] at ⊢ hj
+    simp only [Set.mem_ofPred_eq, Set.mem_Ici] at ⊢ hj
     apply sInf_le
-    simp only [Set.mem_setOf_eq, hj]
+    simp only [Set.mem_ofPred_eq, hj]
   · intro i₁ hi₁ i₂ hi₂
     apply monotone_cdf
   · simp only [cdf_top]
@@ -173,11 +173,11 @@ lemma eq_quantile_volume
         grind
       · intro h
         apply sInf_le
-        simp only [Set.mem_setOf_eq, h]
+        simp only [Set.mem_ofPred_eq, h]
     simp only [Set.preimage, Set.mem_Iic, lemma₁]
     have lemma₂ : {r : I | r ≤ cdf μ i} = Set.Iic (cdf μ i) := by
       ext ⟨_, _⟩
-      simp only [Set.mem_setOf_eq, Set.mem_Iic]
+      simp only [Set.mem_ofPred_eq, Set.mem_Iic]
     simp_all
   · apply measurable_quantile
     · fun_prop

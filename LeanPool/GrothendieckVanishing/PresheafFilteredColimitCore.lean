@@ -76,9 +76,9 @@ theorem isFlasque_filtered_colimit
     IsFlasqueSheaf c.pt := by
   let G : TopCat.Sheaf AddCommGrpCat.{u} X ⥤ (Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u} :=
     sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}
-  haveI : CreatesColimit F G :=
+  have : CreatesColimit F G :=
     createsFilteredColimit F
-  haveI : PreservesColimit F G :=
+  have : PreservesColimit F G :=
     preservesColimit_of_createsColimit_and_hasColimit F G
   intro U V i
   rw [AddCommGrpCat.epi_iff_surjective]
@@ -188,9 +188,9 @@ theorem sheafH_filtered_colimit_succ_iota_fac
 noncomputable instance sheafH_filtered_colimit_succ_iota_mono
     (c' : Cocone Y') (hc' : IsColimit c') :
     Mono (sheafHFilteredColimitSuccIota Y' c' hc') := by
-  haveI : ∀ j, Mono ((sheafHFilteredColimitSuccEta Y').app j) :=
+  have : ∀ j, Mono ((sheafHFilteredColimitSuccEta Y').app j) :=
     sheafH_filtered_colimit_succ_eta_mono (Y' := Y')
-  haveI : Mono (sheafHFilteredColimitSuccEta Y') := NatTrans.mono_of_mono_app _
+  have : Mono (sheafHFilteredColimitSuccEta Y') := NatTrans.mono_of_mono_app _
   exact colim.map_mono' (sheafHFilteredColimitSuccEta Y') hc'
     (colimit.isColimit (sheafHFilteredColimitSuccInj Y'))
     (sheafHFilteredColimitSuccIota Y' c' hc')
@@ -385,7 +385,7 @@ theorem sheafH_filtered_colimit_succ_stage_shortExact (j : J') :
     (ShortComplex.mk ((sheafHFilteredColimitSuccEta Y').app j)
       (cokernel.π ((sheafHFilteredColimitSuccEta Y').app j))
       (cokernel.condition ((sheafHFilteredColimitSuccEta Y').app j))).ShortExact := by
-  haveI : Mono ((sheafHFilteredColimitSuccEta Y').app j) :=
+  have : Mono ((sheafHFilteredColimitSuccEta Y').app j) :=
     sheafH_filtered_colimit_succ_eta_mono (Y' := Y') j
   exact ShortComplex.ShortExact.mk'
     (ShortComplex.exact_of_g_is_cokernel _
@@ -495,7 +495,7 @@ theorem sheafH_filtered_colimit_succ_inj_subsingleton
       (isFlasque_filtered_colimit
         (F := Inj)
         (hFlasque := fun j ↦ by
-          letI : Injective (Inj.obj j) := hInj j
+          let : Injective (Inj.obj j) := hInj j
           exact fun {_ _} i ↦ (isFlasque_of_injective (Inj.obj j)) i)
         (c := injCocone)
         (hc := colimit.isColimit Inj)) i

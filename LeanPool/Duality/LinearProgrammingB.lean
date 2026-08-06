@@ -225,7 +225,7 @@ variable [Fintype I]
 omit [Fintype I] in
 theorem StandardLP.optimum_neq_none [Finite I] (P : StandardLP I J R) :
     P.optimum ≠ none := by
-  letI : Fintype I := Fintype.ofFinite I
+  let : Fintype I := Fintype.ofFinite I
   exact P.toValidELP_optimum_eq ▸ P.toValidELP.optimum_neq_none
 
 theorem StandardLP.strongDuality (P : StandardLP I J R)

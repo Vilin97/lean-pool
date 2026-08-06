@@ -138,7 +138,7 @@ theorem pac_bayes_per_hypothesis {X : Type u} [MeasurableSpace X]
       ⊆ { xs : Fin m → X | EmpiricalError X Bool (hs h₀) (fun i => (xs i, c (xs i)))
           (zeroOneLoss Bool) ≤ TrueErrorReal X (hs h₀) c D - t } := by
       intro xs hxs
-      simp only [Set.mem_setOf_eq] at hxs ⊢
+      simp only [Set.mem_ofPred_eq] at hxs ⊢
       linarith
     -- Measurability for Hoeffding
     have hmeas : MeasurableSet {x : X | hs h₀ x ≠ c x} :=
@@ -208,7 +208,7 @@ theorem pac_bayes_all_hypotheses {X : Type u} [MeasurableSpace X]
         EmpiricalError X Bool (hs h) (fun i => (S i, c (S i))) (zeroOneLoss Bool) +
         Real.sqrt (Real.log (1 / (P.prob h * δ)) / (2 * ↑m)) } := by
     intro S hS
-    simp only [Set.mem_compl_iff, Good, Set.mem_setOf_eq, not_forall] at hS
+    simp only [Set.mem_compl_iff, Good, Set.mem_ofPred_eq, not_forall] at hS
     simp_all
   -- Per-hypothesis bounds
   have h_per : ∀ h : H, μ { S : Fin m → X |
@@ -228,7 +228,7 @@ theorem pac_bayes_all_hypotheses {X : Type u} [MeasurableSpace X]
             EmpiricalError X Bool (hs h) (fun i => (S i, c (S i)))
               (zeroOneLoss Bool) + t } = ∅ := by
         ext S
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_lt]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_lt]
         -- TrueErrorReal ≤ 1 (probability measure)
         have h_true_le_one : TrueErrorReal X (hs h) c D ≤ 1 := by
           simp only [TrueErrorReal, TrueError]

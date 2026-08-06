@@ -101,7 +101,7 @@ theorem proposition_2_9_a {ι : Type*} (E : ι → Type*) [∀ i, CompleteLattic
     obtain ⟨U, hU, hyiU, hUsub⟩ := ha
     refine ⟨{z : ∀ j, E j | z i ∈ U}, ?_, hyiU, ?_⟩
     · refine ⟨fun z w hzw hz => hU.1 (hzw i) hz, fun S hSne hSdir hmem => ?_⟩
-      rw [Set.mem_setOf_eq, sSup_apply_eq_sSup_image] at hmem
+      rw [Set.mem_ofPred_eq, sSup_apply_eq_sSup_image] at hmem
       have hdir' : DirectedOn (· ≤ ·) (Function.eval i '' S) := by
         rintro _ ⟨f, hf, rfl⟩ _ ⟨g, hg, rfl⟩
         obtain ⟨h, hhS, hfh, hgh⟩ := hSdir f hf g hg
@@ -355,7 +355,7 @@ for some open `V ∋ y₀`, and that value is `≤ g y'` for every `y' ∈ V`, s
 g⁻¹U`. -/
 theorem scottExtend_continuous (hE : IsContinuousLattice E) (e : X → Y) (f : X → E) :
     @Continuous Y E _ scottTopologicalSpace (scottExtend e f) := by
-  letI : TopologicalSpace E := scottTopologicalSpace
+  let : TopologicalSpace E := scottTopologicalSpace
   rw [continuous_def]
   intro U hU
   rw [isOpen_iff_scottOpen] at hU
@@ -467,7 +467,7 @@ any embedding `e` (`scottExtend_eq_of_continuous`) and is itself continuous
 (`scottExtend_continuous`). -/
 theorem proposition_2_11 {E : Type*} [CompleteLattice E] (hE : IsContinuousLattice E) :
     @IsInjectiveSpace E scottTopologicalSpace := by
-  letI : TopologicalSpace E := scottTopologicalSpace
+  let : TopologicalSpace E := scottTopologicalSpace
   intro X Y _ _ e he f
   exact ⟨⟨scottExtend e f, scottExtend_continuous hE e f⟩,
     fun x => scottExtend_eq_of_continuous hE e he f f.continuous x⟩

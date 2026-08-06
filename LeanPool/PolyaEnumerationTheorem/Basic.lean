@@ -244,7 +244,7 @@ theorem numDistinctColorings_mul_card_group_eq_sum_card_pow_numCyclesOfGroup
     [∀ g : G, Fintype (CyclesOfGroup X g)] :
     (numDistinctColorings X Y G) * (Fintype.card G)
       = ∑ g : G, (Fintype.card Y) ^ (numCyclesOfGroup X g) := by
-  haveI : ∀ g : G, Fintype (MulAction.fixedBy (X → Y) g) := fun _ => Fintype.ofFinite _
+  have : ∀ g : G, Fintype (MulAction.fixedBy (X → Y) g) := fun _ => Fintype.ofFinite _
   rw [numDistinctColorings,
     Fintype.sum_congr _ _ forall_card_pow_numCyclesOfGroup_eq_card_fixedBy]
   symm
@@ -257,7 +257,7 @@ theorem numDistinctColorings_eq_sum_card_pow_numCyclesOfGroup_div_card_group
     [∀ g : G, Fintype (CyclesOfGroup X g)] :
     numDistinctColorings X Y G =
       (∑ g : G, (Fintype.card Y) ^ (numCyclesOfGroup X g)) / (Fintype.card G) := by
-  haveI : ∀ g : G, Fintype (MulAction.fixedBy (X → Y) g) := fun _ => Fintype.ofFinite _
+  have : ∀ g : G, Fintype (MulAction.fixedBy (X → Y) g) := fun _ => Fintype.ofFinite _
   exact Nat.eq_div_of_mul_eq_left Fintype.card_ne_zero
     (numDistinctColorings_mul_card_group_eq_sum_card_pow_numCyclesOfGroup X Y G)
 

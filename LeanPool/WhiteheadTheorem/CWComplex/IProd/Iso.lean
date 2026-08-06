@@ -28,7 +28,7 @@ namespace CWComplex.IProd
 
 lemma inl_l_r_eq_relCWComplex_skInclSucc_zero :
     Limits.pushout.inl (l X 0) (r X 0) = RelCWComplex.skInclSucc X.IProd 0 := by
-  haveI : IsEmpty (X.IProd.attachCells 0).cells := PEmpty.instIsEmpty
+  have : IsEmpty (X.IProd.attachCells 0).cells := PEmpty.instIsEmpty
   change _ = Limits.pushout.inl .. ≫
     ((IProd.skZeroIsoSkOne X).symm.trans <| asIso <| Limits.pushout.inl
         (Limits.Sigma.desc fun a ↦ isEmptyElim a)

@@ -30,8 +30,8 @@ lemma not_mem_associatedPrime_of_ndvd
     (R : NSubring T) (r y : R.carrier) (hr : Prime r) (hry : ¬ r ∣ y)
     (P : Ideal T) (hP : P ∈ associatedPrimes T (T ⧸ Ideal.span {(↑r : T)})) :
     (↑y : T) ∉ P := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   intro hy_P
   have hr_ne : (↑r : T) ≠ 0 := fun h => hr.ne_zero (R.carrier.subtype_injective h)
   have hI_le_P : Ideal.span {(↑r : T)} ≤ P := by
@@ -39,13 +39,13 @@ lemma not_mem_associatedPrime_of_ndvd
     rwa [Submodule.annihilator_top, Ideal.annihilator_quotient] at h
   have hr_P : (↑r : T) ∈ P := hI_le_P (Ideal.mem_span_singleton_self _)
   have hht := R.height_bound (↑r : T) hr_ne P hP
-  haveI : P.IsPrime := hP.isPrime
-  haveI : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := hP.isPrime
+  have : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
   have hspan_le : Ideal.span {r} ≤ P.comap R.carrier.subtype :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr (show (↑r : T) ∈ P from hr_P))
   have hspan_ne : Ideal.span {r} ≠ ⊥ :=
     Ideal.span_singleton_eq_bot.not.mpr hr.ne_zero
-  haveI : (Ideal.span {r}).IsPrime := (Ideal.span_singleton_prime hr.ne_zero).mpr hr
+  have : (Ideal.span {r}).IsPrime := (Ideal.span_singleton_prime hr.ne_zero).mpr hr
   -- Height argument: P ∩ R = Ideal.span{r}
   have hspan_eq : Ideal.span {r} = P.comap R.carrier.subtype := by
     by_contra hne
@@ -96,8 +96,8 @@ lemma prime_in_adjoinLocSet
   obtain ⟨f₁, n₁, hf₁⟩ := ha₁
   obtain ⟨f₂, n₂, hf₂⟩ := hb₁
   obtain ⟨f₃, n₃, hf₃⟩ := hc
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   have hinj := transcendental_iff_injective.mp hx_trans
   have hpoly : f₁ * f₂ * C (y ^ n₃) = C r * f₃ * C (y ^ (n₁ + n₂)) := by
     apply hinj
@@ -171,7 +171,7 @@ lemma exists_prime_mem_of_ne_bot {S : Type*} [CommRing S]
   obtain ⟨b, hxpb⟩ := hp_dvd
   rcases hQ.mem_or_mem (show p * b ∈ Q from hxpb ▸ hxQ) with hp_Q | hb_Q
   · exact ⟨p, hp_irr.prime, hp_Q⟩
-  · exact ih b ⟨right_ne_zero_of_mul (hxpb ▸ hx_ne), p, hp_irr.prime.not_unit,
+  · exact ih b ⟨right_ne_zero_of_mul (hxpb ▸ hx_ne), p, hp_irr.prime.not_isUnit,
       by rw [hxpb, mul_comm]⟩ (right_ne_zero_of_mul (hxpb ▸ hx_ne))
       (fun hu => hQ.ne_top (Ideal.eq_top_of_isUnit_mem Q hb_Q hu)) hb_Q
 
@@ -184,16 +184,16 @@ theorem coprime_not_both_in_prime (R : NSubring T)
     (hPR_ht : (P.comap R.carrier.subtype).height ≤ 1)
     (hPR_ne : P.comap R.carrier.subtype ≠ ⊥) :
     (↑y₁ : T) ∉ P ∨ (↑y₂ : T) ∉ P := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   by_contra h
   push Not at h
   obtain ⟨hy₁P, hy₂P⟩ := h
   have hy₁_comap : y₁ ∈ P.comap R.carrier.subtype := hy₁P
   have hy₂_comap : y₂ ∈ P.comap R.carrier.subtype := hy₂P
-  haveI hPR_prime : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
+  have hPR_prime : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
   obtain ⟨q, hq_prime, hq_mem⟩ := exists_prime_mem_of_ne_bot (P.comap R.carrier.subtype) hPR_ne
-  haveI : (Ideal.span {q}).IsPrime := Ideal.span_singleton_prime hq_prime.ne_zero |>.mpr hq_prime
+  have : (Ideal.span {q}).IsPrime := Ideal.span_singleton_prime hq_prime.ne_zero |>.mpr hq_prime
   have hspan_le : Ideal.span {q} ≤ P.comap R.carrier.subtype :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hq_mem)
   have hspan_ne_bot : Ideal.span {q} ≠ ⊥ := by

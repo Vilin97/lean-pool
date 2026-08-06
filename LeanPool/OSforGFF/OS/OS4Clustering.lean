@@ -322,7 +322,7 @@ theorem schwartz_cross_covariance_decay_real (m : ℝ) [Fact (0 < m)]
     apply (freeCovarianceKernel_continuousOn m hm).mono
     intro z hz
     simp only [Set.mem_compl_iff, Metric.mem_closedBall, dist_zero_right, not_le] at hz
-    simp only [Set.mem_setOf_eq, ne_eq]
+    simp only [Set.mem_ofPred_eq, ne_eq]
     exact norm_ne_zero_iff.mp (by linarith)
   have h_decay_tendsto : Filter.Tendsto
       (fun a => ∫ x : SpaceTime, ∫ y : SpaceTime,
@@ -355,7 +355,7 @@ theorem schwartz_cross_covariance_decay_real (m : ℝ) [Fact (0 < m)]
     linarith [lt_of_le_of_lt (le_max_left R 1) ha]
   -- Apply the decay bound from cocompact membership
   have h_int_bound := hK_compl ha_not_in_K
-  simp only [Set.mem_setOf_eq, dist_zero_right] at h_int_bound
+  simp only [Set.mem_ofPred_eq, dist_zero_right] at h_int_bound
   -- Step 6: Connect SchwingerFunction₂ to the double integral
   -- SchwingerFunction₂ (GFF) f g = freeCovarianceFormR m f g = ∫∫ f(x) C(x-y) g(y) dx dy
   -- For translated g, this becomes ∫∫ f(x) C(x-y) g(y-a) dx dy

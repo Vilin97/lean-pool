@@ -119,7 +119,7 @@ omit [IsFractionRing (↥R) K] in
 lemma top_le_submodule_span_of_isLattice {κ : Type*} [Finite κ]
     {M : Submodule R (ι → K)} (b : Basis κ R M)
     [IsLattice M] : ⊤ ≤ Submodule.span K (Set.range fun i ↦ (b i).val) := by
-  letI : Fintype κ := Fintype.ofFinite κ
+  let : Fintype κ := Fintype.ofFinite κ
   rintro x -
   have hx : x ∈ Submodule.span K (M : Set (ι → K)) := by
     rw [IsLattice.spans]
@@ -317,7 +317,7 @@ lemma IsLattice.intersection (M N : Submodule R (ι → K)) [Finite ι]
     have : IsNoetherian R ↥(M ⊓ N) := isNoetherian_of_le inf_le_left
     exact Module.Finite.iff_fg.mp (Module.IsNoetherian.finite R ↥(M ⊓ N))
   spans := by
-    letI : Fintype ι := Fintype.ofFinite ι
+    let : Fintype ι := Fintype.ofFinite ι
     apply Submodule.span_eq_top_of_rank
     have h := Submodule.rank_sup_add_rank_inf_eq M N
     rw [IsLattice.rank' M, IsLattice.rank' N, IsLattice.rank'] at h

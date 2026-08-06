@@ -527,7 +527,7 @@ lemma cauchyPrincipalValueOn_empty
     cauchyPrincipalValueOn ∅ f γ a b =
       ∫ t in a..b, f (γ t) * deriv γ t := by
   unfold cauchyPrincipalValueOn
-  haveI : (𝓝[>] (0 : ℝ)).NeBot :=
+  have : (𝓝[>] (0 : ℝ)).NeBot :=
     nhdsWithin_Ioi_neBot (le_refl 0)
   apply limUnder_eventually_eq_const
   filter_upwards [Ioo_mem_nhdsGT (show (0 : ℝ) < 1 by norm_num)]
@@ -593,7 +593,7 @@ lemma cauchyPrincipalValueOn_avoids
     cauchyPrincipalValueOn S0 f γ.toFun γ.a γ.b =
       ∫ t in γ.a..γ.b, f (γ.toFun t) * deriv γ.toFun t := by
   unfold cauchyPrincipalValueOn
-  haveI : (𝓝[>] (0 : ℝ)).NeBot := nhdsWithin_Ioi_neBot (le_refl 0)
+  have : (𝓝[>] (0 : ℝ)).NeBot := nhdsWithin_Ioi_neBot (le_refl 0)
   by_cases hS0_empty : S0 = ∅
   · subst hS0_empty
     exact cauchyPrincipalValueOn_empty f γ.toFun γ.a γ.b |>.symm ▸ rfl

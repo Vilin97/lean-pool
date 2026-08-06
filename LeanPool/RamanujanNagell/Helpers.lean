@@ -343,10 +343,10 @@ lemma theta_pow_dvd_of_coprime_prod (α β : R) (m : ℕ)
     hθ_prime.dvd_or_dvd (dvd_trans (dvd_pow_self θ (by omega)) h_dvd_prod)
   rcases h_dvd_or with h_dvd_α | h_dvd_β
   · have h_not_dvd_β : ¬ (θ ∣ β) := fun h_dvd_β =>
-      hθ_prime.not_unit (h_coprime.isUnit_of_dvd' h_dvd_α h_dvd_β)
+      hθ_prime.not_isUnit (h_coprime.isUnit_of_dvd' h_dvd_α h_dvd_β)
     exact Or.inl (hθ_prime.pow_dvd_of_dvd_mul_right m h_not_dvd_β h_dvd_prod)
   · have h_not_dvd_α : ¬ (θ ∣ α) := fun h_dvd_α =>
-      hθ_prime.not_unit (h_coprime.isUnit_of_dvd' h_dvd_α h_dvd_β)
+      hθ_prime.not_isUnit (h_coprime.isUnit_of_dvd' h_dvd_α h_dvd_β)
     exact Or.inr (hθ_prime.pow_dvd_of_dvd_mul_left m h_not_dvd_α h_dvd_prod)
 
 lemma associated_of_theta_pow_dvd (α β : R) (m : ℕ)
@@ -367,7 +367,7 @@ lemma associated_of_theta_pow_dvd (α β : R) (m : ℕ)
     intro h_dvd_γ
     have h_dvd_α : θ' ∣ α := hγ ▸ dvd_mul_of_dvd_right h_dvd_γ (θ ^ m)
     have h_not_dvd_β : ¬ (θ' ∣ β) := fun h_dvd_β =>
-      hθ'_prime.not_unit (h_coprime.isUnit_of_dvd' h_dvd_α h_dvd_β)
+      hθ'_prime.not_isUnit (h_coprime.isUnit_of_dvd' h_dvd_α h_dvd_β)
     have h_dvd_prod : θ' ^ m ∣ γ * β := h_cancel ▸ dvd_refl (θ' ^ m)
     have h_θ'_pow_dvd_γ : θ' ^ m ∣ γ :=
       hθ'_prime.pow_dvd_of_dvd_mul_right m h_not_dvd_β h_dvd_prod
@@ -407,7 +407,7 @@ lemma associated_of_theta_pow_dvd_right (α β : R) (m : ℕ)
     intro h_dvd_γ
     have h_dvd_β : θ' ∣ β := hγ ▸ dvd_mul_of_dvd_right h_dvd_γ (θ ^ m)
     have h_not_dvd_α : ¬ (θ' ∣ α) := fun h_dvd_α =>
-      hθ'_prime.not_unit (h_coprime.isUnit_of_dvd' h_dvd_α h_dvd_β)
+      hθ'_prime.not_isUnit (h_coprime.isUnit_of_dvd' h_dvd_α h_dvd_β)
     have h_dvd_prod : θ' ^ m ∣ α * γ := h_cancel ▸ dvd_refl (θ' ^ m)
     have h_θ'_pow_dvd_γ : θ' ^ m ∣ γ :=
       hθ'_prime.pow_dvd_of_dvd_mul_left m h_not_dvd_α h_dvd_prod

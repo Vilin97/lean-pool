@@ -276,7 +276,7 @@ private lemma upperTriRep_card_le_relIndex (a : Fin n → ℕ) (ha : ∀ i, 0 < 
   set H := (GLPair n).H
   set α := (diagMat n a : GL (Fin n) ℚ)
   set f := (mapGL ℚ : SL(n, ℤ) →* GL (Fin n) ℚ)
-  haveI : Fintype (H ⧸ (ConjAct.toConjAct α⁻¹ • H).subgroupOf H) :=
+  have : Fintype (H ⧸ (ConjAct.toConjAct α⁻¹ • H).subgroupOf H) :=
     Subgroup.fintypeOfIndexNeZero h_rel_ne
   set injMap : UpperTriRep n a hdiv → H ⧸ (ConjAct.toConjAct α⁻¹ • H).subgroupOf H :=
     fun B => ⟦⟨(f (unipSL n a hdiv B))⁻¹,

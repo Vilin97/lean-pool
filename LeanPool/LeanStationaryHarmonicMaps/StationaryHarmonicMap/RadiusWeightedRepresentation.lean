@@ -222,7 +222,7 @@ in the weak monotonicity argument. -/
 theorem ballIntegralRadiusWeightedRepresentationForWeights_euclidean (n : ℕ) :
     BallIntegralRadiusWeightedRepresentationForWeights n := by
   intro hne f R0 hf
-  letI : NeZero n := hne
+  let : NeZero n := hne
   refine ⟨radialRNDensity (n := n) f R0, ?_, ?_⟩
   · exact radialRNDensity_locallyIntegrableOn (n := n) (f := f) (R0 := R0)
   · intro c hc

@@ -104,7 +104,7 @@ lemma r_eq_inv_image (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ b) (hbp 
     r = ((-((d : ℕ) : ZMod (p ^ 2))) * ((b : ℕ) : ZMod (p ^ 2))⁻¹).val := by
   have hcop : b.Coprime (p ^ 2) := b_coprime_p_sq p hp b hb hbp
   have hbUnit : IsUnit ((b : ℕ) : ZMod (p ^ 2)) := by rwa [ZMod.isUnit_iff_coprime]
-  haveI : Fact (1 < p ^ 2) := ⟨by nlinarith [hp.two_le, Nat.le_mul_self p]⟩
+  have : Fact (1 < p ^ 2) := ⟨by nlinarith [hp.two_le, Nat.le_mul_self p]⟩
   have hZero : ((b * r + d : ℕ) : ZMod (p ^ 2)) = 0 := by
     rwa [ZMod.natCast_eq_zero_iff]
   have hEq : (b : ZMod (p ^ 2)) * (r : ZMod (p ^ 2)) = -((d : ℕ) : ZMod (p ^ 2)) := by
@@ -259,7 +259,7 @@ lemma deviation_bounded_eventually (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT
   rw [Filter.eventually_cofinite]
   apply Set.Finite.subset (finite_primes_le b)
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   by_contra h
   push Not at h
   exact hp (deviation_bound_for_large_prime p p.prop b hb h T hT)

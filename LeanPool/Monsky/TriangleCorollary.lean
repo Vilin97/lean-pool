@@ -106,7 +106,7 @@ theorem unit_is_unit_in_prod
   ext x
   constructor <;>
     unfold regionBetween openHull openSimplex lower upper unitTriangle <;> intro hx <;>
-    simp only [idMap_apply, Fin.isValue, Set.mem_image, Set.mem_setOf_eq,
+    simp only [idMap_apply, Fin.isValue, Set.mem_image, Set.mem_ofPred_eq,
       exists_exists_and_eq_and, WithLp.ofLp_sum, WithLp.ofLp_smul, Finset.sum_apply, Pi.smul_apply,
       smul_eq_mul, Set.mem_Ioc, Set.mem_Ioo, Pi.zero_apply] at *
   · rcases hx with ⟨a, ⟨ha, ha''⟩, ha'⟩
@@ -708,7 +708,7 @@ theorem allEdgesTriangleHull_area (T : Triangle)
 -- would like it to be, it might be due to a lack of understanding of sums and unions....
 theorem union_of_edges_zero_vol (S : Finset Triangle)
     : MeasureTheory.volume ( ⋃ (T ∈ S) , allEdgesTriangleHull T ) = 0 := by
-  let f := Set.restrict S allEdgesTriangleHull
+  let f := Set.domRestrict ↑S allEdgesTriangleHull
   have h : ∀ (i : S), MeasureTheory.NullMeasurableSet (f i) := by
     · intro T
       exact MeasureTheory.NullMeasurableSet.of_null (allEdgesTriangleHull_area T)
@@ -719,7 +719,7 @@ theorem union_of_edges_zero_vol (S : Finset Triangle)
         ⊆ S.restrict allEdgesTriangleHull i := Set.inter_subset_left
     apply MeasureTheory.measure_mono_null h2 (allEdgesTriangleHull_area i)
   have h4 :  ⋃ T ∈ S, allEdgesTriangleHull T
-      = (⋃ i, (↑S : Set Triangle).restrict allEdgesTriangleHull i) :=
+      = (⋃ i, (↑S : Set Triangle).domRestrict allEdgesTriangleHull i) :=
     Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict allEdgesTriangleHull))
   rw[h4]
   rw[MeasureTheory.measure_iUnion₀ hd h]
@@ -741,14 +741,14 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle)
     ext T X
     rw[closed_triangle_is_union T]
   have h2 :  ⋃ T ∈ (↑S : Set Triangle), closedHull T
-      = (⋃ i, (↑S : Set Triangle).restrict closedHull i) :=
+      = (⋃ i, (↑S : Set Triangle).domRestrict closedHull i) :=
     Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict closedHull))
   rw[h2,  h1]
   dsimp
   rw[Set.iUnion_union_distrib ]
   rw[volume_zero]
   · let openHullT : (Triangle → Set ℝ²) := openHull
-    let f := Set.restrict S openHullT
+    let f := Set.domRestrict ↑S openHullT
     have h : ∀ (i : S), MeasureTheory.NullMeasurableSet (f i) := by
       · intro T
         exact null_meas_triangle T
@@ -761,10 +761,10 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle)
       apply Disjoint.aedisjoint
       simp_all
     erw[MeasureTheory.measure_iUnion₀ hd h, tsum_fintype,]
-    simp only [SetLike.coe_sort_coe, univ_eq_attach, Set.restrict_apply, f]
+    simp only [SetLike.coe_sort_coe, univ_eq_attach, Set.domRestrict_apply, f]
     rw [Finset.sum_attach S (fun x ↦ volume (openHullT x))]
   · have h4 :  ⋃ T ∈ S, allEdgesTriangleHull T
-        = (⋃ i, (↑S : Set Triangle).restrict allEdgesTriangleHull i) :=
+        = (⋃ i, (↑S : Set Triangle).domRestrict allEdgesTriangleHull i) :=
       Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict allEdgesTriangleHull))
     have h5 := union_of_edges_zero_vol S
     simp_all

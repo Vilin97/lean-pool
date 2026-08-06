@@ -384,7 +384,7 @@ lemma sublemma_3_1 (τ : Finset T) (D : Finset I)
     · constructor
       · exact h_case
       · ext y
-        simp only [mSet, ne_eq, gt_iff_lt, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false,
+        simp only [mSet, ne_eq, gt_iff_lt, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false,
           not_forall, not_lt, le_min'_iff]
         obtain ⟨k, hk_in_erase, hk_dom⟩ := h_dom y
         have hk_in_D : k ∈ D := (Finset.mem_erase.mp hk_in_erase).2
@@ -411,7 +411,7 @@ lemma sublemma_3_1 (τ : Finset T) (D : Finset I)
   · rintro ⟨a, b, ha_mem, hb_mem, h_ne, h_eq_mini, h_i_case, h_Mi_empty⟩
     intro y
     unfold mSet at h_Mi_empty
-    simp only [Set.mem_setOf_eq, Set.eq_empty_iff_forall_notMem] at h_Mi_empty
+    simp only [Set.mem_ofPred_eq, Set.eq_empty_iff_forall_notMem] at h_Mi_empty
     specialize h_Mi_empty y
     push Not at h_Mi_empty
     obtain ⟨k, hk_mem, hk_ne_i, hk_not_lt⟩ := h_Mi_empty
@@ -447,7 +447,7 @@ lemma sublemma_3_2 (τ : Finset T) (D : Finset I) (x : T)
       intros k hk_mem hk_ne_i
       have h_mini_cases : mini h_insert_nonempty k = mini h_nonempty k ∨ mini h_insert_nonempty k =
           x := by
-        letI := IST k
+        let := IST k
         unfold mini
         by_cases h : τ.min' h_nonempty ≤[k] x
         · left
@@ -476,7 +476,7 @@ lemma sublemma_3_2 (τ : Finset T) (D : Finset I) (x : T)
         have hk_mem_D : k ∈ D := hk_mem
         have h_mini_i_eq_x : mini h_insert_nonempty i = x := hi_eq
         exact hk_ne_i (h_inj hi_mem_D hk_mem_D (h_mini_i_eq_x.trans h_eq.symm)).symm
-      letI := IST k
+      let := IST k
       have h_mini_eq_k : mini h_insert_nonempty k = mini h_nonempty k := by
         simp_all
       apply lt_of_le_of_ne
@@ -486,7 +486,7 @@ lemma sublemma_3_2 (τ : Finset T) (D : Finset I) (x : T)
         simp_all
       · exact fun h_eq_x => h_not_mem (h_eq_x ▸ Finset.min'_mem τ h_nonempty)
     have h_x_le_mini_i : x ≤[i] mini h_nonempty i := by
-      letI := IST i
+      let := IST i
       rw [← hi_eq]
       unfold mini
       apply Finset.min'_le
@@ -501,7 +501,7 @@ lemma sublemma_3_2 (τ : Finset T) (D : Finset I) (x : T)
           intros k hk_mem hk_ne_i
           have h_cases : mini h_insert_nonempty k = mini h_nonempty k ∨ mini h_insert_nonempty k =
               x := by
-            letI := IST k
+            let := IST k
             by_cases h : τ.min' h_nonempty ≤[k] x
             · left
               apply le_antisymm
@@ -545,9 +545,9 @@ lemma sublemma_3_2 (τ : Finset T) (D : Finset I) (x : T)
       · unfold mSet
         simp_all
       · intros y hy
-        letI := IST i
+        let := IST i
         unfold mSet at hy
-        simp only [ne_eq, gt_iff_lt, Set.mem_setOf_eq] at hy
+        simp only [ne_eq, gt_iff_lt, Set.mem_ofPred_eq] at hy
         obtain ⟨k, hk_in_D, h_y_le_all⟩ := h_dominant y
         by_cases hik : k = i
         · simp_all
@@ -558,7 +558,7 @@ lemma sublemma_3_2 (τ : Finset T) (D : Finset I) (x : T)
           have h_mini_mem_insert : mini h_nonempty k ∈ insert x τ := Finset.mem_insert_of_mem
               h_mini_mem
           have h_le_m : y ≤[k] mini h_nonempty k := h_y_le_all (mini h_nonempty k) h_mini_mem_insert
-          letI := IST k
+          let := IST k
           exact absurd (lt_of_lt_of_le h_lt_y h_le_m) (lt_irrefl _)
   · rintro ⟨i, hi_mem_ab, h_M_nonempty, h_x_is_max⟩
     have h_x_in_M : x ∈ mSet τ D i h_nonempty := h_x_is_max.1
@@ -570,7 +570,7 @@ lemma sublemma_3_2 (τ : Finset T) (D : Finset I) (x : T)
     · subst h_k_eq_i
       have hk_in_D : k ∈ D := by
         simp_all
-      letI := IST k
+      let := IST k
       by_cases h_y_le_x : y ≤[k] x
       · use k, hk_in_D
         simp_all
@@ -579,26 +579,26 @@ lemma sublemma_3_2 (τ : Finset T) (D : Finset I) (x : T)
           intro h_y_in_M
           have h_y_le_x : y ≤[k] x := h_x_is_max.2 y h_y_in_M
           exact not_le.mpr h_x_lt_y h_y_le_x
-        simp only [mSet, ne_eq, gt_iff_lt, Set.mem_setOf_eq, not_forall] at h_y_not_in_M
+        simp only [mSet, ne_eq, gt_iff_lt, Set.mem_ofPred_eq, not_forall] at h_y_not_in_M
         obtain ⟨j, hj_in_D, hj_ne_k, hj_not_lt⟩ := h_y_not_in_M
         use j, hj_in_D
         intro z hz
         cases Finset.mem_insert.mp hz with
         | inl h_z_eq_x =>
           rw [h_z_eq_x]
-          letI := IST j
+          let := IST j
           have h_mini_lt_x : mini h_nonempty j <[j] x := h_x_in_M j hj_in_D hj_ne_k
           have h_y_le_mini : y ≤[j] mini h_nonempty j := le_of_not_gt hj_not_lt
           exact le_of_lt (lt_of_le_of_lt h_y_le_mini h_mini_lt_x)
         | inr h_z_in_tau =>
-          letI := IST j
+          let := IST j
           simp_all
     · use k, hk_in_D
       intro z hz
       cases Finset.mem_insert.mp hz with
       | inl h_z_eq_x =>
         rw [h_z_eq_x]
-        letI := IST k
+        let := IST k
         have h_y_le_mini : y ≤[k] mini h_nonempty k := hk_dom (mini h_nonempty k)
             (Finset.min'_mem τ h_nonempty)
         have h_mini_lt_x : mini h_nonempty k <[k] x := h_x_in_M k hk_in_D h_k_eq_i
@@ -630,18 +630,18 @@ lemma M_sets_disjoint (τ : Finset T) (D : Finset I) (a b : I)
     have h_y_le_mini_b : y ≤[k] mini h_nonempty b := hk_dom (mini h_nonempty b) h_mini_b_mem
     by_cases hk_eq_a : k = a
     · subst hk_eq_a
-      letI := IST k
+      let := IST k
       exact not_le.mpr h_mini_a_lt_y h_y_le_mini_b
     · by_cases hk_eq_b : k = b
       · subst hk_eq_b
-        letI := IST k
+        let := IST k
         exact not_le.mpr h_mini_b_lt_y h_y_le_mini_b
       · have h_mini_k_lt_y : mini h_nonempty k <[k] y := h_in_a k hk_in_D hk_eq_a
         have h_mini_k_mem : mini h_nonempty k ∈ τ := by
           unfold mini
           exact @Finset.min'_mem _ (IST k) _ h_nonempty
         have h_y_le_mini_k : y ≤[k] mini h_nonempty k := hk_dom (mini h_nonempty k) h_mini_k_mem
-        letI := IST k
+        let := IST k
         exact not_le.mpr h_mini_k_lt_y h_y_le_mini_k
   · simp_all
 
@@ -664,7 +664,7 @@ lemma m_element_not_in_tau [Fintype T] (τ : Finset T) (D : Finset I) (i a b : I
       unfold mini
       exact @Finset.min'_mem _ (IST k) _ h_nonempty)
     have h_m_eq_mini : m_i = mini h_nonempty k := by
-      letI := IST k
+      let := IST k
       have h_mini_le_m : mini h_nonempty k ≤[k] m_i := Finset.min'_le τ m_i h_m_in_tau
       exact le_antisymm h_m_le_mini h_mini_le_m
     have h_m_in_M : m_i ∈ mSet τ D k h_nonempty := h_max.1
@@ -684,7 +684,7 @@ lemma m_element_not_in_tau [Fintype T] (τ : Finset T) (D : Finset I) (i a b : I
     have h_m_le_mini_k : m_i ≤[k] mini h_nonempty k := hk_dom (mini h_nonempty k) (by
       unfold mini
       exact @Finset.min'_mem _ (IST k) _ h_nonempty)
-    letI := IST k
+    let := IST k
     exact not_le.mpr h_mini_k_lt_m h_m_le_mini_k
 
 omit [Inhabited T] [DecidableEq T] in
@@ -726,7 +726,7 @@ lemma maximal_element_unique [Fintype T] (τ : Finset T) (D : Finset I) (i : I)
   let m_i := mElement τ D i h_nonempty h_M_nonempty
   have h_mi_max : isMaximalInMSet τ D i h_nonempty m_i :=
     m_element_is_maximal τ D i h_nonempty h_M_nonempty
-  letI := IST i
+  let := IST i
   have h_x_in_M : x ∈ mSet τ D i h_nonempty := h_x_max.1
   have h_mi_in_M : m_i ∈ mSet τ D i h_nonempty := h_mi_max.1
   have h_x_le_mi : x ≤[i] m_i := h_mi_max.2 x h_x_in_M
@@ -1951,7 +1951,7 @@ lemma doorsOfNCroomRepeated [DecidableEq T] (h_room : isRoom σ C)
     simp_all
   have h_exactly_two : NCdoors c σ C = {door1, door2} := by
     ext ⟨τ, D⟩
-    simp only [NCdoors, Set.mem_setOf_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
+    simp only [NCdoors, Set.mem_ofPred_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
     constructor
     · intro ⟨h_nc_τD, h_door_τD⟩
       cases h_door_τD with
@@ -2337,7 +2337,7 @@ lemma firber2_doors_NCroom (h0 : isRoom σ C) (h1 : isTypedNC c i σ C) :
         rw [h_x_form]
         simp only [mem_insert, Prod.mk.injEq, and_true, mem_singleton]
         have h_x1_in_doors : x.1 ∈ NCdoors c σ C := by
-          simp only [NCdoors, Set.mem_setOf_eq]
+          simp only [NCdoors, Set.mem_ofPred_eq]
           have h_sigma : x.2.1 = σ := by rw [h_eq]
           have h_C : x.2.2 = C := by rw [h_eq]
           rw [h_sigma, h_C] at h_door
@@ -2354,7 +2354,7 @@ lemma firber2_doors_NCroom (h0 : isRoom σ C) (h1 : isTypedNC c i σ C) :
           · rw [mem_filter]
             have h_door1_in_doors : door1 ∈ NCdoors c σ C := by
               simp_all
-            simp only [NCdoors, Set.mem_setOf_eq] at h_door1_in_doors
+            simp only [NCdoors, Set.mem_ofPred_eq] at h_door1_in_doors
             exact ⟨by simp,
                 isTypedNC_of_isNearlyColorful_of_isDoorof_isTypedNC h_door1_in_doors.1
                 h_door1_in_doors.2 h1, h_door1_in_doors.2⟩
@@ -2365,7 +2365,7 @@ lemma firber2_doors_NCroom (h0 : isRoom σ C) (h1 : isTypedNC c i σ C) :
           · rw [mem_filter]
             have h_door2_in_doors : door2 ∈ NCdoors c σ C := by
               simp_all
-            simp only [NCdoors, Set.mem_setOf_eq] at h_door2_in_doors
+            simp only [NCdoors, Set.mem_ofPred_eq] at h_door2_in_doors
             exact ⟨by simp,
                 isTypedNC_of_isNearlyColorful_of_isDoorof_isTypedNC h_door2_in_doors.1
                 h_door2_in_doors.2 h1, h_door2_in_doors.2⟩

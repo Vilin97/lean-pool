@@ -210,12 +210,12 @@ private lemma finite_validation_family_bound {X : Type u} [MeasurableSpace X]
         EmpiricalError X Bool (cand a) (fun i => (xs i, c (xs i)))
           (zeroOneLoss Bool)| ≥ η} ⊆ LowerTail ∪ UpperTail := by
       intro xs hxs
-      simp only [Set.mem_setOf_eq] at hxs
+      simp only [Set.mem_ofPred_eq] at hxs
       by_cases h : EmpiricalError X Bool (cand a) (fun i => (xs i, c (xs i)))
           (zeroOneLoss Bool) ≤ TrueErrorReal X (cand a) c D - η
       · exact Or.inl h
       · right
-        simp only [UpperTail, Set.mem_setOf_eq]
+        simp only [UpperTail, Set.mem_ofPred_eq]
         push Not at h
         -- h: EmpErr > TrueErr - η, so TrueErr - EmpErr < η
         -- hxs: |TrueErr - EmpErr| ≥ η
@@ -302,7 +302,7 @@ private lemma pi_cylinder_set_eq {ι : Type*} [Fintype ι]
   have h_eq : {xs : ι → X | (fun i : {i // p i} => xs i.1) ∈ S} =
       e ⁻¹' (S ×ˢ Set.univ) := by
     ext xs
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_prod, Set.mem_univ, and_true]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_prod, Set.mem_univ, and_true]
     rfl
   rw [h_eq, h_mp.measure_preimage_equiv (S ×ˢ Set.univ),
       MeasureTheory.Measure.prod_prod,
@@ -339,7 +339,7 @@ private lemma nat_pair_sample_marginal
   let N := Nat.pair m₁ m₂
   let n := m₁ + m₂
   let p : Fin N → Prop := fun i => (i : ℕ) < n
-  haveI : DecidablePred p := fun i => inferInstance
+  have : DecidablePred p := fun i => inferInstance
   let e₁ : Fin n ≃ {i : Fin N // p i} := Fin.castLEquiv (Nat.add_le_pair m₁ m₂)
   -- Transport Success to the subtype index space
   let SuccessSub : Set ({i : Fin N // p i} → X) :=
@@ -348,7 +348,7 @@ private lemma nat_pair_sample_marginal
   have h_eq : (usedPrefix (X := X) m₁ m₂) ⁻¹' Success =
       {xs : Fin N → X | (fun j : {i : Fin N // p i} => xs j.1) ∈ SuccessSub} := by
     ext xs
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, SuccessSub, p, N, n]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, SuccessSub, p, N, n]
     constructor <;> intro h <;> (convert h using 1; rfl)
   have hSuccessSub_meas : MeasurableSet SuccessSub :=
     measurableSet_preimage (measurable_pi_lambda _ (fun j => measurable_pi_apply (e₁ j))) hSuccess
@@ -441,7 +441,7 @@ private lemma adviceBadVal_measurable {X : Type u} [MeasurableSpace X]
           (LA.learnWithAdvice a (fun i => (p.1 i, c (p.1 i)))) c D -
             EmpiricalError X Bool (LA.learnWithAdvice a (fun i => (p.1 i, c (p.1 i))))
               (fun j => (p.2 j, c (p.2 j))) (zeroOneLoss Bool)| ≥ ε / 4} from by
-      ext p; simp only [Set.mem_setOf_eq, Set.mem_iUnion]]
+      ext p; simp only [Set.mem_ofPred_eq, Set.mem_iUnion]]
     exact MeasurableSet.iUnion h
   intro a
   have h_label_a : Measurable
@@ -594,7 +594,7 @@ private lemma adviceValidationUniformBound {X : Type u} [MeasurableSpace X]
           EmpiricalError X Bool (cand a) (fun i => (xs i, c (xs i)))
             (zeroOneLoss Bool)| ≥ η} := by
     intro xs hxs
-    simp only [Set.mem_setOf_eq, cand] at hxs ⊢
+    simp only [Set.mem_ofPred_eq, cand] at hxs ⊢
     obtain ⟨a, ha⟩ := hxs
     exact ⟨a, le_trans (min_le_left _ _) ha⟩
   calc μ₂ {xs : Fin m₂ → X | ∃ a : A,
@@ -775,7 +775,7 @@ theorem advice_elimination (X : Type u) [MeasurableSpace X]
   case pac =>
     intro ε δ hε hδ D hD c hcC
     obtain ⟨aStar, haStar⟩ := h_adv (ε / 2) (δ / 2) (by linarith) (by linarith) D hD c hcC
-    haveI : MeasureTheory.SigmaFinite D := inferInstance
+    have : MeasureTheory.SigmaFinite D := inferInstance
     have hcm : Measurable c := hc_meas c hcC
     set m₁ := mf_adv (ε / 2) (δ / 2)
     set m₂ := Nat.ceil ((1 / (2 * (min (ε / 4) 1) ^ 2)) * Real.log (4 * ↑(Fintype.card A) / δ)) + 1
@@ -822,7 +822,7 @@ theorem advice_elimination (X : Type u) [MeasurableSpace X]
       (usedPrefix (X := X) m₁ m₂) ⁻¹' GoodUsed
     -- Step 2b: GoodPair equivalence
     have hGP_eq : GoodPair = {p | p.1 ∈ GoodTrain ∧ p ∉ BadVal} := by
-      ext p; simp only [GoodPair, BadVal, Set.mem_setOf_eq, not_exists, not_le]
+      ext p; simp only [GoodPair, BadVal, Set.mem_ofPred_eq, not_exists, not_le]
     -- Step 2c: Measurability
     have hGoodTrain_meas : MeasurableSet GoodTrain := by
       simpa [GoodTrain] using
@@ -902,7 +902,7 @@ theorem advice_elimination (X : Type u) [MeasurableSpace X]
         {p : (Fin m₁ → X) × (Fin m₂ → X) | p.1 ∉ GoodTrain} ∪ BadVal := by
       intro p hp
       rw [hGP_eq] at hp
-      simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_and_or] at hp
+      simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_and_or] at hp
       exact hp.imp id (fun h => not_not.mp h)
     have hGoodPair_bound : (μ₁.prod μ₂) GoodPair ≥ ENNReal.ofReal (1 - δ) := by
       have hcompl : (μ₁.prod μ₂) GoodPairᶜ ≤ ENNReal.ofReal δ :=

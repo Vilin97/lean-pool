@@ -77,7 +77,7 @@ theorem lipschitzOnWith_symm_extChartAt_ofRiemannianMetric
   classical
   -- Prefer the `ContinuousLinearMap`-native `SeminormedAddCommGroup` structure on `→L` spaces to
   -- avoid definitional mismatches between `‖_‖ₑ` occurrences.
-  letI (y : E) :
+  let (y : E) :
       SeminormedAddCommGroup
         (TangentSpace (𝓘(ℝ, E)) y →L[ℝ] TangentSpace I ((extChartAt I x).symm y)) :=
     ContinuousLinearMap.toSeminormedAddCommGroup

@@ -50,7 +50,7 @@ lemma finiteIndex_conjGL' (Γ : Subgroup SL(2, ℤ)) [Γ.FiniteIndex] (g : GL (F
   · obtain ⟨N, hN, hN'⟩ := exists_Gamma_le_conj' g 1
     rw [Gamma_one_top, ← MonoidHom.range_eq_map] at hN'
     suffices Γ(N) ≤ (t • A ⊓ A).comap (mapGL ℝ) by
-      haveI _ : NeZero N := ⟨hN⟩
+      have _ : NeZero N := ⟨hN⟩
       simpa only [index_comap] using (finiteIndex_of_le this).index_ne_zero
     intro k hk
     have ht : t⁻¹ = toConjAct (g.map (Rat.castHom ℝ)) := inv_inv _

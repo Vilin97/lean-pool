@@ -353,7 +353,7 @@ theorem sum_chosenDifference [Finite V]
     (hmin : ∀ v, 2 ≤ Fintype.card (W.Occurrence v))
     (choice : V → Fin 3) :
     ∑ i, W.chosenDifference hmin choice i = 0 := by
-  haveI : Fintype V := Fintype.ofFinite V
+  have : Fintype V := Fintype.ofFinite V
   let e := Equiv.sigmaFiberEquiv W.letter
   calc
     (∑ i, W.chosenDifference hmin choice i) =
@@ -605,7 +605,7 @@ omit [Fintype V] in
 four-colouring of its gaps. -/
 theorem exists_coloring [Finite V]
     (hmin : ∀ v, 2 ≤ Fintype.card (W.Occurrence v)) : Nonempty W.Coloring := by
-  haveI : Fintype V := Fintype.ofFinite V
+  have : Fintype V := Fintype.ofFinite V
   obtain ⟨choice, hbalanced⟩ := W.exists_balanced_choice hmin
   let y := W.chosenDifference hmin choice
   let x := W.prefixColor y

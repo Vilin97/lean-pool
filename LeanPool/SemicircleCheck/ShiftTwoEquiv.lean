@@ -54,7 +54,7 @@ lemma mapsTo_remaining {π : Equiv.Perm (Fin (2 * n + 2))}
     (h₁ : π ⟨1, by omega⟩ = ⟨0, by omega⟩) :
     Set.MapsTo π (RemainingDomain n) (RemainingDomain n) := by
   intro x hx
-  simp only [RemainingDomain, Set.mem_setOf_eq] at *
+  simp only [RemainingDomain, Set.mem_ofPred_eq] at *
   -- By contradiction: assume (π x).val < 2
   by_contra hlt
   push Not at hlt

@@ -85,7 +85,7 @@ theorem transfinite_union_primes_preserved
     set q : ↥S := ↑(hu.unit⁻¹)
     obtain ⟨β, hβ⟩ := hS_union q
     have hp' := chain.primes_preserved (le_max_left α β) p hp
-    apply hp'.not_unit
+    apply hp'.not_isUnit
     have hpq : (p : T) * (q : T) = 1 := by
       have h1 := congrArg (fun (x : ↥S) => (x : T)) hu.unit.val_inv
       simp only [Subring.coe_mul, Subring.coe_one] at h1
@@ -191,7 +191,7 @@ theorem transfinite_union_isNSubring
   have hS_le : ∀ α, (chain.ring α).carrier ≤ S := chain.le_union
   have hS_union : ∀ x : ↥S, ∃ α, (x : T) ∈ (chain.ring α).carrier :=
     fun x => chain.mem_union_iff.mp x.2
-  haveI hIsLocal : IsLocalRing S := by
+  have hIsLocal : IsLocalRing S := by
     apply IsLocalRing.of_isUnit_or_isUnit_one_sub_self
     intro a
     obtain ⟨α, hα⟩ := hS_union a
@@ -257,7 +257,7 @@ theorem transfinite_union_isNSubring
     -- contradicting ht(P∩Rγ) ≤ 1 in Rγ.
     intro t ht P hP
     have hP_prime : P.IsPrime := hP.isPrime
-    haveI hPS : (Ideal.comap S.subtype P).IsPrime :=
+    have hPS : (Ideal.comap S.subtype P).IsPrime :=
       hP_prime.comap _
     change (Ideal.comap S.subtype P).height ≤ ↑(1 : ℕ)
     rw [Ideal.height_le_iff]
@@ -271,7 +271,7 @@ theorem transfinite_union_isNSubring
     obtain ⟨αx, hαx⟩ := hS_union x
     set γ := max αs αx
     set inclγ := Subring.inclusion (hS_le γ)
-    haveI : (Ideal.comap inclγ q).IsPrime :=
+    have : (Ideal.comap inclγ q).IsPrime :=
       hq_prime.comap _
     set s' : (chain.ring γ).carrier :=
       ⟨(s : T), chain.mono (le_max_left ..) hαs⟩
@@ -310,13 +310,13 @@ theorem transfinite_union_isNSubring
       · exact fun h => hx'_nq (h ▸ hx'_P)
     -- ht(P ∩ Rγ) ≤ 1 by NSubring height bound
     have hht := (chain.ring γ).height_bound t ht P hP
-    haveI :
+    have :
         (Ideal.comap (chain.ring γ).carrier.subtype P).IsPrime :=
       hP_prime.comap _
     have hq'_ht :=
       (Ideal.height_le_iff (n := 1)).mp hht _ inferInstance hq'_lt
     -- height < 1 for nonzero prime in domain → contradiction
-    haveI : IsDomain (chain.ring γ).carrier := inferInstance
+    have : IsDomain (chain.ring γ).carrier := inferInstance
     have h0 : (Ideal.comap inclγ q).height ≤ ↑(0 : ℕ) := by
       simp_all
     exact absurd

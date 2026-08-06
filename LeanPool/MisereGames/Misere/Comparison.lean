@@ -298,16 +298,16 @@ theorem Downlinked.of_separating (h_root : A r) (h_isRoot : IsRoot IsAmbient r)
   classical
   choose x hxA hxLose hxWin using h_left_sep
   choose y hyA hyWin hyLose using h_right_sep
-  haveI : Small.{u} (downlinkZero r .left g h) := by
+  have : Small.{u} (downlinkZero r .left g h) := by
     by_cases hz : IsEnd .right g ∧ IsEnd .right h
     · simpa [downlinkZero, hz] using (inferInstance : Small.{u} ({r} : Set G))
     · simpa [downlinkZero, hz] using (inferInstance : Small.{u} (∅ : Set G))
-  haveI : Small.{u} (downlinkZero r .right h g) := by
+  have : Small.{u} (downlinkZero r .right h g) := by
     by_cases hz : IsEnd .left h ∧ IsEnd .left g
     · simpa [downlinkZero, hz] using (inferInstance : Small.{u} ({r} : Set G))
     · simpa [downlinkZero, hz] using (inferInstance : Small.{u} (∅ : Set G))
-  haveI : Small.{u} (downlinkLeftSet r g h y) := inferInstance
-  haveI : Small.{u} (downlinkRightSet r g h x) := inferInstance
+  have : Small.{u} (downlinkLeftSet r g h y) := inferInstance
+  have : Small.{u} (downlinkRightSet r g h x) := inferInstance
   exact downlinked_of_downlinkWitness_mem h_isRoot hg hh
     (downlinkWitness_mem h_root h_sub hg hh hxA hyA) hxLose hxWin hyWin hyLose
 

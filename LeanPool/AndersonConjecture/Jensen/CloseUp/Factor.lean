@@ -172,7 +172,7 @@ private def close_up_aux_factor_proof
             (Ideal.subset_span (Finset.mem_coe.mpr ha'_mem)) ha'_unit]
         exact Submodule.mem_top
       · have hdvd : DvdNotUnit (div_q a) a :=
-          ⟨ha'_zero, ⟨q, hq.not_unit,
+          ⟨ha'_zero, ⟨q, hq.not_isUnit,
             (hdiv_spec a ha_mem).trans (mul_comm q (div_q a))⟩⟩
         have ht_card : t_set.card = n'' + 1 + 1 + 1 := by
           have hinj : Set.InjOn div_q ↑s := fun x hx y hy hxy => by
@@ -311,7 +311,7 @@ private def close_up_aux_factor_proof
         refine h_nested b₀ t_set' (Finset.card_image_le.trans hs'_card) ha_t hb₀ ?_ c' hc'_mem
         -- gcdComplexity (insert a t_set') ≤ gcdComplexity s
         show gcdComplexity (insert a t_set') ≤ gcdComplexity s
-        letI : NormalizationMonoid R.carrier :=
+        let : NormalizationMonoid R.carrier :=
           UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
         have ha_not_s' : a ∉ s' := by
           rw [hs'_def]

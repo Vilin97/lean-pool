@@ -120,7 +120,7 @@ instance : (forget Trees).ReflectsIsomorphisms where
     constructor
     have hIso : IsIso (TypeCat.ofHom f.toFun) := by
       simpa [forget_map] using inferInstanceAs (IsIso ((forget Trees).map f))
-    haveI := hIso
+    have := hIso
     have hinj : Function.Injective f := by
       intro x y h
       exact ((isIso_iff_bijective (TypeCat.ofHom f.toFun)).mp inferInstance).1 h

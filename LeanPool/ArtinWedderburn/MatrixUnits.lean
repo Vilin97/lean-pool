@@ -47,7 +47,7 @@ theorem nontrivial_ortidem_n_pos (nontriv : Nontrivial R) (ort_idem : OrtIdemDiv
   have not_less_zero (n : ℕ) : ¬ n < ort_idem.n := by rw [n_zero]; exact Nat.not_lt_zero n
   have fin_empty : IsEmpty (Fin ort_idem.n) := isEmpty_iff.mpr (fun ⟨n, hn⟩ => not_less_zero n hn)
   have zero_eq_one : (1 : R) = (0 : R) := by
-    haveI := fin_empty
+    have := fin_empty
     calc
       1 = ∑ i : Fin ort_idem.n, ort_idem.f i := Eq.symm ort_idem.sum_one
       _ = 0 := Fintype.sum_empty ort_idem.f

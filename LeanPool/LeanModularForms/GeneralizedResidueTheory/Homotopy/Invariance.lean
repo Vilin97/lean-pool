@@ -218,7 +218,7 @@ private theorem windingNumber_continuousOn_param_piecewise_with_bound
         hs₀ ht_Icc ht_Ioo ht_notB.2
     have h_ae_not_B : ∀ᵐ t ∂(volume.restrict (Icc a b)), t ∉ B := by
       rw [ae_restrict_iff' measurableSet_Icc, ae_iff]
-      simp only [Set.setOf_and, Classical.not_imp, not_not]
+      simp only [Set.ofPred_and, Classical.not_imp, not_not]
       exact measure_mono_null Set.inter_subset_right hB_null
     filter_upwards [h_ae_not_B, ae_restrict_mem measurableSet_Icc] with t ht_notB ht_Icc
     exact h_cont_off_B t ht_Icc ht_notB
@@ -252,7 +252,7 @@ private theorem continuous_integer_valued_constant
           have h4 : m = n := sub_eq_zero.mp h3
           exact_mod_cast h4
       rw [heq]
-      exact hf_cont.restrict.isOpen_preimage _ Metric.isOpen_ball
+      exact hf_cont.domRestrict.isOpen_preimage _ Metric.isOpen_ball
     · convert isOpen_empty
       ext ⟨x, hx⟩
       simp only [g, mem_preimage, mem_singleton_iff,

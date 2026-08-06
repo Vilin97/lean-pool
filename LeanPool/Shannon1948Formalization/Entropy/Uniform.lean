@@ -310,7 +310,7 @@ lemma nonempty_of_probDist
     (p : ProbDist α) :
     Nonempty α := by
   by_contra h
-  haveI : IsEmpty α := not_nonempty_iff.mp h
+  have : IsEmpty α := not_nonempty_iff.mp h
   have hsum0 : (∑ a, p a) = 0 := by simp
   linarith [hsum0, prob_sum_eq_one p]
 

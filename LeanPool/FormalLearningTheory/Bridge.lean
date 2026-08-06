@@ -56,13 +56,13 @@ theorem bridge_round_trip (X : Type u) (C : ConceptClass X Bool) :
     setFamilyToConceptClass X (conceptClassToSetFamily X C) = C := by
   apply Set.ext
   intro c
-  simp only [setFamilyToConceptClass, conceptClassToSetFamily, Set.mem_setOf_eq]
+  simp only [setFamilyToConceptClass, conceptClassToSetFamily, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨c', hc', hEq⟩
     have hcc' : c = c' := by
       funext x
       have := Set.ext_iff.mp hEq x
-      simp only [Set.mem_setOf_eq] at this
+      simp only [Set.mem_ofPred_eq] at this
       cases hcx : c x <;> cases hc'x : c' x <;> simp_all
     rwa [hcc']
   · intro hc
@@ -245,8 +245,8 @@ theorem vcdim_eq_finset_vcdim {X : Type u} [Fintype X] [DecidableEq X]
 theorem vcdim_finite_of_fintype {X : Type u}
     (hX : Fintype X) (hdec : DecidableEq X) (C : Finset (X → Bool)) :
     VCDim X (↑C : Set (X → Bool)) < ⊤ := by
-  letI := hX
-  letI := hdec
+  let := hX
+  let := hdec
   rw [vcdim_eq_finset_vcdim (X := X) C]
   exact WithTop.coe_lt_top _
 
@@ -432,7 +432,7 @@ private theorem ncard_restrictions_eq_card {X : Type u}
   have hEq : { f : ↥S → Bool | ∃ c ∈ (↑C : Set (X → Bool)), ∀ x : ↥S, c ↑x = f x } =
       ↑(restrictConceptClass C S) := by
     ext f
-    simp only [Set.mem_setOf_eq, Finset.mem_coe, restrictConceptClass, Finset.mem_image,
+    simp only [Set.mem_ofPred_eq, Finset.mem_coe, restrictConceptClass, Finset.mem_image,
       Finset.mem_coe]
     constructor
     · rintro ⟨c, hcC, hcf⟩
@@ -522,7 +522,7 @@ theorem withTopNatToOrdinal_mono :
 theorem vcdim_to_ordinal_vcdim (X : Type u)
     (C : ConceptClass X Bool) :
     withTopNatToOrdinal (VCDim X C) ≤ OrdinalVCDim X C := by
-  haveI : Nonempty (Finset X) := ⟨∅⟩
+  have : Nonempty (Finset X) := ⟨∅⟩
   rcases hv : VCDim X C with _ | n
   · -- INFINITE CASE: VCDim X C = ⊤, withTopNatToOrdinal ⊤ = ω
     simp only [withTopNatToOrdinal]
@@ -630,7 +630,7 @@ theorem compression_bounds_vcdim (X : Type u)
     have : (N - 1 : ℕ) < S.card := by exact_mod_cast h_big
     omega
   -- Classical reasoning for DecidableEq
-  haveI : DecidableEq X := Classical.decEq X
+  have : DecidableEq X := Classical.decEq X
   -- Take subset T ⊆ S with |T| = N
   obtain ⟨T, hT_sub, hT_card⟩ := Finset.exists_subset_card_eq hN_le
   -- T is shattered (subset of shattered set)

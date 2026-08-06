@@ -348,7 +348,7 @@ private lemma indicator_ae_eq_of_ae_eq_restrict
     nullMeasurableSet_eq_fun (μ := μ.restrict K) hf hg
   have hnullNe : NullMeasurableSet {x | f x ≠ g x} (μ.restrict K) := by
     -- Complement of the equality set.
-    simpa [Set.compl_setOf, ne_eq] using hnullEq.compl
+    simpa [Set.compl_ofPred, ne_eq] using hnullEq.compl
   have hK0 : μ ({x | f x ≠ g x} ∩ K) = 0 := by
     -- Use the restriction formula on a null-measurable set.
     have hEqRestr :
@@ -365,7 +365,7 @@ private lemma indicator_ae_eq_of_ae_eq_restrict
           intro hxSupp
           exact hxK (hsupp hxSupp)
         -- `x ∉ support g` means `g x = 0`.
-        simpa [Function.support, Set.mem_setOf_eq] using hxnsupp
+        simpa [Function.support, Set.mem_ofPred_eq] using hxnsupp
       have hfx0 : K.indicator f x = 0 := by simp [hxK]
       exact hx (by simp [hfx0, hg0])
     have hne : f x ≠ g x := by

@@ -80,8 +80,8 @@ def SubField.adjoin (L : SubField K D) (a : D) (ha : a ∈ Subalgebra.centralize
   mul_comm x y hx hy := by
     exact SubField.adjoin_centralizer_mul_comm K D L a ha x hx y hy
   exists_inverse x hx hx0 := by
-    letI := SubField.adjoinCommRing K D L a ha
-    haveI := isField_of_isIntegral_of_isField' (R := K) (S := Algebra.adjoin K (L ∪ {a}))
+    let := SubField.adjoinCommRing K D L a ha
+    have := isField_of_isIntegral_of_isField' (R := K) (S := Algebra.adjoin K (L ∪ {a}))
       (Semifield.toIsField K)
     exact ⟨(this.3 (Subtype.coe_ne_coe.mp hx0 : (⟨x, hx⟩ : Algebra.adjoin K _) ≠ 0)).choose.1,
     ⟨(this.3 (Subtype.coe_ne_coe.mp hx0 : (⟨x, hx⟩ : Algebra.adjoin _ _) ≠ 0)).choose.2,
@@ -149,7 +149,7 @@ noncomputable abbrev iSupChainSepsubfield (c : Set (AllSepSubfield K D)) [Nonemp
     exists_inverse x hx hx0 := by
       simp only [Subalgebra.coe_toSubsemiring,
         Subsemiring.coe_carrier_toSubmonoid, SetLike.mem_coe] at *
-      letI : Nonempty c := Set.Nonempty.to_subtype (Set.Nonempty.of_subtype)
+      let : Nonempty c := Set.Nonempty.to_subtype (Set.Nonempty.of_subtype)
       have := Subalgebra.coe_iSup_of_directed hc1.directed
       dsimp at this
       change x ∈ (_ : Set _) at hx
@@ -163,7 +163,7 @@ noncomputable abbrev iSupChainSepsubfield (c : Set (AllSepSubfield K D)) [Nonemp
       · exact L1.1.1.3 hx hx0|>.choose_spec.2
   }
   property := by
-    simp only [Set.coe_setOf, Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [Algebra.isSeparable_def]
     simp only [Subtype.forall]
     intro a ha
@@ -181,10 +181,10 @@ noncomputable abbrev iSupChainSepsubfield (c : Set (AllSepSubfield K D)) [Nonemp
 omit [Algebra.IsCentral K D] [FiniteDimensional K D] in
 lemma exists_max_sepSub : ∃ L : AllSepSubfield K D, IsMax L :=
   zorn_le_nonempty (α := AllSepSubfield K D) fun c hc1 hc2 ↦ by
-    haveI : Nonempty c := Set.Nonempty.to_subtype hc2
+    have : Nonempty c := Set.Nonempty.to_subtype hc2
     use iSupChainSepsubfield K D c hc1
     change _ ∈ {L | _}
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     intro L hL
     change L.1.1 ≤ (⨆ (L : c), L.1.1.1 : Subalgebra K D)
     exact le_iSup_of_le ⟨L, hL⟩ (by rfl)
@@ -327,7 +327,7 @@ theorem exists_sep_masSubfield' : ∃ (a : D), IsMax (SubField.botAdjoin K D a) 
   suffices h : CL = L.1.1 by
     have Lmax := maxsubfield_of_div_iff K D L.1 |>.1 <|
       cor_two_2to3 K D L.1 (cor_two_1to2 K D L.1 |>.1 h)
-    haveI : Algebra.IsSeparable _ _  := L.2
+    have : Algebra.IsSeparable _ _  := L.2
     obtain ⟨a, ha⟩ := Field.exists_primitive_element K L.1
     use a
     constructor
@@ -345,8 +345,8 @@ theorem exists_sep_masSubfield' : ∃ (a : D), IsMax (SubField.botAdjoin K D a) 
   by_contra! h
   let ZCL := Subalgebra.center K CL
   let CCL := Subalgebra.centralizer K (A := D) CL
-  letI : Field L.1 := inferInstance
-  haveI sim : IsSimpleRing L.1.1 := inferInstance
+  let : Field L.1 := inferInstance
+  have sim : IsSimpleRing L.1.1 := inferInstance
   have eq1 := double_centralizer (F := K) (A := D) L.1.1
   change CCL = L.1.1 at eq1
   have eq2 : CCL = ZCL.map (Subalgebra.val _) := by
@@ -370,9 +370,9 @@ theorem exists_sep_masSubfield' : ∃ (a : D), IsMax (SubField.botAdjoin K D a) 
       simp_all
     -- rw [eq1]
   rw [eq1] at eq2
-  haveI inst1 : Algebra.IsAlgebraic L CL := Algebra.IsAlgebraic.of_finite L CL
-  haveI inst2 : FiniteDimensional ZCL CL := inferInstance
-  haveI inst3: Algebra.IsAlgebraic ZCL CL := Algebra.IsAlgebraic.of_finite ZCL CL
+  have inst1 : Algebra.IsAlgebraic L CL := Algebra.IsAlgebraic.of_finite L CL
+  have inst2 : FiniteDimensional ZCL CL := inferInstance
+  have inst3: Algebra.IsAlgebraic ZCL CL := Algebra.IsAlgebraic.of_finite ZCL CL
   have ass : Subring.center ↥CL ≠ ⊤ := by
     rw [eq2] at h
     symm
@@ -431,9 +431,9 @@ theorem exists_sep_masSubfield' : ∃ (a : D), IsMax (SubField.botAdjoin K D a) 
           (Subalgebra.inclusion_injective _) <|
           (Algebra.isSeparable_def K L).1 hLsep ⟨x1, hxL⟩
       · subst hxa
-        letI : Algebra.IsSeparable K L := hLsep
-        letI := IsLAlg K D L a.1 a.2
-        letI := SubField.adjoin_scalarTower K D L a.1 a.2
+        let : Algebra.IsSeparable K L := hLsep
+        let := IsLAlg K D L a.1 a.2
+        let := SubField.adjoin_scalarTower K D L a.1 a.2
         exact IsSeparable.of_algebra_isSeparable_of_isSeparable K (E := L)
           (K := SubField.adjoin K D L a.1 a.2)
           (x := ⟨a.1, Algebra.subset_adjoin (by simp)⟩) <| by
@@ -480,7 +480,7 @@ private theorem normalClosure_isSeparable {Kbar : Type u} [Field Kbar]
     [Algebra K Kbar] [IsAlgClosed Kbar] (L : Type u) [Field L] [Algebra K L]
     [Algebra.IsSeparable K L] [Algebra.IsAlgebraic K L] :
     Algebra.IsSeparable K (IntermediateField.normalClosure K L Kbar) := by
-  haveI : ∀ f : L →ₐ[K] Kbar, Algebra.IsSeparable K f.fieldRange := fun f ↦
+  have : ∀ f : L →ₐ[K] Kbar, Algebra.IsSeparable K f.fieldRange := fun f ↦
     algHom_fieldRange_isSeparable (K := K) (L := L) (Kbar := Kbar) f
   rw [normalClosure_def]
   infer_instance
@@ -489,15 +489,15 @@ theorem exists_finite_galois_split :
     ∃ (L : Type u) (_ : Field L) (_ : Algebra K L) (_ : FiniteDimensional K L),
     IsGalois K L ∧ isSplit K D L := by
   obtain ⟨L, _, _, _, hL1, hL2⟩ := exists_sep_splitting K D
-  haveI : FiniteDimensional K L := inferInstance
+  have : FiniteDimensional K L := inferInstance
   let K_bar := AlgebraicClosure K
-  haveI : IsAlgClosed K_bar := inferInstance
-  haveI : Algebra.IsAlgebraic K L := inferInstance
+  have : IsAlgClosed K_bar := inferInstance
+  have : Algebra.IsAlgebraic K L := inferInstance
   let L' := IntermediateField.normalClosure K L K_bar
   let f := normalClosure.algHomEquiv K L K_bar |>.symm IsAlgClosed.lift
-  letI : Algebra.IsSeparable K L := hL1
-  letI : Algebra L L' := RingHom.toAlgebra f
-  haveI : IsScalarTower K L L' := {
+  let : Algebra.IsSeparable K L := hL1
+  let : Algebra L L' := RingHom.toAlgebra f
+  have : IsScalarTower K L L' := {
     smul_assoc k l x := by
       simp only [Algebra.smul_def, map_mul]
       rw [mul_assoc]
@@ -505,9 +505,9 @@ theorem exists_finite_galois_split :
       change (normalClosure.algHomEquiv K L K_bar |>.symm IsAlgClosed.lift) _ = _
       simp only [AlgHom.commutes]
       rfl }
-  haveI : Algebra.IsSeparable K L' := by
+  have : Algebra.IsSeparable K L' := by
     simpa [L'] using normalClosure_isSeparable (K := K) (Kbar := K_bar) L
-  haveI : IsGalois K L' := {
+  have : IsGalois K L' := {
     to_isSeparable := inferInstance
     to_normal := inferInstance }
   have hsplit : isSplit K D L' := extensionOverSplit' K K_bar D L L' hL2

@@ -56,7 +56,7 @@ noncomputable def midProjToFun (n : ℕ) : mid.{u} n → disk.{u} n := fun p ↦
     | ⟨⟨ ⟨⟨x, _⟩⟩, ⟨y, _⟩ ⟩, _⟩ => (2 / (2 - y)) • x,
   property := by
     obtain ⟨⟨ ⟨⟨x, _⟩⟩, ⟨y, _, _⟩ ⟩, hxy⟩ := p
-    dsimp only [Int.ofNat_eq_natCast, Set.coe_setOf, Set.mem_setOf_eq]
+    dsimp only [Int.ofNat_eq_natCast, Set.coe_ofPred, Set.mem_ofPred_eq]
     rw [Metric.mem_closedBall]
     rw [dist_zero_right, norm_smul, norm_div, RCLike.norm_ofNat, Real.norm_eq_abs]
     have : 0 < |2 - y| := lt_of_le_of_ne (abs_nonneg _) (abs_ne_zero.mpr (by linarith)).symm

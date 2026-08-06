@@ -67,7 +67,7 @@ theorem measurableSet_agreementRel
     (hπ₁ : Measurable π₁) (hπ₂ : Measurable π₂) :
     MeasurableSet (agreementRel π₁ π₂) := by
   unfold agreementRel
-  letI := upgradeStandardBorel S
+  let := upgradeStandardBorel S
   exact measurableSet_eq_fun (hπ₁.comp measurable_fst) (hπ₂.comp measurable_snd)
 
 /-! ## Amalgamation preserves WellBehavedVCMeasTarget -/
@@ -87,11 +87,11 @@ theorem amalgClass_wellBehaved
     (hmerge : Measurable (fun p : (Θ₁ × Θ₂) × X => merge p.1 p.2)) :
     WellBehavedVCMeasTarget X (amalgClass π₁ π₂ merge) := by
   have hmeas := measurableSet_agreementRel π₁ π₂ hπ₁ hπ₂
-  haveI := hmeas.standardBorel
+  have := hmeas.standardBorel
   have hrange : amalgClass π₁ π₂ merge =
       Set.range (fun θ : ↥(agreementRel π₁ π₂) => merge θ.val) := by
     ext h
-    simp only [amalgClass, relParamClass, Set.mem_setOf_eq, Set.mem_range]
+    simp only [amalgClass, relParamClass, Set.mem_ofPred_eq, Set.mem_range]
     constructor
     · rintro ⟨θ, hθ, rfl⟩; exact ⟨⟨θ, hθ⟩, rfl⟩
     · rintro ⟨⟨θ, hθ⟩, rfl⟩; exact ⟨θ, hθ, rfl⟩
@@ -113,7 +113,7 @@ theorem interpClassFixed_subset_amalgClass
       amalgClass (fun _ : Θ₁ => ()) (fun _ : Θ₂ => ())
         (fun p => piecewiseConcept A (e₁ p.1) (e₂ p.2)) := by
   intro h hh
-  simp only [interpClassFixed, Set.mem_setOf_eq] at hh
+  simp only [interpClassFixed, Set.mem_ofPred_eq] at hh
   obtain ⟨h₁, ⟨θ₁, rfl⟩, h₂, ⟨θ₂, rfl⟩, rfl⟩ := hh
-  simp only [amalgClass, relParamClass, agreementRel, Set.mem_setOf_eq]
+  simp only [amalgClass, relParamClass, agreementRel, Set.mem_ofPred_eq]
   exact ⟨(θ₁, θ₂), trivial, rfl⟩

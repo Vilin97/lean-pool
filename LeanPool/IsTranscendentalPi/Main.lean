@@ -98,7 +98,7 @@ theorem IsTranscendentalPi : Transcendental ℚ (Real.pi : ℂ) := by
       rw [pow_succ']
       ac_rfl
   obtain ⟨N, hN⟩ := Filter.eventually_atTop.1 hUpper
-  letI : Nonempty {p : ℕ // Nat.Prime p} := ⟨⟨2, by decide⟩⟩
+  let : Nonempty {p : ℕ // Nat.Prime p} := ⟨⟨2, by decide⟩⟩
   obtain ⟨q, hq⟩ := Filter.eventually_atTop.1 hLower
   obtain ⟨p, hp, hpprime⟩ := Nat.exists_infinite_primes (max N (q : ℕ))
   exact

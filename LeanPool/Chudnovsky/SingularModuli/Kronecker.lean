@@ -118,7 +118,7 @@ lemma wParam_tendsto_zero [NeZero m] :
 /-- Each `some b` factor of the orbit product, times `q`, tends to `1`. -/
 lemma some_factor_tendsto_one [Fact m.Prime] (b : ZMod m) :
     Tendsto (fun τ : ℍ ↦ (j τ - f m (some b) τ) * q τ) atImInfty (nhds 1) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   have hm2 : 2 ≤ m := (Fact.out : m.Prime).two_le
   -- `f_b · q → 0`
   have hfac : Tendsto (fun τ : ℍ ↦ f m (some b) τ * q τ) atImInfty (nhds 0) := by
@@ -156,7 +156,7 @@ lemma some_factor_tendsto_one [Fact m.Prime] (b : ZMod m) :
 /-- The `∞` factor of the orbit product, times `qᵐ`, tends to `−1`. -/
 lemma none_factor_tendsto_neg_one [Fact m.Prime] :
     Tendsto (fun τ : ℍ ↦ (j τ - f m none τ) * q τ ^ m) atImInfty (nhds (-1)) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   have hm2 : 2 ≤ m := (Fact.out : m.Prime).two_le
   -- `j · qᵐ → 0`
   have hjqm : Tendsto (fun τ : ℍ ↦ j τ * q τ ^ m) atImInfty (nhds 0) := by
@@ -181,7 +181,7 @@ lemma none_factor_tendsto_neg_one [Fact m.Prime] :
 lemma orbit_prod_tendsto_neg_one [Fact m.Prime] :
     Tendsto (fun τ : ℍ ↦ (∏ i : Option (ZMod m), (j τ - f m i τ)) * q τ ^ (2 * m)) atImInfty
       (nhds (-1)) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   have hprod : Tendsto (fun τ : ℍ ↦ ∏ b : ZMod m, ((j τ - f m (some b) τ) * q τ)) atImInfty
       (nhds 1) := by
     have h := tendsto_finsetProd (Finset.univ : Finset (ZMod m))
@@ -255,7 +255,7 @@ theorem diagPhiZ_natDegree_and_leadingCoeff [Fact m.Prime]
     {PhiZ : Polynomial (Polynomial ℤ)}
     (hPhi : ∀ τ : ℍ, orbitPoly m τ = specializeZ (j τ) PhiZ) :
     (diagPhiZ PhiZ).natDegree = 2 * m ∧ (diagPhiZ PhiZ).leadingCoeff = -1 := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   set G := diagPhiZ PhiZ with hGdef
   -- `G(j τ) = ∏_i (j τ − f_i τ)`
   have hD : ∀ τ : ℍ, G.eval₂ (Int.castRingHom ℂ) (j τ) = ∏ i : Option (ZMod m), (j τ - f m i τ) :=
@@ -331,7 +331,7 @@ and the CM root are needed. -/
 theorem isIntegral_j_of_cm [Fact m.Prime] {PhiZ : Polynomial (Polynomial ℤ)}
     (hPhi : ∀ τ : ℍ, orbitPoly m τ = specializeZ (j τ) PhiZ)
     {τ : ℍ} {i : Option (ZMod m)} (hcm : j τ = f m i τ) : IsIntegral ℤ (j τ) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   exact isIntegral_of_kronecker (diagPhiZ_leadingCoeff_eq hPhi)
     (diagPhiZ_eval_eq_zero hPhi hcm)
 

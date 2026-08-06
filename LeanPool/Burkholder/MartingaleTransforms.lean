@@ -796,7 +796,7 @@ private lemma burkholder_du_dx_Xn_Yn_integrable_mul_diff
           (X_{n}[w, f] ω) (Y_{n}[w, f] ω) *
             (X_{n+1}[w, f] ω - X_{n}[w, f] ω)) μ := by
     rw [hp_eq_ofReal] at hXdiff_memLp
-    letI : ENNReal.HolderTriple (ENNReal.ofReal q) (ENNReal.ofReal p.toReal) 1 := hpq
+    let : ENNReal.HolderTriple (ENNReal.ofReal q) (ENNReal.ofReal p.toReal) 1 := hpq
     exact MemLp.integrable_mul hdu hXdiff_memLp
   constructor
   · exact hmul_int
@@ -987,7 +987,7 @@ private lemma burkholder_du_dy_Xn_Yn_integrable_mul_diff
           (X_{n}[w, f] ω) (Y_{n}[w, f] ω) *
             (Y_{n+1}[w, f] ω - Y_{n}[w, f] ω)) μ := by
     rw [hp_eq_ofReal] at hYdiff_memLp
-    letI : ENNReal.HolderTriple (ENNReal.ofReal q) (ENNReal.ofReal p.toReal) 1 := hpq
+    let : ENNReal.HolderTriple (ENNReal.ofReal q) (ENNReal.ofReal p.toReal) 1 := hpq
     exact MemLp.integrable_mul hdu hYdiff_memLp
   constructor
   · exact hmul_int

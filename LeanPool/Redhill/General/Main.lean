@@ -22,7 +22,7 @@ variable {n : ℕ} {F : Finset ℕ}
 
 lemma tup_mem_factorFreeTuples (hF : ∀ f ∈ F, 3 ≤ f) :
     ∀ᶠ h in atTop, tup n F h ∈ factorFreeTuples F (n + 6) := by
-  simp_rw [factorFreeTuples, Set.mem_setOf_eq, eventually_and]
+  simp_rw [factorFreeTuples, Set.mem_ofPred_eq, eventually_and]
   exact ⟨.of_forall fun h ↦ sum_tup, strongSSC_tup, pairwiseCoprime_tup,
     .of_forall fun h f mf ↦ not_dvd_tup mf (hF f mf)⟩
 

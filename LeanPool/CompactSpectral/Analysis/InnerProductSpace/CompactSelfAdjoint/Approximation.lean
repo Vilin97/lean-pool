@@ -40,7 +40,7 @@ lemma largeEigenspace_mem_invtSubmodule_of_isCompactOperator_of_isSelfAdjoint
     simpa [s, t] using
       finite_set_hasEigenvalue_norm_ge_of_isCompactOperator_of_isSelfAdjoint
         (𝕜 := 𝕜) (E := E) T hT hTc hε
-  letI : Fintype s.Elem := hsFin.fintype
+  let : Fintype s.Elem := hsFin.fintype
   have h_each : ∀ i : s.Elem, t.eigenspace i.1 ∈ t.invtSubmodule := by
     intro i
     change t.eigenspace i.1 ≤ (t.eigenspace i.1).comap t
@@ -80,7 +80,7 @@ lemma finiteDimensional_range_comp_largeEigenspaceProjector
           E →ₗ[𝕜] E)) := by
   classical
   let U : Submodule 𝕜 E := largeEigenspace (𝕜 := 𝕜) (E := E) T ε
-  haveI : FiniteDimensional 𝕜 U :=
+  have : FiniteDimensional 𝕜 U :=
     finiteDimensional_largeEigenspace_of_isCompactOperator_of_isSelfAdjoint
       (𝕜 := 𝕜) (E := E) T hT hTc hε
   let P : E →L[𝕜] E := largeEigenspaceProjector (𝕜 := 𝕜) (E := E) T hT hTc hε
@@ -106,9 +106,9 @@ lemma opNorm_sub_comp_largeEigenspaceProjector_le
     ‖T - T ∘L largeEigenspaceProjector (𝕜 := 𝕜) (E := E) T hT hTc hε‖ ≤ ε := by
   classical
   by_cases hE : Nontrivial E
-  · haveI : Nontrivial E := hE
+  · have : Nontrivial E := hE
     let U : Submodule 𝕜 E := largeEigenspace (𝕜 := 𝕜) (E := E) T ε
-    haveI : FiniteDimensional 𝕜 U :=
+    have : FiniteDimensional 𝕜 U :=
       finiteDimensional_largeEigenspace_of_isCompactOperator_of_isSelfAdjoint
         (𝕜 := 𝕜) (E := E) T hT hTc hε
     let P0 : E →L[𝕜] E := U.starProjection
@@ -139,10 +139,10 @@ lemma opNorm_sub_comp_largeEigenspaceProjector_le
       by_contra hlt
       have hlt' : ε < ‖S‖ := lt_of_not_ge hlt
       by_cases hVsub : Subsingleton V
-      · haveI : Subsingleton V := hVsub
+      · have : Subsingleton V := hVsub
         have : ‖S‖ = 0 := ContinuousLinearMap.opNorm_subsingleton (f := S)
         exact (not_lt_of_ge (le_of_lt hε)) (by simpa [this] using hlt')
-      · haveI : Nontrivial V := (not_subsingleton_iff_nontrivial).1 hVsub
+      · have : Nontrivial V := (not_subsingleton_iff_nontrivial).1 hVsub
         obtain ⟨μ, v, hv, hμ⟩ :=
           exists_hasEigenvector_norm_eq_opNorm_of_isCompactOperator_of_isSelfAdjoint
             (𝕜 := 𝕜) (E := V) S hS_self hS_compact
@@ -217,6 +217,6 @@ lemma opNorm_sub_comp_largeEigenspaceProjector_le
     -- Rewrite back to the canonical projector.
     simpa [hP0] using hmain
   · -- If `E` is trivial, all operator norms are `0`.
-    haveI : Subsingleton E := (not_nontrivial_iff_subsingleton).1 hE
+    have : Subsingleton E := (not_nontrivial_iff_subsingleton).1 hE
     simpa using (le_of_lt hε)
 end CompactSelfAdjoint

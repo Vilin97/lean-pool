@@ -229,7 +229,7 @@ theorem exists_hasEigenvector_norm_eq_opNorm_of_isCompactOperator_of_isSelfAdjoi
       exact hbound x
     refine le_antisymm ?_ ?_
     · -- upper bound
-      haveI : Nonempty { x : E // x ≠ 0 } := by
+      have : Nonempty { x : E // x ≠ 0 } := by
         rcases exists_ne (0 : E) with ⟨x, hx⟩
         exact ⟨⟨x, hx⟩⟩
       exact ciSup_le hbound

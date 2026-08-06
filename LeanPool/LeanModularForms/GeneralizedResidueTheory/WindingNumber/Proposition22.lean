@@ -241,7 +241,7 @@ theorem PiecewiseC1Immersion.crossing_not_accPt
   rw [accPt_iff_frequently_nhdsNE, Filter.not_frequently]
   exact (γ.crossing_isolated_nhds z₀ t₀ ht₀ hcross).mono
     (fun t ht ht_mem => by
-      simp only [mem_setOf_eq] at ht_mem
+      simp only [mem_ofPred_eq] at ht_mem
       exact ht.elim (fun h => h ht_mem.2) (fun h => h ht_mem.1))
 
 /-- The crossing set is closed. -/
@@ -417,7 +417,7 @@ theorem cpv_integrand_intervalIntegrable
             (S \ γ.partition) := by
           intro t ⟨⟨ht_far, ht_Icc⟩, ht_notP⟩
           have h_ne : γ.toFun t - z₀ ≠ 0 := by
-            intro heq; simp only [Set.mem_setOf_eq, heq, norm_zero] at ht_far; linarith
+            intro heq; simp only [Set.mem_ofPred_eq, heq, norm_zero] at ht_far; linarith
           apply ContinuousWithinAt.mul
           · have hγ_sub : ContinuousWithinAt (fun t => γ.toFun t - z₀)
                 (S \ γ.partition) t :=

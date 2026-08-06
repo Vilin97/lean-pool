@@ -29,7 +29,7 @@ lemma open_induction {P : V → Prop}
     (zero : P 0) (succ : ∀ x, P x → P (x + 1)) : ∀ x, P x :=
   induction (C := Semiformula.Open)
     (by rcases hP with ⟨p, hp, hhp⟩
-        haveI : Inhabited V := Classical.inhabited_of_nonempty'
+        have : Inhabited V := Classical.inhabited_of_nonempty'
         exact ⟨p.fvarEnumInv, Rew.rewriteMap p.fvarEnum ▹ p, by simp[hp],
           by  intro x
               simp only [hhp, Nat.succ_eq_add_one, Nat.reduceAdd, Semiformula.eval_rewriteMap]

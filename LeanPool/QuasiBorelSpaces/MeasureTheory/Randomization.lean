@@ -78,7 +78,7 @@ lemma measurableEmbedding_normalize (r) : MeasurableEmbedding (normalize (r := r
     clear ht this s
     wlog! hr : r ≠ 0
     · subst hr
-      simp only [Set.image, div_zero, exists_and_right, measurableSet_setOf]
+      simp only [Set.image, div_zero, exists_and_right, measurableSet_setOfPred]
       fun_prop
     have : (fun x ↦ x / r) '' t = (· * r) ⁻¹' t := by grind
     rw [this]

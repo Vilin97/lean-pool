@@ -116,7 +116,7 @@ theorem qamA.toMatrix [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
 private noncomputable def has_smul.units_matrix_ne_zero : SMul ℂˣ { x : Matrix n n ℂ // x ≠ 0 }
     where smul α x :=
     (⟨((α : ℂ) • x.1 : Matrix n n ℂ),
-        smul_ne_zero (Units.ne_zero α) (Set.mem_setOf.mp (Subtype.mem x))⟩ :
+        smul_ne_zero (Units.ne_zero α) (Set.mem_ofPred.mp (Subtype.mem x))⟩ :
       { x : Matrix n n ℂ // x ≠ 0 })
 
 omit [Fintype n] [DecidableEq n] in
@@ -155,7 +155,7 @@ theorem qamA.is_idempotent [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
       (Qam.reflIdempotent hφ (qamA hφ x) (qamA hφ x) = qamA hφ x) := by
   withMatrixQuantumCtx[φ]
-  letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   rw [← Function.Injective.eq_iff (hφ.psi (ψ := φ) 0 (1 / 2)).injective,
     Module.Dual.IsFaithfulPosMap.psi, Qam.reflIdempotent, Psi.schurMul, qamA_eq]
   simp only [← rankOne_toMatrix_transpose_psi_symm]
@@ -283,7 +283,7 @@ theorem Psi.schurMul_faithful [hφ : φ.IsFaithfulPosMap] (r₁ r₂ : ℝ) (f g
       (hφ.psi (ψ := φ) r₁ r₂ (f •ₛ g) =
         hφ.psi (ψ := φ) r₁ r₂ f * hφ.psi (ψ := φ) r₁ r₂ g) := by
   withMatrixQuantumCtx[φ]
-  letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   rw [Module.Dual.IsFaithfulPosMap.psi, Psi.schurMul]
 
 theorem qamA.isReal [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
@@ -367,7 +367,7 @@ private theorem qam_A_is_sa_iff_aux5 [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ 
       symmMap ℂ ℍ ℍ |x.1⟩⟨x.1| = |x.1⟩⟨x.1|) := by
   withMatrixQuantumCtx[φ]
   intro h
-  haveI := hφ.matrixIsPosDef.invertible
+  have := hφ.matrixIsPosDef.invertible
   calc
     symmMap ℂ ℍ ℍ |x.1⟩⟨x.1| =
         (hφ.sig (-1)).toLinearMap ∘ₗ (|x.1ᴴ⟩⟨x.1ᴴ| : l(ℍ)) :=
@@ -506,7 +506,7 @@ theorem sig_eq_self_iff_commute [hφ : φ.IsFaithfulPosMap] (x : ℍ) : hφ.sig 
   Commute φ.matrix x := by
   simp_rw [hφ.sig_apply, Commute, SemiconjBy, PosDef.rpow_one_eq_self,
     PosDef.rpow_neg_one_eq_inv_self]
-  haveI := hφ.matrixIsPosDef.invertible
+  have := hφ.matrixIsPosDef.invertible
   constructor <;> intro h
   · nth_rw 1 [← h]
     rw [Matrix.mul_assoc, mul_inv_cancel_left_of_invertible]
@@ -691,11 +691,11 @@ theorem qamA.of_is_self_adjoint [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x 
   simp_rw [starRingEnd_apply, star_div₀, star_one, Complex.star_def, ← Complex.ofReal_pow,
     Complex.conj_ofReal, Complex.ofReal_pow] at h
   simp_rw [← ContinuousLinearMap.toLinearMap_smul, ContinuousLinearMap.coe_inj] at h
-  letI gg : NoZeroSMulDivisors ℂ (ℍ →ₗ[ℂ] ℍ) := by infer_instance
+  let gg : NoZeroSMulDivisors ℂ (ℍ →ₗ[ℂ] ℍ) := by infer_instance
   rw [smul_right_inj thisss] at h
   simp_rw [← ContinuousLinearMap.coe_inj] at h
   rw [qam_A_is_sa_iff_aux, qam_A_is_sa_iff_aux2] at h
-  haveI := hφ.matrixIsPosDef.invertible
+  have := hφ.matrixIsPosDef.invertible
   simp_rw [← LinearMap.comp_assoc, LinearMap.mulLeft_comp_inj] at h
   have h' := qam_A_is_sa_iff_aux5 x h
   exact qam_A_is_sa_iff_aux6 x h'
@@ -732,14 +732,14 @@ theorem qamA.isRealQam [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) 
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
       RealQam hφ (qamA hφ x) := by
   withMatrixQuantumCtx[φ]
-  letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   exact ⟨qamA.is_idempotent _, qamA.isReal _⟩
 
 open scoped ComplexOrder
 omit [Fintype n] [DecidableEq n] in
 theorem Matrix.PosDef.ne_zero [Finite n] [Nontrivial n] {Q : ℍ} (hQ : Q.PosDef) : Q ≠ 0 := by
   classical
-  letI := Fintype.ofFinite n
+  let := Fintype.ofFinite n
   have := PosDef.trace_ne_zero hQ
   intro h
   simp_all
@@ -749,7 +749,7 @@ theorem qamA.edges [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
       (@qamA.isRealQam n _ _ φ hφ x).edges = 1 := by
   withMatrixQuantumCtx[φ]
-  letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   rw [RealQam.edges_eq_one_iff]
   exact ⟨x, rfl⟩
 
@@ -758,7 +758,7 @@ theorem qamA.is_irreflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : 
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
       (Qam.reflIdempotent hφ (qamA hφ x) 1 = 0 ↔ x.1.trace = 0) := by
   withMatrixQuantumCtx[φ]
-  letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   simp_rw [qamA_eq, ← rankOne_toMatrix_transpose_psi_symm]
   rw [← Function.Injective.eq_iff (hφ.psi (ψ := φ) 0 (1 / 2)).injective]
   simp_rw [Qam.reflIdempotent, Psi.schurMul_faithful, Psi.one, _root_.map_smul,
@@ -771,7 +771,7 @@ theorem qamA.is_irreflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : 
     ContinuousLinearMap.coe_eq_zero, rankOne.eq_zero_iff,
     Matrix.PosDef.ne_zero hφ.matrixIsPosDef.inv, or_false,
     x.property, or_false, Module.Dual.IsFaithfulPosMap.inner_eq']
-  haveI := hφ.matrixIsPosDef.invertible
+  have := hφ.matrixIsPosDef.invertible
   rw [trace_mul_cycle, Matrix.mul_assoc, inv_mul_cancel_left_of_invertible, ← trace_star,
     star_eq_zero]
 
@@ -834,7 +834,7 @@ theorem qamA.is_reflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : { 
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
       (Qam.reflIdempotent hφ (qamA hφ x) 1 = 1 ↔ ∃ α : ℂˣ, x.1 = (α : ℂ) • φ.matrix⁻¹) := by
   withMatrixQuantumCtx[φ]
-  letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   simp_rw [qamA_eq, ← rankOne_toMatrix_transpose_psi_symm]
   rw [← Function.Injective.eq_iff (hφ.psi (ψ := φ) 0 (1 / 2)).injective]
   simp_rw [Qam.reflIdempotent, Psi.schurMul_faithful, Psi.one, _root_.map_smul,
@@ -853,7 +853,7 @@ theorem qamA.is_reflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : { 
         ((1 : ℂ) / (↑‖x.1‖ : ℂ) ^ 2) * inner ℂ x.1 φ.matrix⁻¹ := by
     simp
   rw [hstar, ← rankOne.left_sub, rankOne.eq_zero_iff]
-  haveI := hφ.matrixIsPosDef.invertible
+  have := hφ.matrixIsPosDef.invertible
   simp only [sub_eq_zero, Module.Dual.IsFaithfulPosMap.inner_eq']
   rw [trace_mul_cycle, inv_mul_of_invertible, Matrix.one_mul, ← trace_star]
   simp only [hφ.matrixIsPosDef.inv.ne_zero, or_false]
@@ -893,10 +893,10 @@ theorem qamA.of_trivialGraph [hφ : φ.IsFaithfulPosMap] [Nontrivial n] [Nonempt
       letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
       qamA hφ ⟨φ.matrix⁻¹, hφ.matrixIsPosDef.inv.ne_zero⟩ = Qam.trivialGraph ℍ := by
   withMatrixQuantumCtx[φ]
-  letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
-  letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
+  let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
   rw [qamA_eq]
-  haveI := hφ.matrixIsPosDef.invertible
+  have := hφ.matrixIsPosDef.invertible
   simp only [inv_mul_of_invertible, mul_inv_of_invertible, LinearMap.mulLeft_one,
     LinearMap.mulRight_one, ← Module.End.one_eq_id, LinearMap.adjoint_one, one_mul]
   have : ((‖φ.matrix⁻¹‖ : ℝ) : ℂ) ^ 2 = φ.matrix⁻¹.trace := by
@@ -915,8 +915,8 @@ theorem Qam.unique_one_edge_and_refl [hφ : φ.IsFaithfulPosMap] [Nontrivial n] 
       (hA : RealQam hφ A) →
       hA.edges = 1 ∧ Qam.reflIdempotent hφ A 1 = 1 ↔ A = Qam.trivialGraph ℍ := by
   withMatrixQuantumCtx[φ]
-  letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
-  letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
+  let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
   intro hA
   constructor
   · rintro ⟨h1, h2⟩
@@ -950,7 +950,7 @@ theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial
   apply_fun hφ.toMatrix using (AlgEquiv.injective _)
   have hf' := hf
   rw [star_alg_equiv.is_isometry_iff] at hf
-  haveI := hφ.matrixIsPosDef.invertible
+  have := hφ.matrixIsPosDef.invertible
   have this2 : f φ.matrix⁻¹ = φ.matrix⁻¹ := by
     symm
     apply inv_eq_left_inv

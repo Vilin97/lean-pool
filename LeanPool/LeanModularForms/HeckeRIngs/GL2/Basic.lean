@@ -216,7 +216,7 @@ private lemma heckeMultiplicity_right_scalar_eq_one (b : Fin 2 → ℕ)
       Fintype.card (decompQuot (GLPair 2) (HeckeCoset.rep (TDiag (fun _ : Fin 2 => c)))) = 1 := by
     have := HeckeCoset_deg_scalar 2 c hc
     simp only [HeckeRing.HeckeCosetDeg] at this; exact_mod_cast this
-  haveI : Subsingleton (decompQuot (GLPair 2) (HeckeCoset.rep (TDiag (fun _ : Fin 2 => c)))) :=
+  have : Subsingleton (decompQuot (GLPair 2) (HeckeCoset.rep (TDiag (fun _ : Fin 2 => c)))) :=
     Fintype.card_le_one_iff_subsingleton.mp (le_of_eq h_card)
   have h_le : HeckeRing.heckeMultiplicity (GLPair 2) (HeckeCoset.rep (TDiag b))
       (HeckeCoset.rep (TDiag (fun _ : Fin 2 => c)))
@@ -226,7 +226,7 @@ private lemma heckeMultiplicity_right_scalar_eq_one (b : Fin 2 → ℕ)
     apply Fintype.card_le_one_iff_subsingleton.mpr
     constructor; intro ⟨⟨i₁, j₁⟩, h₁⟩ ⟨⟨i₂, j₂⟩, h₂⟩
     have hj : j₁ = j₂ := Subsingleton.elim j₁ j₂; subst hj
-    simp only [Set.mem_setOf_eq] at h₁ h₂
+    simp only [Set.mem_ofPred_eq] at h₁ h₂
     have hi : i₁ = i₂ := by
       by_contra hne
       apply HeckeRing.decompQuot_coset_diff (GLPair 2) (HeckeCoset.rep (TDiag b)) i₁ i₂ hne

@@ -77,29 +77,29 @@ theorem sInf_closed (IsAmbient : G → Prop) [Universe IsAmbient IsAmbient]
     refine sInf_mem_of_forall_mem
       (ClosedUnderAdd.has_add g h ((sInf S).2 g hg) ((sInf S).2 h hh)) ?_
     intro U hUS
-    haveI : Universe IsAmbient (U : G → Prop) := hS U hUS
+    have : Universe IsAmbient (U : G → Prop) := hS U hUS
     exact ClosedUnderAdd.has_add g h (mem_of_sInf_mem hUS hg) (mem_of_sInf_mem hUS hh)
   has_option hg h := by
     refine sInf_mem_of_forall_mem (Hereditary.has_option ((sInf S).2 _ hg) h) ?_
     intro U hUS
-    haveI : Universe IsAmbient (U : G → Prop) := hS U hUS
+    have : Universe IsAmbient (U : G → Prop) := hS U hUS
     exact Hereditary.has_option (mem_of_sInf_mem hUS hg) h
   neg_of hg := by
     refine sInf_mem_of_forall_mem (ClosedUnderNeg.neg_of ((sInf S).2 _ hg)) ?_
     intro U hUS
-    haveI : Universe IsAmbient (U : G → Prop) := hS U hUS
+    have : Universe IsAmbient (U : G → Prop) := hS U hUS
     exact ClosedUnderNeg.neg_of (mem_of_sInf_mem hUS hg)
   closed_dicotic B C _ _ hB hC hBne hCne hAmbient := by
     refine sInf_mem_of_forall_mem hAmbient ?_
     intro U hUS
-    haveI : Universe IsAmbient (U : G → Prop) := hS U hUS
+    have : Universe IsAmbient (U : G → Prop) := hS U hUS
     exact ClosedUnderDicotic.closed_dicotic B C
       (fun b hb => mem_of_sInf_mem hUS (hB b hb))
       (fun c hc => mem_of_sInf_mem hUS (hC c hc)) hBne hCne hAmbient
   zero_mem := by
     refine sInf_mem_of_forall_mem (Universe.zero_mem IsAmbient (A := IsAmbient)) ?_
     intro U hUS
-    haveI : Universe IsAmbient (U : G → Prop) := hS U hUS
+    have : Universe IsAmbient (U : G → Prop) := hS U hUS
     exact Universe.zero_mem IsAmbient (A := (U : G → Prop))
   isAmbient_of_mem hg :=
     (sInf S).2 _ hg

@@ -20,7 +20,7 @@ variable {R : α → α → Prop}
 lemma _root_.List.IsChain.nodup_of_trans_irreflex
     (R_trans : IsTrans α R) (R_irrefl : Std.Irrefl R) (h_chain : l.IsChain R) :
     l.Nodup := by
-  haveI : IsTrans α R := R_trans
+  have : IsTrans α R := R_trans
   by_contra hC
   replace ⟨d, hC⟩ := List.exists_duplicate_iff_not_nodup.mpr hC
   have hsub := List.duplicate_iff_sublist.mp hC

@@ -170,7 +170,7 @@ theorem execList_exists_finite [DecidableEventStructure es] {c : Conf es} {e : e
     have hcR : ∀ x, x ∈ cR ↔ x ∈ (@rollbackFuture es c e).1 := by
       intro x
       simp only [cR, Finset.mem_filter, hcF, rollbackFuture_mem,
-        EventStructure.future, Set.mem_setOf_eq]
+        EventStructure.future, Set.mem_ofPred_eq]
     exact H _ _ cR hcR (Finset.filter_subset _ _) rfl
   intro n
   induction n using Nat.strong_induction_on with

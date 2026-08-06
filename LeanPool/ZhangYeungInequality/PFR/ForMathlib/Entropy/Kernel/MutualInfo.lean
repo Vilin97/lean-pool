@@ -302,8 +302,8 @@ lemma _root_.ProbabilityTheory.Kernel.entropy_submodular_compProd
   have : FiniteSupport (μ ⊗ₘ (ξ ⊗ₖ κ)) := finiteSupport_of_compProd (hξ.compProd hκ)
   let η' : Kernel ((T × S) × U) V :=
     comap η MeasurableEquiv.prodAssoc h_meas
-  letI : IsMarkovKernel η' := IsMarkovKernel.comap η h_meas
-  letI : IsZeroOrMarkovKernel (κ ⊗ₖ η') :=
+  let : IsMarkovKernel η' := IsMarkovKernel.comap η h_meas
+  let : IsZeroOrMarkovKernel (κ ⊗ₖ η') :=
     IsZeroOrMarkovKernel.compProd κ η'
   have h := entropy_condKernel_le_entropy_snd
     (κ := κ ⊗ₖ η') (μ := μ ⊗ₘ ξ) ?_

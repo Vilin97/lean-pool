@@ -201,7 +201,7 @@ private lemma heckeMultiplicity_scalar_eq_one (c : ℕ) (hc : 0 < c) (b : Fin n 
   have h_card : Fintype.card (decompQuot (GLPair n) (HeckeCoset.rep D_c)) = 1 := by
     have := HeckeCoset_deg_scalar n c hc
     simp only [HeckeRing.HeckeCosetDeg] at this; exact_mod_cast this
-  haveI : Subsingleton (decompQuot (GLPair n) (HeckeCoset.rep D_c)) :=
+  have : Subsingleton (decompQuot (GLPair n) (HeckeCoset.rep D_c)) :=
     Fintype.card_le_one_iff_subsingleton.mp (le_of_eq h_card)
   have h_le : HeckeRing.heckeMultiplicity (GLPair n) (HeckeCoset.rep D_c) (HeckeCoset.rep D_b)
       (HeckeCoset.rep D_cb) ≤ 1 := by
@@ -210,7 +210,7 @@ private lemma heckeMultiplicity_scalar_eq_one (c : ℕ) (hc : 0 < c) (b : Fin n 
     apply Fintype.card_le_one_iff_subsingleton.mpr; constructor
     intro ⟨⟨i₁, j₁⟩, h₁⟩ ⟨⟨i₂, j₂⟩, h₂⟩
     have hi : i₁ = i₂ := Subsingleton.elim i₁ i₂; subst hi
-    simp only [Set.mem_setOf_eq] at h₁ h₂
+    simp only [Set.mem_ofPred_eq] at h₁ h₂
     have hj := HeckeRing.decompQuot_snd_eq_of_fst_eq (GLPair n) (HeckeCoset.rep D_c)
       (HeckeCoset.rep D_b) (HeckeCoset.rep D_cb) i₁ j₁ j₂ h₁ h₂
     subst hj; rfl
@@ -740,7 +740,7 @@ private lemma heckeMultiplicity_coprime_le_one (a b : Fin n → ℕ) (ha_pos : �
   set D_a := TDiag a; set D_b := TDiag b
   simp only [HeckeRing.heckeMultiplicity]; norm_cast; rw [Nat.card_eq_fintype_card]
   apply Fintype.card_le_one_iff_subsingleton.mpr; constructor
-  intro ⟨⟨i₁, j₁⟩, h₁⟩ ⟨⟨i₂, j₂⟩, h₂⟩; simp only [Set.mem_setOf_eq] at h₁ h₂
+  intro ⟨⟨i₁, j₁⟩, h₁⟩ ⟨⟨i₂, j₂⟩, h₂⟩; simp only [Set.mem_ofPred_eq] at h₁ h₂
   set H := (GLPair n).H
   set δ_a' := (HeckeCoset.rep D_a : GL (Fin n) ℚ) with hδ_a_def
   set δ_b' := (HeckeCoset.rep D_b : GL (Fin n) ℚ) with hδ_b_def

@@ -143,5 +143,5 @@ lemma logDeriv_eqOn_iff2 (f g : ℂ → ℂ) (s : Set ℂ) (hf : DifferentiableO
     (hg : DifferentiableOn ℂ g s) (_hs : s.Nonempty) (hs2 : IsOpen s) (hsc : Convex ℝ s)
     (hgn : ∀ x, x ∈ s → g x ≠ 0) (hfn : ∀ x, x ∈ s → f x ≠ 0) : EqOn (logDeriv f) (logDeriv g) s ↔
     ∃( z : ℂ),  z ≠ 0 ∧  EqOn (f) (z • g) s := by
-  haveI : IsBoundedSMul ℝ ℂ := NormedSpace.toIsBoundedSMul
+  have : IsBoundedSMul ℝ ℂ := NormedSpace.toIsBoundedSMul
   exact logDeriv_eqOn_iff hf hg hs2 (hsc.isPreconnected) hgn hfn

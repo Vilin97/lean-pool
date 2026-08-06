@@ -180,10 +180,10 @@ theorem hoeffding_one_sided {X : Type u} [MeasurableSpace X]
       (zeroOneLoss Bool) ≤ p - t} with hS_def
   have h_set_sub : S ⊆ {xs | ↑m * t ≤ ∑ i : Fin m, Z i xs} := by
     intro xs hxs
-    simp only [Set.mem_setOf_eq] at hxs ⊢
+    simp only [Set.mem_ofPred_eq] at hxs ⊢
     simp only [hZ_def, Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ,
       Fintype.card_fin, nsmul_eq_mul]
-    simp only [hS_def, Set.mem_setOf_eq, EmpiricalError,
+    simp only [hS_def, Set.mem_ofPred_eq, EmpiricalError,
       Nat.pos_iff_ne_zero.mp hm, ↓reduceIte] at hxs
     have h_div : (∑ i : Fin m, zeroOneLoss Bool (h (xs i)) (c (xs i))) / (m : ℝ) ≤ p - t := hxs
     rw [div_le_iff₀ hm_pos] at h_div
@@ -210,7 +210,7 @@ theorem hoeffding_one_sided {X : Type u} [MeasurableSpace X]
         have h_int_ind : ∫ x, indicator x ∂D = p := by
           simp only [hind_def, zeroOneLoss, hp_def, TrueErrorReal, TrueError]
           rw [show (fun x => if h x = c x then (0 : ℝ) else 1) =
-              Set.indicator {x | h x ≠ c x} 1 from by ext x; simp [Set.indicator, Set.mem_setOf_eq],
+              Set.indicator {x | h x ≠ c x} 1 from by ext x; simp [Set.indicator],
             integral_indicator_one hmeas]
           simp only [Measure.real]
         have h_int_g : ∫ x, g x ∂D = 0 := by
@@ -340,7 +340,7 @@ theorem symmetrization_step {X : Type u} [MeasurableSpace X]
         (fun i => (xs i, c (xs i))) (zeroOneLoss Bool) ≥ ε / 2} with hS_ghost_def
     have h_ghost_sub_B : S_ghost ⊆ Prod.mk xs ⁻¹' B := by
       intro xs' hxs'
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, hB_def]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, hB_def]
       exact ⟨h_star, h_star_in_C, hxs'⟩
     have h_B_sub_B' : Prod.mk xs ⁻¹' B ⊆ Prod.mk xs ⁻¹' B' :=
       Set.preimage_mono (MeasureTheory.subset_toMeasurable _ _)
@@ -385,8 +385,8 @@ theorem symmetrization_step {X : Type u} [MeasurableSpace X]
               _ = μ H_setᶜ := ENNReal.add_sub_cancel_left h_H_ne_top
           have h_compl_sub : H_setᶜ ⊆ S_ghost := by
             intro xs' hxs'
-            simp only [Set.mem_compl_iff, hH_set_def, Set.mem_setOf_eq, not_le] at hxs'
-            simp only [hS_ghost_def, Set.mem_setOf_eq, ge_iff_le]
+            simp only [Set.mem_compl_iff, hH_set_def, Set.mem_ofPred_eq, not_le] at hxs'
+            simp only [hS_ghost_def, Set.mem_ofPred_eq, ge_iff_le]
             linarith
           exact h_compl_ge.trans (MeasureTheory.measure_mono h_compl_sub)
       _ ≤ μ (Prod.mk xs ⁻¹' B') :=
@@ -454,7 +454,7 @@ theorem per_hypothesis_gap_bound {X : Type u} [MeasurableSpace X]
     with hS_def
   have h_preimage_sub : equiv ⁻¹' S ⊆ S_sum := by
     intro z hz
-    simp only [hS_def, hS_sum_def, Set.mem_preimage, Set.mem_setOf_eq] at hz ⊢
+    simp only [hS_def, hS_sum_def, Set.mem_preimage, Set.mem_ofPred_eq] at hz ⊢
     unfold EmpiricalError at hz
     simp only [Nat.pos_iff_ne_zero.mp hm, ↓reduceIte] at hz
     have h_fst : (equiv z).1 = fun i => (z i).1 := by
@@ -563,7 +563,7 @@ theorem restriction_pattern_count {X : Type u} [Infinite X]
     have hi := congr_fun hfg i; simp only [ψ] at hi
     revert hi; cases f i <;> cases g i <;> cases c (z i) <;> simp [Bool.xor]
   have hP_eq : {p : Fin n → Bool | ∃ h ∈ C, ∀ i, p i = decide (h (z i) ≠ c (z i))} = ψ '' R := by
-    ext p; simp only [Set.mem_setOf_eq, Set.mem_image, R, ψ]
+    ext p; simp only [Set.mem_ofPred_eq, Set.mem_image, R, ψ]
     constructor
     · rintro ⟨h, hC, hp⟩
       refine ⟨fun i => h (z i), ⟨h, hC, fun i => rfl⟩, ?_⟩
@@ -861,7 +861,7 @@ theorem exchangeability_chain_bound {X : Type u} [MeasurableSpace X] [Infinite X
           intro σ hσ
           simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hσ
           have hσS : swap_fun σ z ∈ S := hσ
-          simp only [S, Set.mem_preimage, hE_def, Set.mem_setOf_eq] at hσS
+          simp only [S, Set.mem_preimage, hE_def, Set.mem_ofPred_eq] at hσS
           obtain ⟨h, hC_h, hgap⟩ := hσS
           let p : Fin (2 * m) → Bool := fun j => decide (h (merged j) ≠ c (merged j))
           apply Finset.mem_biUnion.mpr
@@ -1050,7 +1050,7 @@ theorem double_sample_pattern_bound {X : Type u} [MeasurableSpace X] [Infinite X
   by_cases hC : C = ∅
   · -- Event is empty when C is empty
     have hE_empty : E = ∅ := by
-      ext p; simp only [hE_def, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      ext p; simp only [hE_def, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       intro ⟨h_hyp, h_in_C, _⟩
       rw [hC] at h_in_C; exact h_in_C
     rw [hE_empty, MeasureTheory.measure_empty]; exact bot_le
@@ -1058,7 +1058,7 @@ theorem double_sample_pattern_bound {X : Type u} [MeasurableSpace X] [Infinite X
     by_cases hε2 : 2 < ε
     · -- EmpiricalError ∈ [0,1], so gap ∈ [-1,1] and ε/2 > 1 makes event empty
       have hE_empty : E = ∅ := by
-        ext p; simp only [hE_def, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        ext p; simp only [hE_def, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         intro ⟨h_hyp, h_in_C, h_gap⟩
         have h_emp_le := empiricalError_zeroOne_le_one h_hyp hm (fun i => (p.2 i, c (p.2 i)))
         have h_emp_nn := empiricalError_zeroOne_nonneg h_hyp hm (fun i => (p.1 i, c (p.1 i)))
@@ -1116,10 +1116,10 @@ theorem hoeffding_one_sided_upper {X : Type u} [MeasurableSpace X]
       (zeroOneLoss Bool) ≥ p + t} with hS_def
   have h_set_sub : S ⊆ {xs | ↑m * t ≤ ∑ i : Fin m, Z i xs} := by
     intro xs hxs
-    simp only [Set.mem_setOf_eq] at hxs ⊢
+    simp only [Set.mem_ofPred_eq] at hxs ⊢
     simp only [hZ_def, Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ,
       Fintype.card_fin, nsmul_eq_mul]
-    simp only [hS_def, Set.mem_setOf_eq, EmpiricalError,
+    simp only [hS_def, Set.mem_ofPred_eq, EmpiricalError,
       Nat.pos_iff_ne_zero.mp hm, ↓reduceIte] at hxs
     have h_div : p + t ≤ (∑ i : Fin m, zeroOneLoss Bool (h (xs i)) (c (xs i))) / (m : ℝ) := hxs
     rw [le_div_iff₀ hm_pos] at h_div
@@ -1146,7 +1146,7 @@ theorem hoeffding_one_sided_upper {X : Type u} [MeasurableSpace X]
         have h_int_ind : ∫ x, indicator x ∂D = p := by
           simp only [hind_def, zeroOneLoss, hp_def, TrueErrorReal, TrueError]
           rw [show (fun x => if h x = c x then (0 : ℝ) else 1) =
-              Set.indicator {x | h x ≠ c x} 1 from by ext x; simp [Set.indicator, Set.mem_setOf_eq],
+              Set.indicator {x | h x ≠ c x} 1 from by ext x; simp [Set.indicator],
             integral_indicator_one hmeas]
           simp only [Measure.real]
         have h_int_g : ∫ x, g x ∂D = 0 := by
@@ -1206,7 +1206,7 @@ theorem symmetrization_step_lower {X : Type u} [MeasurableSpace X]
         (fun i => (xs' i, c (xs' i))) (zeroOneLoss Bool) ≥ ε / 2} with hS_ghost_def
     have h_ghost_sub_B : S_ghost ⊆ Prod.mk xs ⁻¹' B := by
       intro xs' hxs'
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, hB_def]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, hB_def]
       exact ⟨h_star, h_star_in_C, hxs'⟩
     have h_B_sub_B' : Prod.mk xs ⁻¹' B ⊆ Prod.mk xs ⁻¹' B' :=
       Set.preimage_mono (MeasureTheory.subset_toMeasurable _ _)
@@ -1255,8 +1255,8 @@ theorem symmetrization_step_lower {X : Type u} [MeasurableSpace X]
               _ = μ H_setᶜ := ENNReal.add_sub_cancel_left h_H_ne_top
           have h_compl_sub : H_setᶜ ⊆ S_ghost := by
             intro xs' hxs'
-            simp only [Set.mem_compl_iff, hH_set_def, Set.mem_setOf_eq, not_le] at hxs'
-            simp only [hS_ghost_def, Set.mem_setOf_eq, ge_iff_le]
+            simp only [Set.mem_compl_iff, hH_set_def, Set.mem_ofPred_eq, not_le] at hxs'
+            simp only [hS_ghost_def, Set.mem_ofPred_eq, ge_iff_le]
             linarith
           exact h_compl_ge.trans (MeasureTheory.measure_mono h_compl_sub)
       _ ≤ μ (Prod.mk xs ⁻¹' B') :=
@@ -1376,7 +1376,7 @@ theorem symmetrization_uc_bound {X : Type u} [MeasurableSpace X] [Infinite X]
       have h_preimage : ⇑swap_equiv ⁻¹' S2 = S1 := by
         ext p
         change (p.2, p.1) ∈ S2 ↔ p ∈ S1
-        simp only [S1, S2, Set.mem_setOf_eq]
+        simp only [S1, S2, Set.mem_ofPred_eq]
       have h_sym : (μ.prod μ).map swap_equiv = μ.prod μ :=
         (show (μ.prod μ).map ⇑swap_equiv = (μ.prod μ).map Prod.swap from rfl).trans
           (MeasureTheory.Measure.prod_swap (μ := μ) (ν := μ))
@@ -1436,7 +1436,7 @@ private lemma growth_function_le_two_pow {X : Type u}
     apply csSup_le h_ne
     rintro _ ⟨S, rfl⟩
     let T : Finset X := (↑S : Finset X)
-    letI : Fintype ↥T := Finset.fintypeCoeSort T
+    let : Fintype ↥T := Finset.fintypeCoeSort T
     have hBound' : ({ f : ↥T → Bool | ∃ c ∈ C, ∀ x : ↥T, c ↑x = f x } :
         Set (↥T → Bool)).ncard ≤ 2 ^ n := by
       calc ({ f : ↥T → Bool | ∃ c ∈ C, ∀ x : ↥T, c ↑x = f x } :
@@ -1754,9 +1754,9 @@ theorem vcdim_finite_imp_uc' (X : Type u) [MeasurableSpace X]
     HasUniformConvergence X C := by
   rcases finite_or_infinite X with hfin | hinf
   · -- ═══ FINITE X BRANCH ═══
-    letI := Fintype.ofFinite X
-    haveI : DecidableEq X := Classical.decEq X
-    haveI : Fintype (Concept X Bool) := show Fintype (X → Bool) from Pi.instFintype
+    let := Fintype.ofFinite X
+    have : DecidableEq X := Classical.decEq X
+    have : Fintype (Concept X Bool) := show Fintype (X → Bool) from Pi.instFintype
     have hfin_C : Set.Finite C := Set.Finite.subset (Set.finite_univ) (Set.subset_univ C)
     set Cf := hfin_C.toFinset with hCf_def
     have hCf_mem : ∀ h, h ∈ Cf ↔ h ∈ C := fun h => Set.Finite.mem_toFinset hfin_C
@@ -1800,7 +1800,7 @@ theorem vcdim_finite_imp_uc' (X : Type u) [MeasurableSpace X]
              EmpiricalError X Bool h (fun i => (xs i, c (xs i)))
                (zeroOneLoss Bool)| ≥ ε' } := by
           intro xs hxs
-          simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hxs ⊢
+          simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at hxs ⊢
           obtain ⟨h', hh'C, hh'gap⟩ := hxs
           exact ⟨h', (hCf_mem h').mpr hh'C, hh'gap⟩
         have hper_hyp : ∀ h' ∈ Cf, μ { xs : Fin m → X |
@@ -1818,7 +1818,7 @@ theorem vcdim_finite_imp_uc' (X : Type u) [MeasurableSpace X]
             { xs : Fin m → X | EmpiricalError X Bool h' (fun i => (xs i, c (xs i)))
                 (zeroOneLoss Bool) ≥ TrueErrorReal X h' c D + ε' } := by
             intro xs hxs
-            simp only [Set.mem_setOf_eq, Set.mem_union] at hxs ⊢
+            simp only [Set.mem_ofPred_eq, Set.mem_union] at hxs ⊢
             rcases le_or_gt (EmpiricalError X Bool h' (fun i => (xs i, c (xs i)))
                 (zeroOneLoss Bool)) (TrueErrorReal X h' c D - ε') with h_le | h_gt
             · left; exact h_le

@@ -197,7 +197,7 @@ lemma no_return_of_inj_continuous
     rw [norm_pos_iff, sub_ne_zero]
     intro h_eq
     have h_t_eq := h_inj t ht_Icc h_eq
-    subst h_t_eq; simp only [Set.mem_setOf_eq, sub_self, abs_zero] at ht_dist; linarith
+    subst h_t_eq; simp only [Set.mem_ofPred_eq, sub_self, abs_zero] at ht_dist; linarith
   obtain ⟨ρ, hρ_pos, hρ_le⟩ := hS_compact.exists_forall_le' hf_cont hf_pos
   exact ⟨ρ, hρ_pos, fun t ht h_dist => hρ_le t ⟨ht, h_dist⟩⟩
 

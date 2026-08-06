@@ -241,7 +241,7 @@ theorem single_intValued_parametrization_yields_finite_intPoly_parametrization
   refine ⟨m, G, ?_⟩
   rw [FiniteIntPolyTupleParametrizes]
   ext v
-  simp only [Set.mem_setOf_eq, hF_eq]
+  simp only [Set.mem_ofPred_eq, hF_eq]
   constructor
   · rintro ⟨a, ha⟩
     let b : Fin n → ℤ := fun j => a j / D_total
@@ -419,7 +419,7 @@ theorem integerValued_polynomial_ring_not_uniqueFactorization :
         _ = C ((z : ℚ) * (w : ℚ)) := by rw [hwq]
         _ = C (z : ℚ) * C (w : ℚ) := by simp
   intro hUFM
-  haveI := hUFM
+  have := hUFM
   have hirr : Irreducible (2 : IntegerValuedPoly 1) := by
     refine ⟨?notunit, ?factor⟩
     · intro hunit

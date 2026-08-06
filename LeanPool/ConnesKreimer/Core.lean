@@ -597,9 +597,9 @@ theorem _root_.CK.Δ₀_mul (F G : Forest) : Δ₀ k (F ++ G) = Δ₀ k F * Δ�
 /-- `Δ` is multiplicative on all of `H` (reduce to the forest basis, bilinearly). -/
 theorem _root_.CK.Δ_mul (a b : H k) : Δ k (a * b) = Δ k a * Δ k b := by
   induction a using MonoidAlgebra.induction_on with
-  | hM F =>
+  | of F =>
     induction b using MonoidAlgebra.induction_on with
-    | hM G =>
+    | of G =>
       simp only [MonoidAlgebra.of_apply]
       change Δ k ((MonoidAlgebra.single (FreeMonoid.toList F) (1 : k) : H k) *
             (MonoidAlgebra.single (FreeMonoid.toList G) (1 : k) : H k))
@@ -607,10 +607,10 @@ theorem _root_.CK.Δ_mul (a b : H k) : Δ k (a * b) = Δ k a * Δ k b := by
             Δ k (MonoidAlgebra.single (FreeMonoid.toList G) (1 : k) : H k)
       rw [← single_append, Δ_single, Δ_single, Δ_single, one_smul, one_smul, one_smul]
       exact Δ₀_mul k F G
-    | hadd b1 b2 h1 h2 => rw [mul_add, map_add, map_add, h1, h2, mul_add]
-    | hsmul r b hb => rw [mul_smul_comm, map_smul, map_smul, hb, mul_smul_comm]
-  | hadd a1 a2 h1 h2 => rw [add_mul, map_add, map_add, h1, h2, add_mul]
-  | hsmul r a ha => rw [smul_mul_assoc, map_smul, map_smul, ha, smul_mul_assoc]
+    | add b1 b2 h1 h2 => rw [mul_add, map_add, map_add, h1, h2, mul_add]
+    | smul r b hb => rw [mul_smul_comm, map_smul, map_smul, hb, mul_smul_comm]
+  | add a1 a2 h1 h2 => rw [add_mul, map_add, map_add, h1, h2, add_mul]
+  | smul r a ha => rw [smul_mul_assoc, map_smul, map_smul, ha, smul_mul_assoc]
 
 /-- `Δ 1 = 1`. -/
 theorem _root_.CK.Δ_one : Δ k (1 : H k) = 1 := by
@@ -2219,7 +2219,7 @@ theorem _root_.CK.star_identity (p N : ℕ) (w : Hab k)
     rw [WithConv.ofConv_smul, LinearMap.smul_apply]
   have hDcoeff : ∀ m, m ≤ N → D.coeff m = 0 := by
     intro m hm
-    haveI : IsAddTorsionFree k := IsAddTorsionFree.of_module_rat k
+    have : IsAddTorsionFree k := IsAddTorsionFree.of_module_rat k
     rw [hD, Polynomial.coeff_sub, Polynomial.coeff_C_mul, hPL,
         PowerSeries.polyPL_coeff (A := k) p N m hm, hPR, PR_coeff (k := k) N m hm,
         nsmul_eq_mul]

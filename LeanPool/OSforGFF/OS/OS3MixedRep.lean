@@ -803,14 +803,14 @@ theorem schwinger_bilinear_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
   -- First show that {p | p.1 ≤ 0} has μ-measure zero
   have h_null : μ {p : ℝ × SpaceTime × SpaceTime | p.1 ≤ 0} = 0 := by
     have h_preimage : {p : ℝ × SpaceTime × SpaceTime | p.1 ≤ 0} = Set.Iic 0 ×ˢ Set.univ := by
-      ext p; simp only [Set.mem_setOf_eq, Set.mem_prod, Set.mem_Iic, Set.mem_univ, and_true]
+      ext p; simp only [Set.mem_ofPred_eq, Set.mem_prod, Set.mem_Iic, Set.mem_univ, and_true]
     rw [h_preimage, Measure.prod_prod]
     rw [Measure.restrict_apply measurableSet_Iic]
     simp only [Set.Iic_inter_Ioi, Set.Ioc_self, measure_empty, zero_mul]
   -- The set where the bound fails is contained in {p | p.1 ≤ 0}
   apply measure_mono_null _ h_null
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   by_contra h_pos
   exact hp (h_bound p (not_le.mp h_pos))
 

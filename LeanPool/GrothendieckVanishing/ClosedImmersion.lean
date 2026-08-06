@@ -191,24 +191,24 @@ theorem closedIncl_counit_isIso
     (F : TopCat.Sheaf C (TopCat.of s)) :
     IsIso ((TopCat.Sheaf.pullbackPushforwardAdjunction C (closedIncl hs)).counit.app
       F) := by
-  letI : (Opens.map (closedIncl hs)).IsCoverDense
+  let : (Opens.map (closedIncl hs)).IsCoverDense
       (Opens.grothendieckTopology (TopCat.of s)) :=
     opensMap_isCoverDense_of_isInducing (closedIncl_isInducing hs)
-  letI : (Opens.map (closedIncl hs)).IsLocallyFull
+  let : (Opens.map (closedIncl hs)).IsLocallyFull
       (Opens.grothendieckTopology (TopCat.of s)) :=
     opensMap_isLocallyFull (closedIncl hs)
-  letI : (Opens.map (closedIncl hs)).IsContinuous
+  let : (Opens.map (closedIncl hs)).IsContinuous
       (Opens.grothendieckTopology X) (Opens.grothendieckTopology (TopCat.of s)) :=
     CategoryTheory.Functor.IsCoverDense.isContinuous
       (J := Opens.grothendieckTopology X)
       (K := Opens.grothendieckTopology (TopCat.of s))
       (G := Opens.map (closedIncl hs))
       (coverPreserving_opens_map (closedIncl hs))
-  haveI : (TopCat.Sheaf.pushforward C (closedIncl hs)).Full := by
+  have : (TopCat.Sheaf.pushforward C (closedIncl hs)).Full := by
     change ((Opens.map (closedIncl hs)).sheafPushforwardContinuous C
       (Opens.grothendieckTopology X) (Opens.grothendieckTopology (TopCat.of s))).Full
     infer_instance
-  haveI : (TopCat.Sheaf.pushforward C (closedIncl hs)).Faithful := by
+  have : (TopCat.Sheaf.pushforward C (closedIncl hs)).Faithful := by
     change ((Opens.map (closedIncl hs)).sheafPushforwardContinuous C
       (Opens.grothendieckTopology X) (Opens.grothendieckTopology (TopCat.of s))).Faithful
     infer_instance
@@ -231,7 +231,7 @@ theorem pushforward_closedIncl_stalk_eq_zero
   let W : Opens X := U ⊓ ⟨sᶜ, hs.isOpen_compl⟩
   have hW_map : (Opens.map (TopCat.closedIncl hs)).obj W = ⊥ :=
     TopCat.closedIncl_map_eq_bot_of_le_compl (hs := hs) (U := W) inf_le_right
-  haveI : Subsingleton (F'.obj (op W)) := AddCommGrpCat.subsingleton_of_isZero (by
+  have : Subsingleton (F'.obj (op W)) := AddCommGrpCat.subsingleton_of_isZero (by
     change IsZero (G.obj (op ((Opens.map (TopCat.closedIncl hs)).obj W)))
     rw [hW_map]
     exact Gsh.isTerminalOfEmpty.isZero)
@@ -258,7 +258,7 @@ theorem epi_pushforward_map_closedIncl_of_locallySurjective
             ObjectProperty.homMk f)) := by
   let fsh : (⟨F, hF⟩ : TopCat.Sheaf AddCommGrpCat.{u} (TopCat.of s)) ⟶
       (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} (TopCat.of s)) := ObjectProperty.homMk f
-  letI : Balanced (Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
+  let : Balanced (Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
     balanced_of_strongEpiCategory
   change Epi ((TopCat.Sheaf.pushforward AddCommGrpCat.{u}
       (TopCat.closedIncl hs)).map fsh)
@@ -268,7 +268,7 @@ theorem epi_pushforward_map_closedIncl_of_locallySurjective
   rw [TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks]
   intro x; by_cases hx : (x : X) ∈ s
   · let z : TopCat.of s := ⟨x, hx⟩
-    haveI hEpiF : Epi ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} z).map f) :=
+    have hEpiF : Epi ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} z).map f) :=
       (AddCommGrpCat.epi_iff_surjective _).mpr
         (((TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks
             (T := f)).mp hf_loc) z)
@@ -291,10 +291,10 @@ theorem epi_pushforward_map_closedIncl_of_locallySurjective
     change Epi ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
         ((TopCat.closedIncl hs) z)).map
         ((TopCat.Presheaf.pushforward AddCommGrpCat.{u} (TopCat.closedIncl hs)).map f))
-    haveI : IsIso (TopCat.Presheaf.stalkPushforward AddCommGrpCat.{u}
+    have : IsIso (TopCat.Presheaf.stalkPushforward AddCommGrpCat.{u}
         (TopCat.closedIncl hs) F z) :=
       TopCat.closedIncl_stalkPushforward_isIso (hs := hs)
-    haveI : IsIso (TopCat.Presheaf.stalkPushforward AddCommGrpCat.{u}
+    have : IsIso (TopCat.Presheaf.stalkPushforward AddCommGrpCat.{u}
         (TopCat.closedIncl hs) G z) :=
       TopCat.closedIncl_stalkPushforward_isIso (hs := hs)
     have hcomp : Epi (TopCat.Presheaf.stalkPushforward AddCommGrpCat.{u}
@@ -322,8 +322,8 @@ instance closedIncl_pushforward_preservesEpis
     (TopCat.Sheaf.pushforward AddCommGrpCat.{u}
       (TopCat.closedIncl hs)).PreservesEpimorphisms where
   preserves {F G} f hf := by
-    letI : Epi f := hf
-    letI : Balanced (Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
+    let : Epi f := hf
+    let : Balanced (Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
       balanced_of_strongEpiCategory
     have hf_loc : TopCat.Presheaf.IsLocallySurjective f.hom :=
       (TopCat.Sheaf.isLocallySurjective_iff_epi f).mpr inferInstance
@@ -345,10 +345,10 @@ theorem closedIncl_pushforward_shortExact
     (S.map (TopCat.Sheaf.pushforward AddCommGrpCat.{u}
         (TopCat.closedIncl hs))).ShortExact := by
   let F := TopCat.Sheaf.pushforward AddCommGrpCat.{u} (TopCat.closedIncl hs)
-  haveI := hSE.mono_f
-  haveI := hSE.epi_g
-  haveI : Mono (F.map S.f) := inferInstance
-  haveI : Epi (F.map S.g) := inferInstance
+  have := hSE.mono_f
+  have := hSE.epi_g
+  have : Mono (F.map S.f) := inferInstance
+  have : Epi (F.map S.g) := inferInstance
   exact ShortComplex.ShortExact.mk'
     (hSE.exact.map_of_mono_of_preservesKernel _ hSE.mono_f inferInstance) ‹_› ‹_›
 
@@ -406,15 +406,15 @@ theorem closedIncl_unit_stalk_isIso
   let adj := Sheaf.pullbackPushforwardAdjunction C i
   let pb := Sheaf.pullback C i
   let η := adj.unit.app F
-  haveI hCounit : IsIso (adj.counit.app (pb.obj F)) :=
+  have hCounit : IsIso (adj.counit.app (pb.obj F)) :=
     closedIncl_counit_isIso (C := C) (hs := hs) (pb.obj F)
-  haveI hId : IsIso (𝟙 (pb.obj F)) := IsIso.id _
-  haveI hEta : IsIso (pb.map η) :=
+  have hId : IsIso (𝟙 (pb.obj F)) := IsIso.id _
+  have hEta : IsIso (pb.map η) :=
     @IsIso.of_isIso_fac_right (TopCat.Sheaf C (TopCat.of s)) _ _ _ _
       (adj.counit.app (pb.obj F)) (pb.map η) (𝟙 (pb.obj F))
       hCounit hId (adj.left_triangle_components F)
   -- Step 2: val stalk of pb.map(η) is iso
-  haveI hEtaHom : IsIso (pb.map η).hom :=
+  have hEtaHom : IsIso (pb.map η).hom :=
     @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) (pb.map η) hEta
   let Tz := Presheaf.stalkFunctor C x
   let K := Opens.grothendieckTopology (TopCat.of s)
@@ -423,10 +423,10 @@ theorem closedIncl_unit_stalk_isIso
   let pi := Sheaf.pullbackIso C i
   let piF := pi.hom.app F
   let piT := pi.hom.app ((pb ⋙ Sheaf.pushforward C i).obj F)
-  haveI hPiFHom : IsIso piF.hom :=
+  have hPiFHom : IsIso piF.hom :=
     @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piF
       (inferInstanceAs (IsIso (pi.hom.app F)))
-  haveI hPiTHom : IsIso piT.hom :=
+  have hPiTHom : IsIso piT.hom :=
     @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piT
       (inferInstanceAs (IsIso (pi.hom.app ((pb ⋙ Sheaf.pushforward C i).obj F))))
   have hnat : (pb.map η).hom ≫ piT.hom = piF.hom ≫ sheafifyMap K (pull.map η.hom) :=
@@ -436,16 +436,16 @@ theorem closedIncl_unit_stalk_isIso
     rw [← Tz.map_comp, ← Tz.map_comp]
     exact congr_arg Tz.map hnat
   -- Step 4: presheafToSheaf.map(pull.map(η.hom)) stalk is iso
-  haveI hStalkEtaHom : IsIso (Tz.map (pb.map η).hom) :=
+  have hStalkEtaHom : IsIso (Tz.map (pb.map η).hom) :=
     @Functor.map_isIso _ _ _ _ _ _ Tz _ hEtaHom
-  haveI hStalkPiFHom : IsIso (Tz.map piF.hom) :=
+  have hStalkPiFHom : IsIso (Tz.map piF.hom) :=
     @Functor.map_isIso _ _ _ _ _ _ Tz _ hPiFHom
-  haveI hStalkPiTHom : IsIso (Tz.map piT.hom) :=
+  have hStalkPiTHom : IsIso (Tz.map piT.hom) :=
     @Functor.map_isIso _ _ _ _ _ _ Tz _ hPiTHom
-  haveI hSheafifyComp : IsIso (Tz.map piF.hom ≫ Tz.map (sheafifyMap K (pull.map η.hom))) := by
+  have hSheafifyComp : IsIso (Tz.map piF.hom ≫ Tz.map (sheafifyMap K (pull.map η.hom))) := by
     rw [← hnat_stalk]
     exact @IsIso.comp_isIso _ _ _ _ _ _ _ hStalkEtaHom hStalkPiTHom
-  haveI hSheafifyMap : IsIso (Tz.map (sheafifyMap K (pull.map η.hom))) :=
+  have hSheafifyMap : IsIso (Tz.map (sheafifyMap K (pull.map η.hom))) :=
     @IsIso.of_isIso_comp_left _ _ _ _ _ (Tz.map piF.hom)
       (Tz.map (sheafifyMap K (pull.map η.hom))) hStalkPiFHom hSheafifyComp
   -- Step 5: toSheafify naturality → pull.map(η.hom) stalk is iso
@@ -458,21 +458,21 @@ theorem closedIncl_unit_stalk_isIso
   have hToSheafifyIso (P : (TopCat.of s).Presheaf C) :
       IsIso (Tz.map (toSheafify K P)) :=
     stalkFunctor_map_iso_toSheafify P x
-  haveI hPullComp :
+  have hPullComp :
       IsIso (Tz.map (pull.map η.hom) ≫ Tz.map (CategoryTheory.toSheafify K P₂)) := by
     rw [hts]
-    haveI := hToSheafifyIso P₁
+    have := hToSheafifyIso P₁
     infer_instance
-  haveI hPullMap : IsIso (Tz.map (pull.map η.hom)) :=
+  have hPullMap : IsIso (Tz.map (pull.map η.hom)) :=
     @IsIso.of_isIso_comp_right _ _ _ _ _ (Tz.map (pull.map η.hom))
       (Tz.map (CategoryTheory.toSheafify K P₂)) (hToSheafifyIso P₂) hPullComp
   -- Step 6: stalkPull_nat → η.hom stalk is iso
-  haveI hStalkPullbackF : IsIso (Presheaf.stalkPullbackHom C i F.obj x) :=
+  have hStalkPullbackF : IsIso (Presheaf.stalkPullbackHom C i F.obj x) :=
     (Presheaf.stalkPullbackIso C i F.obj x).isIso_hom
-  haveI hStalkPullbackTarget : IsIso (Presheaf.stalkPullbackHom C i
+  have hStalkPullbackTarget : IsIso (Presheaf.stalkPullbackHom C i
       ((pb ⋙ Sheaf.pushforward C i).obj F).obj x) :=
     (Presheaf.stalkPullbackIso C i _ x).isIso_hom
-  haveI hStalkPullbackComp :
+  have hStalkPullbackComp :
       IsIso (Presheaf.stalkPullbackHom C i F.obj x ≫ Tz.map (pull.map η.hom)) :=
     @IsIso.comp_isIso _ _ _ _ _ _ _ hStalkPullbackF hPullMap
   exact @IsIso.of_isIso_fac_right _ _ _ _ _ _ _ _
@@ -489,13 +489,13 @@ theorem epi_unit_of_closedImmersion
       (TopCat.closedIncl hZ)).unit.app F) := by
   let closedIncl := TopCat.closedIncl hZ
   let adj := TopCat.Sheaf.pullbackPushforwardAdjunction AddCommGrpCat.{u} closedIncl
-  letI : Balanced (Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
+  let : Balanced (Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
     balanced_of_strongEpiCategory
   rw [← TopCat.Sheaf.isLocallySurjective_iff_epi (adj.unit.app F),
     TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks]
   intro x
   by_cases hxZ : (x : X) ∈ Z
-  · haveI : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
+  · have : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
         ((TopCat.closedIncl hZ) ⟨x, hxZ⟩)).map (adj.unit.app F).hom) := by
       simpa using
         (TopCat.closedIncl_unit_stalk_isIso (C := AddCommGrpCat.{u})
@@ -528,6 +528,6 @@ theorem closedImmersionSES_shortExact
     (F : TopCat.Sheaf AddCommGrpCat.{u} X) :
     (closedImmersionSES (Z := Z) (hZ := hZ) F).ShortExact := by
   unfold closedImmersionSES
-  haveI := epi_unit_of_closedImmersion (Z := Z) (hZ := hZ) F
+  have := epi_unit_of_closedImmersion (Z := Z) (hZ := hZ) F
   exact ShortComplex.ShortExact.mk'
     (ShortComplex.exact_of_f_is_kernel _ (kernelIsKernel _)) inferInstance inferInstance

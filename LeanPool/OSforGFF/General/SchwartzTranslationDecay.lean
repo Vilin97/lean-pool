@@ -388,8 +388,8 @@ theorem schwartz_bilinear_prod_integrable
     Integrable (Function.uncurry (fun x y => f x * (K (x - y) : ℂ) * g (y - a)))
         (volume.prod volume) := by
   -- Get Schwartz integrability
-  haveI : ProperSpace E := FiniteDimensional.proper ℝ E
-  haveI : SecondCountableTopology E := secondCountable_of_proper
+  have : ProperSpace E := FiniteDimensional.proper ℝ E
+  have : SecondCountableTopology E := secondCountable_of_proper
   have hf_int : Integrable f volume := f.integrable
   have hg_int : Integrable g volume := g.integrable
   -- Get bounds
@@ -806,8 +806,8 @@ private lemma schwartz_bilinear_kernel_convolution_continuous
         _ = M_tail * ‖f x‖ := mul_comm _ _
     · exact hf_int.norm.const_mul M_tail
     · by_cases hnt : Nontrivial E
-      · haveI := hnt
-        haveI : NullSingletonClass (volume : Measure E) := inferInstance
+      · have := hnt
+        have : NullSingletonClass (volume : Measure E) := inferInstance
         have h_vol_sphere : volume (Metric.sphere y₀ R₀) = 0 :=
           MeasureTheory.Measure.addHaar_sphere volume y₀ R₀
         have h_vol_singleton : volume {y₀} = 0 := measure_singleton y₀

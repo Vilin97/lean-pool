@@ -172,7 +172,7 @@ lemma lapMatrix_loewner_mono {H₁ H₂ : SimpleGraph V}
     { Adj := fun v w => H₂.Adj v w ∧ ¬ H₁.Adj v w
       symm.symm := fun v w ⟨h2, h1⟩ => ⟨H₂.adj_symm h2, fun hh => h1 (H₁.adj_symm hh)⟩
       loopless.irrefl := fun v ⟨h2, _⟩ => (SimpleGraph.irrefl H₂) h2 }
-  haveI : DecidableRel H'.Adj := inferInstance
+  have : DecidableRel H'.Adj := inferInstance
   suffices heq : H₂.lapMatrix ℝ - H₁.lapMatrix ℝ = H'.lapMatrix ℝ by
     rw [heq]; exact SimpleGraph.posSemidef_lapMatrix ℝ H'
   -- Reduce to entry-wise matching via graphLaplacian formula

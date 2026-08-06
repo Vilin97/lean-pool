@@ -65,7 +65,7 @@ needs only that `e` is monotone (which follows from Scott continuity). -/
 theorem isLUB_sSup (hidem : ∀ x, e (e x) = e x) (hmono : Monotone e) :
     letI := supSet hidem
     ∀ S : Set (IdemFix e), IsLUB S (sSup S) := by
-  letI := supSet hidem
+  let := supSet hidem
   intro S
   constructor
   · intro k hk
@@ -107,7 +107,7 @@ theorem idemFix_incl_preservesDirectedSup (hidem : ∀ x, e (e x) = e x)
     (hsc : PreservesDirectedSup e) :
     letI := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
     PreservesDirectedSup (Subtype.val : IdemFix e → L) := by
-  letI := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
+  let := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
   intro S hS hSdir
   change e (sSup (Subtype.val '' S)) = sSup (Subtype.val '' S)
   have hdir' : DirectedOn (· ≤ ·) (Subtype.val '' S) := by
@@ -124,7 +124,7 @@ theorem idemFix_retr_preservesDirectedSup (hidem : ∀ x, e (e x) = e x)
     (hsc : PreservesDirectedSup e) :
     letI := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
     PreservesDirectedSup (fun x : L => (⟨e x, hidem x⟩ : IdemFix e)) := by
-  letI := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
+  let := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
   have hmono := preservesDirectedSup_monotone hsc
   intro T hT hTdir
   apply Subtype.ext
@@ -164,7 +164,7 @@ theorem idemFix_isContinuousLattice (hidem : ∀ x, e (e x) = e x) (hsc : Preser
     (hL : IsContinuousLattice L) :
     @IsContinuousLattice (IdemFix e)
       (IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)) := by
-  letI := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
+  let := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
   exact proposition_2_10_a (idemFixRetraction hidem hsc) hL
 
 /-- **Scott topology of the fixed-point lattice = subspace topology.** Proposition
@@ -177,7 +177,7 @@ theorem idemFix_scottTopology (hidem : ∀ x, e (e x) = e x) (hsc : PreservesDir
     @scottTopologicalSpace (IdemFix e)
         (IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)) =
       TopologicalSpace.induced (Subtype.val : IdemFix e → L) scottTopologicalSpace := by
-  letI := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
+  let := IdemFix.completeLattice hidem (preservesDirectedSup_monotone hsc)
   exact proposition_2_10_b (idemFixRetraction hidem hsc) hL
 
 end FixedPoints
@@ -258,7 +258,7 @@ theorem theorem_2_12 {D : Type u} [TopologicalSpace D] [T0Space D] :
           Nonempty (@Homeomorph D E _ (@scottTopologicalSpace E inst)) := by
   refine ⟨theorem_2_12_backward, ?_⟩
   rintro ⟨E, inst, hE, ⟨h⟩⟩
-  letI τE : TopologicalSpace E := @scottTopologicalSpace E inst
+  let τE : TopologicalSpace E := @scottTopologicalSpace E inst
   exact @IsInjectiveSpace.of_retract E D τE _ (theorem_2_12_forward hE)
     ⟨⇑h, h.continuous⟩ ⟨⇑h.symm, h.symm.continuous⟩ (fun d => h.left_inv d)
 
@@ -303,13 +303,13 @@ theorem lemma_3_9 (hD : IsContinuousLattice D) (hD' : IsContinuousLattice D')
   -- order).
   have hjg : @Continuous Y D _ scottTopologicalSpace (fun z => (P.retr : D' → D) (
     scottExtend e g z)) := by
-    letI : TopologicalSpace D := scottTopologicalSpace
-    letI : TopologicalSpace D' := scottTopologicalSpace
+    let : TopologicalSpace D := scottTopologicalSpace
+    let : TopologicalSpace D' := scottTopologicalSpace
     exact P.retr.continuous.comp hgbar
   have hif : @Continuous Y D' _ scottTopologicalSpace (fun z => (P.incl : D → D') (
     scottExtend e f z)) := by
-    letI : TopologicalSpace D := scottTopologicalSpace
-    letI : TopologicalSpace D' := scottTopologicalSpace
+    let : TopologicalSpace D := scottTopologicalSpace
+    let : TopologicalSpace D' := scottTopologicalSpace
     exact P.incl.continuous.comp hfbar
   -- Step A: `j ∘ gbar ⊑ fbar`.
   have hA : ∀ z, (P.retr : D' → D) (scottExtend e g z) ≤ scottExtend e f z := by

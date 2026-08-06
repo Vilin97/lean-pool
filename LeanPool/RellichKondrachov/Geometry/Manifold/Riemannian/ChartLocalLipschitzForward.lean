@@ -69,7 +69,7 @@ theorem lipschitzOnWith_extChartAt_ofRiemannianMetric
   classical
   -- Prefer the `ContinuousLinearMap`-native `SeminormedAddCommGroup` structure on `→L` spaces to
   -- avoid definitional mismatches between `‖_‖ₑ` occurrences.
-  letI (y : M) :
+  let (y : M) :
       SeminormedAddCommGroup (TangentSpace I y →L[ℝ] TangentSpace (𝓘(ℝ, E)) (extChartAt I x y)) :=
     ContinuousLinearMap.toSeminormedAddCommGroup
   -- Start from a local bound on the derivative of `extChartAt I x`.
@@ -83,7 +83,7 @@ theorem lipschitzOnWith_extChartAt_ofRiemannianMetric
   have hx_source : (chartAt H x).source ∈ 𝓝 x := chart_source_mem_nhds H x
   have hU : P ∩ (chartAt H x).source ∈ 𝓝 x := inter_mem hP hx_source
   -- Convert this neighborhood information into a concrete Riemannian ball.
-  rcases setOf_riemannianEDist_lt_subset_nhds (I := I) (x := x)
+  rcases setOfPred_riemannianEDist_lt_subset_nhds (I := I) (x := x)
       (s := P ∩ (chartAt H x).source) hU with ⟨c, c_pos, hc⟩
   -- Work on the smaller ball of radius `c/4`, so that short paths between points in the ball stay
   -- inside `{y | riemannianEDist I x y < c}` where the derivative bound holds.

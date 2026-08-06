@@ -53,8 +53,8 @@ noncomputable def idealSetIntNormFiberEquiv
 private theorem finite_idealSetIntNorm_fiber
     (J : (Ideal (𝓞 K))⁰) (n : ℕ) :
     Finite {a : idealSet K J // idealSetIntNorm K J a = n} := by
-  letI : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
-    (Ideal.finite_setOf_absNorm_eq n).fintype
+  let : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
+    (Ideal.finite_setOfPred_absNorm_eq n).fintype
   let f :
       {I : (Ideal (𝓞 K))⁰ //
         (J : Ideal (𝓞 K)) ∣ I ∧ IsPrincipal (I : Ideal (𝓞 K)) ∧
@@ -63,7 +63,7 @@ private theorem finite_idealSetIntNorm_fiber
     fun I ↦ ⟨I.1.1, I.2.2.2⟩
   have hf : Function.Injective f := fun I I' h ↦ by
     grind
-  letI : Finite
+  let : Finite
       {I : (Ideal (𝓞 K))⁰ //
         (J : Ideal (𝓞 K)) ∣ I ∧ IsPrincipal (I : Ideal (𝓞 K)) ∧
           absNorm (I : Ideal (𝓞 K)) = n} :=
@@ -99,8 +99,8 @@ theorem fundamentalConeNormCount_eq_torsion_mul
 theorem principalIdealNormCount_le_idealNormCount
     (J : (Ideal (𝓞 K))⁰) (n : ℕ) :
     principalIdealNormCount K J n ≤ idealNormCount K n := by
-  letI : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
-    (Ideal.finite_setOf_absNorm_eq n).fintype
+  let : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
+    (Ideal.finite_setOfPred_absNorm_eq n).fintype
   rw [principalIdealNormCount, idealNormCount]
   let f :
       {I : (Ideal (𝓞 K))⁰ //
@@ -150,7 +150,7 @@ theorem summable_idealSet_inverseNormPower
     (J : (Ideal (𝓞 K))⁰) {s : ℂ} (hs : 1 < s.re) :
     Summable (fun a : idealSet K J ↦
       ((idealSetIntNorm K J a : ℂ) ^ (-s))) := by
-  letI (n : ℕ) :
+  let (n : ℕ) :
       Finite {a : idealSet K J // idealSetIntNorm K J a = n} :=
     finite_idealSetIntNorm_fiber K J n
   apply summable_inversePower_of_lSeriesSummable_fiberCard
@@ -164,7 +164,7 @@ theorem hasSum_idealSet_inverseNormPower
     HasSum (fun a : idealSet K J ↦
       ((idealSetIntNorm K J a : ℂ) ^ (-s)))
       (fundamentalConeZeta K J s) := by
-  letI (n : ℕ) :
+  let (n : ℕ) :
       Finite {a : idealSet K J // idealSetIntNorm K J a = n} :=
     finite_idealSetIntNorm_fiber K J n
   have h := hasSum_inversePower_eq_lSeries_fiberCard

@@ -24,7 +24,7 @@ noncomputable def uderiv (f : 𝓒 U) : 𝓒 U := deriv f
 
 lemma tendsto_𝓒_iff (hU : IsOpen U) {F : ι → 𝓒 U} {f : 𝓒 U} :
     Tendsto F l (𝓝 f) ↔ TendstoLocallyUniformlyOn F f l U := by
-  simp only [UniformOnFun.tendsto_iff_tendstoUniformlyOn, compacts, mem_setOf_eq, and_imp]
+  simp only [UniformOnFun.tendsto_iff_tendstoUniformlyOn, compacts, mem_ofPred_eq, and_imp]
   exact (tendstoLocallyUniformlyOn_iff_forall_isCompact hU).symm
 
 /-- `𝓗 U` : the subspace of `𝓒 U` consisting of holomorphic
@@ -33,7 +33,7 @@ def 𝓗 (U : Set ℂ) := {f : 𝓒 U | DifferentiableOn ℂ f U}
 
 lemma isClosed_𝓗 (hU : IsOpen U) : IsClosed (𝓗 U) := by
   refine isClosed_iff_clusterPt.2 (fun f hf => ?_)
-  haveI : (𝓝 f ⊓ 𝓟 (𝓗 U)).NeBot := hf
+  have : (𝓝 f ⊓ 𝓟 (𝓗 U)).NeBot := hf
   have hconv : TendstoLocallyUniformlyOn (id : 𝓒 U → 𝓒 U) f (𝓝 f ⊓ 𝓟 (𝓗 U)) U :=
     (tendsto_𝓒_iff hU).1 (tendsto_id.mono_left inf_le_left)
   have hF : ∀ᶠ (g : 𝓒 U) in 𝓝 f ⊓ 𝓟 (𝓗 U), DifferentiableOn ℂ g U := by
@@ -55,7 +55,7 @@ def 𝓑 (U : Set ℂ) (Q : Set ℂ → Set ℂ) : Set (𝓒 U) :=
 lemma 𝓑_const {Q : Set ℂ} : 𝓑 U (fun _ => Q) = {f ∈ 𝓗 U | MapsTo f U Q} := by
   rw [𝓑]
   ext f
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   have hmaps : MapsTo f U Q ↔ ∀ K ∈ compacts U, MapsTo f K Q := by
     simpa only [union_compacts] using
       (@mapsTo_sUnion ℂ ℂ (compacts U) Q f)
@@ -63,8 +63,8 @@ lemma 𝓑_const {Q : Set ℂ} : 𝓑 U (fun _ => Q) = {f ∈ 𝓗 U | MapsTo f 
 
 theorem isClosed_𝓑 (hU : IsOpen U) (hQ : ∀ K ∈ compacts U, IsCompact (Q K)) :
     IsClosed (𝓑 U Q) := by
-  rw [𝓑, setOf_and]; apply (isClosed_𝓗 hU).inter
-  simp only [setOf_forall, MapsTo]
+  rw [𝓑, ofPred_and]; apply (isClosed_𝓗 hU).inter
+  simp only [ofPred_forall, MapsTo]
   apply isClosed_biInter; intro K hK
   apply isClosed_biInter; intro z hz
   apply (hQ K hK).isClosed.preimage
@@ -79,7 +79,7 @@ lemma 𝓜_eq_𝓑 : 𝓜 U = 𝓑 U (fun _ => closedBall 0 1) := 𝓑_const.sym
 
 lemma IsClosed_𝓜 (hU : IsOpen U) : IsClosed (𝓜 U) := by
   suffices h : IsClosed {f : 𝓒 U | MapsTo f U (closedBall 0 1)} from (isClosed_𝓗 hU).inter h
-  simp_rw [MapsTo, setOf_forall]
+  simp_rw [MapsTo, ofPred_forall]
   refine isClosed_biInter (fun z hz => isClosed_closedBall.preimage ?_)
   exact ((UniformOnFun.uniformContinuous_eval_of_mem ℂ (compacts U)
     (mem_singleton z) ⟨singleton_subset_iff.2 hz, isCompact_singleton⟩).continuous)

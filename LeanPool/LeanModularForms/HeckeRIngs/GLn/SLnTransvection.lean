@@ -240,7 +240,7 @@ private lemma extractBlock_blockLift {m : ℕ} (i j : Fin m) (hij : i ≠ j) (c 
       (by intro k hk; rw [blockLift_row0]; exact h0j k hk)
       (by intro k hk; rw [blockLift_col0 _ _ _ _ _ hi0]; exact hi0 k hk) =
     slTransvecG i j hij c * extractBlock τ h00 h0j hi0 := by
-  haveI : NeZero m := ⟨by rintro rfl; exact i.elim0⟩
+  have : NeZero m := ⟨by rintro rfl; exact i.elim0⟩
   apply Subtype.ext; ext a b
   change (blockLift i j hij c * τ).1 a.succ b.succ =
     (slTransvecG i j hij c * extractBlock τ h00 h0j hi0).1 a b
@@ -289,7 +289,7 @@ private lemma row0_clear {m : ℕ} (τ : Matrix.SpecialLinearGroup (Fin (m + 1))
       intro h; simp [h, show ¬(j₀ : ℕ) = 0 from fun h₀ => hj₀ (Fin.ext h₀)] at hj₀_nz
     set E := slTransvecG (0 : Fin (m+1)) j₀ (Ne.symm hj₀) (-σ.1 0 j₀)
     set σ' := σ * E with hσ'_def
-    haveI : NeZero (m + 1) := ⟨Nat.succ_ne_zero m⟩
+    have : NeZero (m + 1) := ⟨Nat.succ_ne_zero m⟩
     have hσ'00 : σ'.1 0 0 = 1 := by
       rw [hσ'_def]; change (σ * slTransvecG 0 j₀ (Ne.symm hj₀) (-σ.1 0 j₀)).1 0 0 = 1
       rw [slTransvecG_mul_right_entry]; simp [hj₀.symm, hσ00]
@@ -404,7 +404,7 @@ private lemma to_block_form {m : ℕ} (τ : Matrix.SpecialLinearGroup (Fin (m + 
       (L_left.prod * τ * L_right.prod).1 0 0 = 1 ∧
       (∀ j : Fin (m+1), j ≠ 0 → (L_left.prod * τ * L_right.prod).1 0 j = 0) ∧
       (∀ i : Fin (m+1), i ≠ 0 → (L_left.prod * τ * L_right.prod).1 i 0 = 0) := by
-  haveI : NeZero (m + 1) := ⟨Nat.succ_ne_zero m⟩
+  have : NeZero (m + 1) := ⟨Nat.succ_ne_zero m⟩
   suffices h_col : ∃ (L₁ : List (Matrix.SpecialLinearGroup (Fin (m+1)) ℤ)),
       (∀ E ∈ L₁, IsTransvec E) ∧
       (L₁.prod * τ).1 0 0 = 1 ∧

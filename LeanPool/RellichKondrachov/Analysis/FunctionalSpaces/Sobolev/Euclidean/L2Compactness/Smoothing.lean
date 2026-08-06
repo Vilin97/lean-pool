@@ -118,7 +118,7 @@ lemma extendByZeroL2_eq_extendByZeroₗᵢ (hKm : MeasurableSet K)
       (MeasureTheory.Lp.extendByZeroₗᵢ (μ := (volume : Measure E)) (E := ℝ) (p := (2 : ℝ≥0∞))
         (s := K) hKm) u := by
   classical
-  letI : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
+  let : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
   refine MeasureTheory.Lp.ext ?_
   have h1 :
       (extendByZeroL2 (E := E) (K := K) hKm u : E → ℝ) =ᵐ[(volume : Measure E)]
@@ -137,7 +137,7 @@ lemma norm_extendByZeroL2 (hKm : MeasurableSet K)
     (u : MeasureTheory.Lp ℝ (2 : ℝ≥0∞) (volume.restrict K)) :
     ‖extendByZeroL2 (E := E) (K := K) hKm u‖ = ‖u‖ := by
   classical
-  letI : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
+  let : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
   calc
     ‖extendByZeroL2 (E := E) (K := K) hKm u‖ =
         ‖(MeasureTheory.Lp.extendByZeroₗᵢ (μ := (volume : Measure E)) (E := ℝ) (p := (2 : ℝ≥0∞))

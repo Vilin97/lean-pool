@@ -114,7 +114,7 @@ theorem ramanujan_E₆' : serreD 6 E₆.toFun = - 2⁻¹ * E₄.toFun * E₄.toF
   have hE₄_sq_ne : E₄_sq ≠ 0 := fun h => E4_ne_zero <| by
     ext z
     have := congrFun (congrArg (↑· : ModularForm _ _ → ℍ → ℂ) h) z
-    simp only [ModularForm.zero_apply] at this
+    simp only [_root_.zero_apply] at this
     exact mul_self_eq_zero.mp this
   obtain ⟨c, hc⟩ := exists_smul_eq_of_rank_one
     (weight_eight_one_dimensional 8 (by norm_num) ⟨4, rfl⟩ (by norm_num)) hE₄_sq_ne

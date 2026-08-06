@@ -105,7 +105,7 @@ theorem interpClassFixed_eq_range_patchEval
     interpClassFixed (Set.range e₁) (Set.range e₂) A =
       Set.range (patchEval e₁ e₂ (routerOfSet A)) := by
   ext h
-  simp only [interpClassFixed, Set.mem_setOf_eq, Set.mem_range]
+  simp only [interpClassFixed, Set.mem_ofPred_eq, Set.mem_range]
   constructor
   · rintro ⟨_, ⟨θ₁, rfl⟩, _, ⟨θ₂, rfl⟩, rfl⟩
     refine ⟨(θ₁, θ₂, ()), funext fun x => ?_⟩
@@ -125,7 +125,7 @@ theorem interpClassCountable_eq_range_patchEval
     interpClassCountable (Set.range e₁) (Set.range e₂) A =
       Set.range (patchEval e₁ e₂ (routerOfSetFamily A)) := by
   ext h
-  simp only [interpClassCountable, Set.mem_setOf_eq, Set.mem_range]
+  simp only [interpClassCountable, Set.mem_ofPred_eq, Set.mem_range]
   constructor
   · rintro ⟨n, _, ⟨θ₁, rfl⟩, _, ⟨θ₂, rfl⟩, rfl⟩
     refine ⟨(θ₁, θ₂, n), funext fun x => ?_⟩
@@ -211,14 +211,14 @@ theorem range_patchEval_sub_interpClass
     Set.range (letI := R.instMeasΡ; patchEval e₁ e₂ R.eval) ⊆
       interpClass (Set.range e₁) (Set.range e₂) := by
   rintro h ⟨⟨θ₁, θ₂, ρ⟩, rfl⟩
-  simp only [interpClass, Set.mem_setOf_eq]
+  simp only [interpClass, Set.mem_ofPred_eq]
   refine ⟨{x | R.eval ρ x = true}, ?_, e₁ θ₁, ⟨θ₁, rfl⟩, e₂ θ₂, ⟨θ₂, rfl⟩, ?_⟩
-  · letI := R.instMeasΡ
+  · let := R.instMeasΡ
     have hm : Measurable (fun x => R.eval ρ x) :=
       R.eval_meas.comp (Measurable.prodMk measurable_const measurable_id)
     exact hm (measurableSet_singleton true)
   · funext x
-    simp only [patchEval, piecewiseConcept, Set.mem_setOf_eq]
+    simp only [patchEval, piecewiseConcept, Set.mem_ofPred_eq]
     split <;> rfl
 
 /-- Conditional interpolation via BorelRouterCode is well-behaved:
@@ -234,8 +234,8 @@ theorem interpClass_wellBehaved_of_routerCode
     (R : BorelRouterCode X) :
     WellBehavedVCMeasTarget X
       (Set.range (letI := R.instMeasΡ; patchEval e₁ e₂ R.eval)) := by
-  letI := R.instMeasΡ
-  letI := R.instStdΡ
+  let := R.instMeasΡ
+  let := R.instStdΡ
   exact patch_borel_param_wellBehavedVCMeasTarget e₁ e₂ R.eval he₁ he₂ R.eval_meas
 
 /-! ## Open Question Definition -/

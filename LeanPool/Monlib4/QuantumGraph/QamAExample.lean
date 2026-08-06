@@ -114,7 +114,7 @@ theorem Qam.iso_preserves_ir_reflexive {φ : Module.Dual ℂ ℍ}
       (Qam.reflIdempotent hφ x 1 = ite ir_reflexive 1 0 ↔
         Qam.reflIdempotent hφ y 1 = ite ir_reflexive 1 0) := by
   withMatrixQuantumCtx[φ]
-  letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
+  let : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   obtain ⟨f, hf, h⟩ := hxhy
   rw [StarAlgEquiv.comp_eq_iff, LinearMap.comp_assoc] at hf
   have := List.TFAE.out (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _
@@ -307,7 +307,7 @@ theorem qamA.finTwoIso (x y : { x : Matrix (Fin 2) (Fin 2) ℂ // x ≠ 0 })
       @Qam.Iso (Fin 2) _ _ traceModuleDual (qamA trace_isFaithfulPosMap x)
         (qamA trace_isFaithfulPosMap y) := by
   withMatrixQuantumCtx[(traceModuleDual : Module.Dual ℂ (Matrix (Fin 2) (Fin 2) ℂ))]
-  letI : Coalgebra ℂ (Matrix (Fin 2) (Fin 2) ℂ) :=
+  let : Coalgebra ℂ (Matrix (Fin 2) (Fin 2) ℂ) :=
     Coalgebra.ofFiniteDimensionalHilbertAlgebra
   intro hx1 hx2 hy1 hy2
   simp_rw [qamA.iso_iff, traceModuleDual_matrix, Commute.one_left, and_true,
@@ -362,7 +362,7 @@ theorem Qam.finTwoIsoOfSingleEdge {A B : Matrix (Fin 2) (Fin 2) ℂ →ₗ[ℂ] 
       (hy2 : Qam.reflIdempotent trace_isFaithfulPosMap B 1 = 0) →
       @Qam.Iso (Fin 2) _ _ traceModuleDual A B := by
   withMatrixQuantumCtx[(traceModuleDual : Module.Dual ℂ (Matrix (Fin 2) (Fin 2) ℂ))]
-  letI : Coalgebra ℂ (Matrix (Fin 2) (Fin 2) ℂ) :=
+  let : Coalgebra ℂ (Matrix (Fin 2) (Fin 2) ℂ) :=
     Coalgebra.ofFiniteDimensionalHilbertAlgebra
   intro hx0 hy0 hx hy hx1 hx2 hy1 hy2
   rw [RealQam.edges_eq_one_iff] at hx hy

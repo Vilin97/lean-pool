@@ -91,7 +91,7 @@ theorem sq_setIntegral_le_measure_mul_setIntegral_sq_proved
   by_cases hf_aesm : AEStronglyMeasurable f (volume.restrict (Icc a b))
   · -- Use Hölder with p = q = 2
     have hpq : (2:ℝ).HolderConjugate 2 := ⟨by norm_num, by norm_num, by norm_num⟩
-    haveI : IsFiniteMeasure (volume.restrict (Icc a b)) := Real.isFiniteMeasure_restrict_Icc a b
+    have : IsFiniteMeasure (volume.restrict (Icc a b)) := Real.isFiniteMeasure_restrict_Icc a b
     have h_memLp1 : MemLp (fun (_ : ℝ) => (1:ℂ)) (ENNReal.ofReal 2)
         (volume.restrict (Icc a b)) := by
       rw [show ENNReal.ofReal 2 = (2 : ENNReal) from by norm_num]; exact memLp_const 1
@@ -991,7 +991,7 @@ theorem _root_.OSforGFF.L2_process_covariance_fubini_integrable {Ω : Type*} [Me
     memLp_two_lintegral_nnnorm_sq (h_L2.sub (memLp_const c))
   have h_both_finite : ν Set.univ * ∫⁻ z : ℝ × Ω, ↑‖A z.1 z.2 - c‖₊ ^ 2 ∂(ν.prod μ) < ⊤ :=
     mul_lt_top hν_fin h_lint_base
-  haveI : SFinite ν := inferInstance
+  have : SFinite ν := inferInstance
   have hg_meas : ∀ ω, Measurable (fun s : ℝ => (↑‖A s ω - c‖₊ : ℝ≥0∞) ^ 2) := fun ω =>
     ((h_cont_s ω).sub continuous_const).measurable.nnnorm.coe_nnreal_ennreal.pow_const _
   have hF_meas_swap : Measurable (fun p : Ω × ℝ => (↑‖A p.2 p.1 - c‖₊ : ℝ≥0∞) ^ 2) := by fun_prop

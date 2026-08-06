@@ -1055,7 +1055,7 @@ theorem hostSet_forced [NeZero (d * m)] (hd : 0 < d) (hm : 0 < m)
 theorem T_inj (hd : 0 < d) (hm : 0 < m)
     {P₁ P₂ : Finset (Finset (ZMod (d * m)))} (h₁ : Portrait d m P₁) (h₂ : Portrait d m P₂)
     (hT : T P₁ = T P₂) : P₁ = P₂ := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   rw [portrait_eq_image_hostSet h₁, portrait_eq_image_hostSet h₂]
   -- The attach sets differ (T P₁ vs T P₂), so rewrite along hT and match the functions.
   apply Finset.ext

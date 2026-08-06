@@ -151,7 +151,7 @@ theorem sheafify_const_flasque_of_irreducible
     subst this
     rw [AddCommGrpCat.epi_iff_surjective]
     intro y
-    haveI : Subsingleton (ToType (((Opens.grothendieckTopology X).sheafify P).obj (op ⊥))) :=
+    have : Subsingleton (ToType (((Opens.grothendieckTopology X).sheafify P).obj (op ⊥))) :=
       AddCommGrpCat.subsingleton_of_isZero
         (TopCat.Sheaf.isTerminalOfEmpty
           ⟨_, (Opens.grothendieckTopology X).sheafify_isSheaf P⟩).isZero
@@ -196,9 +196,9 @@ theorem presheafToSheaf_const_flasque_of_irreducible
   let P : (Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u} := (Functor.const (Opens X)ᵒᵖ).obj A
   intro U V i
   let e := plusPlusIsoSheafify (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) (P := P)
-  haveI : Epi (((Opens.grothendieckTopology X).sheafify P).map i.op) := by
+  have : Epi (((Opens.grothendieckTopology X).sheafify P).map i.op) := by
     simpa using sheafify_const_flasque_of_irreducible (X := X) A (U := U) (V := V) i
-  haveI : Epi (e.hom.app (op V) ≫
+  have : Epi (e.hom.app (op V) ≫
       (CategoryTheory.sheafify (Opens.grothendieckTopology X) P).map i.op) := by
     rw [← e.hom.naturality i.op]; infer_instance
   exact epi_of_epi (e.hom.app (op V))
@@ -233,8 +233,8 @@ theorem isFlasqueSheaf_zeroOutsideInt_top (X : TopCat.{u}) [IrreducibleSpace X] 
       (((sheafToPresheaf J AddCommGrpCat.{u}).obj
         ((presheafToSheaf J AddCommGrpCat.{u}).obj TopCat.Presheaf.constZ)).map i.op) :=
     hconst
-  haveI : IsIso (eP.hom.app (op U)) := CategoryTheory.NatIso.hom_app_isIso eP (op U)
-  haveI : IsIso (eP.hom.app (op W)) := CategoryTheory.NatIso.hom_app_isIso eP (op W)
+  have : IsIso (eP.hom.app (op U)) := CategoryTheory.NatIso.hom_app_isIso eP (op U)
+  have : IsIso (eP.hom.app (op W)) := CategoryTheory.NatIso.hom_app_isIso eP (op W)
   have hepiComp : Epi
       (eP.hom.app (op W) ≫
         ((sheafToPresheaf J AddCommGrpCat.{u}).obj

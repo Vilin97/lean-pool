@@ -66,13 +66,13 @@ theorem IsQuasiComplete.quotient_isWeaklyQuasiComplete
       IsLocalRing.of_surjective'
         (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
     IsWeaklyQuasiComplete (R ⧸ I) := by
-  letI : Nontrivial (R ⧸ I) :=
+  let : Nontrivial (R ⧸ I) :=
     Ideal.Quotient.nontrivial_iff.mpr hI
-  letI : IsLocalRing (R ⧸ I) :=
+  let : IsLocalRing (R ⧸ I) :=
     IsLocalRing.of_surjective'
       (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
   set mk := Ideal.Quotient.mk I
-  haveI : IsLocalHom mk :=
+  have : IsLocalHom mk :=
     IsLocalHom.of_surjective mk Ideal.Quotient.mk_surjective
   have hmap_M : Ideal.map mk (IsLocalRing.maximalIdeal R) ≤
       IsLocalRing.maximalIdeal (R ⧸ I) := by

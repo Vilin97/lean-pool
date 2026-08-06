@@ -73,8 +73,8 @@ lemma eval_Uprod [(i : I) → Nonempty (A i)] {φ : Semiformula L μ n} :
     Evalm (Uprod A 𝓤) e ε φ ↔
         {i | Eval (s i) (fun x ↦ (e x).val i) (fun x ↦ (ε x).val i) φ} ∈ 𝓤 := by
   induction φ using rec' <;>
-    simp only [LogicalConnective.HomClass.map_top, Prop.top_eq_true, Set.setOf_true, true_iff,
-      LogicalConnective.HomClass.map_bot, Prop.bot_eq_false, Set.setOf_false,
+    simp only [LogicalConnective.HomClass.map_top, Prop.top_eq_true, Set.ofPred_true, true_iff,
+      LogicalConnective.HomClass.map_bot, Prop.bot_eq_false, Set.ofPred_false,
       Ultrafilter.empty_notMem,
       eval_rel, eval_nrel, Semiterm.val_Uprod, rel_Uprod,
       LogicalConnective.HomClass.map_and, LogicalConnective.Prop.and_eq,
@@ -151,7 +151,7 @@ lemma ultrafilter_exists [(t : FinSubtheory T) → Nonempty (A t)]
     (H : ∀ (i : FinSubtheory T), (A i) ⊧ₘ* (i.val : Theory L)) :
     ∃ 𝓤 : Ultrafilter (FinSubtheory T), Set.image (Semiformula.domain A) T ⊆ 𝓤.sets :=
   Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty _ (by
-    haveI : DecidableEq (Set (FinSubtheory T)) := fun _ _ => Classical.propDecidable _
+    have : DecidableEq (Set (FinSubtheory T)) := fun _ _ => Classical.propDecidable _
     intro t ht
     have : ∃ t' : Finset (SyntacticFormula L), ↑t' ⊆ T ∧ Finset.image (Semiformula.domain A) t' =
         t := by

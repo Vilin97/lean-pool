@@ -63,7 +63,7 @@ theorem levelOne_odd_weight_eq_zero {k : ℤ} (hk : Odd k)
     simp_all
   rw [hdenom, zpow_neg, hk.neg_one_zpow, inv_neg, inv_one] at hmod
   simp only [SlashInvariantForm.toFun_eq_coe, ModularForm.toSlashInvariantForm_coe] at hmod
-  simp only [ModularForm.zero_apply]
+  simp only [_root_.zero_apply]
   exact (mul_eq_zero.mp (show 2 * f z = 0 by linear_combination -hmod)).resolve_left two_ne_zero
 
 /-- For odd weight k, the space of modular forms of weight k for Γ(1) has rank zero. -/

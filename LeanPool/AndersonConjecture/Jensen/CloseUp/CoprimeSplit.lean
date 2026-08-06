@@ -115,8 +115,8 @@ private def close_up_aux_b2_nonzero_proof
       intersection_close_up R a p c hc_ap hcoprime_ap
         ha_ne hp_ne hM_bot hM_not_assoc hAss_ht hR_card hT_card
     -- Step 4: Extract w from hrem₁
-    haveI : IsDomain S₁.carrier := NSubring.isDomain S₁
-    haveI : UniqueFactorizationMonoid S₁.carrier := S₁.isUFD
+    have : IsDomain S₁.carrier := NSubring.isDomain S₁
+    have : UniqueFactorizationMonoid S₁.carrier := S₁.isUFD
     obtain ⟨w, hw_eq⟩ := Ideal.mem_span_singleton.mp hrem₁
     have hS₁_card : Cardinal.mk S₁.carrier < Cardinal.mk T :=
       lt_of_le_of_lt hAext₁.card_le (max_lt hT_aleph0 hR_card)

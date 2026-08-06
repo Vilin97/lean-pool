@@ -348,7 +348,7 @@ theorem kunen_inconsistency_vonNeumann
   refine ciSup_eq_of_forall_le_of_forall_lt_exists_gt (fun n => le_of_lt ?_) (fun α hα => ?_)
   · simpa only [maxOrdinal_vonNeumann, WithTop.coe_lt_coe] using toOrdinal_lt (α := κ n)
   · by_contra! h
-    letI params : KunenBoundParams := {
+    let params : KunenBoundParams := {
       M := V_ μ
       structureM := by infer_instance
       isVonNeumann := by infer_instance
@@ -369,7 +369,7 @@ theorem kunen_inconsistency_V (j : V ↪ₑ[𝓛ZF] V) : j = .refl .. := by
   let j' : NontrivialElementaryEmbedding V := ⟨j, hj⟩
   set! κ : ℕ → V := fun n => j'^[n] (crit j') with hκ
   rw [funext_iff] at hκ
-  letI params : KunenBoundParams := {
+  let params : KunenBoundParams := {
     M := V
     structureM := by infer_instance
     isVonNeumann := by infer_instance

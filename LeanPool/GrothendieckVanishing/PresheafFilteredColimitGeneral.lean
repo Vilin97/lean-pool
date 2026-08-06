@@ -152,7 +152,6 @@ theorem filtered_colimit_restriction_eventually_zero_of_zero
     change ConcreteCategory.hom (((ev U).mapCocone c).ι.app j₀) _ =
       ConcreteCategory.hom (((ev U).mapCocone c).ι.app j₀) 0
     rw [hnat, ha, map_zero]
-    rfl
   rw [Types.FilteredColimit.isColimit_eq_iff' hcTyp] at h0
   obtain ⟨j', f, hf⟩ := h0
   refine ⟨j', f, ?_⟩

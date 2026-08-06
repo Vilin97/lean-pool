@@ -83,7 +83,7 @@ private lemma measurableSet_productAnnulus_annulus
     {d : Nat} (j : Idx d) :
     MeasurableSet (productAnnulus j) := by
   unfold productAnnulus
-  rw [Set.setOf_forall]
+  rw [Set.ofPred_forall]
   refine MeasurableSet.iInter fun q => ?_
   exact (measurableSet_le measurable_const
       (measurable_norm.comp (continuous_apply q).measurable)).inter
@@ -210,7 +210,7 @@ private lemma rotate_one_gamma_preserving_annulus
       withDensity_apply _ hs', withDensity_apply _ hs]
     rw [← MeasureTheory.lintegral_indicator (hs := hs'),
       ← MeasureTheory.lintegral_indicator (hs := hs)]
-    simpa [Set.preimage, Set.indicator, Set.mem_setOf_eq, dens, f, hdens] using
+    simpa [Set.preimage, Set.indicator, Set.mem_ofPred_eq, dens, f, hdens] using
       (hvol.lintegral_comp_emb hmeas (fun x => if x ∈ s then dens x else 0))
   exact ⟨hmeas.measurable, hmap⟩
 
@@ -239,7 +239,7 @@ private theorem annulusCoordinateRotationAveraging
   let G : Cd d → ENNReal := fun z => if z ∈ productAnnulus j then F z else 0
   have hG : Measurable G := by
     refine hF.piecewise (measurableSet_productAnnulus_annulus j) measurable_const
-  letI : MeasureTheory.SFinite (gammaD d) := by
+  let : MeasureTheory.SFinite (gammaD d) := by
     change MeasureTheory.SFinite
       ((volume : Measure (Cd d)).withDensity (fun z => ENNReal.ofReal (gaussianDensity d z)))
     infer_instance

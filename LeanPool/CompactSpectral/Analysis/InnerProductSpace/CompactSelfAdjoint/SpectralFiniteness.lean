@@ -248,17 +248,17 @@ theorem tendsto_norm_of_injective_hasEigenvalue_of_isCompactOperator_of_isSelfAd
     by_contra hnot
     have hfreq : Filter.Frequently (fun n => ε ≤ ‖μ n‖) atTop := by
       simpa [Filter.Frequently, not_le] using hnot
-    have hInf : (setOf fun n => ε ≤ ‖μ n‖).Infinite :=
+    have hInf : (Set.ofPred fun n => ε ≤ ‖μ n‖).Infinite :=
       (Nat.frequently_atTop_iff_infinite).1 hfreq
-    let emb : Function.Embedding ℕ ((setOf fun n => ε ≤ ‖μ n‖).Elem) :=
+    let emb : Function.Embedding ℕ ((Set.ofPred fun n => ε ≤ ‖μ n‖).Elem) :=
       Set.Infinite.natEmbedding _ hInf
-    let idx : ℕ → ℕ := fun n => (emb n : (setOf fun n => ε ≤ ‖μ n‖).Elem).1
+    let idx : ℕ → ℕ := fun n => (emb n : (Set.ofPred fun n => ε ≤ ‖μ n‖).Elem).1
     have hidx_inj : Function.Injective idx := fun m n hmn => by
       apply emb.injective
       ext
       exact hmn
     have hidx_ge : ∀ n, ε ≤ ‖μ (idx n)‖ := fun n =>
-      (emb n : (setOf fun n => ε ≤ ‖μ n‖).Elem).property
+      (emb n : (Set.ofPred fun n => ε ≤ ‖μ n‖).Elem).property
     have hμ' :
         ¬ ∃ μ' : ℕ → 𝕜, Function.Injective μ' ∧ (∀ n, ε ≤ ‖μ' n‖) ∧
             (∀ n, Module.End.HasEigenvalue (T : E →ₗ[𝕜] E) (μ' n)) :=
@@ -387,8 +387,8 @@ lemma finiteDimensional_iSup_eigenspace_norm_ge
     exact
       finiteDimensional_eigenspace_of_isCompactOperator (𝕜 := 𝕜) (E := E) (T := T) hTc (μ := i.1)
         hne
-  letI : Fintype s.Elem := hsFin.fintype
-  haveI : ∀ i : s.Elem, FiniteDimensional 𝕜 (t.eigenspace i.1) := hfd_each
+  let : Fintype s.Elem := hsFin.fintype
+  have : ∀ i : s.Elem, FiniteDimensional 𝕜 (t.eigenspace i.1) := hfd_each
   -- Rewrite the target `iSup` index type to `s.Elem` using definitional equality of `s`.
   exact (inferInstance : FiniteDimensional 𝕜 ((⨆ i : s.Elem, t.eigenspace i.1) : Submodule 𝕜 E))
 end CompactSelfAdjoint

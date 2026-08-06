@@ -49,13 +49,13 @@ lemma finsum_mem_mem_span {ι R V : Type*}
           (Submodule.mem_span_of_mem (Set.mem_image_of_mem vs his))
       · simp [his]
     · intro i hi
-      simp only [ne_eq, Set.Finite.coe_toFinset, Set.mem_setOf_eq, t]
+      simp only [ne_eq, Set.Finite.coe_toFinset, Set.mem_ofPred_eq, t]
       refine ⟨?_, ?_⟩ <;>
       · by_contra con
         simp [con] at hi
   · suffices junk : ∑ᶠ i ∈ s, cfs i • vs i = 0 by simp [junk]
     exact finsum_mem_eq_zero_of_infinite (by simpa [Function.support, Set.inter_comm,
-      Set.setOf_and] using h)
+      Set.ofPred_and] using h)
 
 namespace Module.Basis
 
