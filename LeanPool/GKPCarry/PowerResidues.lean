@@ -42,7 +42,7 @@ lemma two_dvd_orderOf_twoUnit (level : ℕ) :
     rw [hmap]
     rw [← orderOf_injective (Units.coeHom _) Units.val_injective]
     change orderOf (2 : ZMod 3) = 2
-    haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     apply orderOf_eq_prime <;> decide
   rw [← himage]
   exact orderOf_map_dvd reduction (twoUnit level)

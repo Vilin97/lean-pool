@@ -286,7 +286,7 @@ theorem ballIntegralRadiusWeightedRepresentation_of_ac_derivativeFormula
     (hformula : BallIntegralRadiusDerivativeFormula n) :
     BallIntegralRadiusWeightedRepresentation n := by
   intro hne f R0 hf
-  letI : NeZero n := hne
+  let : NeZero n := hne
   let D : ℝ → ℝ := fun rho : ℝ =>
     deriv (fun r : ℝ => ∫ x in Metric.ball (0 : Domain n) r, f x) rho
   refine ⟨D, ?_, ?_⟩
@@ -303,7 +303,7 @@ theorem ballIntegralRadiusWeightedRepresentationForWeights_of_ac_derivativeFormu
     (hformula : BallIntegralRadiusDerivativeFormulaForWeights n) :
     BallIntegralRadiusWeightedRepresentationForWeights n := by
   intro hne f R0 hf
-  letI : NeZero n := hne
+  let : NeZero n := hne
   let D : ℝ → ℝ := fun rho : ℝ =>
     deriv (fun r : ℝ => ∫ x in Metric.ball (0 : Domain n) r, f x) rho
   refine ⟨D, ?_, ?_⟩

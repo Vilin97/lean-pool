@@ -967,7 +967,7 @@ theorem jentzsch_theorem_proved {Ω : Type*} [MeasureSpace Ω] [(ae (volume : Me
     h_finite_above _ (by linarith)
   -- j₀ is in this finite set
   have hj₀_mem : j₀ ∈ {i : ι | eigenval j₀ / 2 < |eigenval i|} := by
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [abs_of_pos hj₀_pos]
     linarith
   -- Find the index with maximum eigenvalue in this finite set

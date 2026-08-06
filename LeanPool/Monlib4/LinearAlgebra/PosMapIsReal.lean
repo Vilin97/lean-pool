@@ -564,7 +564,7 @@ theorem Matrix.isReal_of_isPosMap
   {φ : Matrix n n ℂ →ₗ[ℂ] K} (hφ : LinearMap.IsPosMap φ) :
   LinearMap.IsReal φ := by
   classical
-  letI := Fintype.ofFinite n
+  let := Fintype.ofFinite n
   refine isReal_of_isPosMap_of_selfAdjointDecomposition hφ (fun x hx => ?_)
   obtain ⟨a, b, hab⟩ := Matrix.IsHermitian.posSemidefDecomposition' hx
   exact ⟨a, b, by simpa only [star_eq_conjTranspose] using hab⟩
@@ -677,7 +677,7 @@ lemma Matrix.inv_diagonal' {R n : Type*} [Field R]
   [Fintype n] [DecidableEq n]
   (d : n → R) [Invertible d] :
   (Matrix.diagonal d)⁻¹ = Matrix.diagonal d⁻¹ := by
-  haveI := Matrix.diagonalInvertible d
+  have := Matrix.diagonalInvertible d
   rw [← invOf_eq_nonsing_inv, invOf_diagonal_eq]
   simp only [diagonal_eq_diagonal_iff, Pi.inv_apply]
   intro
@@ -736,7 +736,7 @@ theorem Matrix.PosDef.rpow_eq_pow {𝕜 : Type*} [RCLike 𝕜]
 theorem Matrix.PosDef.rpow_eq_zpow {𝕜 : Type*} [RCLike 𝕜]
   {Q : Matrix n n 𝕜} (hQ : Q.PosDef) (r : ℤ) :
   hQ.rpow r = Q ^ r := by
-  letI := PosDef.eigenvaluesInvertible' hQ
+  let := PosDef.eigenvaluesInvertible' hQ
   nth_rw 2 [hQ.1.spectral_theorem'']
   simp only [innerAut.map_zpow, diagonal_zpow]
   rw [rpow_eq]
@@ -977,7 +977,7 @@ theorem LinearMap.exists_scalar_isometry_iff_preserves_ortho_of_ne_zero
   (∃ (α : 𝕜ˣ), Isometry ((α : 𝕜) • T))
   ↔
   ∀ x y, ⟪x, y⟫_𝕜 = 0 → ⟪T x, T y⟫_𝕜 = 0 := by
-  haveI : Nontrivial V := Module.nontrivial_of_finrank_pos hV
+  have : Nontrivial V := Module.nontrivial_of_finrank_pos hV
   constructor
   · rintro ⟨α, h⟩ x y hxy
     have : ⟪T x, T y⟫_𝕜 = 0 ↔ ⟪((α : 𝕜) • T) x, ((α : 𝕜) • T) y⟫_𝕜 = 0 := by
@@ -987,7 +987,7 @@ theorem LinearMap.exists_scalar_isometry_iff_preserves_ortho_of_ne_zero
         simp only [Units.ne_zero, false_or]
     rw [this, (isometry_iff_inner _).mp h, hxy]
   · intro h
-    haveI : FiniteDimensional 𝕜 V := Module.finite_of_finrank_pos hV
+    have : FiniteDimensional 𝕜 V := Module.finite_of_finrank_pos hV
     let e := stdOrthonormalBasis 𝕜 V
     have : ∀ i j, ⟪e i + e j, e i - e j⟫_𝕜 = 0 :=
     fun i j => by

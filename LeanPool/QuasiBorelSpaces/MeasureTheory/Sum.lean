@@ -33,8 +33,8 @@ instance
       · intro h
         induction h with
         | basic u hu =>
-          simp only [isOpen_sum_iff, Set.mem_setOf_eq] at hu
-          simp only [Set.mem_setOf_eq, hu, MeasurableSpace.measurableSet_generateFrom, and_self]
+          simp only [isOpen_sum_iff, Set.mem_ofPred_eq] at hu
+          simp only [Set.mem_ofPred_eq, hu, MeasurableSpace.measurableSet_generateFrom, and_self]
         | empty => simp only [Set.preimage_empty, MeasurableSet.empty, and_self]
         | compl t _ ih => simp only [Set.preimage_compl, MeasurableSet.compl_iff, ih, and_self]
         | iUnion f _ ih =>
@@ -54,10 +54,10 @@ instance
         apply MeasurableSet.union
         · induction h₁ with
           | basic u hu =>
-            simp only [Set.mem_setOf_eq] at hu
+            simp only [Set.mem_ofPred_eq] at hu
             apply MeasurableSpace.measurableSet_generateFrom
             simp only [
-              isOpen_sum_iff, Set.mem_setOf_eq, Sum.inl_injective, Set.preimage_image_eq,
+              isOpen_sum_iff, Set.mem_ofPred_eq, Sum.inl_injective, Set.preimage_image_eq,
               hu, Set.preimage_inr_image_inl, isOpen_empty, and_self]
           | empty => simp only [Set.image_empty, MeasurableSet.empty]
           | compl t _ ih =>
@@ -67,14 +67,14 @@ instance
             · apply MeasurableSet.compl
               apply ih
             · apply MeasurableSpace.measurableSet_generateFrom
-              simp only [Set.image_univ, Set.mem_setOf_eq, isOpen_range_inr]
+              simp only [Set.image_univ, Set.mem_ofPred_eq, isOpen_range_inr]
           | iUnion f _ ih => simp only [Set.image_iUnion, MeasurableSet.iUnion ih]
         · induction h₂ with
           | basic u hu =>
-            simp only [Set.mem_setOf_eq] at hu
+            simp only [Set.mem_ofPred_eq] at hu
             apply MeasurableSpace.measurableSet_generateFrom
             simp only [
-              isOpen_sum_iff, Set.mem_setOf_eq, Set.preimage_inl_image_inr, isOpen_empty,
+              isOpen_sum_iff, Set.mem_ofPred_eq, Set.preimage_inl_image_inr, isOpen_empty,
               Sum.inr_injective, Set.preimage_image_eq, hu, and_self]
           | empty => simp only [Set.image_empty, MeasurableSet.empty]
           | compl t _ ih =>
@@ -84,7 +84,7 @@ instance
             · apply MeasurableSet.compl
               apply ih
             · apply MeasurableSpace.measurableSet_generateFrom
-              simp only [Set.image_univ, Set.mem_setOf_eq, isOpen_range_inl]
+              simp only [Set.image_univ, Set.mem_ofPred_eq, isOpen_range_inl]
           | iUnion f _ ih => simp only [Set.image_iUnion, MeasurableSet.iUnion ih]
     rw [hA.measurable_eq, hB.measurable_eq, measurableSet_sum_iff]
     exact this.symm

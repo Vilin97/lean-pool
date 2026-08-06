@@ -64,9 +64,9 @@ lemma lintegral_eq_measureOf
   rcases μ with ⟨φ, μ⟩
   simp only [lintegral_mk, measureOf_mk, ProbabilityMeasure.ennreal_coeFn_eq_coeFn_toMeasure]
   rw [←MeasureTheory.lintegral_indicator_one]
-  · simp only [Set.indicator, Set.mem_setOf_eq, Pi.one_apply]
+  · rfl
   · have := isHom_comp' hp φ.isHom_coe
-    simpa only [measurableSet_setOf, isHom_ofMeasurableSpace] using this
+    simpa only [measurableSet_setOfPred, isHom_ofMeasurableSpace] using this
 
 /--
 A `PreProbabilityMeasure` can be constructed from any `ProbabilityMeasure` on a
@@ -200,7 +200,7 @@ theorem lintegral_lintegral_swap
 lemma measureOf_empty (μ : PreProbabilityMeasure B) : measureOf μ ∅ = 0 := by
   rcases μ
   simp only [
-    measureOf_mk, Set.mem_empty_iff_false, Set.setOf_false,
+    measureOf_mk, Set.mem_empty_iff_false, Set.ofPred_false,
     ProbabilityMeasure.coeFn_empty, ENNReal.coe_zero]
 
 @[simp]
@@ -215,7 +215,7 @@ lemma measureOf_iUnion_le {ι : Type*} [Countable ι]
     : μ.measureOf (⋃ i, s i) ≤ ∑' (i : ι), μ.measureOf (s i) := by
   rcases μ
   simp only [
-    measureOf_mk, Set.mem_iUnion, Set.setOf_exists,
+    measureOf_mk, Set.mem_iUnion, Set.ofPred_exists,
     ProbabilityMeasure.ennreal_coeFn_eq_coeFn_toMeasure]
   apply measure_iUnion_le
 
@@ -264,7 +264,7 @@ lemma equiv_def' (μ₁ μ₂ : PreProbabilityMeasure A)
         simp only [QuasiBorelHom.isHom_coe]
       · intro φ hφ
         have := isHom_comp' hp hφ
-        simpa only [Set.preimage, measurableSet_setOf, isHom_ofMeasurableSpace] using this
+        simpa only [Set.preimage, measurableSet_setOfPred, isHom_ofMeasurableSpace] using this
     simp +contextual only [this] at h
     congr 1
     ext X hX
@@ -272,7 +272,7 @@ lemma equiv_def' (μ₁ μ₂ : PreProbabilityMeasure A)
     rw [isHom_def]
     intro φ hφ
     specialize hX hφ
-    simpa only [Set.preimage, measurableSet_setOf, isHom_ofMeasurableSpace] using hX
+    simpa only [Set.preimage, measurableSet_setOfPred, isHom_ofMeasurableSpace] using hX
 
 lemma nonempty (μ : PreProbabilityMeasure A) : Nonempty A := ⟨μ.eval 0⟩
 

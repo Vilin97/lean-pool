@@ -341,7 +341,7 @@ lemma cross_edge_sum_le_graphLaplacian
     { Adj := fun v w => G.Adj v w ∧ (v ∈ pc.colored ↔ w ∈ pc.colored)
       symm.symm := fun a b ⟨h, hiff⟩ => ⟨G.adj_symm h, hiff.symm⟩
       loopless.irrefl := fun v ⟨h, _⟩ => G.loopless.irrefl v h }
-  haveI : DecidableRel G_same.Adj := inferInstance
+  have : DecidableRel G_same.Adj := inferInstance
   let S : Fin r → Finset V := fun γ => pc.colored.filter (fun w => pc.color w = γ)
   suffices h_eq : graphLaplacian G -
       ∑ v ∈ Finset.univ.filter (· ∉ pc.colored), ∑ γ : Fin r,
@@ -1052,7 +1052,7 @@ lemma total_barrier_bound
     rw [h_lap_le1 _ h_class_le1, Matrix.mul_zero, Matrix.zero_mul]
   · -- === Case k > r: BSS dynamic barrier construction ===
     push Not at hkr
-    haveI : Nonempty V := Fintype.card_pos_iff.mp (by omega)
+    have : Nonempty V := Fintype.card_pos_iff.mp (by omega)
     suffices h_ind : ∀ t, t ≤ k →
         ∃ pc : PartialColoring V r,
           pc.colored.card = t ∧
@@ -1317,7 +1317,7 @@ theorem exists_eps_light_subset
     refine ⟨∅, ?_, by simp [hn0]⟩
     -- n = 0 means V is empty, so all matrices are trivially PSD
     unfold IsEpsLight
-    haveI : IsEmpty V := Fintype.card_eq_zero_iff.mp hn0
+    have : IsEmpty V := Fintype.card_eq_zero_iff.mp hn0
     have h : ε • graphLaplacian G - inducedLaplacian G ∅ = 0 := by
       ext i _; exact isEmptyElim i
     rw [h]; exact Matrix.PosSemidef.zero

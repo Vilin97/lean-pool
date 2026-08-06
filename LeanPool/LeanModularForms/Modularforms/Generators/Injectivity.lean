@@ -465,10 +465,10 @@ private lemma eval_Delta_mul_zero_imp {n : ℕ} (hn12 : 12 ≤ n)
     have : ∀ {k₁ k₂ : ℤ} (h : k₁ = k₂) (f : ModularForm Γ(1) k₁),
       h ▸ f = (0 : ModularForm Γ(1) k₂) → f = 0 := by intros k₁ k₂ heq f hf; cases heq; exact hf
     exact this hcast _ h
-  ext z; simp only [ModularForm.zero_apply]
+  ext z; simp only [_root_.zero_apply]
   have hpw := congr_fun (congr_arg (fun (f : ModularForm Γ(1) _) => f.toFun) hds2) z
   simp only [SlashInvariantForm.toFun_eq_coe, ModularForm.toSlashInvariantForm_coe,
-    ModularForm.zero_apply] at hpw
+    _root_.zero_apply] at hpw
   change (D 12) z * (S (↑(n-12))) z = 0 at hpw
   exact (mul_eq_zero.mp hpw).resolve_left
     (show (D 12) z ≠ 0 from evalE₄E₆_Delta_poly_grade ▸ Δ_ne_zero z)
@@ -513,7 +513,7 @@ private lemma per_weight_injective_small {n : ℕ} (a b : ℕ) (ha : a < 3) (hn 
     ext i; fin_cases i <;> [exact hda ▸ hd0a.symm; exact hdb ▸ hd0b.symm]
   · rw [hd0a, hd0b]; intro habs
     have := monomial_coeff_zero_eq_one n a b (by omega)
-    rw [habs] at this; simp only [coe_zero, qExpansion_zero,
+    rw [habs] at this; simp only [FunLike.coe_zero, qExpansion_zero,
       PowerSeries.coeff_zero_eq_constantCoeff, PowerSeries.constantCoeff_zero,
       zero_ne_one] at this
 

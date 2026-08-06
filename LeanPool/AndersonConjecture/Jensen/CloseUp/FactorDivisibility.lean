@@ -140,7 +140,7 @@ theorem close_up_aux_factor_dvd_a
             ha'_unit]
         exact Submodule.mem_top
       · have hdvd : DvdNotUnit (div_q_a a) a :=
-          ⟨ha'_zero, ⟨q', hq'.not_unit,
+          ⟨ha'_zero, ⟨q', hq'.not_isUnit,
             (hdiv_a a (Finset.mem_insert_self a rest)).trans (mul_comm q' (div_q_a a))⟩⟩
         have ht_card_eq : t_q'.card = n'' + 1 + 1 + 1 := by
           push Not at ht_card
@@ -367,7 +367,7 @@ theorem close_up_aux_factor_dvd_c
           exact Submodule.mem_top
         · -- General: DvdNotUnit, use ih_b
           have hdvd_b : DvdNotUnit (div_q_b b) b :=
-            ⟨hdb_zero, ⟨q', hq'.not_unit,
+            ⟨hdb_zero, ⟨q', hq'.not_isUnit,
               (hdiv_b b hb_rest).trans (mul_comm q' (div_q_b b))⟩⟩
           have hgcd_rest' : gcdComplexity (insert a rest') ≤ gcdComplexity s := by
             apply le_trans _ hgcd_rest

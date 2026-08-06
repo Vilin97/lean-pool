@@ -110,12 +110,12 @@ lemma contraction_height_one
     q.height = 1 := by
   set Ahat := AdicCompletion (IsLocalRing.maximalIdeal A) A
   set Q' := Ideal.comap φ.toRingHom Q
-  haveI : IsNoetherianRing Ahat := isNoetherianRing_of_ringEquiv T φ.symm
-  haveI : Module.Flat A Ahat := AdicCompletion.flat_of_isNoetherian _
-  haveI : Algebra.HasGoingDown A Ahat := Algebra.HasGoingDown.of_flat
-  haveI : Q.IsPrime := Q_isPrime
-  haveI : Q'.IsPrime := Ideal.comap_isPrime φ.toRingHom Q
-  haveI : Q'.LiesOver q := ⟨hq_eq⟩
+  have : IsNoetherianRing Ahat := isNoetherianRing_of_ringEquiv T φ.symm
+  have : Module.Flat A Ahat := AdicCompletion.flat_of_isNoetherian _
+  have : Algebra.HasGoingDown A Ahat := Algebra.HasGoingDown.of_flat
+  have : Q.IsPrime := Q_isPrime
+  have : Q'.IsPrime := Ideal.comap_isPrime φ.toRingHom Q
+  have : Q'.LiesOver q := ⟨hq_eq⟩
   have hQ'_height : Q'.height = (1 : ℕ∞) := by
     rw [show Q' = Ideal.comap φ Q from rfl,
         RingEquiv.height_comap φ Q, Q_height_one]
@@ -127,7 +127,7 @@ lemma contraction_height_one
           (Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown q Q').symm
       _ = 1 := hQ'_height
   have h_lower : 1 ≤ q.height := by
-    haveI : (⊥ : Ideal A).IsPrime := Ideal.isPrime_bot
+    have : (⊥ : Ideal A).IsPrime := Ideal.isPrime_bot
     have h := Ideal.height_add_one_le_of_lt_of_isPrime
       (bot_lt_iff_ne_bot.mpr hq_ne)
     simp_all
@@ -142,7 +142,7 @@ lemma ufd_height_one_principal
     intro h
     simp_all
   obtain ⟨a, ha_mem, ha_prime⟩ := hq_prime.exists_mem_prime_of_ne_bot hq_ne
-  haveI : (Ideal.span {a}).IsPrime :=
+  have : (Ideal.span {a}).IsPrime :=
     (Ideal.span_singleton_prime ha_prime.ne_zero).mpr ha_prime
   have h_le : Ideal.span {a} ≤ q := Ideal.span_le.mpr (Set.singleton_subset_iff.mpr ha_mem)
   refine ⟨a, ha_prime, le_antisymm ?_ h_le⟩
@@ -151,7 +151,7 @@ lemma ufd_height_one_principal
     lt_of_le_of_ne h_le (fun h => h_not_le (le_of_eq h.symm))
   have h1 := Ideal.height_add_one_le_of_lt_of_isPrime h_lt
   rw [hq_height] at h1
-  haveI : (⊥ : Ideal A).IsPrime := Ideal.isPrime_bot
+  have : (⊥ : Ideal A).IsPrime := Ideal.isPrime_bot
   have h_bot_lt : (⊥ : Ideal A) < Ideal.span {a} :=
     bot_lt_iff_ne_bot.mpr (Ideal.span_singleton_eq_bot.not.mpr ha_prime.ne_zero)
   have h2 := Ideal.height_add_one_le_of_lt_of_isPrime h_bot_lt
@@ -191,12 +191,12 @@ lemma ringKrullDim_le_of_adic_completion
     ringKrullDim A ≤ ringKrullDim (AdicCompletion (IsLocalRing.maximalIdeal A) A) := by
   set M := IsLocalRing.maximalIdeal A
   set Ahat := AdicCompletion M A
-  haveI : IsLocalRing Ahat := φ.symm.isLocalRing
-  haveI : IsLocalHom (algebraMap A Ahat) := isLocalHom_algebraMap_adicCompletion
-  haveI : IsNoetherianRing Ahat := isNoetherianRing_of_ringEquiv T φ.symm
-  haveI : Module.Flat A Ahat := AdicCompletion.flat_of_isNoetherian _
-  haveI : Algebra.HasGoingDown A Ahat := Algebra.HasGoingDown.of_flat
-  haveI : (IsLocalRing.maximalIdeal Ahat).LiesOver M :=
+  have : IsLocalRing Ahat := φ.symm.isLocalRing
+  have : IsLocalHom (algebraMap A Ahat) := isLocalHom_algebraMap_adicCompletion
+  have : IsNoetherianRing Ahat := isNoetherianRing_of_ringEquiv T φ.symm
+  have : Module.Flat A Ahat := AdicCompletion.flat_of_isNoetherian _
+  have : Algebra.HasGoingDown A Ahat := Algebra.HasGoingDown.of_flat
+  have : (IsLocalRing.maximalIdeal Ahat).LiesOver M :=
     IsLocalRing.ResidueField.instLiesOverMaximalIdeal
   -- Going-down gives ht(M_A) ≤ ht(M_Â)
   rw [← IsLocalRing.maximalIdeal_height_eq_ringKrullDim,
@@ -350,7 +350,7 @@ lemma map_maximalIdeal_eq {A : Type u_1} [CommRing A] [IsLocalRing A]
       (IsLocalRing.maximalIdeal A) =
     IsLocalRing.maximalIdeal (AdicCompletion (IsLocalRing.maximalIdeal A) A) := by
   rw [← ker_evalOneₐ_eq_map_maximalIdeal]
-  letI : Field (A ⧸ IsLocalRing.maximalIdeal A) := Ideal.Quotient.field _
+  let : Field (A ⧸ IsLocalRing.maximalIdeal A) := Ideal.Quotient.field _
   exact IsLocalRing.ker_eq_maximalIdeal
     (AdicCompletion.evalOneₐ (IsLocalRing.maximalIdeal A)).toRingHom
     (AdicCompletion.evalOneₐ_surjective _)
@@ -479,28 +479,28 @@ lemma quotient_prime_dim_one
     letI : (Ideal.span {a}).IsPrime :=
       (Ideal.span_singleton_prime ha.ne_zero).mpr ha
     letI : Nontrivial (A ⧸ Ideal.span {a}) :=
-      Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha.not_unit)
+      Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha.not_isUnit)
     letI : IsLocalRing (A ⧸ Ideal.span {a}) :=
       IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
     ringKrullDim (A ⧸ Ideal.span {a}) = 1 := by
   obtain ⟨φ⟩ := hiso
   set Ahat := AdicCompletion (IsLocalRing.maximalIdeal A) A
-  haveI : IsNoetherianRing Ahat := isNoetherianRing_of_ringEquiv T φ.symm
+  have : IsNoetherianRing Ahat := isNoetherianRing_of_ringEquiv T φ.symm
   have hdim_Ahat : ringKrullDim Ahat = 2 :=
     ringKrullDim_eq_of_ringEquiv φ ▸ T_ringKrullDim
   have hdim_A_le : ringKrullDim A ≤ 2 :=
     (ringKrullDim_le_of_adic_completion φ).trans hdim_Ahat.le
   have h_eq := ringKrullDim_quotient_span_singleton_succ_eq_ringKrullDim
     (IsSMulRegular.of_ne_zero ha.ne_zero)
-    ((IsLocalRing.mem_maximalIdeal a).mpr ha.not_unit)
+    ((IsLocalRing.mem_maximalIdeal a).mpr ha.not_isUnit)
   -- dim(A) = 2: going-down + fiber_height = 0 (since Ideal.map algebraMap M = maxIdeal Â)
   have hdim_A : ringKrullDim A = 2 := le_antisymm hdim_A_le (by
     set M := IsLocalRing.maximalIdeal A
-    haveI : IsLocalRing Ahat := φ.symm.isLocalRing
-    haveI : IsLocalHom (algebraMap A Ahat) := isLocalHom_algebraMap_adicCompletion
-    haveI : Module.Flat A Ahat := AdicCompletion.flat_of_isNoetherian _
-    haveI : Algebra.HasGoingDown A Ahat := Algebra.HasGoingDown.of_flat
-    haveI : (IsLocalRing.maximalIdeal Ahat).LiesOver M :=
+    have : IsLocalRing Ahat := φ.symm.isLocalRing
+    have : IsLocalHom (algebraMap A Ahat) := isLocalHom_algebraMap_adicCompletion
+    have : Module.Flat A Ahat := AdicCompletion.flat_of_isNoetherian _
+    have : Algebra.HasGoingDown A Ahat := Algebra.HasGoingDown.of_flat
+    have : (IsLocalRing.maximalIdeal Ahat).LiesOver M :=
       IsLocalRing.ResidueField.instLiesOverMaximalIdeal
     have h_gd := Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown M
       (IsLocalRing.maximalIdeal Ahat)
@@ -510,7 +510,7 @@ lemma quotient_prime_dim_one
     have h_fiber_bot : Ideal.map (Ideal.Quotient.mk (Ideal.map (algebraMap A Ahat) M))
         (IsLocalRing.maximalIdeal Ahat) = ⊥ := by
       rw [h_map_eq, Ideal.map_quotient_self]
-    haveI : Nontrivial (Ahat ⧸ Ideal.map (algebraMap A Ahat) M) := by
+    have : Nontrivial (Ahat ⧸ Ideal.map (algebraMap A Ahat) M) := by
       rw [h_map_eq]
       exact Ideal.Quotient.nontrivial_iff.mpr (IsLocalRing.maximalIdeal.isMaximal Ahat).ne_top
     have h_fiber_height : (Ideal.map (Ideal.Quotient.mk (Ideal.map (algebraMap A Ahat) M))
@@ -547,8 +547,8 @@ so if `span{b}` were prime it would equal `Q` (chain `⊥ < span{b} < Q` is too 
 contradicting that `Q` is not principal. -/
 lemma span_singleton_not_isPrime_of_mem_Q {b : T} (hb_ne : b ≠ 0) (hb_mem : b ∈ Q) :
     ¬ (Ideal.span ({b} : Set T)).IsPrime := by
-  haveI : IsDomain T := T_isDomain
-  haveI : Q.IsPrime := Q_isPrime
+  have : IsDomain T := T_isDomain
+  have : Q.IsPrime := Q_isPrime
   intro hprime
   have hne_bot : Ideal.span ({b} : Set T) ≠ ⊥ :=
     Ideal.span_singleton_eq_bot.not.mpr hb_ne
@@ -561,7 +561,7 @@ lemma span_singleton_not_isPrime_of_mem_Q {b : T} (hb_ne : b ≠ 0) (hb_mem : b 
     have h1 := Ideal.height_add_one_le_of_lt_of_isPrime hlt
     have hQh : Q.height = 1 := Q_height_one
     rw [hQh] at h1
-    haveI : (⊥ : Ideal T).IsPrime := Ideal.isPrime_bot
+    have : (⊥ : Ideal T).IsPrime := Ideal.isPrime_bot
     have h2 := Ideal.height_add_one_le_of_lt_of_isPrime
       (bot_lt_iff_ne_bot.mpr hne_bot)
     have h3 : (⊥ : Ideal T).height = 0 := by
@@ -586,7 +586,7 @@ lemma quotient_not_analytically_irreducible
     letI : (Ideal.span {a}).IsPrime :=
       (Ideal.span_singleton_prime ha.ne_zero).mpr ha
     letI : Nontrivial (A ⧸ Ideal.span {a}) :=
-      Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha.not_unit)
+      Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha.not_isUnit)
     letI : IsLocalRing (A ⧸ Ideal.span {a}) :=
       IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
     ¬ IsAnalyticallyIrreducible (A ⧸ Ideal.span {a}) := by
@@ -594,8 +594,8 @@ lemma quotient_not_analytically_irreducible
   let M : Ideal A := IsLocalRing.maximalIdeal A
   let Ahat : Type _ := AdicCompletion M A
   set b := φ (algebraMap A Ahat a) with hb_def
-  haveI : IsDomain T := T_isDomain
-  haveI : Q.IsPrime := Q_isPrime
+  have : IsDomain T := T_isDomain
+  have : Q.IsPrime := Q_isPrime
   have hb_mem : b ∈ Q := by
     have : a ∈ Ideal.span {a} := Ideal.mem_span_singleton_self a
     rw [hq_eq, Ideal.mem_comap] at this
@@ -618,15 +618,15 @@ lemma quotient_not_analytically_irreducible
   set I := Ideal.span ({a} : Set A)
   set Abar := A ⧸ I
   set π := Ideal.Quotient.mk I
-  haveI hI_prime : I.IsPrime := (Ideal.span_singleton_prime ha.ne_zero).mpr ha
-  haveI : Nontrivial Abar :=
-    Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha.not_unit)
-  haveI : IsLocalRing Abar :=
+  have hI_prime : I.IsPrime := (Ideal.span_singleton_prime ha.ne_zero).mpr ha
+  have : Nontrivial Abar :=
+    Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha.not_isUnit)
+  have : IsLocalRing Abar :=
     IsLocalRing.of_surjective' π Ideal.Quotient.mk_surjective
-  haveI : IsDomain Abar := Ideal.Quotient.isDomain I
-  haveI : IsNoetherianRing Abar := Ideal.Quotient.isNoetherianRing I
+  have : IsDomain Abar := Ideal.Quotient.isDomain I
+  have : IsNoetherianRing Abar := Ideal.Quotient.isNoetherianRing I
   set Mbar := IsLocalRing.maximalIdeal Abar
-  letI hCommRing : CommRing (AdicCompletion Mbar Abar) := AdicCompletion.instCommRing Mbar
+  let hCommRing : CommRing (AdicCompletion Mbar Abar) := AdicCompletion.instCommRing Mbar
   have hmap_M : Ideal.map (π : A →+* Abar) M = Mbar :=
     IsLocalRing.map_maximalIdeal_of_surjective π Ideal.Quotient.mk_surjective
   have hmap_pow : ∀ n : ℕ, Ideal.map (π : A →+* Abar) (M ^ n) = Mbar ^ n := by
@@ -702,12 +702,12 @@ lemma quotient_not_analytically_irreducible
       simp_all
     set s := φ.symm t
     set J := Ideal.map (algebraMap A Ahat) I
-    haveI : IsNoetherianRing Ahat := isNoetherianRing_of_ringEquiv T φ.symm
-    haveI : IsLocalRing Ahat := φ.symm.isLocalRing
+    have : IsNoetherianRing Ahat := isNoetherianRing_of_ringEquiv T φ.symm
+    have : IsLocalRing Ahat := φ.symm.isLocalRing
     set Mhat := IsLocalRing.maximalIdeal Ahat
-    haveI : IsNoetherianRing (Ahat ⧸ J) := Ideal.Quotient.isNoetherianRing J
-    haveI : Module.Finite Ahat (Ahat ⧸ J) := Module.IsNoetherian.finite Ahat (Ahat ⧸ J)
-    haveI : IsHausdorff Mhat (Ahat ⧸ J) := inferInstance
+    have : IsNoetherianRing (Ahat ⧸ J) := Ideal.Quotient.isNoetherianRing J
+    have : Module.Finite Ahat (Ahat ⧸ J) := Module.IsNoetherian.finite Ahat (Ahat ⧸ J)
+    have : IsHausdorff Mhat (Ahat ⧸ J) := inferInstance
     have hmap_M_hat : Ideal.map (algebraMap A Ahat) M = Mhat := map_maximalIdeal_eq
     suffices hmem : s ∈ J by
       have hJ_eq : J = Ideal.span {algebraMap A Ahat a} := by
@@ -770,7 +770,7 @@ lemma quotient_not_analytically_irreducible
     exact Ideal.mem_map_of_mem _ (by
                                     rw [← neg_sub]
                                     exact I.neg_mem hxy)
-  haveI : IsDomain (AdicCompletion Mbar Abar) := h_ai
+  have : IsDomain (AdicCompletion Mbar Abar) := h_ai
   exact hT_quot_not_domain (Function.Injective.isDomain ψ' hψ'_inj)
 
 /-- There exists a prime element a in A such that A/(a) is a 1-dim
@@ -782,14 +782,14 @@ theorem exists_prime_bad_quotient
     (htrivial : HasTrivialGenericFormalFiber A) :
     ∃ (a : A) (ha : Prime a),
       letI : Nontrivial (A ⧸ Ideal.span {a}) :=
-        Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha.not_unit)
+        Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha.not_isUnit)
       letI : IsLocalRing (A ⧸ Ideal.span {a}) :=
         IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
       ¬ IsWeaklyQuasiComplete (A ⧸ Ideal.span {a}) := by
   obtain ⟨φ⟩ := hiso
   set Ahat := AdicCompletion (IsLocalRing.maximalIdeal A) A with hAhat_def
   set Q' : Ideal Ahat := Ideal.comap φ.toRingHom Q with hQ'_def
-  haveI : Q.IsPrime := Q_isPrime
+  have : Q.IsPrime := Q_isPrime
   have hQ'_prime : Q'.IsPrime := Ideal.comap_isPrime φ.toRingHom Q
   have hQ'_ne : Q' ≠ ⊥ := comap_ringEquiv_ne_bot φ Q_ne_bot
   -- q = Q' ∩ A nonzero by trivial generic formal fiber; height 1 by faithful flatness
@@ -802,13 +802,13 @@ theorem exists_prime_bad_quotient
   obtain ⟨a, ha_prime, hq_eq⟩ := ufd_height_one_principal q hq_prime hq_height
   refine ⟨a, ha_prime, ?_⟩
   set I := Ideal.span {a} with hI_def
-  haveI hI_prime : I.IsPrime := (Ideal.span_singleton_prime ha_prime.ne_zero).mpr ha_prime
-  haveI : Nontrivial (A ⧸ I) :=
-    Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha_prime.not_unit)
-  haveI : IsLocalRing (A ⧸ I) :=
+  have hI_prime : I.IsPrime := (Ideal.span_singleton_prime ha_prime.ne_zero).mpr ha_prime
+  have : Nontrivial (A ⧸ I) :=
+    Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top ha_prime.not_isUnit)
+  have : IsLocalRing (A ⧸ I) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
-  haveI : IsDomain (A ⧸ I) := Ideal.Quotient.isDomain I
-  haveI : IsNoetherianRing (A ⧸ I) := Ideal.Quotient.isNoetherianRing I
+  have : IsDomain (A ⧸ I) := Ideal.Quotient.isDomain I
+  have : IsNoetherianRing (A ⧸ I) := Ideal.Quotient.isNoetherianRing I
   have hdim : ringKrullDim (A ⧸ I) = 1 := quotient_prime_dim_one ⟨φ⟩ a ha_prime
   have h_not_ai : ¬ IsAnalyticallyIrreducible (A ⧸ I) :=
     quotient_not_analytically_irreducible A φ a ha_prime hq_eq.symm
@@ -839,7 +839,7 @@ theorem anderson_main_theorem :
       @exists_prime_bad_quotient A instCR instLR instDom instUFM instNoeth hiso htrivial
     have hqc_iff := @isQuasiComplete_iff_quotients_wqc A instCR instLR
     have hall_wqc := hqc_iff.mp hqc
-    have hne_top : Ideal.span {a} ≠ ⊤ := Ideal.span_singleton_ne_top ha.not_unit
+    have hne_top : Ideal.span {a} ≠ ⊤ := Ideal.span_singleton_ne_top ha.not_isUnit
     exact hbad (hall_wqc (Ideal.span {a}) hne_top)
   exact ⟨A, instCR, instLR, instNoeth, hwqc, hnqc⟩
 

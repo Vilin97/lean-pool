@@ -268,7 +268,7 @@ lemma modelsTheory (h : M₁ ≡ₑ[L] M₂) {T : Theory L} :
 lemma ofEquiv [Nonempty N] (Θ : M ≃ N) :
     letI : Structure L N := Structure.ofEquiv Θ
     M ≡ₑ[L] N := fun φ => by
-  letI : Structure L N := Structure.ofEquiv Θ
+  let : Structure L N := Structure.ofEquiv Θ
   rw [models_iff, models_iff]
   constructor
   · intro h f

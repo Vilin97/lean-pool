@@ -267,7 +267,7 @@ private lemma measurableSet_oneDimAnnulus
   have hlt :
       MeasurableSet {z : CSpace 1 | ‖z 0‖ < (j : ℝ) + 1} := measurableSet_lt
       (measurable_norm.comp (continuous_apply 0).measurable) measurable_const
-  simpa [productAnnulus, Set.setOf_forall, Set.setOf_and] using hge.inter hlt
+  simpa [productAnnulus, Set.ofPred_forall, Set.ofPred_and] using hge.inter hlt
 
 private lemma integrable_oneDimPhi_cross_gaussian
     (k m n : ℕ) :
@@ -572,7 +572,7 @@ private lemma finiteShellSubtype
     Finite {j : MultiIndex d // blockDistance j ℓ = r} := by
   by_cases hd : d = 0
   · subst hd
-    letI := shellSubtype_isEmpty ℓ hr
+    let := shellSubtype_isEmpty ℓ hr
     infer_instance
   · obtain ⟨f, hf⟩ := shellSubtype_injects hd ℓ hr
     exact Finite.of_injective f hf
@@ -582,13 +582,13 @@ private lemma sharpShellCount_of_pos
     Nat.card {j : MultiIndex d // blockDistance j ℓ = r} ≤ shellCardinality d r := by
   by_cases hd : d = 0
   · subst hd
-    letI := shellSubtype_isEmpty ℓ hr
+    let := shellSubtype_isEmpty ℓ hr
     simp_all
   · obtain ⟨f, hf⟩ := shellSubtype_injects hd ℓ hr
     have hshell : Nat.card {x // x ∈ shellFinset d r} = shellCardinality d r := by
       rw [Nat.card_eq_fintype_card, Fintype.card_coe]
       exact cube_boundary_card d r hr
-    letI := finiteShellSubtype ℓ hr
+    let := finiteShellSubtype ℓ hr
     exact le_trans (Nat.card_le_card_of_injective f hf) (le_of_eq hshell)
 
 private lemma shell_cardinality_bound_filter
@@ -615,7 +615,7 @@ private lemma shell_cardinality_bound_filter
       cases b
       cases hab
       rfl
-    letI := finiteShellSubtype ℓ hr
+    let := finiteShellSubtype ℓ hr
     have hcard :
         Nat.card {j // j ∈ s.filter fun j => blockDistance j ℓ = r} ≤
           Nat.card {j : MultiIndex d // blockDistance j ℓ = r} :=

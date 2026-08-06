@@ -88,7 +88,7 @@ private def adjoin_from_prime_proof
       intro P hP hle
       obtain ⟨r, hr_ne, hP_assoc⟩ := hC_mem P hP
       have hP_ht := hAss_ht (r : T) hr_ne P hP_assoc
-      haveI : P.IsPrime := hC_prime P hP
+      have : P.IsPrime := hC_prime P hP
       rcases eq_or_lt_of_le hle with rfl | hlt
       · -- q = P: r ∈ q via associated prime, contradicts q ∩ R = ⊥
         have hr_mem_q : (r : T) ∈ q := by
@@ -161,14 +161,14 @@ private def adjoin_from_prime_proof
         (C'.Countable ∧ D_mod.Countable) := by
       by_cases hR_le : Cardinal.mk R.carrier ≤ Cardinal.aleph0
       · -- R countable: use countable avoidance
-        haveI : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
+        have : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
         have hC_countable : C.Countable := by
           apply Set.countable_iUnion
           intro r
           apply Set.countable_iUnion
           intro _
           exact (associatedPrimes.finite T _).countable
-        haveI : Countable (Polynomial R.carrier) :=
+        have : Countable (Polynomial R.carrier) :=
           Countable.of_equiv _ ((Polynomial.toFinsuppIso R.carrier).toEquiv.trans
             AddMonoidAlgebra.coeffEquiv).symm
         right
@@ -181,9 +181,9 @@ private def adjoin_from_prime_proof
               intro hfne
               apply Set.Finite.countable
               apply Set.Finite.image
-              haveI : P.IsPrime := hC_prime P hPC
-              haveI : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
-              letI : DecidableEq (T ⧸ P) := Classical.decEq _
+              have : P.IsPrime := hC_prime P hPC
+              have : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
+              let : DecidableEq (T ⧸ P) := Classical.decEq _
               apply Set.Finite.subset (f.map (φ P)).roots.toFinset.finite_toSet
               intro α hα
               exact Multiset.mem_toFinset.mpr ((Polynomial.mem_roots hfne).mpr hα))⟩
@@ -243,8 +243,8 @@ private def adjoin_from_prime_proof
                           apply Cardinal.mk_le_aleph0_iff.mpr
                           by_cases hfne : Polynomial.map (φ P) f = 0
                           · exact Set.Countable.to_subtype (by simp [hfne])
-                          · haveI : P.IsPrime := hC_prime P hP
-                            haveI : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
+                          · have : P.IsPrime := hC_prime P hP
+                            have : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
                             exact (Set.Finite.subset
                               ((Polynomial.rootSet_finite (Polynomial.map (φ P) f) (T ⧸ P)).image
                                 (liftQ P))
@@ -372,7 +372,7 @@ private def adjoin_from_prime_proof
           rw [Ideal.annihilator_quotient] at hsub
           exact hsub hP_minimal
         exact mem_iUnion.mpr ⟨r₀, mem_iUnion.mpr ⟨hr₀T_ne, hP_assoc⟩⟩
-      haveI := hP_prime
+      have := hP_prime
       have ht_root : (f.map (φ P)).IsRoot (Ideal.Quotient.mk P t) := by
         rw [Polynomial.IsRoot, Polynomial.eval_map]
         rw [show φ P = (Ideal.Quotient.mk P).comp R.carrier.subtype from rfl,

@@ -239,7 +239,7 @@ lemma chain_spec' (nwf : ¬WellFounded (SearchTree.Lt T Γ)) (c : Code L) (i : �
 
 omit [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)] in
 lemma chainSet_verum (nwf : ¬WellFounded (SearchTree.Lt T Γ)) : ⊤ ∉ chainAll := by
-  simp only [chainSet, Set.mem_iUnion, Set.mem_setOf_eq, not_exists]
+  simp only [chainSet, Set.mem_iUnion, Set.mem_ofPred_eq, not_exists]
   intro s h
   have : ⊤ ∈ chainAt[(encode (Code.verum : Code L)).pair s] :=
     chain_monotone nwf (Nat.right_le_pair _ _) h

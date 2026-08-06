@@ -426,7 +426,7 @@ theorem finite_massart_lemma {m : ℕ} (_hm : 0 < m) {N : ℕ} (hN : 0 < N)
     (1 / (Fintype.card (SignVector m) : ℝ)) *
       ∑ sv : SignVector m, Finset.univ.sup' Finset.univ_nonempty (fun j => Z j sv) ≤
     σ_param * Real.sqrt (2 * Real.log N) := by
-  haveI : Nonempty (Fin N) := Fin.pos_iff_nonempty.mp hN
+  have : Nonempty (Fin N) := Fin.pos_iff_nonempty.mp hN
   -- Abbreviation for the LHS (the "expected maximum")
   set E_max := (1 / (Fintype.card (SignVector m) : ℝ)) *
     ∑ sv : SignVector m, Finset.univ.sup' Finset.univ_nonempty (fun j => Z j sv)
@@ -919,7 +919,7 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
     let Z : Fin N → SignVector m → ℝ :=
       fun j σ => cf σ (e.symm j).val
     -- dpats.sup' (cf σ) = univ.sup' (fun j => Z j σ)
-    haveI : Nonempty (Fin N) := Fin.pos_iff_nonempty.mp hN_pos
+    have : Nonempty (Fin N) := Fin.pos_iff_nonempty.mp hN_pos
     have h_sup'_eq : ∀ σ : SignVector m,
         dpats.sup' hdpats_ne (cf σ) =
         Finset.univ.sup' Finset.univ_nonempty (fun j => Z j σ) := by
@@ -974,7 +974,7 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
         ring
       simp_all
     -- Apply finite_massart_lemma
-    haveI : Nonempty (Fin N) := Fin.pos_iff_nonempty.mp hN_pos
+    have : Nonempty (Fin N) := Fin.pos_iff_nonempty.mp hN_pos
     have h_massart := finite_massart_lemma hm hN_pos Z σ_param hσ_pos h_mgf_Z
     -- === STEP 3: Bound N via Sauer-Shelah ===
     set S := Finset.univ.image xs
@@ -1108,7 +1108,7 @@ private theorem uniform_injective_tuple_measure_half
   have hpos : 0 < Fintype.card α := Fintype.card_pos_iff.mpr hne
   have hD_sub_prob : MeasureTheory.IsProbabilityMeasure D_sub :=
     uniformMeasure_isProbability α hne hpos
-  haveI : MeasureTheory.IsProbabilityMeasure μ_sub :=
+  have : MeasureTheory.IsProbabilityMeasure μ_sub :=
     MeasureTheory.Measure.pi.instIsProbabilityMeasure _
   set B := {ys : Fin m → α | Function.Injective ys}
   have hB_meas : MeasurableSet B := Set.Finite.measurableSet (Set.toFinite B)
@@ -1120,9 +1120,9 @@ private theorem uniform_injective_tuple_measure_half
     intro t
     simp only [D_sub, uniformMeasure, MeasureTheory.Measure.smul_apply, smul_eq_mul]
     simp_all
-  haveI : MeasureTheory.IsFiniteMeasure D_sub := by
+  have : MeasureTheory.IsFiniteMeasure D_sub := by
     constructor; rw [hD_sub_prob.measure_univ]; exact ENNReal.one_lt_top
-  haveI : MeasureTheory.SigmaFinite D_sub :=
+  have : MeasureTheory.SigmaFinite D_sub :=
     @MeasureTheory.IsFiniteMeasure.toSigmaFinite α _ D_sub inferInstance
   set pairs := (Finset.univ : Finset (Fin m × Fin m)).filter (fun p => p.1 < p.2) with pairs_def
   have hBc_sub : Bᶜ ⊆ ⋃ p ∈ pairs, {ys : Fin m → α | ys p.1 = ys p.2} := by
@@ -1145,12 +1145,12 @@ private theorem uniform_injective_tuple_measure_half
     have hij : i ≠ j := ne_of_lt (Finset.mem_filter.mp hp).2
     set Cij := {ys : Fin m → α | ys i = ys j}
     have hCij_eq : Cij = ⋃ t : α, {ys : Fin m → α | ys i = t ∧ ys j = t} := by
-      ext ys; simp only [Cij, Set.mem_setOf_eq, Set.mem_iUnion]
+      ext ys; simp only [Cij, Set.mem_ofPred_eq, Set.mem_iUnion]
       exact ⟨fun h => ⟨ys i, rfl, h.symm⟩, fun ⟨_, h1, h2⟩ => h1 ▸ h2.symm⟩
     have hcyl : ∀ t : α, {ys : Fin m → α | ys i = t ∧ ys j = t} =
         Set.pi Set.univ (fun k => if k = i then {t} else if k = j then {t} else Set.univ) := by
       intro t; ext ys
-      simp only [Set.mem_setOf_eq, Set.mem_pi, Set.mem_univ, true_implies]
+      simp only [Set.mem_ofPred_eq, Set.mem_pi, Set.mem_univ, true_implies]
       constructor
       · intro ⟨h1, h2⟩ k
         split_ifs with hki hkj
@@ -1276,9 +1276,9 @@ theorem rademacher_lower_bound_on_shattered (X : Type u) [MeasurableSpace X]
     rw [Finset.nonempty_iff_ne_empty]; intro h; simp [h] at hT_large
   have hT_card_pos : 0 < T.card := Finset.Nonempty.card_pos hT_ne
   -- Construct D = uniform on T via pushforward from ↥T.
-  haveI : Fintype ↥T := T.fintypeCoeSort
-  letI msT : MeasurableSpace ↥T := ⊤
-  haveI : @MeasurableSingletonClass ↥T ⊤ := ⟨fun _ => MeasurableSpace.measurableSet_top⟩
+  have : Fintype ↥T := T.fintypeCoeSort
+  let msT : MeasurableSpace ↥T := ⊤
+  have : @MeasurableSingletonClass ↥T ⊤ := ⟨fun _ => MeasurableSpace.measurableSet_top⟩
   have hTne_type : Nonempty ↥T := hT_ne.coe_sort
   have hTpos : 0 < Fintype.card ↥T := by rw [Fintype.card_coe]; exact hT_card_pos
   let D_sub := @uniformMeasure ↥T ⊤ _ hTne_type
@@ -1330,7 +1330,7 @@ theorem rademacher_lower_bound_on_shattered (X : Type u) [MeasurableSpace X]
   change (1 : ℝ) / 2 ≤ RademacherComplexity X C D m
   unfold RademacherComplexity
   set μ := MeasureTheory.Measure.pi (fun _ : Fin m => D)
-  haveI : MeasureTheory.IsProbabilityMeasure μ :=
+  have : MeasureTheory.IsProbabilityMeasure μ :=
     MeasureTheory.Measure.pi.instIsProbabilityMeasure _
   -- Lower bound the integral.
   -- Define A = {xs | injective ∧ ∀ i, xs i ∈ T}. On A, EmpRad = 1. On Aᶜ, EmpRad ≥ 0.
@@ -1348,7 +1348,7 @@ theorem rademacher_lower_bound_on_shattered (X : Type u) [MeasurableSpace X]
     · exact hEmpRad_nn xs
   -- A is measurable (the pi sigma-algebra on Fin m → X with MeasurableSingletonClass
   -- has all subsets measurable for finite Fin m, but we use a direct approach).
-  haveI : MeasurableSingletonClass (Fin m → X) := Pi.instMeasurableSingletonClass
+  have : MeasurableSingletonClass (Fin m → X) := Pi.instMeasurableSingletonClass
   have hA_meas : MeasurableSet A := by
     -- A ⊆ {xs | ∀ i, xs i ∈ T} which embeds into Fin m → ↑T, a finite type.
     -- So A is finite, hence measurable (finite union of measurable singletons).
@@ -1357,10 +1357,10 @@ theorem rademacher_lower_bound_on_shattered (X : Type u) [MeasurableSpace X]
   -- ∫ EmpRad ≥ μ(A).toReal via pullback to finite type Fin m → ↥T.
   -- On Fin m → ↥T (finite type), all functions are measurable/integrable automatically.
   -- We use MeasurableEmbedding.integral_map which requires no AEStronglyMeasurable on codomain.
-  haveI : MeasurableSingletonClass (Fin m → ↥T) := Pi.instMeasurableSingletonClass
+  have : MeasurableSingletonClass (Fin m → ↥T) := Pi.instMeasurableSingletonClass
   let μ_sub : MeasureTheory.Measure (Fin m → ↥T) :=
     MeasureTheory.Measure.pi (fun _ : Fin m => D_sub)
-  haveI : MeasureTheory.IsProbabilityMeasure μ_sub :=
+  have : MeasureTheory.IsProbabilityMeasure μ_sub :=
     MeasureTheory.Measure.pi.instIsProbabilityMeasure _
   let φ : (Fin m → ↥T) → (Fin m → X) := fun ys i => Subtype.val (ys i)
   -- φ is a MeasurableEmbedding (injective, measurable, images of meas sets are meas).
@@ -1671,7 +1671,7 @@ theorem vcdim_finite_imp_rademacher_vanishing (X : Type u) [MeasurableSpace X]
   -- For ε > 1: Rad ≤ 1 < ε.
   by_cases hε1 : 1 < ε
   · use 1; intro D hD m hm
-    haveI : MeasureTheory.IsProbabilityMeasure
+    have : MeasureTheory.IsProbabilityMeasure
         (MeasureTheory.Measure.pi (fun _ : Fin m => D)) :=
       MeasureTheory.Measure.pi.instIsProbabilityMeasure _
     exact lt_of_le_of_lt (rademacherComplexity_le_one X C D m (by omega)) hε1
@@ -1683,7 +1683,7 @@ theorem vcdim_finite_imp_rademacher_vanishing (X : Type u) [MeasurableSpace X]
     use max (d + 1) (Nat.ceil (32 * (↑d + 1) / ε ^ 4) + 1)
     intro D hD m hm
     have hm_pos : 0 < m := by omega
-    haveI : MeasureTheory.IsProbabilityMeasure
+    have : MeasureTheory.IsProbabilityMeasure
         (MeasureTheory.Measure.pi (fun _ : Fin m => D)) :=
       MeasureTheory.Measure.pi.instIsProbabilityMeasure _
     by_cases hd_pos : d = 0

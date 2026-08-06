@@ -41,7 +41,7 @@ lemma log_subset {c : Conf es} : log es c ⊆ c.1 := fun _ ⟨h, _⟩ => h
 
 /-- If e is in the log of c, then e is logged. -/
 lemma log_logged {c : Conf es} {e : es.Event} (h : e ∈ log es c) : logged es e := by
-  simp only [log, Set.mem_setOf_eq] at h
+  simp only [log, Set.mem_ofPred_eq] at h
   exact ⟨h.2.choose, h.2.choose_spec.2⟩
 
 /-- The log is a subset of the configuration. -/

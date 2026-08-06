@@ -76,4 +76,4 @@ lemma dist_le_mul_volume_of_norm_deriv_le_of_le {f : ℝ → E} {a b C : ℝ} (h
         setIntegral_const, smul_eq_mul, mul_comm]
       simp only [s, Measure.real,
         Measure.measure_toMeasurable_inter_of_sFinite measurableSet_Ioo]
-      simp only [inter_def, mem_setOf_eq, and_comm]
+      simp only [inter_def, mem_ofPred_eq, and_comm]

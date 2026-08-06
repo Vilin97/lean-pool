@@ -171,10 +171,10 @@ lemma eliminateUnitRules_output_nonUnit :
     split <;> tauto
 
 theorem toCNF_correct : g.language \ {[]} = g.toCNF.language := by
-  letI : DecidableEq g.eliminateEmpty.NT := inferInstanceAs (DecidableEq g.NT)
-  letI : DecidableEq g.eliminateEmpty.eliminateUnitRules.NT :=
+  let : DecidableEq g.eliminateEmpty.NT := inferInstanceAs (DecidableEq g.NT)
+  let : DecidableEq g.eliminateEmpty.eliminateUnitRules.NT :=
     inferInstanceAs (DecidableEq g.NT)
-  letI : DecidableEq g.eliminateEmpty.eliminateUnitRules.restrictTerminals.NT :=
+  let : DecidableEq g.eliminateEmpty.eliminateUnitRules.restrictTerminals.NT :=
     inferInstanceAs (DecidableEq (g.NT ⊕ T))
   unfold toCNF
   rw [eliminateEmpty_correct, eliminateUnitRules_correct, restrictTerminals_correct]

@@ -144,7 +144,7 @@ theorem exists_perm_fixing_base_of_baseOrbit (k : DirIdx) (w w' : BaseOrbit k) :
     (e.symm.toEmbedding).trans ((keyEmb w).trans availEquiv.toEmbedding)
   let y : Fin m ↪ SubMulAction.ofFixingSubgroup G baseSet :=
     (e.symm.toEmbedding).trans ((keyEmb w').trans availEquiv.toEmbedding)
-  letI : MulAction.IsMultiplyPretransitive G SymN (baseSet.ncard + m) :=
+  let : MulAction.IsMultiplyPretransitive G SymN (baseSet.ncard + m) :=
     Equiv.Perm.isMultiplyPretransitive (α := SymN) (baseSet.ncard + m)
   have hmtp :
       MulAction.IsMultiplyPretransitive (fixingSubgroup G baseSet)

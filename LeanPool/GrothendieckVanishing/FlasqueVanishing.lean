@@ -297,7 +297,7 @@ theorem epi_app_of_shortExact_of_epi_restrictions {X : TopCat.{u}}
     Epi (S.g.hom.app (op U)) := by
   rw [AddCommGrpCat.epi_iff_surjective]
   intro s
-  haveI : Epi S.g := by
+  have : Epi S.g := by
     simpa using hS.epi_g
   have hls : TopCat.Presheaf.IsLocallySurjective S.g.hom := by
     simpa using (TopCat.Sheaf.isLocallySurjective_iff_epi S.g).mpr inferInstance
@@ -392,7 +392,7 @@ theorem sheafH_subsingleton_H1_of_flasque {X : TopCat.{u}}
     Subsingleton (Sheaf.H F 1) := by
   obtain ⟨ip⟩ := EnoughInjectives.presentation F
   let S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) := ip.shortComplex
-  letI : Injective S.X₂ := by
+  let : Injective S.X₂ := by
     simpa [S] using (inferInstance : Injective S.X₂)
   have hg : Epi (S.g.hom.app (op ⊤)) := by
     simpa [S] using epi_app_of_shortExact_flasque
@@ -414,7 +414,7 @@ theorem sheafH_subsingleton_of_flasque
   | succ n ih =>
       obtain ⟨ip⟩ := EnoughInjectives.presentation F
       let S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) := ip.shortComplex
-      letI : Injective S.X₂ := by
+      let : Injective S.X₂ := by
         simpa [S] using (inferInstance : Injective S.X₂)
       have hX₁ : IsFlasqueSheaf S.X₁ := fun i ↦ by simpa [S] using hF i
       have hX₂ : IsFlasqueSheaf S.X₂ := isFlasque_of_injective S.X₂

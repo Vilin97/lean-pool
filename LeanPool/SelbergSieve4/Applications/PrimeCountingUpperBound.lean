@@ -727,7 +727,7 @@ theorem loglog_bigO_log :
   apply Asymptotics.IsBigO.of_bound'
   rw [Filter.eventually_iff, Filter.mem_atTop_sets]
   use 10
-  intro x hx; simp only [Real.norm_eq_abs, Set.mem_setOf_eq]
+  intro x hx; simp only [Real.norm_eq_abs, Set.mem_ofPred_eq]
   rw [←Nat.cast_le (α:=ℝ)] at hx
   conv at hx => {lhs; norm_num}
   rw [le_abs]; left
@@ -807,7 +807,7 @@ theorem _lemma7 :
       rw [Filter.eventually_iff, Filter.mem_atTop_sets]
       use 1
       intro x hx
-      simp only [norm_one, Real.norm_eq_abs, Set.mem_setOf_eq]
+      simp only [norm_one, Real.norm_eq_abs, Set.mem_ofPred_eq]
       rw [Real.abs_rpow_of_nonneg (by linarith)]
       apply Real.one_le_rpow
       · rw [le_abs]
@@ -826,7 +826,7 @@ theorem _lemma8 :
       rw [Filter.eventually_iff, Filter.mem_atTop_sets]
       use 1
       intro x hx
-      simp only [norm_mul, Real.norm_eq_abs, Set.mem_setOf_eq]
+      simp only [norm_mul, Real.norm_eq_abs, Set.mem_ofPred_eq]
       rw [← abs_mul, ← abs_mul]
       apply le_of_eq
       apply congr_arg
@@ -841,14 +841,14 @@ theorem _lemma8 :
         rw [Filter.eventually_iff, Filter.mem_atTop_sets]
         use 1
         intro x hx
-        simp only [Real.norm_eq_abs, Set.mem_setOf_eq]
+        simp only [Real.norm_eq_abs, Set.mem_ofPred_eq]
         rw [neg_div, Real.rpow_neg (by linarith : 0 ≤ x), abs_inv]
       apply Asymptotics.IsBigO.inv_rev
       · apply (isLittleO_log_rpow_atTop (by norm_num)).isBigO
       · rw [Filter.eventually_iff, Filter.mem_atTop_sets]
         use 100
         intro x hx
-        rw [Set.mem_setOf_eq]
+        rw [Set.mem_ofPred_eq]
         intro hlog
         exfalso
         have hlog_pos : 0 < Real.log x := Real.log_pos (by linarith)
@@ -903,7 +903,7 @@ theorem pi_le_mul : ∃ N C, ∀ n ≥ N, π n ≤ C*n/Real.log n := by
   obtain ⟨C, h⟩ := pi_ll.bound
   rw [Filter.eventually_iff, Filter.mem_atTop_sets] at h
   obtain ⟨N, h⟩ := h
-  simp only [RCLike.norm_natCast, norm_div, Real.norm_eq_abs, Set.mem_setOf_eq] at h
+  simp only [RCLike.norm_natCast, norm_div, Real.norm_eq_abs, Set.mem_ofPred_eq] at h
   use N
   use C
   intro n

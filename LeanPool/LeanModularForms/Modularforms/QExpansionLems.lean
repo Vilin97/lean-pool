@@ -63,10 +63,10 @@ theorem modform_tendto_ndhs_zero {k : ℤ} (n : ℕ) [ModularFormClass F Γ(n) k
 
 theorem derivWithin_mul2 (f g : ℂ → ℂ) (s : Set ℂ) (hf : DifferentiableOn ℂ f s)
     (hd : DifferentiableOn ℂ g s) :
-    s.restrict (derivWithin (fun y => f y * g y) s) =
-      s.restrict (derivWithin f s * g + f * derivWithin g s) := by
+    s.domRestrict (derivWithin (fun y => f y * g y) s) =
+      s.domRestrict (derivWithin f s * g + f * derivWithin g s) := by
   ext y
-  simp only [restrict_apply, Pi.add_apply, Pi.mul_apply]
+  simp only [domRestrict_apply, Pi.add_apply, Pi.mul_apply]
   rw [derivWithin_fun_mul (hf y y.2) (hd y y.2)]
 
 lemma iteratedDerivWithin_mul' (f g : ℂ → ℂ) (s : Set ℂ) (hs : IsOpen s)
@@ -83,13 +83,14 @@ lemma iteratedDerivWithin_mul' (f g : ℂ → ℂ) (s : Set ℂ) (hs : IsOpen s)
     have h2 : (fun y => f y * g y) = f * g := by ext y; simp
     rw [iteratedDerivWithin_succ']
     have hset : s.EqOn (derivWithin (f * g) s) (derivWithin f s * g + f * derivWithin g s) := by
-      simp_all
+      rw [← h2]
+      exact Set.domRestrict_eq_domRestrict_iff.mp h1
     rw [iteratedDerivWithin_congr hset hx, iteratedDerivWithin_add hx hs.uniqueDiffOn, hm _ _ hf,
       hm _ _ _ hg]
     · simp_rw [←iteratedDerivWithin_succ']
       have := Finset.sum_choose_succ_mul (fun i => fun j =>
         ((iteratedDerivWithin i f s x) * (iteratedDerivWithin j g s x)) ) m
-      simp only [Nat.succ_eq_add_one, restrict_eq_restrict_iff] at *
+      simp only [Nat.succ_eq_add_one] at *
       rw [show m + 1 + 1 = m + 2 by ring]
       simp_rw [← mul_assoc] at *
       rw [this, add_comm]

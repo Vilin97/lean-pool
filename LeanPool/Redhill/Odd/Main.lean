@@ -37,7 +37,7 @@ lemma strongSSC_tupPell : StrongSSC (tupPell n F k) := by
 
 lemma tupPell_mem_factorFreeTuples (hn : Even n) (dF : Disjoint {0, 1, 2, 5, 10} F) :
     tupPell n F k ∈ factorFreeTuples F (n + 5) := by
-  simp_rw [factorFreeTuples, Set.mem_setOf_eq, strongSSC_tupPell, tupPell, sum_tup, true_and]
+  simp_rw [factorFreeTuples, Set.mem_ofPred_eq, strongSSC_tupPell, tupPell, sum_tup, true_and]
   exact ⟨pairwiseCoprime_tup hn (dvd_mul_left ..), not_dvd_tup (dvd_mul_left ..) dF⟩
 
 lemma maxAbs_tupPell : maxAbs (tupPell n F k) = ((pell (Y n F ^ 2) k).1 * Y n F + 1) ^ 5 :=

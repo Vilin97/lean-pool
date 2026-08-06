@@ -55,7 +55,6 @@ lemma inverse_poly_integrable (C : ℝ) :
         convert this using 1
         ext v
         rw [inv_pow]
-        rfl
       refine h_integrable2.mono' ?_ ?_
       · exact Measurable.aestronglyMeasurable (by measurability)
       · filter_upwards [] with v

@@ -279,7 +279,7 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
          -- factors.
          obtain ⟨i, j, hij, h_div_factor⟩ : ∃ i j : Fin (k + 1),
              i > j ∧ (p : ℤ) ∣ (c i - c j : ℤ) := by
-           haveI :=
+           have :=
                Fact.mk (Fact.out : Nat.Prime p);
                    simp_all? +decide
                        [← ZMod.intCast_zmod_eq_zero_iff_dvd, Finset.prod_eq_zero_iff];

@@ -128,7 +128,7 @@ lemma outerShadow_points_in_shadow :
       projXyLinear, LinearMap.coe_mk, AddHom.coe_mk]
   apply xfer
   unfold outerShadowDenorm
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   use i
   fin_cases i <;>
     simp [matrix_simps, cube, projXy, outerShadowPointsDenorm, mul_two] <;> norm_num

@@ -115,7 +115,7 @@ theorem sigma_one_completeness {σ : Sentence ℒₒᵣ} (hσ : Hierarchy Sg 1 �
     ℕ ⊧ₘ₀ σ → T ⊢! ↑σ := fun H =>
   haveI : 𝐄𝐐 wkn T := Entailment.WeakerThan.trans (𝓣 := 𝐑₀) inferInstance inferInstance
   complete <| oRing_consequence_of.{0} _ _ <| fun M _ _ => by
-    haveI : M ⊧ₘ* 𝐑₀ := ModelsTheory.of_provably_subtheory M 𝐑₀ T inferInstance
+    have : M ⊧ₘ* 𝐑₀ := ModelsTheory.of_provably_subtheory M 𝐑₀ T inferInstance
     exact LO.Arith.sigma_one_completeness hσ H
 
 theorem sigma_one_completeness_iff [ss : Sigma1Sound T] {σ : Sentence ℒₒᵣ} (hσ : Hierarchy Sg 1 σ) :

@@ -292,7 +292,7 @@ lemma exists_consistent_maximal_of_consistent (T_consis : Consistent 𝓢 T)
   obtain ⟨Z, h₁, ⟨h₂, h₃⟩⟩ := zorn_subset_nonempty { T : FormulaSet α | Consistent 𝓢 T} (by
     intro c hc chain hnc;
     existsi (⋃₀ c);
-    simp only [Set.mem_setOf_eq];
+    simp only [Set.mem_ofPred_eq];
     constructor;
     · apply def_consistent.mpr;
       intro Γ hΓ; by_contra hC;
@@ -313,7 +313,7 @@ lemma exists_consistent_maximal_of_consistent (T_consis : Consistent 𝓢 T)
       exact Set.subset_sUnion_of_mem a;
   ) T T_consis;
   use Z;
-  simp_all only [Set.mem_setOf_eq, true_and];
+  simp_all only [Set.mem_ofPred_eq, true_and];
   constructor;
   · assumption;
   · intro U hU hZU;
@@ -421,7 +421,7 @@ lemma iff_mem_neg : (∼φ ∈ Ω) ↔ (φ ∉ Ω) := by classical
     contradiction;
   · intro hp;
     have : Consistent 𝓢 (insert (∼φ) Ω.1) := by
-      haveI := provable_iff_insert_neg_not_consistent.not.mpr <| membership_iff.not.mp hp;
+      have := provable_iff_insert_neg_not_consistent.not.mpr <| membership_iff.not.mp hp;
       unfold FormulaSet.Inconsistent at this;
       push Not at this;
       exact this;

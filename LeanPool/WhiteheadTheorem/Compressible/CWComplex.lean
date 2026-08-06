@@ -73,8 +73,8 @@ lemma of_arrow_iso_left
     (e : Arrow.mk i ≅ Arrow.mk i') (hcom : IsCompressible i j) :
     IsCompressible i' j := by
   rw [Arrow.iso_w' e]
-  haveI hr : IsIso (Arrow.Hom.right e.hom) := Arrow.isIso_right e.hom
-  haveI hl : IsIso (Arrow.Hom.left e.inv) := Arrow.isIso_left e.inv
+  have hr : IsIso (Arrow.Hom.right e.hom) := Arrow.isIso_right e.hom
+  have hl : IsIso (Arrow.Hom.left e.inv) := Arrow.isIso_left e.inv
   exact IsCompressible.of_iso_comp_left (i1 := Arrow.Hom.left e.inv)
     (IsCompressible.of_comp_iso_left (i2 := Arrow.Hom.right e.hom) hcom)
 

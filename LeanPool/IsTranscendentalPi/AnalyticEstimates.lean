@@ -220,7 +220,7 @@ lemma sum_Gp_asym_lbound
   have hnotdvd :
     ∀ᶠ p : {p : ℕ // Nat.Prime p} in Filter.atTop,
       ¬ (p : ℕ) ∣ Int.natAbs (k * (c * T.coeff 0)) := by
-    letI : Nonempty {p : ℕ // Nat.Prime p} := ⟨⟨2, by decide⟩⟩
+    let : Nonempty {p : ℕ // Nat.Prime p} := ⟨⟨2, by decide⟩⟩
     rcases Nat.exists_infinite_primes (Int.natAbs (k * (c * T.coeff 0)) + 1) with ⟨q, hq, hqprime⟩
     refine Filter.eventually_atTop.2 ⟨⟨q, hqprime⟩, fun p hp => ?_⟩
     exact Nat.not_dvd_of_pos_of_lt (Int.natAbs_pos.2 hkcT0)

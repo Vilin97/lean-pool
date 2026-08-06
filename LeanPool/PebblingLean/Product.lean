@@ -152,7 +152,7 @@ theorem fibers_reaches_of_forall_reaches [Finite W] [DecidableEq V] [DecidableEq
     (hreach : ∀ z : W, Reaches G (F z) (F' z)) :
     Reaches (Graph.cartesianProduct G H) (fibersDistribution F) (fibersDistribution F') := by
   classical
-  letI := Fintype.ofFinite W
+  let := Fintype.ofFinite W
   have hstep :
       ∀ s : Finset W,
         Reaches (Graph.cartesianProduct G H)

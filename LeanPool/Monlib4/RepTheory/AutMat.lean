@@ -388,8 +388,8 @@ their index types have the same cardinality. -/
 theorem matrix_linearEquiv_iff_fintype_equiv {R n m : Type*} [Ring R]
     [StrongRankCondition R] [Finite n] [Finite m] :
     Nonempty (Mat R m ≃ₗ[R] Mat R n) ↔ Nonempty (m ≃ n) := by
-  letI := Fintype.ofFinite n
-  letI := Fintype.ofFinite m
+  let := Fintype.ofFinite n
+  let := Fintype.ofFinite m
   have rank_from_linear_equiv :=
     fun (f : Mat R m ≃ₗ[R] Mat R n) => LinearEquiv.finrank_eq f
   simp only [Module.finrank_matrix, ← pow_two, Module.finrank_self, mul_one,
@@ -698,7 +698,7 @@ theorem AlgEquiv.matrix_prod_aut {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
   have h₉ : f (e₁ + e₂) = 1 := by
     rw [h₁, _root_.map_one]
   by_cases Hem : IsEmpty n
-  · haveI : NeZero (1 : 𝕜) := by infer_instance
+  · have : NeZero (1 : 𝕜) := by infer_instance
     rw [← @Matrix.one_eq_zero_iff 𝕜] at Hem
     rw [he₁, he₂, Hem]
     simp_rw [← Prod.zero_eq_mk, map_zero, true_and,
@@ -711,7 +711,7 @@ theorem AlgEquiv.matrix_prod_aut {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
       nth_rw 2 [Prod.eq_iff_fst_eq_snd_eq]
       simp only [Prod.fst_zero, Prod.snd_zero, true_and, Hen, or_false]
       simp_rw [← Hem, ← Prod.one_eq_mk, _root_.map_one]
-  · haveI : Nonempty n := not_isEmpty_iff.mp Hem
+  · have : Nonempty n := not_isEmpty_iff.mp Hem
     rw [← @Matrix.one_eq_zero_iff 𝕜] at Hem
     simp_rw [_root_.map_mul, ← h₆, ← h₇, add_mul, mul_add,
       smul_mul_smul_comm, h₂, h₃, h₄, h₅, smul_zero, add_zero,

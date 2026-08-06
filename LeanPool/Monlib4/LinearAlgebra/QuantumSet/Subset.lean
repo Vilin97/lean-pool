@@ -237,7 +237,7 @@ theorem QuantumSet.toSubsetAlgEquiv_symm_adjoint [hA : QuantumSet A] (sk₁ : �
   LinearMap.adjoint (toSubsetAlgEquiv sk₁ : A ≃ₐ[ℂ] subset sk₁ A).symm.toLinearMap
     = (toSubsetAlgEquiv sk₁).toLinearMap ∘ₗ (ha.modAut (-sk₁ + k A)).toLinearMap := by
   ext1 x
-  letI := hA.instSubset sk₁
+  let := hA.instSubset sk₁
   apply ext_inner_left ℂ
   intro y
   simp_rw [LinearMap.adjoint_inner_right, AlgEquiv.toLinearMap_apply]
@@ -277,8 +277,8 @@ theorem LinearMap.ofSubsetQuantumSet_adjoint_apply {B : Type*} [hb : starAlgebra
     (ha.modAut (sk₁ + -hA.k)).toLinearMap
       ∘ₗ (LinearMap.adjoint f).ofSubsetQuantumSet sk₂ sk₁
       ∘ₗ (hb.modAut (-sk₂ + hB.k)).toLinearMap := by
-  letI := hA.instSubset sk₁
-  letI := hB.instSubset sk₂
+  let := hA.instSubset sk₁
+  let := hB.instSubset sk₂
   simp_rw [ofSubsetQuantumSet, LinearMap.adjoint_comp,
     toSubsetAlgEquiv_symm_adjoint, toSubsetAlgEquiv_adjoint,
     LinearMap.comp_assoc]
@@ -291,8 +291,8 @@ theorem rankOne_toSubsetQuantumSet {B : Type*} [hb : starAlgebra B]
   (rankOne ℂ a b).toLinearMap.toSubsetQuantumSet sk₁ sk₂
     = (rankOne ℂ (QuantumSet.toSubsetEquiv sk₂ a)
       (QuantumSet.toSubsetEquiv sk₁ (ha.modAut (-sk₁ + k A) b))).toLinearMap := by
-  letI := hA.instSubset sk₁
-  letI := hB.instSubset sk₂
+  let := hA.instSubset sk₁
+  let := hB.instSubset sk₂
   rw [LinearMap.toSubsetQuantumSet, LinearMap.rankOne_comp,
     LinearMap.comp_rankOne, QuantumSet.toSubsetAlgEquiv_symm_adjoint]
   simp_rw [LinearMap.comp_apply, AlgEquiv.toLinearMap_apply]
@@ -307,8 +307,8 @@ theorem rankOne_ofSubsetQuantumSet {B : Type*} [starAlgebra B]
   (rankOne ℂ a b).ofSubsetQuantumSet sk₁ sk₂
     = (rankOne ℂ ((toSubsetEquiv sk₂).symm a)
       (ha.modAut (sk₁ + -k A) ((toSubsetEquiv sk₁).symm b))).toLinearMap := by
-  letI := hA.instSubset sk₁
-  letI := hB.instSubset sk₂
+  let := hA.instSubset sk₁
+  let := hB.instSubset sk₂
   rw [LinearMap.ofSubsetQuantumSet, LinearMap.rankOne_comp,
     LinearMap.comp_rankOne, QuantumSet.toSubsetAlgEquiv_adjoint]
   simp_rw [LinearMap.comp_apply, AlgEquiv.toLinearMap_apply]
@@ -372,12 +372,12 @@ theorem QuantumSet.subsetTensorAlgEquiv_adjoint
     = (QuantumSet.subsetTensorAlgEquiv r).symm.toLinearMap := by
   simp only [QuantumSet.subsetTensorAlgEquiv, AlgEquiv.trans_toLinearMap,
     AlgEquiv.TensorProduct.map_toLinearMap]
-  letI h1 := QuantumSet.instSubset (A := A) (by infer_instance) r
-  letI h2 := QuantumSet.instSubset (A := B) (by infer_instance) r
-  letI h3 := QuantumSet.tensorProduct (h := h)
-  letI := QuantumSet.tensorProduct (hA := h1) (hB := h2) (h := Fact.mk rfl)
-  letI h4 := QuantumSet.instSubset (A := A ⊗[ℂ] B) h3 r
-  letI : FiniteDimensional ℂ (subset r (A ⊗[ℂ] B)) := QuantumSet.toFinite (hA := h4)
+  let h1 := QuantumSet.instSubset (A := A) (by infer_instance) r
+  let h2 := QuantumSet.instSubset (A := B) (by infer_instance) r
+  let h3 := QuantumSet.tensorProduct (h := h)
+  let := QuantumSet.tensorProduct (hA := h1) (hB := h2) (h := Fact.mk rfl)
+  let h4 := QuantumSet.instSubset (A := A ⊗[ℂ] B) h3 r
+  let : FiniteDimensional ℂ (subset r (A ⊗[ℂ] B)) := QuantumSet.toFinite (hA := h4)
   refine (LinearMap.adjoint_comp
     (QuantumSet.toSubsetAlgEquiv r : A ⊗[ℂ] B ≃ₐ[ℂ] subset r (A ⊗[ℂ] B)).toLinearMap
     (TensorProduct.map (QuantumSet.toSubsetAlgEquiv r).symm.toLinearMap
@@ -421,10 +421,10 @@ theorem QuantumSet.comul_subset_eq {A : Type*} [starAlgebra A] [QuantumSet A] (r
       ∘ₗ
     (Coalgebra.comul (R := ℂ) (A := A))
        ∘ₗ (toSubsetAlgEquiv r).symm.toLinearMap  := by
-  letI := QuantumSet.instSubset (A := A) (by infer_instance) r
-  letI : Fact (k A = k A) := Fact.mk rfl
-  letI hh := QuantumSet.tensorProduct (A := A) (B := A) (h := Fact.mk rfl)
-  letI := QuantumSet.instSubset (A := A ⊗[ℂ] A) (by infer_instance) r
+  let := QuantumSet.instSubset (A := A) (by infer_instance) r
+  let : Fact (k A = k A) := Fact.mk rfl
+  let hh := QuantumSet.tensorProduct (A := A) (B := A) (h := Fact.mk rfl)
+  let := QuantumSet.instSubset (A := A ⊗[ℂ] A) (by infer_instance) r
   simp only [Coalgebra.comul_eq_mul_adjoint, LinearMap.mul'_quantumSet_subset_eq]
   simp only [LinearMap.adjoint_comp, TensorProduct.map_adjoint,
     toSubsetAlgEquiv_symm_adjoint, toSubsetAlgEquiv_adjoint]
@@ -483,7 +483,7 @@ theorem QuantumSet.toSubset_onb (r : ℝ) (i : n A) :
   letI := hA.instSubset r;
   this.onb i =
     toSubsetAlgEquiv r (modAut ((k A / 2) + -(r / 2)) (hA.onb i)) := by
-  letI := hA.instSubset r
+  let := hA.instSubset r
   simp [onb]
 
 lemma QuantumSet.comul_of_subset (r : ℝ) :
@@ -511,7 +511,7 @@ theorem QuantumSet.innerOne_map_one_toSubset_eq
   ⟪1, f 1⟫_ℂ = ⟪1, (f.toSubsetQuantumSet r₁ r₂) 1⟫_ℂ := by
   simp only [LinearMap.coe_comp, Function.comp_apply, AlgEquiv.toLinearMap_apply, map_one]
   rw [← AlgEquiv.toLinearMap_apply]
-  letI := QuantumSet.instSubset (A := B) (by infer_instance) r₂
+  let := QuantumSet.instSubset (A := B) (by infer_instance) r₂
   nth_rw 2 [← LinearMap.adjoint_inner_left]
   rw [toSubsetAlgEquiv_adjoint, LinearMap.comp_apply]
   simp only [AlgEquiv.toLinearMap_apply, map_one]
@@ -544,7 +544,7 @@ hA
 theorem QuantumSet.normOne_toSubset {A : Type*} [starAlgebra A] [QuantumSet A] (r : ℝ) :
   letI := QuantumSet.instSubset (A := A) (by infer_instance) r
   ‖(1 : A)‖ = ‖(1 : QuantumSet.subset r A)‖ := by
-  letI := QuantumSet.instSubset (A := A) (by infer_instance) r
+  let := QuantumSet.instSubset (A := A) (by infer_instance) r
   simp_rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), QuantumSet.subset_inner_eq,
     ← QuantumSet.toSubsetAlgEquiv_symm_eq_toSubsetEquiv, map_one]
 
@@ -563,7 +563,7 @@ theorem LinearMap.toSubsetQuantumSet_eq_iff {A B : Type*} [ha : starAlgebra A]
   letI := hB.instSubset sk₂
   ∀ g : QuantumSet.subset sk₁ A →ₗ[ℂ] QuantumSet.subset sk₂ B,
     f.toSubsetQuantumSet sk₁ sk₂ = g ↔ f = g.ofSubsetQuantumSet sk₁ sk₂ := by
-  letI := hA.instSubset sk₁
-  letI := hB.instSubset sk₂
+  let := hA.instSubset sk₁
+  let := hB.instSubset sk₂
   intro g
   rfl

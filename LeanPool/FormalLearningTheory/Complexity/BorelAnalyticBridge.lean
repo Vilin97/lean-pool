@@ -142,7 +142,7 @@ theorem borel_param_badEvent_analytic
   -- SecondCountableTopology on range of Prod.snd
   -- range Prod.snd ⊆ GhostPairs X m which is SecondCountableTopology (from PolishSpace X)
   -- Any subtype of a SecondCountableTopology space inherits it
-  haveI : SecondCountableTopology (Set.range (Prod.snd : Θ × GhostPairs X m → GhostPairs X m)) :=
+  have : SecondCountableTopology (Set.range (Prod.snd : Θ × GhostPairs X m → GhostPairs X m)) :=
     inferInstance
   exact hW.analyticSet_image measurable_snd
 
@@ -167,7 +167,7 @@ theorem analyticSet_nullMeasurableSet_ghostPairs
     (hs : MeasureTheory.AnalyticSet s)
     (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D] :
     MeasureTheory.NullMeasurableSet s (GhostPairMeasure D m) := by
-  haveI : MeasureTheory.IsFiniteMeasure (GhostPairMeasure D m) := inferInstance
+  have : MeasureTheory.IsFiniteMeasure (GhostPairMeasure D m) := inferInstance
   exact analyticSet_nullMeasurableSet hs
 
 /-! ## Theorem D: Positive bridge - bad event is NullMeasurableSet -/
@@ -212,7 +212,7 @@ theorem borel_param_wellBehavedVCMeasTarget
         EmpiricalError X Bool h (fun i => (p.1 i, c (p.1 i))) (zeroOneLoss Bool) ≥ ε / 2}
       = paramBadEvent e c m ε := by
     ext p
-    simp only [paramBadEvent, paramWitnessSet, Set.mem_image, Set.mem_setOf_eq, Prod.exists]
+    simp only [paramBadEvent, paramWitnessSet, Set.mem_image, Set.mem_ofPred_eq, Prod.exists]
     constructor
     · rintro ⟨_, ⟨θ, rfl⟩, hp⟩; exact ⟨θ, p.1, p.2, hp, rfl⟩
     · rintro ⟨θ, s1, s2, hp, heq⟩

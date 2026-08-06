@@ -234,7 +234,7 @@ theorem positive_triples_parametrization :
   refine ⟨f_pos_param_intValued, g_pos_param_intValued, h_pos_param_intValued, ?_⟩
   ext p
   rcases p with ⟨x, y, z⟩
-  simp only [positivePythagoreanTriples, exists_and_left, Set.mem_setOf_eq]
+  simp only [positivePythagoreanTriples, exists_and_left, Set.mem_ofPred_eq]
   rw [hPositiveRange x y z]
   constructor
   · rintro ⟨a, b, c, hpos, hT⟩

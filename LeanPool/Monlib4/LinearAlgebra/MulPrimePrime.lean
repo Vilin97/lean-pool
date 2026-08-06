@@ -87,8 +87,8 @@ lemma LinearIsometryEquiv.commutes_with_mul_adjoint_iff_of_surjective_isometry
     ↔
       ∀ x y : X, f (x * y) = f x * f y := by
   simp_rw [LinearMap.commutes_with_mul_adjoint_iff]
-  haveI : CompleteSpace X := FiniteDimensional.complete 𝕜 _
-  haveI : CompleteSpace Y := FiniteDimensional.complete 𝕜 _
+  have : CompleteSpace X := FiniteDimensional.complete 𝕜 _
+  have : CompleteSpace Y := FiniteDimensional.complete 𝕜 _
   have : LinearMap.adjoint f.toLinearMap = f.symm.toLinearMap := by
     calc
       LinearMap.adjoint f.toLinearMap =
@@ -115,8 +115,8 @@ theorem Matrix.KroneckerProduct.ext_iff {R P n₁ n₂ : Type _} [Finite n₁] [
     {g h : Matrix (n₁ × n₂) (n₁ × n₂) R →ₗ[R] P} :
     g = h ↔ ∀ (x : Matrix n₁ n₁ R) (y : Matrix n₂ n₂ R), g (x ⊗ₖ y) = h (x ⊗ₖ y) := by
   classical
-  letI := Fintype.ofFinite n₁
-  letI := Fintype.ofFinite n₂
+  let := Fintype.ofFinite n₁
+  let := Fintype.ofFinite n₂
   refine ⟨fun h x y => by rw [h], fun h => ?_⟩
   rw [LinearMap.ext_iff]
   intro x

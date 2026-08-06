@@ -645,7 +645,7 @@ noncomputable instance : Form AugmentedForm where
   moves_neg' := by
     intro p x
     simp only [neg_eq']
-    simp only [←neg'_eq, ←Set.neg_range, Subtype.range_coe_subtype, Set.setOf_mem_eq,
+    simp only [←neg'_eq, ←Set.neg_range, Subtype.range_coe_subtype, Set.ofPred_mem_eq,
                moves_ofSetsWithTombs]
   moves_add' := private moves_add'
   moves_small' := instSmallElemMoves

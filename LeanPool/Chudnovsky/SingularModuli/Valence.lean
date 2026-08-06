@@ -742,8 +742,8 @@ theorem j_two_values : ∃ τ₁ τ₂ : ℍ, j τ₁ ≠ j τ₂ := by
   set τb : ℍ := UpperHalfPlane.mk ⟨0, 2⟩ (by norm_num) with hτb
   have hima : τa.im = 3 := rfl
   have himb : τb.im = 2 := rfl
-  have hRa : τa ∈ Region := by rw [Region, Set.mem_setOf_eq, hima]; norm_num
-  have hRb : τb ∈ Region := by rw [Region, Set.mem_setOf_eq, himb]; norm_num
+  have hRa : τa ∈ Region := by rw [Region, Set.mem_ofPred_eq, hima]; norm_num
+  have hRb : τb ∈ Region := by rw [Region, Set.mem_ofPred_eq, himb]; norm_num
   refine ⟨τa, τb, ?_⟩
   have hlow := theonaeherJ_lower hRa
   have hup := theonaeherJ_upper hRb
@@ -828,7 +828,7 @@ theorem isClosed_range_j : IsClosed (Set.range (j : ℍ → ℂ)) := by
   have him_le : ∀ n, (τ n).im ≤ M := by
     intro n
     by_cases hR : 5 / 4 < (τ n).im
-    · have hReg : τ n ∈ Region := by rw [Region, Set.mem_setOf_eq]; exact hR
+    · have hReg : τ n ∈ Region := by rw [Region, Set.mem_ofPred_eq]; exact hR
       have hlow := theonaeherJ_lower hReg
       have hjyn : (1728 : ℂ) * J (τ n) = y n := by rw [← j_def]; exact hτj n
       rw [show ‖(1728 : ℂ) * J (τ n)‖ = ‖y n‖ by rw [hjyn]] at hlow

@@ -127,7 +127,7 @@ theorem g_not_isEndLike (p : Player) : ¬ IsEndLike p g := by
   rw [AugmentedForm.IsEndLike_iff, not_or]
   constructor
   · simp only [g, hasTombstone_ofSets, not_false_eq_true]
-  · cases p <;> simp only [g, adjointsOfShort, Set.coe_setOf, Set.mem_setOf_eq,
+  · cases p <;> simp only [g, adjointsOfShort, Set.coe_ofPred,
                            isEnd_def, leftMoves_ofSets, rightMoves_ofSets, Set.range_eq_empty_iff,
                            nonempty_subtype, not_isEmpty_of_nonempty, not_false_eq_true,
                            Exists.intro 0 Short.zero, ]

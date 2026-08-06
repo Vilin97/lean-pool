@@ -28,7 +28,7 @@ theorem nine_dvd_centralBinom_iff_two_le_ternaryDoubleCarryCount (n : ℕ) :
       2 ≤ ternaryDoubleCarryCount (Nat.digits 3 n) := by
   constructor
   · intro hdiv
-    haveI : Fact (Nat.Prime 3) := ⟨by decide⟩
+    have : Fact (Nat.Prime 3) := ⟨by decide⟩
     have hval : 2 ≤ padicValNat 3 (Nat.centralBinom n) := by
       apply (pow_dvd_iff_le_padicValNat
         (by decide : (3 : ℕ) ≠ 1) (Nat.centralBinom_ne_zero n)).mp

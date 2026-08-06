@@ -133,9 +133,9 @@ lemma continuousAt_toQDisk_zero :
 /-- The map `toQDisk` is continuous on `{x | x ≠ 0}`. -/
 lemma continuousOn_toQDisk_nonzero :
     ContinuousOn (toQDisk.{u} n p q) {x : pDisk.{u} n p | x ≠ 0} := by
-  apply continuousOn_iff_continuous_restrict.mpr
-  unfold Set.restrict toQDisk
-  simp only [ne_eq, Set.coe_setOf, Set.mem_setOf_eq]
+  apply continuousOn_iff_continuous_domRestrict.mpr
+  unfold Set.domRestrict toQDisk
+  simp only [ne_eq, Set.coe_ofPred, Set.mem_ofPred_eq]
   refine continuous_uliftUp.comp <| Continuous.subtype_mk ?_ _
   have denominator_ne_zero :
       ∀ x : {x : pDisk.{u} n p // x ≠ 0}, ‖WithLp.toLp q x.val.down.val.ofLp‖ ≠ 0 := by
@@ -314,7 +314,7 @@ noncomputable def largeCubeBoundaryHomeoPDiskBoundary (n : ℕ) :
       have := Real.forall_le_of_iSup_le_of_finite_domain (le_of_eq hx) i
       exact ⟨neg_le_of_abs_le this, le_of_max_le_left this⟩ ⟩,
     by
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       obtain hn | hn := Nat.eq_zero_or_pos n
       · exfalso
         have h0 : pDiskBoundary.{0} 0 ∞ := by subst hn; exact ⟨x, hx⟩
@@ -350,7 +350,7 @@ noncomputable def largeCubeBoundaryHomeoCubeBoundary (n : ℕ) :
     · use i; left; simp [hi0]
     · use i; right; simp [hi1] ⟩
   left_inv x := by
-    simp only [Set.coe_setOf, Set.mem_setOf_eq, Homeomorph.symm_apply_apply, Subtype.coe_eta]
+    simp only [Set.coe_ofPred, Set.mem_ofPred_eq, Homeomorph.symm_apply_apply, Subtype.coe_eta]
   right_inv x := by
     simp only [Homeomorph.apply_symm_apply, Subtype.coe_eta]
   continuous_toFun := by

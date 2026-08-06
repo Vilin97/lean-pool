@@ -108,7 +108,7 @@ theorem not_powerful_of_large_g6 (hBlock : BlockRadLB6) {k n : ℕ}
 theorem g6_crude_finiteness (hBlock : BlockRadLB6) {k : ℕ} (hk : 6 ≤ k) :
     {n : ℕ | 1 ≤ n ∧ Powerful (F k n)}.Finite := by
   apply Set.Finite.subset (Set.finite_Iic (k ^ 3))
-  intro n hn; simp only [Set.mem_setOf_eq] at hn; simp only [Set.mem_Iic]
+  intro n hn; simp only [Set.mem_ofPred_eq] at hn; simp only [Set.mem_Iic]
   by_contra hcon; push Not at hcon
   exact not_powerful_of_large_g6 hBlock hk hcon hn.2
 

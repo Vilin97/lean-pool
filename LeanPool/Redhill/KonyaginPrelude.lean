@@ -80,7 +80,7 @@ lemma isCoprime_31 :
 
 open IsCoprime in
 lemma pairwiseCoprime_tup : PairwiseCoprime (tup k) := by
-  haveI : Std.Symm (fun i j ↦ IsCoprime (tup k i) (tup k j)) :=
+  have : Std.Symm (fun i j ↦ IsCoprime (tup k i) (tup k j)) :=
     ⟨fun {a b} (h : IsCoprime (tup k a) (tup k b)) ↦ h.symm⟩
   refine Pairwise.of_lt fun i j h ↦ ?_
   fin_cases j <;> simp only [Fin.reduceFinMk, Fin.not_lt_zero, Fin.lt_one_iff] at *

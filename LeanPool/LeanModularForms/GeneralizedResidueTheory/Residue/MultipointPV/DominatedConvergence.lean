@@ -115,7 +115,7 @@ private lemma pointwise_ae_limit_off_crossing (S0 : Finset ℂ) (f g_reg : ℂ �
           Tendsto (fun ε => A_int ε t) (𝓝[>] 0) (𝓝 (f_lim t)))}
       ≤ volume {t | t ∈ Icc γ.a γ.b ∧ γ.toFun t ∈ (S0 : Set ℂ)} := by
         apply MeasureTheory.measure_mono; intro t ht
-        simp only [Set.mem_setOf_eq] at ht; rw [Classical.not_imp] at ht
+        simp only [Set.mem_ofPred_eq] at ht; rw [Classical.not_imp] at ht
         obtain ⟨ht_in, ht_not_tendsto⟩ := ht
         constructor
         · have h1 : t ∈ Set.uIcc γ.a γ.b := Set.uIoc_subset_uIcc ht_in

@@ -39,7 +39,7 @@ lemma measurable_apply
     : Measurable (fun x ↦ μ x (i x)) := by
   have hi' {x} : MeasurableSet (i x) := by
     change MeasurableSet { a | a ∈ i x }
-    rw [measurableSet_setOf]
+    rw [measurableSet_setOfPred]
     have : Measurable (fun y : B ↦ (y, x)) := by fun_prop
     apply Measurable.fun_comp hi this
   simp only [← MeasureTheory.lintegral_indicator_one, hi']
@@ -64,7 +64,7 @@ noncomputable def mapOption (f : A → Option B) (μ : Measure A) : Measure B :=
           contradiction
       rcases h with ⟨h⟩
       simp only [
-        this, Bool.false_eq_true, Set.setOf_false,
+        this, Bool.false_eq_true, Set.ofPred_false,
         restrict_empty, ne_eq, not_true_eq_false, μ'] at h
     μ'.map (Option.elim' this.some id ∘ f)
   else
@@ -80,10 +80,10 @@ lemma lintegral_mapOption
   by_cases h : NeZero (μ.restrict {x | (f x).isSome = true})
   · simp only [mapOption, h, ↓reduceDIte]
     rw [lintegral_map, ← MeasureTheory.lintegral_indicator]
-    · simp only [Set.indicator, Set.mem_setOf_eq, Function.comp_apply]
+    · simp only [Set.indicator, Set.mem_ofPred_eq, Function.comp_apply]
       apply lintegral_congr fun a ↦ ?_
       cases f a <;> rfl
-    · simp only [measurableSet_setOf]
+    · simp only [measurableSet_setOfPred]
       fun_prop
     · fun_prop
     · fun_prop
@@ -91,10 +91,10 @@ lemma lintegral_mapOption
     simp only [not_neZero, restrict_eq_zero] at h
     nth_rw 1 [← MeasureTheory.setLIntegral_measure_zero _ (fun a ↦ (f a).elim 0 k) h]
     rw [← MeasureTheory.lintegral_indicator]
-    · simp only [Set.indicator, Set.mem_setOf_eq]
+    · simp only [Set.indicator, Set.mem_ofPred_eq]
       apply lintegral_congr fun a ↦ ?_
       cases f a <;> rfl
-    · simp only [measurableSet_setOf]
+    · simp only [measurableSet_setOfPred]
       fun_prop
 
 instance : MeasurableSMul₂ ENNReal (Measure B) where

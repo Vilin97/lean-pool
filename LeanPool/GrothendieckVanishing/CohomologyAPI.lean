@@ -178,7 +178,7 @@ private lemma extClass_naturality {S₁ S₂ : ShortComplex C'} (hS₁ : S₁.Sh
     (hS₂ : S₂.ShortExact) (φ : S₁ ⟶ S₂) :
     (Ext.mk₀ φ.τ₃).comp hS₂.extClass (zero_add 1) =
     hS₁.extClass.comp (Ext.mk₀ φ.τ₁) (add_zero 1) := by
-  letI := HasDerivedCategory.standard C'
+  let := HasDerivedCategory.standard C'
   ext
   simp only [Ext.comp_hom, Ext.mk₀_hom, ShortComplex.ShortExact.extClass_hom]
   rw [ShiftedHom.mk₀_comp, ShiftedHom.comp_mk₀]
@@ -203,7 +203,7 @@ private lemma extClass_naturality {S₁ S₂ : ShortComplex C'} (hS₁ : S₁.Sh
       simp only [ShortComplex.ShortExact.singleTriangle_mor₁] at this
       exact (DerivedCategory.singleFunctor C' 0).map_injective <| by
         rwa [Functor.map_comp, Functor.map_comp]
-    haveI : Mono S₂.f := hS₂.mono_f
+    have : Mono S₂.f := hS₂.mono_f
     exact (cancel_mono S₂.f).mp (by rw [← φ.comm₁₂.symm, h])
   rw [ha'] at ha₃
   exact ha₃.symm
@@ -298,11 +298,11 @@ theorem sheafH_subsingleton_of_isZero {X : TopCat.{u}}
 private theorem stalkFunctor_map_f_mono {X : TopCat.{u}}
     (S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)) (hS : S.ShortExact) (x : X) :
     Mono ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f.hom) := by
-  haveI : Mono S.f := (Sheaf.Hom.mono_iff_presheaf_mono
+  have : Mono S.f := (Sheaf.Hom.mono_iff_presheaf_mono
     (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).2
     ((Sheaf.Hom.mono_iff_presheaf_mono
       (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).1 hS.mono_f)
-  haveI := TopCat.Presheaf.stalkFunctor_preserves_mono (C := AddCommGrpCat.{u}) (X := X) x
+  have := TopCat.Presheaf.stalkFunctor_preserves_mono (C := AddCommGrpCat.{u}) (X := X) x
   exact show Mono ((TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
     TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f) from
     Functor.map_mono (TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
@@ -357,16 +357,16 @@ theorem stalk_zero_of_g_is_cokernel_of_stalk_epi
     a = 0 := by
   let T : TopCat.Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
     TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙ TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x
-  haveI : ∀ U : Opens X, Decidable (x ∈ U) := fun _ ↦ Classical.dec _
-  haveI : T.IsLeftAdjoint :=
+  have : ∀ U : Opens X, Decidable (x ∈ U) := fun _ ↦ Classical.dec _
+  have : T.IsLeftAdjoint :=
     (stalkSkyscraperSheafAdjunction (C := AddCommGrpCat.{u}) (X := X) (p₀ := x)).isLeftAdjoint
-  haveI : Epi (T.map S.f) :=
+  have : Epi (T.map S.f) :=
     show Epi ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f.hom) from hepi
   have hzero_map : T.map S.f ≫ T.map S.g = 0 := by
     rw [← T.map_comp, S.zero, Functor.map_zero]
   have hzero : IsZero (T.obj S.X₃) :=
     CokernelCofork.IsColimit.isZero_of_epi (CokernelCofork.mapIsColimit _ hg T)
-  haveI := AddCommGrpCat.subsingleton_of_isZero hzero
+  have := AddCommGrpCat.subsingleton_of_isZero hzero
   change T.obj S.X₃ at a
   change (a : T.obj S.X₃) = 0
   exact Subsingleton.elim _ _
@@ -595,9 +595,9 @@ theorem sheafH_dimension_shift_X₃_of_locallySurjective {X : TopCat.{u}}
     (h₂ : Subsingleton (Sheaf.H F n))
     (h₁ : Subsingleton (Sheaf.H (kernel f) (n + 1))) :
     Subsingleton (Sheaf.H G n) := by
-  letI : Balanced (CategoryTheory.Sheaf (Opens.grothendieckTopology X)
+  let : Balanced (CategoryTheory.Sheaf (Opens.grothendieckTopology X)
       AddCommGrpCat.{u}) := balanced_of_strongEpiCategory
-  haveI : Epi f := by
+  have : Epi f := by
     rw [← TopCat.Sheaf.isLocallySurjective_iff_epi f]
     simpa using hf
   let S := ShortComplex.mk (kernel.ι f) f (kernel.condition f)

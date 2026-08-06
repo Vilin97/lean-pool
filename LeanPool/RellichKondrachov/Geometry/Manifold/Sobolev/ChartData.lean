@@ -104,7 +104,7 @@ theorem exists_finiteChartData_chartAt :
     rcases mem_iUnion₂.1 this with ⟨y, hy, hxy⟩
     exact mem_iUnion_of_mem ⟨y, hy⟩ hxy
   -- Build a smooth partition of unity subordinate to this finite family.
-  haveI : SigmaCompactSpace M := by infer_instance
+  have : SigmaCompactSpace M := by infer_instance
   have ho : ∀ i : ι', IsOpen ((chartAt H (i : M)).source : Set M) := fun i =>
     isOpen_chartAt_source (H := H) (x := (i : M))
   rcases SmoothPartitionOfUnity.exists_isSubordinate (ι := ι') (I := I) (M := M)

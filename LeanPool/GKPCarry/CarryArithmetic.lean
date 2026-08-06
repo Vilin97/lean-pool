@@ -153,7 +153,7 @@ coefficient by nine. -/
 theorem nine_dvd_centralBinom_of_two_le_ternaryDoubleCarryCount
     {n : ℕ} (h : 2 ≤ ternaryDoubleCarryCount (Nat.digits 3 n)) :
     9 ∣ Nat.centralBinom n := by
-  haveI : Fact (Nat.Prime 3) := ⟨by decide⟩
+  have : Fact (Nat.Prime 3) := ⟨by decide⟩
   have hexcess : 4 ≤ ternaryDigitExcess n := by
     rw [ternaryDigitExcess_eq_two_mul_ternaryDoubleCarryCount]
     omega

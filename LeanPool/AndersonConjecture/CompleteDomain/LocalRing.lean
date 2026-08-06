@@ -199,7 +199,7 @@ lemma mvPowerSeries_fin_isNoetherianRing {n : ℕ} {R : Type*} [CommRing R]
   induction n with
   | zero => exact isNoetherianRing_of_ringEquiv R (mvPowerSeriesFin0RingEquiv R).symm
   | succ n ih =>
-    haveI := ih
+    have := ih
     exact isNoetherianRing_of_ringEquiv (PowerSeries (MvPowerSeries (Fin n) R))
       mvPowerSeriesFinSuccRingEquiv'.symm
 
@@ -627,7 +627,7 @@ lemma mvPS_maximalIdeal_eq_span_X :
 open MvPowerSeries in
 lemma mvPS_ringKrullDim_le :
     ringKrullDim (MvPowerSeries (Fin 3) ℂ) ≤ 3 := by
-  haveI : IsNoetherianRing (MvPowerSeries (Fin 3) ℂ) := mvPowerSeries_fin3_isNoetherianRing
+  have : IsNoetherianRing (MvPowerSeries (Fin 3) ℂ) := mvPowerSeries_fin3_isNoetherianRing
   -- dim = height(maxIdeal) for local rings; then apply Krull's height theorem
   rw [← IsLocalRing.maximalIdeal_height_eq_ringKrullDim, mvPS_maximalIdeal_eq_span_X]
   have hne : Ideal.span ({(X 0 : MvPowerSeries (Fin 3) ℂ), X 1, X 2} : Set _) ≠ ⊤ := by

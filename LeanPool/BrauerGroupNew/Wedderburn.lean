@@ -213,7 +213,7 @@ lemma minimal_ideal_isSimpleModule {A : Type u} [Ring A]
     (I : Ideal A) (I_nontrivial : I ≠ ⊥)
     (I_minimal : ∀ J : Ideal A, J ≠ ⊥ → ¬ J < I) :
     IsSimpleModule A I := by
-  letI ins1 : Nontrivial I := by
+  let ins1 : Nontrivial I := by
     obtain ⟨y, hy⟩ := Submodule.nonzero_mem_of_bot_lt (bot_lt_iff_ne_bot.mpr I_nontrivial)
     exact ⟨0, y, hy.symm⟩
   rw [isSimpleModule_iff]
@@ -238,7 +238,7 @@ lemma WedderburnArtin.aux.one_eq
     {A : Type u} [Ring A] [simple : IsSimpleRing A]
     (I : Ideal A) (I_nontrivial : I ≠ ⊥) :
     ∃ (n : ℕ) (x : Fin n → A) (i : Fin n → I), ∑ j : Fin n, i j * x j = 1 := by
-  letI I' : TwoSidedIdeal A := TwoSidedIdeal.span I
+  let I' : TwoSidedIdeal A := TwoSidedIdeal.span I
   have I'_is_everything : I' = ⊤ := simple.1.2 I' |>.resolve_left (fun r ↦ by
     obtain ⟨y, hy⟩ := Submodule.nonzero_mem_of_bot_lt (bot_lt_iff_ne_bot.mpr I_nontrivial)
     have hy' : y.1 ∈ I' := by
@@ -322,14 +322,14 @@ lemma WedderburnArtin.aux.equivIdeal
     (I : Ideal A) (I_nontrivial : I ≠ ⊥) (I_minimal : ∀ J : Ideal A, J ≠ ⊥ → ¬ J < I) :
     ∃ n ≠ 0, Nonempty ((Fin n → I) ≃ₗ[A] A) := by
   classical
-  letI n : ℕ := WedderburnArtin.aux.n I I_nontrivial
+  let n : ℕ := WedderburnArtin.aux.n I I_nontrivial
   have n_ne : n ≠ 0 := WedderburnArtin.aux.n_ne_zero I I_nontrivial
-  letI x : Fin n → A := WedderburnArtin.aux.x I I_nontrivial
-  letI i : Fin n → I := WedderburnArtin.aux.i I I_nontrivial
+  let x : Fin n → A := WedderburnArtin.aux.x I I_nontrivial
+  let i : Fin n → I := WedderburnArtin.aux.i I I_nontrivial
   have one_eq : ∑ j : Fin n, (i j) * (x j) = 1 :=
     WedderburnArtin.aux.nxi_spec I I_nontrivial
-  haveI : IsSimpleModule A I := minimal_ideal_isSimpleModule I I_nontrivial I_minimal
-  letI g : (Fin n → I) →ₗ[A] A :=
+  have : IsSimpleModule A I := minimal_ideal_isSimpleModule I I_nontrivial I_minimal
+  let g : (Fin n → I) →ₗ[A] A :=
   { toFun := fun v ↦ ∑ j : Fin n, v j * x j
     map_add' := fun v1 v2 => by simp [add_mul, Finset.sum_add_distrib]
     map_smul' := fun a v => by simp [Finset.mul_sum, mul_assoc] }
@@ -389,7 +389,7 @@ theorem WedderburnArtin_ideal_version
   obtain ⟨(I : Ideal A), (I_nontrivial : I ≠ ⊥), (I_minimal : ∀ J : Ideal A, J ≠ ⊥ → ¬ J < I)⟩ :=
       IsArtinian.set_has_minimal (R := A) (M := A) {I | I ≠ ⊥}
     ⟨⊤, show ⊤ ≠ ⊥ by aesop⟩
-  haveI : IsSimpleModule A I := minimal_ideal_isSimpleModule I I_nontrivial I_minimal
+  have : IsSimpleModule A I := minimal_ideal_isSimpleModule I I_nontrivial I_minimal
   obtain ⟨n, hn, ⟨e⟩⟩ := WedderburnArtin.aux.equivIdeal I I_nontrivial I_minimal
   exact ⟨n, hn, I, inferInstance, ⟨e⟩⟩
 
@@ -400,7 +400,7 @@ theorem WedderburnArtin (A : Type u) [Ring A] [IsArtinianRing A] [simple : IsSim
   obtain ⟨(I : Ideal A), (I_nontrivial : I ≠ ⊥), (I_minimal : ∀ J : Ideal A, J ≠ ⊥ → ¬ J < I)⟩ :=
       IsArtinian.set_has_minimal (R := A) (M := A) {I | I ≠ ⊥}
     ⟨⊤, show ⊤ ≠ ⊥ by aesop⟩
-  haveI : IsSimpleModule A I := minimal_ideal_isSimpleModule I I_nontrivial I_minimal
+  have : IsSimpleModule A I := minimal_ideal_isSimpleModule I I_nontrivial I_minimal
   obtain ⟨n, hn, ⟨e⟩⟩ := WedderburnArtin.aux.equivIdeal I I_nontrivial I_minimal
   let endEquiv : Module.End A A ≃+* Module.End A (Fin n → I) :=
   { toFun := fun f ↦ e.symm ∘ₗ f ∘ₗ e

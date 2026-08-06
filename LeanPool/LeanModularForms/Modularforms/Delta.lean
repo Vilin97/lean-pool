@@ -126,7 +126,7 @@ lemma Δ_S_transform (z : ℍ) : Δ (ModularGroup.S • z) = z ^ (12 : ℕ) * Δ
 lemma I_in_atImInfty (A : ℝ) : { z : ℍ | A ≤ z.im} ∈ atImInfty := by
   rw [atImInfty_mem]
   use A
-  simp only [mem_setOf_eq, imp_self, implies_true]
+  simp only [mem_ofPred_eq, imp_self, implies_true]
 
 
 instance natPosSMul : SMul ℕ+ ℍ where
@@ -146,7 +146,7 @@ lemma atImInfy_pnat_mono (S : Set ℍ) (hS : S ∈ atImInfty) (B : ℝ) : ∃ A 
   use A
   constructor
   · intro n s hs
-    simp only [mem_inter_iff, mem_setOf_eq] at *
+    simp only [mem_inter_iff, mem_ofPred_eq] at *
     have K : max A B ≤ (n • s).im := by
       rw [UpperHalfPlane.im, natPosSMul_apply]
       simp only [mul_im, natCast_re, coe_im, natCast_im, coe_re, zero_mul, add_zero]
@@ -263,7 +263,7 @@ theorem Delta_boundedfactor :
       rw [haa]
       simp only [forall_exists_index, and_imp, gt_iff_lt, CharP.cast_eq_zero, zero_add, mul_one,
         dist_zero_right, norm_neg, inf_eq_inter, inter_mem_iff, sup_le_iff, mem_inter_iff,
-        mem_setOf_eq, one_div, Complex.norm_mul, norm_ofNat, Nat.ofNat_pos, mul_le_mul_iff_right₀,
+        mem_ofPred_eq, one_div, Complex.norm_mul, norm_ofNat, Nat.ofNat_pos, mul_le_mul_iff_right₀,
         ge_iff_le] at *
       apply le_trans (this ?_)
       · simp only [Nat.ofNat_pos, div_pos_iff_of_pos_left, mul_le_mul_iff_right₀]
@@ -271,7 +271,7 @@ theorem Delta_boundedfactor :
         · simpa using hr
         simp only [UpperHalfPlane.I_im, hb.2.2]
       have HH := ha3 (K • b) (by
-        have h8 := hA K b hb; simp only [mem_inter_iff, mem_setOf_eq] at h8; exact h8.1.2)
+        have h8 := hA K b hb; simp only [mem_inter_iff, mem_ofPred_eq] at h8; exact h8.1.2)
       rw [natPosSMul_apply K b] at HH
       norm_num [K, ← mul_assoc] at HH
       simpa [one_div] using HH.le
@@ -470,7 +470,7 @@ theorem CuspForm_div_Discriminant_Add (k : ℤ) (x y : CuspForm (CongruenceSubgr
   (fun f ↦ CuspFormDivDiscriminant k f) (x + y) =
     (fun f ↦ CuspFormDivDiscriminant k f) x + (fun f ↦ CuspFormDivDiscriminant k f) y := by
   ext z
-  simp only [CuspForm_div_Discriminant_apply, CuspForm.add_apply, ModularForm.add_apply]
+  simp only [CuspForm_div_Discriminant_apply, _root_.add_apply]
   ring
 
 lemma cexp_aux1 (t : ℝ) : cexp (2 * ↑π * Complex.I * (Complex.I * t)) = rexp (-2 * π * t) := by

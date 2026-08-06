@@ -67,7 +67,7 @@ theorem pow_dvd_centralBinom_of_digit_excess
 theorem two_mul_padicValNat_three_centralBinom (n : ℕ) :
     2 * padicValNat 3 (Nat.centralBinom n) =
       2 * (Nat.digits 3 n).sum - (Nat.digits 3 (2 * n)).sum := by
-  haveI : Fact (Nat.Prime 3) := ⟨by decide⟩
+  have : Fact (Nat.Prime 3) := ⟨by decide⟩
   have := sub_one_mul_padicValNat_centralBinom 3 n
   simpa using this
 

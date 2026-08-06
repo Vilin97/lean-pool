@@ -148,7 +148,7 @@ lemma HIncrement_eq_min' {n : ℕ} (p : ℕ) (w : Cube n) (hw : rank w = p) (hne
   have hinj : Set.InjOn (fun j : Fin n => insert j w)
       (↑(Finset.univ.filter (fun j : Fin n => (j : ℕ) < (w.min' hne : ℕ)))) := by
     intro j hj j' hj' hjj'
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hj hj'
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hj hj'
     have hjw : j ∉ w := fun hc => by have := Finset.min'_le w j hc; omega
     simp only at hjj'
     have : j ∈ insert j' w := hjj' ▸ Finset.mem_insert_self j w

@@ -158,8 +158,8 @@ theorem hall_matching_from_expansion
       Function.Injective match_fn ∧
       ∀ x : A, match_fn x ∈ edgeNeighbors edge x.val := by
   classical
-  letI := Fintype.ofFinite V
-  letI := Fintype.ofFinite W
+  let := Fintype.ofFinite V
+  let := Fintype.ofFinite W
   have hall_cond : ∀ s : Finset A, s.card ≤ (s.biUnion (fun x => edgeNeighbors edge x.val)).card :=
     by
     intro s

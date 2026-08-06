@@ -323,8 +323,8 @@ lemma integrableOn_ball_of_rpow_decay {d : ℕ} (hd : d ≥ 1)
     (h_decay : ∀ x, |f x| ≤ C * ‖x‖ ^ (-α))
     (h_meas : AEStronglyMeasurable f volume) :
     IntegrableOn f (ball (0 : EuclideanSpace ℝ (Fin d)) r) volume := by
-  haveI : Nontrivial (EuclideanSpace ℝ (Fin d)) := by
-    haveI : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
+  have : Nontrivial (EuclideanSpace ℝ (Fin d)) := by
+    have : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
     infer_instance
   -- We apply integrableOn_ball_of_radial with the bound function g(y) = C * y^(-α)
   -- The radial integral becomes ∫_0^r y^(d-1) * C * y^(-α) dy = C * ∫_0^r y^(d-1-α) dy
@@ -1068,7 +1068,7 @@ theorem double_mollifier_convergence
               · exact Continuous.continuousOn (continuous_const.sub continuous_fst)
               · intro ⟨t, v⟩ htv
                 dsimp [K, K_t, K_v] at htv
-                simp only [mem_prod, Metric.mem_closedBall, dist_zero_right, mem_setOf_eq,
+                simp only [mem_prod, Metric.mem_closedBall, dist_zero_right, mem_ofPred_eq,
                   sub_ne_zero] at htv ⊢
                 by_contra h_ta
                 rw [← h_ta] at htv

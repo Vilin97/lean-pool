@@ -696,10 +696,10 @@ theorem summable_3 (m : ℕ) (y : {z : ℂ | 0 < z.im}) :
   rw [summable_mul_left_iff]
   · apply Summable.add
     · have h0 := summable_1 m (⟨y, y.2⟩ : ℍ) (by linarith)
-      simp only [Nat.reduceLeDiff, mem_setOf_eq, one_div] at *
+      simp only [Nat.reduceLeDiff, one_div] at *
       apply h0.subtype
     have h1 := summable_2 m (⟨y, y.2⟩ : ℍ) (by linarith)
-    simp only [Nat.reduceLeDiff, mem_setOf_eq, one_div] at *
+    simp only [Nat.reduceLeDiff, one_div] at *
     apply h1.subtype
   simp [Nat.factorial_ne_zero]
 
@@ -707,7 +707,7 @@ theorem summable_iter_derv' (k : ℕ) (y : ℍ') :
     Summable fun n : ℕ => (2 * ↑π * Complex.I * n) ^ k * Complex.exp (2 * ↑π * Complex.I * n * y) :=
   by
   apply Summable.of_norm
-  simp only [mem_setOf_eq, Complex.norm_mul, norm_pow, norm_real, Real.norm_eq_abs,
+  simp only [Complex.norm_mul, norm_pow, norm_real, Real.norm_eq_abs,
     norm_I, mul_one]
   simp_rw [mul_pow, mul_assoc]
   apply Summable.mul_left
@@ -722,7 +722,7 @@ theorem summable_iter_derv' (k : ℕ) (y : ℍ') :
       ring]
   apply summable_norm_pow_mul_geometric_of_norm_lt_one
   have := exp_upperHalfPlane_lt_one (⟨y, y.2⟩ : ℍ)
-  simp only [mem_setOf_eq, gt_iff_lt] at *
+  simp only [gt_iff_lt] at *
   simp_rw [← mul_assoc] at *
   exact this
 
@@ -911,7 +911,7 @@ theorem iter_der_within_add (k : ℕ+) (x : {z : ℂ | 0 < z.im}) :
       -(2 * ↑π * Complex.I) * ∑' n : ℕ, (2 * ↑π * Complex.I * n) ^ (k : ℕ) *
       Complex.exp (2 * ↑π * Complex.I * n * x) := by
   rw [iteratedDerivWithin_const_sub (PNat.pos k)]
-  simp only [smul_eq_mul, mem_setOf_eq, neg_mul]
+  simp only [smul_eq_mul, neg_mul]
   rw [iteratedDerivWithin_fun_neg,
     iteratedDerivWithin_const_mul x.2 <| IsOpen.uniqueDiffOn upper_half_plane_isOpen]
   · congr
@@ -1198,7 +1198,7 @@ theorem tsum_aexp_contDiffOn (k : ℕ) :
     congr 1
     apply derivWithin_congr
     · have h21 := (iter_div_aut_add n m).symm
-      simp only [Nat.cast_le, one_div, mem_setOf_eq, Subtype.forall, Int.cast_natCast] at *
+      simp only [Nat.cast_le, one_div, mem_ofPred_eq, Subtype.forall, Int.cast_natCast] at *
       intro v hv
       have h22 := h21 hv
       simp_all
@@ -1212,7 +1212,7 @@ theorem tsum_aexp_contDiffOn (k : ℕ) :
     · apply isOpen_lt (by fun_prop) (by fun_prop)
     apply r.2
   apply DifferentiableOn.differentiableAt _ hN
-  simp only [Nat.cast_le, one_div, mem_setOf_eq] at *
+  simp only [Nat.cast_le, one_div, mem_ofPred_eq] at *
   apply this
 
 

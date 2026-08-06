@@ -155,7 +155,7 @@ lemma isStrongLimit_crit : IsStrongLimit (crit j) := by
   by_contra h
   simp only [cardLT_iff, not_lt] at h
   rcases h with ⟨⟨g, hg⟩⟩
-  haveI inst₁ : Nonempty κ := by
+  have inst₁ : Nonempty κ := by
     rw [nonempty_iff]
     intro hκ
     have := j_crit_ne_crit (j := j)

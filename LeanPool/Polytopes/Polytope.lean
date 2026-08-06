@@ -136,7 +136,7 @@ lemma hyperplane_Hpolytope : ∀ (f : {f : (StrongDual ℝ E) // norm f = 1}) (c
   refine ⟨ {Halfspace.mk f c, Halfspace.mk (-f) (-c)},
     (by simp only [Set.finite_singleton, Set.Finite.insert]) , ?_ ⟩
   ext x
-  rw [mem_Hpolytope, Set.mem_setOf]
+  rw [mem_Hpolytope, Set.mem_ofPred]
   constructor
   · -- 1.
     intro h

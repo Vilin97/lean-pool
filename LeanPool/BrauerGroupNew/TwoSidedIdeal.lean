@@ -55,7 +55,7 @@ lemma mem_span'_iff_exists_fin (s : Set R) (x : R) :
     x ∈ span' s ↔
     ∃ (ι : Type) (_ : Fintype ι) (xL : ι → R) (xR : ι → R) (y : ι → s),
     x = ∑ i : ι, xL i * (y i : R) * xR i := by
-  simp only [span', mem_mk', Set.mem_setOf_eq]
+  simp only [span', mem_mk', Set.mem_ofPred_eq]
 
 lemma mem_span_iff_exists_fin (s : Set R) (x : R) :
     x ∈ span s ↔
@@ -125,7 +125,7 @@ lemma _root_.IsSimpleRing.iff_eq_zero_or_injective'
       exact Or.inr hker
   · intro h
     refine ⟨⟨fun I => ?_⟩⟩
-    letI : Algebra k I.ringCon.Quotient :=
+    let : Algebra k I.ringCon.Quotient :=
     { algebraMap := I.ringCon.mk'.comp (algebraMap k A)
       smul a := Quotient.map' (fun b => a • b) fun x y (h : I.ringCon x y) =>
         show I.ringCon _ _ by

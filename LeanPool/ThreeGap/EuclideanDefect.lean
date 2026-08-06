@@ -50,13 +50,13 @@ theorem deltaN_euclNorm_attained (α : Fin n → ℝ) (q : ℤ) :
   set V : ℝ := euclNorm n (rem α q p₀) with hV
   -- the candidate set: integer translates with norm ≤ V
   set S : Set (Fin n → ℤ) := {p | euclNorm n (rem α q p) ≤ V} with hS
-  have hp₀S : p₀ ∈ S := by simp only [hS, Set.mem_setOf_eq]; exact le_of_eq hV.symm
+  have hp₀S : p₀ ∈ S := by simp only [hS, Set.mem_ofPred_eq]; exact le_of_eq hV.symm
   -- finiteness: each coordinate is confined to an interval of length `2V`
   have hSfin : S.Finite := by
     apply Set.Finite.subset
       (Set.Finite.pi (fun k => Set.finite_Icc (⌈(q : ℝ) * α k - V⌉) (⌊(q : ℝ) * α k + V⌋)))
     intro p hp
-    simp only [hS, Set.mem_setOf_eq] at hp
+    simp only [hS, Set.mem_ofPred_eq] at hp
     simp only [Set.mem_pi, Set.mem_univ, Set.mem_Icc, forall_true_left]
     intro k
     have hcoord : |(rem α q p) k| ≤ V := le_trans (abs_le_euclNorm _ k) hp
@@ -77,7 +77,7 @@ theorem deltaN_euclNorm_attained (α : Fin n → ℝ) (q : ℤ) :
     intro p
     by_cases hp : p ∈ S
     · exact hp₁min p (hSfin.mem_toFinset.mpr hp)
-    · simp only [hS, Set.mem_setOf_eq, not_le] at hp
+    · simp only [hS, Set.mem_ofPred_eq, not_le] at hp
       linarith [hp₁V, hp]
   refine ⟨p₁, le_antisymm ?_ (deltaN_le (euclNorm n) euclNorm_nonneg α q p₁)⟩
   exact le_ciInf hall

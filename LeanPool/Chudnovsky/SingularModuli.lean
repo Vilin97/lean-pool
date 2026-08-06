@@ -64,8 +64,8 @@ open Complex
 /-- **Cited input 1** [Silverman ATAEC II.6.1]. The value of the `j`-invariant
 `j = 1728·J` at the CM point `τ₁₆₃ = (1 + i√163)/2` is an algebraic integer. -/
 theorem isIntegral_j_τ₁₆₃ : IsIntegral ℤ (1728 * J τ₁₆₃) := by
-  haveI : Fact (Nat.Prime 41) := ⟨by norm_num⟩
-  haveI : NeZero (41 : ℕ) := ⟨by norm_num⟩
+  have : Fact (Nat.Prime 41) := ⟨by norm_num⟩
+  have : NeZero (41 : ℕ) := ⟨by norm_num⟩
   obtain ⟨PhiZ, hPhi⟩ := exists_PhiZ_closed (m := 41)
   obtain ⟨i, hi⟩ := cm_coset_rel (m := 41) 0 (by norm_num)
   exact isIntegral_j_of_cm hPhi hi.symm

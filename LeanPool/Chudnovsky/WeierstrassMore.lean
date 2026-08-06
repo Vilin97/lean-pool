@@ -197,7 +197,7 @@ theorem two_le_untop₀_meromorphicOrderAt {c : ℂ} {a : ℂ} (ha : a ∉ L.lat
   rw [hAn.meromorphicOrderAt_eq] at hne ⊢
   rw [Ne, ENat.map_eq_top_iff] at hne
   lift analyticOrderAt f a to ℕ using hne with n hn
-  rw [ENat.map_coe, WithTop.untop₀_coe]
+  rw [ENat.map_natCast, WithTop.untop₀_coe]
   have : (2 : ℕ) ≤ n := by exact_mod_cast h2
   exact_mod_cast this
 

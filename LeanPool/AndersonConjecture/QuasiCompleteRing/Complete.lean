@@ -27,9 +27,9 @@ lemma krull_intersection_sup (J : Ideal R) :
     simp only [Submodule.mem_iInf] at hx
     by_cases hJ : J = ⊤
     · simp_all
-    haveI : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJ
-    haveI : IsLocalRing (R ⧸ J) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
-    haveI : IsLocalHom (Ideal.Quotient.mk J) :=
+    have : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJ
+    have : IsLocalRing (R ⧸ J) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
+    have : IsLocalHom (Ideal.Quotient.mk J) :=
       IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
     suffices Ideal.Quotient.mk J x = 0 from Ideal.Quotient.eq_zero_iff_mem.mp this
     set M' := IsLocalRing.maximalIdeal (R ⧸ J)
@@ -113,14 +113,14 @@ theorem anderson_complete_isQuasiComplete
     intro j
     by_cases hMj_top : M ^ j = ⊤
     · exact ⟨0, fun m _ => by simp [hMj_top]⟩
-    haveI : Nontrivial (R ⧸ M ^ j) := Ideal.Quotient.nontrivial_iff.mpr hMj_top
-    haveI : IsLocalRing (R ⧸ M ^ j) :=
+    have : Nontrivial (R ⧸ M ^ j) := Ideal.Quotient.nontrivial_iff.mpr hMj_top
+    have : IsLocalRing (R ⧸ M ^ j) :=
       IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
-    haveI : IsArtinianRing (R ⧸ M ^ j) := by
+    have : IsArtinianRing (R ⧸ M ^ j) := by
       rw [isArtinianRing_iff_isNilpotent_maximalIdeal]
       refine ⟨j, ?_⟩
       set mk := Ideal.Quotient.mk (M ^ j)
-      haveI : IsLocalHom mk := IsLocalHom.of_surjective mk Ideal.Quotient.mk_surjective
+      have : IsLocalHom mk := IsLocalHom.of_surjective mk Ideal.Quotient.mk_surjective
       have hM'_eq : IsLocalRing.maximalIdeal (R ⧸ M ^ j) = Ideal.map mk M := by
         apply le_antisymm
         · intro x hx

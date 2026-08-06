@@ -40,13 +40,13 @@ lemma pairwise_disjoint_indexTri :
     · aesop
     · apply Set.disjoint_image_image fun k hk l hl ↦ ?_
       by_contra con
-      simp only [Set.mem_setOf_eq, Option.some.injEq] at hk hl con
+      simp only [Set.mem_ofPred_eq, Option.some.injEq] at hk hl con
       linarith
   · cases ε₂
     · aesop
     · apply Set.disjoint_image_image fun k hk l hl ↦ ?_
       by_contra con
-      simp only [Set.mem_setOf_eq, Option.some.injEq] at hk hl con
+      simp only [Set.mem_ofPred_eq, Option.some.injEq] at hk hl con
       linarith
     · aesop
 

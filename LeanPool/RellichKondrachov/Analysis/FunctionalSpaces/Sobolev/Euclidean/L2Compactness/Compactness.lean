@@ -107,7 +107,7 @@ lemma uniformContinuous_ψ (hψc : Continuous ψ) (hψcs : HasCompactSupport ψ)
   -- If `ψ x` is `ε`-far from `0`, then `ψ x ≠ 0`, hence `x` belongs to the support and therefore
   -- to the topological support.
   have hx' : ¬ dist (ψ x) 0 < ε := by
-    simpa [Set.mem_compl_iff, Set.mem_setOf_eq] using hx
+    simpa [Set.mem_compl_iff, Set.mem_ofPred_eq] using hx
   have hxε : ε ≤ dist (ψ x) 0 := le_of_not_gt (by simpa [gt_iff_lt] using hx')
   have hx0 : ψ x ≠ 0 := by
     intro hψ0
@@ -133,8 +133,8 @@ private lemma integrable_norm_L2_restrict (hK : IsCompact K)
   -- On a finite measure space, `L² ⊆ L¹`.
   have hμ : (volume : Measure E) K < ∞ :=
     (hK.measure_lt_top (μ := (volume : Measure E)))
-  letI : Fact ((volume : Measure E) K < ∞) := ⟨hμ⟩
-  haveI : IsFiniteMeasure (volume.restrict K) := by
+  let : Fact ((volume : Measure E) K < ∞) := ⟨hμ⟩
+  have : IsFiniteMeasure (volume.restrict K) := by
     infer_instance
   have hu2 : MemLp (fun x : E => u x) (2 : ℝ≥0∞) (volume.restrict K) :=
     MeasureTheory.Lp.memLp u

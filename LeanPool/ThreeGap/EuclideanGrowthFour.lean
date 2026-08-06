@@ -43,7 +43,7 @@ theorem euclidean_growth_four (α : Fin 2 → ℝ) (q : ℕ → ℤ) (p : ℕ �
   rw [not_le] at hcon
   have hnorm_eq : ∀ k, euclNorm 2 (rem α (q k) (p k)) = deltaN (euclNorm 2) α (q k) := fun k =>
     le_antisymm (hattain k) (deltaN_le (euclNorm 2) euclNorm_nonneg α (q k) (p k))
-  haveI : Fact (Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 2) := ⟨finrank_euclideanSpace_fin⟩
+  have : Fact (Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 2) := ⟨finrank_euclideanSpace_fin⟩
   -- the five remainder vectors, in natural denominator order: w 0 longest (= δ_N), w 4 shortest
   set w : Fin 5 → EuclideanSpace ℝ (Fin 2) :=
     fun i => (EuclideanSpace.equiv (Fin 2) ℝ).symm (rem α (q (N + i.val)) (p (N + i.val))) with hw

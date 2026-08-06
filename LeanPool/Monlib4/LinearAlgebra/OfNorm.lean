@@ -34,7 +34,7 @@ theorem cs_aux {x y : E} (hy : y ≠ 0) :
   simp_rw [inner_self_eq_norm_sq_to_K, starRingEnd_apply,
     RCLike.ofReal_inv, star_inv₀, RCLike.star_def,
     RCLike.conj_ofReal, mul_assoc, ← RCLike.ofReal_pow, inv_mul_cancel₀ this, mul_one]
-  letI : InnerProductSpace.Core 𝕜 E := InnerProductSpace.toCore
+  let : InnerProductSpace.Core 𝕜 E := InnerProductSpace.toCore
   calc
     RCLike.re
           (((‖x‖ ^ 2 : ℝ) : 𝕜) - inner 𝕜 y x * (((‖y‖ ^ 2 : ℝ) : 𝕜)⁻¹ * inner 𝕜 x y) -
@@ -427,7 +427,7 @@ lemma Set.mem_extremePoints_iff'
   (x ∈ y ∧
     ∀ (x₁ : H), x₁ ∈ y → ∀ (x₂ : H), x₂ ∈ y →
       (∃ a : 𝕜, 0 < a ∧ a < 1 ∧ a • x₁ + (1 - a) • x₂ = x) → x₁ = x ∧ x₂ = x) := by
-  simp only [mem_extremePoints, openSegment, Set.mem_setOf]
+  simp only [mem_extremePoints, openSegment, Set.mem_ofPred]
   simp only [exists_and_left, forall_exists_index, and_imp, and_congr_right_iff]
   intro h
   constructor
@@ -689,7 +689,7 @@ lemma example_pos_commute_iff_pos_mul_of {𝕜 R : Type _} [RCLike 𝕜] [Ring R
   {x y : R} (hx : 0 ≤ x) (hy : 0 ≤ y) :
   Commute x y ↔ 0 ≤ x * y := by
   have : {(0 : 𝕜)} ⊆ {a : 𝕜 | 0 ≤ a} :=
-  by simp only [Set.singleton_subset_iff, Set.mem_setOf_eq, le_refl]
+  by simp only [Set.singleton_subset_iff, Set.mem_ofPred_eq, le_refl]
   have := fun s => Set.subset_diff_inj s this
   rw [h₂, IsSelfAdjoint, star_mul, ((h₂ _).mp hx).1, ((h₂ _).mp hy).1]
   constructor

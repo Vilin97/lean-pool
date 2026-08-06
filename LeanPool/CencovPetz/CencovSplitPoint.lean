@@ -47,7 +47,7 @@ theorem eq_smul_fisher_of_isSplitRepresentable (G : MonotoneMetricFamily)
   rcases hp with ⟨m, hm, hp⟩
   -- Split target `β := Σ a, Fin (m a)`.
   let β := SplitTarget (α := α) m
-  haveI : Nonempty β := ⟨⟨a0, ⟨0, hm a0⟩⟩⟩
+  have : Nonempty β := ⟨⟨a0, ⟨0, hm a0⟩⟩⟩
   have h_uniform :
       (split (α := α) m hm).pushforward p = Simplex.uniform (α := β) := by
     simpa [β] using
@@ -70,7 +70,7 @@ theorem eq_smul_fisher_of_isSplitRepresentable (G : MonotoneMetricFamily)
   have hi01 : i0 ≠ i1 := by
     intro h
     exact Nat.zero_ne_one (congrArg Fin.val h)
-  haveI : Nonempty (Fin n) := ⟨i0⟩
+  have : Nonempty (Fin n) := ⟨i0⟩
   have h_equiv_uniform :
       (MarkovMorphism.deterministic
         (α := β) (β := Fin n) (g := (e : β → Fin n))

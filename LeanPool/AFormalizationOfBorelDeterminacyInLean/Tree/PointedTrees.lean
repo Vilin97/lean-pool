@@ -102,7 +102,7 @@ end «Section2»
 def extensions : PointedTrees ⥤ Type* where
   obj T := { a : T.1.1 | T.2.val ++ [a] ∈ T.1.2 }
   map f := TypeCat.ofHom fun a ↦ ⟨concat (forgetPoint.map f) a.prop, by
-    dsimp only [Set.mem_setOf_eq]; erw [← f.hp, ← concat_spec]; apply SetLike.coe_mem⟩
+    dsimp only [Set.mem_ofPred_eq]; erw [← f.hp, ← concat_spec]; apply SetLike.coe_mem⟩
   map_id _ := by
     ext a
     change concat (𝟙 _) a.prop = a.val

@@ -72,9 +72,9 @@ theorem kronecker_roots {p : Polynomial ℤ} (hm : p.Monic)
   -- the number field K = ℚ⟮z⟯
   have halg : IsAlgebraic ℚ z := (hint.tower_top (A := ℚ)).isAlgebraic
   let K := IntermediateField.adjoin ℚ ({z} : Set ℂ)
-  haveI : FiniteDimensional ℚ K :=
+  have : FiniteDimensional ℚ K :=
     IntermediateField.adjoin.finiteDimensional halg.isIntegral
-  haveI : NumberField K := ⟨⟩
+  have : NumberField K := ⟨⟩
   -- the generator, its integrality, and its image
   set x : K := IntermediateField.AdjoinSimple.gen ℚ z with hxdef
   have hgen : (algebraMap K ℂ) x = z := IntermediateField.AdjoinSimple.algebraMap_gen ℚ z

@@ -31,7 +31,7 @@ theorem for_any_LTL_formula_exists_an_equivalent_NBW :
   obtain ⟨Q, qfin, A, lang_eq⟩ := exists_ABW_lang_for_LTL φ
   exists A.toNBW
   constructor
-  · haveI := qfin
+  · have := qfin
     exact inferInstanceAs (Finite ((Set Q) × (Set Q)))
   · rw [lang_eq, ABW.toNBW.lang_eq]
 

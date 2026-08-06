@@ -166,13 +166,13 @@ lemma coprod_type_isIso_iff {J : Type u1} {F G : Discrete J ⥤ Type (max u1 v1)
     apply (isIso_iff_bijective (f j)).mpr
     constructor
     · suffices Mono (f j) by exact injective_of_mono (f j)
-      haveI : Mono (s.ι.app ⟨j⟩) := h1 ⟨j⟩
-      haveI : IsIso (hs.map t df) := by simpa [df] using hi
+      have : Mono (s.ι.app ⟨j⟩) := h1 ⟨j⟩
+      have : IsIso (hs.map t df) := by simpa [df] using hi
       have hMap : Mono (hs.map t df) := by infer_instance
       have h : Mono (s.ι.app ⟨j⟩ ≫ hs.map t df) :=
         mono_comp' (h1 ⟨j⟩) hMap
       have hEq : s.ι.app ⟨j⟩ ≫ hs.map t df = f j ≫ t.ι.app ⟨j⟩ := hs.ι_map t df ⟨j⟩
-      haveI : Mono (f j ≫ t.ι.app ⟨j⟩) := hEq ▸ h
+      have : Mono (f j ≫ t.ι.app ⟨j⟩) := hEq ▸ h
       exact mono_of_mono _ (t.ι.app ⟨j⟩)
     · intro y
       obtain ⟨i, x, h⟩ := h3 (inv (hs.map t df) (t.ι.app ⟨j⟩ y))

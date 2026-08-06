@@ -257,7 +257,7 @@ theorem Matrix.posSemidef_iff_vecMulVec' [Finite n]
     rcases (Matrix.posSemidef_iff_vecMulVec.mp hx) with ⟨m, v, hv⟩
     exact ⟨Fin m, inferInstance, v, hv⟩
   · rintro ⟨m, hm, v, hv⟩
-    letI := hm
+    let := hm
     rw [Matrix.posSemidef_iff_vecMulVec]
     let v' : Fin (Fintype.card m) → EuclideanSpace 𝕜 n :=
       fun i => v ((Fintype.equivFin m).symm i)
@@ -502,7 +502,7 @@ theorem _root_.Matrix.PosDef.trace_conjTranspose_hMul_self_eq_zero {m : Type*}
   · intro h
     have hQx : Q * xᴴ = 0 := by
       rw [hy, Matrix.mul_assoc, h, Matrix.mul_zero]
-    letI := hQ.invertible
+    let := hQ.invertible
     have hxT : xᴴ = 0 :=
       (Matrix.mul_right_injective_of_invertible (A := Q)) (by simpa using hQx)
     rwa [← Matrix.conjTranspose_eq_zero]

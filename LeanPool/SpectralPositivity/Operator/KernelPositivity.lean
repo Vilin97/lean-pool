@@ -151,7 +151,7 @@ private theorem IntegralOperator.ae_pos_inner_integral
   have h_nonpos : ∫ x in {x | ¬ 0 < g x}, g x ∂volume ≤ 0 := by
     apply setIntegral_nonpos h_A_meas
     intro x hx
-    simp only [Set.mem_setOf_eq, not_lt] at hx
+    simp only [Set.mem_ofPred_eq, not_lt] at hx
     exact hx
   -- But hT says ∫_A ∫_B K > 0
   have h_pos := hT _ B h_A_meas hB_meas h_A_pos hB_pos

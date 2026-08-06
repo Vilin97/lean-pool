@@ -223,7 +223,7 @@ private lemma isIntegral_of_adjoin_latHat (τ : ℍ) (hj : IsIntegral ℤ (1728 
     rcases hy with h | h
     · rw [h]; exact isIntegral_latHat_g₂_div_four τ hj
     · rw [h]; exact isIntegral_latHat_g₃_div_four τ hj
-  haveI : Algebra.IsIntegral ℤ (Algebra.adjoin ℤ
+  have : Algebra.IsIntegral ℤ (Algebra.adjoin ℤ
       ({(latHatUnit τ • Lτ τ).g₂ / 4, (latHatUnit τ • Lτ τ).g₃ / 4} : Set ℂ)) :=
     Algebra.IsIntegral.adjoin hgen
   exact isIntegral_trans x hx
@@ -874,7 +874,7 @@ private lemma lemkapa2_pos (τ : ℍ) {A B C : ℤ} (hA : 0 < A) (hC : 0 < C)
   set M : ℕ := (A * C).toNat with hMdef
   have hMAC : (M : ℤ) = A * C := Int.toNat_of_nonneg (mul_pos hA hC).le
   have hM0 : 0 < M := cmM_pos hA hC hMAC
-  haveI : NeZero M := ⟨hM0.ne'⟩
+  have : NeZero M := ⟨hM0.ne'⟩
   obtain ⟨c, hc⟩ := exists_mulDiffCM_const hCM hA hC hMAC
   have hval := mulDiffCM_const_value hCM hA hC hMAC hc
   -- evaluate the constant multiplication formula at `z = 0`
@@ -1035,7 +1035,7 @@ theorem theoezweisternrest_of_isIntegral_j (τ : ℍ) {A B C : ℤ}
     IsIntegral ℤ ((2 * (C : ℂ) * τ + B) * (E₂star τ / ModularForm.eta τ ^ 4) *
       ((A : ℂ) * C) ^ 2) := by
   obtain ⟨M, hne, s, hs0, hid⟩ := lemkapppppa_rescaled τ hgcd hCM
-  haveI : NeZero M := hne
+  have : NeZero M := hne
   rw [hid]
   exact (isIntegral_sum_mul_weierstrassP_latHat τ hj M s hs0).mul (isIntegral_C_mul_conj hCM)
 

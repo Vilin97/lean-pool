@@ -68,7 +68,7 @@ theorem iSup_eigenspace_orthogonal_eq_bot_of_isCompactOperator_of_isSelfAdjoint
       set ε : ℝ := ‖T x‖ / (2 * ‖x‖) with hεdef
       have hε : 0 < ε := by
         simp_all
-      haveI : FiniteDimensional 𝕜 (largeEigenspace (𝕜 := 𝕜) (E := E) T ε) :=
+      have : FiniteDimensional 𝕜 (largeEigenspace (𝕜 := 𝕜) (E := E) T ε) :=
         finiteDimensional_largeEigenspace_of_isCompactOperator_of_isSelfAdjoint
           (𝕜 := 𝕜) (E := E) T hT hTc (ε := ε) hε
       let P : E →L[𝕜] E :=
@@ -148,7 +148,7 @@ theorem exists_hilbertBasis_hasEigenvector_of_isCompactOperator_of_isSelfAdjoint
         simp [t, LinearMap.mem_ker, sub_eq_zero]
       simpa [this] using
         (ContinuousLinearMap.isClosed_ker (f := (T - μ • ContinuousLinearMap.id 𝕜 E)))
-    haveI : CompleteSpace ((t.eigenspace μ : Submodule 𝕜 E) : Set E) := hClosed.completeSpace_coe
+    have : CompleteSpace ((t.eigenspace μ : Submodule 𝕜 E) : Set E) := hClosed.completeSpace_coe
     simpa using (inferInstance : CompleteSpace (t.eigenspace μ))
   -- Choose a Hilbert basis for each eigenspace, indexed by a set of vectors.
   classical

@@ -290,7 +290,7 @@ theorem Tcolim_sub_colim (s : Setup.{w}) {X : Set s.Tok} (hX : (Tcolim s).mem X)
   rw [Set.mem_iUnion] at hmem
   obtain ⟨hD, hmemD⟩ := hmem
   obtain ⟨n, rfl⟩ := hD
-  simp only [targetFam, Set.mem_setOf_eq] at hmemD
+  simp only [targetFam, Set.mem_ofPred_eq] at hmemD
   -- conclude `X ∈ Tⁿ⁺¹({Γ}) ⊆ 𝒟`.
   refine ⟨n + 1, ?_⟩
   rw [Dsys_succ s n, mem_cast (Dceq s n)]

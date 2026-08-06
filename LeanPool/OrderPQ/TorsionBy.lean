@@ -27,9 +27,9 @@ variable (α) in
 def Subgroup.torsionBy' (d : ℕ) : Subgroup α where
   carrier := {a | a ^ d = 1}
   mul_mem' {x y} hx hy := by
-    rw [Set.mem_setOf_eq, mul_pow, hx, hy, mul_one]
+    rw [Set.mem_ofPred_eq, mul_pow, hx, hy, mul_one]
   one_mem' := by
-    rw [Set.mem_setOf_eq, one_pow]
+    rw [Set.mem_ofPred_eq, one_pow]
   inv_mem' {x} hx := by
     simp_all
 

@@ -40,8 +40,8 @@ theorem hausdorffMeasure_eq_smul_volume :
       ((μH[(Module.finrank ℝ E : ℝ)] (Metric.closedBall (0 : E) 1)) /
           ((volume : Measure E) (Metric.closedBall (0 : E) 1))) • (volume : Measure E) := by
   classical
-  haveI : SecondCountableTopology E := by infer_instance
-  haveI : LocallyCompactSpace E := by infer_instance
+  have : SecondCountableTopology E := by infer_instance
+  have : LocallyCompactSpace E := by infer_instance
   let K₀ : PositiveCompacts E :=
     ⟨⟨Metric.closedBall (0 : E) 1, isCompact_closedBall (x := (0 : E)) (r := (1 : ℝ))⟩,
       (Metric.nonempty_ball.2 (by norm_num : (0 : ℝ) < (1 : ℝ))).mono <|
@@ -98,8 +98,8 @@ theorem volume_eq_smul_hausdorffMeasure :
           ((μH[(Module.finrank ℝ E : ℝ)] : Measure E) (Metric.closedBall (0 : E) 1))) •
         (μH[(Module.finrank ℝ E : ℝ)] : Measure E) := by
   classical
-  haveI : SecondCountableTopology E := by infer_instance
-  haveI : LocallyCompactSpace E := by infer_instance
+  have : SecondCountableTopology E := by infer_instance
+  have : LocallyCompactSpace E := by infer_instance
   let K : Set E := Metric.closedBall (0 : E) 1
   have hv0 : (volume : Measure E) K ≠ 0 := by
     have hne : (interior K).Nonempty := by

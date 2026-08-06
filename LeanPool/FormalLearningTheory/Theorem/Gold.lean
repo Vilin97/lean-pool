@@ -230,7 +230,7 @@ theorem mind_change_characterization (X : Type u)
       have hfin : { t : ℕ | L.conjecture (T.toDataStream.prefix t) ≠
                              L.conjecture (T.toDataStream.prefix (t + 1)) }.Finite :=
         Set.Finite.subset (Finset.range (t₀ + 1)).finite_toSet (fun t ht => by
-          simp only [Set.mem_setOf] at ht
+          simp only [Set.mem_ofPred] at ht
           simp only [Finset.mem_coe, Finset.mem_range]
           by_contra hge; push Not at hge
           exact ht (by rw [hpref t (by omega), hpref (t + 1) (by omega)]))

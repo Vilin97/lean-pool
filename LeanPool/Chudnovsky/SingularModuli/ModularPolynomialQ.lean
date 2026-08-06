@@ -178,7 +178,7 @@ lemma powerSum_T [NeZero m] (k : ℕ) (τ : ℍ) :
 /-- `S`-invariance of the power sums (from `sum_orbit_S_smul`; needs `m` prime). -/
 lemma powerSum_S [Fact m.Prime] (k : ℕ) (τ : ℍ) :
     powerSum m k (ModularGroup.S • τ) = powerSum m k τ := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   exact sum_orbit_S_smul (fun z ↦ z ^ k) τ
 
 /-- **`SL(2,ℤ)`-invariance of the power sums.** -/
@@ -221,7 +221,7 @@ permuted by `γ`, so the product `∏_i (X − f_i τ)` — and hence each coeff
 symmetric function of the orbit) — is unchanged. -/
 lemma orbitPoly_smul [Fact m.Prime] (γ : SL(2, ℤ)) (τ : ℍ) :
     orbitPoly m (γ • τ) = orbitPoly m τ := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   ext n
   refine invariant_of_S_T (h := fun σ ↦ (orbitPoly m σ).coeff n) ?_ ?_ γ τ
   · intro σ; rw [orbitPoly_S σ]
@@ -534,7 +534,7 @@ theorem exists_PhiQ [Fact m.Prime]
       (orbitPoly m τ).coeff n = (Polynomial.aeval (j τ)) Q) :
     ∃ PhiQ : Polynomial (Polynomial ℚ),
       ∀ τ : ℍ, orbitPoly m τ = specializeY (j τ) PhiQ := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   choose Q hQ using hrat
   refine ⟨∑ n ∈ Finset.range (m + 2), C (Q n) * X ^ n, ?_⟩
   -- coefficients of the packaged polynomial
@@ -930,7 +930,7 @@ lemma isBoundedAtImInfty_jqPow_comp (k : ℕ) (A : GL (Fin 2) ℝ) (hA : A 1 0 =
 bounded `(j·q)ᵏ`-value (composed with an isogeny) times a factor of norm `≤ 1`. -/
 lemma isBoundedAtImInfty_powerSum_mul_qpow [Fact m.Prime] (k : ℕ) :
     IsBoundedAtImInfty (fun τ : ℍ ↦ powerSum m k τ * q τ ^ (m * k)) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   have hsum : (fun τ : ℍ ↦ powerSum m k τ * q τ ^ (m * k))
       = ∑ i : Option (ZMod m), (fun τ : ℍ ↦ (f m i τ) ^ k * q τ ^ (m * k)) := by
     funext τ; simp only [powerSum, Finset.sum_apply, Finset.sum_mul]
@@ -1125,7 +1125,7 @@ def Cq (m k p : ℕ) : ℤ := CAint m k p + CIint m k p
 /-- **The full `q`-series for `powerSum·q^{mk}`.** -/
 lemma hasSum_powerSum_mul_qpow [Fact m.Prime] (k : ℕ) (τ : ℍ) :
     HasSum (fun p : ℕ ↦ (Cq m k p : ℂ) * q τ ^ p) (powerSum m k τ * q τ ^ (m * k)) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   have hval : powerSum m k τ * q τ ^ (m * k)
       = (f m none τ) ^ k * q τ ^ (m * k)
         + ∑ b : ZMod m, (f m (some b) τ) ^ k * q τ ^ (m * k) := by
@@ -1137,7 +1137,7 @@ lemma hasSum_powerSum_mul_qpow [Fact m.Prime] (k : ℕ) (τ : ℍ) :
 
 /-- **(B3) The power sums are cusp-meromorphic of pole order `≤ m·k` with `ℚ`-coefficients.** -/
 lemma powerSum_isCuspMeroR [Fact m.Prime] (k : ℕ) : IsCuspMeroR (powerSum m k) (m * k) RQ := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   have hpvadd : ∀ τ : ℍ, powerSum m k ((1 : ℝ) +ᵥ τ) = powerSum m k τ := fun τ ↦ by
     rw [← modular_T_smul]; exact powerSum_T k τ
   have hFper : Function.Periodic ((fun τ : ℍ ↦ powerSum m k τ * q τ ^ (m * k)) ∘ ofComplex) 1 :=
@@ -1225,7 +1225,7 @@ lemma algebraMap_polyJ_apply (c : ℚ) (τ : ℍ) : (algebraMap ℚ (ℍ → ℂ
 
 /-- Each elementary symmetric function of the orbit lies in `polyJ` (Newton induction). -/
 lemma esf_mem_polyJ [Fact m.Prime] (l : ℕ) : (fun τ ↦ esf m l τ) ∈ polyJ := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   induction l using Nat.strong_induction_on with
   | _ l ih =>
     rcases Nat.eq_zero_or_pos l with hl | hl
@@ -1252,7 +1252,7 @@ lemma esf_mem_polyJ [Fact m.Prime] (l : ℕ) : (fun τ ↦ esf m l τ) ∈ polyJ
 /-- Each coefficient of the orbit polynomial lies in `polyJ`. -/
 lemma orbitPoly_coeff_mem_polyJ [Fact m.Prime] (n : ℕ) :
     (fun τ ↦ (orbitPoly m τ).coeff n) ∈ polyJ := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   by_cases hn : n ≤ m + 1
   · have hfun : (fun τ ↦ (orbitPoly m τ).coeff n)
         = algebraMap ℚ (ℍ → ℂ) ((-1) ^ ((m + 1) - n)) * (fun τ ↦ esf m ((m + 1) - n) τ) := by

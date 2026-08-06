@@ -138,7 +138,7 @@ theorem upSet_zero : upSet 0 = Set.univ := by
 /-- `[m⁺] = [m]⁺`: the recursion step of 4.13(3). -/
 theorem upSet_succ (m : ℕ) : upSet (m + 1) = succImage (upSet m) := by
   ext k
-  simp only [upSet, succImage, Set.mem_setOf_eq]
+  simp only [upSet, succImage, Set.mem_ofPred_eq]
   constructor
   · intro h
     exact ⟨k - 1, by omega, by omega⟩

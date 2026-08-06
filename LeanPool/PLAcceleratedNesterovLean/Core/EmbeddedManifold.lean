@@ -128,8 +128,8 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
       ∀ x ∈ Metric.ball m δ,
         x ∈ Set.range ι ↔
           ∃ v : V, x = m + (v : E d) + (φ v : E d) := by
-  letI : AddCommGroup (E d) := NormedAddCommGroup.toAddCommGroup
-  letI : Module ℝ (E d) := NormedSpace.toModule
+  let : AddCommGroup (E d) := NormedAddCommGroup.toAddCommGroup
+  let : Module ℝ (E d) := NormedSpace.toModule
   -- Step 1: Obtain a preimage p of m under ι
   obtain ⟨p, hp⟩ := hm
   -- Step 2: Set up chart composition
@@ -144,7 +144,7 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
     have hp_ext_source : p ∈ (hFp.domChart.extend (modelI n)).source := by
       rw [hFp.domChart.extend_source]; exact hFp.mem_domChart_source
     have hp_inTarget := (hFp.domChart.extend (modelI n)).map_source hp_ext_source
-    haveI : (modelI n).Boundaryless := by unfold modelI; infer_instance
+    have : (modelI n).Boundaryless := by unfold modelI; infer_instance
     have htarget_open : IsOpen (hFp.domChart.extend (modelI n)).target :=
       hFp.domChart.isOpen_extend_target
     have heq : (hFp.codChart.extend (𝓘(ℝ, E d)) ∘ ι ∘ (hFp.domChart.extend (modelI n)).symm)
@@ -172,7 +172,7 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
   have hg_inj : Function.Injective (fderiv ℝ g a) := by
     obtain ⟨F, _, _, hF⟩ := hι.isImmersion
     have hFp := hF p
-    haveI : (modelI n).Boundaryless := by unfold modelI; infer_instance
+    have : (modelI n).Boundaryless := by unfold modelI; infer_instance
     have hg_diff' : DifferentiableAt ℝ g a := hg_smooth.differentiableAt (by norm_num)
     have hp_ext_source : p ∈ (hFp.domChart.extend (modelI n)).source := by
       rw [hFp.domChart.extend_source]; exact hFp.mem_domChart_source
@@ -266,9 +266,9 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
   -- Step 4: Define the tangent subspace V = range(Dg(a))
   set L : ManifoldModel n →L[ℝ] E d := fderiv ℝ g a with hL_def
   set V : Submodule ℝ (E d) := LinearMap.range L.toLinearMap with hV_def
-  haveI : FiniteDimensional ℝ ↥V := LinearMap.finiteDimensional_range L.toLinearMap
-  haveI hV_OP : V.HasOrthogonalProjection := inferInstance
-  haveI hVperp_OP : Vᗮ.HasOrthogonalProjection := inferInstance
+  have : FiniteDimensional ℝ ↥V := LinearMap.finiteDimensional_range L.toLinearMap
+  have hV_OP : V.HasOrthogonalProjection := inferInstance
+  have hVperp_OP : Vᗮ.HasOrthogonalProjection := inferInstance
   -- Step 5: Define tangent projection h(t) = π_V(g(t) − m) and its properties
   let h : ManifoldModel n → ↥V := fun t => V.orthogonalProjectionOnto (g t - m)
   have hh_a : h a = 0 := by
@@ -951,7 +951,7 @@ private theorem c3_pl_argmin_global_graph
       0 < δ ∧ ContDiff ℝ 2 φ ∧ φ 0 = 0 ∧ fderiv ℝ φ 0 = 0 ∧
       ∀ x ∈ Metric.ball m δ,
         x ∈ argminSet f ↔ ∃ v : V, x = m + (v : E d) + (φ v : E d) := by
-  haveI : Nonempty (Fin d) := ⟨⟨0, _hd⟩⟩
+  have : Nonempty (Fin d) := ⟨⟨0, _hd⟩⟩
   set V := hessianKer f m
   have hm_U : m ∈ U := hS_sub hm
   have hf3_at : ContDiffAt ℝ 3 f m := hf_C3.contDiffAt (hU_open.mem_nhds hm_U)

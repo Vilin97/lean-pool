@@ -66,7 +66,7 @@ lemma M_alpha_lt_K_max_sup (α : ℝ) (X : ℕ) (p : ℕ) (hp : Nat.Prime p) (hp
 lemma irregularPrimes_subset_union (α : ℝ) (X : ℕ) :
     irregularPrimesUpTo α X ⊆ ⋃ k ∈ Finset.range (KMaxSup α X), AK α X k := by
   intro p hp
-  simp only [irregularPrimesUpTo, Set.mem_setOf_eq] at hp
+  simp only [irregularPrimesUpTo, Set.mem_ofPred_eq] at hp
   obtain ⟨hpX, hprime, hodd, hnot_reg⟩ := hp
   simp only [isMRegular, hprime, hodd, true_and, not_forall, not_not] at hnot_reg
   obtain ⟨k, _, hk2, hdiv⟩ := hnot_reg
@@ -77,13 +77,13 @@ lemma irregularPrimes_subset_union (α : ℝ) (X : ℕ) :
     calc k ≤ 2 * k := Nat.le_mul_of_pos_left k (by norm_num : 0 < 2)
       _ ≤ MAlpha α p := h2k_le
       _ < KMaxSup α X := M_alpha_lt_K_max_sup α X p hprime hpX
-  · simp only [AK, Set.mem_setOf_eq]
+  · simp only [AK, Set.mem_ofPred_eq]
     exact ⟨hpX, hprime, hodd, h2k_le, hdiv⟩
 
 lemma A_k_zero_empty (α : ℝ) (X : ℕ) : AK α X 0 = ∅ := by
   apply Set.eq_empty_of_forall_notMem
   intro p hp
-  simp only [AK, Set.mem_setOf_eq] at hp
+  simp only [AK, Set.mem_ofPred_eq] at hp
   have hp_dvd : (p : ℤ) ∣ (bernoulli 0).num := by simpa using hp.2.2.2.2
   simp only [bernoulli_zero, Rat.num_one] at hp_dvd
   linarith [Int.le_of_dvd (by norm_num) hp_dvd, hp.2.1.two_le]
@@ -108,7 +108,7 @@ lemma bernoulli_num_natAbs_ne_zero (k : ℕ) (hk : 1 ≤ k) :
 
 lemma A_k_subset_primeFactors (α : ℝ) (X : ℕ) (k : ℕ) (hk : 1 ≤ k) :
     AK α X k ⊆ ↑((bernoulli (2 * k)).num.natAbs.primeFactors) := fun p hp => by
-  simp only [AK, Set.mem_setOf_eq] at hp
+  simp only [AK, Set.mem_ofPred_eq] at hp
   rw [Finset.mem_coe, Nat.mem_primeFactors]
   exact ⟨hp.2.1, prime_int_dvd_natAbs p _ hp.2.1 hp.2.2.2.2,
     bernoulli_num_natAbs_ne_zero k hk⟩
@@ -500,7 +500,7 @@ lemma rpow_div_log_monotoneOn (α : ℝ) (hα : 0 < α) :
         {x | Real.exp (2 * α) ≤ x} := by
     simpa [Set.Ici, one_div] using Real.log_div_self_rpow_antitoneOn ha
   intro x hx y hy hxy
-  simp only [Set.mem_setOf_eq] at hx hy
+  simp only [Set.mem_ofPred_eq] at hx hy
   have h2α_pos : 0 < 2 * α := by linarith
   have hexp_pos : 0 < Real.exp (2 * α) := Real.exp_pos _
   have hx_pos : 0 < x := lt_of_lt_of_le hexp_pos hx
@@ -530,7 +530,7 @@ lemma rpow_div_log_pow_eq_sqrt_div_log_pow (α : ℝ) (hα : 0 < α) (x : ℝ) (
 lemma sqrt_div_log_monotoneOn (α : ℝ) (hα : 0 < α) :
     MonotoneOn (fun x : ℝ => Real.sqrt x / (Real.log x) ^ α) {x | Real.exp (2 * α) ≤ x} := by
   intro x hx y hy hxy
-  simp only [Set.mem_setOf_eq] at hx hy
+  simp only [Set.mem_ofPred_eq] at hx hy
   have hexp_pos : 0 < Real.exp (2 * α) := Real.exp_pos _
   have hx_pos : 0 < x := lt_of_lt_of_le hexp_pos hx
   have hy_pos : 0 < y := lt_of_lt_of_le hexp_pos hy
