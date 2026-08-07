@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryChoices
 import LeanPool.Erdos97ConvexOctagon.CoverageSummaryChoicesValidity
 
 /-! # Validity audits for static coverage-summary placement -/
