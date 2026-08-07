@@ -1,0 +1,141 @@
+/-
+Copyright (c) 2026 Egor Lyfar. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Egor Lyfar
+-/
+
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData
+
+/-! # Static pattern-summary choices for one incidence row -/
+
+namespace Erdos97Octagon.RawIncidence
+
+/-- Row masks and compatible highest-row pattern summaries for centre 1. -/
+def patternSummaryChoices1 : List SummaryRowChoice := [
+  ⟨29, 270008348,
+[
+      [
+        ⟨0, 7196⟩
+      ]
+    ]⟩,
+  ⟨45, 539492396,
+[
+    ]⟩,
+  ⟨77, 1078460492,
+[
+    ]⟩,
+  ⟨141, 2156396684,
+[
+    ]⟩,
+  ⟨53, 137442099252,
+[
+    ]⟩,
+  ⟨85, 274883149908,
+[
+    ]⟩,
+  ⟨149, 549765251220,
+[
+    ]⟩,
+  ⟨101, 70368750469220,
+[
+    ]⟩,
+  ⟨165, 140737498841252,
+[
+    ]⟩,
+  ⟨197, 36028797031547076,
+[
+    ]⟩,
+  ⟨57, 138244259896,
+[
+    ]⟩,
+  ⟨89, 276220084312,
+[
+    ]⟩,
+  ⟨153, 552171733144,
+[
+    ]⟩,
+  ⟨105, 70370354790504,
+[
+    ]⟩,
+  ⟨169, 140740172710056,
+[
+    ]⟩,
+  ⟨201, 36028800240189640,
+[
+    ]⟩,
+  ⟨113, 70781061038192,
+[
+    ]⟩,
+  ⟨177, 141424683122864,
+[
+    ]⟩,
+  ⟨209, 36029621652685008,
+[
+    ]⟩,
+  ⟨225, 36239903251497184,
+[
+    ]⟩,
+  ⟨60, 138247929856,
+[
+      [
+        ⟨0, 7196⟩
+      ]
+    ]⟩,
+  ⟨92, 276225851392,
+[
+      [
+        ⟨0, 7196⟩
+      ]
+    ]⟩,
+  ⟨156, 552181694464,
+[
+      [
+        ⟨0, 7196⟩
+      ]
+    ]⟩,
+  ⟨108, 70370361606144,
+[
+    ]⟩,
+  ⟨172, 140740183719936,
+[
+    ]⟩,
+  ⟨204, 36028800253296640,
+[
+    ]⟩,
+  ⟨116, 70781068378112,
+[
+    ]⟩,
+  ⟨180, 141424694657024,
+[
+    ]⟩,
+  ⟨212, 36029621666316288,
+[
+    ]⟩,
+  ⟨228, 36239903266177024,
+[
+    ]⟩,
+  ⟨120, 70782940086272,
+[
+    ]⟩,
+  ⟨184, 141427635912704,
+[
+    ]⟩,
+  ⟨216, 36029625142345728,
+[
+    ]⟩,
+  ⟨232, 36239907009593344,
+[
+    ]⟩,
+  ⟨240, 36240865324171264,
+[
+    ]⟩
+]
+
+/-- Every placed pattern summary for centre 1 belongs to the audited summary data. -/
+theorem patternSummaryChoices1_members :
+    patternSummaryChoices1.all (fun choice =>
+      choice.patterns.all (fun bucket =>
+        bucket.all PatternSummary.memberB) && choice.pairMaskValidB) = true := by
+  rfl
+
+end Erdos97Octagon.RawIncidence
