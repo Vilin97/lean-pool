@@ -101,7 +101,7 @@ private lemma common_circle_points_collinear
   have hfd : Module.finrank ℝ Plane = 1 + 1 := by
     rw [finrank_euclideanSpace]
     norm_num
-  letI : Fact (Module.finrank ℝ Plane = 1 + 1) := ⟨hfd⟩
+  let : Fact (Module.finrank ℝ Plane = 1 + 1) := ⟨hfd⟩
   have hfo : Module.finrank ℝ ((ℝ ∙ (B -ᵥ A) : Submodule ℝ Plane))ᗮ = 1 :=
     Submodule.finrank_orthogonal_span_singleton hne
   have horth : vectorSpan ℝ ({q1, q2, q3} : Set Plane) ≤
@@ -122,7 +122,7 @@ private lemma common_circle_points_collinear
     rcases hq_cases with rfl | rfl
     · exact h12
     · exact h13
-  letI : FiniteDimensional ℝ (vectorSpan ℝ ({q1, q2, q3} : Set Plane)) :=
+  let : FiniteDimensional ℝ (vectorSpan ℝ ({q1, q2, q3} : Set Plane)) :=
     Submodule.finiteDimensional_of_le horth
   rw [collinear_iff_finrank_le_one]
   calc

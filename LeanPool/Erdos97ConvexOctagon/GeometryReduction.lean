@@ -48,7 +48,7 @@ private lemma three_centres_collinear
   have hfd : Module.finrank ℝ Plane = 1 + 1 := by
     rw [finrank_euclideanSpace]
     norm_num
-  letI : Fact (Module.finrank ℝ Plane = 1 + 1) := ⟨hfd⟩
+  let : Fact (Module.finrank ℝ Plane = 1 + 1) := ⟨hfd⟩
   have hfo : Module.finrank ℝ ((ℝ ∙ (b -ᵥ a) : Submodule ℝ Plane))ᗮ = 1 :=
     Submodule.finrank_orthogonal_span_singleton hne
   have horth : vectorSpan ℝ ({v₁, v₂, v₃} : Set Plane) ≤
@@ -69,7 +69,7 @@ private lemma three_centres_collinear
     rcases hq_cases with rfl | rfl
     · exact hinn₁₂
     · exact hinn₁₃
-  letI : FiniteDimensional ℝ (vectorSpan ℝ ({v₁, v₂, v₃} : Set Plane)) :=
+  let : FiniteDimensional ℝ (vectorSpan ℝ ({v₁, v₂, v₃} : Set Plane)) :=
     Submodule.finiteDimensional_of_le horth
   rw [collinear_iff_finrank_le_one]
   calc
