@@ -5,9 +5,8 @@ Authors: Egor Lyfar
 -/
 
 import LeanPool.Erdos97ConvexOctagon.CoverageSummaryChoices
-import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData
 import LeanPool.Erdos97ConvexOctagon.PairCompatibility
-import LeanPool.Erdos97ConvexOctagon.RowSymmetry
+import LeanPool.Erdos97ConvexOctagon.RowMasks
 
 /-! # Direct finite coverage audit using statically bucketed summaries -/
 
@@ -35,11 +34,57 @@ def PairState.add (state : PairState) (pairMask : UInt64) : PairState :=
   ⟨state.seenOnce ||| pairMask,
     state.seenTwice ||| (state.seenOnce &&& pairMask)⟩
 
+/-- Packed byte counters for the number of assigned rows selecting each target. -/
+structure ColumnState where
+  /-- Eight one-byte column counters. -/
+  counts : UInt64
+
+/-- The empty column-count state. -/
+def ColumnState.empty : ColumnState := ⟨0⟩
+
+/-- Packed increments contributed by one target-row mask. -/
+def columnIncrements (row : UInt64) : UInt64 :=
+  (List.finRange 8).foldl (fun result target =>
+    if bitSetB row target.val then
+      result + (1 <<< UInt64.ofNat (8 * target.val))
+    else result) 0
+
+/-- Update packed column counts after accepting one row. -/
+def ColumnState.add (state : ColumnState) (row : UInt64) : ColumnState :=
+  ⟨state.counts + columnIncrements row⟩
+
+/-- Read one packed column counter. -/
+def ColumnState.count (state : ColumnState) (target : Vertex) : Nat :=
+  ((state.counts >>> UInt64.ofNat (8 * target.val)) &&& 255).toNat
+
+/-- Number of remaining rows that can still select a target. -/
+def remainingColumnCapacity (remaining : List Vertex) (target : Vertex) : Nat :=
+  (remaining.filter (· ≠ target)).length
+
+/-- Fast packed check that every column can still finish with exactly four entries. -/
+def ColumnState.feasible (state : ColumnState) (remaining : List Vertex) : Bool :=
+  (List.finRange 8).all fun target =>
+    decide (state.count target ≤ 4) &&
+      decide (4 ≤ state.count target + remainingColumnCapacity remaining target)
+
 /-- Whether a target is selected by an assigned row. -/
 def selectedByAssignmentsB
     (assignments : List RowAssignment) (centre target : Vertex) : Bool :=
   assignments.any fun assignment =>
     (assignment.1 == centre) && bitSetB assignment.2 target.val
+
+/-- Number of assigned rows selecting one target, computed from the semantic prefix. -/
+def assignmentColumnCount
+    (assignments : List RowAssignment) (target : Vertex) : Nat :=
+  (assignments.filter fun assignment => bitSetB assignment.2 target.val).length
+
+/-- Semantic check that every column can still finish with exactly four entries. -/
+def columnFeasibleB
+    (assignments : List RowAssignment) (remaining : List Vertex) : Bool :=
+  (List.finRange 8).all fun target =>
+    decide (assignmentColumnCount assignments target ≤ 4) &&
+      decide (4 ≤ assignmentColumnCount assignments target +
+        remainingColumnCapacity remaining target)
 
 /-- Full semantic check that a packed pattern extends the assigned partial table. -/
 def patternExtendsAssignmentsB
@@ -99,19 +144,23 @@ def hardSummaries (orbit : Fin 7) (rowTwo : Fin 35) : HardSummaryBuckets :=
 
 /-- Exhaustively search the remaining rows using pair sparsity and summary buckets. -/
 def directSearch :
-    List Vertex → List RowAssignment → UInt64 → PairState →
+    List Vertex → List RowAssignment → UInt64 → PairState → ColumnState →
       HardSummaryBuckets → Bool
-  | [], assignments, code, _pairState, hardEntries =>
+  | [], assignments, code, _pairState, _columnState, hardEntries =>
       hasHardB code assignments hardEntries
-  | centre :: remaining, assignments, code, pairState, hardEntries =>
+  | centre :: remaining, assignments, code, pairState, columnState, hardEntries =>
       (patternSummaryChoices.getD centre.val []).all fun choice =>
         let row := choice.rowMask
         if pairState.compatible choice.pairMask then
           let nextAssignments := assignments ++ [(centre, row)]
           let nextCode := addRowCode code row centre
           let nextPairState := pairState.add choice.pairMask
-          hasPatternB nextCode nextAssignments choice.patterns ||
-            directSearch remaining nextAssignments nextCode nextPairState hardEntries
+          let nextColumnState := columnState.add row
+          if nextColumnState.feasible remaining then
+            hasPatternB nextCode nextAssignments choice.patterns ||
+              directSearch remaining nextAssignments nextCode nextPairState
+                nextColumnState hardEntries
+          else !columnFeasibleB nextAssignments remaining
         else !pairCompatibleB assignments row
 
 /-- Direct exhaustive audit of one fixed canonical orbit and second row. -/
@@ -121,6 +170,7 @@ def directCoverageBranchB (orbit : Fin 7) (rowTwo : Fin 35) : Bool :=
   let choice0 := choiceForRow 0 30
   let choice1 := choiceForRow 1 (canonicalRowMask orbit)
   let pairState := (PairState.empty.add choice0.pairMask).add choice1.pairMask
+  let columnState := (ColumnState.empty.add 30).add (canonicalRowMask orbit)
   if hasPatternB code assignments choice1.patterns then true
   else
     let row := rowTwoMask rowTwo
@@ -129,9 +179,12 @@ def directCoverageBranchB (orbit : Fin 7) (rowTwo : Fin 35) : Bool :=
       let nextAssignments := assignments ++ [(2, row)]
       let nextCode := addRowCode code row 2
       let nextPairState := pairState.add choice2.pairMask
-      hasPatternB nextCode nextAssignments choice2.patterns ||
-        directSearch [3, 4, 5, 6, 7] nextAssignments nextCode nextPairState
-          (hardSummaries orbit rowTwo)
+      let nextColumnState := columnState.add row
+      if nextColumnState.feasible searchCentres then
+        hasPatternB nextCode nextAssignments choice2.patterns ||
+          directSearch searchCentres nextAssignments nextCode nextPairState
+            nextColumnState (hardSummaries orbit rowTwo)
+      else !columnFeasibleB nextAssignments searchCentres
     else !pairCompatibleB assignments row
 
 /-- Direct audit after fixing rows two and three, for adaptive kernel splitting. -/
@@ -142,6 +195,7 @@ def directCoverageSubbranchB
   let choice0 := choiceForRow 0 30
   let choice1 := choiceForRow 1 (canonicalRowMask orbit)
   let pairState := (PairState.empty.add choice0.pairMask).add choice1.pairMask
+  let columnState := (ColumnState.empty.add 30).add (canonicalRowMask orbit)
   if hasPatternB code assignments choice1.patterns then true
   else
     let row2 := rowTwoMask rowTwo
@@ -150,17 +204,23 @@ def directCoverageSubbranchB
       let assignments2 := assignments ++ [(2, row2)]
       let code2 := addRowCode code row2 2
       let pairState2 := pairState.add choice2.pairMask
-      if hasPatternB code2 assignments2 choice2.patterns then true
-      else
-        let choice3 := patternSummaryChoices3.getD rowThree.val ⟨0, 0, []⟩
-        if pairState2.compatible choice3.pairMask then
-          let assignments3 := assignments2 ++ [(3, choice3.rowMask)]
-          let code3 := addRowCode code2 choice3.rowMask 3
-          let pairState3 := pairState2.add choice3.pairMask
-          hasPatternB code3 assignments3 choice3.patterns ||
-            directSearch [4, 5, 6, 7] assignments3 code3 pairState3
-              (hardSummaries orbit rowTwo)
-        else !pairCompatibleB assignments2 choice3.rowMask
+      let columnState2 := columnState.add row2
+      if columnState2.feasible searchCentres then
+        if hasPatternB code2 assignments2 choice2.patterns then true
+        else
+          let choice3 := patternSummaryChoices3.getD rowThree.val ⟨0, 0, []⟩
+          if pairState2.compatible choice3.pairMask then
+            let assignments3 := assignments2 ++ [(3, choice3.rowMask)]
+            let code3 := addRowCode code2 choice3.rowMask 3
+            let pairState3 := pairState2.add choice3.pairMask
+            let columnState3 := columnState2.add choice3.rowMask
+            if columnState3.feasible searchCentres.tail then
+              hasPatternB code3 assignments3 choice3.patterns ||
+                directSearch searchCentres.tail assignments3 code3 pairState3
+                  columnState3 (hardSummaries orbit rowTwo)
+            else !columnFeasibleB assignments3 searchCentres.tail
+          else !pairCompatibleB assignments2 choice3.rowMask
+      else !columnFeasibleB assignments2 searchCentres
     else !pairCompatibleB assignments row2
 
 /-- Either a whole second-row branch or all of its third-row subbranches audit cleanly. -/
