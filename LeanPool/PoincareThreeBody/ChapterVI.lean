@@ -8,7 +8,6 @@ import Mathlib.Analysis.Fourier.AddCircle
 import LeanPool.PoincareThreeBody.ChapterVIContour
 import LeanPool.PoincareThreeBody.ChapterVIDarboux
 import LeanPool.PoincareThreeBody.ChapterVILatticeReduction
-import LeanPool.PoincareThreeBody.ChapterVISingularityAlgebra
 import LeanPool.PoincareThreeBody.LocalEnergyLeaf
 
 /-!
@@ -48,27 +47,15 @@ the decisive complex-singularity calculation in Chapter VI of Poincaré's first 
   only one moving Kepler ellipse; the definition
   `chapterVIOrientationCoefficient` below records the corresponding one-circle coefficient, but
   is not itself Poincaré's full two-variable perturbing function.
-* §95 (pp. 285--287): Poincaré characterizes candidate singularities of `Phi` by pinching two
-  moving singularities of its contour integrand. This parameterized contour-deformation theorem is
-  not yet formalized.
-* §96 (pp. 287--295): `chapterVI_planarKeplerCoordinate_mul_conjugate` verifies
-  `ξ ξ₀ = (1 - sin φ cos u)²`; the half-angle and collision-factor theorems in
-  `ChapterVISingularityAlgebra` verify equations (1), (3), and (4), while the first- and
-  second-kind reciprocal theorems verify the inversion symmetries of equations (7)--(10) and of
-  the singularity parameter `z`. The printed equation (10) has `x² - 1`; its derivation and the
-  claimed reciprocal symmetry instead require `x² + 1`, which the formalization makes explicit.
-* §97--98 (pp. 295--314): Poincaré decides by contour deformation which candidate singularities
-  are admissible. This Riemann-surface and contour-deformation argument is **not yet formalized**.
-  Poincaré himself describes the general discussion in §98 as only sketched.
+* §95--98 (pp. 285--314): Poincaré complexifies the eccentric anomalies, finds candidate branch
+  points, and decides by contour deformation which singularities are admissible.  This
+  Riemann-surface and contour-deformation argument is **not yet formalized**.  Poincaré himself
+  describes the general discussion in §98 as only sketched.
 * §99--101 (pp. 314--325): local singular expansions and Darboux asymptotics show that high-order
-  resonant coefficients do not vanish. `hasSum_chapterVILogSingularityCoefficient` verifies the
-  logarithmic Taylor expansion used in §100, and
-  `chapterVI_darbouxAsymptotic_of_logarithmicLeadingTerm` connects its exact coefficients plus a
-  little-oh remainder to Poincaré's leading Darboux model.
-  `eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic` then verifies asymptotics-to-
-  nonvanishing. Deriving the local logarithmic normal form by Weierstrass preparation and proving
-  the remainder estimate remain open. The predicates below state the corresponding
-  restricted-problem inputs.
+  resonant coefficients do not vanish.
+  `eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic` verifies asymptotics-to-
+  nonvanishing for Poincaré's leading model.  Deriving the asymptotic from the singular expansion
+  remains open.  The predicates below state the corresponding restricted-problem inputs.
 * §102--103 (pp. 325--334): Poincaré uses the dependence of complex singular points on orbital
   parameters and an algebraic-curve intersection count to contradict an additional uniform
   integral.  That dimension/counting argument is not formalized.  The theorems at the end of
