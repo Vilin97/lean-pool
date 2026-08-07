@@ -5121,8 +5121,9 @@ projects:
       one point has no four other points at a common distance. The development reduces a geometric
       counterexample to a finite incidence model, classifies normalized row patterns up to symmetry,
       proves geometric and algebraic obstructions, and excludes seven canonical first-row masks with
-      one regenerable LRAT certificate checked by a project-owned kernel-safe checker. This is the
-      convex-octagon case only; the general Erdős Problem 97 remains open.
+      a kernel-audited exhaustive search over the remaining legal row masks and checked geometric
+      obstruction witnesses. This is the convex-octagon case only; the general Erdős Problem 97
+      remains open.
     branch: discrete geometry
     entry_module: LeanPool.Erdos97ConvexOctagon
     authors:

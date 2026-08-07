@@ -9,9 +9,9 @@ import LeanPool.Erdos97ConvexOctagon.CoverageBranches
 /-!
 # Exhaustive normalized-incidence classification
 
-The 35 possible first rows reduce to seven symmetry orbits.  One master LRAT
-certificate excludes all seven canonical rows, and every clause has an audited
-semantic proof in `CoverageFormula`.
+The 35 possible first rows reduce to seven symmetry orbits.  A kernel-audited
+finite search excludes every completion of those canonical rows using checked
+geometric obstruction witnesses.
 -/
 
 namespace Erdos97Octagon

@@ -15,8 +15,8 @@ position, some point does not have four other points at a common distance.
 
 The proof reduces a hypothetical counterexample to a normalized balanced
 incidence table, classifies its first row up to symmetry, and excludes all
-seven canonical masks with one regenerable LRAT certificate checked by a
-project-owned kernel-safe checker.
+seven canonical masks with a kernel-audited exhaustive search over the
+remaining legal rows and checked geometric obstruction witnesses.
 
 This is the eight-point convex case only. It does not prove the general open
 problem.
