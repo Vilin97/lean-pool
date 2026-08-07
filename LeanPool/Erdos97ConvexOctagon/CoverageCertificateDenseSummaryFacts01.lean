@@ -36,4 +36,3 @@ theorem densePatternSummaries09_canonical :
   decide
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage
-
