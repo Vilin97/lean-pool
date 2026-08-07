@@ -5618,14 +5618,17 @@ projects:
       two-variable shear reduction and affine-ray coefficient extraction in
       §94, coefficient extraction by normalized circle integration for finite
       Laurent sums and absolutely convergent Laurent series, extend the lattice
-      reindexing to summable double series, and prove that a Darboux-type
-      asymptotic with nonzero leading model forces eventual coefficient
-      nonvanishing as used in §§99--102. They also
+      reindexing to summable double series, verify the planar singularity
+      equations and reciprocal symmetries of §96, verify the logarithmic Taylor
+      coefficients used in §100, and prove that a Darboux-type asymptotic with
+      nonzero leading model forces eventual coefficient nonvanishing as used in
+      §§99--102. They also
       connect that output to the restricted nonintegrability theorem. The
       proof of the convergence hypothesis and holomorphic annulus for
-      Poincaré's actual series, complex singularity and admissibility analysis,
-      derivation of the Darboux asymptotics, and final singularity-parameter
-      count are explicitly recorded as not yet formalized. The unconditional
+      Poincaré's actual series, the contour-pinch and admissibility analysis,
+      derivation of the local logarithmic normal form and remainder bound, and
+      final singularity-parameter count are explicitly recorded as not yet
+      formalized. The unconditional
       statement is the fixed-coordinate, global uniform-domain special case of
       the planar part of Yagasaki's Theorem 1.1; his local meromorphic
       obstruction is Theorem 3.1.
@@ -5651,6 +5654,9 @@ projects:
       - LeanPool.PoincareThreeBody.chapterVIReducedCoefficient_circleIntegral
       - LeanPool.PoincareThreeBody.chapterVI_laurentSeries_circleCoefficient
       - LeanPool.PoincareThreeBody.chapterVI_tsum_eq_iterated_shear_sum
+      - LeanPool.PoincareThreeBody.chapterVI_planarKeplerCoordinate_mul_conjugate
+      - LeanPool.PoincareThreeBody.chapterVI_singularityParameter_inv
+      - LeanPool.PoincareThreeBody.hasSum_chapterVILogSingularityCoefficient
       - LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
       - LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI_asymptotics
     main_results:
@@ -5729,6 +5735,33 @@ projects:
           contour step under an explicit convergence hypothesis, not yet that
           Poincaré's actual perturbing series satisfies the hypothesis on the
           required annulus.
+      - declaration: LeanPool.PoincareThreeBody.chapterVI_planarKeplerCoordinate_mul_conjugate
+        informal: >-
+          Poincaré's two conjugate planar complex Kepler coordinates multiply
+          to the square of 1 minus eccentricity times cosine anomaly, the
+          identity used to derive the first-kind singularity equations.
+        source_ref: >-
+          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
+          Volume I (1892), Chapter VI, §96 (p. 290). The accompanying module
+          also identifies and corrects the x² - 1 inconsistency in printed
+          equation (10): the preceding derivation and reciprocal symmetry both
+          require x² + 1.
+      - declaration: LeanPool.PoincareThreeBody.chapterVI_singularityParameter_inv
+        informal: >-
+          Simultaneously replacing the two complex eccentric-anomaly variables
+          x and y by their inverses replaces Poincaré's singularity parameter z
+          by its inverse.
+        source_ref: >-
+          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
+          Volume I (1892), Chapter VI, §96 (pp. 291--293).
+      - declaration: LeanPool.PoincareThreeBody.hasSum_chapterVILogSingularityCoefficient
+        informal: >-
+          The logarithmic singularity log(1 - z/z₀) has the exact coefficient
+          expansion used in Poincaré's Darboux calculation inside its disk of
+          convergence.
+        source_ref: >-
+          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
+          Volume I (1892), Chapter VI, §100 (pp. 322--324).
       - declaration: LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
         informal: >-
           A coefficient sequence asymptotically equivalent to Poincaré's

@@ -8,6 +8,7 @@ import Mathlib.Analysis.Asymptotics.AsymptoticEquivalent
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.Normed.Field.Basic
+import Mathlib.Analysis.SpecialFunctions.Complex.LogBounds
 
 /-!
 # The nonvanishing consequence of Darboux asymptotics
@@ -62,6 +63,59 @@ theorem chapterVILeadingDarbouxModel_ne_zero
   have hindex : (index : ℂ) + 1 ≠ 0 := by
     exact_mod_cast Nat.succ_ne_zero index
   exact div_ne_zero (mul_ne_zero (pow_ne_zero index hsingularity) hleading) hindex
+
+/-- The exact coefficient of `z^(index + 1)` in the logarithmic singular term
+`log (1 - z / singularity)`. -/
+def chapterVILogSingularityCoefficient (singularityInverse : ℂ) (index : ℕ) : ℂ :=
+  -(singularityInverse ^ (index + 1) / (index + 1))
+
+/-- The Taylor expansion of the logarithmic singularity used in §100, with its singular point
+made explicit. -/
+theorem hasSum_chapterVILogSingularityCoefficient
+    {singularity z : ℂ} (hz : ‖z / singularity‖ < 1) :
+    HasSum
+      (fun index : ℕ ↦
+        chapterVILogSingularityCoefficient singularity⁻¹ index * z ^ (index + 1))
+      (Complex.log (1 - z / singularity)) := by
+  have hseries := (Complex.hasSum_taylorSeries_neg_log' hz).neg
+  simpa only [neg_neg] using
+    HasSum.congr_fun hseries (fun index ↦ by
+      unfold chapterVILogSingularityCoefficient
+      rw [div_eq_mul_inv z singularity, mul_pow]
+      ring)
+
+/-- Poincaré's leading logarithmic coefficient is exactly the Darboux model with leading
+coefficient `-singularityInverse`; no asymptotic estimate is needed for this isolated term. -/
+theorem chapterVILogSingularityCoefficient_eq_leadingDarbouxModel
+    (singularityInverse : ℂ) (index : ℕ) :
+    chapterVILogSingularityCoefficient singularityInverse index =
+      chapterVILeadingDarbouxModel singularityInverse (-singularityInverse) index := by
+  unfold chapterVILogSingularityCoefficient chapterVILeadingDarbouxModel
+  rw [pow_succ]
+  ring
+
+/-- Every coefficient of a logarithmic singularity away from zero is nonzero. -/
+theorem chapterVILogSingularityCoefficient_ne_zero
+    {singularityInverse : ℂ} (hsingularity : singularityInverse ≠ 0) (index : ℕ) :
+    chapterVILogSingularityCoefficient singularityInverse index ≠ 0 := by
+  rw [chapterVILogSingularityCoefficient_eq_leadingDarbouxModel]
+  exact chapterVILeadingDarbouxModel_ne_zero hsingularity (neg_ne_zero.mpr hsingularity) index
+
+/-- If all other singular and holomorphic contributions are little-oh of the logarithmic
+coefficient, then Poincaré's §100 coefficient formula has the claimed Darboux asymptotic. -/
+theorem chapterVI_darbouxAsymptotic_of_logarithmicLeadingTerm
+    {singularityInverse : ℂ} {remainder : ℕ → ℂ}
+    (hremainder : remainder =o[atTop]
+      chapterVILogSingularityCoefficient singularityInverse) :
+    (fun index ↦ chapterVILogSingularityCoefficient singularityInverse index + remainder index)
+      ~[atTop]
+      chapterVILeadingDarbouxModel singularityInverse (-singularityInverse) := by
+  have hleading : chapterVILogSingularityCoefficient singularityInverse =
+      chapterVILeadingDarbouxModel singularityInverse (-singularityInverse) := by
+    funext index
+    exact chapterVILogSingularityCoefficient_eq_leadingDarbouxModel singularityInverse index
+  rw [hleading] at hremainder ⊢
+  exact IsEquivalent.refl.add_isLittleO hremainder
 
 /-- A Darboux asymptotic equivalence to a nonzero leading model forces all sufficiently
 high-order coefficients to be nonzero.  This formalizes the logical passage from the asymptotic
