@@ -518,7 +518,6 @@ theorem inducedHom_id [FiniteDimensional ℂ V] (L : AddSubgroup V)
 omit [CompleteSpace V'] in
 /-- `inducedHom` is compositional (`QuotientAddGroup.map` functoriality). -/
 theorem inducedHom_comp {V'' : Type*} [NormedAddCommGroup V''] [NormedSpace ℂ V'']
-   
     (L : AddSubgroup V) (L' : AddSubgroup V') (L'' : AddSubgroup V'')
     (T : V →ₗ[ℂ] V') (T' : V' →ₗ[ℂ] V'')
     (hT : L ≤ L'.comap T.toAddMonoidHom) (hT' : L' ≤ L''.comap T'.toAddMonoidHom)

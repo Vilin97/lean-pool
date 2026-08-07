@@ -445,7 +445,7 @@ theorem pairingTerm_add_left (PU : SurfPoU X) (σ σ' : RS.Form01 X) (θ : RS.Fo
   funext z
   simp only [pairingTerm]
   by_cases hz : z ∈ (PU.chart i).target
-  · simp only [Set.indicator_of_mem hz, RS.Form01.coeffAt_add, 
+  · simp only [Set.indicator_of_mem hz, RS.Form01.coeffAt_add,
       Complex.real_smul]
     ring
   · simp [Set.indicator_of_notMem hz]
@@ -456,7 +456,7 @@ theorem pairingTerm_smul_left (PU : SurfPoU X) (c : ℂ) (σ : RS.Form01 X) (θ 
   funext z
   simp only [pairingTerm]
   by_cases hz : z ∈ (PU.chart i).target
-  · simp only [Set.indicator_of_mem hz, RS.Form01.coeffAt_smul, 
+  · simp only [Set.indicator_of_mem hz, RS.Form01.coeffAt_smul,
       Complex.real_smul]
     ring
   · simp [Set.indicator_of_notMem hz]

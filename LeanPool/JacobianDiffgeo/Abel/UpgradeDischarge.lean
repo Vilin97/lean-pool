@@ -83,7 +83,7 @@ theorem contMDiffAt_mul_real' {f g : X → ℂ} {x : X}
 /-! ## The core discharge -/
 
 omit [CompactSpace X] in
-/-- The exp-corrected product has vanishing `∂̄` off the divisor set. Split out of
+/-- The exp-corrected product has vanishing `dbar` off the divisor set. Split out of
 `exists_mero_of_sum_pathIntegral_eq_zero` for the 200-line proof size we hold ourselves to; the
 `ηT`/`fT`/`F₀` abbreviations are rebuilt here so the body reads as it did inline. -/
 private theorem isDbarOn_exp_neg_mul_prod {Λ : Type*} [Fintype Λ]

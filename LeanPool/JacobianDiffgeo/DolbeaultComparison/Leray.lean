@@ -15,7 +15,7 @@ Unit: dolbeault-comparison (`docs/design/dolbeault-comparison.md` §5). This is 
 the unit and the gate for `finiteness-and-chi` (§0.1 of the design): everything here uses only
 cech's cover/cochain/colimit machinery, mero's gluing sheaf axioms, and dbar's disk acyclicity
 (`subsingleton_h1Cover_of_isChartDisk`, general-`D`, added to `Jacobian/Dbar/DiskAcyclic.lean`
-under this unit's authorization) as black boxes — no `Form01`, no PoU, no ∂̄-solving.
+under this unit's authorization) as black boxes — no `Form01`, no PoU, no dbar-solving.
 
 * `FinCover.induced 𝒱 V : FinCover V`: the induced cover of a member `V` of `⊤`'s cover `𝒱`.
 * `exists_goodCover`: good covers exist (3-line corollary of cech's `exists_good_refinement`).

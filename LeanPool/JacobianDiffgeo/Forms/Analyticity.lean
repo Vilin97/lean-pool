@@ -164,7 +164,7 @@ theorem inCoordinates_apply_one (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[�
 
 /-! ### The section characterization -/
 
-/-- **Smoothness ⟺ analytic coefficients** (CC1): a covector section is `C^ω` at `x` iff its
+/-- **Smoothness ↔ analytic coefficients** (CC1): a covector section is `C^ω` at `x` iff its
 coefficient function in the preferred chart at `x` is analytic at the chart image of `x`. -/
 theorem contMDiffAt_section_iff_analyticAt_coeffInFun
     (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[ℂ] Bundle.Trivial X ℂ x) (x : X) :
