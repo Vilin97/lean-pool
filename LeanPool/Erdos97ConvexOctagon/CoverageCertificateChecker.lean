@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaries
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificatePrototype
+import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
+import LeanPool.Erdos97ConvexOctagon.StaticDirectCoverage
 
-/-! # Flat local checker for prototype coverage certificates -/
+/-! # Flat local checker for coverage certificates -/
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
@@ -47,6 +48,15 @@ structure BranchClaims where
   nodeCount : Nat
   /-- Identifier of the branch root. -/
   rootId : Nat
+
+/-- A fixed branch closes immediately by a pattern, or by a flat search certificate. -/
+inductive BranchClaim where
+  /-- A pattern covers the first two fixed rows. -/
+  | patternTwo (patternIdentifier : Nat)
+  /-- A pattern covers all three fixed rows. -/
+  | patternThree (patternIdentifier : Nat)
+  /-- The five remaining rows are covered by postorder local claims. -/
+  | search (claims : BranchClaims)
 
 private def defaultNodeClaim : NodeClaim :=
   ⟨0, 0, 0, 0, 0, 0, 0, 0, #[], #[], #[], #[]⟩
@@ -250,6 +260,23 @@ def nodeClaimChunkValidB
     (claims : BranchClaims) (start count : Nat) : Bool :=
   (List.range count).all fun offset => nodeLocalValidB claims (start + offset)
 
+/-- Every node in a flat branch passes its local checker. -/
+def BranchClaims.LocallyValid (claims : BranchClaims) : Prop :=
+  ∀ identifier, identifier < claims.nodeCount →
+    nodeLocalValidB claims identifier = true
+
+/-- Extract one local node fact from a bounded chunk audit. -/
+theorem nodeLocalValid_of_chunk
+    {claims : BranchClaims} {start count identifier : Nat}
+    (haudit : nodeClaimChunkValidB claims start count = true)
+    (hlower : start ≤ identifier) (hupper : identifier < start + count) :
+    nodeLocalValidB claims identifier = true := by
+  have hoffset : identifier - start < count := by omega
+  have hmember : identifier - start ∈ List.range count :=
+    List.mem_range.mpr hoffset
+  have hvalid := (List.all_eq_true.mp haudit) (identifier - start) hmember
+  simpa [Nat.add_sub_of_le hlower] using hvalid
+
 /-- Validate only row-partition facts in a bounded node chunk. -/
 def nodePruningChunkValidB
     (claims : BranchClaims) (start count : Nat) : Bool :=
@@ -267,8 +294,8 @@ def allNodeClaimsValidB (claims : BranchClaims) : Bool :=
     let start := 64 * blockIndex
     nodeClaimChunkValidB claims start (min 64 (claims.nodeCount - start))
 
-/-- Validate the exact fixed-row root carried by one branch claim array. -/
-def branchClaimRootValidB
+/-- Validate the exact fixed-row root carried by one search claim array. -/
+def searchBranchRootValidB
     (orbit : Fin 7) (rowTwo : Fin 35) (claims : BranchClaims) : Bool :=
   if claims.rootId < claims.nodeCount then
     let root := claims.nodeAt claims.rootId
@@ -284,5 +311,34 @@ def branchClaimRootValidB
       (root.pairOnce == pairState.seenOnce) &&
       (root.pairTwice == pairState.seenTwice)
   else false
+
+/-- Validate the immediate pattern or exact fixed-row state of one branch claim. -/
+def branchClaimRootValidB
+    (orbit : Fin 7) (rowTwo : Fin 35) (claim : BranchClaim) : Bool :=
+  let codeTwo := addRowCode (addRowCode 0 30 0) (canonicalRowMask orbit) 1
+  match claim with
+  | .patternTwo patternIdentifier =>
+      patternIdentifierPackedMatchesB patternIdentifier codeTwo
+  | .patternThree patternIdentifier =>
+      let choice0 := searchChoiceForRow 0 30
+      let choice1 := searchChoiceForRow 1 (canonicalRowMask orbit)
+      let pairState := (PairState.empty.add choice0.pairMask).add choice1.pairMask
+      let columnState := (ColumnState.empty.add 30).add (canonicalRowMask orbit)
+      let row := rowTwoMask rowTwo
+      let choice2 := searchChoiceForRow 2 row
+      let codeThree := addRowCode codeTwo row 2
+      pairState.compatible choice2.pairMask &&
+        (columnState.add row).feasible searchCentres &&
+        patternIdentifierPackedMatchesB patternIdentifier codeThree
+  | .search claims =>
+      let choice0 := searchChoiceForRow 0 30
+      let choice1 := searchChoiceForRow 1 (canonicalRowMask orbit)
+      let pairState := (PairState.empty.add choice0.pairMask).add choice1.pairMask
+      let columnState := (ColumnState.empty.add 30).add (canonicalRowMask orbit)
+      let row := rowTwoMask rowTwo
+      let choice2 := searchChoiceForRow 2 row
+      pairState.compatible choice2.pairMask &&
+        (columnState.add row).feasible searchCentres &&
+        searchBranchRootValidB orbit rowTwo claims
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage
