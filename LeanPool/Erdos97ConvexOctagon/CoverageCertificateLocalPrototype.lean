@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaries
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificatePrototype
 
 /-! # Flat local checker for prototype coverage certificates -/
@@ -20,10 +21,14 @@ structure NodeClaim where
   pairOnce : UInt64
   /-- Pairs selected by at least two assigned rows. -/
   pairTwice : UInt64
-  /-- Eight packed one-byte column counts. -/
-  columnCounts : UInt64
+  /-- Row indices whose pair and column guards both survive. -/
+  activeRows : UInt64
+  /-- Pair-compatible row indices rejected by the semantic column guard. -/
+  rejectedRows : UInt64
   /-- Legal-row indices stopped by pattern origins. -/
   patternRows : UInt64
+  /-- One semantic column-conflict target for every rejected row. -/
+  rejectionTargetGroups : Array (List Nat)
   /-- Pattern origins grouped by consecutive five-row words. -/
   patternOriginGroups : Array (List Nat)
   /-- Recursive child identifiers grouped by consecutive five-row words. -/
@@ -40,7 +45,8 @@ structure BranchClaims where
   /-- Identifier of the branch root. -/
   rootId : Nat
 
-private def defaultNodeClaim : NodeClaim := ⟨0, 0, 0, 0, 0, 0, #[], #[], #[]⟩
+private def defaultNodeClaim : NodeClaim :=
+  ⟨0, 0, 0, 0, 0, 0, 0, #[], #[], #[], #[]⟩
 
 /-- Retrieve one node without unfolding an entire large flat array literal. -/
 def BranchClaims.nodeAt (claims : BranchClaims) (identifier : Nat) : NodeClaim :=
@@ -74,108 +80,175 @@ private structure LocalCursor where
   childIds : List Nat
   hardOrigins : List Nat
 
-/-- Packed-only pattern-origin validation for the first computation gate. -/
-def patternOriginPackedMatchesB (origin : Nat) (code : UInt64) : Bool :=
-  match patternSummaryForOrigin? origin with
+private structure RejectionCursor where
+  ok : Bool
+  targets : List Nat
+
+/-- Constant-depth lookup of one compact pattern-summary identifier. -/
+def densePatternSummaryAt? (identifier : Nat) : Option PatternSummary :=
+  match densePatternSummaryGroups[identifier / 64]? with
+  | none => none
+  | some group => group[identifier % 64]?
+
+/-- Constant-depth lookup of one compact exact-summary identifier. -/
+def denseHardSummaryAt? (identifier : Nat) : Option HardSummary :=
+  match denseHardSummaryGroups[identifier / 64]? with
+  | none => none
+  | some group => group[identifier % 64]?
+
+/-- Packed-only pattern-summary validation for the first computation gate. -/
+def patternIdentifierPackedMatchesB
+    (identifier : Nat) (code : UInt64) : Bool :=
+  match densePatternSummaryAt? identifier with
   | none => false
   | some summary => (summary.mask &&& code) == summary.mask
 
-/-- Packed-only hard-origin validation for the first computation gate. -/
-def hardOriginPackedMatchesB (origin : Nat) (code : UInt64) : Bool :=
-  match hardSummaryForOrigin? origin with
+/-- Packed-only exact-summary validation for the first computation gate. -/
+def hardIdentifierPackedMatchesB (identifier : Nat) (code : UInt64) : Bool :=
+  match denseHardSummaryAt? identifier with
   | none => false
   | some summary => summary.code == code
 
-/-- Compatible row indices in one fixed five-index word. -/
-def compatibleRowIndexWord
-    (incompatible : UInt64) (offset : Nat) : List Nat :=
-  let compatible := incompatible ^^^ 34359738367
-  let word := ((compatible >>> UInt64.ofNat offset) &&& 31).toNat
+/-- Selected row indices in one fixed five-index word. -/
+def rowIndexWord (rows : UInt64) (offset : Nat) : List Nat :=
+  let word := ((rows >>> UInt64.ofNat offset) &&& 31).toNat
   (fiveBitIndices.getD word []).map fun index => offset + index
 
 /-- Process at most five compatible rows while threading the local witness streams. -/
 private def processFiveRows
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
-    (columnState : ColumnState) (indices : List Nat)
-    (initial : LocalCursor) : LocalCursor :=
+    (indices : List Nat) (initial : LocalCursor) : LocalCursor :=
   indices.foldl (fun cursor index =>
     if !cursor.ok then cursor
     else
       let choice := (searchRowChoices.getD centre.val #[]).getD index ⟨0, 0⟩
       let nextCode := addRowCode claim.code choice.rowMask centre
       let nextPairState := pairState.add choice.pairMask
-      let nextColumnState := columnState.add choice.rowMask
-      let nextAssignments :=
-        (centre, choice.rowMask) :: assignmentsFromCode claim.code claim.depth
-      let columnSurvives := nextColumnState.feasible remaining ||
-        columnFeasibleB nextAssignments remaining
-      if columnSurvives then
-        if bitSetB claim.patternRows index then
-          match cursor.patternOrigins with
-          | [] => ⟨false, [], cursor.childIds, cursor.hardOrigins⟩
-          | origin :: origins =>
-              ⟨patternOriginPackedMatchesB origin nextCode,
-                origins, cursor.childIds, cursor.hardOrigins⟩
-        else if remaining.isEmpty then
-          match cursor.hardOrigins with
-          | [] => ⟨false, cursor.patternOrigins, cursor.childIds, []⟩
-          | origin :: origins =>
-              ⟨hardOriginPackedMatchesB origin nextCode,
-                cursor.patternOrigins, cursor.childIds, origins⟩
-        else
-          match cursor.childIds with
-          | [] => ⟨false, cursor.patternOrigins, [], cursor.hardOrigins⟩
-          | childId :: childIds =>
-              let child := claims.nodeAt childId
-              let childValid := decide (childId < identifier) &&
-                decide (childId < claims.nodeCount) &&
-                (child.depth == claim.depth + 1) && (child.code == nextCode) &&
-                (child.pairOnce == nextPairState.seenOnce) &&
-                (child.pairTwice == nextPairState.seenTwice) &&
-                (child.columnCounts == nextColumnState.counts)
-              ⟨childValid, cursor.patternOrigins, childIds, cursor.hardOrigins⟩
-      else if bitSetB claim.patternRows index then
-        ⟨false, cursor.patternOrigins, cursor.childIds, cursor.hardOrigins⟩
-      else cursor) initial
+      if bitSetB claim.patternRows index then
+        match cursor.patternOrigins with
+        | [] => ⟨false, [], cursor.childIds, cursor.hardOrigins⟩
+        | patternIdentifier :: patternIdentifiers =>
+            ⟨patternIdentifierPackedMatchesB patternIdentifier nextCode,
+              patternIdentifiers, cursor.childIds, cursor.hardOrigins⟩
+      else if remaining.isEmpty then
+        match cursor.hardOrigins with
+        | [] => ⟨false, cursor.patternOrigins, cursor.childIds, []⟩
+        | hardIdentifier :: hardIdentifiers =>
+            ⟨hardIdentifierPackedMatchesB hardIdentifier nextCode,
+              cursor.patternOrigins, cursor.childIds, hardIdentifiers⟩
+      else
+        match cursor.childIds with
+        | [] => ⟨false, cursor.patternOrigins, [], cursor.hardOrigins⟩
+        | childId :: childIds =>
+            let child := claims.nodeAt childId
+            let childValid := decide (childId < identifier) &&
+              decide (childId < claims.nodeCount) &&
+              (child.depth == claim.depth + 1) && (child.code == nextCode) &&
+              (child.pairOnce == nextPairState.seenOnce) &&
+              (child.pairTwice == nextPairState.seenTwice)
+            ⟨childValid, cursor.patternOrigins, childIds, cursor.hardOrigins⟩) initial
 
 /-- Validate one of the seven disjoint five-row words of a node claim. -/
 private def nodeWordValidB
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
-    (columnState : ColumnState) (incompatible : UInt64) (wordIndex : Nat) : Bool :=
+    (wordIndex : Nat) : Bool :=
   let initial : LocalCursor :=
     ⟨true, claim.patternOriginGroups.getD wordIndex [],
       claim.childIdGroups.getD wordIndex [],
       claim.hardOriginGroups.getD wordIndex []⟩
   let result := processFiveRows claims identifier claim centre remaining pairState
-    columnState (compatibleRowIndexWord incompatible (5 * wordIndex)) initial
+    (rowIndexWord claim.activeRows (5 * wordIndex)) initial
   result.ok && result.patternOrigins.isEmpty && result.childIds.isEmpty &&
     result.hardOrigins.isEmpty
 
-/-- Fail-closed local validation of one postorder node and its child transitions. -/
-def nodeLocalValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
+/-- Validate one semantically rejected row of a node claim. -/
+private def rejectedRowValidB
+    (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
+    (index target : Nat) : Bool :=
+  if htarget : target < 8 then
+    let targetVertex : Vertex := ⟨target, htarget⟩
+    let choice := (searchRowChoices.getD centre.val #[]).getD index ⟨0, 0⟩
+    let assignments :=
+      (centre, choice.rowMask) :: assignmentsFromCode claim.code claim.depth
+    let count := assignmentColumnCount assignments targetVertex
+    decide (4 < count) ||
+      decide (count + remainingColumnCapacity remaining targetVertex < 4)
+  else false
+
+/-- Validate at most five rejected rows using one semantic conflict each. -/
+private def rejectedWordValidB
+    (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
+    (indices targets : List Nat) : Bool :=
+  let initial : RejectionCursor := ⟨true, targets⟩
+  let result := indices.foldl (fun cursor index =>
+    if !cursor.ok then cursor
+    else
+      match cursor.targets with
+      | [] => ⟨false, []⟩
+      | target :: remainingTargets =>
+          ⟨rejectedRowValidB claim centre remaining index target,
+            remainingTargets⟩) initial
+  result.ok && result.targets.isEmpty
+
+/-- Validate the conservative pair/column row partition of one node. -/
+def nodePruningValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
   if identifier < claims.nodeCount then
     let claim := claims.nodeAt identifier
     if claim.depth < searchCentres.length then
       let centre := searchCentres.getD claim.depth 0
       let remaining := searchCentres.drop (claim.depth + 1)
       let pairState : PairState := ⟨claim.pairOnce, claim.pairTwice⟩
-      let columnState : ColumnState := ⟨claim.columnCounts⟩
       let incompatible := incompatibleRowIndexMask centre pairState.seenTwice
-      if (claim.patternRows &&& 34359738367) != claim.patternRows ||
-          (claim.patternRows &&& incompatible) != 0 then false
+      let legalRows : UInt64 := 34359738367
+      if (claim.activeRows &&& legalRows) != claim.activeRows ||
+          (claim.rejectedRows &&& legalRows) != claim.rejectedRows ||
+          (claim.patternRows &&& claim.activeRows) != claim.patternRows ||
+          (claim.activeRows &&& claim.rejectedRows) != 0 ||
+          (claim.activeRows &&& incompatible) != 0 ||
+          (claim.rejectedRows &&& incompatible) != 0 ||
+          ((claim.activeRows ||| claim.rejectedRows ||| incompatible) &&&
+            legalRows) != legalRows then false
       else
         (List.range 7).all fun wordIndex =>
-          nodeWordValidB claims identifier claim centre remaining pairState
-            columnState incompatible wordIndex
+          rejectedWordValidB claim centre remaining
+              (rowIndexWord claim.rejectedRows (5 * wordIndex))
+              (claim.rejectionTargetGroups.getD wordIndex [])
     else false
   else false
+
+/-- Validate the active row outcomes and child-state transitions of one node. -/
+def nodeTransitionsValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
+  if identifier < claims.nodeCount then
+    let claim := claims.nodeAt identifier
+    if claim.depth < searchCentres.length then
+      let centre := searchCentres.getD claim.depth 0
+      let remaining := searchCentres.drop (claim.depth + 1)
+      let pairState : PairState := ⟨claim.pairOnce, claim.pairTwice⟩
+      (List.range 7).all fun wordIndex =>
+        nodeWordValidB claims identifier claim centre remaining pairState wordIndex
+    else false
+  else false
+
+/-- Fail-closed local validation of one postorder node. -/
+def nodeLocalValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
+  nodePruningValidB claims identifier && nodeTransitionsValidB claims identifier
 
 /-- Validate a bounded consecutive chunk of postorder node identifiers. -/
 def nodeClaimChunkValidB
     (claims : BranchClaims) (start count : Nat) : Bool :=
   (List.range count).all fun offset => nodeLocalValidB claims (start + offset)
+
+/-- Validate only row-partition facts in a bounded node chunk. -/
+def nodePruningChunkValidB
+    (claims : BranchClaims) (start count : Nat) : Bool :=
+  (List.range count).all fun offset => nodePruningValidB claims (start + offset)
+
+/-- Validate only active transitions in a bounded node chunk. -/
+def nodeTransitionsChunkValidB
+    (claims : BranchClaims) (start count : Nat) : Bool :=
+  (List.range count).all fun offset => nodeTransitionsValidB claims (start + offset)
 
 /-- Validate all postorder claims in bounded 64-node blocks. -/
 def allNodeClaimsValidB (claims : BranchClaims) : Bool :=
@@ -197,12 +270,9 @@ def branchClaimRootValidB
     let choice2 := searchChoiceForRow 2 (rowTwoMask rowTwo)
     let pairState := ((PairState.empty.add choice0.pairMask).add choice1.pairMask).add
       choice2.pairMask
-    let columnState := ((ColumnState.empty.add 30).add (canonicalRowMask orbit)).add
-      (rowTwoMask rowTwo)
     (root.depth == 0) && (root.code == expected) &&
       (root.pairOnce == pairState.seenOnce) &&
-      (root.pairTwice == pairState.seenTwice) &&
-      (root.columnCounts == columnState.counts)
+      (root.pairTwice == pairState.seenTwice)
   else false
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage
