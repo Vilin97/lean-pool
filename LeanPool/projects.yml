@@ -5614,8 +5614,8 @@ projects:
       quotient of the dual of holomorphic 1-forms, and proves the surrounding
       theory it needs: the genus as the dimension of the space of holomorphic
       1-forms, discreteness and full rank 2g of the period lattice, the
-      Abel-Jacobi map with Abel's theorem in the form of its injectivity on
-      degree-zero divisor classes, functoriality (pushforward, pullback, degree,
+      Abel-Jacobi map and its injectivity in positive genus, functoriality
+      (pushforward, pullback, degree,
       and the projection formula), Riemann-Roch, Serre duality via Laurent
       tails, the residue theorem, the Dolbeault-Cech comparison, and finite
       dimensionality of the first cohomology by a Schwartz/Montel argument. The
