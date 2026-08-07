@@ -24,7 +24,7 @@ import LeanPool.Erdos97ConvexOctagon.CoverageHardChoices6
 
 namespace Erdos97Octagon.RawIncidence
 
-/-- Legal rows paired with summaries whose highest nonempty row is that row. -/
+/-- Legal rows paired with summaries whose last assigned nonempty row is that row. -/
 def patternSummaryChoices : Array (List SummaryRowChoice) := #[
   patternSummaryChoices0,
   patternSummaryChoices1,

@@ -69,6 +69,10 @@ def packedRow (mask : UInt64) : Finset Vertex :=
     target ∈ packedRow mask ↔ bitSetB mask target.val = true := by
   simp [packedRow]
 
+/-- Vertex pairs in the lexicographic order used by the finite search. -/
+def vertexPairs : List (List Vertex) :=
+  ((List.finRange 8).sublistsLen 2).reverse
+
 /-- Read one directed incidence from a packed table. -/
 def packedSelectsB (code : UInt64) (centre target : Vertex) : Bool :=
   bitSetB code (varIndex centre target)

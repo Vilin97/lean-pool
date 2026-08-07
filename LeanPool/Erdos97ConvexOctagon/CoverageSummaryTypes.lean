@@ -36,7 +36,7 @@ structure SummaryRowChoice where
   rowMask : UInt64
   /-- Bit mask of unordered vertex pairs selected together by the row. -/
   pairMask : UInt64
-  /-- Patterns whose highest nonempty row is compatible with this row. -/
+  /-- Patterns whose last assigned nonempty row is compatible with this row. -/
   patterns : PatternSummaryBuckets
 
 /-- Compute the unordered vertex-pair bits selected together by a row mask. -/

@@ -48,10 +48,6 @@ theorem valuation_variable (R : RawIncidence) (centre target : Vertex) :
 def fiveSubsets : List (List Vertex) :=
   ((List.finRange 8).sublistsLen 5).reverse
 
-/-- Vertex pairs in the lexicographic order used by the generator. -/
-def vertexPairs : List (List Vertex) :=
-  ((List.finRange 8).sublistsLen 2).reverse
-
 /-- Vertex triples in the lexicographic order used by the generator. -/
 def vertexTriples : List (List Vertex) :=
   ((List.finRange 8).sublistsLen 3).reverse
