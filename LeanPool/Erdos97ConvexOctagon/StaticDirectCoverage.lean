@@ -6,6 +6,7 @@ Authors: Egor Lyfar
 
 import LeanPool.Erdos97ConvexOctagon.CoverageSummaryChoices
 import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData
+import LeanPool.Erdos97ConvexOctagon.PairCompatibility
 import LeanPool.Erdos97ConvexOctagon.RowSymmetry
 
 /-! # Direct finite coverage audit using statically bucketed summaries -/
@@ -82,15 +83,6 @@ def hasHardB
     (summaries : HardSummaryBuckets) : Bool :=
   summaries.any fun bucket =>
     bucket.any (hardSummaryMatchesB code assignments)
-
-/-- Semantic pair-sparsity guard used to validate every fast pair-state rejection. -/
-def pairCompatibleB (assignments : List RowAssignment) (row : UInt64) : Bool :=
-  vertexPairs.all fun pair =>
-    match pair with
-    | [a, b] => !(bitSetB row a.val && bitSetB row b.val) ||
-        decide ((assignments.filter fun previous =>
-          bitSetB previous.2 a.val && bitSetB previous.2 b.val).length < 2)
-    | _ => false
 
 /-- Add one row to a packed 64-bit incidence-table prefix. -/
 def addRowCode (code row : UInt64) (centre : Vertex) : UInt64 :=
