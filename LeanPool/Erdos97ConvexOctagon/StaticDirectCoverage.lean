@@ -8,6 +8,7 @@ import LeanPool.Erdos97ConvexOctagon.CoverageSummaryChoices
 import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
 import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
 import LeanPool.Erdos97ConvexOctagon.PairCompatibility
+import LeanPool.Erdos97ConvexOctagon.RowMasks
 
 /-! # Direct finite coverage audit using statically bucketed summaries -/
 

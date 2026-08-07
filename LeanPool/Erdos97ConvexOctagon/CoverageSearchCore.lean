@@ -5,7 +5,6 @@ Authors: Egor Lyfar
 -/
 
 import LeanPool.Erdos97ConvexOctagon.CoverageSummaryTypes
-import LeanPool.Erdos97ConvexOctagon.RowMasks
 
 /-! # Lightweight state for finite coverage search -/
 

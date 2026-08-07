@@ -15,9 +15,9 @@ theorem coverageBranchRoot_0_02 :
     branchClaimRootValidB 0 2 (.patternTwo 0) = true := by
   rfl
 
-/-- Root audit for fixed branch (4, 16). -/
-theorem coverageBranchRoot_4_16 :
-    branchClaimRootValidB 4 16 (.patternTwo 0) = true := by
+/-- Root audit for fixed branch (4, 20). -/
+theorem coverageBranchRoot_4_20 :
+    branchClaimRootValidB 4 20 (.patternTwo 0) = true := by
   rfl
 
 /-- Root audit for fixed branch (1, 8). -/

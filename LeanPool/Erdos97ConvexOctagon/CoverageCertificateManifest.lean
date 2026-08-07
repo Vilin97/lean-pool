@@ -20,12 +20,6 @@ import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData12
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData13
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData14
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData15
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData16
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData17
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData18
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData19
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData20
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData21
 
 /-! # Exhaustive fixed-branch coverage-certificate manifest -/
 

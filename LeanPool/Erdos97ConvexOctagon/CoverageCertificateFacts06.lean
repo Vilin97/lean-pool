@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData00
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData01
 
 /-! # Bounded coverage-certificate computation facts -/
@@ -15,9 +16,9 @@ theorem coverageBranchRoot_0_06 :
     branchClaimRootValidB 0 6 (.patternTwo 0) = true := by
   rfl
 
-/-- Root audit for fixed branch (4, 20). -/
-theorem coverageBranchRoot_4_20 :
-    branchClaimRootValidB 4 20 (.patternTwo 0) = true := by
+/-- Root audit for fixed branch (4, 24). -/
+theorem coverageBranchRoot_4_24 :
+    branchClaimRootValidB 4 24 (.patternTwo 0) = true := by
   rfl
 
 /-- Root audit for fixed branch (1, 27). -/

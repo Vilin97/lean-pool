@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData17
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData12
 
 /-! # Bounded coverage-certificate computation facts -/
 
@@ -15,34 +15,29 @@ theorem coverageBranchRoot_3_29 :
     branchClaimRootValidB 3 29 (.patternThree 6) = true := by
   rfl
 
-/-- Root audit for fixed branch (6, 9). -/
-theorem coverageBranchRoot_6_09 :
-    branchClaimRootValidB 6 9 (.search branchClaims_6_9) = true := by
+/-- Root audit for fixed branch (6, 1). -/
+theorem coverageBranchRoot_6_01 :
+    branchClaimRootValidB 6 1 (.search branchClaims_6_1) = true := by
   rfl
 
-/-- Root audit for fixed branch (6, 10). -/
-theorem coverageBranchRoot_6_10 :
-    branchClaimRootValidB 6 10 (.search branchClaims_6_10) = true := by
+/-- Node audit for fixed branch (5, 34), starting at 320. -/
+theorem coverageBranchNodes_5_34_00320 :
+    nodeClaimChunkValidB branchClaims_5_34 320 64 = true := by
   rfl
 
-/-- Node audit for fixed branch (6, 8), starting at 64. -/
-theorem coverageBranchNodes_6_08_00064 :
-    nodeClaimChunkValidB branchClaims_6_8 64 57 = true := by
+/-- Node audit for fixed branch (5, 34), starting at 384. -/
+theorem coverageBranchNodes_5_34_00384 :
+    nodeClaimChunkValidB branchClaims_5_34 384 6 = true := by
   rfl
 
-/-- Node audit for fixed branch (6, 9), starting at 0. -/
-theorem coverageBranchNodes_6_09_00000 :
-    nodeClaimChunkValidB branchClaims_6_9 0 64 = true := by
+/-- Node audit for fixed branch (6, 1), starting at 0. -/
+theorem coverageBranchNodes_6_01_00000 :
+    nodeClaimChunkValidB branchClaims_6_1 0 32 = true := by
   rfl
 
-/-- Node audit for fixed branch (6, 9), starting at 64. -/
-theorem coverageBranchNodes_6_09_00064 :
-    nodeClaimChunkValidB branchClaims_6_9 64 51 = true := by
-  rfl
-
-/-- Node audit for fixed branch (6, 10), starting at 0. -/
-theorem coverageBranchNodes_6_10_00000 :
-    nodeClaimChunkValidB branchClaims_6_10 0 64 = true := by
+/-- Node audit for fixed branch (6, 1), starting at 32. -/
+theorem coverageBranchNodes_6_01_00032 :
+    nodeClaimChunkValidB branchClaims_6_1 32 32 = true := by
   rfl
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage

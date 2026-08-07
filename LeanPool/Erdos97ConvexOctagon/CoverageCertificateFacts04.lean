@@ -5,7 +5,6 @@ Authors: Egor Lyfar
 -/
 
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData00
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData01
 
 /-! # Bounded coverage-certificate computation facts -/
 
@@ -16,9 +15,9 @@ theorem coverageBranchRoot_0_04 :
     branchClaimRootValidB 0 4 (.patternTwo 0) = true := by
   rfl
 
-/-- Root audit for fixed branch (4, 18). -/
-theorem coverageBranchRoot_4_18 :
-    branchClaimRootValidB 4 18 (.patternTwo 0) = true := by
+/-- Root audit for fixed branch (4, 22). -/
+theorem coverageBranchRoot_4_22 :
+    branchClaimRootValidB 4 22 (.patternTwo 0) = true := by
   rfl
 
 /-- Root audit for fixed branch (1, 17). -/

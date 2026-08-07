@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 Egor Lyfar. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Egor Lyfar
+-/
+
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateManifest
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts00
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts01
@@ -89,6 +95,10 @@ import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts86
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts87
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts88
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts89
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts90
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts91
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts92
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateFacts93
 
 /-! # Assembled coverage-certificate validity facts -/
 
@@ -224,8 +234,10 @@ theorem coverageBranchLocallyValid_1_29 :
     branchClaims_1_29.LocallyValid := by
   intro identifier hidentifier
   change identifier < 67 at hidentifier
-  by_cases hchunk0 : identifier < 64
+  by_cases hchunk0 : identifier < 32
   · exact nodeLocalValid_of_chunk coverageBranchNodes_1_29_00000 (by omega) hchunk0
+  by_cases hchunk1 : identifier < 64
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_1_29_00032 (by omega) hchunk1
   exact nodeLocalValid_of_chunk coverageBranchNodes_1_29_00064 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (1, 30). -/
@@ -254,7 +266,9 @@ theorem coverageBranchLocallyValid_1_31 :
   · exact nodeLocalValid_of_chunk coverageBranchNodes_1_31_00064 (by omega) hchunk1
   by_cases hchunk2 : identifier < 192
   · exact nodeLocalValid_of_chunk coverageBranchNodes_1_31_00128 (by omega) hchunk2
-  exact nodeLocalValid_of_chunk coverageBranchNodes_1_31_00192 (by omega) (by omega)
+  by_cases hchunk3 : identifier < 221
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_1_31_00192 (by omega) hchunk3
+  exact nodeLocalValid_of_chunk coverageBranchNodes_1_31_00221 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (1, 32). -/
 theorem coverageBranchLocallyValid_1_32 :
@@ -402,10 +416,12 @@ theorem coverageBranchLocallyValid_2_15 :
     branchClaims_2_15.LocallyValid := by
   intro identifier hidentifier
   change identifier < 135 at hidentifier
-  by_cases hchunk0 : identifier < 64
+  by_cases hchunk0 : identifier < 32
   · exact nodeLocalValid_of_chunk coverageBranchNodes_2_15_00000 (by omega) hchunk0
-  by_cases hchunk1 : identifier < 128
-  · exact nodeLocalValid_of_chunk coverageBranchNodes_2_15_00064 (by omega) hchunk1
+  by_cases hchunk1 : identifier < 64
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_2_15_00032 (by omega) hchunk1
+  by_cases hchunk2 : identifier < 128
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_2_15_00064 (by omega) hchunk2
   exact nodeLocalValid_of_chunk coverageBranchNodes_2_15_00128 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (2, 17). -/
@@ -695,8 +711,10 @@ theorem coverageBranchLocallyValid_3_26 :
   · exact nodeLocalValid_of_chunk coverageBranchNodes_3_26_00064 (by omega) hchunk1
   by_cases hchunk2 : identifier < 192
   · exact nodeLocalValid_of_chunk coverageBranchNodes_3_26_00128 (by omega) hchunk2
-  by_cases hchunk3 : identifier < 256
+  by_cases hchunk3 : identifier < 224
   · exact nodeLocalValid_of_chunk coverageBranchNodes_3_26_00192 (by omega) hchunk3
+  by_cases hchunk4 : identifier < 256
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_3_26_00224 (by omega) hchunk4
   exact nodeLocalValid_of_chunk coverageBranchNodes_3_26_00256 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (3, 27). -/
@@ -757,7 +775,9 @@ theorem coverageBranchLocallyValid_3_31 :
   · exact nodeLocalValid_of_chunk coverageBranchNodes_3_31_00064 (by omega) hchunk1
   by_cases hchunk2 : identifier < 192
   · exact nodeLocalValid_of_chunk coverageBranchNodes_3_31_00128 (by omega) hchunk2
-  exact nodeLocalValid_of_chunk coverageBranchNodes_3_31_00192 (by omega) (by omega)
+  by_cases hchunk3 : identifier < 218
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_3_31_00192 (by omega) hchunk3
+  exact nodeLocalValid_of_chunk coverageBranchNodes_3_31_00218 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (3, 32). -/
 theorem coverageBranchLocallyValid_3_32 :
@@ -960,7 +980,9 @@ theorem coverageBranchLocallyValid_5_24 :
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_24_00064 (by omega) hchunk1
   by_cases hchunk2 : identifier < 192
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_24_00128 (by omega) hchunk2
-  exact nodeLocalValid_of_chunk coverageBranchNodes_5_24_00192 (by omega) (by omega)
+  by_cases hchunk3 : identifier < 217
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_24_00192 (by omega) hchunk3
+  exact nodeLocalValid_of_chunk coverageBranchNodes_5_24_00217 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (5, 25). -/
 theorem coverageBranchLocallyValid_5_25 :
@@ -973,7 +995,9 @@ theorem coverageBranchLocallyValid_5_25 :
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_25_00064 (by omega) hchunk1
   by_cases hchunk2 : identifier < 192
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_25_00128 (by omega) hchunk2
-  exact nodeLocalValid_of_chunk coverageBranchNodes_5_25_00192 (by omega) (by omega)
+  by_cases hchunk3 : identifier < 223
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_25_00192 (by omega) hchunk3
+  exact nodeLocalValid_of_chunk coverageBranchNodes_5_25_00223 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (5, 26). -/
 theorem coverageBranchLocallyValid_5_26 :
@@ -1016,14 +1040,18 @@ theorem coverageBranchLocallyValid_5_28 :
   change identifier < 334 at hidentifier
   by_cases hchunk0 : identifier < 64
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00000 (by omega) hchunk0
-  by_cases hchunk1 : identifier < 128
+  by_cases hchunk1 : identifier < 96
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00064 (by omega) hchunk1
-  by_cases hchunk2 : identifier < 192
-  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00128 (by omega) hchunk2
-  by_cases hchunk3 : identifier < 256
-  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00192 (by omega) hchunk3
-  by_cases hchunk4 : identifier < 320
-  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00256 (by omega) hchunk4
+  by_cases hchunk2 : identifier < 128
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00096 (by omega) hchunk2
+  by_cases hchunk3 : identifier < 192
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00128 (by omega) hchunk3
+  by_cases hchunk4 : identifier < 256
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00192 (by omega) hchunk4
+  by_cases hchunk5 : identifier < 288
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00256 (by omega) hchunk5
+  by_cases hchunk6 : identifier < 320
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00288 (by omega) hchunk6
   exact nodeLocalValid_of_chunk coverageBranchNodes_5_28_00320 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (5, 29). -/
@@ -1054,10 +1082,12 @@ theorem coverageBranchLocallyValid_5_31 :
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_31_00192 (by omega) hchunk3
   by_cases hchunk4 : identifier < 320
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_31_00256 (by omega) hchunk4
-  by_cases hchunk5 : identifier < 384
+  by_cases hchunk5 : identifier < 352
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_31_00320 (by omega) hchunk5
-  by_cases hchunk6 : identifier < 448
-  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_31_00384 (by omega) hchunk6
+  by_cases hchunk6 : identifier < 384
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_31_00352 (by omega) hchunk6
+  by_cases hchunk7 : identifier < 448
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_31_00384 (by omega) hchunk7
   exact nodeLocalValid_of_chunk coverageBranchNodes_5_31_00448 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (5, 32). -/
@@ -1075,9 +1105,13 @@ theorem coverageBranchLocallyValid_5_32 :
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_32_00192 (by omega) hchunk3
   by_cases hchunk4 : identifier < 320
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_32_00256 (by omega) hchunk4
-  by_cases hchunk5 : identifier < 384
+  by_cases hchunk5 : identifier < 352
   · exact nodeLocalValid_of_chunk coverageBranchNodes_5_32_00320 (by omega) hchunk5
-  exact nodeLocalValid_of_chunk coverageBranchNodes_5_32_00384 (by omega) (by omega)
+  by_cases hchunk6 : identifier < 384
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_32_00352 (by omega) hchunk6
+  by_cases hchunk7 : identifier < 413
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_5_32_00384 (by omega) hchunk7
+  exact nodeLocalValid_of_chunk coverageBranchNodes_5_32_00413 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (5, 34). -/
 theorem coverageBranchLocallyValid_5_34 :
@@ -1103,8 +1137,10 @@ theorem coverageBranchLocallyValid_6_01 :
     branchClaims_6_1.LocallyValid := by
   intro identifier hidentifier
   change identifier < 65 at hidentifier
-  by_cases hchunk0 : identifier < 64
+  by_cases hchunk0 : identifier < 32
   · exact nodeLocalValid_of_chunk coverageBranchNodes_6_01_00000 (by omega) hchunk0
+  by_cases hchunk1 : identifier < 64
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_6_01_00032 (by omega) hchunk1
   exact nodeLocalValid_of_chunk coverageBranchNodes_6_01_00064 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (6, 2). -/
@@ -1158,7 +1194,9 @@ theorem coverageBranchLocallyValid_6_08 :
   change identifier < 121 at hidentifier
   by_cases hchunk0 : identifier < 64
   · exact nodeLocalValid_of_chunk coverageBranchNodes_6_08_00000 (by omega) hchunk0
-  exact nodeLocalValid_of_chunk coverageBranchNodes_6_08_00064 (by omega) (by omega)
+  by_cases hchunk1 : identifier < 92
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_6_08_00064 (by omega) hchunk1
+  exact nodeLocalValid_of_chunk coverageBranchNodes_6_08_00092 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (6, 9). -/
 theorem coverageBranchLocallyValid_6_09 :
@@ -1372,7 +1410,9 @@ theorem coverageBranchLocallyValid_6_31 :
   · exact nodeLocalValid_of_chunk coverageBranchNodes_6_31_00064 (by omega) hchunk1
   by_cases hchunk2 : identifier < 192
   · exact nodeLocalValid_of_chunk coverageBranchNodes_6_31_00128 (by omega) hchunk2
-  exact nodeLocalValid_of_chunk coverageBranchNodes_6_31_00192 (by omega) (by omega)
+  by_cases hchunk3 : identifier < 221
+  · exact nodeLocalValid_of_chunk coverageBranchNodes_6_31_00192 (by omega) hchunk3
+  exact nodeLocalValid_of_chunk coverageBranchNodes_6_31_00221 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (6, 32). -/
 theorem coverageBranchLocallyValid_6_32 :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData18
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateData13
 
 /-! # Bounded coverage-certificate computation facts -/
 
@@ -15,29 +15,29 @@ theorem coverageBranchRoot_4_03 :
     branchClaimRootValidB 4 3 (.patternTwo 0) = true := by
   rfl
 
-/-- Root audit for fixed branch (6, 18). -/
-theorem coverageBranchRoot_6_18 :
-    branchClaimRootValidB 6 18 (.search branchClaims_6_18) = true := by
+/-- Root audit for fixed branch (6, 13). -/
+theorem coverageBranchRoot_6_13 :
+    branchClaimRootValidB 6 13 (.search branchClaims_6_13) = true := by
   rfl
 
-/-- Node audit for fixed branch (6, 17), starting at 64. -/
-theorem coverageBranchNodes_6_17_00064 :
-    nodeClaimChunkValidB branchClaims_6_17 64 64 = true := by
+/-- Node audit for fixed branch (6, 12), starting at 64. -/
+theorem coverageBranchNodes_6_12_00064 :
+    nodeClaimChunkValidB branchClaims_6_12 64 61 = true := by
   rfl
 
-/-- Node audit for fixed branch (6, 17), starting at 128. -/
-theorem coverageBranchNodes_6_17_00128 :
-    nodeClaimChunkValidB branchClaims_6_17 128 43 = true := by
+/-- Node audit for fixed branch (6, 13), starting at 0. -/
+theorem coverageBranchNodes_6_13_00000 :
+    nodeClaimChunkValidB branchClaims_6_13 0 64 = true := by
   rfl
 
-/-- Node audit for fixed branch (6, 18), starting at 0. -/
-theorem coverageBranchNodes_6_18_00000 :
-    nodeClaimChunkValidB branchClaims_6_18 0 64 = true := by
+/-- Node audit for fixed branch (6, 13), starting at 64. -/
+theorem coverageBranchNodes_6_13_00064 :
+    nodeClaimChunkValidB branchClaims_6_13 64 64 = true := by
   rfl
 
-/-- Node audit for fixed branch (6, 18), starting at 64. -/
-theorem coverageBranchNodes_6_18_00064 :
-    nodeClaimChunkValidB branchClaims_6_18 64 64 = true := by
+/-- Node audit for fixed branch (6, 13), starting at 128. -/
+theorem coverageBranchNodes_6_13_00128 :
+    nodeClaimChunkValidB branchClaims_6_13 128 5 = true := by
   rfl
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage
