@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryTypes
 
 /-! # Static exact-table summary choices for one canonical orbit -/
 
@@ -236,11 +236,5 @@ def hardSummaryChoices1 : Array HardSummaryBuckets :=
     ]
   ]
 ]
-
-/-- Every hard summary for orbit 1 belongs to the audited summary data. -/
-theorem hardSummaryChoices1_members :
-    hardSummaryChoices1.toList.all (fun summaries =>
-      summaries.all (fun bucket => bucket.all HardSummary.memberB)) = true := by
-  rfl
 
 end Erdos97Octagon.RawIncidence

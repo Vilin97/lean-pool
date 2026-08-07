@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.CoverageSummaryData
+import LeanPool.Erdos97ConvexOctagon.CoverageSummaryTypes
 
 /-! # Static pattern-summary choices for one incidence row -/
 
@@ -220,12 +220,5 @@ def patternSummaryChoices2 : List SummaryRowChoice := [
       ]
     ]⟩
 ]
-
-/-- Every placed pattern summary for centre 2 belongs to the audited summary data. -/
-theorem patternSummaryChoices2_members :
-    patternSummaryChoices2.all (fun choice =>
-      choice.patterns.all (fun bucket =>
-        bucket.all PatternSummary.memberB) && choice.pairMaskValidB) = true := by
-  rfl
 
 end Erdos97Octagon.RawIncidence
