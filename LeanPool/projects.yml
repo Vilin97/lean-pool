@@ -5607,6 +5607,82 @@ projects:
       - "35Q83"
       - "82C22"
       - "49Q22"
+  - slug: poincare-three-body-nonintegrability
+    title: Poincaré's Nonintegrability Theorem for the Restricted Three-Body Problem
+    summary: >-
+      Formalizes Poincaré's classical parameter-analytic nonintegrability
+      theorem for the planar circular restricted three-body problem. The
+      development defines the rotating-frame Hamiltonian on its collision-free
+      domain, proves logarithmic blow-up of the resonant disturbing average at
+      an apoapsis collision boundary, and analytically propagates the resulting
+      dense resonant obstruction to exclude an additional analytic first
+      integral. The final statement is the fixed-coordinate, global
+      uniform-domain special case of the planar part of Yagasaki's Theorem 1.1;
+      his local meromorphic resonant-orbit obstruction is Theorem 3.1.
+    branch: dynamical systems
+    entry_module: LeanPool.PoincareThreeBody
+    authors:
+      - Gershon Bialer
+    source:
+      title: A new proof of Poincaré's result on the restricted three-body problem
+      authors:
+        - Kazuyuki Yagasaki
+      arxiv: "2111.11031"
+      doi: "10.1063/5.0266087"
+      url: https://arxiv.org/abs/2111.11031
+      github_repo: gersh/lean-pool
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
+    main_results:
+      - declaration: LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
+        informal: >-
+          No jointly real-analytic family near zero mass can be an additional
+          first integral of the planar circular restricted three-body
+          Hamiltonian with phase differential independent from the Hamiltonian
+          differential anywhere on the uniform collision-free domain.
+        source_ref: >-
+          Kazuyuki Yagasaki, "A new proof of Poincaré's result on the
+          restricted three-body problem," Theorem 1.1 (p. 2), planar case;
+          compare the precise local meromorphic obstruction near resonant
+          unperturbed elliptic orbits in Theorem 3.1 (p. 8). The Lean result is
+          the fixed-coordinate global uniform-domain special case: a global
+          real-analytic family restricts and complexifies on the local
+          neighborhoods used in the source theorem.
+      - declaration: LeanPool.PoincareThreeBody.delaunayHomological_obstruction
+        informal: >-
+          If the first homological equation holds and its perturbing Fourier
+          coefficient is nonzero at every positive rational Kepler resonance,
+          then the leading differential of a putative analytic first integral
+          is nowhere independent of the unperturbed Hamiltonian frequency.
+      - declaration: LeanPool.PoincareThreeBody.delaunayDenseResonance_obstruction
+        informal: >-
+          For the rotating Kepler frequency in Delaunay actions, orthogonality
+          of a continuous candidate differential to every positive rational
+          resonance vector forces dependence with the Hamiltonian frequency
+          at every positive action.
+      - declaration: LeanPool.PoincareThreeBody.homologicalEquation_obstruction
+        informal: >-
+          At a resonant action in two degrees of freedom, a nonzero perturbing
+          Fourier mode and the first homological equation force the
+          unperturbed frequency and the differential of a putative leading
+          first-integral coefficient to be linearly dependent.
+      - declaration: LeanPool.PoincareThreeBody.denseResonance_obstruction
+        informal: >-
+          If the resonant obstruction holds on a dense set of actions and the
+          frequency and differential vary continuously, then they are linearly
+          dependent at every action.
+    tags:
+      - dynamical-systems
+      - celestial-mechanics
+      - hamiltonian-systems
+      - nonintegrability
+    msc:
+      - "70F07"
+      - "37J30"
+      - "37J40"
   - slug: jacobian-diffgeo
     title: The Jacobian of a Compact Riemann Surface
     summary: >-
