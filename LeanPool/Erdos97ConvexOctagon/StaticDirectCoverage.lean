@@ -5,6 +5,7 @@ Authors: Egor Lyfar
 -/
 
 import LeanPool.Erdos97ConvexOctagon.CoverageSummaryChoices
+import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
 import LeanPool.Erdos97ConvexOctagon.PairCompatibility
 import LeanPool.Erdos97ConvexOctagon.RowMasks
 
@@ -33,6 +34,43 @@ def PairState.compatible (state : PairState) (pairMask : UInt64) : Bool :=
 def PairState.add (state : PairState) (pairMask : UInt64) : PairState :=
   ⟨state.seenOnce ||| pairMask,
     state.seenTwice ||| (state.seenOnce &&& pairMask)⟩
+
+/-- Index of the least significant set bit, found by six fixed half-word tests. -/
+def firstSetBitIndex (bits : UInt64) : Nat :=
+  let shift32 : UInt64 := if (bits &&& 4294967295) == 0 then 32 else 0
+  let bits := bits >>> shift32
+  let shift16 : UInt64 := if (bits &&& 65535) == 0 then 16 else 0
+  let bits := bits >>> shift16
+  let shift8 : UInt64 := if (bits &&& 255) == 0 then 8 else 0
+  let bits := bits >>> shift8
+  let shift4 : UInt64 := if (bits &&& 15) == 0 then 4 else 0
+  let bits := bits >>> shift4
+  let shift2 : UInt64 := if (bits &&& 3) == 0 then 2 else 0
+  let bits := bits >>> shift2
+  let shift1 : UInt64 := if (bits &&& 1) == 0 then 1 else 0
+  (shift32 + shift16 + shift8 + shift4 + shift2 + shift1).toNat
+
+private def incompatibleRowIndexMaskAux
+    (pairMasks : Array UInt64) : Nat → UInt64 → UInt64 → UInt64
+  | 0, _bits, result => result
+  | fuel + 1, bits, result =>
+      if bits == 0 then result
+      else
+        let index := firstSetBitIndex bits
+        incompatibleRowIndexMaskAux pairMasks fuel (bits &&& (bits - 1))
+          (result ||| pairMasks.getD index 0)
+
+/-- Legal-row indices incompatible with pairs already seen in two rows. -/
+def incompatibleRowIndexMask (centre : Vertex) (seenTwice : UInt64) : UInt64 :=
+  incompatibleRowIndexMaskAux (pairRowIndexMasks.getD centre.val #[])
+    64 seenTwice 0
+
+/-- Legal-row indices not ruled out by the accumulated pair conflicts. -/
+def compatibleRowIndices (incompatible : UInt64) : List Nat :=
+  let compatible := incompatible ^^^ 34359738367
+  [0, 5, 10, 15, 20, 25, 30].flatMap fun offset =>
+    let word := ((compatible >>> UInt64.ofNat offset) &&& 31).toNat
+    (fiveBitIndices.getD word []).map fun index => offset + index
 
 /-- Packed byte counters for the number of assigned rows selecting each target. -/
 structure ColumnState where
