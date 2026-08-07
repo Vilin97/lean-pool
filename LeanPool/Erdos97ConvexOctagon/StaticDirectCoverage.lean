@@ -34,25 +34,6 @@ def PairState.add (state : PairState) (pairMask : UInt64) : PairState :=
   ⟨state.seenOnce ||| pairMask,
     state.seenTwice ||| (state.seenOnce &&& pairMask)⟩
 
-/-- Vertex pairs in tuple form for decoding packed pair-state hints. -/
-def vertexPairTuples : List (Vertex × Vertex) :=
-  vertexPairs.filterMap fun pair =>
-    match pair with
-    | [first, second] => some (first, second)
-    | _ => none
-
-/-- Validate one pair-conflict hint selected from the packed pair state. -/
-def pairConflictHintB
-    (assignments : List RowAssignment) (row : UInt64)
-    (state : PairState) (pairMask : UInt64) : Bool :=
-  let overlap := state.seenTwice &&& pairMask
-  match vertexPairTuples.find? fun pair =>
-      bitSetB overlap (varIndex pair.1 pair.2) with
-  | some (first, second) =>
-      bitSetB row first.val && bitSetB row second.val &&
-        decide (2 ≤ pairCount assignments first second)
-  | none => false
-
 /-- Packed byte counters for the number of assigned rows selecting each target. -/
 structure ColumnState where
   /-- Eight one-byte column counters. -/
@@ -119,13 +100,13 @@ def columnConflictHintB
         decide (4 ≤ count + remainingColumnCapacity remaining target))
   | none => false
 
-/-- Use the packed pair guard only when its suggested conflict validates semantically. -/
+/-- Prune a row as soon as the exact packed pair state detects a third occurrence. -/
 def withPairPruningB
-    (assignments : List RowAssignment) (row : UInt64)
+    (_assignments : List RowAssignment) (_row : UInt64)
     (state : PairState) (pairMask : UInt64)
     (continueSearch : Unit → Bool) : Bool :=
   if state.compatible pairMask then continueSearch ()
-  else pairConflictHintB assignments row state pairMask || continueSearch ()
+  else true
 
 /-- Use the packed column guard only when its suggested conflict validates semantically. -/
 def withColumnPruningB

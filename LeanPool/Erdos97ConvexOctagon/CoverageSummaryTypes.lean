@@ -39,14 +39,27 @@ structure SummaryRowChoice where
   /-- Patterns whose last assigned nonempty row is compatible with this row. -/
   patterns : PatternSummaryBuckets
 
+/-- Vertex pairs in tuple form for packed pair masks. -/
+def vertexPairTuples : List (Vertex × Vertex) :=
+  vertexPairs.filterMap fun pair =>
+    match pair with
+    | [first, second] => some (first, second)
+    | _ => none
+
+/-- Whether one row selects both endpoints of a vertex pair. -/
+def pairSelectedB (rowMask : UInt64) (pair : Vertex × Vertex) : Bool :=
+  bitSetB rowMask pair.1.val && bitSetB rowMask pair.2.val
+
+/-- Add one selected pair to a packed pair mask. -/
+def addPairBit
+    (rowMask : UInt64) (result : UInt64) (pair : Vertex × Vertex) : UInt64 :=
+  if pairSelectedB rowMask pair then
+    result ||| (1 <<< UInt64.ofNat (varIndex pair.1 pair.2))
+  else result
+
 /-- Compute the unordered vertex-pair bits selected together by a row mask. -/
 def rowPairMask (rowMask : UInt64) : UInt64 :=
-  (List.finRange 8).foldl (fun result first =>
-    (List.finRange 8).foldl (fun result second =>
-      if decide (first < second) && bitSetB rowMask first.val &&
-          bitSetB rowMask second.val then
-        result ||| (1 <<< UInt64.ofNat (varIndex first second))
-      else result) result) 0
+  vertexPairTuples.foldl (addPairBit rowMask) 0
 
 /-- Check the precomputed pair mask attached to a row choice. -/
 def SummaryRowChoice.pairMaskValidB (choice : SummaryRowChoice) : Bool :=
