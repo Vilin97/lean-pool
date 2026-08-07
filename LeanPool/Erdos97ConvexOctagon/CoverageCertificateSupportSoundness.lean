@@ -12,6 +12,141 @@ import LeanPool.Erdos97ConvexOctagon.PairStateExactness
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
+private theorem bitSetB_eq_getLsbD (code : UInt64) (index : Fin 64) :
+    bitSetB code index.val = code.toBitVec.getLsbD index.val := by
+  unfold bitSetB
+  have hmasked :
+      ((code >>> UInt64.ofNat index.val) &&& 1).toBitVec =
+        (BitVec.ofBool (code.toBitVec.getLsbD index.val)).setWidth 64 := by
+    rw [UInt64.toBitVec_and, UInt64.toBitVec_shiftRight,
+      UInt64.toBitVec_one, BitVec.and_one_eq_setWidth_ofBool_getLsbD]
+    change (BitVec.ofBool ((code.toBitVec >>>
+      ((UInt64.ofNat index.val).toBitVec % 64).toNat).getLsbD 0)).setWidth 64 =
+      (BitVec.ofBool (code.toBitVec.getLsbD index.val)).setWidth 64
+    rw [BitVec.getLsbD_ushiftRight]
+    congr 3
+    simp [index.isLt]
+  cases hbit : code.toBitVec.getLsbD index.val with
+  | false =>
+      have hzero : (code >>> UInt64.ofNat index.val) &&& 1 = 0 := by
+        apply UInt64.toBitVec_inj.mp
+        rw [hmasked, hbit]
+        decide
+      simp [hzero]
+  | true =>
+      have hone : (code >>> UInt64.ofNat index.val) &&& 1 = 1 := by
+        apply UInt64.toBitVec_inj.mp
+        rw [hmasked, hbit]
+        decide
+      simp [hone]
+
+/-- Bit testing reflects bitwise disjunction. -/
+theorem bitSetB_or
+    (left right : UInt64) (index : Fin 64) :
+    bitSetB (left ||| right) index.val =
+      (bitSetB left index.val || bitSetB right index.val) := by
+  simp only [bitSetB_eq_getLsbD]
+  simp
+
+private theorem fiveBitIndices_spec (word : Fin 32) :
+    fiveBitIndices.getD word.val [] =
+      (List.range 5).filter fun index => word.val.testBit index := by
+  fin_cases word <;> decide
+
+private theorem rowWord_lt (rows : UInt64) (offset : Nat) :
+    (((rows >>> UInt64.ofNat offset) &&& 31).toNat) < 32 := by
+  calc
+    (((rows >>> UInt64.ofNat offset) &&& 31).toNat) =
+        (((rows >>> UInt64.ofNat offset) &&& 31).toBitVec).toNat := rfl
+    _ = (rows >>> UInt64.ofNat offset).toBitVec.toNat &&& 31 := by
+      rw [UInt64.toBitVec_and, BitVec.toNat_and]
+      rfl
+    _ ≤ 31 := Nat.and_le_right
+    _ < 32 := by omega
+
+private theorem rowWord_testBit
+    (rows : UInt64) (offset : Nat) (hoffset : offset + 5 ≤ 64)
+    (index : Fin 5) :
+    (((rows >>> UInt64.ofNat offset) &&& 31).toNat).testBit index.val =
+      bitSetB rows (offset + index.val) := by
+  let observed : Fin 64 := ⟨offset + index.val, by omega⟩
+  change (((rows >>> UInt64.ofNat offset) &&& 31).toBitVec.toNat).testBit
+      index.val = bitSetB rows observed.val
+  rw [BitVec.testBit_toNat, bitSetB_eq_getLsbD]
+  simp only [UInt64.toBitVec_and, BitVec.getLsbD_and,
+    UInt64.toBitVec_shiftRight]
+  change ((rows.toBitVec >>>
+      ((UInt64.ofNat offset).toBitVec % 64).toNat).getLsbD index.val &&
+        (31 : UInt64).toBitVec.getLsbD index.val) =
+      rows.toBitVec.getLsbD observed.val
+  have hshift : ((UInt64.ofNat offset).toBitVec % 64).toNat = offset := by
+    simp [UInt64.toNat_ofNat', Nat.mod_eq_of_lt (by omega : offset < 64)]
+  rw [hshift, BitVec.getLsbD_ushiftRight]
+  have hmask : (31 : UInt64).toBitVec.getLsbD index.val = true := by
+    rw [UInt64.toBitVec_ofNat, BitVec.getLsbD_ofNat]
+    change (decide (index.val < 64) &&
+        Nat.testBit (2 ^ 5 - 1) index.val) = true
+    rw [Nat.testBit_two_pow_sub_one]
+    simp [index.isLt, show index.val < 64 by omega]
+  rw [hmask, Bool.and_true]
+
+/-- One compact five-bit word enumerates exactly its set row indices. -/
+theorem rowIndexWord_eq_filter
+    (rows : UInt64) (offset : Nat) (hoffset : offset + 5 ≤ 64) :
+    rowIndexWord rows offset =
+      ((List.range 5).filter fun index =>
+        bitSetB rows (offset + index)).map fun index => offset + index := by
+  let word : Fin 32 :=
+    ⟨((rows >>> UInt64.ofNat offset) &&& 31).toNat, rowWord_lt rows offset⟩
+  unfold rowIndexWord
+  change (fiveBitIndices.getD word.val []).map (fun index => offset + index) = _
+  rw [fiveBitIndices_spec]
+  congr 1
+  apply List.filter_congr
+  intro index hindex
+  have hindexBound : index < 5 := List.mem_range.mp hindex
+  let boundedIndex : Fin 5 := ⟨index, hindexBound⟩
+  simpa only [word, boundedIndex] using
+    rowWord_testBit rows offset hoffset boundedIndex
+
+/-- Every set legal-row bit occurs in its unique compact five-row word. -/
+theorem rowIndex_mem_word_of_bit
+    (rows : UInt64) (index : Fin 35)
+    (hbit : bitSetB rows index.val = true) :
+    index.val ∈ rowIndexWord rows (5 * (index.val / 5)) := by
+  have hmod : index.val % 5 < 5 := Nat.mod_lt _ (by omega)
+  have hdecompose : 5 * (index.val / 5) + index.val % 5 = index.val := by
+    have := Nat.mod_add_div index.val 5
+    omega
+  rw [rowIndexWord_eq_filter _ _ (by omega)]
+  apply List.mem_map.mpr
+  refine ⟨index.val % 5, ?_, hdecompose⟩
+  rw [List.mem_filter]
+  exact ⟨List.mem_range.mpr hmod, by simpa [hdecompose] using hbit⟩
+
+/-- The compact word containing a legal-row index is one of the seven checked words. -/
+theorem rowIndex_wordIndex_mem_range (index : Fin 35) :
+    index.val / 5 ∈ List.range 7 := by
+  rw [List.mem_range]
+  omega
+
+/-- The low-35-bit legal-row mask contains every legal row index. -/
+theorem legalRows_bit (index : Fin 35) :
+    bitSetB 34359738367 index.val = true := by
+  fin_cases index <;> decide
+
+/-- A complete row partition puts every cover-compatible legal row in either
+the active or semantically rejected mask. -/
+theorem active_or_rejected_of_partition
+    {active rejected incompatible : UInt64} (index : Fin 35)
+    (hpartition : active ||| (rejected ||| incompatible) = 34359738367)
+    (hcompatible : bitSetB incompatible index.val = false) :
+    bitSetB active index.val = true ∨ bitSetB rejected index.val = true := by
+  let boundedIndex : Fin 64 := ⟨index.val, by omega⟩
+  have hbits := congrArg (fun rows => bitSetB rows boundedIndex.val) hpartition
+  rw [bitSetB_or, bitSetB_or, legalRows_bit index, hcompatible] at hbits
+  simpa only [Bool.or_false, Bool.or_eq_true] using hbits
+
 /-- A conflict cover is sound when every rejected legal row contains one of
 its required pair bits at its recorded centre. -/
 def ConflictCover.Valid (cover : ConflictCover) : Prop :=
