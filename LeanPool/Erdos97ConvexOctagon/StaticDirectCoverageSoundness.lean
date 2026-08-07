@@ -182,6 +182,88 @@ private theorem pairCompatibleB_of_pairSparse_perm
   exact pairCompatibleB_of_pairSparse Q hSparse assignments centre row
     (List.nodup_cons.mpr ⟨hcentreFresh, hprocessed⟩) hassignments hrow
 
+private theorem vertexPairTuples_mem_vertexPairs
+    {first second : Vertex} (hpair : (first, second) ∈ vertexPairTuples) :
+    [first, second] ∈ vertexPairs := by
+  revert first second
+  decide
+
+private theorem pairConflictHintB_eq_false_of_compatible
+    {assignments : List RowAssignment} {row : UInt64}
+    {state : PairState} {pairMask : UInt64}
+    (hcompatible : pairCompatibleB assignments row = true) :
+    pairConflictHintB assignments row state pairMask = false := by
+  apply Bool.eq_false_of_not_eq_true
+  intro hhint
+  unfold pairConflictHintB at hhint
+  simp only at hhint
+  generalize hfind : vertexPairTuples.find? (fun pair =>
+    bitSetB (state.seenTwice &&& pairMask) (varIndex pair.1 pair.2)) = found at hhint
+  cases found with
+  | none =>
+      simp at hhint
+  | some pair =>
+      rcases pair with ⟨first, second⟩
+      simp only at hhint
+      have hmember : (first, second) ∈ vertexPairTuples :=
+        List.mem_of_find?_eq_some hfind
+      have hguard := (List.all_eq_true.mp hcompatible) [first, second]
+        (vertexPairTuples_mem_vertexPairs hmember)
+      have hparts :
+          (bitSetB row first.val = true ∧ bitSetB row second.val = true) ∧
+            2 ≤ pairCount assignments first second := by
+        simpa only [Bool.and_eq_true, decide_eq_true_eq] using hhint
+      have hnotLess : ¬pairCount assignments first second < 2 := by omega
+      simp [hparts.1.1, hparts.1.2, hnotLess] at hguard
+
+private theorem columnConflictHintB_eq_false_of_feasible
+    {assignments : List RowAssignment} {remaining : List Vertex}
+    {state : ColumnState}
+    (hfeasible : columnFeasibleB assignments remaining = true) :
+    columnConflictHintB assignments remaining state = false := by
+  apply Bool.eq_false_of_not_eq_true
+  intro hhint
+  unfold columnConflictHintB at hhint
+  generalize hfind : (List.finRange 8).find? (fun target =>
+    let count := state.count target
+    !(decide (count ≤ 4) &&
+      decide (4 ≤ count + remainingColumnCapacity remaining target))) = found at hhint
+  cases found with
+  | none =>
+      simp at hhint
+  | some target =>
+      simp only at hhint
+      have htarget := (List.all_eq_true.mp hfeasible) target
+        (List.mem_finRange target)
+      rw [htarget] at hhint
+      simp at hhint
+
+private theorem withPairPruningB_eq_of_compatible
+    {assignments : List RowAssignment} {row : UInt64}
+    {state : PairState} {pairMask : UInt64} {continueSearch : Unit → Bool}
+    (hcompatible : pairCompatibleB assignments row = true) :
+    withPairPruningB assignments row state pairMask continueSearch =
+      continueSearch () := by
+  have hhint := pairConflictHintB_eq_false_of_compatible
+    (state := state) (pairMask := pairMask) hcompatible
+  by_cases hfast : state.compatible pairMask = true
+  · simp [withPairPruningB, hfast]
+  · have hfastFalse := Bool.eq_false_of_not_eq_true hfast
+    simp [withPairPruningB, hfastFalse, hhint]
+
+private theorem withColumnPruningB_eq_of_feasible
+    {assignments : List RowAssignment} {remaining : List Vertex}
+    {state : ColumnState} {continueSearch : Unit → Bool}
+    (hfeasible : columnFeasibleB assignments remaining = true) :
+    withColumnPruningB assignments remaining state continueSearch =
+      continueSearch () := by
+  have hhint := columnConflictHintB_eq_false_of_feasible
+    (state := state) hfeasible
+  by_cases hfast : state.feasible remaining = true
+  · simp [withColumnPruningB, hfast]
+  · have hfastFalse := Bool.eq_false_of_not_eq_true hfast
+    simp [withColumnPruningB, hfastFalse, hhint]
+
 private theorem patternBucketsValid_of_audit
     {patterns : PatternSummaryBuckets}
     (haudit : patterns.all (fun bucket =>
@@ -486,21 +568,14 @@ private theorem directSearch_sound
             remaining).Perm (List.finRange 8) := by
         simpa only [List.map_cons, Prod.fst, List.cons_append] using
           (List.perm_middle.symm.trans hcentres)
-      by_cases hfast : pairState.compatible choice.pairMask = true
-      · by_cases hcolumn :
-            (columnState.add choice.rowMask).feasible remaining = true
-        · simp only [hfast, if_true, hcolumn, Bool.or_eq_true] at hbranch
-          rcases hbranch with hpattern | hrecursive
-          · exact impossible_of_pattern hC hR hnewAssignments hpatterns hpattern
-          · exact induction hnewCentres hnewAssignments hrecursive
-        · have hcolumnFalse := Bool.eq_false_of_not_eq_true hcolumn
-          have hsemantic := columnFeasibleB_of_balanced Q
-            (Q.balanced_of_pairSparse hSparse) hnewCentres hnewAssignments
-          simp [hfast, hcolumnFalse, hsemantic] at hbranch
-      · have hcompatibleChoice : pairCompatibleB assignments choice.rowMask = true :=
-          hcompatible
-        have hfastFalse := Bool.eq_false_of_not_eq_true hfast
-        simp [hfastFalse, hcompatibleChoice] at hbranch
+      rw [withPairPruningB_eq_of_compatible hcompatible] at hbranch
+      have hsemantic := columnFeasibleB_of_balanced Q
+        (Q.balanced_of_pairSparse hSparse) hnewCentres hnewAssignments
+      rw [withColumnPruningB_eq_of_feasible hsemantic] at hbranch
+      simp only [Bool.or_eq_true] at hbranch
+      rcases hbranch with hpattern | hrecursive
+      · exact impossible_of_pattern hC hR hnewAssignments hpatterns hpattern
+      · exact induction hnewCentres hnewAssignments hrecursive
 
 private theorem standardTargets_eq_packedRow :
     standardTargets = packedRow 30 := by
@@ -554,46 +629,36 @@ private theorem branch_impossible
     let pairState := (PairState.empty.add choice0.pairMask).add choice1.pairMask
     let columnState := (ColumnState.empty.add 30).add (canonicalRowMask orbit)
     have hpattern1False := Bool.eq_false_of_not_eq_true hpattern1
-    by_cases hfast : pairState.compatible choice2.pairMask = true
-    · let assignments2 := (2, row) :: assignments
-      let code2 := addRowCode code row 2
-      let pairState2 := pairState.add choice2.pairMask
-      let columnState2 := columnState.add row
-      have hassignments2 : AssignmentsMatch Q assignments2 :=
-        hassignments.cons 2 row hrowTwo
-      have hcentres : (assignments2.map Prod.fst ++ searchCentres).Perm
-          (List.finRange 8) := by
-        change ([2, 0, 1] ++ searchCentres : List Vertex).Perm (List.finRange 8)
-        decide
-      by_cases hcolumn : columnState2.feasible searchCentres = true
-      · have hauditParts : hasPatternB code2 assignments2 choice2.patterns = true ∨
+    let assignments2 := (2, row) :: assignments
+    let code2 := addRowCode code row 2
+    let pairState2 := pairState.add choice2.pairMask
+    let columnState2 := columnState.add row
+    have hassignments2 : AssignmentsMatch Q assignments2 :=
+      hassignments.cons 2 row hrowTwo
+    have hcentres : (assignments2.map Prod.fst ++ searchCentres).Perm
+        (List.finRange 8) := by
+      change ([2, 0, 1] ++ searchCentres : List Vertex).Perm (List.finRange 8)
+      decide
+    have hwrapped : withPairPruningB assignments row pairState choice2.pairMask
+        (fun _ => withColumnPruningB assignments2 searchCentres columnState2 fun _ =>
+          hasPatternB code2 assignments2 choice2.patterns ||
             directSearch searchCentres assignments2 code2 pairState2 columnState2
-              (hardSummaries orbit rowTwo) = true := by
-          simpa [directCoverageBranchB, assignments, code, choice0, choice1,
-            choice2, row, pairState, columnState, assignments2, code2,
-            pairState2, columnState2, hpattern1False, hfast, hcolumn,
-            Bool.or_eq_true] using haudit
-        rcases hauditParts with hpattern2 | hrecursive
-        · exact impossible_of_pattern hC hR hassignments2 hpatterns2 hpattern2
-        · exact directSearch_sound hC hR hSparse hcentres hassignments2
-            (hardSummaries_valid orbit rowTwo) hrecursive
-      · have hcolumnFalse := Bool.eq_false_of_not_eq_true hcolumn
-        have hsemantic := columnFeasibleB_of_balanced Q
-          (Q.balanced_of_pairSparse hSparse) hcentres hassignments2
-        have hsemanticFalse : columnFeasibleB assignments2 searchCentres = false := by
-          simpa [directCoverageBranchB, assignments, code, choice0, choice1,
-            choice2, row, pairState, columnState, assignments2, code2,
-            pairState2, columnState2, hpattern1False, hfast, hcolumnFalse]
-            using haudit
-        rw [hsemantic] at hsemanticFalse
-        contradiction
-    · have hfastFalse := Bool.eq_false_of_not_eq_true hfast
-      have hpairFalse : pairCompatibleB assignments row = false := by
-        simpa [directCoverageBranchB, assignments, code, choice0, choice1,
-          choice2, row, pairState, columnState, hpattern1False, hfastFalse]
-          using haudit
-      rw [hcompatible] at hpairFalse
-      contradiction
+              (hardSummaries orbit rowTwo)) = true := by
+      simpa [directCoverageBranchB, assignments, code, choice0, choice1,
+        choice2, row, pairState, columnState, assignments2, code2,
+        pairState2, columnState2, hpattern1False] using haudit
+    rw [withPairPruningB_eq_of_compatible hcompatible] at hwrapped
+    have hsemantic := columnFeasibleB_of_balanced Q
+      (Q.balanced_of_pairSparse hSparse) hcentres hassignments2
+    rw [withColumnPruningB_eq_of_feasible hsemantic] at hwrapped
+    have hauditParts : hasPatternB code2 assignments2 choice2.patterns = true ∨
+          directSearch searchCentres assignments2 code2 pairState2 columnState2
+            (hardSummaries orbit rowTwo) = true := by
+      simpa only [Bool.or_eq_true] using hwrapped
+    rcases hauditParts with hpattern2 | hrecursive
+    · exact impossible_of_pattern hC hR hassignments2 hpatterns2 hpattern2
+    · exact directSearch_sound hC hR hSparse hcentres hassignments2
+        (hardSummaries_valid orbit rowTwo) hrecursive
 
 private theorem subbranch_impossible
     {p : Vertex → Plane} {Q : OctagonIncidence}
@@ -631,111 +696,75 @@ private theorem subbranch_impossible
       decide
     have hcompatible2 := pairCompatibleB_of_pairSparse_perm Q hSparse hcentresOne
       hassignments hrowTwo
-    by_cases hfast2 : pairState.compatible choice2.pairMask = true
-    · let assignments2 := (2, row2) :: assignments
-      let code2 := addRowCode code row2 2
-      let pairState2 := pairState.add choice2.pairMask
-      let columnState2 := columnState.add row2
-      have hassignments2 : AssignmentsMatch Q assignments2 :=
-        hassignments.cons 2 row2 hrowTwo
-      have hcentres2 : (assignments2.map Prod.fst ++ searchCentres).Perm
-          (List.finRange 8) := by
-        change ([2, 0, 1] ++ searchCentres : List Vertex).Perm (List.finRange 8)
-        decide
-      by_cases hcolumn2 : columnState2.feasible searchCentres = true
-      · by_cases hpattern2 : hasPatternB code2 assignments2 choice2.patterns = true
-        · exact impossible_of_pattern hC hR hassignments2 hpatterns2 hpattern2
-        · let choice3 := patternSummaryChoices3.getD rowThree.val ⟨0, 0, []⟩
-          have hchoice3Equal : choice3 = rowChoiceAt 3 rowThree := by
-            rfl
-          have hchoice3 : choice3 ∈ patternSummaryChoices.getD 3 [] := by
-            rw [hchoice3Equal]
-            exact rowChoiceAt_mem 3 rowThree
-          have hpatterns3 : PatternBucketsValid choice3.patterns :=
-            patternBucketsValid_of_choice (centre := 3) hchoice3
-          have hcentresTwo : (assignments2.map Prod.fst ++
-              3 :: searchCentres.tail).Perm (List.finRange 8) := by
-            simpa only [searchCentres, List.tail_cons] using hcentres2
-          have hrowThreeChoice : Q.targets 3 = packedRow choice3.rowMask := by
-            rw [hchoice3Equal]
-            exact hrowThree
-          have hcompatible3 := pairCompatibleB_of_pairSparse_perm Q hSparse
-            hcentresTwo hassignments2 hrowThreeChoice
-          let assignments3 := (3, choice3.rowMask) :: assignments2
-          let code3 := addRowCode code2 choice3.rowMask 3
-          let pairState3 := pairState2.add choice3.pairMask
-          let columnState3 := columnState2.add choice3.rowMask
-          have hassignments3 : AssignmentsMatch Q assignments3 :=
-            hassignments2.cons 3 choice3.rowMask hrowThreeChoice
-          have hcentres3 : (assignments3.map Prod.fst ++ searchCentres.tail).Perm
-              (List.finRange 8) := by
-            simpa only [assignments3, List.map_cons, Prod.fst, List.cons_append] using
-              (List.perm_middle.symm.trans hcentresTwo)
-          have hpattern1False := Bool.eq_false_of_not_eq_true hpattern1
-          have hauditCases : hasPatternB code2 assignments2 choice2.patterns = true ∨
-              (if pairState2.compatible choice3.pairMask = true then
-                if columnState3.feasible searchCentres.tail = true then
-                  hasPatternB code3 assignments3 choice3.patterns = true ∨
-                    directSearch searchCentres.tail assignments3 code3 pairState3
-                      columnState3 (hardSummaries orbit rowTwo) = true
-                else columnFeasibleB assignments3 searchCentres.tail = false
-              else pairCompatibleB assignments2 choice3.rowMask = false) := by
-            simpa [directCoverageSubbranchB, assignments, code, choice0, choice1,
-              pairState, columnState, row2, choice2, assignments2, code2,
-              pairState2, columnState2, choice3, assignments3, code3,
-              pairState3, columnState3, hpattern1False, hfast2, hcolumn2]
-              using haudit
-          have hauditTail :
-              (if pairState2.compatible choice3.pairMask = true then
-                if columnState3.feasible searchCentres.tail = true then
-                  hasPatternB code3 assignments3 choice3.patterns = true ∨
-                    directSearch searchCentres.tail assignments3 code3 pairState3
-                      columnState3 (hardSummaries orbit rowTwo) = true
-                else columnFeasibleB assignments3 searchCentres.tail = false
-              else pairCompatibleB assignments2 choice3.rowMask = false) :=
-            Or.resolve_left hauditCases hpattern2
-          by_cases hfast3 : pairState2.compatible choice3.pairMask = true
-          · by_cases hcolumn3 : columnState3.feasible searchCentres.tail = true
-            · have hauditParts : hasPatternB code3 assignments3 choice3.patterns = true ∨
+    let assignments2 := (2, row2) :: assignments
+    let code2 := addRowCode code row2 2
+    let pairState2 := pairState.add choice2.pairMask
+    let columnState2 := columnState.add row2
+    have hassignments2 : AssignmentsMatch Q assignments2 :=
+      hassignments.cons 2 row2 hrowTwo
+    have hcentres2 : (assignments2.map Prod.fst ++ searchCentres).Perm
+        (List.finRange 8) := by
+      change ([2, 0, 1] ++ searchCentres : List Vertex).Perm (List.finRange 8)
+      decide
+    have hsemantic2 := columnFeasibleB_of_balanced Q
+      (Q.balanced_of_pairSparse hSparse) hcentres2 hassignments2
+    let choice3 := patternSummaryChoices3.getD rowThree.val ⟨0, 0, []⟩
+    have hchoice3Equal : choice3 = rowChoiceAt 3 rowThree := by rfl
+    have hchoice3 : choice3 ∈ patternSummaryChoices.getD 3 [] := by
+      rw [hchoice3Equal]
+      exact rowChoiceAt_mem 3 rowThree
+    have hpatterns3 : PatternBucketsValid choice3.patterns :=
+      patternBucketsValid_of_choice (centre := 3) hchoice3
+    have hcentresTwo : (assignments2.map Prod.fst ++
+        3 :: searchCentres.tail).Perm (List.finRange 8) := by
+      simpa only [searchCentres, List.tail_cons] using hcentres2
+    have hrowThreeChoice : Q.targets 3 = packedRow choice3.rowMask := by
+      rw [hchoice3Equal]
+      exact hrowThree
+    have hcompatible3 := pairCompatibleB_of_pairSparse_perm Q hSparse
+      hcentresTwo hassignments2 hrowThreeChoice
+    let assignments3 := (3, choice3.rowMask) :: assignments2
+    let code3 := addRowCode code2 choice3.rowMask 3
+    let pairState3 := pairState2.add choice3.pairMask
+    let columnState3 := columnState2.add choice3.rowMask
+    have hassignments3 : AssignmentsMatch Q assignments3 :=
+      hassignments2.cons 3 choice3.rowMask hrowThreeChoice
+    have hcentres3 : (assignments3.map Prod.fst ++ searchCentres.tail).Perm
+        (List.finRange 8) := by
+      simpa only [assignments3, List.map_cons, Prod.fst, List.cons_append] using
+        (List.perm_middle.symm.trans hcentresTwo)
+    have hsemantic3 := columnFeasibleB_of_balanced Q
+      (Q.balanced_of_pairSparse hSparse) hcentres3 hassignments3
+    have hpattern1False := Bool.eq_false_of_not_eq_true hpattern1
+    have hwrapped : withPairPruningB assignments row2 pairState choice2.pairMask
+        (fun _ => withColumnPruningB assignments2 searchCentres columnState2 fun _ =>
+          if hasPatternB code2 assignments2 choice2.patterns then true
+          else withPairPruningB assignments2 choice3.rowMask pairState2
+            choice3.pairMask (fun _ => withColumnPruningB assignments3
+              searchCentres.tail columnState3 fun _ =>
+                hasPatternB code3 assignments3 choice3.patterns ||
                   directSearch searchCentres.tail assignments3 code3 pairState3
-                    columnState3 (hardSummaries orbit rowTwo) = true := by
-                simpa only [hfast3, if_true, hcolumn3] using hauditTail
-              rcases hauditParts with hpattern3 | hrecursive
-              · exact impossible_of_pattern hC hR hassignments3 hpatterns3 hpattern3
-              · exact directSearch_sound hC hR hSparse hcentres3 hassignments3
-                  (hardSummaries_valid orbit rowTwo) hrecursive
-            · have hcolumn3False := Bool.eq_false_of_not_eq_true hcolumn3
-              have hsemantic := columnFeasibleB_of_balanced Q
-                (Q.balanced_of_pairSparse hSparse) hcentres3 hassignments3
-              have hsemanticFalse :
-                  columnFeasibleB assignments3 searchCentres.tail = false := by
-                simpa [hfast3, hcolumn3False] using hauditTail
-              rw [hsemantic] at hsemanticFalse
-              contradiction
-          · have hfast3False := Bool.eq_false_of_not_eq_true hfast3
-            have hpairFalse : pairCompatibleB assignments2 choice3.rowMask = false := by
-              simpa [hfast3False] using hauditTail
-            rw [hcompatible3] at hpairFalse
-            contradiction
-      · have hcolumn2False := Bool.eq_false_of_not_eq_true hcolumn2
-        have hsemantic := columnFeasibleB_of_balanced Q
-          (Q.balanced_of_pairSparse hSparse) hcentres2 hassignments2
-        have hpattern1False := Bool.eq_false_of_not_eq_true hpattern1
-        have hsemanticFalse : columnFeasibleB assignments2 searchCentres = false := by
-          simpa [directCoverageSubbranchB, assignments, code, choice0, choice1,
-            pairState, columnState, row2, choice2, assignments2, code2,
-            pairState2, columnState2, hpattern1False, hfast2, hcolumn2False]
-            using haudit
-        rw [hsemantic] at hsemanticFalse
-        contradiction
-    · have hfast2False := Bool.eq_false_of_not_eq_true hfast2
-      have hpattern1False := Bool.eq_false_of_not_eq_true hpattern1
-      have hpairFalse : pairCompatibleB assignments row2 = false := by
-        simpa [directCoverageSubbranchB, assignments, code, choice0, choice1,
-          pairState, columnState, row2, choice2, hpattern1False, hfast2False]
-          using haudit
-      rw [hcompatible2] at hpairFalse
-      contradiction
+                    columnState3 (hardSummaries orbit rowTwo))) = true := by
+      simpa [directCoverageSubbranchB, assignments, code, choice0, choice1,
+        pairState, columnState, row2, choice2, assignments2, code2,
+        pairState2, columnState2, choice3, assignments3, code3,
+        pairState3, columnState3, hpattern1False] using haudit
+    rw [withPairPruningB_eq_of_compatible hcompatible2] at hwrapped
+    rw [withColumnPruningB_eq_of_feasible hsemantic2] at hwrapped
+    by_cases hpattern2 : hasPatternB code2 assignments2 choice2.patterns = true
+    · exact impossible_of_pattern hC hR hassignments2 hpatterns2 hpattern2
+    · have hpattern2False := Bool.eq_false_of_not_eq_true hpattern2
+      simp only [hpattern2False] at hwrapped
+      rw [withPairPruningB_eq_of_compatible hcompatible3] at hwrapped
+      rw [withColumnPruningB_eq_of_feasible hsemantic3] at hwrapped
+      by_cases hpattern3 : hasPatternB code3 assignments3 choice3.patterns = true
+      · exact impossible_of_pattern hC hR hassignments3 hpatterns3 hpattern3
+      · have hpattern3False := Bool.eq_false_of_not_eq_true hpattern3
+        have hrecursive : directSearch searchCentres.tail assignments3 code3
+            pairState3 columnState3 (hardSummaries orbit rowTwo) = true := by
+          simpa [hpattern3False] using hwrapped
+        exact directSearch_sound hC hR hSparse hcentres3 hassignments3
+          (hardSummaries_valid orbit rowTwo) hrecursive
 
 /-- Soundness of adaptive static audits for a canonical normalized branch. -/
 theorem canonicalBranch_impossible_of_staticCoverage
