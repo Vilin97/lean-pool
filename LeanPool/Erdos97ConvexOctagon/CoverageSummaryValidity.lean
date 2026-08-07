@@ -188,4 +188,88 @@ theorem HardSummary.valid_of_data
   exact HardSummary.valid_of_shardAudit shard.audit
     ⟨bucket, hbucket, hsummary⟩
 
+/-- Membership in the generated pattern-summary table supplies its audited entry. -/
+theorem PatternSummary.valid_of_memberB
+    {summary : PatternSummary} (hmember : summary.memberB = true) : summary.Valid := by
+  let groupIndex := summary.origin % 256 / 8
+  have hgroupIndex : groupIndex < patternSummaryBucketGroups.size := by
+    change summary.origin % 256 / 8 < 32
+    omega
+  let group := patternSummaryBucketGroups[groupIndex]'hgroupIndex
+  have hgroup : group ∈ patternSummaryBucketGroups.toList := by
+    exact Array.getElem_mem_toList hgroupIndex
+  have hgroupGetD : patternSummaryBucketGroups.getD groupIndex #[] = group := by
+    simp only [Array.getD, dif_pos hgroupIndex, Array.getInternal_eq_getElem, group]
+  rw [PatternSummary.memberB, hgroupGetD] at hmember
+  change (match (group.getD (summary.origin % 8) []).find?
+      (fun candidate => candidate.origin == summary.origin) with
+    | some candidate => candidate.mask == summary.mask
+    | none => false) = true at hmember
+  by_cases hbucketIndex : summary.origin % 8 < group.size
+  · let bucket := group[summary.origin % 8]'hbucketIndex
+    have hbucket : bucket ∈ group.toList := Array.getElem_mem_toList hbucketIndex
+    have hbucketGetD : group.getD (summary.origin % 8) [] = bucket := by
+      simp only [Array.getD, dif_pos hbucketIndex, Array.getInternal_eq_getElem,
+        bucket]
+    rw [hbucketGetD] at hmember
+    generalize hfind : bucket.find?
+        (fun candidate => candidate.origin == summary.origin) = found at hmember
+    cases found with
+    | none => simp at hmember
+    | some candidate =>
+        have horigin : candidate.origin = summary.origin := by
+          simpa only [beq_iff_eq] using List.find?_some hfind
+        have hmask : candidate.mask = summary.mask := by
+          simpa only [beq_iff_eq] using hmember
+        have hequal : candidate = summary := by
+          cases candidate
+          cases summary
+          simp_all
+        apply PatternSummary.valid_of_data
+        refine ⟨group, hgroup, bucket, hbucket, ?_⟩
+        simpa only [hequal] using List.mem_of_find?_eq_some hfind
+  · simp [Array.getD, hbucketIndex] at hmember
+
+/-- Membership in the generated exact-summary table supplies its audited entry. -/
+theorem HardSummary.valid_of_memberB
+    {summary : HardSummary} (hmember : summary.memberB = true) : summary.Valid := by
+  let groupIndex := summary.origin % 256 / 8
+  have hgroupIndex : groupIndex < hardSummaryBucketGroups.size := by
+    change summary.origin % 256 / 8 < 32
+    omega
+  let group := hardSummaryBucketGroups[groupIndex]'hgroupIndex
+  have hgroup : group ∈ hardSummaryBucketGroups.toList := by
+    exact Array.getElem_mem_toList hgroupIndex
+  have hgroupGetD : hardSummaryBucketGroups.getD groupIndex #[] = group := by
+    simp only [Array.getD, dif_pos hgroupIndex, Array.getInternal_eq_getElem, group]
+  rw [HardSummary.memberB, hgroupGetD] at hmember
+  change (match (group.getD (summary.origin % 8) []).find?
+      (fun candidate => candidate.origin == summary.origin) with
+    | some candidate => candidate.code == summary.code
+    | none => false) = true at hmember
+  by_cases hbucketIndex : summary.origin % 8 < group.size
+  · let bucket := group[summary.origin % 8]'hbucketIndex
+    have hbucket : bucket ∈ group.toList := Array.getElem_mem_toList hbucketIndex
+    have hbucketGetD : group.getD (summary.origin % 8) [] = bucket := by
+      simp only [Array.getD, dif_pos hbucketIndex, Array.getInternal_eq_getElem,
+        bucket]
+    rw [hbucketGetD] at hmember
+    generalize hfind : bucket.find?
+        (fun candidate => candidate.origin == summary.origin) = found at hmember
+    cases found with
+    | none => simp at hmember
+    | some candidate =>
+        have horigin : candidate.origin = summary.origin := by
+          simpa only [beq_iff_eq] using List.find?_some hfind
+        have hcode : candidate.code = summary.code := by
+          simpa only [beq_iff_eq] using hmember
+        have hequal : candidate = summary := by
+          cases candidate
+          cases summary
+          simp_all
+        apply HardSummary.valid_of_data
+        refine ⟨group, hgroup, bucket, hbucket, ?_⟩
+        simpa only [hequal] using List.mem_of_find?_eq_some hfind
+  · simp [Array.getD, hbucketIndex] at hmember
+
 end Erdos97Octagon.RawIncidence
