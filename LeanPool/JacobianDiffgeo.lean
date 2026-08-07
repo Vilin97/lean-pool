@@ -45,7 +45,7 @@ import LeanPool.JacobianDiffgeo.Challenge
 Source: url:https://gist.github.com/kbuzzard/778bc714030b3e974ab5f4038783d1a9
 Authors: Rado Kirov
 Status: verified
-Main declarations: `JacobianChallenge.genus_eq_zero_iff_homeo`
+Main declarations: `genus_eq_zero_iff_homeo`, `Jacobian.ofCurve_inj`
 Tags: riemann-surfaces, complex-geometry, abel-jacobi, riemann-roch, serre-duality
 MSC: 14H40, 30F30, 32G20
 -/
