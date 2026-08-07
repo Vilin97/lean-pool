@@ -5608,20 +5608,17 @@ projects:
       - "82C22"
       - "49Q22"
   - slug: poincare-three-body-nonintegrability
-    title: A Restricted Three-Body Nonintegrability Theorem
+    title: Poincaré's Nonintegrability Theorem for the Restricted Three-Body Problem
     summary: >-
-      Proves a parameter-analytic nonintegrability theorem for the planar
-      circular restricted three-body problem. The unconditional proof uses a
-      real logarithmic collision blow-up and analytic continuation in place of
-      the complex singularity classification and Darboux estimates in Chapter
-      VI of Poincaré's first volume. A separate correspondence module defines
-      the restricted resonant Fourier coefficient and verifies the conditional
-      bridge from Darboux nonvanishing to nonintegrability, while explicitly
-      recording that Poincaré's two-variable complex analysis, admissibility
-      argument, Darboux asymptotics, and final singularity-parameter count are
-      not yet formalized. The unconditional statement is the fixed-coordinate,
-      global uniform-domain special case of the planar part of Yagasaki's
-      Theorem 1.1; his local meromorphic obstruction is Theorem 3.1.
+      Formalizes Poincaré's classical parameter-analytic nonintegrability
+      theorem for the planar circular restricted three-body problem. The
+      development defines the rotating-frame Hamiltonian on its collision-free
+      domain, proves logarithmic blow-up of the resonant disturbing average at
+      an apoapsis collision boundary, and analytically propagates the resulting
+      dense resonant obstruction to exclude an additional analytic first
+      integral. The final statement is the fixed-coordinate, global
+      uniform-domain special case of the planar part of Yagasaki's Theorem 1.1;
+      his local meromorphic resonant-orbit obstruction is Theorem 3.1.
     branch: dynamical systems
     entry_module: LeanPool.PoincareThreeBody
     authors:
@@ -5639,7 +5636,6 @@ projects:
     provenance: AI
     main_declarations:
       - LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
-      - LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI
     main_results:
       - declaration: LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
         informal: >-
@@ -5655,19 +5651,6 @@ projects:
           the fixed-coordinate global uniform-domain special case: a global
           real-analytic family restricts and complexifies on the local
           neighborhoods used in the source theorem.
-      - declaration: LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI
-        informal: >-
-          Conditional correspondence with Poincaré's Volume I, Chapter VI: if
-          the missing complex-singularity and Darboux calculation supplies a
-          nonzero nonconstant Fourier mode at one admissible eccentricity on
-          every positive rational resonance, then no additional jointly
-          real-analytic first-integral family exists for the restricted model.
-          This does not claim that the two-variable Darboux calculation itself
-          has been formalized.
-        source_ref: >-
-          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
-          Volume I (1892), Chapter VI, especially §§93--103 (pp. 278--334),
-          https://fr.wikisource.org/wiki/Les_m%C3%A9thodes_nouvelles_de_la_m%C3%A9canique_c%C3%A9leste/Chap.06.
       - declaration: LeanPool.PoincareThreeBody.delaunayHomological_obstruction
         informal: >-
           If the first homological equation holds and its perturbing Fourier
