@@ -42,6 +42,7 @@ Current checks:
 - project summaries and branches are nonempty strings, MSC codes are a nonempty string list, and `main_results` is a nonempty list of `declaration` / `informal` entries
 - project `main_results[*].declaration` values include every `main_declarations` entry, so compact project cards and richer documentation metadata cannot drift
 - project `slug` and `entry_module` values are unique
+- every registered project `entry_module` is imported directly by `LeanPool.lean`
 - every top-level project module `LeanPool/Foo.lean`, except `LeanPool/Basic.lean`, is registered as an `entry_module`
 - project entry modules and listed main declarations resolve in Lean
 - generated entry-point project cards match `LeanPool/projects.yml`
