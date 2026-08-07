@@ -14,6 +14,7 @@ import LeanPool.PoincareThreeBody.Core
 import LeanPool.PoincareThreeBody.CoefficientNormalization
 import LeanPool.PoincareThreeBody.CertifiedPoincareSet
 import LeanPool.PoincareThreeBody.ChapterVI
+import LeanPool.PoincareThreeBody.ChapterVIContour
 import LeanPool.PoincareThreeBody.ChapterVIDarboux
 import LeanPool.PoincareThreeBody.ChapterVILatticeReduction
 import LeanPool.PoincareThreeBody.Delaunay
@@ -82,11 +83,13 @@ The final Lean theorem is the fixed-coordinate, global uniform-domain special ca
 real-analytic family restricts and complexifies on the local neighborhoods used by the source.
 
 `ChapterVILatticeReduction` verifies the finite two-variable coefficient reduction in §94 and
-its unimodular reindexing for arbitrary summable double series.
+its unimodular reindexing for arbitrary summable double series. `ChapterVIContour` verifies
+coefficient extraction by normalized circle integration for the resulting finite Laurent sums.
 `ChapterVIDarboux` proves that a Darboux-type asymptotic with nonzero leading model forces
 eventual coefficient nonvanishing, as used in §§99--102.  `ChapterVI` connects these results to
-the restricted resonant Fourier coefficient and final theorem.  The extension to convergent
-infinite series, complex singularity/admissibility analysis, and derivation of the Darboux
-asymptotics are not yet formalized.  Thus the project must not be cited as a complete verification
-of Poincaré's original Chapter VI calculations.
+the restricted resonant Fourier coefficient and final theorem. The analytic passage from a
+summable coefficient family to Poincaré's holomorphic infinite Laurent series, complex
+singularity/admissibility analysis, and derivation of the Darboux asymptotics are not yet
+formalized. Thus the project must not be cited as a complete verification of Poincaré's original
+Chapter VI calculations.
 -/
