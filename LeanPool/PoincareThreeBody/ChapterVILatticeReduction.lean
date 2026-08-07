@@ -7,7 +7,9 @@ Authors: Gershon Bialer
 import Mathlib.Algebra.BigOperators.Finprod
 import Mathlib.Data.Int.GCD
 import Mathlib.Data.Finsupp.Basic
+import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.Complex.Exponential
+import Mathlib.Topology.Algebra.InfiniteSum.Constructions
 
 /-!
 # The lattice reduction in Poincaré's Chapter VI, §94
@@ -150,5 +152,115 @@ theorem chapterVIReducedCoefficient_eq_sum_affineRay
   apply Finset.sum_congr rfl
   intro frequency hfrequency
   simp only [chapterVIShearExponent_eq_iff_mem_affineRay ha hcoprime]
+
+/-- A Bézout choice `c * r - a * s = 1` gives unimodular coordinates on the entire frequency
+lattice.  The first new coordinate is the shear exponent and the second runs along its affine
+fiber. -/
+def chapterVIFrequencyLatticeEquiv
+    (a c r s : ℤ) (hbezout : c * r - a * s = 1) :
+    (ℤ × ℤ) ≃ (ℤ × ℤ) where
+  toFun coordinates :=
+    (a * coordinates.2 + r * coordinates.1,
+      c * coordinates.2 + s * coordinates.1)
+  invFun frequency :=
+    (chapterVIShearExponent a c frequency,
+      r * frequency.2 - s * frequency.1)
+  left_inv := by
+    rintro ⟨shear, alongFiber⟩
+    apply Prod.ext
+    · dsimp only
+      unfold chapterVIShearExponent
+      calc
+        c * (a * alongFiber + r * shear) -
+            a * (c * alongFiber + s * shear) =
+            (c * r - a * s) * shear := by ring
+        _ = shear := by rw [hbezout, one_mul]
+    · dsimp only
+      calc
+        r * (c * alongFiber + s * shear) -
+            s * (a * alongFiber + r * shear) =
+            (c * r - a * s) * alongFiber := by ring
+        _ = alongFiber := by rw [hbezout, one_mul]
+  right_inv := by
+    rintro ⟨firstFrequency, secondFrequency⟩
+    apply Prod.ext
+    · dsimp only
+      unfold chapterVIShearExponent
+      calc
+        a * (r * secondFrequency - s * firstFrequency) +
+            r * (c * firstFrequency - a * secondFrequency) =
+            (c * r - a * s) * firstFrequency := by ring
+        _ = firstFrequency := by rw [hbezout, one_mul]
+    · dsimp only
+      unfold chapterVIShearExponent
+      calc
+        c * (r * secondFrequency - s * firstFrequency) +
+            s * (c * firstFrequency - a * secondFrequency) =
+            (c * r - a * s) * secondFrequency := by ring
+        _ = secondFrequency := by rw [hbezout, one_mul]
+
+/-- In the unimodular coordinates, Poincaré's shear exponent is exactly the first coordinate. -/
+@[simp]
+theorem chapterVIShearExponent_frequencyLatticeEquiv
+    (a c r s : ℤ) (hbezout : c * r - a * s = 1)
+    (coordinates : ℤ × ℤ) :
+    chapterVIShearExponent a c
+      (chapterVIFrequencyLatticeEquiv a c r s hbezout coordinates) = coordinates.1 := by
+  change
+    chapterVIShearExponent a c
+      (a * coordinates.2 + r * coordinates.1,
+        c * coordinates.2 + s * coordinates.1) = coordinates.1
+  unfold chapterVIShearExponent
+  calc
+    c * (a * coordinates.2 + r * coordinates.1) -
+        a * (c * coordinates.2 + s * coordinates.1) =
+        (c * r - a * s) * coordinates.1 := by ring
+    _ = coordinates.1 := by rw [hbezout, one_mul]
+
+/-- Coprimality supplies the Bézout data required by the unimodular frequency coordinates. -/
+theorem exists_chapterVIFrequencyLatticeBezout
+    {a c : ℤ} (hcoprime : Int.gcd a c = 1) :
+    ∃ r s : ℤ, c * r - a * s = 1 := by
+  have hgcd := Int.gcd_eq_gcd_ab a c
+  rw [hcoprime] at hgcd
+  refine ⟨Int.gcdB a c, -Int.gcdA a c, ?_⟩
+  calc
+    c * Int.gcdB a c - a * -Int.gcdA a c =
+        a * Int.gcdA a c + c * Int.gcdB a c := by ring
+    _ = 1 := by simpa using hgcd.symm
+
+/-- The finite §94 reindexing extends without ambiguity to every summable double series: the
+outer sum is over shear exponents and the inner sum runs along the corresponding affine lattice
+fiber. -/
+theorem chapterVI_tsum_eq_iterated_shear_sum
+    (term : (ℤ × ℤ) → ℂ) (a c r s : ℤ)
+    (hbezout : c * r - a * s = 1) (hsummable : Summable term) :
+    (∑' frequency : ℤ × ℤ, term frequency) =
+      ∑' shear : ℤ, ∑' alongFiber : ℤ,
+        term (chapterVIFrequencyLatticeEquiv a c r s hbezout (shear, alongFiber)) := by
+  let latticeEquiv := chapterVIFrequencyLatticeEquiv a c r s hbezout
+  have hreindexed : Summable (term ∘ latticeEquiv) :=
+    hsummable.comp_injective latticeEquiv.injective
+  calc
+    (∑' frequency : ℤ × ℤ, term frequency) =
+        ∑' coordinates : ℤ × ℤ, term (latticeEquiv coordinates) := by
+      exact (latticeEquiv.tsum_eq term).symm
+    _ = ∑' shear : ℤ, ∑' alongFiber : ℤ,
+          term (latticeEquiv (shear, alongFiber)) := by
+      exact hreindexed.tsum_prod
+
+/-- Coprimality alone therefore provides a valid iterated shear decomposition of any summable
+double series. -/
+theorem exists_chapterVI_tsum_eq_iterated_shear_sum_of_coprime
+    (term : (ℤ × ℤ) → ℂ) {a c : ℤ}
+    (hcoprime : Int.gcd a c = 1) (hsummable : Summable term) :
+    ∃ r s : ℤ, ∃ hbezout : c * r - a * s = 1,
+      (∑' frequency : ℤ × ℤ, term frequency) =
+        ∑' shear : ℤ, ∑' alongFiber : ℤ,
+          term (chapterVIFrequencyLatticeEquiv a c r s
+            hbezout (shear, alongFiber)) := by
+  rcases exists_chapterVIFrequencyLatticeBezout hcoprime with ⟨r, s, hbezout⟩
+  exact ⟨r, s, hbezout,
+    chapterVI_tsum_eq_iterated_shear_sum term a c r s hbezout hsummable⟩
 
 end LeanPool.PoincareThreeBody

@@ -81,7 +81,8 @@ and gives its precise local meromorphic resonant-orbit obstruction in Theorem 3.
 The final Lean theorem is the fixed-coordinate, global uniform-domain special case: a global
 real-analytic family restricts and complexifies on the local neighborhoods used by the source.
 
-`ChapterVILatticeReduction` verifies the finite two-variable coefficient reduction in §94.
+`ChapterVILatticeReduction` verifies the finite two-variable coefficient reduction in §94 and
+its unimodular reindexing for arbitrary summable double series.
 `ChapterVIDarboux` proves that a Darboux-type asymptotic with nonzero leading model forces
 eventual coefficient nonvanishing, as used in §§99--102.  `ChapterVI` connects these results to
 the restricted resonant Fourier coefficient and final theorem.  The extension to convergent

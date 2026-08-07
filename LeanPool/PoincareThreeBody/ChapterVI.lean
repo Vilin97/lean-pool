@@ -36,8 +36,10 @@ the decisive complex-singularity calculation in Chapter VI of Poincaré's first 
   `chapterVIShearExponent_eq_iff_mem_affineRay`,
   `chapterVIFiniteFourierPolynomial_substitution`, and
   `chapterVIReducedCoefficient_eq_sum_affineRay` verify the exact reduction for finite Fourier
-  polynomials.  Extension to convergent infinite series and the contour integral is not yet
-  formalized.  The restricted problem has only one moving Kepler ellipse; the definition
+  polynomials.  `chapterVI_tsum_eq_iterated_shear_sum` extends the lattice reindexing to arbitrary
+  summable double series.  Connecting that abstract sum to holomorphic convergence domains and
+  the contour integral `Phi(z)` is not yet formalized.  The restricted problem has only one
+  moving Kepler ellipse; the definition
   `chapterVIOrientationCoefficient` below records the corresponding one-circle coefficient, but
   is not itself Poincaré's full two-variable perturbing function.
 * §95--98 (pp. 285--314): Poincaré complexifies the eccentric anomalies, finds candidate branch

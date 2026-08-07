@@ -5616,8 +5616,9 @@ projects:
       the complex singularity classification and Darboux estimates in Chapter
       VI of Poincaré's first volume. The Chapter VI modules verify the finite
       two-variable shear reduction and affine-ray coefficient extraction in
-      §94, and prove that a Darboux-type asymptotic with nonzero leading model
-      forces eventual coefficient nonvanishing as used in §§99--102. They also
+      §94, extend the lattice reindexing to summable double series, and prove
+      that a Darboux-type asymptotic with nonzero leading model forces eventual
+      coefficient nonvanishing as used in §§99--102. They also
       connect that output to the restricted nonintegrability theorem. The
       extension to convergent infinite series, complex singularity and
       admissibility analysis, derivation of the Darboux asymptotics, and final
@@ -5644,6 +5645,7 @@ projects:
       - LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
       - LeanPool.PoincareThreeBody.chapterVIFiniteFourierPolynomial_substitution
       - LeanPool.PoincareThreeBody.chapterVIReducedCoefficient_eq_sum_affineRay
+      - LeanPool.PoincareThreeBody.chapterVI_tsum_eq_iterated_shear_sum
       - LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
       - LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI_asymptotics
     main_results:
@@ -5690,6 +5692,16 @@ projects:
         source_ref: >-
           Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
           Volume I (1892), Chapter VI, §94 (pp. 280--285).
+      - declaration: LeanPool.PoincareThreeBody.chapterVI_tsum_eq_iterated_shear_sum
+        informal: >-
+          A Bézout/unimodular coordinate change reindexes every summable
+          complex series on ℤ² as an iterated sum whose outer index is
+          Poincaré's shear exponent and whose inner index runs along its affine
+          lattice fiber.
+        source_ref: >-
+          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
+          Volume I (1892), Chapter VI, §94 (pp. 280--285); this verifies the
+          summable-series reindexing, not yet the holomorphic contour argument.
       - declaration: LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
         informal: >-
           A coefficient sequence asymptotically equivalent to Poincaré's
