@@ -22,13 +22,27 @@ open LRAT
 
 namespace RawIncidence
 
-/-- Decode an eight-bit row mask as a set of octagon vertices. -/
-def packedRow (mask : UInt64) : Finset Vertex :=
-  Finset.univ.filter fun target => bitSetB mask target.val
+/-- A proposition-valued SAT assignment obtained from an incidence table. -/
+def valuation (R : RawIncidence) : LRAT.Valuation := fun index =>
+  ∃ centre target : Vertex,
+    index = varIndex centre target ∧ target ∈ R centre
 
-@[simp] theorem mem_packedRow (mask : UInt64) (target : Vertex) :
-    target ∈ packedRow mask ↔ bitSetB mask target.val = true := by
-  simp [packedRow]
+/-- Reading the SAT assignment at an incidence variable recovers membership. -/
+theorem valuation_variable (R : RawIncidence) (centre target : Vertex) :
+    valuation R (varIndex centre target) ↔ target ∈ R centre := by
+  constructor
+  · rintro ⟨centre', target', hindex, hmem⟩
+    have hcentreVal : centre'.val = centre.val := by
+      unfold varIndex at hindex
+      omega
+    have htargetVal : target'.val = target.val := by
+      unfold varIndex at hindex
+      omega
+    have hcentre : centre' = centre := Fin.ext hcentreVal
+    have htarget : target' = target := Fin.ext htargetVal
+    simpa [hcentre, htarget] using hmem
+  · intro hmem
+    exact ⟨centre, target, rfl, hmem⟩
 
 /-- Five-, two-, and three-subsets in the lexicographic order used by the generator. -/
 def fiveSubsets : List (List Vertex) :=

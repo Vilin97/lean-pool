@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.RowSymmetry
+import LeanPool.Erdos97ConvexOctagon.FiniteModel
 
 /-! # Pair-sparsity guard for direct incidence-table search -/
 
@@ -19,7 +19,7 @@ def pairCount
 /-- Boolean guard that prevents a new row from making any pair occur three times. -/
 def pairCompatibleB
     (assignments : List (Vertex × UInt64)) (row : UInt64) : Bool :=
-  vertexPairs.all fun pair =>
+  (((List.finRange 8).sublistsLen 2).reverse).all fun pair =>
     match pair with
     | [a, b] => !(bitSetB row a.val && bitSetB row b.val) ||
         decide (pairCount assignments a b < 2)
@@ -61,7 +61,8 @@ theorem pairCount_le_pairMultiplicity
   rw [List.toFinset_card_of_nodup hmatchingNodup] at hcard
   simpa only [matchingCentres, List.length_map, pairCount] using hcard
 
-private theorem vertexPairs_shape {pair : List Vertex} (hpair : pair ∈ vertexPairs) :
+private theorem vertexPairs_shape {pair : List Vertex}
+    (hpair : pair ∈ ((List.finRange 8).sublistsLen 2).reverse) :
     ∃ a b, pair = [a, b] ∧ a ≠ b := by
   revert pair
   decide

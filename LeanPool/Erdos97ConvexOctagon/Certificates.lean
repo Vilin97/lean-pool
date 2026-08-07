@@ -69,10 +69,6 @@ def payloadForwardCode (payload : UInt64) : UInt64 :=
 def payloadInverseCode (payload : UInt64) : UInt64 :=
   (payload >>> 28) &&& 0xffffff
 
-/-- Decode one three-bit entry of a packed permutation. -/
-def decodeMap (code : UInt64) (v : Vertex) : Vertex :=
-  Fin.ofNat 8 (((code >>> UInt64.ofNat (3 * v.val)) &&& 7).toNat)
-
 /-- The mathematical proposition checked for each emitted finite witness. -/
 def Certificate.Valid (R : RawIncidence) : Certificate → Prop
   | .k4 root component a b c d =>

@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.CoverageFormula
+import LeanPool.Erdos97ConvexOctagon.FiniteModel
+import Mathlib.Tactic.FinCases
 
 /-!
 # First-row symmetry reduction

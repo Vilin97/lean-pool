@@ -5,7 +5,6 @@ Authors: Egor Lyfar
 -/
 
 import LeanPool.Erdos97ConvexOctagon.Relabelling
-import LeanPool.Erdos97ConvexOctagon.LRAT.Semantics
 import Mathlib.Data.List.Sort
 
 /-! # Erdős 97 convex-octagon formalization: Finite Model -/
@@ -54,31 +53,21 @@ theorem target_row_mem_rowOptions (Q : OctagonIncidence) (v : Vertex) :
 def varIndex (centre target : Vertex) : ℕ :=
   8 * centre.val + target.val
 
-/-- A proposition-valued SAT assignment obtained from an incidence table. -/
-def valuation (R : RawIncidence) : LRAT.Valuation := fun index =>
-  ∃ centre target : Vertex,
-    index = varIndex centre target ∧ target ∈ R centre
-
-/-- Reading the SAT assignment at an incidence variable recovers membership. -/
-theorem valuation_variable (R : RawIncidence) (centre target : Vertex) :
-    valuation R (varIndex centre target) ↔ target ∈ R centre := by
-  constructor
-  · rintro ⟨centre', target', hindex, hmem⟩
-    have hcentreVal : centre'.val = centre.val := by
-      unfold varIndex at hindex
-      omega
-    have htargetVal : target'.val = target.val := by
-      unfold varIndex at hindex
-      omega
-    have hcentre : centre' = centre := Fin.ext hcentreVal
-    have htarget : target' = target := Fin.ext htargetVal
-    simpa [hcentre, htarget] using hmem
-  · intro hmem
-    exact ⟨centre, target, rfl, hmem⟩
-
 /-- Test one bit of a packed 64-bit incidence table. -/
 def bitSetB (code : UInt64) (index : ℕ) : Bool :=
   ((code >>> UInt64.ofNat index) &&& 1) != 0
+
+/-- Decode one three-bit entry of a packed permutation. -/
+def decodeMap (code : UInt64) (vertex : Vertex) : Vertex :=
+  Fin.ofNat 8 (((code >>> UInt64.ofNat (3 * vertex.val)) &&& 7).toNat)
+
+/-- Decode an eight-bit row mask as a set of octagon vertices. -/
+def packedRow (mask : UInt64) : Finset Vertex :=
+  Finset.univ.filter fun target => bitSetB mask target.val
+
+@[simp] theorem mem_packedRow (mask : UInt64) (target : Vertex) :
+    target ∈ packedRow mask ↔ bitSetB mask target.val = true := by
+  simp [packedRow]
 
 /-- Read one directed incidence from a packed table. -/
 def packedSelectsB (code : UInt64) (centre target : Vertex) : Bool :=

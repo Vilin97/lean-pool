@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.RowSymmetry
+import LeanPool.Erdos97ConvexOctagon.FiniteModel
 
 /-! # Generated master-formula core data -/
 

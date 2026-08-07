@@ -551,7 +551,7 @@ private def renderWordArray (words : Array UInt64) : String :=
 
 private def renderMasterFormulaData (core : DerivedCore) : String :=
   header ++
-    "import LeanPool.Erdos97ConvexOctagon.RowSymmetry\n\n" ++
+    "import LeanPool.Erdos97ConvexOctagon.FiniteModel\n\n" ++
     "/-! # Generated master-formula core data -/\n\n" ++
     "namespace Erdos97Octagon.RawIncidence\n\n" ++
     "/-- Bitset of source-clause references retained in the unsatisfiable core. -/\n" ++
