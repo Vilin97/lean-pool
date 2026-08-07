@@ -7,7 +7,7 @@ Authors: Egor Lyfar
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
 import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
-import LeanPool.Erdos97ConvexOctagon.StaticDirectCoverage
+import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
 
 /-! # Flat local checker for coverage certificates -/
 

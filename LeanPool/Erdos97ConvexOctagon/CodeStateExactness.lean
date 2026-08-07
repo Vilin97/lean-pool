@@ -5,7 +5,7 @@ Authors: Egor Lyfar
 -/
 
 import LeanPool.Erdos97ConvexOctagon.Certificates
-import LeanPool.Erdos97ConvexOctagon.StaticDirectCoverage
+import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
 
 /-! # Exactness of packed incidence-table prefixes -/
 
