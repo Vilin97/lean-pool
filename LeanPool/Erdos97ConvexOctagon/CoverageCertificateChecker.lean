@@ -6,6 +6,7 @@ Authors: Egor Lyfar
 
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
+import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
 import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoices
 import LeanPool.Erdos97ConvexOctagon.CoverageSearchCore
 import LeanPool.Erdos97ConvexOctagon.RowMasks
