@@ -5,7 +5,7 @@ Authors: Egor Lyfar
 -/
 
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateChecker
-import LeanPool.Erdos97ConvexOctagon.CoverageSearchRowChoiceSoundness
+import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMaskSoundness
 import LeanPool.Erdos97ConvexOctagon.PairStateExactness
 
 /-! # Support lemmas for compact coverage certificates -/
@@ -45,6 +45,19 @@ theorem bitSetB_or
     (left right : UInt64) (index : Fin 64) :
     bitSetB (left ||| right) index.val =
       (bitSetB left index.val || bitSetB right index.val) := by
+  simp only [bitSetB_eq_getLsbD]
+  simp
+
+/-- Bit testing reflects bitwise conjunction. -/
+theorem bitSetB_and
+    (left right : UInt64) (index : Fin 64) :
+    bitSetB (left &&& right) index.val =
+      (bitSetB left index.val && bitSetB right index.val) := by
+  simp only [bitSetB_eq_getLsbD]
+  simp
+
+private theorem bitSetB_zero (index : Fin 64) :
+    bitSetB 0 index.val = false := by
   simp only [bitSetB_eq_getLsbD]
   simp
 
@@ -156,15 +169,38 @@ def ConflictCover.Valid (cover : ConflictCover) : Prop :=
         ((cover.requiredPairs &&&
           (searchRowChoiceAt ⟨cover.centre, hcentre⟩ rowIndex).pairMask) != 0) = true
 
-/-- Decidable audit that every row masked by a cover contains a required pair. -/
-def ConflictCover.validB (cover : ConflictCover) : Bool :=
-  if _hcentre : cover.centre < 8 then
-    (List.range 35).all fun rowIndex =>
-      !bitSetB cover.incompatibleRows rowIndex ||
-        ((cover.requiredPairs &&&
-          ((searchRowChoices.getD cover.centre #[]).getD rowIndex
-            ⟨0, 0⟩).pairMask) != 0)
-  else false
+private theorem foldPairMasks_bit_aux
+    (masks : Array UInt64) (indices : List Nat) (rows : UInt64)
+    (rowIndex : Fin 64) :
+    bitSetB (indices.foldl (fun accumulated index =>
+        accumulated ||| masks.getD index 0) rows) rowIndex.val = true →
+      bitSetB rows rowIndex.val = true ∨
+        ∃ index ∈ indices,
+          bitSetB (masks.getD index 0) rowIndex.val = true := by
+  induction indices generalizing rows with
+  | nil => simp
+  | cons index indices hinduction =>
+      intro hbit
+      have hresult := hinduction
+        (rows := rows ||| masks.getD index 0) hbit
+      rcases hresult with hcurrent | ⟨witness, hwitness, hset⟩
+      · rw [bitSetB_or, Bool.or_eq_true] at hcurrent
+        rcases hcurrent with hrows | hindex
+        · exact Or.inl hrows
+        · exact Or.inr ⟨index, by simp, hindex⟩
+      · exact Or.inr ⟨witness, by simp [hwitness], hset⟩
+
+private theorem foldPairMasks_bit
+    (masks : Array UInt64) (indices : List Nat) (rowIndex : Fin 64)
+    (hbit : bitSetB (indices.foldl (fun rows index =>
+      rows ||| masks.getD index 0) 0) rowIndex.val = true) :
+    ∃ index ∈ indices,
+      bitSetB (masks.getD index 0) rowIndex.val = true := by
+  rcases foldPairMasks_bit_aux masks indices 0 rowIndex hbit with
+    hzero | hwitness
+  · rw [bitSetB_zero] at hzero
+    simp at hzero
+  · exact hwitness
 
 /-- The finite cover audit implies semantic cover validity. -/
 theorem ConflictCover.valid_of_validB
@@ -173,11 +209,36 @@ theorem ConflictCover.valid_of_validB
   unfold ConflictCover.validB at hvalid
   split at hvalid
   next hcentre =>
+    let masks := pairRowIndexMasks.getD cover.centre #[]
+    have hparts :
+        cover.pairIndices.all (fun index =>
+            index < 64 && bitSetB cover.requiredPairs index) = true ∧
+          cover.pairIndices.foldl (fun rows index =>
+            rows ||| masks.getD index 0) 0 = cover.incompatibleRows := by
+      simpa only [masks, Bool.and_eq_true, beq_iff_eq] using hvalid
     refine ⟨hcentre, fun rowIndex hrow => ?_⟩
-    have haudit := (List.all_eq_true.mp hvalid) rowIndex.val
-      (List.mem_range.mpr rowIndex.isLt)
-    rw [hrow] at haudit
-    simpa only [Bool.not_true, Bool.false_or, searchRowChoiceAt] using haudit
+    let boundedRow : Fin 64 := ⟨rowIndex.val, by omega⟩
+    have hfoldBit : bitSetB (cover.pairIndices.foldl (fun rows index =>
+        rows ||| masks.getD index 0) 0) boundedRow.val = true := by
+      rw [hparts.2]
+      exact hrow
+    obtain ⟨pairIndex, hpairMember, hmaskBit⟩ :=
+      foldPairMasks_bit masks cover.pairIndices boundedRow hfoldBit
+    have hpairAudit := (List.all_eq_true.mp hparts.1) pairIndex hpairMember
+    have hpairParts : pairIndex < 64 ∧
+        bitSetB cover.requiredPairs pairIndex = true := by
+      simpa only [Bool.and_eq_true, decide_eq_true_eq] using hpairAudit
+    let boundedPair : Fin 64 := ⟨pairIndex, hpairParts.1⟩
+    have hrowPair : bitSetB
+        (searchRowChoiceAt ⟨cover.centre, hcentre⟩ rowIndex).pairMask
+        boundedPair.val = true := by
+      rw [← pairRowIndexMasks_bit ⟨cover.centre, hcentre⟩ boundedPair rowIndex]
+      exact hmaskBit
+    apply bne_iff_ne.mpr
+    intro hintersection
+    have hzero := congrArg (fun bits => bitSetB bits boundedPair.val) hintersection
+    rw [bitSetB_and, hpairParts.2, hrowPair, bitSetB_zero] at hzero
+    simp at hzero
   next => simp at hvalid
 
 /-- A table-wide audit makes every successful canonical cover lookup valid. -/
