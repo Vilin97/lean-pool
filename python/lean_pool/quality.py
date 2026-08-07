@@ -1124,6 +1124,9 @@ def _check_projects(root: Path) -> list[_QualityError]:
     errors.extend(_check_project_uniqueness(path, projects))
     if errors:
         return errors
+    errors.extend(_check_project_entry_imports(root, projects))
+    if errors:
+        return errors
     errors.extend(_check_top_level_project_modules(root, path, projects))
     if errors:
         return errors
@@ -1163,6 +1166,30 @@ def _check_project_uniqueness(path: Path, projects: list[Any]) -> list[_QualityE
             else:
                 seen[value] = index
     return errors
+
+
+def _check_project_entry_imports(
+    root: Path, projects: list[Any]
+) -> list[_QualityError]:
+    """Require LeanPool.lean to import every registered project entry module."""
+    index_path = root / "LeanPool.lean"
+    if not index_path.exists():
+        return []
+    imports = set(_parse_imports(index_path.read_text()))
+    entry_modules = {
+        project["entry_module"]
+        for project in projects
+        if isinstance(project, dict) and isinstance(project.get("entry_module"), str)
+    }
+    return [
+        _QualityError(
+            index_path,
+            1,
+            f"project entry module {module} is not imported by LeanPool.lean; "
+            "run `lake exe mk_all`",
+        )
+        for module in sorted(entry_modules - imports)
+    ]
 
 
 def _check_top_level_project_modules(

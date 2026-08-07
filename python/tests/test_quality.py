@@ -267,6 +267,31 @@ def test_quality_check_rejects_unreachable_lean_file(tmp_path: Path) -> None:
     assert any("not reachable" in error.message for error in errors)
 
 
+def test_quality_check_requires_direct_project_entry_import(tmp_path: Path) -> None:
+    """Transitive reachability does not replace a root import for each project."""
+    _write_minimal_repo(tmp_path, "def baseHello := 1\n")
+    wrapper = tmp_path / "LeanPool" / "Wrapper"
+    wrapper.mkdir()
+    (tmp_path / "LeanPool.lean").write_text(
+        "import LeanPool.Basic\nimport LeanPool.Wrapper.Internal\n"
+    )
+    (wrapper / "Internal.lean").write_text(f"{HEADER}\nimport LeanPool.MyProj\n")
+    card = _project_card(_PROJECT_FIXTURE)
+    (tmp_path / "LeanPool" / "MyProj.lean").write_text(
+        f"{HEADER}\n\n{card}\n\ndef hello := 1\n"
+    )
+    _write_project_yaml(tmp_path, [{"slug": "p", "entry_module": "LeanPool.MyProj"}])
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert not any("not reachable" in error.message for error in errors)
+    assert any(
+        "project entry module LeanPool.MyProj is not imported by LeanPool.lean"
+        in error.message
+        for error in errors
+    )
+
+
 def test_quality_check_rejects_missing_project_metadata(tmp_path: Path) -> None:
     """Project metadata is required even before there are projects."""
     _write_minimal_repo(tmp_path)
