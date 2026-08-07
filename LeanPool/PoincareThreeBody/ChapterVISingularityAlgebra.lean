@@ -259,25 +259,6 @@ theorem chapterVI_secondKindPolynomialEight_inv_root
   simp only [inv_inv] at hreciprocal
   simpa only [hroot, mul_zero] using hreciprocal.symm
 
-/-- The discriminant of Poincaré's small-eccentricity quadratic (12). -/
-theorem chapterVI_equationTwelve_discriminant
-    (a c φ : ℝ) :
-    (2 * φ * (c - 2 * a)) ^ 2 -
-        4 * (4 * (a + c)) * (a * φ ^ 2) =
-      4 * φ ^ 2 * (c ^ 2 - 8 * a * c) := by
-  ring
-
-/-- In particular, the approximate equation (12) has nonnegative discriminant when `a` and `c`
-have opposite signs, as asserted near the end of §96. -/
-theorem chapterVI_equationTwelve_discriminant_nonnegative
-    {a c φ : ℝ} (hopposite : a * c ≤ 0) :
-    0 ≤ (2 * φ * (c - 2 * a)) ^ 2 -
-      4 * (4 * (a + c)) * (a * φ ^ 2) := by
-  rw [chapterVI_equationTwelve_discriminant]
-  have hfactor : 0 ≤ c ^ 2 - 8 * a * c := by
-    nlinarith [sq_nonneg c]
-  positivity
-
 /-- Poincaré's §96 parameter `z`, written in variables `x` and `y` with arbitrary complex
 coefficients in the exponential. -/
 def chapterVISingularityParameter
