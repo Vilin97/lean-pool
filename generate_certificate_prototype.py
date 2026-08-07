@@ -40,6 +40,67 @@ def source_choices() -> tuple[tuple[tuple[int, int], ...], ...]:
 SOURCE_CHOICES = source_choices()
 
 
+def pair_row_index_masks() -> tuple[tuple[int, ...], ...]:
+    """Build each centre's row-index mask for every packed pair bit."""
+    all_masks = []
+    for choices in SOURCE_CHOICES:
+        masks = [0] * 64
+        for row_index, (_row, pair_bits) in enumerate(choices):
+            remaining = pair_bits
+            while remaining:
+                bit = (remaining & -remaining).bit_length() - 1
+                masks[bit] |= 1 << row_index
+                remaining &= remaining - 1
+        all_masks.append(tuple(masks))
+    return tuple(all_masks)
+
+
+PAIR_ROW_INDEX_MASKS = pair_row_index_masks()
+
+
+def conflict_pair_cover(centre: int, seen_twice: int) -> tuple[int, ...]:
+    """Greedily choose repeated-pair bits with the same rejected-row union."""
+    candidates = [index for index in range(64) if seen_twice & (1 << index)]
+    masks = PAIR_ROW_INDEX_MASKS[centre]
+    target = 0
+    for index in candidates:
+        target |= masks[index]
+    uncovered = target
+    selected: list[int] = []
+    while uncovered:
+        index = max(candidates, key=lambda item: ((masks[item] & uncovered).bit_count(),
+                                                  -item))
+        assert masks[index] & uncovered
+        selected.append(index)
+        candidates.remove(index)
+        uncovered &= ~masks[index]
+    for index in reversed(selected.copy()):
+        trial = [item for item in selected if item != index]
+        trial_union = 0
+        for item in trial:
+            trial_union |= masks[item]
+        if trial_union == target:
+            selected = trial
+    assert target == _mask_union(masks, selected)
+    return tuple(selected)
+
+
+def _mask_union(masks: tuple[int, ...], indices: list[int]) -> int:
+    """Return the bitwise union of selected mask entries."""
+    result = 0
+    for index in indices:
+        result |= masks[index]
+    return result
+
+
+def conflict_cover_data(centre: int, seen_twice: int) -> tuple[int, int, int]:
+    """Return a centre, required-pair mask, and its exact rejected-row union."""
+    indices = conflict_pair_cover(centre, seen_twice)
+    required_pairs = sum(1 << index for index in indices)
+    incompatible_rows = _mask_union(PAIR_ROW_INDEX_MASKS[centre], list(indices))
+    return centre, required_pairs, incompatible_rows
+
+
 @dataclass(frozen=True)
 class Leaf:
     origin: int
@@ -355,8 +416,10 @@ GroupedOrigins = tuple[tuple[int, ...], ...]
 
 
 def flatten_claims(
-    root: Node, pattern_ids: dict[int, int], hard_ids: dict[int, int]
-) -> tuple[list[tuple[int, int, int, int, int, int, int, GroupedOrigins,
+    root: Node, pattern_ids: dict[int, int], hard_ids: dict[int, int],
+    cover_ids: dict[tuple[int, int, int], int],
+    covers: list[tuple[int, int, int]],
+) -> tuple[list[tuple[int, int, int, int, int, int, int, int, GroupedOrigins,
                                                       GroupedOrigins, GroupedOrigins,
                                                       GroupedOrigins]], int]:
     """Flatten one witness tree postorder, returning child identifiers."""
@@ -371,6 +434,11 @@ def flatten_claims(
         children = iter(node.children)
         centre = ORDER[node.depth]
         remaining = ORDER[node.depth + 1 :]
+        cover = conflict_cover_data(centre, node.pair_twice)
+        if cover not in cover_ids:
+            cover_ids[cover] = len(covers)
+            covers.append(cover)
+        cover_id = cover_ids[cover]
         active_rows = 0
         rejected_rows = 0
         columns = tuple((node.column_counts >> (8 * target)) & 255
@@ -402,7 +470,7 @@ def flatten_claims(
         identifier = len(claims)
         claims.append((
             node.depth, node.code, node.pair_once, node.pair_twice,
-            active_rows, rejected_rows, node.pattern_rows,
+            cover_id, active_rows, rejected_rows, node.pattern_rows,
             tuple(tuple(group) for group in rejection_target_groups),
             tuple(tuple(group) for group in pattern_groups),
             tuple(tuple(group) for group in child_groups),
@@ -424,25 +492,81 @@ def lean_groups(groups: GroupedOrigins) -> str:
     return "#[" + ", ".join(lean_list(group) for group in groups) + "]"
 
 
+def generate_conflict_covers(covers: list[tuple[int, int, int]]) -> None:
+    """Generate shallow groups of globally reusable exact conflict covers."""
+    definitions = []
+    names = []
+    for start in range(0, len(covers), 64):
+        name = f"conflictCovers{start // 64:02}"
+        names.append(name)
+        entries = [f"⟨{centre}, {required}, {rows}⟩"
+                   for centre, required, rows in covers[start:start + 64]]
+        lines = [", ".join(entries[offset:offset + 4])
+                 for offset in range(0, len(entries), 4)]
+        definitions.append(
+            f"private def {name} : Array ConflictCover := #[\n  "
+            + ",\n  ".join(lines) + "\n]"
+        )
+    source = """/-
+Copyright (c) 2026 Egor Lyfar. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Egor Lyfar
+-/
+
+import LeanPool.Erdos97ConvexOctagon.CoveragePairRowIndexMasks
+
+/-! # Deduplicated repeated-pair row-mask covers -/
+
+namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
+
+/-- A reusable exact union of row indices rejected by selected repeated pairs. -/
+structure ConflictCover where
+  /-- Search centre for which the row-index mask is valid. -/
+  centre : Nat
+  /-- Repeated-pair bits sufficient to justify the rejected rows. -/
+  requiredPairs : UInt64
+  /-- Exact union of legal row indices containing one of the required pairs. -/
+  incompatibleRows : UInt64
+
+""" + "\n\n".join(definitions) + f"""
+
+/-- Conflict covers in shallow 64-entry groups. -/
+def conflictCoverGroups : Array (Array ConflictCover) :=
+  #[{', '.join(names)}]
+
+/-- Number of globally deduplicated conflict covers. -/
+def conflictCoverCount : Nat := {len(covers)}
+
+end Erdos97Octagon.RawIncidence.StaticDirectCoverage
+"""
+    (LEAN / "CoverageCertificateConflictCovers.lean").write_text(source)
+
+
 def generate_local_claims() -> None:
     """Generate flat postorder claims and six independent chunk-audit modules."""
     patterns, hards = summary_maps()
     pattern_ids, hard_ids = generate_dense_summaries()
     definitions = []
     probes = {}
+    cover_ids: dict[tuple[int, int, int], int] = {}
+    covers: list[tuple[int, int, int]] = []
     for orbit, row_two in PIVOTS:
         witness, _counts = build_branch(orbit, row_two, patterns, hards)
-        claims, root_id = flatten_claims(witness, pattern_ids, hard_ids)
+        claims, root_id = flatten_claims(
+            witness, pattern_ids, hard_ids, cover_ids, covers
+        )
         prefix = f"branchClaims_{orbit}_{row_two}"
         names = []
         for identifier, claim in enumerate(claims):
-            (depth, code, pair_once, pair_twice, active_rows, rejected_rows,
+            (depth, code, pair_once, pair_twice, cover_id,
+             active_rows, rejected_rows,
              pattern_rows, rejection_targets, origins, child_ids, hard_origins) = claim
             name = f"{prefix}_node_{identifier:04}"
             names.append(name)
             definitions.append(
                 f"private def {name} : NodeClaim :=\n"
-                f"  ⟨{depth}, {code}, {pair_once}, {pair_twice}, {active_rows}, "
+                f"  ⟨{depth}, {code}, {pair_once}, {pair_twice}, "
+                f"{cover_id}, {active_rows}, "
                 f"{rejected_rows}, {pattern_rows}, {lean_groups(rejection_targets)}, "
                 f"{lean_groups(origins)}, "
                 f"{lean_groups(child_ids)}, {lean_groups(hard_origins)}⟩"
@@ -491,6 +615,7 @@ namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage
 """
     (LEAN / "CoverageCertificateLocalPrototypeData.lean").write_text(source)
+    generate_conflict_covers(covers)
     for name, probe in probes.items():
         (ROOT / name).write_text(probe)
 

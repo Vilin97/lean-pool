@@ -5,6 +5,7 @@ Authors: Egor Lyfar
 -/
 
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateDenseSummaries
+import LeanPool.Erdos97ConvexOctagon.CoverageCertificateConflictCovers
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificatePrototype
 
 /-! # Flat local checker for prototype coverage certificates -/
@@ -21,6 +22,8 @@ structure NodeClaim where
   pairOnce : UInt64
   /-- Pairs selected by at least two assigned rows. -/
   pairTwice : UInt64
+  /-- Dense identifier of a globally audited repeated-pair row-mask cover. -/
+  conflictCoverId : Nat
   /-- Row indices whose pair and column guards both survive. -/
   activeRows : UInt64
   /-- Pair-compatible row indices rejected by the semantic column guard. -/
@@ -46,7 +49,7 @@ structure BranchClaims where
   rootId : Nat
 
 private def defaultNodeClaim : NodeClaim :=
-  ⟨0, 0, 0, 0, 0, 0, 0, #[], #[], #[], #[]⟩
+  ⟨0, 0, 0, 0, 0, 0, 0, 0, #[], #[], #[], #[]⟩
 
 /-- Retrieve one node without unfolding an entire large flat array literal. -/
 def BranchClaims.nodeAt (claims : BranchClaims) (identifier : Nat) : NodeClaim :=
@@ -113,6 +116,12 @@ def hardIdentifierPackedMatchesB (identifier : Nat) (code : UInt64) : Bool :=
 def rowIndexWord (rows : UInt64) (offset : Nat) : List Nat :=
   let word := ((rows >>> UInt64.ofNat offset) &&& 31).toNat
   (fiveBitIndices.getD word []).map fun index => offset + index
+
+/-- Retrieve one conflict cover without unfolding the full generated table. -/
+def conflictCoverAt? (identifier : Nat) : Option ConflictCover :=
+  match conflictCoverGroups[identifier / 64]? with
+  | none => none
+  | some group => group[identifier % 64]?
 
 /-- Process at most five compatible rows while threading the local witness streams. -/
 private def processFiveRows
@@ -199,22 +208,23 @@ def nodePruningValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
     if claim.depth < searchCentres.length then
       let centre := searchCentres.getD claim.depth 0
       let remaining := searchCentres.drop (claim.depth + 1)
-      let pairState : PairState := ⟨claim.pairOnce, claim.pairTwice⟩
-      let incompatible := incompatibleRowIndexMask centre pairState.seenTwice
-      let legalRows : UInt64 := 34359738367
-      if (claim.activeRows &&& legalRows) != claim.activeRows ||
-          (claim.rejectedRows &&& legalRows) != claim.rejectedRows ||
-          (claim.patternRows &&& claim.activeRows) != claim.patternRows ||
-          (claim.activeRows &&& claim.rejectedRows) != 0 ||
-          (claim.activeRows &&& incompatible) != 0 ||
-          (claim.rejectedRows &&& incompatible) != 0 ||
-          ((claim.activeRows ||| claim.rejectedRows ||| incompatible) &&&
-            legalRows) != legalRows then false
-      else
-        (List.range 7).all fun wordIndex =>
-          rejectedWordValidB claim centre remaining
-              (rowIndexWord claim.rejectedRows (5 * wordIndex))
-              (claim.rejectionTargetGroups.getD wordIndex [])
+      match conflictCoverAt? claim.conflictCoverId with
+      | none => false
+      | some cover =>
+          let incompatible := cover.incompatibleRows
+          let inactive := claim.rejectedRows ||| incompatible
+          let legalRows : UInt64 := 34359738367
+          if cover.centre != centre.val ||
+              (cover.requiredPairs &&& claim.pairTwice) != cover.requiredPairs ||
+              (claim.patternRows &&& claim.activeRows) != claim.patternRows ||
+              (claim.rejectedRows &&& incompatible) != 0 ||
+              (claim.activeRows &&& inactive) != 0 ||
+              (claim.activeRows ||| inactive) != legalRows then false
+          else
+            (List.range 7).all fun wordIndex =>
+              rejectedWordValidB claim centre remaining
+                  (rowIndexWord claim.rejectedRows (5 * wordIndex))
+                  (claim.rejectionTargetGroups.getD wordIndex [])
     else false
   else false
 
