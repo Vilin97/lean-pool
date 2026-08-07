@@ -40,11 +40,9 @@ the decisive complex-singularity calculation in Chapter VI of Poincaré's first 
   polynomials. `chapterVIReducedCoefficient_circleIntegral` verifies Poincaré's normalized-circle
   contour extraction for the resulting finite Laurent polynomial.
   `chapterVI_tsum_eq_iterated_shear_sum` extends the lattice reindexing to arbitrary summable
-  double series. `chapterVI_laurentSeries_circleCoefficient` proves the infinite Laurent-series
-  contour extraction under a weighted absolute-summability hypothesis on the chosen circle.
-  Establishing that hypothesis and the corresponding annulus of holomorphic convergence for
-  Poincaré's actual perturbing function `Phi(z)` is not yet formalized. The restricted problem has
-  only one moving Kepler ellipse; the definition
+  double series. Connecting that abstract sum to a Laurent function on its annulus of holomorphic
+  convergence, and hence justifying Poincaré's infinite-series contour integral `Phi(z)`, is not
+  yet formalized. The restricted problem has only one moving Kepler ellipse; the definition
   `chapterVIOrientationCoefficient` below records the corresponding one-circle coefficient, but
   is not itself Poincaré's full two-variable perturbing function.
 * §95--98 (pp. 285--314): Poincaré complexifies the eccentric anomalies, finds candidate branch

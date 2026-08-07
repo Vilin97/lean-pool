@@ -5617,18 +5617,16 @@ projects:
       VI of Poincaré's first volume. The Chapter VI modules verify the finite
       two-variable shear reduction and affine-ray coefficient extraction in
       §94, coefficient extraction by normalized circle integration for finite
-      Laurent sums and absolutely convergent Laurent series, extend the lattice
-      reindexing to summable double series, and prove that a Darboux-type
-      asymptotic with nonzero leading model forces eventual coefficient
-      nonvanishing as used in §§99--102. They also
+      Laurent sums, extend the lattice reindexing to summable double series,
+      and prove that a Darboux-type asymptotic with nonzero leading model forces
+      eventual coefficient nonvanishing as used in §§99--102. They also
       connect that output to the restricted nonintegrability theorem. The
-      proof of the convergence hypothesis and holomorphic annulus for
-      Poincaré's actual series, complex singularity and admissibility analysis,
-      derivation of the Darboux asymptotics, and final singularity-parameter
-      count are explicitly recorded as not yet formalized. The unconditional
-      statement is the fixed-coordinate, global uniform-domain special case of
-      the planar part of Yagasaki's Theorem 1.1; his local meromorphic
-      obstruction is Theorem 3.1.
+      analytic passage to Poincaré's holomorphic infinite Laurent series,
+      complex singularity and admissibility analysis, derivation of the
+      Darboux asymptotics, and final singularity-parameter count are explicitly
+      recorded as not yet formalized. The unconditional statement is the fixed-coordinate, global
+      uniform-domain special case of the planar part of Yagasaki's Theorem 1.1;
+      his local meromorphic obstruction is Theorem 3.1.
     branch: dynamical systems
     entry_module: LeanPool.PoincareThreeBody
     authors:
@@ -5649,7 +5647,6 @@ projects:
       - LeanPool.PoincareThreeBody.chapterVIFiniteFourierPolynomial_substitution
       - LeanPool.PoincareThreeBody.chapterVIReducedCoefficient_eq_sum_affineRay
       - LeanPool.PoincareThreeBody.chapterVIReducedCoefficient_circleIntegral
-      - LeanPool.PoincareThreeBody.chapterVI_laurentSeries_circleCoefficient
       - LeanPool.PoincareThreeBody.chapterVI_tsum_eq_iterated_shear_sum
       - LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
       - LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI_asymptotics
@@ -5715,20 +5712,8 @@ projects:
         source_ref: >-
           Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
           Volume I (1892), Chapter VI, §94 (pp. 280--285); this verifies finite
-          Laurent coefficient extraction, while the following declaration
-          treats an infinite Laurent series under an explicit hypothesis.
-      - declaration: LeanPool.PoincareThreeBody.chapterVI_laurentSeries_circleCoefficient
-        informal: >-
-          If the coefficient norms weighted by the chosen circle radius are
-          summable, the Laurent series converges uniformly on that circle,
-          circle integration commutes with its infinite sum, and normalized
-          integration extracts the requested coefficient.
-        source_ref: >-
-          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
-          Volume I (1892), Chapter VI, §94 (pp. 280--285); this verifies the
-          contour step under an explicit convergence hypothesis, not yet that
-          Poincaré's actual perturbing series satisfies the hypothesis on the
-          required annulus.
+          Laurent coefficient extraction, not yet termwise integration of the
+          infinite Laurent series defining Phi.
       - declaration: LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
         informal: >-
           A coefficient sequence asymptotically equivalent to Poincaré's
