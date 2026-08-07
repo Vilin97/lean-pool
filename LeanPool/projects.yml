@@ -5721,3 +5721,58 @@ projects:
       - "70F07"
       - "37J30"
       - "37J40"
+  - slug: jacobian-diffgeo
+    title: The Jacobian of a Compact Riemann Surface
+    summary: >-
+      Constructs the Jacobian of a compact Riemann surface as the period-lattice
+      quotient of the dual of holomorphic 1-forms, and proves the surrounding
+      theory it needs: the genus as the dimension of the space of holomorphic
+      1-forms, discreteness and full rank 2g of the period lattice, the
+      Abel-Jacobi map and its injectivity in positive genus, functoriality
+      (pushforward, pullback, degree,
+      and the projection formula), Riemann-Roch, Serre duality via Laurent
+      tails, the residue theorem, the Dolbeault-Cech comparison, and finite
+      dimensionality of the first cohomology by a Schwartz/Montel argument. The
+      headline no-hack guard is that the genus vanishes exactly when the surface
+      is homeomorphic to the sphere.
+    branch: complex analysis and geometry
+    entry_module: LeanPool.JacobianDiffgeo
+    authors:
+      - Rado Kirov
+    source:
+      title: >-
+        Jacobians of compact Riemann surfaces (AI challenge)
+      authors:
+        - Kevin Buzzard
+      url: "https://gist.github.com/kbuzzard/778bc714030b3e974ab5f4038783d1a9"
+      github_repo: rkirov/jacobian-fable
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - genus_eq_zero_iff_homeo
+      - Jacobian.ofCurve_inj
+    main_results:
+      - declaration: genus_eq_zero_iff_homeo
+        informal: >-
+          A compact connected Riemann surface has genus zero if and only if it
+          is homeomorphic to the 2-sphere.
+      - declaration: Jacobian.ofCurve_inj
+        informal: >-
+          The Abel-Jacobi map of a compact Riemann surface of positive genus is
+          injective: two points with the same image coincide.
+      - declaration: Jacobian.pushforward_pullback
+        informal: >-
+          For a non-constant holomorphic map between compact Riemann surfaces,
+          the pushforward composed with the pullback on Jacobians is
+          multiplication by the degree of the map.
+    tags:
+      - riemann-surfaces
+      - complex-geometry
+      - abel-jacobi
+      - riemann-roch
+      - serre-duality
+    msc:
+      - "14H40"
+      - "30F30"
+      - "32G20"
