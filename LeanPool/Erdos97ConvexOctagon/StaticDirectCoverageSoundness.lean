@@ -6,6 +6,7 @@ Authors: Egor Lyfar
 
 import LeanPool.Erdos97ConvexOctagon.CoverageSummaryChoiceValidity
 import LeanPool.Erdos97ConvexOctagon.CoverageSummaryValidity
+import LeanPool.Erdos97ConvexOctagon.CodeStateExactness
 import LeanPool.Erdos97ConvexOctagon.PairStateExactness
 import LeanPool.Erdos97ConvexOctagon.RowSymmetry
 
@@ -409,35 +410,16 @@ private theorem selectedByAssignmentsB_complete
   simp only [selectedByAssignmentsB, List.any_eq_true]
   exact ⟨(centre, row), hassignment, by simp [hbit]⟩
 
-private theorem patternExtendsAssignmentsB_sound
-    {Q : OctagonIncidence} {assignments : List RowAssignment}
-    (hassignments : AssignmentsMatch Q assignments) {summary : PatternSummary}
-    (hmatch : patternExtendsAssignmentsB assignments summary = true) :
-    Extends (packedIncidence summary.mask) Q.targets := by
-  intro centre target htarget
-  have hcentre := (List.all_eq_true.mp hmatch) centre (List.mem_finRange centre)
-  have htargetCheck :=
-    (List.all_eq_true.mp hcentre) target (List.mem_finRange target)
-  have hbit : bitSetB summary.mask (varIndex centre target) = true := by
-    rw [mem_packedIncidence] at htarget
-    simpa only [packedSelectsB] using htarget
-  simp only [Bool.or_eq_true] at htargetCheck
-  rcases htargetCheck with hnot | hselected
-  · simp [hbit] at hnot
-  · exact selectedByAssignmentsB_sound hassignments hselected
-
 private theorem hasPatternB_sound
     {code : UInt64} {assignments : List RowAssignment}
     {patterns : PatternSummaryBuckets}
     (hmatch : hasPatternB code assignments patterns = true) :
     ∃ summary, CandidateMember summary patterns ∧
-      patternExtendsAssignmentsB assignments summary = true := by
+      ((summary.mask &&& code) == summary.mask) = true := by
   simp only [hasPatternB, List.any_eq_true] at hmatch
   obtain ⟨bucket, hbucket, summary, hsummary, hmatch⟩ := hmatch
-  have hparts : ((summary.mask &&& code) == summary.mask) = true ∧
-      patternExtendsAssignmentsB assignments summary = true := by
-    simpa only [patternSummaryMatchesB, Bool.and_eq_true] using hmatch
-  exact ⟨summary, ⟨bucket, hbucket, hsummary⟩, hparts.2⟩
+  exact ⟨summary, ⟨bucket, hbucket, hsummary⟩,
+    by simpa only [patternSummaryMatchesB] using hmatch⟩
 
 private theorem impossible_of_pattern
     {p : Vertex → Plane} {Q : OctagonIncidence}
@@ -445,11 +427,14 @@ private theorem impossible_of_pattern
     {code : UInt64} {assignments : List RowAssignment}
     {patterns : PatternSummaryBuckets}
     (hassignments : AssignmentsMatch Q assignments)
+    (hcodeExact : CodeMatches code assignments)
     (hpatterns : PatternBucketsValid patterns)
     (hmatch : hasPatternB code assignments patterns = true) : False := by
   obtain ⟨summary, hsummary, hmatch⟩ := hasPatternB_sound hmatch
   obtain ⟨entry, _horigin, hmask, hvalidB⟩ := hpatterns summary hsummary
-  have hextendsSummary := patternExtendsAssignmentsB_sound hassignments hmatch
+  have hextendsSummary := hcodeExact.extends_of_subset
+    (fun centre target hselected =>
+      selectedByAssignmentsB_sound hassignments hselected) hmatch
   have hextends : Extends (packedIncidence entry.mask) Q.targets := by
     simpa only [hmask] using hextendsSummary
   have hvalid := PatternEntry.valid_of_validB hvalidB
@@ -461,13 +446,11 @@ private theorem hasHardB_sound
     {hardEntries : HardSummaryBuckets}
     (hmatch : hasHardB code assignments hardEntries = true) :
     ∃ summary, CandidateMember summary hardEntries ∧
-      hardEqualsAssignmentsB assignments summary = true := by
+      (summary.code == code) = true := by
   simp only [hasHardB, List.any_eq_true] at hmatch
   obtain ⟨bucket, hbucket, summary, hsummary, hmatch⟩ := hmatch
-  have hparts : (summary.code == code) = true ∧
-      hardEqualsAssignmentsB assignments summary = true := by
-    simpa only [hardSummaryMatchesB, Bool.and_eq_true] using hmatch
-  exact ⟨summary, ⟨bucket, hbucket, hsummary⟩, hparts.2⟩
+  exact ⟨summary, ⟨bucket, hbucket, hsummary⟩,
+    by simpa only [hardSummaryMatchesB] using hmatch⟩
 
 private theorem impossible_of_hard
     {p : Vertex → Plane} {Q : OctagonIncidence}
@@ -476,30 +459,18 @@ private theorem impossible_of_hard
     {hardEntries : HardSummaryBuckets}
     (hcentres : (assignments.map Prod.fst).Perm (List.finRange 8))
     (hassignments : AssignmentsMatch Q assignments)
+    (hcodeExact : CodeMatches code assignments)
     (hhardEntries : HardBucketsValid hardEntries)
     (hmatch : hasHardB code assignments hardEntries = true) : False := by
   obtain ⟨summary, hsummary, hmatch⟩ := hasHardB_sound hmatch
   obtain ⟨entry, _horigin, hcode, hvalidB⟩ := hhardEntries summary hsummary
-  have htargetsSummary : Q.targets = packedIncidence summary.code := by
-    funext centre
-    ext target
-    rw [mem_packedIncidence]
-    change (target ∈ Q.targets centre) ↔
-      bitSetB summary.code (varIndex centre target) = true
-    have hcentre := (List.all_eq_true.mp hmatch) centre (List.mem_finRange centre)
-    have htarget := (List.all_eq_true.mp hcentre) target (List.mem_finRange target)
-    have hequal : bitSetB summary.code (varIndex centre target) =
-        selectedByAssignmentsB assignments centre target := by
-      simpa only [beq_iff_eq] using htarget
-    constructor
-    · intro htargetQ
-      have hselected := selectedByAssignmentsB_complete hcentres hassignments htargetQ
-      rw [hequal]
-      exact hselected
-    · intro htargetBit
-      apply selectedByAssignmentsB_sound hassignments
-      rw [← hequal]
-      exact htargetBit
+  have htargetsSummary : Q.targets = packedIncidence summary.code :=
+    hcodeExact.table_eq_of_code_eq
+      (fun centre target hselected =>
+        selectedByAssignmentsB_sound hassignments hselected)
+      (fun centre target htarget =>
+        selectedByAssignmentsB_complete hcentres hassignments htarget)
+      hmatch
   have htargets : Q.targets = packedIncidence entry.code := by
     simpa only [hcode] using htargetsSummary
   have hcertificate : entry.certificate.Valid Q.targets := by
@@ -515,6 +486,7 @@ private theorem directSearch_sound
     {hardEntries : HardSummaryBuckets}
     (hcentres : (assignments.map Prod.fst ++ remaining).Perm (List.finRange 8))
     (hassignments : AssignmentsMatch Q assignments)
+    (hcodeExact : CodeMatches code assignments)
     (hpairState : pairState.Exact assignments)
     (hhardEntries : HardBucketsValid hardEntries)
     (haudit : directSearch remaining assignments code pairState columnState
@@ -524,6 +496,7 @@ private theorem directSearch_sound
       apply impossible_of_hard hC hR
       · simpa using hcentres
       · exact hassignments
+      · exact hcodeExact
       · exact hhardEntries
       · simpa only [directSearch] using haudit
   | cons centre remaining induction =>
@@ -538,6 +511,7 @@ private theorem directSearch_sound
       have hcompatible := pairCompatibleB_of_pairSparse_perm Q hSparse hcentres
         hassignments hrow
       have hnewAssignments := hassignments.cons centre choice.rowMask hrow
+      have hnewCodeExact := hcodeExact.add centre choice.rowMask
       have hnewPairState :=
         hpairState.add centre choice.rowMask choice.pairMask hmask
       have hnewCentres :
@@ -551,8 +525,10 @@ private theorem directSearch_sound
       rw [withColumnPruningB_eq_of_feasible hsemantic] at hbranch
       simp only [Bool.or_eq_true] at hbranch
       rcases hbranch with hpattern | hrecursive
-      · exact impossible_of_pattern hC hR hnewAssignments hpatterns hpattern
-      · exact induction hnewCentres hnewAssignments hnewPairState hrecursive
+      · exact impossible_of_pattern hC hR hnewAssignments hnewCodeExact
+          hpatterns hpattern
+      · exact induction hnewCentres hnewAssignments hnewCodeExact hnewPairState
+          hrecursive
 
 private theorem standardTargets_eq_packedRow :
     standardTargets = packedRow 30 := by
@@ -594,6 +570,14 @@ private theorem initialPairState_exact (orbit : Fin 7) :
     hexact0.add 1 (canonicalRowMask orbit) choice1.pairMask hmask1
   exact hexact1.perm (List.Perm.swap _ _ [])
 
+private theorem initialCodeMatches (orbit : Fin 7) :
+    CodeMatches
+      (addRowCode (addRowCode 0 30 0) (canonicalRowMask orbit) 1)
+      [(0, 30), (1, canonicalRowMask orbit)] := by
+  have hexact0 := CodeMatches.empty.add 0 30
+  have hexact1 := hexact0.add 1 (canonicalRowMask orbit)
+  exact hexact1.perm (List.Perm.swap _ _ [])
+
 private theorem branch_impossible
     {p : Vertex → Plane} {Q : OctagonIncidence}
     (hC : ConvexIndependent ℝ p) (hR : Realises p Q)
@@ -606,13 +590,15 @@ private theorem branch_impossible
   let choice1 := choiceForRow 1 (canonicalRowMask orbit)
   have hassignments : AssignmentsMatch Q assignments := by
     simpa only [assignments] using initialAssignmentsMatch hN orbit hrowOne
+  have hcodeExact : CodeMatches code assignments := by
+    simpa only [code, assignments] using initialCodeMatches orbit
   have hchoice1 : choice1 ∈ patternSummaryChoices.getD 1 [] ∧
       choice1.rowMask = canonicalRowMask orbit := by
     simpa only [choice1] using initialChoiceOne_spec orbit
   have hpatterns1 : PatternBucketsValid choice1.patterns :=
     patternBucketsValid_of_choice (centre := 1) hchoice1.1
   by_cases hpattern1 : hasPatternB code assignments choice1.patterns = true
-  · exact impossible_of_pattern hC hR hassignments hpatterns1 hpattern1
+  · exact impossible_of_pattern hC hR hassignments hcodeExact hpatterns1 hpattern1
   · let row := rowTwoMask rowTwo
     let choice2 := choiceForRow 2 row
     have hchoice2Spec : choice2 ∈ patternSummaryChoices.getD 2 [] ∧
@@ -642,6 +628,8 @@ private theorem branch_impossible
     let columnState2 := columnState.add row
     have hassignments2 : AssignmentsMatch Q assignments2 :=
       hassignments.cons 2 row hrowTwo
+    have hcodeExact2 : CodeMatches code2 assignments2 :=
+      hcodeExact.add 2 row
     have hpairState2 : pairState2.Exact assignments2 := by
       exact hpairState.add 2 row choice2.pairMask hmask2
     have hcentres : (assignments2.map Prod.fst ++ searchCentres).Perm
@@ -665,9 +653,10 @@ private theorem branch_impossible
             (hardSummaries orbit rowTwo) = true := by
       simpa only [Bool.or_eq_true] using hwrapped
     rcases hauditParts with hpattern2 | hrecursive
-    · exact impossible_of_pattern hC hR hassignments2 hpatterns2 hpattern2
-    · exact directSearch_sound hC hR hSparse hcentres hassignments2 hpairState2
-        (hardSummaries_valid orbit rowTwo) hrecursive
+    · exact impossible_of_pattern hC hR hassignments2 hcodeExact2
+        hpatterns2 hpattern2
+    · exact directSearch_sound hC hR hSparse hcentres hassignments2 hcodeExact2
+        hpairState2 (hardSummaries_valid orbit rowTwo) hrecursive
 
 private theorem subbranch_impossible
     {p : Vertex → Plane} {Q : OctagonIncidence}
@@ -686,6 +675,8 @@ private theorem subbranch_impossible
   let columnState := (ColumnState.empty.add 30).add (canonicalRowMask orbit)
   have hassignments : AssignmentsMatch Q assignments := by
     simpa only [assignments] using initialAssignmentsMatch hN orbit hrowOne
+  have hcodeExact : CodeMatches code assignments := by
+    simpa only [code, assignments] using initialCodeMatches orbit
   have hpairState : pairState.Exact assignments := by
     simpa only [pairState, assignments, choice0, choice1] using
       initialPairState_exact orbit
@@ -695,7 +686,7 @@ private theorem subbranch_impossible
   have hpatterns1 : PatternBucketsValid choice1.patterns :=
     patternBucketsValid_of_choice (centre := 1) hchoice1.1
   by_cases hpattern1 : hasPatternB code assignments choice1.patterns = true
-  · exact impossible_of_pattern hC hR hassignments hpatterns1 hpattern1
+  · exact impossible_of_pattern hC hR hassignments hcodeExact hpatterns1 hpattern1
   · let row2 := rowTwoMask rowTwo
     let choice2 := choiceForRow 2 row2
     have hchoice2Spec : choice2 ∈ patternSummaryChoices.getD 2 [] ∧
@@ -718,6 +709,8 @@ private theorem subbranch_impossible
     let columnState2 := columnState.add row2
     have hassignments2 : AssignmentsMatch Q assignments2 :=
       hassignments.cons 2 row2 hrowTwo
+    have hcodeExact2 : CodeMatches code2 assignments2 :=
+      hcodeExact.add 2 row2
     have hpairState2 : pairState2.Exact assignments2 := by
       exact hpairState.add 2 row2 choice2.pairMask hmask2
     have hcentres2 : (assignments2.map Prod.fst ++ searchCentres).Perm
@@ -748,6 +741,8 @@ private theorem subbranch_impossible
     let columnState3 := columnState2.add choice3.rowMask
     have hassignments3 : AssignmentsMatch Q assignments3 :=
       hassignments2.cons 3 choice3.rowMask hrowThreeChoice
+    have hcodeExact3 : CodeMatches code3 assignments3 :=
+      hcodeExact2.add 3 choice3.rowMask
     have hpairState3 : pairState3.Exact assignments3 := by
       exact hpairState2.add 3 choice3.rowMask choice3.pairMask hmask3
     have hcentres3 : (assignments3.map Prod.fst ++ searchCentres.tail).Perm
@@ -773,19 +768,21 @@ private theorem subbranch_impossible
     rw [withPairPruningB_eq_of_exact hpairState hmask2 hcompatible2] at hwrapped
     rw [withColumnPruningB_eq_of_feasible hsemantic2] at hwrapped
     by_cases hpattern2 : hasPatternB code2 assignments2 choice2.patterns = true
-    · exact impossible_of_pattern hC hR hassignments2 hpatterns2 hpattern2
+    · exact impossible_of_pattern hC hR hassignments2 hcodeExact2
+        hpatterns2 hpattern2
     · have hpattern2False := Bool.eq_false_of_not_eq_true hpattern2
       simp only [hpattern2False] at hwrapped
       rw [withPairPruningB_eq_of_exact hpairState2 hmask3 hcompatible3] at hwrapped
       rw [withColumnPruningB_eq_of_feasible hsemantic3] at hwrapped
       by_cases hpattern3 : hasPatternB code3 assignments3 choice3.patterns = true
-      · exact impossible_of_pattern hC hR hassignments3 hpatterns3 hpattern3
+      · exact impossible_of_pattern hC hR hassignments3 hcodeExact3
+          hpatterns3 hpattern3
       · have hpattern3False := Bool.eq_false_of_not_eq_true hpattern3
         have hrecursive : directSearch searchCentres.tail assignments3 code3
             pairState3 columnState3 (hardSummaries orbit rowTwo) = true := by
           simpa [hpattern3False] using hwrapped
-        exact directSearch_sound hC hR hSparse hcentres3 hassignments3 hpairState3
-          (hardSummaries_valid orbit rowTwo) hrecursive
+        exact directSearch_sound hC hR hSparse hcentres3 hassignments3 hcodeExact3
+          hpairState3 (hardSummaries_valid orbit rowTwo) hrecursive
 
 /-- Soundness of adaptive static audits for a canonical normalized branch. -/
 theorem canonicalBranch_impossible_of_staticCoverage

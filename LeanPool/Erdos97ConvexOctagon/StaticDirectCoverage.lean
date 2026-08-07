@@ -125,10 +125,9 @@ def patternExtendsAssignmentsB
 
 /-- Check a statically selected pattern summary against the current prefix. -/
 def patternSummaryMatchesB
-    (code : UInt64) (assignments : List RowAssignment)
+    (code : UInt64) (_assignments : List RowAssignment)
     (summary : PatternSummary) : Bool :=
-  ((summary.mask &&& code) == summary.mask) &&
-    patternExtendsAssignmentsB assignments summary
+  (summary.mask &&& code) == summary.mask
 
 /-- Check whether any shallow-bucketed pattern summary covers the prefix. -/
 def hasPatternB
@@ -147,9 +146,9 @@ def hardEqualsAssignmentsB
 
 /-- Check a statically selected exact-table summary against a completed table. -/
 def hardSummaryMatchesB
-    (code : UInt64) (assignments : List RowAssignment)
+    (code : UInt64) (_assignments : List RowAssignment)
     (summary : HardSummary) : Bool :=
-  (summary.code == code) && hardEqualsAssignmentsB assignments summary
+  summary.code == code
 
 /-- Check whether any shallow-bucketed exact-table summary equals the table. -/
 def hasHardB
