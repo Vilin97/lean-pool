@@ -41,6 +41,19 @@ private theorem AssignmentsMatch.append
     rcases hnew with ⟨rfl, rfl⟩
     exact hrow
 
+private theorem AssignmentsMatch.cons
+    {Q : OctagonIncidence} {assignments : List RowAssignment}
+    (hmatch : AssignmentsMatch Q assignments)
+    (centre : Vertex) (row : UInt64)
+    (hrow : Q.targets centre = packedRow row) :
+    AssignmentsMatch Q ((centre, row) :: assignments) := by
+  intro centre' row' hassignment
+  rcases List.mem_cons.mp hassignment with hnew | hprevious
+  · simp only [Prod.mk.injEq] at hnew
+    rcases hnew with ⟨rfl, rfl⟩
+    exact hrow
+  · exact hmatch centre' row' hprevious
+
 private theorem assignmentColumnCount_eq_filter_length
     {Q : OctagonIncidence} {assignments : List RowAssignment}
     (hassignments : AssignmentsMatch Q assignments) (target : Vertex) :
@@ -467,12 +480,12 @@ private theorem directSearch_sound
       have hpatterns := patternBucketsValid_of_choice hchoice
       have hcompatible := pairCompatibleB_of_pairSparse_perm Q hSparse hcentres
         hassignments hrow
-      have hnewAssignments := hassignments.append centre choice.rowMask hrow
+      have hnewAssignments := hassignments.cons centre choice.rowMask hrow
       have hnewCentres :
-          ((assignments ++ [(centre, choice.rowMask)]).map Prod.fst ++
+          (((centre, choice.rowMask) :: assignments).map Prod.fst ++
             remaining).Perm (List.finRange 8) := by
-        simpa only [List.map_append, List.map_singleton, Prod.fst,
-          List.append_assoc, List.singleton_append] using hcentres
+        simpa only [List.map_cons, Prod.fst, List.cons_append] using
+          (List.perm_middle.symm.trans hcentres)
       by_cases hfast : pairState.compatible choice.pairMask = true
       · by_cases hcolumn :
             (columnState.add choice.rowMask).feasible remaining = true
@@ -542,15 +555,15 @@ private theorem branch_impossible
     let columnState := (ColumnState.empty.add 30).add (canonicalRowMask orbit)
     have hpattern1False := Bool.eq_false_of_not_eq_true hpattern1
     by_cases hfast : pairState.compatible choice2.pairMask = true
-    · let assignments2 := assignments ++ [(2, row)]
+    · let assignments2 := (2, row) :: assignments
       let code2 := addRowCode code row 2
       let pairState2 := pairState.add choice2.pairMask
       let columnState2 := columnState.add row
       have hassignments2 : AssignmentsMatch Q assignments2 :=
-        hassignments.append 2 row hrowTwo
+        hassignments.cons 2 row hrowTwo
       have hcentres : (assignments2.map Prod.fst ++ searchCentres).Perm
           (List.finRange 8) := by
-        change ([0, 1, 2] ++ searchCentres : List Vertex).Perm (List.finRange 8)
+        change ([2, 0, 1] ++ searchCentres : List Vertex).Perm (List.finRange 8)
         decide
       by_cases hcolumn : columnState2.feasible searchCentres = true
       · have hauditParts : hasPatternB code2 assignments2 choice2.patterns = true ∨
@@ -619,15 +632,15 @@ private theorem subbranch_impossible
     have hcompatible2 := pairCompatibleB_of_pairSparse_perm Q hSparse hcentresOne
       hassignments hrowTwo
     by_cases hfast2 : pairState.compatible choice2.pairMask = true
-    · let assignments2 := assignments ++ [(2, row2)]
+    · let assignments2 := (2, row2) :: assignments
       let code2 := addRowCode code row2 2
       let pairState2 := pairState.add choice2.pairMask
       let columnState2 := columnState.add row2
       have hassignments2 : AssignmentsMatch Q assignments2 :=
-        hassignments.append 2 row2 hrowTwo
+        hassignments.cons 2 row2 hrowTwo
       have hcentres2 : (assignments2.map Prod.fst ++ searchCentres).Perm
           (List.finRange 8) := by
-        change ([0, 1, 2] ++ searchCentres : List Vertex).Perm (List.finRange 8)
+        change ([2, 0, 1] ++ searchCentres : List Vertex).Perm (List.finRange 8)
         decide
       by_cases hcolumn2 : columnState2.feasible searchCentres = true
       · by_cases hpattern2 : hasPatternB code2 assignments2 choice2.patterns = true
@@ -648,16 +661,16 @@ private theorem subbranch_impossible
             exact hrowThree
           have hcompatible3 := pairCompatibleB_of_pairSparse_perm Q hSparse
             hcentresTwo hassignments2 hrowThreeChoice
-          let assignments3 := assignments2 ++ [(3, choice3.rowMask)]
+          let assignments3 := (3, choice3.rowMask) :: assignments2
           let code3 := addRowCode code2 choice3.rowMask 3
           let pairState3 := pairState2.add choice3.pairMask
           let columnState3 := columnState2.add choice3.rowMask
           have hassignments3 : AssignmentsMatch Q assignments3 :=
-            hassignments2.append 3 choice3.rowMask hrowThreeChoice
+            hassignments2.cons 3 choice3.rowMask hrowThreeChoice
           have hcentres3 : (assignments3.map Prod.fst ++ searchCentres.tail).Perm
               (List.finRange 8) := by
-            simpa only [assignments3, List.map_append, List.map_singleton, Prod.fst,
-              List.append_assoc, List.singleton_append] using hcentresTwo
+            simpa only [assignments3, List.map_cons, Prod.fst, List.cons_append] using
+              (List.perm_middle.symm.trans hcentresTwo)
           have hpattern1False := Bool.eq_false_of_not_eq_true hpattern1
           have hauditCases : hasPatternB code2 assignments2 choice2.patterns = true ∨
               (if pairState2.compatible choice3.pairMask = true then

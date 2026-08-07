@@ -152,7 +152,7 @@ def directSearch :
       (patternSummaryChoices.getD centre.val []).all fun choice =>
         let row := choice.rowMask
         if pairState.compatible choice.pairMask then
-          let nextAssignments := assignments ++ [(centre, row)]
+          let nextAssignments := (centre, row) :: assignments
           let nextCode := addRowCode code row centre
           let nextPairState := pairState.add choice.pairMask
           let nextColumnState := columnState.add row
@@ -176,7 +176,7 @@ def directCoverageBranchB (orbit : Fin 7) (rowTwo : Fin 35) : Bool :=
     let row := rowTwoMask rowTwo
     let choice2 := choiceForRow 2 row
     if pairState.compatible choice2.pairMask then
-      let nextAssignments := assignments ++ [(2, row)]
+      let nextAssignments := (2, row) :: assignments
       let nextCode := addRowCode code row 2
       let nextPairState := pairState.add choice2.pairMask
       let nextColumnState := columnState.add row
@@ -201,7 +201,7 @@ def directCoverageSubbranchB
     let row2 := rowTwoMask rowTwo
     let choice2 := choiceForRow 2 row2
     if pairState.compatible choice2.pairMask then
-      let assignments2 := assignments ++ [(2, row2)]
+      let assignments2 := (2, row2) :: assignments
       let code2 := addRowCode code row2 2
       let pairState2 := pairState.add choice2.pairMask
       let columnState2 := columnState.add row2
@@ -210,7 +210,7 @@ def directCoverageSubbranchB
         else
           let choice3 := patternSummaryChoices3.getD rowThree.val ⟨0, 0, []⟩
           if pairState2.compatible choice3.pairMask then
-            let assignments3 := assignments2 ++ [(3, choice3.rowMask)]
+            let assignments3 := (3, choice3.rowMask) :: assignments2
             let code3 := addRowCode code2 choice3.rowMask 3
             let pairState3 := pairState2.add choice3.pairMask
             let columnState3 := columnState2.add choice3.rowMask
