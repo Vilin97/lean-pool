@@ -2282,8 +2282,6 @@ import LeanPool.PoincareThreeBody.AnalyticParameterIntegral
 import LeanPool.PoincareThreeBody.Averaging
 import LeanPool.PoincareThreeBody.CertifiedPoincareSet
 import LeanPool.PoincareThreeBody.ChapterVI
-import LeanPool.PoincareThreeBody.ChapterVIDarboux
-import LeanPool.PoincareThreeBody.ChapterVILatticeReduction
 import LeanPool.PoincareThreeBody.CoefficientNormalization
 import LeanPool.PoincareThreeBody.CollisionBandAnalyticContinuation
 import LeanPool.PoincareThreeBody.CollisionBandObstruction

@@ -5614,17 +5614,14 @@ projects:
       circular restricted three-body problem. The unconditional proof uses a
       real logarithmic collision blow-up and analytic continuation in place of
       the complex singularity classification and Darboux estimates in Chapter
-      VI of Poincaré's first volume. The Chapter VI modules verify the finite
-      two-variable shear reduction and affine-ray coefficient extraction in
-      §94, and prove that a Darboux-type asymptotic with nonzero leading model
-      forces eventual coefficient nonvanishing as used in §§99--102. They also
-      connect that output to the restricted nonintegrability theorem. The
-      extension to convergent infinite series, complex singularity and
-      admissibility analysis, derivation of the Darboux asymptotics, and final
-      singularity-parameter count are explicitly recorded as not yet
-      formalized. The unconditional statement is the fixed-coordinate, global
-      uniform-domain special case of the planar part of Yagasaki's Theorem 1.1;
-      his local meromorphic obstruction is Theorem 3.1.
+      VI of Poincaré's first volume. A separate correspondence module defines
+      the restricted resonant Fourier coefficient and verifies the conditional
+      bridge from Darboux nonvanishing to nonintegrability, while explicitly
+      recording that Poincaré's two-variable complex analysis, admissibility
+      argument, Darboux asymptotics, and final singularity-parameter count are
+      not yet formalized. The unconditional statement is the fixed-coordinate,
+      global uniform-domain special case of the planar part of Yagasaki's
+      Theorem 1.1; his local meromorphic obstruction is Theorem 3.1.
     branch: dynamical systems
     entry_module: LeanPool.PoincareThreeBody
     authors:
@@ -5642,10 +5639,7 @@ projects:
     provenance: AI
     main_declarations:
       - LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
-      - LeanPool.PoincareThreeBody.chapterVIFiniteFourierPolynomial_substitution
-      - LeanPool.PoincareThreeBody.chapterVIReducedCoefficient_eq_sum_affineRay
-      - LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
-      - LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI_asymptotics
+      - LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI
     main_results:
       - declaration: LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
         informal: >-
@@ -5674,40 +5668,6 @@ projects:
           Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
           Volume I (1892), Chapter VI, especially §§93--103 (pp. 278--334),
           https://fr.wikisource.org/wiki/Les_m%C3%A9thodes_nouvelles_de_la_m%C3%A9canique_c%C3%A9leste/Chap.06.
-      - declaration: LeanPool.PoincareThreeBody.chapterVIFiniteFourierPolynomial_substitution
-        informal: >-
-          For a finite Fourier polynomial in two complex angles, Poincaré's §94
-          shear substitution rewrites it as a one-variable Fourier polynomial
-          whose exponent is c m₁ - a m₂.
-        source_ref: >-
-          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
-          Volume I (1892), Chapter VI, §94 (pp. 280--285).
-      - declaration: LeanPool.PoincareThreeBody.chapterVIReducedCoefficient_eq_sum_affineRay
-        informal: >-
-          When a and c are coprime, extracting the shear exponent c b - a d
-          selects exactly the original coefficients on the affine lattice ray
-          (m₁,m₂) = (a n + b,c n + d), for finite coefficient tables.
-        source_ref: >-
-          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
-          Volume I (1892), Chapter VI, §94 (pp. 280--285).
-      - declaration: LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
-        informal: >-
-          A coefficient sequence asymptotically equivalent to Poincaré's
-          exponential-times-inverse-power leading Darboux model is eventually
-          nonzero when the singularity factor and leading coefficient are
-          nonzero.
-        source_ref: >-
-          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
-          Volume I (1892), Chapter VI, §§93, 99, and 102.
-      - declaration: LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI_asymptotics
-        informal: >-
-          Conditional restricted result: Darboux-type asymptotics with a
-          nonzero leading model on every admissible rational resonance imply
-          the restricted nonintegrability theorem.
-        source_ref: >-
-          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
-          Volume I (1892), Chapter VI, §§99--103; this is a restricted-problem
-          correspondence, not the unformalized full singularity calculation.
       - declaration: LeanPool.PoincareThreeBody.delaunayHomological_obstruction
         informal: >-
           If the first homological equation holds and its perturbing Fourier
