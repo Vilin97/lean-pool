@@ -14,6 +14,8 @@ import LeanPool.PoincareThreeBody.Core
 import LeanPool.PoincareThreeBody.CoefficientNormalization
 import LeanPool.PoincareThreeBody.CertifiedPoincareSet
 import LeanPool.PoincareThreeBody.ChapterVI
+import LeanPool.PoincareThreeBody.ChapterVIDarboux
+import LeanPool.PoincareThreeBody.ChapterVILatticeReduction
 import LeanPool.PoincareThreeBody.Delaunay
 import LeanPool.PoincareThreeBody.DelaunayActions
 import LeanPool.PoincareThreeBody.DelaunayAnchorChart
@@ -61,7 +63,7 @@ arxiv:2111.11031, doi:10.1063/5.0266087, url:https://arxiv.org/abs/2111.11031
 Authors: Gershon Bialer
 Status: verified
 Main declarations: `LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand`,
-`LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI`
+`LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI_asymptotics`
 Tags: dynamical-systems, celestial-mechanics, hamiltonian-systems, nonintegrability
 MSC: 70F07, 37J30, 37J40
 -/
@@ -79,9 +81,11 @@ and gives its precise local meromorphic resonant-orbit obstruction in Theorem 3.
 The final Lean theorem is the fixed-coordinate, global uniform-domain special case: a global
 real-analytic family restricts and complexifies on the local neighborhoods used by the source.
 
-`ChapterVI` gives a passage-by-passage correspondence with Volume I, Chapter VI, defines the
-restricted resonant Fourier coefficient, and proves the conditional bridge from Darboux
-nonvanishing to the final theorem.  It clearly identifies the two-variable complex analysis,
-admissible-singularity argument, and Darboux asymptotics that are not yet formalized.  Thus the
-project must not be cited as a verification of Poincaré's original Chapter VI calculations.
+`ChapterVILatticeReduction` verifies the finite two-variable coefficient reduction in §94.
+`ChapterVIDarboux` proves that a Darboux-type asymptotic with nonzero leading model forces
+eventual coefficient nonvanishing, as used in §§99--102.  `ChapterVI` connects these results to
+the restricted resonant Fourier coefficient and final theorem.  The extension to convergent
+infinite series, complex singularity/admissibility analysis, and derivation of the Darboux
+asymptotics are not yet formalized.  Thus the project must not be cited as a complete verification
+of Poincaré's original Chapter VI calculations.
 -/

@@ -5,6 +5,8 @@ Authors: Gershon Bialer
 -/
 
 import Mathlib.Analysis.Fourier.AddCircle
+import LeanPool.PoincareThreeBody.ChapterVIDarboux
+import LeanPool.PoincareThreeBody.ChapterVILatticeReduction
 import LeanPool.PoincareThreeBody.LocalEnergyLeaf
 
 /-!
@@ -26,20 +28,27 @@ the decisive complex-singularity calculation in Chapter VI of Poincaré's first 
   `IsFirstIntegralFamily.firstHomologicalEquation_on_resonantKeplerOrbit` and the averaging
   lemmas verify its restricted resonant-orbit consequence.  The coordinate comparison in §92
   is not formalized.
-* §93 (pp. 278--280): Poincaré recalls Darboux's one-variable coefficient estimates.  Their
-  complex-analytic proof is **not yet formalized** here.
+* §93 (pp. 278--280): Poincaré recalls Darboux's one-variable coefficient estimates.
+  `eventually_ne_zero_of_tendsto_div_one` verifies their elementary eventual-nonvanishing
+  consequence, but the complex-analytic coefficient estimates themselves are not formalized.
 * §94 (pp. 280--285): Poincaré reduces coefficients of a Fourier series in two mean anomalies,
   along an integral ray, to Laurent coefficients of a one-variable contour integral `Phi(z)`.
-  The restricted problem has only one moving Kepler ellipse; the definition
+  `chapterVIShearExponent_eq_iff_mem_affineRay`,
+  `chapterVIFiniteFourierPolynomial_substitution`, and
+  `chapterVIReducedCoefficient_eq_sum_affineRay` verify the exact reduction for finite Fourier
+  polynomials.  Extension to convergent infinite series and the contour integral is not yet
+  formalized.  The restricted problem has only one moving Kepler ellipse; the definition
   `chapterVIOrientationCoefficient` below records the corresponding one-circle coefficient, but
-  does not claim to formalize Poincaré's two-variable reduction.
+  is not itself Poincaré's full two-variable perturbing function.
 * §95--98 (pp. 285--314): Poincaré complexifies the eccentric anomalies, finds candidate branch
   points, and decides by contour deformation which singularities are admissible.  This
   Riemann-surface and contour-deformation argument is **not yet formalized**.  Poincaré himself
   describes the general discussion in §98 as only sketched.
 * §99--101 (pp. 314--325): local singular expansions and Darboux asymptotics show that high-order
-  resonant coefficients do not vanish.  The predicate `HasChapterVIDarbouxNonvanishing` is a
-  restricted-problem analogue of the output needed from this missing calculation.
+  resonant coefficients do not vanish.
+  `eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic` verifies asymptotics-to-
+  nonvanishing for Poincaré's leading model.  Deriving the asymptotic from the singular expansion
+  remains open.  The predicates below state the corresponding restricted-problem inputs.
 * §102--103 (pp. 325--334): Poincaré uses the dependence of complex singular points on orbital
   parameters and an algebraic-curve intersection count to contradict an additional uniform
   integral.  That dimension/counting argument is not formalized.  The theorems at the end of
@@ -58,6 +67,8 @@ open AddCircle
 open scoped Real
 
 namespace LeanPool.PoincareThreeBody
+
+open Asymptotics Filter
 
 /-- The orientation-dependent resonant average, descended to the circle of period `2 * pi`.
 
@@ -125,6 +136,35 @@ def HasChapterVIDarbouxNonvanishing : Prop :=
       ∃ n : ℤ, n ≠ 0 ∧
         chapterVIOrientationCoefficient p q eccentricity n ≠ 0
 
+/-- A stronger, explicitly asymptotic form of the missing restricted Darboux calculation.  It
+matches Poincaré's pattern of an exponential singularity factor times a nonzero inverse-power
+leading term. -/
+def HasChapterVIDarbouxAsymptotics : Prop :=
+  ∀ p q : ℕ, 0 < p → 0 < q →
+    (admissibleResonantEccentricitySet p q).Nonempty →
+    ∃ eccentricity ∈ admissibleResonantEccentricitySet p q,
+      ∃ singularityInverse leadingCoefficient : ℂ,
+        singularityInverse ≠ 0 ∧ leadingCoefficient ≠ 0 ∧
+          (fun index : ℕ ↦ chapterVIOrientationCoefficient p q eccentricity (index + 1))
+            ~[atTop]
+          chapterVILeadingDarbouxModel singularityInverse leadingCoefficient
+
+/-- The formalized Darboux consequence: a nonzero leading asymptotic model supplies an actual
+nonzero Fourier mode on every admissible resonance. -/
+theorem hasChapterVIDarbouxNonvanishing_of_asymptotics
+    (hasymptotics : HasChapterVIDarbouxAsymptotics) :
+    HasChapterVIDarbouxNonvanishing := by
+  intro p q hp hq hnonempty
+  rcases hasymptotics p q hp hq hnonempty with
+    ⟨eccentricity, heccentricity, singularityInverse, leadingCoefficient,
+      hsingularity, hleading, hasymptotic⟩
+  have hnonzero :=
+    eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
+      hsingularity hleading hasymptotic
+  rcases hnonzero.exists with ⟨index, hindex⟩
+  refine ⟨eccentricity, heccentricity, index + 1, ?_, hindex⟩
+  exact_mod_cast Nat.succ_ne_zero index
+
 /-- The Darboux nonvanishing output supplies a separating pair of orientations at one admissible
 eccentricity on every rational resonance. -/
 theorem hasSeparatingResonantAverages_of_chapterVI
@@ -158,5 +198,14 @@ theorem nonintegrability_of_chapterVI
         IsIndependentSomewhere δ F :=
   nonintegrability_of_denseClassicalPoincareSet
     (hasDenseClassicalPoincareSet_of_chapterVI hDarboux)
+
+/-- Conditional restricted nonintegrability directly from Darboux-type coefficient asymptotics. -/
+theorem nonintegrability_of_chapterVI_asymptotics
+    (hasymptotics : HasChapterVIDarbouxAsymptotics) :
+    ¬∃ δ : ℝ, 0 < δ ∧ ∃ F : ℝ → PhaseSpace → ℝ,
+      IsJointlyAnalytic δ F ∧ IsFirstIntegralFamily δ F ∧
+        IsIndependentSomewhere δ F :=
+  nonintegrability_of_chapterVI
+    (hasChapterVIDarbouxNonvanishing_of_asymptotics hasymptotics)
 
 end LeanPool.PoincareThreeBody
