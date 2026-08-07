@@ -160,7 +160,7 @@ def hasHardB
 
 /-- Add one row to a packed 64-bit incidence-table prefix. -/
 def addRowCode (code row : UInt64) (centre : Vertex) : UInt64 :=
-  code ||| (row <<< UInt64.ofNat (8 * centre.val))
+  code ||| ((row &&& 255) <<< UInt64.ofNat (8 * centre.val))
 
 /-- Retrieve the static choice associated with one centre and row mask. -/
 def choiceForRow (centre : Vertex) (row : UInt64) : SummaryRowChoice :=
