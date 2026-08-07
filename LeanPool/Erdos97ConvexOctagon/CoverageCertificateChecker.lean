@@ -99,6 +99,41 @@ private structure RejectionCursor where
   ok : Bool
   targets : List Nat
 
+private theorem foldl_fixed_of_false
+    {State Item : Type} (step : State → Item → State) (ok : State → Bool)
+    (hsticky : ∀ state item, ok state = false → step state item = state)
+    (items : List Item) {state : State} (hfalse : ok state = false) :
+    items.foldl step state = state := by
+  induction items generalizing state with
+  | nil => rfl
+  | cons item items induction =>
+      rw [List.foldl_cons, hsticky state item hfalse]
+      exact induction hfalse
+
+private theorem foldl_good_of_final
+    {State Item : Type} (step : State → Item → State) (ok : State → Bool)
+    (Good : Item → Prop)
+    (hsticky : ∀ state item, ok state = false → step state item = state)
+    (hgood : ∀ state item, ok (step state item) = true → Good item)
+    {items : List Item} {initial : State}
+    (hfinal : ok (items.foldl step initial) = true)
+    {item : Item} (hitem : item ∈ items) : Good item := by
+  induction items generalizing initial with
+  | nil => simp at hitem
+  | cons head tail induction =>
+      rw [List.foldl_cons] at hfinal
+      have hstep : ok (step initial head) = true := by
+        cases hvalue : ok (step initial head) with
+        | false =>
+            have hfixed := foldl_fixed_of_false step ok hsticky tail hvalue
+            rw [hfixed, hvalue] at hfinal
+            contradiction
+        | true => rfl
+      rcases List.mem_cons.mp hitem with hhead | htail
+      · subst item
+        exact hgood initial head hstep
+      · exact induction hfinal htail
+
 /-- Constant-depth lookup of one compact pattern-summary identifier. -/
 def densePatternSummaryAt? (identifier : Nat) : Option PatternSummary :=
   match densePatternSummaryGroups[identifier / 64]? with
@@ -135,43 +170,109 @@ def conflictCoverAt? (identifier : Nat) : Option ConflictCover :=
   | none => none
   | some group => group[identifier % 64]?
 
+private def processRow
+    (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
+    (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
+    (cursor : LocalCursor) (index : Nat) : LocalCursor :=
+  if !cursor.ok then cursor
+  else
+    let choice := (searchRowChoices.getD centre.val #[]).getD index ⟨0, 0⟩
+    let nextCode := addRowCode claim.code choice.rowMask centre
+    let nextPairState := pairState.add choice.pairMask
+    if bitSetB claim.patternRows index then
+      match cursor.patternOrigins with
+      | [] => ⟨false, [], cursor.childIds, cursor.hardOrigins⟩
+      | patternIdentifier :: patternIdentifiers =>
+          ⟨patternIdentifierPackedMatchesB patternIdentifier nextCode,
+            patternIdentifiers, cursor.childIds, cursor.hardOrigins⟩
+    else if remaining.isEmpty then
+      match cursor.hardOrigins with
+      | [] => ⟨false, cursor.patternOrigins, cursor.childIds, []⟩
+      | hardIdentifier :: hardIdentifiers =>
+          ⟨hardIdentifierPackedMatchesB hardIdentifier nextCode,
+            cursor.patternOrigins, cursor.childIds, hardIdentifiers⟩
+    else
+      match cursor.childIds with
+      | [] => ⟨false, cursor.patternOrigins, [], cursor.hardOrigins⟩
+      | childId :: childIds =>
+          let child := claims.nodeAt childId
+          let childValid := decide (childId < identifier) &&
+            decide (childId < claims.nodeCount) &&
+            (child.depth == claim.depth + 1) && (child.code == nextCode) &&
+            (child.pairOnce == nextPairState.seenOnce) &&
+            (child.pairTwice == nextPairState.seenTwice)
+          ⟨childValid, cursor.patternOrigins, childIds, cursor.hardOrigins⟩
+
 /-- Process at most five compatible rows while threading the local witness streams. -/
 private def processFiveRows
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
     (indices : List Nat) (initial : LocalCursor) : LocalCursor :=
-  indices.foldl (fun cursor index =>
-    if !cursor.ok then cursor
-    else
-      let choice := (searchRowChoices.getD centre.val #[]).getD index ⟨0, 0⟩
-      let nextCode := addRowCode claim.code choice.rowMask centre
-      let nextPairState := pairState.add choice.pairMask
-      if bitSetB claim.patternRows index then
-        match cursor.patternOrigins with
-        | [] => ⟨false, [], cursor.childIds, cursor.hardOrigins⟩
-        | patternIdentifier :: patternIdentifiers =>
-            ⟨patternIdentifierPackedMatchesB patternIdentifier nextCode,
-              patternIdentifiers, cursor.childIds, cursor.hardOrigins⟩
-      else if remaining.isEmpty then
-        match cursor.hardOrigins with
-        | [] => ⟨false, cursor.patternOrigins, cursor.childIds, []⟩
-        | hardIdentifier :: hardIdentifiers =>
-            ⟨hardIdentifierPackedMatchesB hardIdentifier nextCode,
-              cursor.patternOrigins, cursor.childIds, hardIdentifiers⟩
-      else
-        match cursor.childIds with
-        | [] => ⟨false, cursor.patternOrigins, [], cursor.hardOrigins⟩
-        | childId :: childIds =>
-            let child := claims.nodeAt childId
-            let childValid := decide (childId < identifier) &&
-              decide (childId < claims.nodeCount) &&
-              (child.depth == claim.depth + 1) && (child.code == nextCode) &&
-              (child.pairOnce == nextPairState.seenOnce) &&
-              (child.pairTwice == nextPairState.seenTwice)
-            ⟨childValid, cursor.patternOrigins, childIds, cursor.hardOrigins⟩) initial
+  indices.foldl
+    (processRow claims identifier claim centre remaining pairState) initial
+
+/-- Semantic consequence recorded for one active legal-row index. -/
+def NodeRowValid
+    (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
+    (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
+    (index : Nat) : Prop :=
+  let choice := (searchRowChoices.getD centre.val #[]).getD index ⟨0, 0⟩
+  let nextCode := addRowCode claim.code choice.rowMask centre
+  let nextPairState := pairState.add choice.pairMask
+  if bitSetB claim.patternRows index = true then
+    ∃ patternIdentifier,
+      patternIdentifierPackedMatchesB patternIdentifier nextCode = true
+  else if remaining.isEmpty = true then
+    ∃ hardIdentifier,
+      hardIdentifierPackedMatchesB hardIdentifier nextCode = true
+  else
+    ∃ childId,
+      let child := claims.nodeAt childId
+      (decide (childId < identifier) && decide (childId < claims.nodeCount) &&
+        (child.depth == claim.depth + 1) && (child.code == nextCode) &&
+        (child.pairOnce == nextPairState.seenOnce) &&
+        (child.pairTwice == nextPairState.seenTwice)) = true
+
+private theorem nodeRowValid_of_processRow_ok
+    (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
+    (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
+    (cursor : LocalCursor) (index : Nat)
+    (hok : (processRow claims identifier claim centre remaining pairState
+      cursor index).ok = true) :
+    NodeRowValid claims identifier claim centre remaining pairState index := by
+  by_cases hcursor : cursor.ok = true
+  · by_cases hpattern : bitSetB claim.patternRows index = true
+    · cases horigins : cursor.patternOrigins with
+      | nil => simp [processRow, hcursor, hpattern, horigins] at hok
+      | cons patternIdentifier patternIdentifiers =>
+          simp only [NodeRowValid, hpattern, if_pos]
+          refine ⟨patternIdentifier, ?_⟩
+          simpa [processRow, hcursor, hpattern, horigins] using hok
+    · have hpatternFalse := Bool.eq_false_of_not_eq_true hpattern
+      by_cases hremaining : remaining.isEmpty = true
+      · cases horigins : cursor.hardOrigins with
+        | nil =>
+            simp [processRow, hcursor, hpatternFalse, hremaining, horigins] at hok
+        | cons hardIdentifier hardIdentifiers =>
+            simp only [NodeRowValid, hpatternFalse, hremaining, if_pos]
+            refine ⟨hardIdentifier, ?_⟩
+            simpa [processRow, hcursor, hpatternFalse, hremaining,
+              horigins] using hok
+      · have hremainingFalse := Bool.eq_false_of_not_eq_true hremaining
+        cases hchildren : cursor.childIds with
+        | nil =>
+            simp [processRow, hcursor, hpatternFalse, hremainingFalse,
+              hchildren] at hok
+        | cons childId childIds =>
+            simp only [NodeRowValid, hpatternFalse, hremainingFalse]
+            refine ⟨childId, ?_⟩
+            simpa [processRow, hcursor, hpatternFalse,
+              hremainingFalse, hchildren] using hok
+  · have hcursorFalse := Bool.eq_false_of_not_eq_true hcursor
+    simp [processRow, hcursorFalse] at hok
 
 /-- Validate one of the seven disjoint five-row words of a node claim. -/
-private def nodeWordValidB
+def nodeWordValidB
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
     (wordIndex : Nat) : Bool :=
@@ -184,8 +285,29 @@ private def nodeWordValidB
   result.ok && result.patternOrigins.isEmpty && result.childIds.isEmpty &&
     result.hardOrigins.isEmpty
 
+/-- Every active index accepted by one compact word has its recorded outcome. -/
+theorem nodeRowValid_of_word
+    (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
+    (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
+    (wordIndex index : Nat)
+    (hword : nodeWordValidB claims identifier claim centre remaining pairState
+      wordIndex = true)
+    (hindex : index ∈ rowIndexWord claim.activeRows (5 * wordIndex)) :
+    NodeRowValid claims identifier claim centre remaining pairState index := by
+  simp only [nodeWordValidB, Bool.and_eq_true] at hword
+  apply foldl_good_of_final
+    (processRow claims identifier claim centre remaining pairState)
+    LocalCursor.ok
+    (NodeRowValid claims identifier claim centre remaining pairState)
+  · intro cursor item hcursor
+    simp [processRow, hcursor]
+  · exact nodeRowValid_of_processRow_ok claims identifier claim centre
+      remaining pairState
+  · exact hword.1.1.1
+  · exact hindex
+
 /-- Validate one semantically rejected row of a node claim. -/
-private def rejectedRowValidB
+def rejectedRowValidB
     (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
     (index target : Nat) : Bool :=
   if htarget : target < 8 then
@@ -198,20 +320,59 @@ private def rejectedRowValidB
       decide (count + remainingColumnCapacity remaining targetVertex < 4)
   else false
 
+private def processRejectedRow
+    (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
+    (cursor : RejectionCursor) (index : Nat) : RejectionCursor :=
+  if !cursor.ok then cursor
+  else
+    match cursor.targets with
+    | [] => ⟨false, []⟩
+    | target :: remainingTargets =>
+        ⟨rejectedRowValidB claim centre remaining index target,
+          remainingTargets⟩
+
 /-- Validate at most five rejected rows using one semantic conflict each. -/
-private def rejectedWordValidB
+def rejectedWordValidB
     (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
     (indices targets : List Nat) : Bool :=
   let initial : RejectionCursor := ⟨true, targets⟩
-  let result := indices.foldl (fun cursor index =>
-    if !cursor.ok then cursor
-    else
-      match cursor.targets with
-      | [] => ⟨false, []⟩
-      | target :: remainingTargets =>
-          ⟨rejectedRowValidB claim centre remaining index target,
-            remainingTargets⟩) initial
+  let result := indices.foldl (processRejectedRow claim centre remaining) initial
   result.ok && result.targets.isEmpty
+
+/-- Semantic column-conflict consequence recorded for one rejected row. -/
+def RejectedRowValid
+    (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
+    (index : Nat) : Prop :=
+  ∃ target, rejectedRowValidB claim centre remaining index target = true
+
+private theorem rejectedRowValid_of_process_ok
+    (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
+    (cursor : RejectionCursor) (index : Nat)
+    (hok : (processRejectedRow claim centre remaining cursor index).ok = true) :
+    RejectedRowValid claim centre remaining index := by
+  by_cases hcursor : cursor.ok = true
+  · cases htargets : cursor.targets with
+    | nil => simp [processRejectedRow, hcursor, htargets] at hok
+    | cons target targets =>
+        exact ⟨target, by simpa [processRejectedRow, hcursor, htargets] using hok⟩
+  · have hcursorFalse := Bool.eq_false_of_not_eq_true hcursor
+    simp [processRejectedRow, hcursorFalse] at hok
+
+/-- Every rejected index accepted by one compact word has a semantic conflict. -/
+theorem rejectedRowValid_of_word
+    (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
+    (indices targets : List Nat) (index : Nat)
+    (hword : rejectedWordValidB claim centre remaining indices targets = true)
+    (hindex : index ∈ indices) : RejectedRowValid claim centre remaining index := by
+  simp only [rejectedWordValidB, Bool.and_eq_true] at hword
+  apply foldl_good_of_final
+    (processRejectedRow claim centre remaining)
+    RejectionCursor.ok (RejectedRowValid claim centre remaining)
+  · intro cursor item hcursor
+    simp [processRejectedRow, hcursor]
+  · exact rejectedRowValid_of_process_ok claim centre remaining
+  · exact hword.1
+  · exact hindex
 
 /-- Validate the conservative pair/column row partition of one node. -/
 def nodePruningValidB (claims : BranchClaims) (identifier : Nat) : Bool :=

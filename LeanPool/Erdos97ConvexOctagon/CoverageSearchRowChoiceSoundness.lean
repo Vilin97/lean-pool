@@ -22,16 +22,18 @@ theorem searchRowChoices_size (centre : Vertex) :
 /-- Indexed lookup returns a member of the corresponding centre's row table. -/
 theorem searchRowChoiceAt_mem (centre : Vertex) (index : Fin 35) :
     searchRowChoiceAt centre index ∈
-      (searchRowChoices.getD centre.val #[]).toList := by
+      searchRowChoices.getD centre.val #[] := by
   have hindex : index.val < (searchRowChoices.getD centre.val #[]).size := by
     rw [searchRowChoices_size]
     exact index.isLt
   have hequal : searchRowChoiceAt centre index =
       (searchRowChoices.getD centre.val #[])[index.val] := by
-    simp only [searchRowChoiceAt, Array.getD, dif_pos hindex,
-      Array.getInternal_eq_getElem]
+    unfold searchRowChoiceAt
+    change (if h : index.val < (searchRowChoices.getD centre.val #[]).size then
+      (searchRowChoices.getD centre.val #[])[index.val] else ⟨0, 0⟩) = _
+    rw [dif_pos hindex]
   rw [hequal]
-  exact Array.getElem_mem_toList hindex
+  exact Array.getElem_mem hindex
 
 /-- The generated table is the complete legal-row enumeration, in search order. -/
 theorem searchRowChoices_complete (centre : Vertex) :
@@ -68,10 +70,10 @@ theorem searchRowChoice_pairMask
 
 private theorem findSearchChoice_spec
     (choices : Array SearchRowChoice) (row : UInt64)
-    (hexists : ∃ choice ∈ choices.toList, choice.rowMask = row) :
+    (hexists : ∃ choice ∈ choices, choice.rowMask = row) :
     let choice := (choices.find? (fun candidate => candidate.rowMask == row)).getD
       ⟨0, 0⟩
-    choice ∈ choices.toList ∧ choice.rowMask = row := by
+    choice ∈ choices ∧ choice.rowMask = row := by
   generalize hfind : choices.find?
       (fun candidate => candidate.rowMask == row) = found
   cases found with
@@ -88,10 +90,10 @@ private theorem findSearchChoice_spec
 /-- Lookup by row mask returns the matching audited table entry when it exists. -/
 theorem searchChoiceForRow_spec
     (centre : Vertex) (row : UInt64)
-    (hexists : ∃ choice ∈ (searchRowChoices.getD centre.val #[]).toList,
+    (hexists : ∃ choice ∈ searchRowChoices.getD centre.val #[],
       choice.rowMask = row) :
     searchChoiceForRow centre row ∈
-        (searchRowChoices.getD centre.val #[]).toList ∧
+        searchRowChoices.getD centre.val #[] ∧
       (searchChoiceForRow centre row).rowMask = row := by
   exact findSearchChoice_spec _ _ hexists
 
