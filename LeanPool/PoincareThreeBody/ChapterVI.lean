@@ -9,7 +9,6 @@ import LeanPool.PoincareThreeBody.ChapterVIContour
 import LeanPool.PoincareThreeBody.ChapterVIDarboux
 import LeanPool.PoincareThreeBody.ChapterVILatticeReduction
 import LeanPool.PoincareThreeBody.ChapterVISingularityAlgebra
-import LeanPool.PoincareThreeBody.ChapterVIWeierstrass
 import LeanPool.PoincareThreeBody.LocalEnergyLeaf
 
 /-!
@@ -62,17 +61,14 @@ the decisive complex-singularity calculation in Chapter VI of Poincaré's first 
   are admissible. This Riemann-surface and contour-deformation argument is **not yet formalized**.
   Poincaré himself describes the general discussion in §98 as only sketched.
 * §99--101 (pp. 314--325): local singular expansions and Darboux asymptotics show that high-order
-  resonant coefficients do not vanish. `exists_chapterVI_weierstrassNormalForm` applies
-  Weierstrass preparation to a bivariate formal series whose parameter specialization has order
-  two and obtains Poincaré's exact `((t - h)² + k) ψ₁` factorization, with `ψ₁` a unit and `h`,
-  `k` vanishing at the singular parameter. `hasSum_chapterVILogSingularityCoefficient` verifies the
+  resonant coefficients do not vanish. `hasSum_chapterVILogSingularityCoefficient` verifies the
   logarithmic Taylor expansion used in §100, and
   `chapterVI_darbouxAsymptotic_of_logarithmicLeadingTerm` connects its exact coefficients plus a
   little-oh remainder to Poincaré's leading Darboux model.
   `eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic` then verifies asymptotics-to-
-  nonvanishing. Identifying the actual convergent analytic germ with the formal series,
-  integrating its prepared square-root form along the pinched contour, and proving the remainder
-  estimate remain open. The predicates below state the corresponding restricted-problem inputs.
+  nonvanishing. Deriving the local logarithmic normal form by Weierstrass preparation and proving
+  the remainder estimate remain open. The predicates below state the corresponding
+  restricted-problem inputs.
 * §102--103 (pp. 325--334): Poincaré uses the dependence of complex singular points on orbital
   parameters and an algebraic-curve intersection count to contradict an additional uniform
   integral.  That dimension/counting argument is not formalized.  The theorems at the end of

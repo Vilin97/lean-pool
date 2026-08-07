@@ -18,7 +18,6 @@ import LeanPool.PoincareThreeBody.ChapterVIContour
 import LeanPool.PoincareThreeBody.ChapterVIDarboux
 import LeanPool.PoincareThreeBody.ChapterVILatticeReduction
 import LeanPool.PoincareThreeBody.ChapterVISingularityAlgebra
-import LeanPool.PoincareThreeBody.ChapterVIWeierstrass
 import LeanPool.PoincareThreeBody.Delaunay
 import LeanPool.PoincareThreeBody.DelaunayActions
 import LeanPool.PoincareThreeBody.DelaunayAnchorChart
@@ -61,17 +60,6 @@ import LeanPool.PoincareThreeBody.ValidatedQuadrature
 /-!
 # A Restricted Three-Body Nonintegrability Theorem
 
-Source: arxiv:2111.11031, doi:10.1063/5.0266087, url:https://arxiv.org/abs/2111.11031
-Authors: Gershon Bialer
-Status: verified
-Main declarations: `LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand`, `LeanPool.PoincareThreeBody.chapterVIFiniteFourierPolynomial_substitution`, `LeanPool.PoincareThreeBody.chapterVIReducedCoefficient_eq_sum_affineRay`, `LeanPool.PoincareThreeBody.chapterVIReducedCoefficient_circleIntegral`, `LeanPool.PoincareThreeBody.chapterVI_laurentSeries_circleCoefficient`, `LeanPool.PoincareThreeBody.chapterVI_tsum_eq_iterated_shear_sum`, `LeanPool.PoincareThreeBody.chapterVI_planarKeplerCoordinate_mul_conjugate`, `LeanPool.PoincareThreeBody.chapterVI_singularityParameter_inv`, `LeanPool.PoincareThreeBody.exists_chapterVI_weierstrassNormalForm`, `LeanPool.PoincareThreeBody.hasSum_chapterVILogSingularityCoefficient`, `LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic`, `LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI_asymptotics`
-Tags: dynamical-systems, celestial-mechanics, hamiltonian-systems, nonintegrability
-MSC: 70F07, 37J30, 37J40
--/
-
-/-!
-# A Restricted Three-Body Nonintegrability Theorem
-
 Sources: Poincaré, *Les méthodes nouvelles de la mécanique céleste*, Volume I, Chapter VI;
 arxiv:2111.11031, doi:10.1063/5.0266087, url:https://arxiv.org/abs/2111.11031
 Authors: Gershon Bialer
@@ -101,15 +89,12 @@ coefficient extraction by normalized circle integration for finite Laurent sums 
 Laurent series under a weighted absolute-summability condition on the chosen circle.
 `ChapterVISingularityAlgebra` verifies the exact planar collision equations and reciprocal
 symmetries in §96, including the correction required in printed equation (10).
-`ChapterVIWeierstrass` derives Poincaré's formal `((t - h)² + k) ψ₁` normal form in §99 from
-Mathlib's Weierstrass preparation theorem when the specialized series has order two.
 `ChapterVIDarboux` proves that a Darboux-type asymptotic with nonzero leading model forces
 eventual coefficient nonvanishing and verifies the logarithmic Taylor coefficients used in §100.
 `ChapterVI` connects these results to
 the restricted resonant Fourier coefficient and final theorem. Establishing the convergence
 hypothesis and holomorphic annulus for Poincaré's actual perturbing series, the parameterized
-contour-pinch/admissibility analysis, the analytic-germ and pinched-integral consequences of the
-formal Weierstrass normal form, the remainder estimate, and the final parameter-counting argument
-are not yet formalized. Thus the project must not be
+contour-pinch/admissibility analysis, the Weierstrass local normal form and remainder estimate,
+and the final parameter-counting argument are not yet formalized. Thus the project must not be
 cited as a complete verification of Poincaré's original Chapter VI calculations.
 -/

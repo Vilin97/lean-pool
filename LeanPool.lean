@@ -2286,7 +2286,6 @@ import LeanPool.PoincareThreeBody.ChapterVIContour
 import LeanPool.PoincareThreeBody.ChapterVIDarboux
 import LeanPool.PoincareThreeBody.ChapterVILatticeReduction
 import LeanPool.PoincareThreeBody.ChapterVISingularityAlgebra
-import LeanPool.PoincareThreeBody.ChapterVIWeierstrass
 import LeanPool.PoincareThreeBody.CoefficientNormalization
 import LeanPool.PoincareThreeBody.CollisionBandAnalyticContinuation
 import LeanPool.PoincareThreeBody.CollisionBandObstruction

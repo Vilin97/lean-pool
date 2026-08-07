@@ -5626,8 +5626,7 @@ projects:
       connect that output to the restricted nonintegrability theorem. The
       proof of the convergence hypothesis and holomorphic annulus for
       Poincaré's actual series, the contour-pinch and admissibility analysis,
-      the analytic and contour-integral consequences of the formal
-      Weierstrass normal form, the remainder bound, and
+      derivation of the local logarithmic normal form and remainder bound, and
       final singularity-parameter count are explicitly recorded as not yet
       formalized. The unconditional
       statement is the fixed-coordinate, global uniform-domain special case of
@@ -5657,7 +5656,6 @@ projects:
       - LeanPool.PoincareThreeBody.chapterVI_tsum_eq_iterated_shear_sum
       - LeanPool.PoincareThreeBody.chapterVI_planarKeplerCoordinate_mul_conjugate
       - LeanPool.PoincareThreeBody.chapterVI_singularityParameter_inv
-      - LeanPool.PoincareThreeBody.exists_chapterVI_weierstrassNormalForm
       - LeanPool.PoincareThreeBody.hasSum_chapterVILogSingularityCoefficient
       - LeanPool.PoincareThreeBody.eventually_coefficient_ne_zero_of_chapterVI_darboux_asymptotic
       - LeanPool.PoincareThreeBody.nonintegrability_of_chapterVI_asymptotics
@@ -5756,16 +5754,6 @@ projects:
         source_ref: >-
           Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
           Volume I (1892), Chapter VI, §96 (pp. 291--293).
-      - declaration: LeanPool.PoincareThreeBody.exists_chapterVI_weierstrassNormalForm
-        informal: >-
-          A bivariate formal series whose specialization at the singular
-          parameter has order two factors as Poincaré's quadratic normal form
-          ((t - h)² + k) times a unit, with h and k vanishing at that parameter.
-        source_ref: >-
-          Henri Poincaré, Les méthodes nouvelles de la mécanique céleste,
-          Volume I (1892), Chapter VI, §99 (pp. 316--317), applying the
-          Weierstrass preparation theorem to the local inverse-square
-          integrand.
       - declaration: LeanPool.PoincareThreeBody.hasSum_chapterVILogSingularityCoefficient
         informal: >-
           The logarithmic singularity log(1 - z/z₀) has the exact coefficient
