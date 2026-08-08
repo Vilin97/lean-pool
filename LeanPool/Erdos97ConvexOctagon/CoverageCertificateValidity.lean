@@ -106,7 +106,7 @@ namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Every local node audit passes for fixed branch (1, 4). -/
 theorem coverageBranchLocallyValid_1_04 :
-    branchClaims_1_4.LocallyValid := by
+    branchClaims1Row4.LocallyValid := by
   intro identifier hidentifier
   change identifier < 102 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -115,7 +115,7 @@ theorem coverageBranchLocallyValid_1_04 :
 
 /-- Every local node audit passes for fixed branch (1, 5). -/
 theorem coverageBranchLocallyValid_1_05 :
-    branchClaims_1_5.LocallyValid := by
+    branchClaims1Row5.LocallyValid := by
   intro identifier hidentifier
   change identifier < 101 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -124,7 +124,7 @@ theorem coverageBranchLocallyValid_1_05 :
 
 /-- Every local node audit passes for fixed branch (1, 6). -/
 theorem coverageBranchLocallyValid_1_06 :
-    branchClaims_1_6.LocallyValid := by
+    branchClaims1Row6.LocallyValid := by
   intro identifier hidentifier
   change identifier < 121 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -133,7 +133,7 @@ theorem coverageBranchLocallyValid_1_06 :
 
 /-- Every local node audit passes for fixed branch (1, 7). -/
 theorem coverageBranchLocallyValid_1_07 :
-    branchClaims_1_7.LocallyValid := by
+    branchClaims1Row7.LocallyValid := by
   intro identifier hidentifier
   change identifier < 115 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -142,7 +142,7 @@ theorem coverageBranchLocallyValid_1_07 :
 
 /-- Every local node audit passes for fixed branch (1, 8). -/
 theorem coverageBranchLocallyValid_1_08 :
-    branchClaims_1_8.LocallyValid := by
+    branchClaims1Row8.LocallyValid := by
   intro identifier hidentifier
   change identifier < 146 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -153,7 +153,7 @@ theorem coverageBranchLocallyValid_1_08 :
 
 /-- Every local node audit passes for fixed branch (1, 9). -/
 theorem coverageBranchLocallyValid_1_09 :
-    branchClaims_1_9.LocallyValid := by
+    branchClaims1Row9.LocallyValid := by
   intro identifier hidentifier
   change identifier < 144 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -164,7 +164,7 @@ theorem coverageBranchLocallyValid_1_09 :
 
 /-- Every local node audit passes for fixed branch (1, 16). -/
 theorem coverageBranchLocallyValid_1_16 :
-    branchClaims_1_16.LocallyValid := by
+    branchClaims1Row16.LocallyValid := by
   intro identifier hidentifier
   change identifier < 92 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -173,7 +173,7 @@ theorem coverageBranchLocallyValid_1_16 :
 
 /-- Every local node audit passes for fixed branch (1, 17). -/
 theorem coverageBranchLocallyValid_1_17 :
-    branchClaims_1_17.LocallyValid := by
+    branchClaims1Row17.LocallyValid := by
   intro identifier hidentifier
   change identifier < 138 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -184,7 +184,7 @@ theorem coverageBranchLocallyValid_1_17 :
 
 /-- Every local node audit passes for fixed branch (1, 18). -/
 theorem coverageBranchLocallyValid_1_18 :
-    branchClaims_1_18.LocallyValid := by
+    branchClaims1Row18.LocallyValid := by
   intro identifier hidentifier
   change identifier < 106 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -193,7 +193,7 @@ theorem coverageBranchLocallyValid_1_18 :
 
 /-- Every local node audit passes for fixed branch (1, 19). -/
 theorem coverageBranchLocallyValid_1_19 :
-    branchClaims_1_19.LocallyValid := by
+    branchClaims1Row19.LocallyValid := by
   intro identifier hidentifier
   change identifier < 117 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -202,7 +202,7 @@ theorem coverageBranchLocallyValid_1_19 :
 
 /-- Every local node audit passes for fixed branch (1, 26). -/
 theorem coverageBranchLocallyValid_1_26 :
-    branchClaims_1_26.LocallyValid := by
+    branchClaims1Row26.LocallyValid := by
   intro identifier hidentifier
   change identifier < 117 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -211,7 +211,7 @@ theorem coverageBranchLocallyValid_1_26 :
 
 /-- Every local node audit passes for fixed branch (1, 27). -/
 theorem coverageBranchLocallyValid_1_27 :
-    branchClaims_1_27.LocallyValid := by
+    branchClaims1Row27.LocallyValid := by
   intro identifier hidentifier
   change identifier < 164 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -222,7 +222,7 @@ theorem coverageBranchLocallyValid_1_27 :
 
 /-- Every local node audit passes for fixed branch (1, 28). -/
 theorem coverageBranchLocallyValid_1_28 :
-    branchClaims_1_28.LocallyValid := by
+    branchClaims1Row28.LocallyValid := by
   intro identifier hidentifier
   change identifier < 120 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -231,7 +231,7 @@ theorem coverageBranchLocallyValid_1_28 :
 
 /-- Every local node audit passes for fixed branch (1, 29). -/
 theorem coverageBranchLocallyValid_1_29 :
-    branchClaims_1_29.LocallyValid := by
+    branchClaims1Row29.LocallyValid := by
   intro identifier hidentifier
   change identifier < 67 at hidentifier
   by_cases hchunk0 : identifier < 32
@@ -242,7 +242,7 @@ theorem coverageBranchLocallyValid_1_29 :
 
 /-- Every local node audit passes for fixed branch (1, 30). -/
 theorem coverageBranchLocallyValid_1_30 :
-    branchClaims_1_30.LocallyValid := by
+    branchClaims1Row30.LocallyValid := by
   intro identifier hidentifier
   change identifier < 275 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -257,7 +257,7 @@ theorem coverageBranchLocallyValid_1_30 :
 
 /-- Every local node audit passes for fixed branch (1, 31). -/
 theorem coverageBranchLocallyValid_1_31 :
-    branchClaims_1_31.LocallyValid := by
+    branchClaims1Row31.LocallyValid := by
   intro identifier hidentifier
   change identifier < 250 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -272,7 +272,7 @@ theorem coverageBranchLocallyValid_1_31 :
 
 /-- Every local node audit passes for fixed branch (1, 32). -/
 theorem coverageBranchLocallyValid_1_32 :
-    branchClaims_1_32.LocallyValid := by
+    branchClaims1Row32.LocallyValid := by
   intro identifier hidentifier
   change identifier < 246 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -285,7 +285,7 @@ theorem coverageBranchLocallyValid_1_32 :
 
 /-- Every local node audit passes for fixed branch (1, 33). -/
 theorem coverageBranchLocallyValid_1_33 :
-    branchClaims_1_33.LocallyValid := by
+    branchClaims1Row33.LocallyValid := by
   intro identifier hidentifier
   change identifier < 232 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -298,7 +298,7 @@ theorem coverageBranchLocallyValid_1_33 :
 
 /-- Every local node audit passes for fixed branch (1, 34). -/
 theorem coverageBranchLocallyValid_1_34 :
-    branchClaims_1_34.LocallyValid := by
+    branchClaims1Row34.LocallyValid := by
   intro identifier hidentifier
   change identifier < 105 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -307,7 +307,7 @@ theorem coverageBranchLocallyValid_1_34 :
 
 /-- Every local node audit passes for fixed branch (2, 1). -/
 theorem coverageBranchLocallyValid_2_01 :
-    branchClaims_2_1.LocallyValid := by
+    branchClaims2Row1.LocallyValid := by
   intro identifier hidentifier
   change identifier < 110 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -316,7 +316,7 @@ theorem coverageBranchLocallyValid_2_01 :
 
 /-- Every local node audit passes for fixed branch (2, 2). -/
 theorem coverageBranchLocallyValid_2_02 :
-    branchClaims_2_2.LocallyValid := by
+    branchClaims2Row2.LocallyValid := by
   intro identifier hidentifier
   change identifier < 115 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -325,7 +325,7 @@ theorem coverageBranchLocallyValid_2_02 :
 
 /-- Every local node audit passes for fixed branch (2, 3). -/
 theorem coverageBranchLocallyValid_2_03 :
-    branchClaims_2_3.LocallyValid := by
+    branchClaims2Row3.LocallyValid := by
   intro identifier hidentifier
   change identifier < 112 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -334,7 +334,7 @@ theorem coverageBranchLocallyValid_2_03 :
 
 /-- Every local node audit passes for fixed branch (2, 4). -/
 theorem coverageBranchLocallyValid_2_04 :
-    branchClaims_2_4.LocallyValid := by
+    branchClaims2Row4.LocallyValid := by
   intro identifier hidentifier
   change identifier < 114 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -343,7 +343,7 @@ theorem coverageBranchLocallyValid_2_04 :
 
 /-- Every local node audit passes for fixed branch (2, 5). -/
 theorem coverageBranchLocallyValid_2_05 :
-    branchClaims_2_5.LocallyValid := by
+    branchClaims2Row5.LocallyValid := by
   intro identifier hidentifier
   change identifier < 125 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -352,7 +352,7 @@ theorem coverageBranchLocallyValid_2_05 :
 
 /-- Every local node audit passes for fixed branch (2, 6). -/
 theorem coverageBranchLocallyValid_2_06 :
-    branchClaims_2_6.LocallyValid := by
+    branchClaims2Row6.LocallyValid := by
   intro identifier hidentifier
   change identifier < 109 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -361,7 +361,7 @@ theorem coverageBranchLocallyValid_2_06 :
 
 /-- Every local node audit passes for fixed branch (2, 8). -/
 theorem coverageBranchLocallyValid_2_08 :
-    branchClaims_2_8.LocallyValid := by
+    branchClaims2Row8.LocallyValid := by
   intro identifier hidentifier
   change identifier < 164 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -372,7 +372,7 @@ theorem coverageBranchLocallyValid_2_08 :
 
 /-- Every local node audit passes for fixed branch (2, 9). -/
 theorem coverageBranchLocallyValid_2_09 :
-    branchClaims_2_9.LocallyValid := by
+    branchClaims2Row9.LocallyValid := by
   intro identifier hidentifier
   change identifier < 182 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -383,28 +383,28 @@ theorem coverageBranchLocallyValid_2_09 :
 
 /-- Every local node audit passes for fixed branch (2, 10). -/
 theorem coverageBranchLocallyValid_2_10 :
-    branchClaims_2_10.LocallyValid := by
+    branchClaims2Row10.LocallyValid := by
   intro identifier hidentifier
   change identifier < 15 at hidentifier
   exact nodeLocalValid_of_chunk coverageBranchNodes_2_10_00000 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (2, 11). -/
 theorem coverageBranchLocallyValid_2_11 :
-    branchClaims_2_11.LocallyValid := by
+    branchClaims2Row11.LocallyValid := by
   intro identifier hidentifier
   change identifier < 15 at hidentifier
   exact nodeLocalValid_of_chunk coverageBranchNodes_2_11_00000 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (2, 12). -/
 theorem coverageBranchLocallyValid_2_12 :
-    branchClaims_2_12.LocallyValid := by
+    branchClaims2Row12.LocallyValid := by
   intro identifier hidentifier
   change identifier < 28 at hidentifier
   exact nodeLocalValid_of_chunk coverageBranchNodes_2_12_00000 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (2, 14). -/
 theorem coverageBranchLocallyValid_2_14 :
-    branchClaims_2_14.LocallyValid := by
+    branchClaims2Row14.LocallyValid := by
   intro identifier hidentifier
   change identifier < 120 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -413,7 +413,7 @@ theorem coverageBranchLocallyValid_2_14 :
 
 /-- Every local node audit passes for fixed branch (2, 15). -/
 theorem coverageBranchLocallyValid_2_15 :
-    branchClaims_2_15.LocallyValid := by
+    branchClaims2Row15.LocallyValid := by
   intro identifier hidentifier
   change identifier < 135 at hidentifier
   by_cases hchunk0 : identifier < 32
@@ -426,7 +426,7 @@ theorem coverageBranchLocallyValid_2_15 :
 
 /-- Every local node audit passes for fixed branch (2, 17). -/
 theorem coverageBranchLocallyValid_2_17 :
-    branchClaims_2_17.LocallyValid := by
+    branchClaims2Row17.LocallyValid := by
   intro identifier hidentifier
   change identifier < 124 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -435,7 +435,7 @@ theorem coverageBranchLocallyValid_2_17 :
 
 /-- Every local node audit passes for fixed branch (2, 18). -/
 theorem coverageBranchLocallyValid_2_18 :
-    branchClaims_2_18.LocallyValid := by
+    branchClaims2Row18.LocallyValid := by
   intro identifier hidentifier
   change identifier < 140 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -446,7 +446,7 @@ theorem coverageBranchLocallyValid_2_18 :
 
 /-- Every local node audit passes for fixed branch (2, 23). -/
 theorem coverageBranchLocallyValid_2_23 :
-    branchClaims_2_23.LocallyValid := by
+    branchClaims2Row23.LocallyValid := by
   intro identifier hidentifier
   change identifier < 120 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -455,7 +455,7 @@ theorem coverageBranchLocallyValid_2_23 :
 
 /-- Every local node audit passes for fixed branch (2, 24). -/
 theorem coverageBranchLocallyValid_2_24 :
-    branchClaims_2_24.LocallyValid := by
+    branchClaims2Row24.LocallyValid := by
   intro identifier hidentifier
   change identifier < 110 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -464,7 +464,7 @@ theorem coverageBranchLocallyValid_2_24 :
 
 /-- Every local node audit passes for fixed branch (2, 25). -/
 theorem coverageBranchLocallyValid_2_25 :
-    branchClaims_2_25.LocallyValid := by
+    branchClaims2Row25.LocallyValid := by
   intro identifier hidentifier
   change identifier < 105 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -473,7 +473,7 @@ theorem coverageBranchLocallyValid_2_25 :
 
 /-- Every local node audit passes for fixed branch (2, 26). -/
 theorem coverageBranchLocallyValid_2_26 :
-    branchClaims_2_26.LocallyValid := by
+    branchClaims2Row26.LocallyValid := by
   intro identifier hidentifier
   change identifier < 98 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -482,7 +482,7 @@ theorem coverageBranchLocallyValid_2_26 :
 
 /-- Every local node audit passes for fixed branch (2, 27). -/
 theorem coverageBranchLocallyValid_2_27 :
-    branchClaims_2_27.LocallyValid := by
+    branchClaims2Row27.LocallyValid := by
   intro identifier hidentifier
   change identifier < 90 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -491,7 +491,7 @@ theorem coverageBranchLocallyValid_2_27 :
 
 /-- Every local node audit passes for fixed branch (2, 28). -/
 theorem coverageBranchLocallyValid_2_28 :
-    branchClaims_2_28.LocallyValid := by
+    branchClaims2Row28.LocallyValid := by
   intro identifier hidentifier
   change identifier < 96 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -500,7 +500,7 @@ theorem coverageBranchLocallyValid_2_28 :
 
 /-- Every local node audit passes for fixed branch (2, 29). -/
 theorem coverageBranchLocallyValid_2_29 :
-    branchClaims_2_29.LocallyValid := by
+    branchClaims2Row29.LocallyValid := by
   intro identifier hidentifier
   change identifier < 103 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -509,7 +509,7 @@ theorem coverageBranchLocallyValid_2_29 :
 
 /-- Every local node audit passes for fixed branch (2, 30). -/
 theorem coverageBranchLocallyValid_2_30 :
-    branchClaims_2_30.LocallyValid := by
+    branchClaims2Row30.LocallyValid := by
   intro identifier hidentifier
   change identifier < 206 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -522,7 +522,7 @@ theorem coverageBranchLocallyValid_2_30 :
 
 /-- Every local node audit passes for fixed branch (2, 31). -/
 theorem coverageBranchLocallyValid_2_31 :
-    branchClaims_2_31.LocallyValid := by
+    branchClaims2Row31.LocallyValid := by
   intro identifier hidentifier
   change identifier < 223 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -535,7 +535,7 @@ theorem coverageBranchLocallyValid_2_31 :
 
 /-- Every local node audit passes for fixed branch (2, 32). -/
 theorem coverageBranchLocallyValid_2_32 :
-    branchClaims_2_32.LocallyValid := by
+    branchClaims2Row32.LocallyValid := by
   intro identifier hidentifier
   change identifier < 219 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -548,7 +548,7 @@ theorem coverageBranchLocallyValid_2_32 :
 
 /-- Every local node audit passes for fixed branch (2, 33). -/
 theorem coverageBranchLocallyValid_2_33 :
-    branchClaims_2_33.LocallyValid := by
+    branchClaims2Row33.LocallyValid := by
   intro identifier hidentifier
   change identifier < 166 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -559,7 +559,7 @@ theorem coverageBranchLocallyValid_2_33 :
 
 /-- Every local node audit passes for fixed branch (2, 34). -/
 theorem coverageBranchLocallyValid_2_34 :
-    branchClaims_2_34.LocallyValid := by
+    branchClaims2Row34.LocallyValid := by
   intro identifier hidentifier
   change identifier < 162 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -570,7 +570,7 @@ theorem coverageBranchLocallyValid_2_34 :
 
 /-- Every local node audit passes for fixed branch (3, 1). -/
 theorem coverageBranchLocallyValid_3_01 :
-    branchClaims_3_1.LocallyValid := by
+    branchClaims3Row1.LocallyValid := by
   intro identifier hidentifier
   change identifier < 111 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -579,7 +579,7 @@ theorem coverageBranchLocallyValid_3_01 :
 
 /-- Every local node audit passes for fixed branch (3, 2). -/
 theorem coverageBranchLocallyValid_3_02 :
-    branchClaims_3_2.LocallyValid := by
+    branchClaims3Row2.LocallyValid := by
   intro identifier hidentifier
   change identifier < 116 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -588,7 +588,7 @@ theorem coverageBranchLocallyValid_3_02 :
 
 /-- Every local node audit passes for fixed branch (3, 3). -/
 theorem coverageBranchLocallyValid_3_03 :
-    branchClaims_3_3.LocallyValid := by
+    branchClaims3Row3.LocallyValid := by
   intro identifier hidentifier
   change identifier < 95 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -597,7 +597,7 @@ theorem coverageBranchLocallyValid_3_03 :
 
 /-- Every local node audit passes for fixed branch (3, 4). -/
 theorem coverageBranchLocallyValid_3_04 :
-    branchClaims_3_4.LocallyValid := by
+    branchClaims3Row4.LocallyValid := by
   intro identifier hidentifier
   change identifier < 114 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -606,7 +606,7 @@ theorem coverageBranchLocallyValid_3_04 :
 
 /-- Every local node audit passes for fixed branch (3, 5). -/
 theorem coverageBranchLocallyValid_3_05 :
-    branchClaims_3_5.LocallyValid := by
+    branchClaims3Row5.LocallyValid := by
   intro identifier hidentifier
   change identifier < 116 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -615,7 +615,7 @@ theorem coverageBranchLocallyValid_3_05 :
 
 /-- Every local node audit passes for fixed branch (3, 6). -/
 theorem coverageBranchLocallyValid_3_06 :
-    branchClaims_3_6.LocallyValid := by
+    branchClaims3Row6.LocallyValid := by
   intro identifier hidentifier
   change identifier < 97 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -624,7 +624,7 @@ theorem coverageBranchLocallyValid_3_06 :
 
 /-- Every local node audit passes for fixed branch (3, 10). -/
 theorem coverageBranchLocallyValid_3_10 :
-    branchClaims_3_10.LocallyValid := by
+    branchClaims3Row10.LocallyValid := by
   intro identifier hidentifier
   change identifier < 145 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -635,7 +635,7 @@ theorem coverageBranchLocallyValid_3_10 :
 
 /-- Every local node audit passes for fixed branch (3, 11). -/
 theorem coverageBranchLocallyValid_3_11 :
-    branchClaims_3_11.LocallyValid := by
+    branchClaims3Row11.LocallyValid := by
   intro identifier hidentifier
   change identifier < 113 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -644,7 +644,7 @@ theorem coverageBranchLocallyValid_3_11 :
 
 /-- Every local node audit passes for fixed branch (3, 12). -/
 theorem coverageBranchLocallyValid_3_12 :
-    branchClaims_3_12.LocallyValid := by
+    branchClaims3Row12.LocallyValid := by
   intro identifier hidentifier
   change identifier < 107 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -653,7 +653,7 @@ theorem coverageBranchLocallyValid_3_12 :
 
 /-- Every local node audit passes for fixed branch (3, 23). -/
 theorem coverageBranchLocallyValid_3_23 :
-    branchClaims_3_23.LocallyValid := by
+    branchClaims3Row23.LocallyValid := by
   intro identifier hidentifier
   change identifier < 297 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -668,7 +668,7 @@ theorem coverageBranchLocallyValid_3_23 :
 
 /-- Every local node audit passes for fixed branch (3, 24). -/
 theorem coverageBranchLocallyValid_3_24 :
-    branchClaims_3_24.LocallyValid := by
+    branchClaims3Row24.LocallyValid := by
   intro identifier hidentifier
   change identifier < 349 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -685,7 +685,7 @@ theorem coverageBranchLocallyValid_3_24 :
 
 /-- Every local node audit passes for fixed branch (3, 25). -/
 theorem coverageBranchLocallyValid_3_25 :
-    branchClaims_3_25.LocallyValid := by
+    branchClaims3Row25.LocallyValid := by
   intro identifier hidentifier
   change identifier < 341 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -702,7 +702,7 @@ theorem coverageBranchLocallyValid_3_25 :
 
 /-- Every local node audit passes for fixed branch (3, 26). -/
 theorem coverageBranchLocallyValid_3_26 :
-    branchClaims_3_26.LocallyValid := by
+    branchClaims3Row26.LocallyValid := by
   intro identifier hidentifier
   change identifier < 298 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -719,7 +719,7 @@ theorem coverageBranchLocallyValid_3_26 :
 
 /-- Every local node audit passes for fixed branch (3, 27). -/
 theorem coverageBranchLocallyValid_3_27 :
-    branchClaims_3_27.LocallyValid := by
+    branchClaims3Row27.LocallyValid := by
   intro identifier hidentifier
   change identifier < 345 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -736,7 +736,7 @@ theorem coverageBranchLocallyValid_3_27 :
 
 /-- Every local node audit passes for fixed branch (3, 28). -/
 theorem coverageBranchLocallyValid_3_28 :
-    branchClaims_3_28.LocallyValid := by
+    branchClaims3Row28.LocallyValid := by
   intro identifier hidentifier
   change identifier < 341 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -753,7 +753,7 @@ theorem coverageBranchLocallyValid_3_28 :
 
 /-- Every local node audit passes for fixed branch (3, 30). -/
 theorem coverageBranchLocallyValid_3_30 :
-    branchClaims_3_30.LocallyValid := by
+    branchClaims3Row30.LocallyValid := by
   intro identifier hidentifier
   change identifier < 223 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -766,7 +766,7 @@ theorem coverageBranchLocallyValid_3_30 :
 
 /-- Every local node audit passes for fixed branch (3, 31). -/
 theorem coverageBranchLocallyValid_3_31 :
-    branchClaims_3_31.LocallyValid := by
+    branchClaims3Row31.LocallyValid := by
   intro identifier hidentifier
   change identifier < 245 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -781,7 +781,7 @@ theorem coverageBranchLocallyValid_3_31 :
 
 /-- Every local node audit passes for fixed branch (3, 32). -/
 theorem coverageBranchLocallyValid_3_32 :
-    branchClaims_3_32.LocallyValid := by
+    branchClaims3Row32.LocallyValid := by
   intro identifier hidentifier
   change identifier < 268 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -796,7 +796,7 @@ theorem coverageBranchLocallyValid_3_32 :
 
 /-- Every local node audit passes for fixed branch (5, 4). -/
 theorem coverageBranchLocallyValid_5_04 :
-    branchClaims_5_4.LocallyValid := by
+    branchClaims5Row4.LocallyValid := by
   intro identifier hidentifier
   change identifier < 114 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -805,7 +805,7 @@ theorem coverageBranchLocallyValid_5_04 :
 
 /-- Every local node audit passes for fixed branch (5, 5). -/
 theorem coverageBranchLocallyValid_5_05 :
-    branchClaims_5_5.LocallyValid := by
+    branchClaims5Row5.LocallyValid := by
   intro identifier hidentifier
   change identifier < 94 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -814,7 +814,7 @@ theorem coverageBranchLocallyValid_5_05 :
 
 /-- Every local node audit passes for fixed branch (5, 6). -/
 theorem coverageBranchLocallyValid_5_06 :
-    branchClaims_5_6.LocallyValid := by
+    branchClaims5Row6.LocallyValid := by
   intro identifier hidentifier
   change identifier < 93 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -823,7 +823,7 @@ theorem coverageBranchLocallyValid_5_06 :
 
 /-- Every local node audit passes for fixed branch (5, 7). -/
 theorem coverageBranchLocallyValid_5_07 :
-    branchClaims_5_7.LocallyValid := by
+    branchClaims5Row7.LocallyValid := by
   intro identifier hidentifier
   change identifier < 99 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -832,7 +832,7 @@ theorem coverageBranchLocallyValid_5_07 :
 
 /-- Every local node audit passes for fixed branch (5, 8). -/
 theorem coverageBranchLocallyValid_5_08 :
-    branchClaims_5_8.LocallyValid := by
+    branchClaims5Row8.LocallyValid := by
   intro identifier hidentifier
   change identifier < 89 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -841,7 +841,7 @@ theorem coverageBranchLocallyValid_5_08 :
 
 /-- Every local node audit passes for fixed branch (5, 9). -/
 theorem coverageBranchLocallyValid_5_09 :
-    branchClaims_5_9.LocallyValid := by
+    branchClaims5Row9.LocallyValid := by
   intro identifier hidentifier
   change identifier < 86 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -850,7 +850,7 @@ theorem coverageBranchLocallyValid_5_09 :
 
 /-- Every local node audit passes for fixed branch (5, 10). -/
 theorem coverageBranchLocallyValid_5_10 :
-    branchClaims_5_10.LocallyValid := by
+    branchClaims5Row10.LocallyValid := by
   intro identifier hidentifier
   change identifier < 159 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -861,7 +861,7 @@ theorem coverageBranchLocallyValid_5_10 :
 
 /-- Every local node audit passes for fixed branch (5, 11). -/
 theorem coverageBranchLocallyValid_5_11 :
-    branchClaims_5_11.LocallyValid := by
+    branchClaims5Row11.LocallyValid := by
   intro identifier hidentifier
   change identifier < 153 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -872,7 +872,7 @@ theorem coverageBranchLocallyValid_5_11 :
 
 /-- Every local node audit passes for fixed branch (5, 12). -/
 theorem coverageBranchLocallyValid_5_12 :
-    branchClaims_5_12.LocallyValid := by
+    branchClaims5Row12.LocallyValid := by
   intro identifier hidentifier
   change identifier < 202 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -885,7 +885,7 @@ theorem coverageBranchLocallyValid_5_12 :
 
 /-- Every local node audit passes for fixed branch (5, 14). -/
 theorem coverageBranchLocallyValid_5_14 :
-    branchClaims_5_14.LocallyValid := by
+    branchClaims5Row14.LocallyValid := by
   intro identifier hidentifier
   change identifier < 364 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -902,7 +902,7 @@ theorem coverageBranchLocallyValid_5_14 :
 
 /-- Every local node audit passes for fixed branch (5, 15). -/
 theorem coverageBranchLocallyValid_5_15 :
-    branchClaims_5_15.LocallyValid := by
+    branchClaims5Row15.LocallyValid := by
   intro identifier hidentifier
   change identifier < 365 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -919,7 +919,7 @@ theorem coverageBranchLocallyValid_5_15 :
 
 /-- Every local node audit passes for fixed branch (5, 16). -/
 theorem coverageBranchLocallyValid_5_16 :
-    branchClaims_5_16.LocallyValid := by
+    branchClaims5Row16.LocallyValid := by
   intro identifier hidentifier
   change identifier < 170 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -930,7 +930,7 @@ theorem coverageBranchLocallyValid_5_16 :
 
 /-- Every local node audit passes for fixed branch (5, 17). -/
 theorem coverageBranchLocallyValid_5_17 :
-    branchClaims_5_17.LocallyValid := by
+    branchClaims5Row17.LocallyValid := by
   intro identifier hidentifier
   change identifier < 220 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -943,7 +943,7 @@ theorem coverageBranchLocallyValid_5_17 :
 
 /-- Every local node audit passes for fixed branch (5, 18). -/
 theorem coverageBranchLocallyValid_5_18 :
-    branchClaims_5_18.LocallyValid := by
+    branchClaims5Row18.LocallyValid := by
   intro identifier hidentifier
   change identifier < 254 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -956,7 +956,7 @@ theorem coverageBranchLocallyValid_5_18 :
 
 /-- Every local node audit passes for fixed branch (5, 19). -/
 theorem coverageBranchLocallyValid_5_19 :
-    branchClaims_5_19.LocallyValid := by
+    branchClaims5Row19.LocallyValid := by
   intro identifier hidentifier
   change identifier < 298 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -971,7 +971,7 @@ theorem coverageBranchLocallyValid_5_19 :
 
 /-- Every local node audit passes for fixed branch (5, 24). -/
 theorem coverageBranchLocallyValid_5_24 :
-    branchClaims_5_24.LocallyValid := by
+    branchClaims5Row24.LocallyValid := by
   intro identifier hidentifier
   change identifier < 242 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -986,7 +986,7 @@ theorem coverageBranchLocallyValid_5_24 :
 
 /-- Every local node audit passes for fixed branch (5, 25). -/
 theorem coverageBranchLocallyValid_5_25 :
-    branchClaims_5_25.LocallyValid := by
+    branchClaims5Row25.LocallyValid := by
   intro identifier hidentifier
   change identifier < 254 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1001,7 +1001,7 @@ theorem coverageBranchLocallyValid_5_25 :
 
 /-- Every local node audit passes for fixed branch (5, 26). -/
 theorem coverageBranchLocallyValid_5_26 :
-    branchClaims_5_26.LocallyValid := by
+    branchClaims5Row26.LocallyValid := by
   intro identifier hidentifier
   change identifier < 263 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1016,7 +1016,7 @@ theorem coverageBranchLocallyValid_5_26 :
 
 /-- Every local node audit passes for fixed branch (5, 27). -/
 theorem coverageBranchLocallyValid_5_27 :
-    branchClaims_5_27.LocallyValid := by
+    branchClaims5Row27.LocallyValid := by
   intro identifier hidentifier
   change identifier < 392 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1035,7 +1035,7 @@ theorem coverageBranchLocallyValid_5_27 :
 
 /-- Every local node audit passes for fixed branch (5, 28). -/
 theorem coverageBranchLocallyValid_5_28 :
-    branchClaims_5_28.LocallyValid := by
+    branchClaims5Row28.LocallyValid := by
   intro identifier hidentifier
   change identifier < 334 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1056,7 +1056,7 @@ theorem coverageBranchLocallyValid_5_28 :
 
 /-- Every local node audit passes for fixed branch (5, 29). -/
 theorem coverageBranchLocallyValid_5_29 :
-    branchClaims_5_29.LocallyValid := by
+    branchClaims5Row29.LocallyValid := by
   intro identifier hidentifier
   change identifier < 249 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1069,7 +1069,7 @@ theorem coverageBranchLocallyValid_5_29 :
 
 /-- Every local node audit passes for fixed branch (5, 31). -/
 theorem coverageBranchLocallyValid_5_31 :
-    branchClaims_5_31.LocallyValid := by
+    branchClaims5Row31.LocallyValid := by
   intro identifier hidentifier
   change identifier < 486 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1092,7 +1092,7 @@ theorem coverageBranchLocallyValid_5_31 :
 
 /-- Every local node audit passes for fixed branch (5, 32). -/
 theorem coverageBranchLocallyValid_5_32 :
-    branchClaims_5_32.LocallyValid := by
+    branchClaims5Row32.LocallyValid := by
   intro identifier hidentifier
   change identifier < 442 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1115,7 +1115,7 @@ theorem coverageBranchLocallyValid_5_32 :
 
 /-- Every local node audit passes for fixed branch (5, 34). -/
 theorem coverageBranchLocallyValid_5_34 :
-    branchClaims_5_34.LocallyValid := by
+    branchClaims5Row34.LocallyValid := by
   intro identifier hidentifier
   change identifier < 390 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1134,7 +1134,7 @@ theorem coverageBranchLocallyValid_5_34 :
 
 /-- Every local node audit passes for fixed branch (6, 1). -/
 theorem coverageBranchLocallyValid_6_01 :
-    branchClaims_6_1.LocallyValid := by
+    branchClaims6Row1.LocallyValid := by
   intro identifier hidentifier
   change identifier < 65 at hidentifier
   by_cases hchunk0 : identifier < 32
@@ -1145,42 +1145,42 @@ theorem coverageBranchLocallyValid_6_01 :
 
 /-- Every local node audit passes for fixed branch (6, 2). -/
 theorem coverageBranchLocallyValid_6_02 :
-    branchClaims_6_2.LocallyValid := by
+    branchClaims6Row2.LocallyValid := by
   intro identifier hidentifier
   change identifier < 52 at hidentifier
   exact nodeLocalValid_of_chunk coverageBranchNodes_6_02_00000 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (6, 3). -/
 theorem coverageBranchLocallyValid_6_03 :
-    branchClaims_6_3.LocallyValid := by
+    branchClaims6Row3.LocallyValid := by
   intro identifier hidentifier
   change identifier < 42 at hidentifier
   exact nodeLocalValid_of_chunk coverageBranchNodes_6_03_00000 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (6, 4). -/
 theorem coverageBranchLocallyValid_6_04 :
-    branchClaims_6_4.LocallyValid := by
+    branchClaims6Row4.LocallyValid := by
   intro identifier hidentifier
   change identifier < 51 at hidentifier
   exact nodeLocalValid_of_chunk coverageBranchNodes_6_04_00000 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (6, 5). -/
 theorem coverageBranchLocallyValid_6_05 :
-    branchClaims_6_5.LocallyValid := by
+    branchClaims6Row5.LocallyValid := by
   intro identifier hidentifier
   change identifier < 40 at hidentifier
   exact nodeLocalValid_of_chunk coverageBranchNodes_6_05_00000 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (6, 6). -/
 theorem coverageBranchLocallyValid_6_06 :
-    branchClaims_6_6.LocallyValid := by
+    branchClaims6Row6.LocallyValid := by
   intro identifier hidentifier
   change identifier < 35 at hidentifier
   exact nodeLocalValid_of_chunk coverageBranchNodes_6_06_00000 (by omega) (by omega)
 
 /-- Every local node audit passes for fixed branch (6, 7). -/
 theorem coverageBranchLocallyValid_6_07 :
-    branchClaims_6_7.LocallyValid := by
+    branchClaims6Row7.LocallyValid := by
   intro identifier hidentifier
   change identifier < 103 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1189,7 +1189,7 @@ theorem coverageBranchLocallyValid_6_07 :
 
 /-- Every local node audit passes for fixed branch (6, 8). -/
 theorem coverageBranchLocallyValid_6_08 :
-    branchClaims_6_8.LocallyValid := by
+    branchClaims6Row8.LocallyValid := by
   intro identifier hidentifier
   change identifier < 121 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1200,7 +1200,7 @@ theorem coverageBranchLocallyValid_6_08 :
 
 /-- Every local node audit passes for fixed branch (6, 9). -/
 theorem coverageBranchLocallyValid_6_09 :
-    branchClaims_6_9.LocallyValid := by
+    branchClaims6Row9.LocallyValid := by
   intro identifier hidentifier
   change identifier < 115 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1209,7 +1209,7 @@ theorem coverageBranchLocallyValid_6_09 :
 
 /-- Every local node audit passes for fixed branch (6, 10). -/
 theorem coverageBranchLocallyValid_6_10 :
-    branchClaims_6_10.LocallyValid := by
+    branchClaims6Row10.LocallyValid := by
   intro identifier hidentifier
   change identifier < 158 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1220,7 +1220,7 @@ theorem coverageBranchLocallyValid_6_10 :
 
 /-- Every local node audit passes for fixed branch (6, 11). -/
 theorem coverageBranchLocallyValid_6_11 :
-    branchClaims_6_11.LocallyValid := by
+    branchClaims6Row11.LocallyValid := by
   intro identifier hidentifier
   change identifier < 142 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1231,7 +1231,7 @@ theorem coverageBranchLocallyValid_6_11 :
 
 /-- Every local node audit passes for fixed branch (6, 12). -/
 theorem coverageBranchLocallyValid_6_12 :
-    branchClaims_6_12.LocallyValid := by
+    branchClaims6Row12.LocallyValid := by
   intro identifier hidentifier
   change identifier < 125 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1240,7 +1240,7 @@ theorem coverageBranchLocallyValid_6_12 :
 
 /-- Every local node audit passes for fixed branch (6, 13). -/
 theorem coverageBranchLocallyValid_6_13 :
-    branchClaims_6_13.LocallyValid := by
+    branchClaims6Row13.LocallyValid := by
   intro identifier hidentifier
   change identifier < 133 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1251,7 +1251,7 @@ theorem coverageBranchLocallyValid_6_13 :
 
 /-- Every local node audit passes for fixed branch (6, 14). -/
 theorem coverageBranchLocallyValid_6_14 :
-    branchClaims_6_14.LocallyValid := by
+    branchClaims6Row14.LocallyValid := by
   intro identifier hidentifier
   change identifier < 178 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1262,7 +1262,7 @@ theorem coverageBranchLocallyValid_6_14 :
 
 /-- Every local node audit passes for fixed branch (6, 15). -/
 theorem coverageBranchLocallyValid_6_15 :
-    branchClaims_6_15.LocallyValid := by
+    branchClaims6Row15.LocallyValid := by
   intro identifier hidentifier
   change identifier < 201 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1275,7 +1275,7 @@ theorem coverageBranchLocallyValid_6_15 :
 
 /-- Every local node audit passes for fixed branch (6, 16). -/
 theorem coverageBranchLocallyValid_6_16 :
-    branchClaims_6_16.LocallyValid := by
+    branchClaims6Row16.LocallyValid := by
   intro identifier hidentifier
   change identifier < 118 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1284,7 +1284,7 @@ theorem coverageBranchLocallyValid_6_16 :
 
 /-- Every local node audit passes for fixed branch (6, 17). -/
 theorem coverageBranchLocallyValid_6_17 :
-    branchClaims_6_17.LocallyValid := by
+    branchClaims6Row17.LocallyValid := by
   intro identifier hidentifier
   change identifier < 171 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1295,7 +1295,7 @@ theorem coverageBranchLocallyValid_6_17 :
 
 /-- Every local node audit passes for fixed branch (6, 18). -/
 theorem coverageBranchLocallyValid_6_18 :
-    branchClaims_6_18.LocallyValid := by
+    branchClaims6Row18.LocallyValid := by
   intro identifier hidentifier
   change identifier < 195 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1308,7 +1308,7 @@ theorem coverageBranchLocallyValid_6_18 :
 
 /-- Every local node audit passes for fixed branch (6, 23). -/
 theorem coverageBranchLocallyValid_6_23 :
-    branchClaims_6_23.LocallyValid := by
+    branchClaims6Row23.LocallyValid := by
   intro identifier hidentifier
   change identifier < 248 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1321,7 +1321,7 @@ theorem coverageBranchLocallyValid_6_23 :
 
 /-- Every local node audit passes for fixed branch (6, 24). -/
 theorem coverageBranchLocallyValid_6_24 :
-    branchClaims_6_24.LocallyValid := by
+    branchClaims6Row24.LocallyValid := by
   intro identifier hidentifier
   change identifier < 235 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1334,7 +1334,7 @@ theorem coverageBranchLocallyValid_6_24 :
 
 /-- Every local node audit passes for fixed branch (6, 25). -/
 theorem coverageBranchLocallyValid_6_25 :
-    branchClaims_6_25.LocallyValid := by
+    branchClaims6Row25.LocallyValid := by
   intro identifier hidentifier
   change identifier < 211 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1347,7 +1347,7 @@ theorem coverageBranchLocallyValid_6_25 :
 
 /-- Every local node audit passes for fixed branch (6, 26). -/
 theorem coverageBranchLocallyValid_6_26 :
-    branchClaims_6_26.LocallyValid := by
+    branchClaims6Row26.LocallyValid := by
   intro identifier hidentifier
   change identifier < 232 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1360,7 +1360,7 @@ theorem coverageBranchLocallyValid_6_26 :
 
 /-- Every local node audit passes for fixed branch (6, 27). -/
 theorem coverageBranchLocallyValid_6_27 :
-    branchClaims_6_27.LocallyValid := by
+    branchClaims6Row27.LocallyValid := by
   intro identifier hidentifier
   change identifier < 224 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1373,7 +1373,7 @@ theorem coverageBranchLocallyValid_6_27 :
 
 /-- Every local node audit passes for fixed branch (6, 28). -/
 theorem coverageBranchLocallyValid_6_28 :
-    branchClaims_6_28.LocallyValid := by
+    branchClaims6Row28.LocallyValid := by
   intro identifier hidentifier
   change identifier < 205 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1386,7 +1386,7 @@ theorem coverageBranchLocallyValid_6_28 :
 
 /-- Every local node audit passes for fixed branch (6, 30). -/
 theorem coverageBranchLocallyValid_6_30 :
-    branchClaims_6_30.LocallyValid := by
+    branchClaims6Row30.LocallyValid := by
   intro identifier hidentifier
   change identifier < 265 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1401,7 +1401,7 @@ theorem coverageBranchLocallyValid_6_30 :
 
 /-- Every local node audit passes for fixed branch (6, 31). -/
 theorem coverageBranchLocallyValid_6_31 :
-    branchClaims_6_31.LocallyValid := by
+    branchClaims6Row31.LocallyValid := by
   intro identifier hidentifier
   change identifier < 250 at hidentifier
   by_cases hchunk0 : identifier < 64
@@ -1416,7 +1416,7 @@ theorem coverageBranchLocallyValid_6_31 :
 
 /-- Every local node audit passes for fixed branch (6, 32). -/
 theorem coverageBranchLocallyValid_6_32 :
-    branchClaims_6_32.LocallyValid := by
+    branchClaims6Row32.LocallyValid := by
   intro identifier hidentifier
   change identifier < 257 at hidentifier
   by_cases hchunk0 : identifier < 64

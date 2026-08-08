@@ -971,7 +971,7 @@ private def branchClaims_5_10_group_02 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 10). -/
-def branchClaims_5_10 : BranchClaims :=
+def branchClaims5Row10 : BranchClaims :=
   ⟨#[branchClaims_5_10_group_00, branchClaims_5_10_group_01, branchClaims_5_10_group_02], 159, 158⟩
 
 private def branchClaims_5_11_group_00 : Array NodeClaim :=
@@ -1899,7 +1899,7 @@ private def branchClaims_5_11_group_02 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 11). -/
-def branchClaims_5_11 : BranchClaims :=
+def branchClaims5Row11 : BranchClaims :=
   ⟨#[branchClaims_5_11_group_00, branchClaims_5_11_group_01, branchClaims_5_11_group_02], 153, 152⟩
 
 private def branchClaims_5_12_group_00 : Array NodeClaim :=
@@ -3124,7 +3124,7 @@ private def branchClaims_5_12_group_03 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 12). -/
-def branchClaims_5_12 : BranchClaims :=
+def branchClaims5Row12 : BranchClaims :=
   ⟨#[branchClaims_5_12_group_00, branchClaims_5_12_group_01, branchClaims_5_12_group_02,
     branchClaims_5_12_group_03], 202, 201⟩
 
@@ -5326,7 +5326,7 @@ private def branchClaims_5_14_group_05 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 14). -/
-def branchClaims_5_14 : BranchClaims :=
+def branchClaims5Row14 : BranchClaims :=
   ⟨#[branchClaims_5_14_group_00, branchClaims_5_14_group_01, branchClaims_5_14_group_02,
     branchClaims_5_14_group_03, branchClaims_5_14_group_04, branchClaims_5_14_group_05], 364, 363⟩
 
@@ -7534,7 +7534,7 @@ private def branchClaims_5_15_group_05 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 15). -/
-def branchClaims_5_15 : BranchClaims :=
+def branchClaims5Row15 : BranchClaims :=
   ⟨#[branchClaims_5_15_group_00, branchClaims_5_15_group_01, branchClaims_5_15_group_02,
     branchClaims_5_15_group_03, branchClaims_5_15_group_04, branchClaims_5_15_group_05], 365, 364⟩
 

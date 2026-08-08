@@ -44,21 +44,21 @@ private theorem varIndex_lt (centre target : Vertex) :
   unfold varIndex
   omega
 
-@[simp] private theorem bitSetB_or
+private theorem bitSetB_or
     (left right : UInt64) (index : Fin 64) :
     bitSetB (left ||| right) index.val =
       (bitSetB left index.val || bitSetB right index.val) := by
   simp only [bitSetB_eq_getLsbD]
   simp
 
-@[simp] private theorem bitSetB_and
+private theorem bitSetB_and
     (left right : UInt64) (index : Fin 64) :
     bitSetB (left &&& right) index.val =
       (bitSetB left index.val && bitSetB right index.val) := by
   simp only [bitSetB_eq_getLsbD]
   simp
 
-@[simp] private theorem bitSetB_or_at
+private theorem bitSetB_or_at
     (left right : UInt64) (centre target : Vertex) :
     bitSetB (left ||| right) (varIndex centre target) =
       (bitSetB left (varIndex centre target) ||

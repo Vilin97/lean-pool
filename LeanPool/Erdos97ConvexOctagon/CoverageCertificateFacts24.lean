@@ -22,32 +22,32 @@ theorem coverageBranchRoot_5_22 :
 
 /-- Root audit for fixed branch (2, 29). -/
 theorem coverageBranchRoot_2_29 :
-    branchClaimRootValidB 2 29 (.search branchClaims_2_29) = true := by
+    branchClaimRootValidB 2 29 (.search branchClaims2Row29) = true := by
   rfl
 
 /-- Root audit for fixed branch (2, 30). -/
 theorem coverageBranchRoot_2_30 :
-    branchClaimRootValidB 2 30 (.search branchClaims_2_30) = true := by
+    branchClaimRootValidB 2 30 (.search branchClaims2Row30) = true := by
   rfl
 
 /-- Node audit for fixed branch (2, 28), starting at 64. -/
 theorem coverageBranchNodes_2_28_00064 :
-    nodeClaimChunkValidB branchClaims_2_28 64 32 = true := by
+    nodeClaimChunkValidB branchClaims2Row28 64 32 = true := by
   rfl
 
 /-- Node audit for fixed branch (2, 29), starting at 0. -/
 theorem coverageBranchNodes_2_29_00000 :
-    nodeClaimChunkValidB branchClaims_2_29 0 64 = true := by
+    nodeClaimChunkValidB branchClaims2Row29 0 64 = true := by
   rfl
 
 /-- Node audit for fixed branch (2, 29), starting at 64. -/
 theorem coverageBranchNodes_2_29_00064 :
-    nodeClaimChunkValidB branchClaims_2_29 64 39 = true := by
+    nodeClaimChunkValidB branchClaims2Row29 64 39 = true := by
   rfl
 
 /-- Node audit for fixed branch (2, 30), starting at 0. -/
 theorem coverageBranchNodes_2_30_00000 :
-    nodeClaimChunkValidB branchClaims_2_30 0 64 = true := by
+    nodeClaimChunkValidB branchClaims2Row30 0 64 = true := by
   rfl
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage

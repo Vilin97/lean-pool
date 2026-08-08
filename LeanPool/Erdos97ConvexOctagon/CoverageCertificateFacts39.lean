@@ -17,27 +17,27 @@ theorem coverageBranchRoot_1_10 :
 
 /-- Root audit for fixed branch (3, 27). -/
 theorem coverageBranchRoot_3_27 :
-    branchClaimRootValidB 3 27 (.search branchClaims_3_27) = true := by
+    branchClaimRootValidB 3 27 (.search branchClaims3Row27) = true := by
   rfl
 
 /-- Node audit for fixed branch (3, 26), starting at 192. -/
 theorem coverageBranchNodes_3_26_00192 :
-    nodeClaimChunkValidB branchClaims_3_26 192 32 = true := by
+    nodeClaimChunkValidB branchClaims3Row26 192 32 = true := by
   rfl
 
 /-- Node audit for fixed branch (3, 26), starting at 224. -/
 theorem coverageBranchNodes_3_26_00224 :
-    nodeClaimChunkValidB branchClaims_3_26 224 32 = true := by
+    nodeClaimChunkValidB branchClaims3Row26 224 32 = true := by
   rfl
 
 /-- Node audit for fixed branch (3, 26), starting at 256. -/
 theorem coverageBranchNodes_3_26_00256 :
-    nodeClaimChunkValidB branchClaims_3_26 256 42 = true := by
+    nodeClaimChunkValidB branchClaims3Row26 256 42 = true := by
   rfl
 
 /-- Node audit for fixed branch (3, 27), starting at 0. -/
 theorem coverageBranchNodes_3_27_00000 :
-    nodeClaimChunkValidB branchClaims_3_27 0 64 = true := by
+    nodeClaimChunkValidB branchClaims3Row27 0 64 = true := by
   rfl
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage

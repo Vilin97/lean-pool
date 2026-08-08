@@ -1363,7 +1363,7 @@ private def branchClaims_2_31_group_03 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (2, 31). -/
-def branchClaims_2_31 : BranchClaims :=
+def branchClaims2Row31 : BranchClaims :=
   ⟨#[branchClaims_2_31_group_00, branchClaims_2_31_group_01, branchClaims_2_31_group_02,
     branchClaims_2_31_group_03], 223, 222⟩
 
@@ -2696,7 +2696,7 @@ private def branchClaims_2_32_group_03 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (2, 32). -/
-def branchClaims_2_32 : BranchClaims :=
+def branchClaims2Row32 : BranchClaims :=
   ⟨#[branchClaims_2_32_group_00, branchClaims_2_32_group_01, branchClaims_2_32_group_02,
     branchClaims_2_32_group_03], 219, 218⟩
 
@@ -3704,7 +3704,7 @@ private def branchClaims_2_33_group_02 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (2, 33). -/
-def branchClaims_2_33 : BranchClaims :=
+def branchClaims2Row33 : BranchClaims :=
   ⟨#[branchClaims_2_33_group_00, branchClaims_2_33_group_01, branchClaims_2_33_group_02], 166, 165⟩
 
 private def branchClaims_2_34_group_00 : Array NodeClaim :=
@@ -4687,7 +4687,7 @@ private def branchClaims_2_34_group_02 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (2, 34). -/
-def branchClaims_2_34 : BranchClaims :=
+def branchClaims2Row34 : BranchClaims :=
   ⟨#[branchClaims_2_34_group_00, branchClaims_2_34_group_01, branchClaims_2_34_group_02], 162, 161⟩
 
 private def branchClaims_3_1_group_00 : Array NodeClaim :=
@@ -5361,7 +5361,7 @@ private def branchClaims_3_1_group_01 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (3, 1). -/
-def branchClaims_3_1 : BranchClaims :=
+def branchClaims3Row1 : BranchClaims :=
   ⟨#[branchClaims_3_1_group_00, branchClaims_3_1_group_01], 111, 110⟩
 
 private def branchClaims_3_2_group_00 : Array NodeClaim :=
@@ -6065,7 +6065,7 @@ private def branchClaims_3_2_group_01 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (3, 2). -/
-def branchClaims_3_2 : BranchClaims :=
+def branchClaims3Row2 : BranchClaims :=
   ⟨#[branchClaims_3_2_group_00, branchClaims_3_2_group_01], 116, 115⟩
 
 private def branchClaims_3_3_group_00 : Array NodeClaim :=
@@ -6643,7 +6643,7 @@ private def branchClaims_3_3_group_01 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (3, 3). -/
-def branchClaims_3_3 : BranchClaims :=
+def branchClaims3Row3 : BranchClaims :=
   ⟨#[branchClaims_3_3_group_00, branchClaims_3_3_group_01], 95, 94⟩
 
 private def branchClaims_3_4_group_00 : Array NodeClaim :=
@@ -7335,7 +7335,7 @@ private def branchClaims_3_4_group_01 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (3, 4). -/
-def branchClaims_3_4 : BranchClaims :=
+def branchClaims3Row4 : BranchClaims :=
   ⟨#[branchClaims_3_4_group_00, branchClaims_3_4_group_01], 114, 113⟩
 
 private def branchClaims_3_5_group_00 : Array NodeClaim :=
@@ -8039,7 +8039,7 @@ private def branchClaims_3_5_group_01 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (3, 5). -/
-def branchClaims_3_5 : BranchClaims :=
+def branchClaims3Row5 : BranchClaims :=
   ⟨#[branchClaims_3_5_group_00, branchClaims_3_5_group_01], 116, 115⟩
 
 end Erdos97Octagon.RawIncidence.StaticDirectCoverage

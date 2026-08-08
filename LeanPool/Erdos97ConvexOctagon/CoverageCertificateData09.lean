@@ -1037,7 +1037,7 @@ private def branchClaims_5_16_group_02 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 16). -/
-def branchClaims_5_16 : BranchClaims :=
+def branchClaims5Row16 : BranchClaims :=
   ⟨#[branchClaims_5_16_group_00, branchClaims_5_16_group_01, branchClaims_5_16_group_02], 170, 169⟩
 
 private def branchClaims_5_17_group_00 : Array NodeClaim :=
@@ -2370,7 +2370,7 @@ private def branchClaims_5_17_group_03 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 17). -/
-def branchClaims_5_17 : BranchClaims :=
+def branchClaims5Row17 : BranchClaims :=
   ⟨#[branchClaims_5_17_group_00, branchClaims_5_17_group_01, branchClaims_5_17_group_02,
     branchClaims_5_17_group_03], 220, 219⟩
 
@@ -3908,7 +3908,7 @@ private def branchClaims_5_18_group_03 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 18). -/
-def branchClaims_5_18 : BranchClaims :=
+def branchClaims5Row18 : BranchClaims :=
   ⟨#[branchClaims_5_18_group_00, branchClaims_5_18_group_01, branchClaims_5_18_group_02,
     branchClaims_5_18_group_03], 254, 253⟩
 
@@ -5711,7 +5711,7 @@ private def branchClaims_5_19_group_04 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 19). -/
-def branchClaims_5_19 : BranchClaims :=
+def branchClaims5Row19 : BranchClaims :=
   ⟨#[branchClaims_5_19_group_00, branchClaims_5_19_group_01, branchClaims_5_19_group_02,
     branchClaims_5_19_group_03, branchClaims_5_19_group_04], 298, 297⟩
 
@@ -7177,7 +7177,7 @@ private def branchClaims_5_24_group_03 : Array NodeClaim :=
       #[[], [], [], [], [], [], []]⟩]
 
 /-- Flat postorder claims for branch (5, 24). -/
-def branchClaims_5_24 : BranchClaims :=
+def branchClaims5Row24 : BranchClaims :=
   ⟨#[branchClaims_5_24_group_00, branchClaims_5_24_group_01, branchClaims_5_24_group_02,
     branchClaims_5_24_group_03], 242, 241⟩
 
