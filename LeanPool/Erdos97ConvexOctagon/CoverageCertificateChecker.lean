@@ -135,13 +135,13 @@ private theorem foldl_good_of_final
       · exact induction hfinal htail
 
 /-- Constant-depth lookup of one compact pattern-summary identifier. -/
-def densePatternSummaryAt? (identifier : Nat) : Option PatternSummary :=
+def densePatternSummaryLookup (identifier : Nat) : Option PatternSummary :=
   match densePatternSummaryGroups[identifier / 64]? with
   | none => none
   | some group => group[identifier % 64]?
 
 /-- Constant-depth lookup of one compact exact-summary identifier. -/
-def denseHardSummaryAt? (identifier : Nat) : Option HardSummary :=
+def denseHardSummaryLookup (identifier : Nat) : Option HardSummary :=
   match denseHardSummaryGroups[identifier / 64]? with
   | none => none
   | some group => group[identifier % 64]?
@@ -149,13 +149,13 @@ def denseHardSummaryAt? (identifier : Nat) : Option HardSummary :=
 /-- Packed-only pattern-summary validation for the first computation gate. -/
 def patternIdentifierPackedMatchesB
     (identifier : Nat) (code : UInt64) : Bool :=
-  match densePatternSummaryAt? identifier with
+  match densePatternSummaryLookup identifier with
   | none => false
   | some summary => (summary.mask &&& code) == summary.mask
 
 /-- Packed-only exact-summary validation for the first computation gate. -/
 def hardIdentifierPackedMatchesB (identifier : Nat) (code : UInt64) : Bool :=
-  match denseHardSummaryAt? identifier with
+  match denseHardSummaryLookup identifier with
   | none => false
   | some summary => summary.code == code
 
@@ -165,7 +165,7 @@ def rowIndexWord (rows : UInt64) (offset : Nat) : List Nat :=
   (fiveBitIndices.getD word []).map fun index => offset + index
 
 /-- Retrieve one conflict cover without unfolding the full generated table. -/
-def conflictCoverAt? (identifier : Nat) : Option ConflictCover :=
+def conflictCoverLookup (identifier : Nat) : Option ConflictCover :=
   match conflictCoverGroups[identifier / 64]? with
   | none => none
   | some group => group[identifier % 64]?
@@ -381,7 +381,7 @@ def nodePruningValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
     if claim.depth < searchCentres.length then
       let centre := searchCentres.getD claim.depth 0
       let remaining := searchCentres.drop (claim.depth + 1)
-      match conflictCoverAt? claim.conflictCoverId with
+      match conflictCoverLookup claim.conflictCoverId with
       | none => false
       | some cover =>
           let incompatible := cover.incompatibleRows

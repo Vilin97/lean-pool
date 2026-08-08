@@ -16,13 +16,13 @@ namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 structure CertificateAudits where
   /-- Every successful conflict-cover lookup is sound. -/
   coverValid : ∀ {identifier cover},
-    conflictCoverAt? identifier = some cover → cover.Valid
+    conflictCoverLookup identifier = some cover → cover.Valid
   /-- Every successful dense pattern lookup is sound. -/
   patternValid : ∀ {identifier summary},
-    densePatternSummaryAt? identifier = some summary → summary.Valid
+    densePatternSummaryLookup identifier = some summary → summary.Valid
   /-- Every successful dense exact lookup is sound. -/
   hardValid : ∀ {identifier summary},
-    denseHardSummaryAt? identifier = some summary → summary.Valid
+    denseHardSummaryLookup identifier = some summary → summary.Valid
 
 /-- A matching valid dense pattern identifier contradicts a realised convex table. -/
 theorem impossible_of_patternIdentifier
@@ -36,7 +36,7 @@ theorem impossible_of_patternIdentifier
     (hidentifier : patternIdentifierPackedMatchesB identifier code = true) :
     False := by
   unfold patternIdentifierPackedMatchesB at hidentifier
-  generalize hlookup : densePatternSummaryAt? identifier = found at hidentifier
+  generalize hlookup : densePatternSummaryLookup identifier = found at hidentifier
   cases found with
   | none => simp at hidentifier
   | some summary =>
@@ -55,7 +55,7 @@ private theorem impossible_of_hardIdentifier
     (hidentifier : hardIdentifierPackedMatchesB identifier code = true) :
     False := by
   unfold hardIdentifierPackedMatchesB at hidentifier
-  generalize hlookup : denseHardSummaryAt? identifier = found at hidentifier
+  generalize hlookup : denseHardSummaryLookup identifier = found at hidentifier
   cases found with
   | none => simp at hidentifier
   | some summary =>
@@ -69,7 +69,7 @@ private theorem nodePruningFacts_of_valid
     let claim := claims.nodeAt identifier
     ∃ cover,
       claim.depth < searchCentres.length ∧
-      conflictCoverAt? claim.conflictCoverId = some cover ∧
+      conflictCoverLookup claim.conflictCoverId = some cover ∧
       cover.centre = (searchCentres.getD claim.depth 0).val ∧
       cover.requiredPairs &&& claim.pairTwice = cover.requiredPairs ∧
       claim.activeRows ||| (claim.rejectedRows ||| cover.incompatibleRows) =
@@ -87,7 +87,7 @@ private theorem nodePruningFacts_of_valid
   · rw [if_pos hdepth] at hvalid
     let centre := searchCentres.getD claim.depth 0
     let remaining := searchCentres.drop (claim.depth + 1)
-    generalize hlookup : conflictCoverAt? claim.conflictCoverId = found at hvalid
+    generalize hlookup : conflictCoverLookup claim.conflictCoverId = found at hvalid
     cases found with
     | none => simp at hvalid
     | some cover =>

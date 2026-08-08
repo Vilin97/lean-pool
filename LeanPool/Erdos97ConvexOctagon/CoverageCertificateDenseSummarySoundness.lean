@@ -13,14 +13,14 @@ namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Check that a dense pattern summary agrees with its canonical source lookup. -/
 def patternSummaryCanonicalB (summary : PatternSummary) : Bool :=
-  match patternSummaryForOrigin? summary.origin with
+  match patternSummaryForOriginLookup summary.origin with
   | none => false
   | some canonical =>
       (canonical.origin == summary.origin) && (canonical.mask == summary.mask)
 
 /-- Check that a dense exact summary agrees with its canonical source lookup. -/
 def hardSummaryCanonicalB (summary : HardSummary) : Bool :=
-  match hardSummaryForOrigin? summary.origin with
+  match hardSummaryForOriginLookup summary.origin with
   | none => false
   | some canonical =>
       (canonical.origin == summary.origin) && (canonical.code == summary.code)
@@ -31,7 +31,7 @@ theorem PatternSummary.valid_of_canonicalB
     (hcanonical : patternSummaryCanonicalB summary = true) :
     summary.Valid := by
   unfold patternSummaryCanonicalB at hcanonical
-  generalize hlookup : patternSummaryForOrigin? summary.origin = found
+  generalize hlookup : patternSummaryForOriginLookup summary.origin = found
     at hcanonical
   cases found with
   | none => simp at hcanonical
@@ -40,7 +40,7 @@ theorem PatternSummary.valid_of_canonicalB
           canonical.mask = summary.mask := by
         simpa only [Bool.and_eq_true, beq_iff_eq] using hcanonical
       obtain ⟨entry, horigin, hmask, hvalid⟩ :=
-        patternSummaryForOrigin?_valid hlookup
+        patternSummaryForOriginLookup_valid hlookup
       exact ⟨entry, horigin.trans hfields.1, hmask.trans hfields.2, hvalid⟩
 
 /-- A successful canonical comparison supplies exact-summary validity. -/
@@ -49,7 +49,7 @@ theorem HardSummary.valid_of_canonicalB
     (hcanonical : hardSummaryCanonicalB summary = true) :
     summary.Valid := by
   unfold hardSummaryCanonicalB at hcanonical
-  generalize hlookup : hardSummaryForOrigin? summary.origin = found
+  generalize hlookup : hardSummaryForOriginLookup summary.origin = found
     at hcanonical
   cases found with
   | none => simp at hcanonical
@@ -58,17 +58,17 @@ theorem HardSummary.valid_of_canonicalB
           canonical.code = summary.code := by
         simpa only [Bool.and_eq_true, beq_iff_eq] using hcanonical
       obtain ⟨entry, horigin, hcode, hvalid⟩ :=
-        hardSummaryForOrigin?_valid hlookup
+        hardSummaryForOriginLookup_valid hlookup
       exact ⟨entry, horigin.trans hfields.1, hcode.trans hfields.2, hvalid⟩
 
 /-- A table-wide canonical audit validates every successful dense pattern lookup. -/
-theorem densePatternSummaryAt?_valid_of_audit
+theorem densePatternSummaryLookup_valid_of_audit
     {identifier : Nat} {summary : PatternSummary}
     (haudit : ∀ group ∈ densePatternSummaryGroups, ∀ entry ∈ group,
       patternSummaryCanonicalB entry = true)
-    (hlookup : densePatternSummaryAt? identifier = some summary) :
+    (hlookup : densePatternSummaryLookup identifier = some summary) :
     summary.Valid := by
-  unfold densePatternSummaryAt? at hlookup
+  unfold densePatternSummaryLookup at hlookup
   generalize hgroupLookup : densePatternSummaryGroups[identifier / 64]? =
     groupOption at hlookup
   cases groupOption with
@@ -81,13 +81,13 @@ theorem densePatternSummaryAt?_valid_of_audit
         (haudit group hgroupMember summary hsummaryMember)
 
 /-- A table-wide canonical audit validates every successful dense exact lookup. -/
-theorem denseHardSummaryAt?_valid_of_audit
+theorem denseHardSummaryLookup_valid_of_audit
     {identifier : Nat} {summary : HardSummary}
     (haudit : ∀ group ∈ denseHardSummaryGroups, ∀ entry ∈ group,
       hardSummaryCanonicalB entry = true)
-    (hlookup : denseHardSummaryAt? identifier = some summary) :
+    (hlookup : denseHardSummaryLookup identifier = some summary) :
     summary.Valid := by
-  unfold denseHardSummaryAt? at hlookup
+  unfold denseHardSummaryLookup at hlookup
   generalize hgroupLookup : denseHardSummaryGroups[identifier / 64]? =
     groupOption at hlookup
   cases groupOption with

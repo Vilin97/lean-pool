@@ -119,10 +119,10 @@ theorem conflictCoverGroups_entry_valid
   exact Array.getElem_mem_toList hindex
 
 /-- Every successful generated conflict-cover lookup is semantically sound. -/
-theorem conflictCoverAt?_valid
+theorem conflictCoverLookup_valid
     {identifier : Nat} {cover : ConflictCover}
-    (hlookup : conflictCoverAt? identifier = some cover) : cover.Valid :=
-  conflictCoverAt?_valid_of_audit
+    (hlookup : conflictCoverLookup identifier = some cover) : cover.Valid :=
+  conflictCoverLookup_valid_of_audit
     (fun group hgroup entry hentry =>
       conflictCoverGroups_entry_valid group hgroup entry hentry)
     hlookup

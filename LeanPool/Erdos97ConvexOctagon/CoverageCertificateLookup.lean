@@ -11,19 +11,19 @@ import LeanPool.Erdos97ConvexOctagon.CoverageSummaryValidity
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Retrieve the generated pattern summary having one source origin. -/
-def patternSummaryForOrigin? (origin : Nat) : Option PatternSummary :=
+def patternSummaryForOriginLookup (origin : Nat) : Option PatternSummary :=
   let group := patternSummaryBucketGroups.getD (origin % 256 / 8) #[]
   (group.getD (origin % 8) []).find? fun summary => summary.origin == origin
 
 /-- Retrieve the generated hard summary having one source origin. -/
-def hardSummaryForOrigin? (origin : Nat) : Option HardSummary :=
+def hardSummaryForOriginLookup (origin : Nat) : Option HardSummary :=
   let group := hardSummaryBucketGroups.getD (origin % 256 / 8) #[]
   (group.getD (origin % 8) []).find? fun summary => summary.origin == origin
 
 /-- Every pattern returned by the canonical origin lookup is globally audited. -/
-theorem patternSummaryForOrigin?_valid
+theorem patternSummaryForOriginLookup_valid
     {origin : Nat} {summary : PatternSummary}
-    (hlookup : patternSummaryForOrigin? origin = some summary) : summary.Valid := by
+    (hlookup : patternSummaryForOriginLookup origin = some summary) : summary.Valid := by
   let groupIndex := origin % 256 / 8
   have hgroupIndex : groupIndex < patternSummaryBucketGroups.size := by
     change origin % 256 / 8 < 32
@@ -34,7 +34,7 @@ theorem patternSummaryForOrigin?_valid
   have hgroupGetD : patternSummaryBucketGroups.getD groupIndex #[] = group := by
     simp only [Array.getD, dif_pos hgroupIndex, Array.getInternal_eq_getElem,
       group]
-  rw [patternSummaryForOrigin?, hgroupGetD] at hlookup
+  rw [patternSummaryForOriginLookup, hgroupGetD] at hlookup
   by_cases hbucketIndex : origin % 8 < group.size
   · let bucket := group[origin % 8]'hbucketIndex
     have hbucket : bucket ∈ group.toList :=
@@ -49,9 +49,9 @@ theorem patternSummaryForOrigin?_valid
   · simp [Array.getD, hbucketIndex] at hlookup
 
 /-- Every exact summary returned by the canonical origin lookup is globally audited. -/
-theorem hardSummaryForOrigin?_valid
+theorem hardSummaryForOriginLookup_valid
     {origin : Nat} {summary : HardSummary}
-    (hlookup : hardSummaryForOrigin? origin = some summary) : summary.Valid := by
+    (hlookup : hardSummaryForOriginLookup origin = some summary) : summary.Valid := by
   let groupIndex := origin % 256 / 8
   have hgroupIndex : groupIndex < hardSummaryBucketGroups.size := by
     change origin % 256 / 8 < 32
@@ -62,7 +62,7 @@ theorem hardSummaryForOrigin?_valid
   have hgroupGetD : hardSummaryBucketGroups.getD groupIndex #[] = group := by
     simp only [Array.getD, dif_pos hgroupIndex, Array.getInternal_eq_getElem,
       group]
-  rw [hardSummaryForOrigin?, hgroupGetD] at hlookup
+  rw [hardSummaryForOriginLookup, hgroupGetD] at hlookup
   by_cases hbucketIndex : origin % 8 < group.size
   · let bucket := group[origin % 8]'hbucketIndex
     have hbucket : bucket ∈ group.toList :=

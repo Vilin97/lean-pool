@@ -122,11 +122,11 @@ private theorem denseHardSummaryGroup_canonical
         denseHardSummaries16_canonical
 
 /-- Every successful dense pattern-summary lookup is semantically valid. -/
-theorem densePatternSummaryAt?_valid
+theorem densePatternSummaryLookup_valid
     {identifier : Nat} {summary : PatternSummary}
-    (hlookup : densePatternSummaryAt? identifier = some summary) :
+    (hlookup : densePatternSummaryLookup identifier = some summary) :
     summary.Valid := by
-  apply densePatternSummaryAt?_valid_of_audit _ hlookup
+  apply densePatternSummaryLookup_valid_of_audit _ hlookup
   intro group hgroup entry hentry
   apply (List.all_eq_true.mp (densePatternSummaryGroup_canonical hgroup)) entry
   rw [Array.mem_iff_getElem] at hentry
@@ -134,10 +134,10 @@ theorem densePatternSummaryAt?_valid
   exact Array.getElem_mem_toList hindex
 
 /-- Every successful dense exact-summary lookup is semantically valid. -/
-theorem denseHardSummaryAt?_valid
+theorem denseHardSummaryLookup_valid
     {identifier : Nat} {summary : HardSummary}
-    (hlookup : denseHardSummaryAt? identifier = some summary) : summary.Valid := by
-  apply denseHardSummaryAt?_valid_of_audit _ hlookup
+    (hlookup : denseHardSummaryLookup identifier = some summary) : summary.Valid := by
+  apply denseHardSummaryLookup_valid_of_audit _ hlookup
   intro group hgroup entry hentry
   apply (List.all_eq_true.mp (denseHardSummaryGroup_canonical hgroup)) entry
   rw [Array.mem_iff_getElem] at hentry

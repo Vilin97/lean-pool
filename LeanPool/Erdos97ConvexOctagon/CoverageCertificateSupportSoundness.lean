@@ -242,12 +242,12 @@ theorem ConflictCover.valid_of_validB
   next => simp at hvalid
 
 /-- A table-wide audit makes every successful canonical cover lookup valid. -/
-theorem conflictCoverAt?_valid_of_audit
+theorem conflictCoverLookup_valid_of_audit
     {identifier : Nat} {cover : ConflictCover}
     (haudit : ∀ group ∈ conflictCoverGroups, ∀ entry ∈ group,
       entry.validB = true)
-    (hlookup : conflictCoverAt? identifier = some cover) : cover.Valid := by
-  unfold conflictCoverAt? at hlookup
+    (hlookup : conflictCoverLookup identifier = some cover) : cover.Valid := by
+  unfold conflictCoverLookup at hlookup
   generalize hgroupLookup : conflictCoverGroups[identifier / 64]? = groupOption
     at hlookup
   cases groupOption with

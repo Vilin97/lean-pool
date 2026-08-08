@@ -430,9 +430,9 @@ theorem coverageBranchClaim_search_locallyValid
 
 /-- Semantic validity accessors for every generated certificate table. -/
 theorem coverageCertificateAudits : CertificateAudits where
-  coverValid := conflictCoverAt?_valid
-  patternValid := densePatternSummaryAt?_valid
-  hardValid := denseHardSummaryAt?_valid
+  coverValid := conflictCoverLookup_valid
+  patternValid := densePatternSummaryLookup_valid
+  hardValid := denseHardSummaryLookup_valid
 
 private theorem searchBranchRootFacts_of_valid
     (orbit : Fin 7) (rowTwo : Fin 35) (claims : BranchClaims)
