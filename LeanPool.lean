@@ -964,7 +964,6 @@ import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSemanticSoundness
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSummaries
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateSupportSoundness
 import LeanPool.Erdos97ConvexOctagon.CoverageCertificateValidity
-import LeanPool.Erdos97ConvexOctagon.CoverageData
 import LeanPool.Erdos97ConvexOctagon.CoverageData00
 import LeanPool.Erdos97ConvexOctagon.CoverageData01
 import LeanPool.Erdos97ConvexOctagon.CoverageData02
@@ -1068,7 +1067,6 @@ import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra11
 import LeanPool.Erdos97ConvexOctagon.ResidualAlgebra12
 import LeanPool.Erdos97ConvexOctagon.ResidualObstructions
 import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
-import LeanPool.Erdos97ConvexOctagon.RhombusFan
 import LeanPool.Erdos97ConvexOctagon.RowMasks
 import LeanPool.Erdos97ConvexOctagon.RowSymmetry
 import LeanPool.ErdosMoser
