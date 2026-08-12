@@ -317,17 +317,17 @@ theorem D_qexp_tsum_pnat (a : ℕ+ → ℂ) (z : ℍ)
     D (fun w => ∑' n : ℕ+, a n * cexp (2 * π * I * n * w)) z =
       ∑' n : ℕ+, (n : ℂ) * a n * cexp (2 * π * I * n * z) := by
   let a' : ℕ → ℂ := fun n => if h : 0 < n then a ⟨n, h⟩ else 0
-  have ha' : ∀ n : ℕ+, a' n = a n := fun n => dif_pos n.pos
+  have ha' : ∀ n : ℕ+, a' n = a n := fun n => dite_eq_left n.pos
   have hsum_deriv' : ∀ K : Set ℂ, K ⊆ {w : ℂ | 0 < w.im} → IsCompact K →
       ∃ u : ℕ → ℝ, Summable u ∧ ∀ n (k : K), ‖a' n * (2 * π * I * n) *
         cexp (2 * π * I * n * k.1)‖ ≤ u n := fun K hK hKc => by
     obtain ⟨u, hu_sum, hu_bound⟩ := hsum_deriv K hK hKc
     let u' : ℕ → ℝ := fun n => if h : 0 < n then u ⟨n, h⟩ else 0
-    have hu' : ∀ n : ℕ+, u' n = u n := fun n => dif_pos n.pos
+    have hu' : ∀ n : ℕ+, u' n = u n := fun n => dite_eq_left n.pos
     refine ⟨u', (nat_pos_tsum2 u' (by simp [u'])).mp (hu_sum.congr fun n => by rw [hu']),
       fun n k => ?_⟩
     by_cases hn : 0 < n
-    · simp only [a', u', dif_pos hn]; exact hu_bound _ k
+    · simp only [a', u', dite_eq_left hn]; exact hu_bound _ k
     · simp only [Nat.not_lt, Nat.le_zero] at hn; simp [a', u', hn]
   have hD := D_qexp_tsum a' z ((nat_pos_tsum2 _ (by simp [a'])).mp
     (hsum.congr fun n => by rw [ha'])) hsum_deriv'
@@ -632,7 +632,7 @@ theorem deriv_resToImagAxis_eq (F : ℍ → ℂ) (hF : MDiff F) {t : ℝ} (ht : 
   -- hcomp : deriv ((F ∘ ofComplex) ∘ g) t = deriv (F ∘ ofComplex) (g t) * I
   rw [show deriv ((F ∘ ↑ofComplex) ∘ g) t = deriv (F ∘ ↑ofComplex) (↑z) * I from hcomp]
   have hD : deriv (F ∘ ofComplex) z = 2 * π * I * D F z := by simp only [D]; field_simp
-  simp only [hD, Function.resToImagAxis_apply, ResToImagAxis, dif_pos ht, z]
+  simp only [hD, Function.resToImagAxis_apply, ResToImagAxis, dite_eq_left ht, z]
   ring_nf; simp only [I_sq]; ring
 
 /-- The derivative of a function with zero imaginary part also has zero imaginary part. -/

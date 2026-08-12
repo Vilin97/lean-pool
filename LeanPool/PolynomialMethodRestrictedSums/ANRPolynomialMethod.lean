@@ -180,7 +180,7 @@ lemma totalDegree_prod_sumX_sub_C_eq_card (E : Multiset (ZMod p)) :
       have := congr($(rid).coeff (fun₀ | 0 => 1))
       simp only [coeff_sum, coeff_single_X, true_and, Finset.sum_ite_eq', Finset.mem_univ,
         ↓reduceIte, coeff_C] at this
-      rw [if_neg] at this
+      rw [ite_eq_right] at this
       · norm_num at this
       · rw [eq_comm, Finsupp.single_eq_zero]
         norm_num
@@ -191,7 +191,7 @@ lemma totalDegree_prod_sumX_sub_C_eq_card (E : Multiset (ZMod p)) :
       have := congr($(rid).coeff (fun₀ | 0 => 1))
       simp only [coeff_sub, coeff_sum, coeff_single_X, true_and, Finset.sum_ite_eq',
         Finset.mem_univ, ↓reduceIte, coeff_C, coeff_zero] at this
-      rw [if_neg] at this
+      rw [ite_eq_right] at this
       · norm_num at this
       · rw [eq_comm, Finsupp.single_eq_zero]
         norm_num
@@ -272,7 +272,7 @@ lemma coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq
       rw [Finset.card_eq_zero.mpr] <;> aesop
     · rw [Finset.sum_subset (Finset.subset_univ snd.support)] <;> aesop
   · -- the case fst ≠ 0: simplify the C-coeff to 0 and reduce to a disjunction
-    rw [MvPolynomial.coeff_C, if_neg h, zero_mul, sub_zero]
+    rw [MvPolynomial.coeff_C, ite_eq_right h, zero_mul, sub_zero]
     -- rewrite the goal as a disjunction expected by the legacy bullet 2
     suffices h_disj :
         coeff snd (Multiset.map (fun e => (∑ i, X i) - C e) E).prod =
@@ -502,13 +502,13 @@ private lemma elimination_polynomial_degreeOf_eq
           simp only [zero_add] at hb
           rw [Prod.mk.injEq]
           exact ⟨rfl, hb⟩
-        · simp [if_neg h_b1]
+        · simp [ite_eq_right h_b1]
       on_goal 2 =>
         intro h_notin
         exfalso; apply h_notin
         simp [Finset.mem_antidiagonal]
       simp only [MvPolynomial.coeff_X,
-        a_2, mul_one, if_true, sub_eq_self, mul_eq_zero]
+        a_2, mul_one, ite_true, sub_eq_self, mul_eq_zero]
       refine Or.inr ?_
       erw [MvPolynomial.coeff_eq_zero_of_totalDegree_lt]
       -- The total degree of the product of linear terms is the sum of the degrees of the
@@ -574,14 +574,14 @@ private lemma elimination_polynomial_coeff_top_eq_one
           by_cases h : (0 : Fin (k+1) →₀ ℕ) = fun₀ | i => 1
           · by_cases h_1 : y = fun₀ | i => #s
             · subst h_1
-              simp only [if_pos h]
+              simp only [ite_eq_left h]
               simpa using congr_arg (fun f => f i) h.symm
-            · simp only [if_pos h]
+            · simp only [ite_eq_left h]
               simpa using congr_arg (fun f => f i) h.symm
           · by_cases h_1 : y = fun₀ | i => #s
             · subst h_1
-              simp only [if_true, and_self, if_neg h, sub_zero, one_mul, ih]
-            · simp only [if_true, if_neg h, sub_zero]
+              simp only [ite_true, and_self, ite_eq_right h, sub_zero, one_mul, ih]
+            · simp only [ite_true, ite_eq_right h, sub_zero]
               rw [Finsupp.ext_iff] at hxy;
               simp_all only [Finsupp.coe_add, Pi.add_apply]
               contrapose! h_1; ext j; specialize hxy j; by_cases hj : j = i
@@ -653,8 +653,8 @@ private lemma elimination_polynomial_sub_top_totalDegree_lt
     by_cases hb : b i = #(A i)
     · simp_all? +decide [MvPolynomial.coeff_X_pow]
       by_cases h : (fun₀ | i => #(A i)) = b
-      · simp_all only [if_true, sub_self, not_true_eq_false]
-      · simp only [if_neg h, sub_zero] at a
+      · simp_all only [ite_true, sub_self, not_true_eq_false]
+      · simp only [ite_eq_right h, sub_zero] at a
         contrapose! h; ext j; by_cases hj : j = i
         · subst hj
           simp_all only [single_eq_same]
@@ -706,7 +706,7 @@ private lemma elimination_polynomial_sub_top_totalDegree_lt
         exact Eq.symm (h_deg_sub b
           (by simp_all only [MvPolynomial.mem_support_iff, ne_eq, not_false_eq_true]))
     · contrapose! a; simp_all? +decide [MvPolynomial.coeff_X_pow]
-      rw [if_neg (by intro h; replace h := congr_arg (fun f => f i) h; aesop)]
+      rw [ite_eq_right (by intro h; replace h := congr_arg (fun f => f i) h; aesop)]
       simp_all only [sub_zero]
       exact Classical.not_not.1 fun h => hb <|
           le_antisymm
@@ -840,7 +840,7 @@ lemma monomial_reduction_step (m : Fin (k + 1) →₀ ℕ) (i : Fin (k + 1))
                   intro j hj
                   rcases Finset.mem_sdiff.mp hj with ⟨_, hji⟩
                   rw [Finset.mem_singleton] at hji
-                  simp [Finsupp.single_apply, if_neg (Ne.symm hji)]
+                  simp [Finsupp.single_apply, ite_eq_right (Ne.symm hji)]
                 rw [Finset.sum_congr rfl h_outside]
                 have h_mi : c i + 1 ≤ m i := by
                   have := h_le i
@@ -866,7 +866,7 @@ lemma monomial_reduction_step (m : Fin (k + 1) →₀ ℕ) (i : Fin (k + 1))
               simp [Finsupp.equivFunOnFinite_symm_apply_apply] at this
               omega
             rw [show coeff (equivFunOnFinite.symm c) ((monomial m) (1:ZMod p)) = 0 from by
-              rw [MvPolynomial.coeff_monomial, if_neg hm_ne]]
+              rw [MvPolynomial.coeff_monomial, ite_eq_right hm_ne]]
           · rw [elimination_polynomial_eval_eq_zero A i x (a i), sub_zero]
             simp +decide [MvPolynomial.eval_monomial]
             ring_nf

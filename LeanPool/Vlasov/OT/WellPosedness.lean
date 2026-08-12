@@ -1655,7 +1655,7 @@ private lemma vlasovWellPosedness_glue_boundary_seam {d : ℕ} [NeZero d]
         else charV_g (s - T) (charX_prev T z, charV_prev T z))
       (-(convolveFunctionMeasure gradW (spatialMarginal (f_next T)) (charX_prev T z)))
       (Set.Iic T) T := by
-    simp only [hdef_f, if_pos (le_refl T)]
+    simp only [hdef_f, ite_eq_left (le_refl T)]
     exact hV_Lic.congr_of_mem (fun s hs => by simp [Set.mem_Iic.mp hs]) Set.self_mem_Iic
   have hV_Ici0 := h_g_bV.mono_of_mem_nhdsWithin h_nhd_R
   have h_chainV : HasDerivWithinAt
@@ -1671,7 +1671,7 @@ private lemma vlasovWellPosedness_glue_boundary_seam {d : ℕ} [NeZero d]
   have hg0_spat : spatialMarginal (g 0) = spatialMarginal (f_prev T) :=
     congrArg spatialMarginal hg_init
   have hfnextT : spatialMarginal (f_next T) = spatialMarginal (f_prev T) :=
-    congrArg spatialMarginal (by rw [hdef_f]; simp only [if_pos (le_refl T)])
+    congrArg spatialMarginal (by rw [hdef_f]; simp only [ite_eq_left (le_refl T)])
   rw [hXg0_eq, hg0_spat, ← hfnextT] at h_chainV
   have hV_right : HasDerivWithinAt
       (fun s => if s ≤ T then charV_prev s z
@@ -1726,7 +1726,7 @@ private lemma vlasovWellPosedness_glue_boundary {d : ℕ} [NeZero d]
   have hz₀_def : (charX_prev T z, charV_prev T z) = (charX_prev T z, charV_prev T z) := rfl
   by_cases ht_le : t ≤ T
   · -- t ≤ T: use h_prev_boundary + upgrade to Icc 0 (T + T_0)
-    simp only [if_pos ht_le]
+    simp only [ite_eq_left ht_le]
     have ht_in : t ∈ Set.Icc (0 : ℝ) T := ⟨ht.1, ht_le⟩
     have h_bX := (h_prev_boundary z t ht_in).1
     have h_bV := (h_prev_boundary z t ht_in).2
@@ -1756,7 +1756,7 @@ private lemma vlasovWellPosedness_glue_boundary {d : ℕ} [NeZero d]
           =ᶠ[nhdsWithin t (Set.Icc 0 (T + T_0))] (charV_prev · z) :=
         Filter.Eventually.mono h_mem (fun s hs => by simp [hs.2])
       -- f_next t = f_prev t, so marginals match
-      have hfnext : f_next t = f_prev t := by rw [hdef_f]; simp only [if_pos ht_le]
+      have hfnext : f_next t = f_prev t := by rw [hdef_f]; simp only [ite_eq_left ht_le]
       have hfnext_spat : spatialMarginal (f_next t) = spatialMarginal (f_prev t) :=
         congrArg spatialMarginal hfnext
       rw [← hfnext_spat] at hV_big
@@ -1765,7 +1765,7 @@ private lemma vlasovWellPosedness_glue_boundary {d : ℕ} [NeZero d]
       · exact hV_big.congr_of_eventuallyEq_of_mem hV_ev ht
   · -- T < t: use hg_boundary + chain rule
     push Not at ht_le
-    simp only [if_neg (not_le.mpr ht_le)]
+    simp only [ite_eq_right (not_le.mpr ht_le)]
     have htT_mem : t - T ∈ Set.Icc (0 : ℝ) T_0 := ⟨by linarith, by linarith [ht.2]⟩
     have h_bdry_gX := (hg_boundary (charX_prev T z, charV_prev T z) (t - T) htT_mem).1
     have h_bdry_gV := (hg_boundary (charX_prev T z, charV_prev T z) (t - T) htT_mem).2
@@ -1787,7 +1787,7 @@ private lemma vlasovWellPosedness_glue_boundary {d : ℕ} [NeZero d]
         simpa [Function.comp_def, one_smul] using this
       -- f_next t = g (t - T), so marginals match
       have h_fnext_t : f_next t = g (t - T) := by
-        rw [hdef_f]; simp only [if_neg (not_le.mpr ht_le)]
+        rw [hdef_f]; simp only [ite_eq_right (not_le.mpr ht_le)]
       rw [← congrArg spatialMarginal h_fnext_t] at h_chainV
       -- piecewise = charX_g (· - T) (charX_prev T z, charV_prev T z) near t (since T < t)
       have h_ev_gt : ∀ᶠ s in nhds t, T < s := eventually_gt_nhds ht_le
@@ -3126,7 +3126,7 @@ private lemma vlasovGlue_flowX_hasDerivAt
       (if t ≤ T then charV_prev t z
         else charV_g (t - T) (charX_prev T z, charV_prev T z)) t := by
   by_cases ht_le : t ≤ T
-  · simp only [if_pos ht_le]
+  · simp only [ite_eq_left ht_le]
     -- Sub-case: t < T (strict interior) vs t = T (boundary)
     by_cases ht_lt : t < T
     · -- t < T strict: piecewise function = charX_prev · z near t
@@ -3183,7 +3183,7 @@ private lemma vlasovGlue_flowX_hasDerivAt
       rw [Set.Iic_union_Ici] at hX_union
       rw [h_t_eq]
       exact hX_union.hasDerivAt Filter.univ_mem
-  · simp only [if_neg ht_le]
+  · simp only [ite_eq_right ht_le]
     push Not at ht_le
     -- t > T: use hg_boundaryX at (t - T) with chain rule for (s ↦ s - T)
     have htT_mem : t - T ∈ Set.Ioo (0 : ℝ) T_0 := ⟨by linarith, by linarith [ht.2]⟩
@@ -3238,7 +3238,7 @@ private lemma vlasovGlue_flowV_hasDerivAt
           (if t ≤ T then charX_prev t z
             else charX_g (t - T) (charX_prev T z, charV_prev T z)))) t := by
   by_cases ht_le : t ≤ T
-  · simp only [if_pos ht_le]
+  · simp only [ite_eq_left ht_le]
     -- Sub-case: t < T (strict interior) vs t = T (boundary)
     by_cases ht_lt : t < T
     · -- t < T strict: piecewise function = charV_prev · z near t
@@ -3315,7 +3315,7 @@ private lemma vlasovGlue_flowV_hasDerivAt
       rw [Set.Iic_union_Ici] at hV_union
       rw [h_t_eq]
       exact hV_union.hasDerivAt Filter.univ_mem
-  · simp only [if_neg ht_le]
+  · simp only [ite_eq_right ht_le]
     push Not at ht_le
     -- t > T: use hg_boundaryV at (t - T)
     have htT_mem : t - T ∈ Set.Ioo (0 : ℝ) T_0 := ⟨by linarith, by linarith [ht.2]⟩
@@ -3669,10 +3669,10 @@ private lemma vlasovGlue_pushforward_eq
          else charV_g (t - T) (charX_prev T z, charV_prev T z)))) (f_next 0) := by
   rw [hf_next_le 0 hT_pos.le]
   by_cases ht_le : t ≤ T
-  · simp only [if_pos ht_le]
+  · simp only [ite_eq_left ht_le]
     rw [hf_next_le t ht_le]
     exact h_prev_push t ⟨ht.1, ht_le⟩
-  · simp only [if_neg ht_le]
+  · simp only [ite_eq_right ht_le]
     push Not at ht_le
     rw [hf_next_gt t ht_le]
     have hT_mem : T ∈ Set.Icc (0 : ℝ) T := ⟨hT_pos.le, le_refl T⟩
@@ -3710,9 +3710,9 @@ private lemma vlasovGlue_flow_aemeasurable
          else charV_g (s - T) (charX_prev T z, charV_prev T z)))) (f_next 0) := by
   rw [hf_next_le 0 hT_pos.le]
   by_cases hs_le : s ≤ T
-  · simp only [if_pos hs_le]
+  · simp only [ite_eq_left hs_le]
     exact h_prev_aemeas s ⟨hs.1, hs_le⟩
-  · simp only [if_neg hs_le]
+  · simp only [ite_eq_right hs_le]
     push Not at hs_le
     have hT_mem : T ∈ Set.Icc (0 : ℝ) T := ⟨hT_pos.le, le_refl T⟩
     have hsT_mem : s - T ∈ Set.Icc (0 : ℝ) T_0 := ⟨by linarith, by linarith [hs.2]⟩
@@ -3889,10 +3889,10 @@ theorem vlasovWellPosedness_glue
     simp [h0_le, h_prev_init]
   · -- Conjunct (iii): HasFiniteFirstMoment on [0, T + T_0] (hoisted helper)
     exact vlasovGlue_moment f_prev g h_prev_mom hg_mom f_next
-      (fun s hs => if_pos hs) (fun s hs => if_neg (not_le.mpr hs))
+      (fun s hs => ite_eq_left hs) (fun s hs => ite_eq_right (not_le.mpr hs))
   · -- Conjunct (iii′): FLAT uniform first-moment bound (hoisted helper)
     exact vlasovGlue_moment_flat f_prev g hM_prev hg_mom_unif f_next
-      (fun s hs => if_pos hs) (fun s hs => if_neg (not_le.mpr hs))
+      (fun s hs => ite_eq_left hs) (fun s hs => ite_eq_right (not_le.mpr hs))
   · -- Conjunct (iv): IsLagrangianVlasovSolutionOn gradW f_next (T + T_0)
     refine ⟨?_, charX_next, charV_next, ?_, ?_, ?_⟩
     · -- IsVlasovSolutionOn gradW f_next (T + T_0)
@@ -3906,8 +3906,8 @@ theorem vlasovWellPosedness_glue
         -- Off-seam weak PDE at every t' ≠ T (hoisted helper); the two strict
         -- branches consume it directly, the seam derives its eventual form.
         have h_diff_ne := vlasovGlue_diff_ne gradW f_prev g
-          h_prev_vlasov h_g_vlasov f_next (fun s hs => if_pos hs)
-          (fun s hs => if_neg (not_le.mpr hs)) φ hφ_smooth hφ_compact
+          h_prev_vlasov h_g_vlasov f_next (fun s hs => ite_eq_left hs)
+          (fun s hs => ite_eq_right (not_le.mpr hs)) φ hφ_smooth hφ_compact
           gradXφ gradVφ hgradXφ hgradVφ
         by_cases ht_lt : t < T
         · -- t ∈ Ioo 0 T: off-seam weak PDE
@@ -3945,7 +3945,7 @@ theorem vlasovWellPosedness_glue
                 (Set.Iic T) T :=
               vlasovGlue_intCont_left gradW f₀ hT_pos f_prev h_prev_init
                 charX_prev charV_prev h_prev_push h_prev_aemeas h_prev_boundary
-                f_next (fun s hs => if_pos hs) φ hφ_cont Cφ hCφ
+                f_next (fun s hs => ite_eq_left hs) φ hφ_cont Cφ hCφ
             -- RIGHT side: substantive close via DCT on the composed pushforward
             -- (charX_g (s-T), charV_g (s-T)) ∘ (charX_prev T, charV_prev T).
             -- At s = T, hg_init_cond bridges (charX_g 0, charV_g 0) = id, matching f_prev T.
@@ -3954,7 +3954,7 @@ theorem vlasovWellPosedness_glue
               vlasovGlue_intCont_right gradW f₀ hT_pos hT_0_pos f_prev h_prev_init
                 charX_prev charV_prev h_prev_push h_prev_aemeas g charX_g charV_g
                 hg_init hg_push_ex hg_aemeas_ex hg_boundary hg_init_cond
-                f_next (if_pos (le_refl T)) (fun s hs => if_neg (not_le.mpr hs))
+                f_next (ite_eq_left (le_refl T)) (fun s hs => ite_eq_right (not_le.mpr hs))
                 φ hφ_cont Cφ hCφ
             -- Combine via union
             have h_cont_f : ContinuousAt (fun s => ∫ z, φ z ∂f_next s) T := by
@@ -3987,7 +3987,7 @@ theorem vlasovWellPosedness_glue
                             (gradVφ z)) ∂(f_next s)) (Set.Iic T) T :=
                 vlasovGlue_seam_contLeft gradW L hL f₀ hf₀_int hT_pos f_prev h_prev_init
                   h_prev_mom hM_prev charX_prev charV_prev h_prev_push h_prev_aemeas
-                  h_prev_boundary h_prev_ic f_next (fun s hs => if_pos hs)
+                  h_prev_boundary h_prev_ic f_next (fun s hs => ite_eq_left hs)
                   φ hφ_smooth hφ_compact gradXφ gradVφ hgradXφ hgradVφ
               -- RIGHT side (s ≥ T): f_next = g (·−T) = composed pushforward; symmetric
               -- to `h_left`.  The flow is the COMPOSED phase-space flow
@@ -4009,7 +4009,7 @@ theorem vlasovWellPosedness_glue
                   h_prev_push h_prev_aemeas h_prev_boundary h_prev_ic
                   g charX_g charV_g hg_init hg_mom hg_mom_unif hg_push_ex
                   hg_aemeas_ex hg_boundary hg_init_cond f_next
-                  (if_pos (le_refl T)) (fun s hs => if_neg (not_le.mpr hs))
+                  (ite_eq_left (le_refl T)) (fun s hs => ite_eq_right (not_le.mpr hs))
                   φ hφ_smooth hφ_compact gradXφ gradVφ hgradXφ hgradVφ
               have h_union := h_left.union h_right
               rw [Set.Iic_union_Ici] at h_union
@@ -4026,7 +4026,7 @@ theorem vlasovWellPosedness_glue
         refine ⟨?_, ?_, ?_⟩
         · -- Initial condition: charX_next 0 z = z.1 ∧ charV_next 0 z = z.2
           intro z _
-          simp only [charX_next, charV_next, if_pos hT_pos.le]
+          simp only [charX_next, charV_next, ite_eq_left hT_pos.le]
           exact h_prev_flow.1 z (Set.mem_univ z)
         · -- HasDerivAt charX_next at t for t ∈ Ioo 0 (T + T_0) (hoisted helper)
           intro t ht z _
@@ -4045,15 +4045,15 @@ theorem vlasovWellPosedness_glue
             (fun t' ht' z' => h_prev_flow.2.2 t' ht' z' (Set.mem_univ z'))
             (fun z' t' ht' => (h_prev_boundary z' t' ht').2)
             (fun z' t' ht' => (hg_boundary z' t' ht').2)
-            hg_init hg_init_cond f_next (fun s hs => if_pos hs)
-            (fun s hs => if_neg (not_le.mpr hs)) t ht z
+            hg_init hg_init_cond f_next (fun s hs => ite_eq_left hs)
+            (fun s hs => ite_eq_right (not_le.mpr hs)) t ht z
       exact h_flow_glue
     · -- Pushforward equation for f_next on Icc 0 (T + T_0) (hoisted helper)
       intro t ht
       simp only [charX_next, charV_next]
       exact vlasovGlue_pushforward_eq f_prev g charX_prev charV_prev charX_g charV_g
         hT_pos h_prev_push h_prev_aemeas hg_init hg_push_ex hg_aemeas_ex f_next
-        (fun s hs => if_pos hs) (fun s hs => if_neg (not_le.mpr hs)) t ht
+        (fun s hs => ite_eq_left hs) (fun s hs => ite_eq_right (not_le.mpr hs)) t ht
     · -- AEMeasurability ∧ boundary ContinuousOn on Icc 0 (T + T_0).
       refine ⟨?_, ?_⟩
       · -- AEMeasurability of the glued flow (hoisted helper).
@@ -4061,7 +4061,7 @@ theorem vlasovWellPosedness_glue
         simp only [charX_next, charV_next]
         exact vlasovGlue_flow_aemeasurable f_prev g charX_prev charV_prev
           charX_g charV_g hT_pos h_prev_push h_prev_aemeas hg_init hg_aemeas_ex
-          f_next (fun s' hs' => if_pos hs') s hs
+          f_next (fun s' hs' => ite_eq_left hs') s hs
       · -- Boundary ContinuousOn on Icc 0 (T + T_0): project the boundary bundle.
         intro z s hs
         exact ((vlasovWellPosedness_glue_boundary gradW hT_pos hT_0_pos f_prev g f_next
@@ -4075,20 +4075,20 @@ theorem vlasovWellPosedness_glue
     simp only [charX_next, charV_next]
     exact vlasovGlue_pushforward_eq f_prev g charX_prev charV_prev charX_g charV_g
       hT_pos h_prev_push h_prev_aemeas hg_init hg_push_ex hg_aemeas_ex f_next
-      (fun s hs => if_pos hs) (fun s hs => if_neg (not_le.mpr hs)) t ht
+      (fun s hs => ite_eq_left hs) (fun s hs => ite_eq_right (not_le.mpr hs)) t ht
   · -- Conjunct (vi): AEMeasurable for charX_next charV_next (hoisted helper)
     intro s hs
     simp only [charX_next, charV_next]
     exact vlasovGlue_flow_aemeasurable f_prev g charX_prev charV_prev
       charX_g charV_g hT_pos h_prev_push h_prev_aemeas hg_init hg_aemeas_ex
-      f_next (fun s' hs' => if_pos hs') s hs
+      f_next (fun s' hs' => ite_eq_left hs') s hs
   · -- Conjunct (vii): boundary bundle for charX_next charV_next on Icc 0 (T + T_0)
     exact vlasovWellPosedness_glue_boundary gradW hT_pos hT_0_pos f_prev g f_next
       charX_prev charV_prev charX_g charV_g charX_next charV_next rfl rfl rfl
       h_prev_boundary hg_boundary hg_init hg_init_cond
   · -- Conjunct (viii): initial condition for charX_next charV_next
     intro z
-    simp only [charX_next, charV_next, if_pos hT_pos.le]
+    simp only [charX_next, charV_next, ite_eq_left hT_pos.le]
     exact h_prev_ic z
 
 /-- For every positive Lipschitz constant there is a window length satisfying all

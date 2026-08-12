@@ -529,19 +529,19 @@ theorem Matrix.commutes_with_all_iff {R n : Type _} [CommSemiring R] [Fintype n]
       specialize h (single l k 1)
       simp_rw [← Matrix.ext_iff, mul_apply, single, of_apply, boole_mul, mul_boole, ite_and,
         Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ,
-        if_true] at h
+        ite_true] at h
       specialize h k k
       simp_rw [diagonal, of_apply, Matrix.diag]
-      simp_rw [if_true, @eq_comm _ l k] at h
+      simp_rw [ite_true, @eq_comm _ l k] at h
       exact h.symm
     have this1 : ∀ k l : n, x k k = x l l := by
       intro k l
       specialize h (single k l 1)
       simp_rw [← Matrix.ext_iff, mul_apply, single, of_apply, boole_mul, mul_boole, ite_and,
         Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ,
-        if_true] at h
+        ite_true] at h
       specialize h k l
-      simp_rw [if_true] at h
+      simp_rw [ite_true] at h
       exact h.symm
     use x i i
     ext k l

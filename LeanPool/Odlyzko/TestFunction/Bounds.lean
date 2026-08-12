@@ -120,13 +120,13 @@ theorem tartarTestFunction_integrable :
   filter_upwards [] with x
   rw [Real.norm_eq_abs, abs_of_nonneg (tartarTestFunction_nonneg x)]
   by_cases hx : x ∈ Set.Icc (-1 : ℝ) 1
-  · simp only [Set.indicator, hx, if_pos]
+  · simp only [Set.indicator, hx, ite_eq_left]
     have hnot : x ∉ Set.Iio (-1 : ℝ) ∪ Set.Ioi 1 := by simp_all
-    simp only [hnot, if_false, add_zero]
+    simp only [hnot, ite_false, add_zero]
     exact tartarTestFunction_le_one x
   · have htailmem : x ∈ Set.Iio (-1 : ℝ) ∪ Set.Ioi 1 := by
       grind
-    simp only [Set.indicator, hx, htailmem, if_false, if_true, zero_add]
+    simp only [Set.indicator, hx, htailmem, ite_false, ite_true, zero_add]
     have habs : 1 ≤ |x| := by grind
     exact tartarTestFunction_le_thirty_six_div_fourth habs
 

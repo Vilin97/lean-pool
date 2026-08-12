@@ -303,7 +303,7 @@ private lemma firstDifferBit_of_ne
   have hxor_ne : x ^^^ y ≠ 0 := Nat.xor_ne_zero_iff.mpr hxne
   have hxor_lt : x ^^^ y < 2 ^ k := Nat.xor_lt_two_pow hx hy
   have hlog_lt : Nat.log2 (x ^^^ y) < k := (Nat.log2_lt hxor_ne).mpr hxor_lt
-  simp only [firstDifferBit, if_neg hxne]
+  simp only [firstDifferBit, ite_eq_right hxne]
   omega
 
 omit [Fintype V] in
@@ -550,7 +550,7 @@ private lemma maskOutI_lt_of_firstDifferBit_not_mem
   have hmask_y := maskOutI_split_at_pivot hj_mem_D y
   rw [hx_bit_false] at hmask_x
   rw [hy_bit_true] at hmask_y
-  simp only [Bool.false_eq_true, if_false, add_zero, if_true] at hmask_x hmask_y
+  simp only [Bool.false_eq_true, ite_false, add_zero, ite_true] at hmask_x hmask_y
   have hlow_x_lt := maskOutI_sum_below_lt I hj_le x
   rw [hmask_x, hmask_y, ← hup_eq]
   omega

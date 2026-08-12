@@ -667,8 +667,8 @@ private lemma sigma_meromorphicOrderAt (w : ℂ) :
     meromorphicOrderAt L.weierstrassSigma w = if w ∈ L.lattice then (1 : WithTop ℤ) else 0 := by
   classical
   by_cases hw : w ∈ L.lattice
-  · rw [if_pos hw, L.meromorphicOrderAt_weierstrassSigma w hw]
-  · rw [if_neg hw]
+  · rw [ite_eq_left hw, L.meromorphicOrderAt_weierstrassSigma w hw]
+  · rw [ite_eq_right hw]
     have hAn : AnalyticAt ℂ L.weierstrassSigma w := L.differentiable_weierstrassSigma.analyticAt w
     rw [hAn.meromorphicOrderAt_eq,
       analyticOrderAt_eq_zero.mpr (.inr (L.weierstrassSigma_ne_zero hw))]
@@ -964,9 +964,10 @@ private lemma sigmaQuot_order_eq {v : ℂ} (hv : v ∉ L.lattice) (z : ℂ) :
   by_cases hz : z ∈ L.lattice
   · have hzv : z + v ∉ L.lattice := fun h => hv (by simpa using sub_mem h hz)
     have hzv' : z - v ∉ L.lattice := fun h => hv (by simpa using sub_mem hz h)
-    rw [if_neg hzv, if_neg hzv', if_pos hz, L.meromorphicOrderAt_weierstrassP_sub hz]
+    rw [ite_eq_right hzv, ite_eq_right hzv', ite_eq_left hz,
+      L.meromorphicOrderAt_weierstrassP_sub hz]
     norm_num
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
     by_cases hsub : z - v ∈ L.lattice
     · have hPz : L.weierstrassP z = L.weierstrassP v :=
         (L.weierstrassP_eq_of_sub_mem hsub).symm
@@ -974,7 +975,7 @@ private lemma sigmaQuot_order_eq {v : ℂ} (hv : v ∉ L.lattice) (z : ℂ) :
       · have h2z : 2 * z ∈ L.lattice := by
           have h := add_mem hsub hadd
           rwa [show z - v + (z + v) = 2 * z by ring] at h
-        rw [if_pos hadd, if_pos hsub,
+        rw [ite_eq_left hadd, ite_eq_left hsub,
           L.wpsub_meromorphicOrderAt_eq_two hz hPz
             ((L.derivWeierstrassP_eq_zero_iff hz).mpr h2z)]
         norm_num
@@ -984,7 +985,7 @@ private lemma sigmaQuot_order_eq {v : ℂ} (hv : v ∉ L.lattice) (z : ℂ) :
             rw [show z + v = 2 * z - (z - v) by ring]; exact sub_mem h hsub)
         have hd : L.derivWeierstrassP z ≠ 0 := fun h0 =>
           h2z ((L.derivWeierstrassP_eq_zero_iff hz).mp h0)
-        rw [if_neg hadd, if_pos hsub, L.wpsub_meromorphicOrderAt_eq_one hz hPz hd]
+        rw [ite_eq_right hadd, ite_eq_left hsub, L.wpsub_meromorphicOrderAt_eq_one hz hPz hd]
         norm_num
     · by_cases hadd : z + v ∈ L.lattice
       · have hPz : L.weierstrassP z = L.weierstrassP v := by
@@ -997,11 +998,11 @@ private lemma sigmaQuot_order_eq {v : ℂ} (hv : v ∉ L.lattice) (z : ℂ) :
             rw [show z - v = 2 * z - (z + v) by ring]; exact sub_mem h hadd)
         have hd : L.derivWeierstrassP z ≠ 0 := fun h0 =>
           h2z ((L.derivWeierstrassP_eq_zero_iff hz).mp h0)
-        rw [if_pos hadd, if_neg hsub, L.wpsub_meromorphicOrderAt_eq_one hz hPz hd]
+        rw [ite_eq_left hadd, ite_eq_right hsub, L.wpsub_meromorphicOrderAt_eq_one hz hPz hd]
         norm_num
       · have hPne : L.weierstrassP z ≠ L.weierstrassP v :=
           L.weierstrassP_ne_of_notMem hz hv hsub hadd
-        rw [if_neg hadd, if_neg hsub, L.wpsub_meromorphicOrderAt_eq_zero hz hPne]
+        rw [ite_eq_right hadd, ite_eq_right hsub, L.wpsub_meromorphicOrderAt_eq_zero hz hPne]
         norm_num
 
 /-- A function periodic in a single direction `p` is invariant under integer multiples
@@ -1284,7 +1285,7 @@ private lemma Fm_sq_meromorphicOrderAt_eq (m : ℕ) [NeZero m] (z : ℂ) :
         meromorphicOrderAt (fun w => L.weierstrassP w - L.weierstrassP (L.divPt m v)) z
           = ((-2 : ℤ) : WithTop ℤ) :=
       fun v _ => L.meromorphicOrderAt_weierstrassP_sub hz
-    rw [if_pos hz, if_pos hmz, Finset.sum_congr rfl hterm, ← WithTop.coe_sum,
+    rw [ite_eq_left hz, ite_eq_left hmz, Finset.sum_congr rfl hterm, ← WithTop.coe_sum,
       Finset.sum_const, Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ,
       Fintype.card_prod, Fintype.card_fin]
     have h1 : (1 : ℕ) ≤ m * m := Nat.one_le_iff_ne_zero.mpr
@@ -1300,10 +1301,10 @@ private lemma Fm_sq_meromorphicOrderAt_eq (m : ℕ) [NeZero m] (z : ℂ) :
       WithTop.coe_eq_coe]
     push_cast
     ring
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
     by_cases hmz : (m : ℂ) * z ∈ L.lattice
     · -- `z` is a nonzero `m`-torsion point: total order `2` on both sides
-      rw [if_pos hmz]
+      rw [ite_eq_left hmz]
       obtain ⟨v₀, hv₀⟩ := L.exists_add_divPt_mem_lattice hmz
       have hv₀ne : v₀ ≠ 0 := by
         intro h0
@@ -1402,7 +1403,7 @@ private lemma Fm_sq_meromorphicOrderAt_eq (m : ℕ) [NeZero m] (z : ℂ) :
           Finset.sum_eq_zero hrest, hordv₀, hordv₁]
         norm_num
     · -- `z` is not `m`-torsion: both sides have order `0`
-      rw [if_neg hmz]
+      rw [ite_eq_right hmz]
       have hall : ∀ v ∈ Finset.univ.erase (0 : Fin m × Fin m),
           meromorphicOrderAt (fun w => L.weierstrassP w
             - L.weierstrassP (L.divPt m v)) z = 0 := by
@@ -1646,7 +1647,7 @@ lemma P_four_mul_add_one {k : ℕ} (hk : 1 ≤ k) :
   rw [show 4 * (j + 1) + 1 = (4 * j) + 5 by ring, P]
   have hmod : 4 * j % 4 = 0 := by omega
   have hdiv : (4 * j + 4) / 4 = j + 1 := by omega
-  simp only [hmod, hdiv, if_pos]
+  simp only [hmod, hdiv, ite_eq_left]
 
 /-- Recursion case `m = 4k + 2`, `k ≥ 1` (paper `defipm`). -/
 lemma P_four_mul_add_two {k : ℕ} (hk : 1 ≤ k) :

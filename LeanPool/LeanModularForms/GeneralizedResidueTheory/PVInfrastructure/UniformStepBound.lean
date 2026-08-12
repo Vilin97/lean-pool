@@ -51,7 +51,7 @@ private lemma singular_cutoff_intervalIntegrable
   simp only [min_eq_left hab.le, max_eq_right hab.le] at ht
   have ht_Icc : t ∈ Set.Icc a b := Set.Ioc_subset_Icc_self ht
   by_cases hcond : ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁
-  · rw [if_pos hcond, norm_inv, Complex.norm_real, Real.norm_eq_abs]
+  · rw [ite_eq_left hcond, norm_inv, Complex.norm_real, Real.norm_eq_abs]
     have h_t_ne : t ≠ t₀ := by
       intro heq; subst heq
       simp only [sub_self, norm_zero] at hcond; linarith [hcond.1]
@@ -64,7 +64,7 @@ private lemma singular_cutoff_intervalIntegrable
     calc |t - t₀|⁻¹
         ≤ (ε₂ / (2 * ‖L‖))⁻¹ := inv_anti₀ (by positivity) (le_of_lt h_t_lower)
       _ = 2 * ‖L‖ / ε₂ := by rw [inv_div]
-  · rw [if_neg hcond, norm_zero]; positivity
+  · rw [ite_eq_right hcond, norm_zero]; positivity
 
 /-- The annulus indicator of `f` equals the difference of the two cutoff integrands, so it is
 interval-integrable whenever both cutoffs are. -/
@@ -84,14 +84,14 @@ private lemma annulus_cutoff_intervalIntegrable
       (if ε₁ < ‖γ t - γ t₀‖ then f t else 0) =
     if ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁ then f t else 0
   by_cases h₂ : ε₂ < ‖γ t - γ t₀‖
-  · rw [if_pos h₂]
+  · rw [ite_eq_left h₂]
     by_cases h₁ : ε₁ < ‖γ t - γ t₀‖
-    · rw [if_pos h₁, sub_self, if_neg (fun h => absurd h₁ (not_lt.mpr h.2))]
+    · rw [ite_eq_left h₁, sub_self, ite_eq_right (fun h => absurd h₁ (not_lt.mpr h.2))]
     · simp_all
-  · rw [if_neg h₂, zero_sub]
+  · rw [ite_eq_right h₂, zero_sub]
     by_cases h₁ : ε₁ < ‖γ t - γ t₀‖
     · exact absurd (lt_of_le_of_lt hε₂_le h₁) h₂
-    · rw [if_neg h₁, neg_zero, if_neg (fun h => h₂ h.1)]
+    · rw [ite_eq_right h₁, neg_zero, ite_eq_right (fun h => h₂ h.1)]
 
 /-- Splitting the annulus integral of `f` into its singular part `(t - t₀)⁻¹` plus the remainder
 `r t = f t - (t - t₀)⁻¹`, valid when both parts are interval-integrable. -/
@@ -113,8 +113,8 @@ private lemma annulus_integral_split
         (if ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁ then f t - (↑(t - t₀))⁻¹ else 0) := by
     funext t
     by_cases hcond : ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁
-    · rw [if_pos hcond, if_pos hcond, if_pos hcond]; ring
-    · rw [if_neg hcond, if_neg hcond, if_neg hcond, add_zero]
+    · rw [ite_eq_left hcond, ite_eq_left hcond, ite_eq_left hcond]; ring
+    · rw [ite_eq_right hcond, ite_eq_right hcond, ite_eq_right hcond, add_zero]
   simp_all
 
 /-- Uniform step bound with epsilon-independent constant. -/
@@ -239,8 +239,8 @@ lemma pv_step_bound_ratio_two_uniform
         by_cases hcond :
             ε₂ < ‖γ t - γ t₀‖ ∧
               ‖γ t - γ t₀‖ ≤ ε₁
-        · simp only [if_pos hcond]; ring
-        · simp only [if_neg hcond, sub_zero])
+        · simp only [ite_eq_left hcond]; ring
+        · simp only [ite_eq_right hcond, sub_zero])
   have h_annulus_split :
       ∫ t in a..b,
         (if ε₂ < ‖γ t - γ t₀‖ ∧

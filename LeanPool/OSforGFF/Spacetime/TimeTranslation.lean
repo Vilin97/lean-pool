@@ -75,7 +75,7 @@ lemma timeShift_time (s : ℝ) (u : SpaceTime) :
 lemma timeShift_spatial (s : ℝ) (u : SpaceTime) (i : Fin STDimension) (hi : i.val ≠ 0) :
     (timeShift s u) i = u i := by
   simp only [timeShift]
-  exact if_neg hi
+  exact ite_eq_right hi
 
 /-- Time shift is a group action: T_{s+t} = T_s ∘ T_t -/
 lemma timeShift_add (s t : ℝ) (u : SpaceTime) :

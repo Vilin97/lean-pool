@@ -80,11 +80,11 @@ private theorem nodePruningFacts_of_valid
           (rowIndexWord claim.rejectedRows (5 * wordIndex))
           (claim.rejectionTargetGroups.getD wordIndex []) = true := by
   unfold nodePruningValidB at hvalid
-  rw [if_pos hidentifier] at hvalid
+  rw [ite_eq_left hidentifier] at hvalid
   let claim := claims.nodeAt identifier
   change (if claim.depth < searchCentres.length then _ else false) = true at hvalid
   by_cases hdepth : claim.depth < searchCentres.length
-  · rw [if_pos hdepth] at hvalid
+  · rw [ite_eq_left hdepth] at hvalid
     let centre := searchCentres.getD claim.depth 0
     let remaining := searchCentres.drop (claim.depth + 1)
     generalize hlookup : conflictCoverLookup claim.conflictCoverId = found at hvalid
@@ -111,7 +111,7 @@ private theorem nodePruningFacts_of_valid
         refine ⟨cover, hdepth, hlookup, hcentre, hrequired, hpartition, ?_⟩
         intro wordIndex hwordIndex
         exact hwords wordIndex (List.mem_range.mp hwordIndex)
-  · rw [if_neg hdepth] at hvalid
+  · rw [ite_eq_right hdepth] at hvalid
     simp at hvalid
 
 private theorem nodeTransitionWords_of_valid
@@ -126,15 +126,15 @@ private theorem nodeTransitionWords_of_valid
           (searchCentres.drop (claim.depth + 1))
           ⟨claim.pairOnce, claim.pairTwice⟩ wordIndex = true := by
   unfold nodeTransitionsValidB at hvalid
-  rw [if_pos hidentifier] at hvalid
+  rw [ite_eq_left hidentifier] at hvalid
   let claim := claims.nodeAt identifier
   change (if claim.depth < searchCentres.length then _ else false) = true at hvalid
   by_cases hdepth : claim.depth < searchCentres.length
-  · rw [if_pos hdepth] at hvalid
+  · rw [ite_eq_left hdepth] at hvalid
     refine ⟨hdepth, ?_⟩
     intro wordIndex hwordIndex
     exact (List.all_eq_true.mp hvalid) wordIndex hwordIndex
-  · rw [if_neg hdepth] at hvalid
+  · rw [ite_eq_right hdepth] at hvalid
     simp at hvalid
 
 private theorem impossible_of_rejectedRow
@@ -274,13 +274,13 @@ theorem BranchClaims.node_impossible
                 (child.pairOnce == nextPairState.seenOnce) &&
                 (child.pairTwice == nextPairState.seenTwice)) = true) at houtcome
         by_cases hpattern : bitSetB claim.patternRows rowIndex.val = true
-        · rw [if_pos hpattern] at houtcome
+        · rw [ite_eq_left hpattern] at houtcome
           obtain ⟨patternIdentifier, hpatternMatch⟩ := houtcome
           exact impossible_of_patternIdentifier audits hC hR hnextAssignments
             hnextCode hpatternMatch
-        · rw [if_neg hpattern] at houtcome
+        · rw [ite_eq_right hpattern] at houtcome
           by_cases hleaf : remaining.isEmpty = true
-          · rw [if_pos hleaf] at houtcome
+          · rw [ite_eq_left hleaf] at houtcome
             obtain ⟨hardIdentifier, hhardMatch⟩ := houtcome
             have hnextAll : (nextAssignments.map Prod.fst ++ remaining).Perm
                 (List.finRange 8) := by
@@ -297,7 +297,7 @@ theorem BranchClaims.node_impossible
               simpa only [hremainingEmpty, List.append_nil] using hnextAll
             exact impossible_of_hardIdentifier audits hC hR hfull
               hnextAssignments hnextCode hhardMatch
-          · rw [if_neg hleaf] at houtcome
+          · rw [ite_eq_right hleaf] at houtcome
             obtain ⟨childId, hchildValid⟩ := houtcome
             let child := claims.nodeAt childId
             have hchildParts : (((((childId < identifier ∧

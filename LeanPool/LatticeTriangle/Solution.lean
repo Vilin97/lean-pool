@@ -1073,7 +1073,7 @@ lemma counting_as_indicator_product (n : ℕ) (p q : ℤ) (hn : 2 ≤ n)
         intervalIndicator n (2 * p - 1).toNat (a.val * (p : ZMod n)) *
         intervalIndicator n (2 * q - 1).toNat (a.val * (q : ZMod n)) := by
   have : NeZero n := ⟨by omega⟩
-  simp only [countingFunctionS, dif_neg (by omega : ¬n = 0)]
+  simp only [countingFunctionS, dite_eq_right (by omega : ¬n = 0)]
   rw [← Finset.sum_boole]
   congr 1
   ext a
@@ -1746,7 +1746,7 @@ lemma summand_eq_EP0_plus_EPalpha
   by_cases hkl : (k, l) = (0, 0)
   · simp_all
   · have hkl' : ¬(k = 0 ∧ l = 0) := hiff.mpr hkl
-    rw [if_pos hkl']
+    rw [ite_eq_left hkl']
     by_cases hP0 : (↑(P ^ (α - 1)) : ℤ) ∣ t
     · by_cases hd : (↑(P ^ α) : ℤ) ∣ t
       · simp_all
@@ -1754,8 +1754,10 @@ lemma summand_eq_EP0_plus_EPalpha
     · have hnotd : ¬((↑(P ^ α) : ℤ) ∣ t) := fun hd =>
         hP0 (dvd_trans (by exact_mod_cast pow_dvd_pow P (Nat.sub_le α 1)) hd)
       have hvanish : ramanujanSum n t = 0 := ramanujan_vanish_low_valuation n hn t hP0
-      rw [if_neg (show ¬((_ ≠ _) ∧ _ ∧ _) from by push Not; exact fun _ h => absurd h hP0),
-          if_neg (show ¬((_ ≠ _) ∧ _) from by push Not; exact fun _ => hnotd)]
+      rw [ite_eq_right (show ¬((_ ≠ _) ∧ _ ∧ _) from by
+        push Not
+        exact fun _ h => absurd h hP0),
+          ite_eq_right (show ¬((_ ≠ _) ∧ _) from by push Not; exact fun _ => hnotd)]
       simp [V, hvanish]
 
 lemma nonzero_sum_eq_EP0_plus_EPalpha
@@ -2466,7 +2468,7 @@ lemma summand_norm_bound
         (↑(ZMod.val k) * p + ↑(ZMod.val l) * q) ∧
       ¬((↑(largestPrimeFactor n ^ n.factorization (largestPrimeFactor n)) : ℤ) ∣
         (↑(ZMod.val k) * p + ↑(ZMod.val l) * q))
-  · rw [if_pos hcond]
+  · rw [ite_eq_left hcond]
     have hP0 := hcond.2.1
     have hd := hcond.2.2
     calc ‖normalizedDFT n (intervalIndicator n (2 * p - 1).toNat) k *
@@ -2485,7 +2487,7 @@ lemma summand_norm_bound
           (‖normalizedDFT n (intervalIndicator n (2 * p - 1).toNat) k‖ *
            ‖normalizedDFT n (intervalIndicator n (2 * q - 1).toNat) l‖) := by
           ring
-  · rw [if_neg hcond, norm_zero]
+  · rw [ite_eq_right hcond, norm_zero]
     have hP := largestPrimeFactor_ge_two n hn
     apply mul_nonneg
     · apply div_nonneg (Nat.cast_nonneg' _)
@@ -2587,14 +2589,14 @@ lemma summand_norm_le_aux (n : ℕ) [NeZero n] (_p _q : ℤ) (k l : ZMod n)
     (Nat.totient n : ℝ) *
     (if cond then ‖normalizedDFT n fp k‖ * ‖normalizedDFT n fq l‖ else 0) := by
   by_cases hc : cond
-  · simp only [hc, if_true]
+  · simp only [hc, ite_true]
     rw [norm_mul, norm_mul]
     calc ‖normalizedDFT n fp k‖ * ‖normalizedDFT n fq l‖ * ‖ramanujanSum n t‖
         ≤ ‖normalizedDFT n fp k‖ * ‖normalizedDFT n fq l‖ * (Nat.totient n : ℝ) := by
           apply mul_le_mul_of_nonneg_left (ramanujanSum_norm_le_totient n t)
           exact mul_nonneg (norm_nonneg _) (norm_nonneg _)
       _ = (Nat.totient n : ℝ) * (‖normalizedDFT n fp k‖ * ‖normalizedDFT n fq l‖) := by ring
-  · simp only [hc, if_false, norm_zero, mul_zero, le_refl]
+  · simp only [hc, ite_false, norm_zero, mul_zero, le_refl]
 
 lemma summand_norm_le (n : ℕ) [NeZero n] (p q : ℤ)
     (k l : ZMod n) :
@@ -2722,7 +2724,7 @@ lemma sum_exchange_weighted
 lemma outer_sum_split (n : ℕ) [NeZero n] (G : ZMod n → ℝ) :
     ∑ k : ZMod n, G k = G 0 + ∑ k ∈ Finset.univ.filter (fun k : ZMod n => k ≠ 0), G k := by
   have h := Finset.sum_filter_add_sum_filter_not Finset.univ (fun k : ZMod n => k = 0) G
-  rw [Finset.sum_filter, Finset.sum_ite_eq' Finset.univ 0 G, if_pos (Finset.mem_univ _)] at h
+  rw [Finset.sum_filter, Finset.sum_ite_eq' Finset.univ 0 G, ite_eq_left (Finset.mem_univ _)] at h
   linarith
 
 lemma zero_term_vanishes
@@ -5664,7 +5666,7 @@ lemma summand_le (n d : ℕ) [NeZero n] (hn : 2 ≤ n)
       ((d : ℤ) ∣ (↑(ZMod.val k) * ↑u_val + ↑(ZMod.val l) * q)) :=
     congr_dvd_equiv d p u_val hu_congr (ZMod.val k) (ZMod.val l) q
   by_cases hcond : k ≠ 0 ∧ ((d : ℤ) ∣ (↑(ZMod.val k) * p + ↑(ZMod.val l) * q))
-  · rw [if_pos hcond, if_pos ⟨hcond.1, h_equiv.mp hcond.2⟩]
+  · rw [ite_eq_left hcond, ite_eq_left ⟨hcond.1, h_equiv.mp hcond.2⟩]
     have hk := hcond.1
     have hmp1 : 1 ≤ (2 * p - 1).toNat := mp_lower_bound p hp_pos
     have hmp2 : (2 * p - 1).toNat < n := mp_upper_bound n hn p q hp_pos hq_pos hpq
@@ -5683,10 +5685,10 @@ lemma summand_le (n d : ℕ) [NeZero n] (hn : 2 ≤ n)
           (2 * min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) := by
           rw [one_div, mul_comm]
           rfl
-  · rw [if_neg hcond]
+  · rw [ite_eq_right hcond]
     by_cases hcond2 : k ≠ 0 ∧ ((d : ℤ) ∣ (↑(ZMod.val k) * ↑u_val + ↑(ZMod.val l) * q))
     · simp_all
-    · rw [if_neg hcond2]
+    · rw [ite_eq_right hcond2]
 
 lemma k_nonzero_contribution_bound
     (n d : ℕ) [NeZero n] (hn : 2 ≤ n)

@@ -210,9 +210,9 @@ lemma term_tendsto (c : ℂ) (r d : ℕ) (hrd : r ≤ d) :
   simp_rw [hfun]
   by_cases h : r = d
   · subst h
-    simp only [Nat.sub_self, pow_zero, mul_one, if_true]
+    simp only [Nat.sub_self, pow_zero, mul_one, ite_true]
     simpa using tendsto_const_nhds.mul (jq_tendsto_one.pow r)
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     have hqdr : Tendsto (fun τ : ℍ ↦ q τ ^ (d - r)) atImInfty (nhds 0) := by
       simpa [zero_pow (show d - r ≠ 0 by omega)] using q_tendsto_zero.pow (d - r)
     have h2 : Tendsto (fun τ : ℍ ↦ c * (j τ * q τ) ^ r) atImInfty (nhds c) := by
@@ -242,7 +242,7 @@ lemma eval2_qpow_tendsto (G : Polynomial ℤ) :
         if r = G.natDegree then ((G.coeff r : ℤ) : ℂ) else 0) = ((G.leadingCoeff : ℤ) : ℂ) := by
     rw [Finset.sum_ite_eq' (Finset.range (G.natDegree + 1)) G.natDegree
       (fun r ↦ ((G.coeff r : ℤ) : ℂ))]
-    simp only [Finset.mem_range, Nat.lt_succ_self, if_true]
+    simp only [Finset.mem_range, Nat.lt_succ_self, ite_true]
     rfl
   rw [hsum] at hlim
   exact hlim

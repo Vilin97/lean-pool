@@ -531,7 +531,7 @@ noncomputable def bStep {d m : ℕ} (U : Finset (ZMod (d * m))) (x : ZMod (d * m
 lemma bStep_lt {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} (hcanon : LevelCanonical d m U) {x : ZMod (d * m)} (hx : x ∈ U) :
     (bStep U x).val < x.val := by
-  unfold bStep; rw [dif_pos hx]
+  unfold bStep; rw [dite_eq_left hx]
   exact betaParent_val_lt hd hm (survivor_level_pos hd hcanon hx)
 
 /-- The **root** of `x`: iterate `bStep` until a non-`U` point. Well-founded on `.val`. -/
@@ -545,13 +545,13 @@ decreasing_by exact betaParent_val_lt hd hm (survivor_level_pos hd hcanon _hx)
 lemma betaRoot_of_not_mem {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} (hcanon : LevelCanonical d m U) {x : ZMod (d * m)} (hx : x ∉ U) :
     betaRoot hd hm hcanon x = x := by
-  rw [betaRoot]; rw [dif_neg hx]
+  rw [betaRoot]; rw [dite_eq_right hx]
 
 /-- If `x ∈ U`, the root descends to its parent's root. -/
 lemma betaRoot_of_mem {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} (hcanon : LevelCanonical d m U) {x : ZMod (d * m)} (hx : x ∈ U) :
     betaRoot hd hm hcanon x = betaRoot hd hm hcanon (betaParent U x) := by
-  rw [betaRoot]; rw [dif_pos hx]
+  rw [betaRoot]; rw [dite_eq_left hx]
 
 /-- The root is never in `U`. -/
 lemma betaRoot_not_mem {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
@@ -1176,7 +1176,7 @@ lemma Q {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
           omega
         -- then j = ls (else j=ls+1 ⟹ φ<ψ, contra)
         have hjeq : j = ls := by
-          rw [hjdef]; rw [if_neg (by omega)]
+          rw [hjdef]; rw [ite_eq_right (by omega)]
         rw [hlyeq, hjeq]; push_cast; omega
     linarith
 

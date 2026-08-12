@@ -83,7 +83,7 @@ private lemma eight_factorization_ne_two (p : ℕ) (hp2 : p ≠ 2) :
     (8 : ℕ).factorization p = 0 := by
   rw [show (8 : ℕ) = 2 ^ 3 from by norm_num, Nat.factorization_pow, Finsupp.coe_nsmul,
       Pi.smul_apply, smul_eq_mul, Nat.prime_two.factorization, Finsupp.single_apply,
-      if_neg (Ne.symm hp2), mul_zero]
+      ite_eq_right (Ne.symm hp2), mul_zero]
 
 lemma isPowerful_eight_mul_sq {y : ℕ} (hy : y ≠ 0) : IsPowerful (8 * y ^ 2) := by
   intro p hp hd

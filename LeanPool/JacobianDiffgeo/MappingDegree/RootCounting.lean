@@ -65,7 +65,7 @@ theorem card_nthRoots_toFinset {k : ℕ} (hk : k ≠ 0) {w : ℂ} (hw : w ≠ 0)
     (nthRoots k w).toFinset.card = k := by
   have hprim := Complex.isPrimitiveRoot_exp k hk
   rw [Multiset.toFinset_card_of_nodup (hprim.nthRoots_nodup hw), hprim.card_nthRoots,
-    if_pos (exists_pow_eq hk hw)]
+    ite_eq_left (exists_pow_eq hk hw)]
 
 theorem ncard_setOf_pow_eq {k : ℕ} (hk : k ≠ 0) {w : ℂ} (hw : w ≠ 0) :
     {z : ℂ | z ^ k = w}.ncard = k := by

@@ -106,7 +106,7 @@ private lemma tubularProj_eq_choose {S U : Set E}
     (hTN : IsTubularNeighborhoodOfSubmanifold S U) (hne : S.Nonempty)
     (x : E) (hx : x ∈ U) :
     tubularProj hTN hne x = (hTN.uniqueProj x hx).choose := by
-  simp only [tubularProj, and_imp, dif_pos hx]
+  simp only [tubularProj, and_imp, dite_eq_left hx]
 
 omit [FiniteDimensional ℝ E] in
 lemma tubularProj_mem {S U : Set E}

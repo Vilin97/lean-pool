@@ -162,7 +162,7 @@ theorem not_dvd_choose (q n k : ℕ) (hq : q.Prime) (hkn : k ≤ n)
 theorem digit_special (q L e : ℕ) (hq : 2 ≤ q) :
     ((q - 1) * q ^ L) / q ^ e % q = if e = L then q - 1 else 0 := by
   rcases lt_trichotomy e L with h | h | h
-  · rw [if_neg (by omega)]
+  · rw [ite_eq_right (by omega)]
     have hd : (q - 1) * q ^ L / q ^ e = (q - 1) * q ^ (L-e) := by
       rw [Nat.mul_div_assoc _ (pow_dvd_pow q (by omega))]
       congr 1
@@ -171,9 +171,9 @@ theorem digit_special (q L e : ℕ) (hq : 2 ≤ q) :
     have : q ∣ (q - 1) * q ^ (L-e) := Dvd.dvd.mul_left (dvd_pow_self q (by omega)) _
     omega
   · subst h
-    rw [if_pos rfl, Nat.mul_div_cancel _ (Nat.pow_pos (by omega : 0 < q))]
+    rw [ite_eq_left rfl, Nat.mul_div_cancel _ (Nat.pow_pos (by omega : 0 < q))]
     exact Nat.mod_eq_of_lt (by omega)
-  · rw [if_neg (by omega)]
+  · rw [ite_eq_right (by omega)]
     have hlt : (q - 1)*q ^ L < q ^ e := by
       calc (q - 1)*q ^ L < q * q ^ L := by
             apply Nat.mul_lt_mul_of_lt_of_le (by omega) (le_refl _) (Nat.pow_pos (by omega : 0 < q))
@@ -217,8 +217,8 @@ theorem main_zero_mem (q : ℕ) (hq : q.Prime) (d k : ℕ) (_hd : 1 < d) (hk : 0
       have h3 : qdigit q (k - 1) k = 0 := by
         rw [qdigit_eq _ _ _ hq2, Nat.div_eq_of_lt hLlt]; simp
       rcases eq_or_ne e k with he | he
-      · subst he; rw [h2, if_pos rfl, h3]; omega
-      · rw [h2, if_neg he]; omega
+      · subst he; rw [h2, ite_eq_left rfl, h3]; omega
+      · rw [h2, ite_eq_right he]; omega
   -- The infimum is attained: extract a minimizer.
   have hmem : sInf S ∈ S := Nat.sInf_mem hne
   obtain ⟨m, hmT, hval⟩ := hmem
@@ -316,22 +316,22 @@ theorem tset_value_nonempty (q d k : ℕ) (hq : 2 ≤ q) (hk : 0 < k) :
     have hsum : (∑ i : Fin d, (if e = k + i.val then q-1 else 0)) ≤ q - 1 := by
       rcases Nat.lt_or_ge e k with h | h
       · have : ∀ i : Fin d, (if e = k + i.val then (q - 1) else 0) = 0 := by
-          intro i; rw [if_neg (by omega)]
+          intro i; rw [ite_eq_right (by omega)]
         simp [this]
       · by_cases hd : e - k < d
         · rw [Finset.sum_eq_single (⟨e-k, hd⟩ : Fin d)]
-          · rw [if_pos (by simp; omega)]
-          · intro j _ hj; rw [if_neg]; intro hc; apply hj; ext; simp at hc ⊢; omega
+          · rw [ite_eq_left (by simp; omega)]
+          · intro j _ hj; rw [ite_eq_right]; intro hc; apply hj; ext; simp at hc ⊢; omega
           · intro hcon; exact absurd (Finset.mem_univ _) hcon
         · have : ∀ i : Fin d, (if e = k + i.val then (q - 1) else 0) = 0 := by
-            intro i; rw [if_neg (by omega)]
+            intro i; rw [ite_eq_right (by omega)]
           simp [this]
     have hk1 : qdigit q (k - 1) e ≤ q - 1 := by
       rw [qdigit_eq _ _ _ hq]; have := Nat.mod_lt ((k - 1)/q ^ e) (by omega : 0 < q); omega
     rcases Nat.lt_or_ge e k with h | h
     · have hz : (∑ i : Fin d, (if e = k + i.val then (q - 1) else 0)) = 0 := by
         have : ∀ i : Fin d, (if e = k + i.val then (q - 1) else 0) = 0 := by
-          intro i; rw [if_neg (by omega)]
+          intro i; rw [ite_eq_right (by omega)]
         simp [this]
       rw [hz]; omega
     · have hk1z : qdigit q (k - 1) e = 0 := by
@@ -991,7 +991,7 @@ theorem wsum_eq (q L : ℕ) (hq : 2 ≤ q) (w : List ℕ)
       have heq : (if a = q ^ e then 1 else 0) = (if e = ea then 1 else 0) := by
         by_cases h : e = ea
         · subst h; rw [haeq]; simp
-        · rw [if_neg h, if_neg]
+        · rw [ite_eq_right h, ite_eq_right]
           rw [haeq]
           intro hcontra
           exact h (Nat.pow_right_injective hq hcontra.symm)
@@ -1013,9 +1013,9 @@ theorem qdigit_window (q L : ℕ) (hq : 2 ≤ q) (w : List ℕ)
     qdigit q w.sum f = if f < L then w.count (q ^ f) else 0 := by
   rw [qdigit_eq _ _ _ hq, wsum_eq q L hq w hpow]
   by_cases hf : f < L
-  · rw [if_pos hf]
+  · rw [ite_eq_left hf]
     exact digit_of_sum_aux q hq L (fun e => w.count (q ^ e)) (fun e _ => hlt e) f hf
-  · rw [if_neg hf]
+  · rw [ite_eq_right hf]
     have hbound : (∑ e ∈ Finset.range L, (w.count (q ^ e)) * q ^ e) < q ^ L :=
       sum_lt_pow_aux q hq L (fun e => w.count (q ^ e)) (fun e _ => hlt e)
     have hle : q ^ L ≤ q ^ f := Nat.pow_le_pow_right (by omega) (by omega)
@@ -1042,7 +1042,7 @@ theorem slotList_count (q k1 L : ℕ) (hq : 2 ≤ q) (e : ℕ) (he : e < L) :
   · simp
   · intro b _ hb
     simp only [Function.comp_apply, List.count_replicate]
-    rw [if_neg]
+    rw [ite_eq_right]
     simp only [beq_iff_eq]
     intro hcontra
     exact hb (Nat.pow_right_injective hq hcontra)
@@ -1220,12 +1220,12 @@ theorem slot_upper_bound (q d k : ℕ) (hq : 2 ≤ q) (hk : 0 < k) :
               =
                 (((slotList q k1 L).drop ((d - 1 - i.val) * (q - 1))).take
                   (q - 1)).count (q ^ e) := by
-            intro i; rw [hmdig i e, if_pos he]
+            intro i; rw [hmdig i e, ite_eq_left he]
           rw [Finset.sum_congr rfl (fun i _ => heq i)]
           rw [← slotList_count q k1 L hq e he]
           exact hcountsum e
         · have hz : ∀ i : Fin d, qdigit q (m i) e = 0 := by
-            intro i; rw [hmdig i e, if_neg he]
+            intro i; rw [hmdig i e, ite_eq_right he]
           rw [Finset.sum_congr rfl (fun i _ => hz i), Finset.sum_const, smul_eq_mul, Nat.mul_zero]
           exact Nat.zero_le _
       have hk1le : qdigit q k1 e ≤ q - 1 := qdigit_le_aux q k1 e hq
@@ -1282,7 +1282,7 @@ theorem slotList_drop (q k1 p r : ℕ)
     symm
     rw [List.flatMap_eq_nil_iff]
     intro e he; simp only [List.mem_range] at he
-    rw [if_pos (by omega)]; simp
+    rw [ite_eq_left (by omega)]; simp
   · push Not at hLx
     set g : ℕ → List ℕ := fun e =>
       List.replicate (if e < p then 0 else if e = p then ((q - 1)-qdigit q k1 p) - r
@@ -1300,7 +1300,7 @@ theorem slotList_drop (q k1 p r : ℕ)
       simp only [List.mem_map, List.mem_range] at he
       obtain ⟨a, _, rfl⟩ := he
       rw [hg]; simp only
-      rw [if_neg (by omega), if_neg (by omega)]
+      rw [ite_eq_right (by omega), ite_eq_right (by omega)]
     have hLHS :
         slotList q k1 Lx =
           (slotList q k1 p ++ List.replicate ((q - 1)-qdigit q k1 p) (q ^ p))
@@ -1389,20 +1389,20 @@ theorem beta_digit (q k1 p r : ℕ) (hq : 2 ≤ q)
     rw [hβ, slotList_sum, Finset.sum_range_succ]
     congr 1
     · apply Finset.sum_congr rfl; intro e he; simp only [Finset.mem_range] at he
-      rw [hbc]; simp only; rw [if_neg (by omega)]
+      rw [hbc]; simp only; rw [ite_eq_right (by omega)]
     · rw [hbc]; simp
   have hcbound : ∀ e, e < p+1 → bcoeff e < q := by
     intro e he; rw [hbc]; simp only
     by_cases h : e = p
-    · rw [if_pos h]; subst h; omega
-    · rw [if_neg h]; omega
+    · rw [ite_eq_left h]; subst h; omega
+    · rw [ite_eq_right h]; omega
   rw [qdigit_eq _ _ _ hq, hβsum]
   by_cases hf : f < p+1
   · rw [digit_of_sum q hq (p + 1) bcoeff hcbound f hf]
     rw [hbc]; simp only
     by_cases h : f = p
-    · rw [if_pos h]; subst h; rw [if_neg (by omega), if_pos rfl]
-    · rw [if_neg h]; rw [if_pos (by omega)]
+    · rw [ite_eq_left h]; subst h; rw [ite_eq_right (by omega), ite_eq_left rfl]
+    · rw [ite_eq_right h]; rw [ite_eq_left (by omega)]
   · have hlt : (∑ e ∈ Finset.range (p + 1), bcoeff e * q ^ e) < q ^ (p + 1) :=
       sum_lt_pow q hq (p + 1) bcoeff hcbound
     have : (∑ e ∈ Finset.range (p + 1), bcoeff e * q ^ e) / q ^ f = 0 := by
@@ -1410,7 +1410,7 @@ theorem beta_digit (q k1 p r : ℕ) (hq : 2 ≤ q)
       calc (∑ e ∈ Finset.range (p + 1), bcoeff e * q ^ e) < q ^ (p + 1) := hlt
         _ ≤ q ^ f := Nat.pow_le_pow_right (by omega) (by omega)
     rw [this, Nat.zero_mod]
-    rw [if_neg (by omega), if_neg (by omega)]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega)]
 
 -- The new slot multiplicity of `k1 + β` at each position: positions `< p` are
 -- spent (multiplicity `0`), position `p` loses `r`, positions `> p` are intact.
@@ -1427,22 +1427,22 @@ theorem newmult_eq (q k1 p r : ℕ) (hq : 2 ≤ q)
     rw [beta_digit q k1 p r hq hr f]
     have hk := qdigit_le q k1 f hq
     by_cases h1 : f < p
-    · rw [if_pos h1]; omega
-    · rw [if_neg h1]
+    · rw [ite_eq_left h1]; omega
+    · rw [ite_eq_right h1]
       by_cases h2 : f = p
-      · rw [if_pos h2]; subst h2; omega
-      · rw [if_neg h2]; omega
+      · rw [ite_eq_left h2]; subst h2; omega
+      · rw [ite_eq_right h2]; omega
   have hadd : qdigit q (k1 + β) e = qdigit q k1 e + qdigit q β e := by
     rw [qdigit_eq _ _ _ hq, qdigit_eq _ _ _ hq, qdigit_eq _ _ _ hq]
     exact qdigit_add q k1 β e hq hcf
   rw [hadd, beta_digit q k1 p r hq hr e]
   have hk := qdigit_le q k1 e hq
   by_cases h1 : e < p
-  · rw [if_pos h1, if_pos h1]; omega
-  · rw [if_neg h1, if_neg h1]
+  · rw [ite_eq_left h1, ite_eq_left h1]; omega
+  · rw [ite_eq_right h1, ite_eq_right h1]
     by_cases h2 : e = p
-    · rw [if_pos h2, if_pos h2]; subst h2; omega
-    · rw [if_neg h2, if_neg h2]; omega
+    · rw [ite_eq_left h2, ite_eq_left h2]; subst h2; omega
+    · rw [ite_eq_right h2, ite_eq_right h2]; omega
 
 /-- (L2, slot subtraction) The slot list of `k1 + β₁`, where `β₁` is the sum of
 the `q-1` smallest slots of `k1`, equals the slot list of `k1` with its first
@@ -1639,7 +1639,7 @@ theorem wlen_eq (q L : ℕ) (hq : 2 ≤ q) (w : List ℕ)
       have heq : (if a = q ^ e then 1 else 0) = (if e = ea then 1 else 0) := by
         by_cases h : e = ea
         · subst h; rw [haeq]; simp
-        · rw [if_neg h, if_neg]
+        · rw [ite_eq_right h, ite_eq_right]
           rw [haeq]; intro hcontra
           exact h (Nat.pow_right_injective hq hcontra.symm)
       have hbeq : (if (a == q ^ e) = true then 1 else 0) = (if a = q ^ e then 1 else 0) := by

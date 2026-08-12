@@ -494,8 +494,8 @@ lemma finiteRange_approxMap_measurable
       intro x
       simp only [List.foldr_cons]
       by_cases hk : x ∈ As k
-      · right; exact ⟨k, List.mem_cons_self, if_pos hk⟩
-      · rw [if_neg hk]
+      · right; exact ⟨k, List.mem_cons_self, ite_eq_left hk⟩
+      · rw [ite_eq_right hk]
         rcases ih x with h | ⟨k', hk', h⟩
         · left; exact h
         · right; exact ⟨k', List.mem_cons_of_mem k hk', h⟩
@@ -510,8 +510,8 @@ lemma finiteRange_approxMap_measurable
       intro x n hn hxn huniq
       simp only [List.foldr_cons]
       by_cases hk : x ∈ As k
-      · rw [if_pos hk, huniq k (List.mem_cons_self) hk]
-      · rw [if_neg hk]
+      · rw [ite_eq_left hk, huniq k (List.mem_cons_self) hk]
+      · rw [ite_eq_right hk]
         have hnk : n ≠ k := fun h => hk (h ▸ hxn)
         have hnl : n ∈ l := (List.mem_cons.mp hn).resolve_left hnk
         exact ih x n hnl hxn (fun m hm hxm => huniq m (List.mem_cons_of_mem k hm) hxm)
@@ -524,7 +524,7 @@ lemma finiteRange_approxMap_measurable
     | cons k l ih =>
       intro x hx
       simp only [List.foldr_cons]
-      rw [if_neg (hx k (List.mem_cons_self))]
+      rw [ite_eq_right (hx k (List.mem_cons_self))]
       exact ih x (fun m hm => hx m (List.mem_cons_of_mem k hm))
   refine ⟨fun x => (List.range N).foldr (fun n acc => if x ∈ As n then as n else acc) x₀,
     hmeas (List.range N), ?_, ?_, ?_⟩
@@ -698,7 +698,7 @@ theorem exists_finiteRange_map_cost_le
         rw [hT_kept n hn x hx]
         have hxn : (As n).Nonempty := ⟨x, hx⟩
         have hasn : as n ∈ As n := by
-          simp only [has_def, dif_pos hxn]; exact hxn.some_mem
+          simp only [has_def, dite_eq_left hxn]; exact hxn.some_mem
         calc c x (as n) ≤ dist x (as n) := hc_le_dist x (as n)
           _ ≤ Metric.diam (As n) := Metric.dist_le_diam_of_mem (hAs_bdd n) hx hasn
           _ ≤ ε / 2 := hAs_diam n)
@@ -1004,7 +1004,7 @@ theorem finiteTransport_dual_eps
     have hbasis : a = ∑ i, a i • (Pi.single i 1 : m → ℝ) := by
       funext k; rw [Finset.sum_apply]
       simp only [Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     conv_lhs => rw [hbasis]
     rw [map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
@@ -1013,7 +1013,7 @@ theorem finiteTransport_dual_eps
     have hbasis : b = ∑ j, b j • (Pi.single j 1 : n → ℝ) := by
       funext k; rw [Finset.sum_apply]
       simp only [Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     conv_lhs => rw [hbasis]
     rw [map_sum]
     refine Finset.sum_congr rfl fun j _ => ?_
@@ -1211,25 +1211,25 @@ theorem finiteRange_transportation_dual
     funext x
     simp only [hulift_def, Set.indicator_apply, Set.mem_singleton_iff]
     by_cases hx : x ∈ hTfin.toFinset
-    · rw [dif_pos hx, Finset.sum_eq_single (⟨x, hx⟩ : hTfin.toFinset)]
+    · rw [dite_eq_left hx, Finset.sum_eq_single (⟨x, hx⟩ : hTfin.toFinset)]
       · simp
-      · intro i _ hi; rw [if_neg (fun h => hi (Subtype.ext h.symm))]
+      · intro i _ hi; rw [ite_eq_right (fun h => hi (Subtype.ext h.symm))]
       · intro h; exact absurd (Finset.mem_attach _ _) h
-    · rw [dif_neg hx]
+    · rw [dite_eq_right hx]
       refine (Finset.sum_eq_zero fun i _ => ?_).symm
-      rw [if_neg (fun (h : x = (↑i : α)) => hx (h.symm ▸ i.2))]
+      rw [ite_eq_right (fun (h : x = (↑i : α)) => hx (h.symm ▸ i.2))]
   have hvlift_eq : vlift = fun y => ∑ j ∈ hSfin.toFinset.attach,
       Set.indicator {(j : α)} (fun _ => v j) y := by
     funext y
     simp only [hvlift_def, Set.indicator_apply, Set.mem_singleton_iff]
     by_cases hy : y ∈ hSfin.toFinset
-    · rw [dif_pos hy, Finset.sum_eq_single (⟨y, hy⟩ : hSfin.toFinset)]
+    · rw [dite_eq_left hy, Finset.sum_eq_single (⟨y, hy⟩ : hSfin.toFinset)]
       · simp
-      · intro j _ hj; rw [if_neg (fun h => hj (Subtype.ext h.symm))]
+      · intro j _ hj; rw [ite_eq_right (fun h => hj (Subtype.ext h.symm))]
       · intro h; exact absurd (Finset.mem_attach _ _) h
-    · rw [dif_neg hy]
+    · rw [dite_eq_right hy]
       refine (Finset.sum_eq_zero fun j _ => ?_).symm
-      rw [if_neg (fun (h : y = (↑j : α)) => hy (h.symm ▸ j.2))]
+      rw [ite_eq_right (fun (h : y = (↑j : α)) => hy (h.symm ▸ j.2))]
   have hulift_meas : Measurable ulift := by
     rw [hulift_eq]
     exact Finset.measurable_sum _ fun i _ =>
@@ -1243,8 +1243,8 @@ theorem finiteRange_transportation_dual
     intro a' ha' b' hb'
     have hia : a' ∈ hTfin.toFinset := by rw [Set.Finite.mem_toFinset]; exact ha'
     have hjb : b' ∈ hSfin.toFinset := by rw [Set.Finite.mem_toFinset]; exact hb'
-    have hua : ulift a' = u ⟨a', hia⟩ := dif_pos hia
-    have hvb : vlift b' = v ⟨b', hjb⟩ := dif_pos hjb
+    have hua : ulift a' = u ⟨a', hia⟩ := dite_eq_left hia
+    have hvb : vlift b' = v ⟨b', hjb⟩ := dite_eq_left hjb
     rw [hua, hvb]
     exact hfeas ⟨a', hia⟩ ⟨b', hjb⟩
   · -- the matrix→measure bridge bound

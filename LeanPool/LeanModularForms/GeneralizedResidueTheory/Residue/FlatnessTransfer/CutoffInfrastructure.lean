@@ -376,7 +376,7 @@ private lemma angle_at_crossing_arg_relation
   · refine ⟨0, ?_⟩
     simp only [Int.cast_zero, zero_mul, add_zero]
     unfold angleAtCrossing
-    rw [dif_pos hp]
+    rw [dite_eq_left hp]
     rw [tendsto_nhds_unique htend_R (Classical.choose_spec (γ.right_deriv_limit t₀ hp ht₀.2)).2,
       tendsto_nhds_unique htend_L (Classical.choose_spec (γ.left_deriv_limit t₀ hp ht₀.1)).2]
   · rw [angleAtCrossing_smooth γ t₀ ht₀ hp]
@@ -515,7 +515,7 @@ lemma cutoff_zpow_infrastructure
       (∀ t ∈ Ioc (σ₂ ε) γ.b, ε < ‖γ.toFun t - s‖) ∧
       (∀ t ∈ Icc (σ₁ ε) (σ₂ ε), ‖γ.toFun t - s‖ ≤ ε) := by
     intro ε hε
-    simpa only [σ₁, σ₂, hε, dif_pos] using (h_exit ε hε).choose_spec.choose_spec
+    simpa only [σ₁, σ₂, hε, dite_eq_left] using (h_exit ε hε).choose_spec.choose_spec
   have hIoo_ev : ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε ∈ Ioo 0 δ := Ioo_mem_nhdsGT hδ_pos
   let wR : ℝ → ℂ := fun ε => γ.toFun (σ₂ ε) - s
   let wL : ℝ → ℂ := fun ε => γ.toFun (σ₁ ε) - s

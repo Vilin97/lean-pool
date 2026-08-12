@@ -102,7 +102,7 @@ private def close_up_aux_factor_intersection_proof
     fun x => if h : q' ∣ x then Classical.choose h else x
   have hdiv_b2 : ∀ x ∈ rest, x = q' * div_q_b2 x := by
     intro x hx
-    simpa only [div_q_b2, dif_pos (hq'_dvd x hx)] using Classical.choose_spec (hq'_dvd x hx)
+    simpa only [div_q_b2, dite_eq_left (hq'_dvd x hx)] using Classical.choose_spec (hq'_dvd x hx)
   let rest'2 := rest.image div_q_b2
   have h_ie_b2 : span (↑rest : Set R.carrier) =
       span {q'} * span (↑rest'2 : Set R.carrier) :=

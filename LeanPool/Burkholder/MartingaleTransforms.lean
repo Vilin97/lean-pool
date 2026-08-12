@@ -560,7 +560,7 @@ private lemma burkholder_du_dx_Xn_Yn_Lq
       ENNReal.ofReal q = p / ENNReal.ofReal r := by
     rw [hp_eq_ofReal]
     dsimp [q, r, Burkholder.q, Majorants.q]
-    rw [if_neg (by linarith [h.hp_one])]
+    rw [ite_eq_right (by linarith [h.hp_one])]
     rw [ENNReal.ofReal_div_of_pos]
     exact hr_pos
   have hX : MemLp (X_{n}[w, f]) p μ :=
@@ -667,7 +667,7 @@ private lemma burkholder_du_dy_Xn_Yn_Lq
       ENNReal.ofReal q = p / ENNReal.ofReal r := by
     rw [hp_eq_ofReal]
     dsimp [q, r, Burkholder.q, Majorants.q]
-    rw [if_neg (by linarith [h.hp_one])]
+    rw [ite_eq_right (by linarith [h.hp_one])]
     rw [ENNReal.ofReal_div_of_pos]
     exact hr_pos
   have hX : MemLp (X_{n}[w, f]) p μ :=
@@ -760,7 +760,7 @@ private lemma burkholder_du_dx_Xn_Yn_integrable_mul_diff
   let q : ℝ := Burkholder.q p.toReal
   have hpq_real : q.HolderConjugate p.toReal := by
     dsimp [q, Burkholder.q, Majorants.q]
-    rw [if_neg (by linarith [h.hp_one])]
+    rw [ite_eq_right (by linarith [h.hp_one])]
     exact (Real.HolderConjugate.conjExponent h.hp_one).symm
   have hpq : ENNReal.HolderConjugate (ENNReal.ofReal q) (ENNReal.ofReal p.toReal) := by
     rw [ENNReal.holderConjugate_iff]
@@ -951,7 +951,7 @@ private lemma burkholder_du_dy_Xn_Yn_integrable_mul_diff
   let q : ℝ := Burkholder.q p.toReal
   have hpq_real : q.HolderConjugate p.toReal := by
     dsimp [q, Burkholder.q, Majorants.q]
-    rw [if_neg (by linarith [h.hp_one])]
+    rw [ite_eq_right (by linarith [h.hp_one])]
     exact (Real.HolderConjugate.conjExponent h.hp_one).symm
   have hpq : ENNReal.HolderConjugate (ENNReal.ofReal q) (ENNReal.ofReal p.toReal) := by
     rw [ENNReal.holderConjugate_iff]

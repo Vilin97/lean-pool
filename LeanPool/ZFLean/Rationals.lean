@@ -425,7 +425,7 @@ noncomputable instance : Inv ZFRat where
 
 theorem inv_eq {a : ZFRat} (ha : a ≠ 0) : a⁻¹ = (⟨a, ha⟩ : ZFRat')⁻¹ := by
   dsimp [Inv.inv]
-  rw [dif_pos ha]
+  rw [dite_eq_left ha]
 
 /-- Division by a nonzero ZF rational. -/
 noncomputable abbrev hdiv (n : ZFRat) (m : ZFRat') : ZFRat := n * m⁻¹
@@ -442,7 +442,7 @@ noncomputable instance : Div ZFRat := ⟨div⟩
 theorem div_eq {n m : ZFRat} (hm : m ≠ 0) : n / m = n / (⟨m, hm⟩:ZFRat') := rfl
 theorem div_eq_mul_inv {n m : ZFRat} (hm : m ≠ 0) : n / m = n * (⟨m, hm⟩:ZFRat')⁻¹ := by
   dsimp [HDiv.hDiv, Div.div]
-  rw [div, dif_pos hm]
+  rw [div, dite_eq_left hm]
 
 @[simp]
 theorem mul_inv' {a : ZFRat'} : a.1 * a⁻¹ = 1 := by

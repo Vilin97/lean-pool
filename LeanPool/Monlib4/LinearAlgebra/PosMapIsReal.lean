@@ -1025,9 +1025,9 @@ theorem LinearMap.exists_scalar_isometry_iff_preserves_ortho_of_ne_zero
       simp_rw [← inner_self_eq_norm_sq_to_K]
       simp only [map_sum, map_smul, sum_inner, inner_smul_left,
         inner_sum, inner_smul_right, h', mul_ite, mul_zero,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true, ← hα]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true, ← hα]
       simp only [← mul_assoc, RCLike.mul_conj, orthonormal_iff_ite.mp (e.orthonormal),
-        mul_boole, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        mul_boole, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       simp_rw [← Finset.sum_mul, mul_comm]
     have hα' : α = 0 ↔ T = 0 := by
       constructor

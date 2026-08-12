@@ -69,7 +69,7 @@ theorem degree_single (P : X) (n : ℤ) :
       simp only [Function.mem_support, ne_eq] at hx
       by_contra hxP
       simp only [Finset.coe_singleton, Set.mem_singleton_iff] at hxP
-      exact hx (by rw [Function.locallyFinsuppWithin.single_apply, if_neg hxP]))]
+      exact hx (by rw [Function.locallyFinsuppWithin.single_apply, ite_eq_right hxP]))]
   simp
 
 end Function.locallyFinsuppWithin
@@ -123,7 +123,7 @@ theorem MForm.d_ne_zero [T2Space X] [ConnectedSpace X] {f : ℳ X}
       filter_upwards [htarget] with z hz
       change (if z ∈ (chartAt ℂ x₁).target then
         deriv (f.holoRepr ∘ ⇑(chartAt ℂ x₁).symm) z else 0) = _
-      rw [if_pos hz]
+      rw [ite_eq_left hz]
     rw [meromorphicOrderAt_congr h3] at h1
     exact h1
   have hderiv0 : deriv (f.holoRepr ∘ ⇑(chartAt ℂ x₁).symm)

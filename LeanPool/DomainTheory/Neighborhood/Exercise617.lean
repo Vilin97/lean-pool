@@ -789,7 +789,7 @@ theorem toCC_consMap (b : Bool) (z : C.Element) :
   apply NeighborhoodSystem.Element.ext
   intro W
   cases b
-  · simp only [cond_false]
+  · simp only [Bool.cond_false]
     constructor
     · rintro (rfl | ⟨rfl, hz⟩ | ⟨X, hX, rfl, hz⟩ | ⟨Y, hY, rfl, hz⟩)
       · exact Or.inl rfl
@@ -799,7 +799,7 @@ theorem toCC_consMap (b : Bool) (z : C.Element) :
     · rintro (rfl | ⟨Y, hY, rfl, hz⟩)
       · exact Or.inl rfl
       · exact Or.inr (Or.inr (Or.inl ⟨Y, hY, rfl, (consMap_mem_embBit hY).mpr hz⟩))
-  · simp only [cond_true]
+  · simp only [Bool.cond_true]
     constructor
     · rintro (rfl | ⟨rfl, hz⟩ | ⟨X, hX, rfl, hz⟩ | ⟨Y, hY, rfl, hz⟩)
       · exact Or.inl rfl
@@ -932,8 +932,8 @@ theorem genKey (g : ApproximableMap C B.carrier.sys) (b : Bool) (w : C.Element) 
       = descF B b (g.toElementMap w) := by
   rw [toCC_consMap]
   cases b
-  · simp only [cond_false]; rw [sumMap3_sinj1]; rfl
-  · simp only [cond_true]; rw [sumMap3_sinj2]; rfl
+  · simp only [Bool.cond_false]; rw [sumMap3_sinj1]; rfl
+  · simp only [Bool.cond_true]; rw [sumMap3_sinj2]; rfl
 
 /-- `T(g)` on the terminator is the terminator; precomposed with `k` it is `e`. -/
 theorem genKey0 (g : ApproximableMap C B.carrier.sys) :

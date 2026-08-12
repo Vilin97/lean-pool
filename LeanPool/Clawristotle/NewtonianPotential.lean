@@ -28,7 +28,7 @@ lemma coulomb_landauMatrix_entry_le (z : Fin 3 → ℝ) (i j : Fin 3) :
   by_cases hz : z = 0
   · -- z = 0: landauMatrix _ 0 = 0 (inner matrix vanishes)
     simp [hz, landauMatrix, innerLandauMatrix, normSq, dotProduct, vecMulVec, eucNorm]
-  · rw [if_neg hz]
+  · rw [ite_eq_right hz]
     -- |Ψ(|z|) * B(z)_{ij}| ≤ |z|^{-3} * |z|² = |z|^{-1}
     simp only [landauMatrix, Matrix.smul_apply, smul_eq_mul]
     have henz : 0 < eucNorm z := by
@@ -64,7 +64,7 @@ lemma coulomb_landauMatrix_entry_le (z : Fin 3 → ℝ) (i j : Fin 3) :
           mul_le_mul_of_nonneg_left h_inner (abs_nonneg _)
       _ = eucNorm z ^ (-3 : ℝ) * normSq z := by
           congr 1
-          rw [coulombKernel, if_neg (by linarith : ¬eucNorm z ≤ 0)]
+          rw [coulombKernel, ite_eq_right (by linarith : ¬eucNorm z ≤ 0)]
           exact abs_of_pos (rpow_pos_of_pos henz _)
       _ = eucNorm z ^ (-3 : ℝ) * eucNorm z ^ (2 : ℕ) := by
           congr 1; exact (eucNorm_sq z).symm
@@ -87,7 +87,7 @@ lemma coulomb_landauMatrix_entry_le_pi (z : Fin 3 → ℝ) (i j : Fin 3)
     (hz : z ≠ 0) :
     |landauMatrix coulombKernel z i j| ≤ ‖z‖⁻¹ := by
   have h := coulomb_landauMatrix_entry_le z i j
-  rw [if_neg hz] at h
+  rw [ite_eq_right hz] at h
   exact le_trans h (inv_anti₀ (norm_pos_iff.mpr hz) (pi_norm_le_eucNorm z))
 
 

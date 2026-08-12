@@ -81,7 +81,7 @@ theorem tendsto_cpv_of_continuousOn_zero_integral
           have h_no_near : ¬∃ s ∈ S0, ‖γ.toFun t - s‖ ≤ ε := by
             push Not; intro s hs
             exact lt_of_lt_of_le hε.2 (Finset.inf'_le _ hs)
-          rw [if_neg h_no_near])
+          rw [ite_eq_right h_no_near])
 
 /-! ### Sublemma 3: Holomorphic CPV integral → 0 on closed curve -/
 
@@ -233,9 +233,9 @@ lemma intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff
       change cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t = _
       simp only [cauchyPrincipalValueIntegrandOn]
       by_cases ht_good : t ∈ GoodSet ∩ Icc γ.a γ.b
-      · rw [Set.piecewise_eq_of_mem _ _ _ ht_good, if_neg]
+      · rw [Set.piecewise_eq_of_mem _ _ _ ht_good, ite_eq_right]
         push Not; exact ht_good.1
-      · rw [Set.piecewise_eq_of_notMem _ _ _ ht_good, if_pos]
+      · rw [Set.piecewise_eq_of_notMem _ _ _ ht_good, ite_eq_left]
         exact by_contra (fun h => by push Not at h; exact ht_good ⟨h, ht⟩)
     exact (h_pw.mono_measure Measure.restrict_le_self).congr h_ae_eq.symm
   have h_int : IntegrableOn cpv_fn (Icc γ.a γ.b) volume :=

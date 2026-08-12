@@ -174,7 +174,7 @@ theorem degree_single (P : X) :
       simp only [Function.mem_support, ne_eq] at hx
       by_contra hxP
       simp only [Finset.coe_singleton, Set.mem_singleton_iff] at hxP
-      exact hx (by rw [Function.locallyFinsuppWithin.single_apply, if_neg hxP]))]
+      exact hx (by rw [Function.locallyFinsuppWithin.single_apply, ite_eq_right hxP]))]
   simp
 
 open scoped Classical in

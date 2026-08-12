@@ -115,7 +115,7 @@ theorem casesOn_of_inl {A B : ZFSet} {motive : A ⊎ B → Sort*} (a : {x // x �
   (inl_case : (val : {x // x ∈ A}) → motive (inl val))
   (inr_case : (val : {x // x ∈ B}) → motive (inr val)) :
     casesOn (inl a) inl_case inr_case = inl_case a := by
-  rw [casesOn, dite_cond_eq_true (eq_true (by rw [inl, π₁_pair]))]
+  rw [casesOn, dite_eq_left_of_eq_true (eq_true (by rw [inl, π₁_pair]))]
   dsimp
   rw [cast_eq_iff_heq]
   congr
@@ -127,7 +127,7 @@ theorem casesOn_of_inr {A B : ZFSet} {motive : A ⊎ B → Sort*} (a : {x // x �
   (inl_case : (val : {x // x ∈ A}) → motive (inl val))
   (inr_case : (val : {x // x ∈ B}) → motive (inr val)) :
     casesOn (inr a) inl_case inr_case = inr_case a := by
-  rw [casesOn, dite_cond_eq_false (eq_false ?_)]
+  rw [casesOn, dite_eq_right_of_eq_false (eq_false ?_)]
   · dsimp
     rw [cast_eq_iff_heq]
     congr
@@ -360,7 +360,7 @@ noncomputable def flift {A B : ZFSet} (f : ZFSet)
   have hf' : IsFunc (Option.toZFSet A) (Option.toZFSet B) f' := by
     apply ZFSet.lambda_isFunc
     intro x hx
-    rw [dite_cond_eq_true (eq_true hx)]
+    rw [dite_eq_left_of_eq_true (eq_true hx)]
     split_ifs with isSome <;> apply SetLike.coe_mem
   ⟨f', hf'⟩
 
@@ -378,7 +378,7 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
         have hsome_z_mem :
             (Option.some ⟨z, hz⟩).val ∈ Option.toZFSet B := SetLike.coe_mem _
         refine ⟨hsome_x_mem, hsome_z_mem, ?_⟩
-        rw [dite_cond_eq_true (eq_true hsome_x_mem)]
+        rw [dite_eq_left_of_eq_true (eq_true hsome_x_mem)]
         split_ifs with isSome
         · have chosen_eq : Classical.choose isSome = ⟨x, hx⟩ :=
             (some_val_injEq.mp
@@ -397,7 +397,7 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
         have hsome_z_mem :
             (Option.some ⟨z, hz⟩).val ∈ Option.toZFSet B := SetLike.coe_mem _
         refine ⟨hsome_y_mem, hsome_z_mem, ?_⟩
-        rw [dite_cond_eq_true (eq_true hsome_y_mem)]
+        rw [dite_eq_left_of_eq_true (eq_true hsome_y_mem)]
         split_ifs with isSome
         · have chosen_eq : Classical.choose isSome = ⟨y, hy⟩ :=
             (some_val_injEq.mp
@@ -416,7 +416,7 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
       have : (Option.some ⟨y, hy⟩).val ∈ Option.toZFSet B :=
         SetLike.coe_mem _
       obtain ⟨x, hx, xy⟩ := hsurj _ this
-      rw [flift, lambda_spec, dite_cond_eq_true (eq_true hx)] at xy
+      rw [flift, lambda_spec, dite_eq_left_of_eq_true (eq_true hx)] at xy
       obtain ⟨-, -, eq⟩ := xy
       split_ifs at eq with issome
       · have eq_val := congrArg Subtype.val (some_val_injEq.mp eq)
@@ -439,7 +439,7 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
       have hnone_mem : (@none A).val ∈ Option.toZFSet A := SetLike.coe_mem _
       and_intros
       · apply SetLike.coe_mem
-      · rw [flift, lambda_spec, dite_cond_eq_true (eq_true hnone_mem)]
+      · rw [flift, lambda_spec, dite_eq_left_of_eq_true (eq_true hnone_mem)]
         and_intros
         · apply SetLike.coe_mem
         · exact hy
@@ -451,7 +451,7 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
       · rintro y ⟨hy, pair⟩
         rw [flift, lambda_spec] at pair
         obtain ⟨-, -, eq⟩ := pair
-        rw [dite_cond_eq_true (eq_true hy)] at eq
+        rw [dite_eq_left_of_eq_true (eq_true hy)] at eq
         split_ifs at eq with issome
         · exact False.elim (ZFSet.Option.some_ne_none _ (Subtype.ext eq.symm))
         · have this : (⟨y, hy⟩ : Option A) = none := by
@@ -467,7 +467,7 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
         SetLike.coe_mem _
       and_intros
       · apply SetLike.coe_mem
-      · rw [flift, lambda_spec, dite_cond_eq_true (eq_true hsome_mem)]
+      · rw [flift, lambda_spec, dite_eq_left_of_eq_true (eq_true hsome_mem)]
         and_intros
         · apply SetLike.coe_mem
         · exact hy
@@ -485,7 +485,7 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
       · rintro z ⟨hz, fzy⟩
         rw [flift, lambda_spec] at fzy
         obtain ⟨-, -, eq⟩ := fzy
-        rw [dite_cond_eq_true (eq_true hz)] at eq
+        rw [dite_eq_left_of_eq_true (eq_true hz)] at eq
         split_ifs at eq with issome
         · have z_eq_some := congrArg Subtype.val (Classical.choose_spec issome)
           have chosen_pair : (Classical.choose issome).val.pair y ∈ f := by

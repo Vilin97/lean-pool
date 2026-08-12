@@ -93,7 +93,7 @@ private lemma eq_zero_of_sum_eq_zero {n k : ℕ} (g : Fin n → (Fin k → ZMod 
         apply Finset.sum_congr rfl
         intro j hj
         dsimp [m]
-        rw [if_pos hj]
+        rw [ite_eq_left hj]
       rw [this, Finset.sum_const]
       simp
     have hs2 : ∑ j ∈ S \ S₁, m j = 0 := by
@@ -101,7 +101,7 @@ private lemma eq_zero_of_sum_eq_zero {n k : ℕ} (g : Fin n → (Fin k → ZMod 
       intro j hj
       dsimp [m]
       have h1 : j ∉ S₁ := (Finset.mem_sdiff.mp hj).2
-      rw [if_neg h1, if_pos hj]
+      rw [ite_eq_right h1, ite_eq_left hj]
     have hs3 : ∑ j ∈ Finset.univ \ S, m j = (Finset.univ \ S).card := by
       have : ∑ j ∈ Finset.univ \ S, m j = ∑ j ∈ Finset.univ \ S, 1 := by
         apply Finset.sum_congr rfl
@@ -110,7 +110,7 @@ private lemma eq_zero_of_sum_eq_zero {n k : ℕ} (g : Fin n → (Fin k → ZMod 
         have h1 : j ∉ S := (Finset.mem_sdiff.mp hj).2
         have h2 : j ∉ S₁ := fun h => h1 (hS₁_sub h)
         have h3 : j ∉ S \ S₁ := fun h => h1 (Finset.mem_sdiff.mp h).1
-        rw [if_neg h2, if_neg h3]
+        rw [ite_eq_right h2, ite_eq_right h3]
       rw [this, Finset.sum_const]
       simp
     rw [hs1, hs2, hs3, hS₁_card]
@@ -136,7 +136,7 @@ private lemma eq_zero_of_sum_eq_zero {n k : ℕ} (g : Fin n → (Fin k → ZMod 
       apply Finset.sum_eq_zero
       intro j hj
       dsimp [m]
-      rw [if_pos hj]
+      rw [ite_eq_left hj]
       have : ((2 : ℕ) : ZMod 2) = 0 := CharP.cast_eq_zero (ZMod 2) 2
       rw [this, zero_smul]
     have hs2 : ∑ j ∈ S \ S₁, ((m j : ℕ) : ZMod 2) • g j = 0 := by
@@ -144,7 +144,7 @@ private lemma eq_zero_of_sum_eq_zero {n k : ℕ} (g : Fin n → (Fin k → ZMod 
       intro j hj
       dsimp [m]
       have h1 : j ∉ S₁ := (Finset.mem_sdiff.mp hj).2
-      rw [if_neg h1, if_pos hj]
+      rw [ite_eq_right h1, ite_eq_left hj]
       have : ((0 : ℕ) : ZMod 2) = 0 := Nat.cast_zero
       rw [this, zero_smul]
     have hs3 : ∑ j ∈ Finset.univ \ S, ((m j : ℕ) : ZMod 2) • g j
@@ -155,7 +155,7 @@ private lemma eq_zero_of_sum_eq_zero {n k : ℕ} (g : Fin n → (Fin k → ZMod 
       have h1 : j ∉ S := (Finset.mem_sdiff.mp hj).2
       have h2 : j ∉ S₁ := fun h => h1 (hS₁_sub h)
       have h3 : j ∉ S \ S₁ := fun h => h1 (Finset.mem_sdiff.mp h).1
-      rw [if_neg h2, if_neg h3]
+      rw [ite_eq_right h2, ite_eq_right h3]
       have : ((1 : ℕ) : ZMod 2) = 1 := Nat.cast_one
       rw [this, one_smul]
     rw [hs1, hs2, hs3, zero_add, zero_add]
@@ -192,11 +192,11 @@ private lemma eq_zero_of_sum_eq_zero {n k : ℕ} (g : Fin n → (Fin k → ZMod 
       exact ⟨Finset.mem_univ i, h_nz⟩
     by_cases hi1 : i ∈ S₁
     · dsimp [m]
-      rw [if_pos hi1]
+      rw [ite_eq_left hi1]
       decide
     · have hi2 : i ∈ S \ S₁ := Finset.mem_sdiff.mpr ⟨hi_mem, hi1⟩
       dsimp [m]
-      rw [if_neg hi1, if_pos hi2]
+      rw [ite_eq_right hi1, ite_eq_left hi2]
       decide
   have h_all_ones := huniq m h_sum_m h_sum_g i
   exact m_ne_ones h_all_ones

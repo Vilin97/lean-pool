@@ -35,7 +35,7 @@ private theorem sectorCurve_differentiableAt_off_knots (r : ℝ) (α : ℝ)
   rcases lt_or_gt_of_ne ht_not.1 with h1 | h1
   · have h_eq : sectorCurve r α =ᶠ[𝓝 t] fun s => (↑(s * r) : ℂ) := by
       filter_upwards [Iio_mem_nhds h1] with s hs
-      simp only [sectorCurve, if_pos (le_of_lt (mem_Iio.mp hs))]
+      simp only [sectorCurve, ite_eq_left (le_of_lt (mem_Iio.mp hs))]
     exact h_eq.differentiableAt_iff.mpr
       ((hasDerivAt_id t).mul_const r).ofReal_comp.differentiableAt
   · rcases lt_or_gt_of_ne ht_not.2 with h2 | h2
@@ -52,8 +52,8 @@ private theorem sectorCurve_differentiableAt_off_knots (r : ℝ) (α : ℝ)
           fun s => (↑((3 - s) * r) : ℂ) * exp (I * ↑α) := by
         filter_upwards [Ioi_mem_nhds h2] with s hs
         simp only [sectorCurve,
-          if_neg (not_le.mpr (lt_trans one_lt_two (mem_Ioi.mp hs))),
-          if_neg (not_le.mpr (mem_Ioi.mp hs))]
+          ite_eq_right (not_le.mpr (lt_trans one_lt_two (mem_Ioi.mp hs))),
+          ite_eq_right (not_le.mpr (mem_Ioi.mp hs))]
       refine h_eq.differentiableAt_iff.mpr ?_
       apply DifferentiableAt.mul_const
       exact (((hasDerivAt_const t (3 : ℝ)).sub
@@ -262,10 +262,10 @@ private theorem cauchyPV_g_aestronglyMeasurable (r : ℝ) (α : ℝ)
     filter_upwards [ae_restrict_mem measurableSet_Ioc] with t ht
     simp only [cauchyPrincipalValueIntegrand', Set.indicator_apply]
     by_cases h : ‖sectorCurve r α t - 0‖ > ε
-    · rw [if_pos (show t ∈ {t | ε < ‖sectorCurve r α t - 0‖} ∩ Icc 0 3 from
-        ⟨h, Ioc_subset_Icc_self ht⟩), if_pos h]
-    · rw [if_neg (show t ∉ {t | ε < ‖sectorCurve r α t - 0‖} ∩ Icc 0 3 from
-        fun ⟨hm, _⟩ => h hm), if_neg h])
+    · rw [ite_eq_left (show t ∈ {t | ε < ‖sectorCurve r α t - 0‖} ∩ Icc 0 3 from
+        ⟨h, Ioc_subset_Icc_self ht⟩), ite_eq_left h]
+    · rw [ite_eq_right (show t ∉ {t | ε < ‖sectorCurve r α t - 0‖} ∩ Icc 0 3 from
+        fun ⟨hm, _⟩ => h hm), ite_eq_right h])
 
 private theorem cauchyPV_g_norm_le (r : ℝ) (α : ℝ)
     (g : ℂ → ℂ) (ε : ℝ) (t : ℝ) :
@@ -311,7 +311,7 @@ private theorem cauchyPV_inv_integrableOn_0δ (r : ℝ) (hr : 0 < r) (α : ℝ)
   (intervalIntegrable_const (c := (0 : ℂ))).congr (fun t ht => by
     rw [Set.uIoc_of_le (div_pos hε_pos hr).le] at ht
     simp only [cauchyPrincipalValueIntegrand', sub_zero]
-    rw [if_neg (not_lt.mpr _)]
+    rw [ite_eq_right (not_lt.mpr _)]
     rw [sectorCurve_norm_seg1 r hr α t ⟨le_of_lt ht.1,
       le_trans ht.2 (le_of_lt (by rwa [div_lt_one hr] : ε / r < 1))⟩]
     exact le_trans (mul_le_mul_of_nonneg_right ht.2 hr.le)
@@ -326,7 +326,7 @@ private theorem cauchyPV_inv_integrableOn_3δ3 (r : ℝ) (hr : 0 < r) (α : ℝ)
     have hεr_lt_one : ε / r < 1 := (div_lt_one hr).mpr hε_lt_r
     rw [Set.uIoc_of_le (by linarith : 3 - ε / r ≤ 3)] at ht
     simp only [cauchyPrincipalValueIntegrand', sub_zero]
-    rw [if_neg (not_lt.mpr _)]
+    rw [ite_eq_right (not_lt.mpr _)]
     rw [sectorCurve_norm_seg3' r hr α t ⟨by linarith [ht.1], ht.2⟩]
     have : (3 - t) * r ≤ ε / r * r :=
       mul_le_mul_of_nonneg_right (by linarith [ht.1]) hr.le
@@ -348,7 +348,7 @@ private theorem cauchyPV_inv_integrableOn_δ1 (r : ℝ) (hr : 0 < r) (α : ℝ)
       cauchyPrincipalValueIntegrand' (fun z => z⁻¹) (sectorCurve r α) 0 ε t =
       (↑(t⁻¹) : ℂ) := fun t ⟨htδ, ht1⟩ => by
     simp only [cauchyPrincipalValueIntegrand', sub_zero]
-    rw [if_pos]; · exact pv_integrand_seg1 r hr α t ⟨lt_trans hδ htδ, ht1⟩
+    rw [ite_eq_left]; · exact pv_integrand_seg1 r hr α t ⟨lt_trans hδ htδ, ht1⟩
     · rw [sectorCurve_norm_seg1 r hr α t ⟨le_of_lt (lt_trans hδ htδ), le_of_lt ht1⟩]
       have hδr : δ * r = ε := div_mul_cancel₀ ε (ne_of_gt hr)
       calc ε = δ * r := hδr.symm
@@ -372,7 +372,7 @@ private theorem cauchyPV_inv_integrableOn_12 (r : ℝ) (hr : 0 < r) (α : ℝ)
       cauchyPrincipalValueIntegrand' (fun z => z⁻¹) (sectorCurve r α) 0 ε t =
       I * ↑α := fun t ⟨ht1, ht2⟩ => by
     simp only [cauchyPrincipalValueIntegrand', sub_zero]
-    rw [if_pos]; · exact pv_integrand_seg2 r hr α t ⟨ht1, ht2⟩
+    rw [ite_eq_left]; · exact pv_integrand_seg2 r hr α t ⟨ht1, ht2⟩
     · rw [sectorCurve_seg2 r α t ⟨le_of_lt ht1, le_of_lt ht2⟩]
       simp only [norm_mul, Complex.norm_exp_I_mul_ofReal, mul_one]
       rw [Complex.norm_of_nonneg (le_of_lt hr)]; exact hε_lt_r
@@ -404,7 +404,7 @@ private theorem cauchyPV_inv_integrableOn_2_3δ (r : ℝ) (hr : 0 < r) (α : ℝ
       cauchyPrincipalValueIntegrand' (fun z => z⁻¹) (sectorCurve r α) 0 ε t =
       -(↑((3 - t)⁻¹) : ℂ) := fun t ⟨ht2, ht3δ⟩ => by
     simp only [cauchyPrincipalValueIntegrand', sub_zero]
-    rw [if_pos]
+    rw [ite_eq_left]
     · rw [sectorCurve_seg3 r α t ⟨le_of_lt ht2, by linarith⟩,
           deriv_sectorCurve_seg3 r α t ⟨ht2, by linarith⟩]
       have : (r : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (ne_of_gt hr)
@@ -746,11 +746,11 @@ private theorem pv_cutoff_integral_eq_mid (r : ℝ) (hr : 0 < r) (α : ℝ) (n :
   have hg_zero_left : ∀ t ∈ Set.uIcc (0 : ℝ) δ, g t = 0 := fun t ht => by
     simp only [g, sub_zero]
     rw [Set.uIcc_of_le hδ_pos.le] at ht
-    rw [if_neg (not_lt.mpr (h_norm_le_0δ t ht))]
+    rw [ite_eq_right (not_lt.mpr (h_norm_le_0δ t ht))]
   have hg_zero_right : ∀ t ∈ Set.uIcc (3 - δ) 3, g t = 0 := fun t ht => by
     simp only [g, sub_zero]
     rw [Set.uIcc_of_le (by linarith : 3 - δ ≤ 3)] at ht
-    rw [if_neg (not_lt.mpr (h_norm_le_3δ3 t ht))]
+    rw [ite_eq_right (not_lt.mpr (h_norm_le_3δ3 t ht))]
   have hg_eq_f_mid : ∀ᵐ x ∂volume, x ∈ Ioc δ (3 - δ) → g x = f x := by
     rw [ae_iff]
     apply measure_mono_null (t := {3 - δ})
@@ -760,7 +760,7 @@ private theorem pv_cutoff_integral_eq_mid (r : ℝ) (hr : 0 < r) (α : ℝ) (n :
       by_contra hne_3δ
       simp only [mem_singleton_iff] at hne_3δ
       have hx_ioo : x ∈ Ioo δ (3 - δ) := ⟨hx_ioc.1, lt_of_le_of_ne hx_ioc.2 hne_3δ⟩
-      exact hx_ne (by simp only [g, sub_zero, f]; rw [if_pos (h_norm_gt_mid x hx_ioo)])
+      exact hx_ne (by simp only [g, sub_zero, f]; rw [ite_eq_left (h_norm_gt_mid x hx_ioo)])
     · exact Real.volume_singleton
   have h_01 : ∫ t in (0 : ℝ)..δ, g t = 0 :=
     intervalIntegral.integral_zero_ae (ae_of_all _ (fun t ht =>

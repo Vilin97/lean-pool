@@ -197,8 +197,8 @@ lemma extension_conLong hp R : (hW.toWLift'.extensionLift hp R).ConLong := by
   have hget := congrArg (fun xs : List A => xs[2 * k + 1]?) ht
   change (List.take (2 * k + 2) (hW.toWLift'.extensionMap hp R).val')[2 * k + 1]? =
       (List.take (2 * k + 2) H.x.val)[2 * k + 1]? at hget
-  rw [List.getElem?_take, if_pos (by omega)] at hget
-  rw [List.getElem?_take, if_pos (by omega)] at hget
+  rw [List.getElem?_take, ite_eq_left (by omega)] at hget
+  rw [List.getElem?_take, ite_eq_left (by omega)] at hget
   have hleft : 2 * k + 1 < (hW.toWLift'.extensionMap hp R).val'.length := by
     have hlen := ExtensionsAt.val'_length (hW.toWLift'.extensionMap hp R)
     rw [hlen]
@@ -490,7 +490,6 @@ lemma take (hn : 1 ≤ h.2.num + n) :
   (H.take (2 * k + 1 + h.2.num + n) (by as_aux_lemma => omega)).Losable := by
   use H.conLong_take (h := by omega) h.1
   replace h := h.2
-  conv at h => simp [List.drop_take]
   conv => simp [List.drop_take]
   apply WinningPrefix.of_take (n := h.num)
   simpa (disch := omega) [List.take_take] using h.shrink
@@ -553,18 +552,18 @@ noncomputable def extension : ExtensionsAt H.x := by
 lemma extension_lost (h : H.Lost) :
   H.extension hp R = h.toLLift'.extensionMap hp R := by
   unfold extension
-  exact dif_pos h
+  exact dite_eq_left h
 lemma extension_losable (hnLost : ¬ H.Lost) (h : H.Losable) :
     H.extension hp R = h.extension hp := by
   unfold extension
-  exact (dif_neg hnLost).trans (dif_pos h)
+  exact (dite_eq_right hnLost).trans (dite_eq_left h)
 lemma extension_winnable (h : H.Winnable) :
   H.extension hp R = h.toWLift'.extensionMap hp R := by
   have hnLost : ¬ H.Lost := fun hL ↦ h (hL.1.mk.losable h.conLong).2
   have hnLosable : ¬ H.Losable := fun hL ↦ h hL.2
   classical
   unfold extension
-  exact (dif_neg hnLost).trans ((dif_neg hnLosable).trans (dif_pos h))
+  exact (dite_eq_right hnLost).trans ((dite_eq_right hnLosable).trans (dite_eq_left h))
 end Lift
 
 end «Section1»

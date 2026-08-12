@@ -132,9 +132,9 @@ theorem circleIntegral_eq_two_pi_I_mul_resAt {R : ℝ} (hR : 0 < R) (hf : Meromo
   rw [Finset.sum_congr rfl hval]
   by_cases ha : a ≤ -1
   · rw [Finset.sum_eq_single (-1)
-      (fun k _ hkne => by rw [if_neg hkne, mul_zero])
+      (fun k _ hkne => by rw [ite_eq_right hkne, mul_zero])
       (fun hnmem => absurd (Finset.mem_Icc.mpr ⟨ha, le_refl _⟩) hnmem)]
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     change laurentCoeffAt f z₀ (-1) * (2 * π * I) = 2 * π * I * resAt f z₀
     rw [resAt]; ring
   · push Not at ha

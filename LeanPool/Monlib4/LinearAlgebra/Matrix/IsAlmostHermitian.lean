@@ -151,7 +151,7 @@ theorem isDiagonal_eq {R : Type _} [Zero R] [DecidableEq n] (A : Matrix n n R) :
   constructor
   · intro h i j
     by_cases H : i = j
-    · simp_rw [H, of_apply, if_true, diag]
+    · simp_rw [H, of_apply, ite_true, diag]
     · simp_all
   · rintro h i j hij
     specialize h i j

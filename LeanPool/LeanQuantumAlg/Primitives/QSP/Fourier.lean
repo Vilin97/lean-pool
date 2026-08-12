@@ -410,8 +410,8 @@ theorem qspYZZYZ_forward (φ θ₀ φ₀ : ℝ) (ps : List (ℝ × ℝ)) :
           * Complex.exp (-((((φ - φ₀) / 2 : ℝ) : ℂ) * Complex.I))),
         ?_, fun x => ?_⟩
       · refine isYZPair_of_coeff (fun m hm => ?_) (fun m hm => ?_) ?_
-        · rw [Polynomial.coeff_C, if_neg (by omega)]
-        · rw [Polynomial.coeff_C, if_neg (by omega)]
+        · rw [Polynomial.coeff_C, ite_eq_right (by omega)]
+        · rw [Polynomial.coeff_C, ite_eq_right (by omega)]
         · rw [conjP_C, conjP_C, reflect_zero_C, reflect_zero_C, pow_zero,
             ← C_mul, ← C_mul, ← C_add, habs, map_one]
       · rw [qspYZZYZ_nil]
@@ -501,8 +501,8 @@ theorem qspYZY_forward (θ₀ : ℝ) (θs : List ℝ) :
       refine ⟨C ((Real.cos (θ₀ / 2) : ℂ)), C ((Real.sin (θ₀ / 2) : ℂ)),
         ⟨?_, ?_, ?_⟩, fun x => ?_⟩
       · refine isYZPair_of_coeff (fun m hm => ?_) (fun m hm => ?_) ?_
-        · rw [Polynomial.coeff_C, if_neg (by omega)]
-        · rw [Polynomial.coeff_C, if_neg (by omega)]
+        · rw [Polynomial.coeff_C, ite_eq_right (by omega)]
+        · rw [Polynomial.coeff_C, ite_eq_right (by omega)]
         · rw [conjP_C, conjP_C, reflect_zero_C, reflect_zero_C, pow_zero,
             ← C_mul, ← C_mul, ← C_add, Complex.conj_ofReal,
             Complex.conj_ofReal]

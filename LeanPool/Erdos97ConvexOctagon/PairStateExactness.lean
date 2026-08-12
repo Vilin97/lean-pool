@@ -219,7 +219,7 @@ theorem PairState.Exact.add
   cases hselected : pairSelectedB row (first, second) with
   | false => simp
   | true =>
-      simp only [if_true, Bool.or_true]
+      simp only [ite_true, Bool.or_true]
       constructor
       · simp
       · apply Bool.eq_iff_iff.mpr

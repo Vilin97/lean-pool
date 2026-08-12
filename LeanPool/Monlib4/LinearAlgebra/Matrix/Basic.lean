@@ -38,7 +38,7 @@ theorem mulVec_stdBasis {R m n : Type _} [Semiring R] [Fintype n]
     (a.mulVec (Pi.basisFun R n j)) i = a i j := by
   classical
   simp_rw [mulVec, dotProduct, Pi.basisFun_apply, Pi.single_apply,
-    mul_boole, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    mul_boole, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem mulVec_eq {R m n : Type _} [CommSemiring R] [Fintype n]
     (a b : Matrix m n R) :
@@ -81,7 +81,7 @@ theorem smul_mulVec_assoc {R m n : Type _} [Semiring R] [Fintype n]
 theorem one_eq_sum_std_matrix {n R : Type _} [CommSemiring R] [Fintype n] [DecidableEq n] :
     (1 : Matrix n n R) = ∑ r : n, Matrix.single r r (1 : R) := by
   simp_rw [← Matrix.ext_iff, Matrix.sum_apply, Matrix.one_apply, Matrix.single, ite_and,
-    of_apply, Finset.sum_ite_eq', Finset.mem_univ, if_true, forall₂_true_iff]
+    of_apply, Finset.sum_ite_eq', Finset.mem_univ, ite_true, forall₂_true_iff]
 
 /-- The trace of a Kronecker product is the product of traces. -/
 theorem kronecker_trace {R n : Type _} [CommSemiring R] [Fintype n]
@@ -167,7 +167,7 @@ theorem kmul_representation {R n₁ n₂ : Type _} [Fintype n₁] [Fintype n₂]
   simp_rw [← Matrix.ext_iff, Matrix.sum_apply, Matrix.smul_apply, Matrix.kroneckerMap,
     Matrix.single, Matrix.of_apply, ite_mul, MulZeroClass.zero_mul, one_mul, smul_ite,
     smul_zero, ite_and, Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, Prod.mk.eta, smul_eq_mul, mul_one, forall₂_true_iff]
+    Finset.mem_univ, ite_true, Prod.mk.eta, smul_eq_mul, mul_one, forall₂_true_iff]
 
 theorem kronecker_conjTranspose {R m n : Type _} [CommSemiring R] [StarRing R]
     (x : Matrix n n R) (y : Matrix m m R) :
@@ -298,7 +298,7 @@ theorem Matrix.single.sum_star_hMul_self [Fintype n] (i j : n) (a b : R) :
       a * star b := by
   simp_rw [Matrix.star_apply, Matrix.single.star_apply, Matrix.single, Matrix.of_apply, ite_mul,
     MulZeroClass.zero_mul, mul_ite, MulZeroClass.mul_zero, ite_and, Finset.sum_ite_irrel,
-    Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem Matrix.single.sum_star_hMul_self' {R : Type _} [Fintype n] [Semiring R] [StarRing R]
     (i j : n) :
@@ -328,7 +328,7 @@ theorem Matrix.single.hMul_stdBasisMatrix {R p : Type _} [Semiring R] [Decidable
       ite (i = x ∧ j = k ∧ l = y) (a * b) 0 := by
   simp_rw [Matrix.mul_apply, Matrix.single, ite_and, of_apply, ite_mul,
     MulZeroClass.zero_mul, mul_ite, MulZeroClass.mul_zero, Finset.sum_ite_irrel,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_const_zero, eq_comm]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_const_zero, eq_comm]
 
 theorem Matrix.single.hMul_stdBasis_matrix' {R p : Type _} [Fintype n] [DecidableEq p]
     [Semiring R] (i : m) (j k : n) (l : p) :
@@ -337,7 +337,7 @@ theorem Matrix.single.hMul_stdBasis_matrix' {R p : Type _} [Fintype n] [Decidabl
   ext x y
   simp_rw [Matrix.smul_apply, Matrix.mul_apply, Matrix.single, ite_and, of_apply, ite_mul,
     MulZeroClass.zero_mul, one_mul, Finset.sum_ite_irrel, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, Finset.sum_const_zero, smul_ite, smul_zero, smul_eq_mul, mul_one, ← ite_and,
+    ite_true, Finset.sum_const_zero, smul_ite, smul_zero, smul_eq_mul, mul_one, ← ite_and,
     eq_comm, and_comm]
 
 theorem Matrix.transposeAlgEquiv_symm_op_apply {n R α : Type _} [CommSemiring R]

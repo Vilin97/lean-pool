@@ -65,7 +65,7 @@ end
 
 private def revertTacDSimps := #[``List.findIdx, ``List.findIdx.go,
   ``List.get?Internal, ``List.eraseIdx, ``String.reduceBEq,
-  ``String.reduceBNe, ``cond_false, ``cond_true, ``Option.elim]
+  ``String.reduceBNe, ``Bool.cond_false, ``Bool.cond_true, ``Option.elim]
 
 private def revertAllTacDSimps := #[``repeatedImplies, ``List.map, ``List.foldr]
 

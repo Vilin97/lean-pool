@@ -63,7 +63,7 @@ noncomputable def diagMat (a : Fin n → ℕ) : GL (Fin n) ℚ :=
 
 @[simp] lemma diagMat_val (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) :
     (↑(diagMat n a) : Matrix (Fin n) (Fin n) ℚ) =
-    Matrix.diagonal (fun i => (a i : ℚ)) := by unfold diagMat; rw [dif_pos ha]; rfl
+    Matrix.diagonal (fun i => (a i : ℚ)) := by unfold diagMat; rw [dite_eq_left ha]; rfl
 
 lemma diagMat_hasIntEntries (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) : HasIntEntries n (diagMat n a) :=
   ⟨Matrix.diagonal (fun i => (a i : ℤ)),
@@ -83,7 +83,7 @@ lemma diagMat_det (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) :
   simp [ha, Matrix.det_diagonal]
 
 lemma diagMat_one : diagMat n (fun _ => 1) = 1 := by
-  simp only [diagMat, dif_pos (fun _ => Nat.one_pos)]
+  simp only [diagMat, dite_eq_left (fun _ => Nat.one_pos)]
   apply Units.ext; ext i j; simp [Matrix.one_apply]
 
 end Diagonal
@@ -101,7 +101,8 @@ noncomputable def diagMatDelta (a : Fin n → ℕ) : (GLPair n).Δ :=
   else ⟨1, (GLPair n).Δ.one_mem⟩
 
 @[simp] lemma diagMat_delta_val (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) :
-    (↑(diagMatDelta n a) : GL (Fin n) ℚ) = diagMat n a := by simp only [diagMatDelta, dif_pos ha]
+    (↑(diagMatDelta n a) : GL (Fin n) ℚ) = diagMat n a := by
+  simp only [diagMatDelta, dite_eq_left ha]
 
 end HeckeDiagonal
 
@@ -164,7 +165,7 @@ lemma T_diag_rep_decompose (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) :
 
 lemma T_diag_ones : TDiag (fun _ : Fin n => 1) = HeckeCoset.one (GLPair n) := by
   simp only [TDiag, HeckeCoset.one]; rw [HeckeCoset.eq_iff]
-  simp only [diagMatDelta, dif_pos (fun _ => Nat.one_pos)]
+  simp only [diagMatDelta, dite_eq_left (fun _ => Nat.one_pos)]
   congr 1; exact diagMat_one n
 
 /-- Two diagonal double cosets are equal iff the underlying double cosets in `GL_n(ℚ)` coincide. -/
@@ -339,9 +340,9 @@ theorem exists_diagonal_of_posdet (A : Matrix (Fin n) (Fin n) ℤ) (hdet : 0 < A
   have hsv_sq : ∀ i, sv i * sv i = 1 := fun i => by simp only [hsv_def]; split_ifs <;> ring
   have hsv_mul_d : ∀ i, sv i * d i = a i := by
     intro i; simp only [hsv_def, hd_def]; rcases lt_trichotomy (a i) 0 with h | h | h
-    · rw [if_neg (not_lt.mpr h.le), abs_of_neg h]; ring
+    · rw [ite_eq_right (not_lt.mpr h.le), abs_of_neg h]; ring
     · exact absurd h (ha_ne i)
-    · rw [if_pos h, abs_of_pos h, one_mul]
+    · rw [ite_eq_left h, abs_of_pos h, one_mul]
   have h_sd : Matrix.diagonal a = Matrix.diagonal sv * Matrix.diagonal d := by
     rw [Matrix.diagonal_mul_diagonal]; congr 1; ext i; exact (hsv_mul_d i).symm
   have hss : Matrix.diagonal sv * Matrix.diagonal sv = 1 := by
@@ -504,7 +505,7 @@ private lemma gcd_step_general (k : ℕ) (d : Fin (k + 2) → ℤ) (hd : ∀ i, 
   refine ⟨⟨L_big, hL_det_big⟩, ⟨R_big, hR_det_big⟩, d', hd'_pos,
     by show d' ⟨0, _⟩ = g; simp [d'], ?_, ?_, ?_, ?_⟩
   · intro i hi1 hi2; show d' i = d i
-    simp only [d']; rw [if_neg (show i ≠ (0 : Fin (k + 2)) from hi1), if_neg hi2]
+    simp only [d']; rw [ite_eq_right (show i ≠ (0 : Fin (k + 2)) from hi1), ite_eq_right hi2]
   · exact Nat.le_of_dvd (Int.natAbs_pos.mpr (ne_of_gt ha))
       (Int.natAbs_dvd_natAbs.mpr (Int.gcd_dvd_left a b))
   · intro hndvd
@@ -546,8 +547,8 @@ private lemma gcd_step_general (k : ℕ) (d : Fin (k + 2) → ℤ) (hd : ∀ i, 
           g, p, q]
       rw [h_head, h_head']; exact gcd_2x2_mul a b
     · congr 1; ext i; simp only [Function.comp, d']
-      rw [if_neg (by simp only [e]; exact genEquiv_symm_inr_ne_zero k j hj i),
-        if_neg (by simp only [e]; exact genEquiv_symm_inr_ne_j k j hj i)]
+      rw [ite_eq_right (by simp only [e]; exact genEquiv_symm_inr_ne_zero k j hj i),
+        ite_eq_right (by simp only [e]; exact genEquiv_symm_inr_ne_j k j hj i)]
 
 private lemma dvd_diag_of_SL_transform (m : ℕ) (d d' : Fin m → ℤ) (c : ℤ) (hc : ∀ i, c ∣ d i)
     (L R : Matrix (Fin m) (Fin m) ℤ) (heq : L * Matrix.diagonal d * R = Matrix.diagonal d') :
@@ -695,8 +696,8 @@ private lemma exists_divchain_of_posdiag (d : Fin n → ℤ) (hd : ∀ i, 0 < d 
         intro i hi; cases i with
         | zero =>
           simp only [d₂]
-          simp only [show (⟨0, by omega⟩ : Fin (k + 2)) = (0 : Fin (k + 2)) from rfl, if_true]
-          rw [if_neg (show (⟨1, hi⟩ : Fin (k + 2)) ≠ 0 from fun h =>
+          simp only [show (⟨0, by omega⟩ : Fin (k + 2)) = (0 : Fin (k + 2)) from rfl, ite_true]
+          rw [ite_eq_right (show (⟨1, hi⟩ : Fin (k + 2)) ≠ 0 from fun h =>
             absurd (Fin.ext_iff.mp h) (by simp))]
           exact (dvd_diag_of_SL_transform (k + 1)
             (fun i : Fin (k + 1) => d₁ ⟨i.val + 1, by omega⟩) d_tail' (d₁ 0)
@@ -704,9 +705,9 @@ private lemma exists_divchain_of_posdiag (d : Fin n → ℤ) (hd : ∀ i, 0 < d 
             (R_tail : Matrix _ _ ℤ) hmul_tail) ⟨0, by omega⟩
         | succ i =>
           simp only [d₂]
-          rw [if_neg (show (⟨i + 1, by omega⟩ : Fin (k + 2)) ≠ 0 from fun h =>
+          rw [ite_eq_right (show (⟨i + 1, by omega⟩ : Fin (k + 2)) ≠ 0 from fun h =>
               absurd (Fin.ext_iff.mp h) (by simp)),
-            if_neg (show (⟨i + 2, hi⟩ : Fin (k + 2)) ≠ 0 from fun h =>
+            ite_eq_right (show (⟨i + 2, hi⟩ : Fin (k + 2)) ≠ 0 from fun h =>
               absurd (Fin.ext_iff.mp h) (by simp))]
           change d_tail' ⟨i, by omega⟩ ∣ d_tail' ⟨i + 1, by omega⟩
           exact hd_tail'_chain i (by omega)

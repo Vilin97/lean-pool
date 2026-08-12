@@ -965,7 +965,7 @@ private lemma hermiteFunction_deriv_l2_sq (n : ℕ) :
   rw [split_sub _ _ hB hC]
   simp only [f_A, f_B, f_C, integral_const_mul, hermiteFunction_l2_sq, mul_one]
   have hne : n - 1 ≠ n + 1 := by omega
-  rw [hermiteFunction_orthonormal (n - 1) (n + 1), if_neg hne, mul_zero]
+  rw [hermiteFunction_orthonormal (n - 1) (n + 1), ite_eq_right hne, mul_zero]
   push_cast; ring
 
 /-- The squared hermiteFunction has a HasDerivAt using the chain/product rule. -/
@@ -1459,7 +1459,7 @@ private lemma integral_f_xpow_gaussian_zero
       have h_same_deg : Q.degree = (Polynomial.C (Real.sqrt 2 ^ k) * Polynomial.X ^ k).degree := by
         rw [Polynomial.degree_eq_natDegree hQ_ne, Polynomial.degree_eq_natDegree hmon_ne,
           hQ_natDeg, hmon_deg]
-      have h_deg_lt := Polynomial.degree_sub_lt h_same_deg hQ_ne h_cancel
+      have h_deg_lt := Polynomial.degree_sub_lt_left h_same_deg hQ_ne h_cancel
       rw [Polynomial.degree_eq_natDegree hQ_ne, hQ_natDeg] at h_deg_lt
       by_cases hR_zero : Q - Polynomial.C (Real.sqrt 2 ^ k) * Polynomial.X ^ k = 0
       · rw [hR_zero]; exact Nat.pos_of_ne_zero hk

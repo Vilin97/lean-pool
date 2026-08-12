@@ -97,11 +97,13 @@ theorem dual_shatters_imp_original_shatters {d : ℕ}
     let b0 : Fin (d + 1) → Bool := fun i => i == j
     have hlabel_j_b0 : label j (embed b0) = true := by
       simp only [label]
-      rw [dif_pos ⟨b0, rfl⟩, hembed_inj (⟨b0, rfl⟩ : ∃ b, embed b = embed b0).choose_spec]
+      rw [dite_eq_left ⟨b0, rfl⟩,
+        hembed_inj (⟨b0, rfl⟩ : ∃ b, embed b = embed b0).choose_spec]
       simp [b0]
     have hlabel_k_b0 : label k (embed b0) = false := by
       simp only [label]
-      rw [dif_pos ⟨b0, rfl⟩, hembed_inj (⟨b0, rfl⟩ : ∃ b, embed b = embed b0).choose_spec]
+      rw [dite_eq_left ⟨b0, rfl⟩,
+        hembed_inj (⟨b0, rfl⟩ : ∃ b, embed b = embed b0).choose_spec]
       simp only [b0]
       cases hkj : (k == j)
       · rfl
@@ -124,7 +126,8 @@ theorem dual_shatters_imp_original_shatters {d : ℕ}
     have step1 : (embed g).val.val (x j) = label j (embed g) := hx j (embed g)
     have step2 : label j (embed g) = g j := by
       simp only [label]
-      rw [dif_pos ⟨g, rfl⟩, hembed_inj (⟨g, rfl⟩ : ∃ b, embed b = embed g).choose_spec]
+      rw [dite_eq_left ⟨g, rfl⟩,
+        hembed_inj (⟨g, rfl⟩ : ∃ b, embed b = embed g).choose_spec]
     rw [step1, step2]
   exact ⟨T, hT_card, hT_shatters⟩
 

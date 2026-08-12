@@ -236,7 +236,7 @@ private theorem exists_linkOrd_factor [DecidableEq X] {A B : X} (hAB : A ≠ B)
     · -- the zero: `linkOrd = 1`
       have hxA : x ≠ A := fun heq => hAB heq.symm
       have hord : linkOrd A x x = 1 := by
-        rw [linkOrd, if_pos rfl, if_neg hxA, sub_zero]
+        rw [linkOrd, ite_eq_left rfl, ite_eq_right hxA, sub_zero]
       refine ⟨(P.β - P.α)⁻¹ * deriv τ z₀, mul_ne_zero (inv_ne_zero
         (sub_ne_zero.mpr (Ne.symm hαβ))) hτderiv_ne, ?_⟩
       have hzero := P.tendsto_zero_factor
@@ -274,7 +274,7 @@ private theorem exists_linkOrd_factor [DecidableEq X] {A B : X} (hAB : A ≠ B)
     · rcases eq_or_ne x A with rfl | hxA
       · -- the pole: `linkOrd = -1`
         have hord : linkOrd x B x = -1 := by
-          rw [linkOrd, if_neg hAB, if_pos rfl, zero_sub]
+          rw [linkOrd, ite_eq_right hAB, ite_eq_left rfl, zero_sub]
         have hslope_inv : Tendsto (fun z => (z - z₀) * (τ z - τ z₀)⁻¹)
             (nhdsWithin z₀ {z₀}ᶜ) (nhds ((deriv τ z₀)⁻¹)) := by
           have h1 := hslope.inv₀ hτderiv_ne
@@ -324,7 +324,7 @@ private theorem exists_linkOrd_factor [DecidableEq X] {A B : X} (hAB : A ≠ B)
           ← mul_assoc (τ (chartAt ℂ x q) - P.α), mul_inv_cancel₀ hτα, one_mul]
       · -- a regular point: `linkOrd = 0`
         have hord : linkOrd A B x = 0 := by
-          rw [linkOrd, if_neg hxB, if_neg hxA, sub_zero]
+          rw [linkOrd, ite_eq_right hxB, ite_eq_right hxA, sub_zero]
         have hexA : e x ≠ P.α := fun heq => hxA (e.injOn hxe hA (hPα ▸ heq))
         have hexB : e x ≠ P.β := fun heq => hxB (e.injOn hxe hB (hPβ ▸ heq))
         refine ⟨P.g (e x), P.g_ne_zero hexA hexB, ?_⟩
@@ -350,7 +350,7 @@ private theorem exists_linkOrd_factor [DecidableEq X] {A B : X} (hAB : A ≠ B)
     have hxA : x ≠ A := fun heq => hxe (heq ▸ hA)
     have hxB : x ≠ B := fun heq => hxe (heq ▸ hB)
     have hord : linkOrd A B x = 0 := by
-      rw [linkOrd, if_neg hxB, if_neg hxA, sub_zero]
+      rw [linkOrd, ite_eq_right hxB, ite_eq_right hxA, sub_zero]
     refine ⟨1, one_ne_zero, ?_⟩
     have hev := hlocal_out hxe
     refine (tendsto_const_nhds).congr' ?_

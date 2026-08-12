@@ -346,7 +346,7 @@ def trivialDLAHermBasis : DLAHermBasis ({1} : Set (Matrix (Fin 1) (Fin 1) ℂ)) 
   B := fun _ => 1
   herm := fun _ => conjTranspose_one
   ortho := fun i j => by
-    rw [Subsingleton.elim i j, if_pos rfl]
+    rw [Subsingleton.elim i j, ite_eq_left rfl]
     simp [hsInner, conjTranspose_one, Matrix.trace_one]
   span_eq := by
     rw [Set.range_const, dynamicalLieAlgebra]

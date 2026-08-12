@@ -339,7 +339,7 @@ lemma arc_cpv_integral_S_identity (S : Finset UpperHalfPlane)
     by_cases h_near : ind t
     · have h_F_t : F t = 0 := by
         change cauchyPrincipalValueIntegrandOn _ _ _ _ _ = 0
-        rw [cauchyPrincipalValueIntegrandOn, if_pos h_near]
+        rw [cauchyPrincipalValueIntegrandOn, ite_eq_left h_near]
       have h_ind_4mt : ind (4 - t) := by
         by_cases h1 : 1 < t ∧ t < 3
         · exact (h_ind_sym t ⟨h1.1, h1.2⟩).mpr h_near
@@ -350,7 +350,7 @@ lemma arc_cpv_integral_S_identity (S : Finset UpperHalfPlane)
             subst this; exact (show (4 : ℝ) - 3 = 1 from by norm_num) ▸ h_ind_1
       have h_F_4mt : F (4 - t) = 0 := by
         change cauchyPrincipalValueIntegrandOn _ _ _ _ _ = 0
-        rw [cauchyPrincipalValueIntegrandOn, if_pos h_ind_4mt]
+        rw [cauchyPrincipalValueIntegrandOn, ite_eq_left h_ind_4mt]
       rw [h_F_4mt, h_F_t]; simp [h_near]
     · have ht_ioo : t ∈ Set.Ioo (1 : ℝ) 3 := by
         constructor
@@ -360,11 +360,11 @@ lemma arc_cpv_integral_S_identity (S : Finset UpperHalfPlane)
       have h_not_ind_4mt : ¬ind (4 - t) := fun h => h_near ((h_ind_sym t ht_ioo).mp h)
       have h_F_t : F t = logDeriv g (γ t) * deriv γ t := by
         change cauchyPrincipalValueIntegrandOn _ _ _ _ _ = _
-        unfold cauchyPrincipalValueIntegrandOn; rw [if_neg h_near]
+        unfold cauchyPrincipalValueIntegrandOn; rw [ite_eq_right h_near]
       have h_F_4mt : F (4 - t) = logDeriv g (γ (4 - t)) * deriv γ (4 - t) := by
         change cauchyPrincipalValueIntegrandOn _ _ _ _ _ = _
-        unfold cauchyPrincipalValueIntegrandOn; rw [if_neg h_not_ind_4mt]
-      rw [h_F_4mt, h_F_t, if_neg h_near]; simp only [Complex.ofReal_one, mul_one]
+        unfold cauchyPrincipalValueIntegrandOn; rw [ite_eq_right h_not_ind_4mt]
+      rw [h_F_4mt, h_F_t, ite_eq_right h_near]; simp only [Complex.ofReal_one, mul_one]
       have h_rev : γ (4 - t) = -(1 : ℂ) / γ t := fdBoundary_arc_S_reverse H t ht_ioo
       have h_d_4mt := h_deriv_arc (4-t) h_4mt
       have hg_ne : g (γ t) ≠ 0 := by
@@ -450,7 +450,7 @@ lemma arc_non_excluded_measure_tendsto (S : Finset UpperHalfPlane) (H : ℝ) :
       apply tendsto_const_nhds.congr'
       filter_upwards [Ioo_mem_nhdsGT hδ_pos] with ε hε
       rw [Set.mem_Ioo] at hε
-      rw [if_neg]; push Not
+      rw [ite_eq_right]; push Not
       intro s hs
       calc ε < δ := hε.2
         _ ≤ ‖fdBoundaryH H t - ↑s‖ := hδ_le s hs
@@ -590,7 +590,7 @@ lemma arc_cpv_eventually_eq_union (S : Finset UpperHalfPlane)
   by_cases h_sarc : ∃ s ∈ sArcOfS S, ‖fdBoundaryH H t - s‖ ≤ ε
   · have h_union : ∃ s ∈ sArcOfS S ∪ sVertOfS S, ‖fdBoundaryH H t - s‖ ≤ ε := by
       obtain ⟨s, hs, hle⟩ := h_sarc; exact ⟨s, Finset.mem_union_left _ hs, hle⟩
-    rw [if_pos h_union, if_pos h_sarc]
+    rw [ite_eq_left h_union, ite_eq_left h_sarc]
   · have h_no_union : ¬∃ s ∈ sArcOfS S ∪ sVertOfS S, ‖fdBoundaryH H t - s‖ ≤ ε := by
       rintro ⟨s, hs, hle⟩
       rcases Finset.mem_union.mp hs with h_arc | h_vert
@@ -598,7 +598,7 @@ lemma arc_cpv_eventually_eq_union (S : Finset UpperHalfPlane)
       · by_cases hs_arc : s ∈ sArcOfS S
         · exact h_sarc ⟨s, hs_arc, hle⟩
         · exact absurd hle (not_le.mpr (h_ind_eq s h_vert hs_arc))
-    rw [if_neg h_no_union, if_neg h_sarc]
+    rw [ite_eq_right h_no_union, ite_eq_right h_sarc]
 
 /-! ### Final bridge for Assembly.lean -/
 

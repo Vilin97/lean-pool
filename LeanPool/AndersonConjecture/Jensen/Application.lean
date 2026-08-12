@@ -260,12 +260,12 @@ lemma rest_eq_X0sq_divR (f g : MvPowerSeries (Fin 3) ℂ)
   ext d
   rw [coeff_lhs, coeff_rhs]
   by_cases hd1 : d 1 = 0
-  · rw [if_pos hd1]
+  · rw [ite_eq_left hd1]
     by_cases hd0 : 2 ≤ d 0
-    · rw [if_pos ⟨hd0, hd1⟩]
-    · rw [if_neg (fun h => hd0 h.1)]
+    · rw [ite_eq_left ⟨hd0, hd1⟩]
+    · rw [ite_eq_right (fun h => hd0 h.1)]
       exact coeff_f_vanish f g hmem d hd1 (by omega)
-  · rw [if_neg hd1, if_neg (fun h => hd1 h.2)]
+  · rw [ite_eq_right hd1, ite_eq_right (fun h => hd1 h.2)]
 
 lemma key_decomp'_app (f g : MvPowerSeries (Fin 3) ℂ)
     (hmem : X 2 * f - X 1 * g ∈ conjI) :

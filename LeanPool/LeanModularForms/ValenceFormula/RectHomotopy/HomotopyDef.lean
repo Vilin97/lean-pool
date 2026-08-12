@@ -188,21 +188,21 @@ lemma fdBoundaryToPolygonHomotopy_continuous :
       if p.1 ≤ 3 then HSeg3 p else if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
     apply Continuous.if_le H_seg3_continuous h45 continuous_fst continuous_const
     intro p hp
-    simp only [show p.1 ≤ 4 from le_trans (le_of_eq hp) (by norm_num : (3 : ℝ) ≤ 4), if_true]
+    simp only [show p.1 ≤ 4 from le_trans (le_of_eq hp) (by norm_num : (3 : ℝ) ≤ 4), ite_true]
     exact H_match_at_t3 p hp
   have h2345 : Continuous (fun p =>
       if p.1 ≤ 2 then HSeg2 p else if p.1 ≤ 3 then HSeg3 p
       else if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
     apply Continuous.if_le H_seg2_continuous h345 continuous_fst continuous_const
     intro p hp
-    simp only [show p.1 ≤ 3 from le_trans (le_of_eq hp) (by norm_num : (2 : ℝ) ≤ 3), if_true]
+    simp only [show p.1 ≤ 3 from le_trans (le_of_eq hp) (by norm_num : (2 : ℝ) ≤ 3), ite_true]
     exact H_match_at_t2 p hp
   have h12345 : Continuous (fun p =>
       if p.1 ≤ 1 then HSeg1 p else if p.1 ≤ 2 then HSeg2 p else if p.1 ≤ 3 then HSeg3 p
       else if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
     apply Continuous.if_le H_seg1_continuous h2345 continuous_fst continuous_const
     intro p hp
-    simp only [show p.1 ≤ 2 from le_trans (le_of_eq hp) (by norm_num : (1 : ℝ) ≤ 2), if_true]
+    simp only [show p.1 ≤ 2 from le_trans (le_of_eq hp) (by norm_num : (1 : ℝ) ≤ 2), ite_true]
     exact H_match_at_t1 p hp
   exact h12345
 

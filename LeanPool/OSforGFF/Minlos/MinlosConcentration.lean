@@ -637,13 +637,13 @@ lemma gram_schmidt_seminorm_aux (p : Seminorm ℝ F) (hp : p.IsHilbertian)
         refine Fin.cases ?_ (fun i' => ?_) i <;> refine Fin.cases ?_ (fun j' => ?_) j
         · -- (0,0)
           change p.innerProd e_new e_new = if (0 : Fin (k + 1)) = 0 then 1 else 0
-          rw [if_pos rfl, p.innerProd_self, he_new_norm, one_pow]
+          rw [ite_eq_left rfl, p.innerProd_self, he_new_norm, one_pow]
         · -- (0, succ j')
           change p.innerProd e_new (e j') = if (0 : Fin (k + 1)) = j'.succ then 1 else 0
-          rw [if_neg (Fin.succ_ne_zero j').symm, he_new_orth_e j']
+          rw [ite_eq_right (Fin.succ_ne_zero j').symm, he_new_orth_e j']
         · -- (succ i', 0)
           change p.innerProd (e i') e_new = if i'.succ = (0 : Fin (k + 1)) then 1 else 0
-          rw [if_neg (Fin.succ_ne_zero i'), p.innerProd_comm, he_new_orth_e i']
+          rw [ite_eq_right (Fin.succ_ne_zero i'), p.innerProd_comm, he_new_orth_e i']
         · -- (succ i', succ j')
           change p.innerProd (e i') (e j') = if i'.succ = j'.succ then 1 else 0
           rw [show (if i'.succ = j'.succ then (1:ℝ) else 0) =

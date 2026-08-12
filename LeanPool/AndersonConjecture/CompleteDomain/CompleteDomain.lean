@@ -340,7 +340,7 @@ lemma coeff_negSubst (g : MvPowerSeries (Fin 2) ℂ) (m : Fin 2 →₀ ℕ) :
     rw [hsum]
     ring
   · intro d hd
-    simp only [if_neg (Ne.symm hd), mul_zero]
+    simp only [ite_eq_right (Ne.symm hd), mul_zero]
 
 open MvPowerSeries in
 lemma ψHom_coeff_odd_parity (f : MvPowerSeries (Fin 3) ℂ)

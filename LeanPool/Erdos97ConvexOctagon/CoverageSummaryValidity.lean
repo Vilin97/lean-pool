@@ -199,7 +199,7 @@ theorem PatternSummary.valid_of_memberB
   have hgroup : group ∈ patternSummaryBucketGroups.toList := by
     exact Array.getElem_mem_toList hgroupIndex
   have hgroupGetD : patternSummaryBucketGroups.getD groupIndex #[] = group := by
-    simp only [Array.getD, dif_pos hgroupIndex, Array.getInternal_eq_getElem, group]
+    simp only [Array.getD, dite_eq_left hgroupIndex, Array.getInternal_eq_getElem, group]
   rw [PatternSummary.memberB, hgroupGetD] at hmember
   change (match (group.getD (summary.origin % 8) []).find?
       (fun candidate => candidate.origin == summary.origin) with
@@ -209,7 +209,7 @@ theorem PatternSummary.valid_of_memberB
   · let bucket := group[summary.origin % 8]'hbucketIndex
     have hbucket : bucket ∈ group.toList := Array.getElem_mem_toList hbucketIndex
     have hbucketGetD : group.getD (summary.origin % 8) [] = bucket := by
-      simp only [Array.getD, dif_pos hbucketIndex, Array.getInternal_eq_getElem,
+      simp only [Array.getD, dite_eq_left hbucketIndex, Array.getInternal_eq_getElem,
         bucket]
     rw [hbucketGetD] at hmember
     generalize hfind : bucket.find?
@@ -241,7 +241,7 @@ theorem HardSummary.valid_of_memberB
   have hgroup : group ∈ hardSummaryBucketGroups.toList := by
     exact Array.getElem_mem_toList hgroupIndex
   have hgroupGetD : hardSummaryBucketGroups.getD groupIndex #[] = group := by
-    simp only [Array.getD, dif_pos hgroupIndex, Array.getInternal_eq_getElem, group]
+    simp only [Array.getD, dite_eq_left hgroupIndex, Array.getInternal_eq_getElem, group]
   rw [HardSummary.memberB, hgroupGetD] at hmember
   change (match (group.getD (summary.origin % 8) []).find?
       (fun candidate => candidate.origin == summary.origin) with
@@ -251,7 +251,7 @@ theorem HardSummary.valid_of_memberB
   · let bucket := group[summary.origin % 8]'hbucketIndex
     have hbucket : bucket ∈ group.toList := Array.getElem_mem_toList hbucketIndex
     have hbucketGetD : group.getD (summary.origin % 8) [] = bucket := by
-      simp only [Array.getD, dif_pos hbucketIndex, Array.getInternal_eq_getElem,
+      simp only [Array.getD, dite_eq_left hbucketIndex, Array.getInternal_eq_getElem,
         bucket]
     rw [hbucketGetD] at hmember
     generalize hfind : bucket.find?

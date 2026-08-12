@@ -985,9 +985,6 @@ lemma fromSnd_toSnd : (fromSnd F K ∘ (H2Iso (galAct F K)).hom) ∘ toSnd = id 
       rw [show (1 : CrossProductAlgebra f) =
         ((A.toCocycles₂ A.arbitraryConjFactor) (1, 1))⁻¹.1 • (CrossProductAlgebra.basis 1) by
         apply CrossProductAlgebra.val_injective
-        change (1 : CrossProductAlgebra f).val =
-          (((A.toCocycles₂ A.arbitraryConjFactor) (1, 1))⁻¹.1 •
-            (CrossProductAlgebra.basis 1 : CrossProductAlgebra f)).val
         simp [f, CrossProductAlgebra.basis, CrossProductAlgebra.val_one,
           CrossProductAlgebra.val_smul, GoodRep.toCocycles₂]
         congr 1]

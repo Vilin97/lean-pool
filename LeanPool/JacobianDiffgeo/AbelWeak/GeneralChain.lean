@@ -397,7 +397,7 @@ private theorem exists_weakSolution_chain_step {P Q : X} {δ : Path Q P} (C : Ch
         · by_cases hym : y = M m
           · rw [hym]; exact hwpm
           · have hzero : ordAt m y = 0 := by
-              simp only [hordAt_def]; rw [if_neg hy0, if_neg hym]; ring
+              simp only [hordAt_def]; rw [ite_eq_right hy0, ite_eq_right hym]; ring
             rw [hzero]; exact isWeakSolutionAt_zero_of_ne hcm hne hy0 hym
       have hgAt : ∀ y, IsWeakSolutionAt g y
           ((if y = M (m + 1) then (1 : ℤ) else 0) + (if y = M m then (-1 : ℤ) else 0)) := by
@@ -405,16 +405,16 @@ private theorem exists_weakSolution_chain_step {P Q : X} {δ : Path Q P} (C : Ch
         by_cases hy1 : y = M (m + 1)
         · have hval : (if y = M (m + 1) then (1 : ℤ) else 0) + (if y = M m then (-1 : ℤ) else 0)
               = 1 := by
-            rw [if_pos hy1, if_neg (hy1 ▸ hdeg : y ≠ M m)]; ring
+            rw [ite_eq_left hy1, ite_eq_right (hy1 ▸ hdeg : y ≠ M m)]; ring
           rw [hval, hy1]; exact hg.weakAt_P
         · by_cases hym : y = M m
           · have hval : (if y = M (m + 1) then (1 : ℤ) else 0)
                 + (if y = M m then (-1 : ℤ) else 0) = -1 := by
-              rw [if_neg hy1, if_pos hym]; ring
+              rw [ite_eq_right hy1, ite_eq_left hym]; ring
             rw [hval, hym]; exact hg.weakAt_Q
           · have hval : (if y = M (m + 1) then (1 : ℤ) else 0)
                 + (if y = M m then (-1 : ℤ) else 0) = 0 := by
-              rw [if_neg hy1, if_neg hym]; ring
+              rw [ite_eq_right hy1, ite_eq_right hym]; ring
             rw [hval]
             exact isWeakSolutionAt_zero_of_ne hg.contMDiffOn
               (fun z h1 h2 => hg.ne_zero_off z h2 h1) hym hy1
@@ -454,7 +454,7 @@ private theorem exists_weakSolution_chain_step {P Q : X} {δ : Path Q P} (C : Ch
             hgcm'' hgne'' hh_ordA hh_ordB hk1 (fun x hxp hxr => hh_eq x hxp hxr)
         exact ⟨f', U', h1o, h2o, h3o, h5o, h6o, h7o, h8o, h9o⟩
       · have hMmzero : ordAt (m + 1) (M m) = 0 := by
-          simp only [hordAt_def]; rw [if_neg (Ne.symm hM0m), if_neg hdeg.symm]; ring
+          simp only [hordAt_def]; rw [ite_eq_right (Ne.symm hM0m), ite_eq_right hdeg.symm]; ring
         by_cases hM01 : M 0 = M (m + 1)
         · -- Case (iii): `M 0 = M (m + 1) ≠ M m`.
           have hne2 : M m ≠ M 0 := by rw [hM01]; exact hdeg.symm

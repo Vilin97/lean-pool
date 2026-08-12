@@ -298,7 +298,7 @@ def _root_.Dipath.Dihomotopy.hcomp (F : Dihomotopy p₀ q₀) (G : Dihomotopy p�
                 then F ((a₁ x).1, ⟨2 * ((a₁ x).2 : ℝ), double_mem_I this⟩)
                 else G ((a₁ x).1, ⟨2 * ((a₁ x).2 : ℝ) - 1,
                     by { apply double_sub_one_mem_I (le_of_lt _); convert h; norm_num }⟩)
-              := by apply Eq.symm; apply dif_pos; convert this using 1; norm_num
+              := by apply Eq.symm; apply dite_eq_left; convert this using 1; norm_num
         _ = if h : ((a₁ x).2 : ℝ) ≤ 1/2
                 then Fₕ.eval (a₁ x).1 ⟨2 * ((a₁ x).2 : ℝ), double_mem_I this⟩
                 else Gₕ.eval (a₁ x).1 ⟨2 * ((a₁ x).2 : ℝ)

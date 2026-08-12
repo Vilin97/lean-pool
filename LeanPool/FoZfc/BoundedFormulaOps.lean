@@ -259,7 +259,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
       funext k
       simp only [Function.comp_apply]
       by_cases h_k_lt_m : k.val < m
-      · rw [if_pos]
+      · rw [ite_eq_left]
         · unfold xs1
           have h2_1 : (Fin.cast h_bar_n (Fin.castAdd n' k)) =
               (Fin.ofNat (_n+n') k).castSucc := by
@@ -285,7 +285,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
             rw [h2_3_1]
             simp only [Fin.ofNat_eq_cast, snoc_init, Function.comp_apply,
               Fin.val_natCast, Fin.val_castSucc]
-            rw [if_pos]
+            rw [ite_eq_left]
             · apply congrArg
               apply Fin.eq_of_val_eq
               simp only [Fin.val_castAdd, Fin.val_natCast]
@@ -300,7 +300,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
       · by_cases h_k__n : k = _n
         · rw [h_k__n]
           unfold xs1
-          rw [if_neg]
+          rw [ite_eq_right]
           · have h2 : (Fin.cast h_bar_n (k.addNat n')) = Fin.last (_n+n') := by
               apply Fin.eq_of_val_eq
               simp_all
@@ -311,7 +311,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
               simpa only [Fin.val_last] using h_k__n
             simp_all
           · omega
-        · rw [if_neg]
+        · rw [ite_eq_right]
           · unfold xs1
             have h2 : (Fin.cast h_bar_n (k.addNat n')) = (Fin.ofNat (_n + n')
                 (k.val+n')).castSucc := by
@@ -331,7 +331,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
               omega
             nth_rw 2 [h4]
             simp only [Fin.ofNat_eq_cast, snoc_init, Function.comp_apply, Fin.val_natCast]
-            rw [if_neg]
+            rw [ite_eq_right]
             · apply congrArg
               apply Fin.eq_of_val_eq
               simp only [Fin.val_natCast, Fin.val_addNat]

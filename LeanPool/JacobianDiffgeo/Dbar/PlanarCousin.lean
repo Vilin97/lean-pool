@@ -105,7 +105,7 @@ theorem exists_holo_splitting_ball {c : ℂ} {R : ℝ} (hR : 0 < R)
     intro j z hz
     have hex : ∃ i, z ∈ W i := ⟨j, hz⟩
     rw [hH_def]
-    simp only [dif_pos hex]
+    simp only [dite_eq_left hex]
     exact hagree hex.choose j z ⟨hex.choose_spec, hz⟩
   have hH_cd : ContDiffOn ℝ ∞ H (Metric.ball c R) := by
     intro z hz

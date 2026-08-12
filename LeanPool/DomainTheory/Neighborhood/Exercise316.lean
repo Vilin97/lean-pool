@@ -98,8 +98,8 @@ theorem single_mono {n : ℕ} {X X' : Set α} (h : X ⊆ X') : single V n X ⊆ 
   intro p hp
   simp only [single, Set.mem_ofPred_eq] at hp ⊢
   by_cases hc : p.1 = n
-  · rw [if_pos hc] at hp ⊢; exact h hp
-  · rw [if_neg hc] at hp ⊢; exact hp
+  · rw [ite_eq_left hc] at hp ⊢; exact h hp
+  · rw [ite_eq_right hc] at hp ⊢; exact hp
 
 theorem single_inter {n : ℕ} (X X' : Set α) :
     single V n X ∩ single V n X' = single V n (X ∩ X') := by
@@ -159,8 +159,8 @@ theorem subset_single {W : Set (ℕ × α)} (hW : (iterSys V).mem W) (i : ℕ) :
   rintro ⟨j, a⟩ ha
   simp only [single, Set.mem_ofPred_eq]
   by_cases h : j = i
-  · rw [if_pos h]; subst h; exact ha
-  · rw [if_neg h]; exact V.sub_master (hW.1 j) ha
+  · rw [ite_eq_left h]; subst h; exact ha
+  · rw [ite_eq_right h]; exact V.sub_master (hW.1 j) ha
 
 theorem interUpTo_subset_master (F : ℕ → Set (ℕ × α)) (N : ℕ) :
     (iterSys V).interUpTo F N ⊆ (iterSys V).master := by

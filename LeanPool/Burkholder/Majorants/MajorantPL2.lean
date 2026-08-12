@@ -915,7 +915,7 @@ private lemma uA1_eq_zero_on_boundary_leTwo
   have hp_pos : 0 < p := by linarith
   have hpden_pos : 0 < p - 1 := by linarith
   unfold uA1
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
   have hfactor : x - pStar p * (x - a p * x) / 2 = 0 := by
     rw [hpStar, a_eq_leTwo p hp1 hp2]
     simp [q, hp_ne_one]
@@ -7277,7 +7277,7 @@ private lemma abs_rpow_tangent_leTwo
         simpa [hxpos, hxneg, abs_of_neg hxneg, abs_of_nonpos hz_nonpos] using ht
     · have hx0 : x = 0 := le_antisymm (le_of_not_gt hxpos) (le_of_not_gt hxneg)
       subst x
-      simp only [abs_zero, lt_irrefl, if_false, zero_mul, sub_zero, add_zero]
+      simp only [abs_zero, lt_irrefl, ite_false, zero_mul, sub_zero, add_zero]
       rw [Real.zero_rpow (by linarith : p ≠ 0)]
       exact Real.rpow_nonneg (abs_nonneg z) p
 
@@ -8756,7 +8756,7 @@ private lemma abs_uA1_le_growth
       |uA1 p x y|
           = |alpha p| * Real.rpow x (p - 1) *
               |x - pStar p * (x - y) / 2| := by
-            simp only [uA1, hxpos, if_true]
+            simp only [uA1, hxpos, ite_true]
             rw [abs_mul, abs_mul, abs_of_nonneg hpow_nonneg]
       _ ≤ |alpha p| * Real.rpow x (p - 1) * ((1 + |pStar p|) * x) := by
             gcongr
@@ -9037,7 +9037,7 @@ private lemma abs_DxuA1_le_growth
       |DxuA1 p x y|
           = |alpha p| * (|p| / 2) * Real.rpow x (p - 2) *
               |((p - 2) / (p - 1)) * x + y| := by
-            simp only [DxuA1, hxpos, if_true]
+            simp only [DxuA1, hxpos, ite_true]
             rw [abs_mul, abs_mul, abs_mul, abs_of_nonneg hpow_nonneg]
             rw [abs_div, abs_of_pos (show (0 : ℝ) < 2 by norm_num)]
       _ ≤ |alpha p| * (|p| / 2) * Real.rpow x (p - 2) *
@@ -9061,7 +9061,7 @@ private lemma abs_DyuA1_le_growth
     calc
       |DyuA1 p x y|
           = |alpha p| * Real.rpow x (p - 1) * (|pStar p| / 2) := by
-            simp only [DyuA1, hxpos, if_true]
+            simp only [DyuA1, hxpos, ite_true]
             rw [abs_mul, abs_mul, abs_of_nonneg hpow_nonneg]
             rw [abs_div, abs_of_pos (show (0 : ℝ) < 2 by norm_num)]
       _ ≤ DyuA1GrowthConst p * Real.rpow x (p - 1) := by
@@ -9096,7 +9096,7 @@ private lemma abs_DxvLeTwo_le_growth_on_closureA2
               |coeffLeTwo p| * (|p| / 2) *
                 Real.rpow |(x - y) / 2| (p - 1) := by
             unfold DxvLeTwo
-            simp only [hxpos, if_true]
+            simp only [hxpos, ite_true]
             calc
               |Real.rpow |(x + y) / 2| (p - 1) * (p / 2) -
                   coeffLeTwo p * Real.rpow |(x - y) / 2| (p - 1) * (p / 2)|
@@ -9171,7 +9171,7 @@ private lemma abs_DyvLeTwo_le_growth_on_closureA2
               |coeffLeTwo p| * (|p| / 2) *
                 Real.rpow |(x - y) / 2| (p - 1) := by
             unfold DyvLeTwo
-            simp only [hxpos, if_true]
+            simp only [hxpos, ite_true]
             calc
               |Real.rpow |(x + y) / 2| (p - 1) * (p / 2) +
                   coeffLeTwo p * Real.rpow |(x - y) / 2| (p - 1) * (p / 2)|
@@ -9408,7 +9408,7 @@ private lemma uA1_eq_smooth_of_nonneg_leTwo
   have hexp_ne : p - 1 ≠ 0 := by linarith
   unfold uA1
   rcases hx.lt_or_eq with hxpos | hxeq
-  · exact if_pos hxpos
+  · exact ite_eq_left hxpos
   · subst x
     simp [Real.zero_rpow hexp_ne]
 

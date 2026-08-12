@@ -254,7 +254,7 @@ theorem sum_walshSign_mul_walshSign_eq (y s : Fin (2 ^ n)) :
       if y = s then ((2 ^ n : ℕ) : ℂ) else 0 := by
   by_cases hys : y = s
   · simp_all
-  · rw [if_neg hys, sum_walshSign_mul_walshSign hys]
+  · rw [ite_eq_right hys, sum_walshSign_mul_walshSign hys]
 
 @[simp]
 theorem invSqrtCard_mul_self (n : ℕ) :
@@ -298,7 +298,7 @@ theorem hadamardLayerOp_mem_unitaryGroup (n : ℕ) :
           by_cases hys : y = s
           · subst s
             simp_all
-          · rw [if_neg hys, Matrix.one_apply_ne hys, mul_zero]
+          · rw [ite_eq_right hys, Matrix.one_apply_ne hys, mul_zero]
 
 /-- The `n`-qubit Hadamard layer as a unitary gate. -/
 def hadamardLayer (n : ℕ) : Gate n :=

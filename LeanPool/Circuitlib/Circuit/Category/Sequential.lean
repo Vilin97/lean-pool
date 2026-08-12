@@ -777,9 +777,9 @@ lemma tensorHom_get
   change ((tensorHomVal f g v).get t).get i = _
   refine Fin.addCases (fun j => ?_) (fun j => ?_) i
   · rw [tensorHom_eq_left]
-    simp only [Fin.val_castAdd, dif_pos j.isLt]
+    simp only [Fin.val_castAdd, dite_eq_left j.isLt]
   · rw [tensorHom_eq_right]
-    simp only [Fin.val_natAdd, dif_neg (show ¬(Y₁.obj + j.val < Y₁.obj) from by omega)]
+    simp only [Fin.val_natAdd, dite_eq_right (show ¬(Y₁.obj + j.val < Y₁.obj) from by omega)]
     congr 1
     exact Fin.ext (by simp)
 

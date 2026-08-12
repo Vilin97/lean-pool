@@ -274,7 +274,7 @@ theorem form1ToOmega_surjective :
   filter_upwards [htarget, hhol] with z hz hzh
   change (if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) (Form1.ofCoeffs Dcoeff) z else 0)
       = θ.coeffAt x z
-  rw [if_pos hz, Form1.coeffIn_ofCoeffs Dcoeff x hz]
+  rw [ite_eq_left hz, Form1.coeffIn_ofCoeffs Dcoeff x hz]
   change ((φ x).holoRepr ∘ ⇑(chartAt ℂ x).symm) z = θ.coeffAt x z
   rw [hzh]
   change θ.coeffAt x (chartAt ℂ x ((chartAt ℂ x).symm z)) = θ.coeffAt x z

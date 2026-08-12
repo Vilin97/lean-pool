@@ -907,7 +907,7 @@ theorem PiMat.orthonormalBasis_trace :
         split
         next h =>
           subst h
-          simp only [Matrix.includeBlock_apply, dif_pos]
+          simp only [Matrix.includeBlock_apply, dite_eq_left]
           simp only [one_div, eq_mp_eq_cast, cast_eq]
           simp only [← Matrix.trace_iff, Matrix.single_hMul_trace]
         next h =>
@@ -939,7 +939,7 @@ theorem QuantumGraph.trivialGraph_dimOfPiMatSubmodule :
   simp only [Pi.star_apply, Matrix.star_eq_conjTranspose, Matrix.trace_conjTranspose,
     PiMat.orthonormalBasis_trace]
   simp only [ite_mul, zero_mul, star_ite, star_zero, mul_ite, mul_zero]
-  simp only [Finset.sum_product_univ, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_product_univ, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   simp only [← Matrix.conjTranspose_apply, (Matrix.PosDef.rpow.isPosDef _ _).1.eq]
   calc
     (QuantumSetDeltaForm.delta (PiMat ℂ ι p))⁻¹ *

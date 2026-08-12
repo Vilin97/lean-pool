@@ -101,19 +101,19 @@ theorem muVal_lt_of {q : ℕ} (hq3 : 3 ≤ q) {n n' : ℕ} (hbad : 0 < badCountQ
   have hmn : muVal q hq3 n
       = leastGoodAbove hq3 hbad * q
         + ((q - 1) / 2 - n / q ^ (leastGoodAbove hq3 hbad) % q) := by
-    simp only [muVal, dif_pos hbad]
+    simp only [muVal, dite_eq_left hbad]
   have hbB : n / q ^ (leastGoodAbove hq3 hbad) % q < (q - 1) / 2 :=
     strictGoodAt_leastGoodAbove hq3 hbad
   have hi1 : 1 ≤ leastGoodAbove hq3 hbad := by
     have := topBad_lt_leastGoodAbove hq3 hbad; omega
   rcases h with hzero | ⟨hbad', hcase⟩
   · have hmn' : muVal q hq3 n' = 0 := by
-      simp only [muVal, dif_neg (by omega : ¬ 0 < badCountQ q n')]
+      simp only [muVal, dite_eq_right (by omega : ¬ 0 < badCountQ q n')]
     simp_all
   · have hmn' : muVal q hq3 n'
         = leastGoodAbove hq3 hbad' * q
           + ((q - 1) / 2 - n' / q ^ (leastGoodAbove hq3 hbad') % q) := by
-      simp only [muVal, dif_pos hbad']
+      simp only [muVal, dite_eq_left hbad']
     have hb'B : n' / q ^ (leastGoodAbove hq3 hbad') % q < (q - 1) / 2 :=
       strictGoodAt_leastGoodAbove hq3 hbad'
     rw [hmn, hmn']
@@ -167,7 +167,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
         _ = (q - 1) * geomQ q i := by rw [hB2]
     omega
   have hmun : muVal q hq3 n = i * q + ((q - 1) / 2 - n / q ^ i % q) := by
-    simp only [muVal, dif_pos hbad, ← hidef]
+    simp only [muVal, dite_eq_left hbad, ← hidef]
   have hq_le_iq : q ≤ i * q := by
     calc q = 1 * q := (one_mul q).symm
       _ ≤ i * q := Nat.mul_le_mul_right _ hi1
@@ -198,7 +198,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
     · -- terminal: fully good, μ' = 0 < μ
       left
       have hmu0 : muVal q hq3 (n + U) = 0 := by
-        simp only [muVal, dif_neg (by omega : ¬ 0 < badCountQ q (n + U))]
+        simp only [muVal, dite_eq_right (by omega : ¬ 0 < badCountQ q (n + U))]
       omega
     · -- the staircase: the working index drops strictly
       left
@@ -248,7 +248,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
     rcases Nat.eq_zero_or_pos (badCountQ q (n - S)) with hz | hbad'
     · left
       have hmu0 : muVal q hq3 (n - S) = 0 := by
-        simp only [muVal, dif_neg (by omega : ¬ 0 < badCountQ q (n - S))]
+        simp only [muVal, dite_eq_right (by omega : ¬ 0 < badCountQ q (n - S))]
       omega
     · have hgoodi : ∀ idx, i ≤ idx → (n - S) / q ^ idx % q ≤ (q - 1) / 2 := by
         intro idx hidx
@@ -269,7 +269,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
         have h1 : muVal q hq3 (n - S)
             = leastGoodAbove hq3 hbad' * q
               + ((q - 1) / 2 - (n - S) / q ^ (leastGoodAbove hq3 hbad') % q) := by
-          simp only [muVal, dif_pos hbad']
+          simp only [muVal, dite_eq_left hbad']
         simp_all
       · -- index dropped: μ strictly drops
         left
@@ -320,10 +320,10 @@ theorem align_mu {p q : ℕ} (hq3 : 3 ≤ q) (N : ℕ)
           push Not at hcon
           have h1 : muVal q hq3 n' = leastGoodAbove hq3 hbad' * q
               + ((q - 1) / 2 - n' / q ^ (leastGoodAbove hq3 hbad') % q) := by
-            simp only [muVal, dif_pos hbad']
+            simp only [muVal, dite_eq_left hbad']
           have h2 : muVal q hq3 n = leastGoodAbove hq3 hbad * q
               + ((q - 1) / 2 - n / q ^ (leastGoodAbove hq3 hbad) % q) := by
-            simp only [muVal, dif_pos hbad]
+            simp only [muVal, dite_eq_left hbad]
           have h3 : (leastGoodAbove hq3 hbad + 1) * q ≤ leastGoodAbove hq3 hbad' * q :=
             Nat.mul_le_mul_right _ (by omega)
           have h4 : (leastGoodAbove hq3 hbad + 1) * q

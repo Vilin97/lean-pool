@@ -32,7 +32,7 @@ theorem patternSummaryForOriginLookup_valid
   have hgroup : group ∈ patternSummaryBucketGroups.toList :=
     Array.getElem_mem_toList hgroupIndex
   have hgroupGetD : patternSummaryBucketGroups.getD groupIndex #[] = group := by
-    simp only [Array.getD, dif_pos hgroupIndex, Array.getInternal_eq_getElem,
+    simp only [Array.getD, dite_eq_left hgroupIndex, Array.getInternal_eq_getElem,
       group]
   rw [patternSummaryForOriginLookup, hgroupGetD] at hlookup
   by_cases hbucketIndex : origin % 8 < group.size
@@ -40,7 +40,7 @@ theorem patternSummaryForOriginLookup_valid
     have hbucket : bucket ∈ group.toList :=
       Array.getElem_mem_toList hbucketIndex
     have hbucketGetD : group.getD (origin % 8) [] = bucket := by
-      simp only [Array.getD, dif_pos hbucketIndex, Array.getInternal_eq_getElem,
+      simp only [Array.getD, dite_eq_left hbucketIndex, Array.getInternal_eq_getElem,
         bucket]
     rw [hbucketGetD] at hlookup
     apply PatternSummary.valid_of_data
@@ -60,7 +60,7 @@ theorem hardSummaryForOriginLookup_valid
   have hgroup : group ∈ hardSummaryBucketGroups.toList :=
     Array.getElem_mem_toList hgroupIndex
   have hgroupGetD : hardSummaryBucketGroups.getD groupIndex #[] = group := by
-    simp only [Array.getD, dif_pos hgroupIndex, Array.getInternal_eq_getElem,
+    simp only [Array.getD, dite_eq_left hgroupIndex, Array.getInternal_eq_getElem,
       group]
   rw [hardSummaryForOriginLookup, hgroupGetD] at hlookup
   by_cases hbucketIndex : origin % 8 < group.size
@@ -68,7 +68,7 @@ theorem hardSummaryForOriginLookup_valid
     have hbucket : bucket ∈ group.toList :=
       Array.getElem_mem_toList hbucketIndex
     have hbucketGetD : group.getD (origin % 8) [] = bucket := by
-      simp only [Array.getD, dif_pos hbucketIndex, Array.getInternal_eq_getElem,
+      simp only [Array.getD, dite_eq_left hbucketIndex, Array.getInternal_eq_getElem,
         bucket]
     rw [hbucketGetD] at hlookup
     apply HardSummary.valid_of_data

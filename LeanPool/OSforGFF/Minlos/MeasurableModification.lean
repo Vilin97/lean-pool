@@ -635,12 +635,12 @@ private lemma measurable_eval_comp_projection
       (nhds ((measurableProjectionAux d (denseRange_denseSeq E) p hp_top ω : E →L[ℝ] ℝ) f))
     by_cases hω : ω ∈ gP
     · -- On good paths: F_k(ω) = ω(d(φ(k))) → extensionFun(f) = P(ω)(f)
-      simp only [F, if_pos hω]
-      -- Unfold measurableProjectionAux using dif_pos
+      simp only [F, ite_eq_left hω]
+      -- Unfold measurableProjectionAux using dite_eq_left
       have h_unfold : (measurableProjectionAux d (denseRange_denseSeq E) p hp_top ω
           : E →L[ℝ] ℝ) f = extensionFun d (denseRange_denseSeq E) p ω hω f := by
         unfold measurableProjectionAux
-        rw [dif_pos hω]
+        rw [dite_eq_left hω]
         rfl
       rw [h_unfold]
       have hcont := extensionFun_continuous d (denseRange_denseSeq E) p hp_top ω hω
@@ -650,11 +650,11 @@ private lemma measurable_eval_comp_projection
       ext k
       exact (extensionFun_eq d (denseRange_denseSeq E) p hp_top ω hω (φ k)).symm
     · -- On bad paths: F_k(ω) = 0 → 0 = P(ω)(f)
-      simp only [F, if_neg hω]
+      simp only [F, ite_eq_right hω]
       have h_unfold : (measurableProjectionAux d (denseRange_denseSeq E) p hp_top ω
           : E →L[ℝ] ℝ) f = 0 := by
         unfold measurableProjectionAux
-        rw [dif_neg hω]
+        rw [dite_eq_right hω]
         rfl
       simp_all
   exact measurable_of_tendsto_metrizable hF_meas hF_tendsto
@@ -699,7 +699,7 @@ lemma projection_embed_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E] :
   have h_mem := embed_mem_goodPaths (denseSeq E)
     (IsHilbertNuclear.nuclear_hilbert_embeddings (E := E)).choose hp_top l
   -- dite picks the "if" branch
-  simp only [measurableProjectionAux, dif_pos h_mem]
+  simp only [measurableProjectionAux, dite_eq_left h_mem]
   -- extensionCLM recovers l
   exact extensionCLM_embed (denseSeq E) (denseRange_denseSeq E)
     (IsHilbertNuclear.nuclear_hilbert_embeddings (E := E)).choose hp_top l
@@ -970,7 +970,7 @@ theorem projection_ae_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
       intro k
       change (measurableProjectionAux d (denseRange_denseSeq E) p hp_top ω : E →L[ℝ] ℝ) (d (φ k)) =
         ω (d (φ k))
-      simp only [measurableProjectionAux, dif_pos h_mem]
+      simp only [measurableProjectionAux, dite_eq_left h_mem]
       exact extensionCLM_eq_on_dense d (denseRange_denseSeq E) p hp_top ω h_mem (φ k)
     have h_Pω_cont : Continuous (measurableProjection ω : E →L[ℝ] ℝ) :=
       (measurableProjection ω : E →L[ℝ] ℝ).cont

@@ -158,7 +158,7 @@ theorem InnerAut.toMatrix [hφ : φ.IsFaithfulPosMap] (U : unitaryGroup n ℂ) :
     simp only [mul_apply, single, mul_ite, ite_mul,
       MulZeroClass.mul_zero, MulZeroClass.zero_mul, one_mul, Finset.sum_ite_irrel,
       Finset.sum_ite_eq, Finset.sum_const_zero, Finset.mem_univ,
-      if_true, ite_and, kroneckerMap, of_apply, conj_apply, sig_apply, star_sum,
+      ite_true, ite_and, kroneckerMap, of_apply, conj_apply, sig_apply, star_sum,
       star_mul', neg_neg, Finset.mul_sum, Finset.sum_mul, mul_assoc, innerAut_apply',
       Module.Dual.IsFaithfulPosMap.basis_apply]
     simp_rw [← star_apply, star_eq_conjTranspose]
@@ -355,7 +355,7 @@ theorem innerAut_lm_basis_apply (U : Matrix.unitaryGroup n ℂ) (i j k l : n) :
     Matrix.stdBasisMatrix, Matrix.single, of_apply, mul_boole, Finset.sum_mul, ite_mul,
       MulZeroClass.zero_mul, ite_and,
     Matrix.kroneckerMap, Matrix.of_apply]
-  simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 lemma Module.Dual.IsFaithfulPosMap.basis_eq_onb_toBasis
   [hφ : φ.IsFaithfulPosMap] :

@@ -94,7 +94,7 @@ theorem g_consistent {z : ℂ} (hz1 : P.ρ < ‖z - P.c‖) (hz2 : ‖z - P.c‖
     P.g z = (z - P.β) / (z - P.α) := by
   have hχ1 : P.χ (z - P.c) = 1 := P.χ.one_of_mem_closedBall (by
     simpa [Metric.mem_closedBall] using hz2)
-  rw [g, if_neg (not_le.mpr hz1), hχ1]
+  rw [g, ite_eq_right (not_le.mpr hz1), hχ1]
   rw [show ((1 : ℝ) : ℂ) * P.L (z - P.c) = P.L (z - P.c) by push_cast; ring]
   exact P.exp_L_sub hz1
 
@@ -102,7 +102,7 @@ theorem g_consistent {z : ℂ} (hz1 : P.ρ < ‖z - P.c‖) (hz2 : ‖z - P.c‖
 theorem g_one {z : ℂ} (hz : P.χ.rOut ≤ ‖z - P.c‖) : P.g z = 1 := by
   have hzρ : P.ρ < ‖z - P.c‖ := lt_of_lt_of_le P.hρOut hz
   have hχ0 : P.χ (z - P.c) = 0 := P.χ.zero_of_le_dist (by rw [dist_zero_right]; exact hz)
-  rw [g, if_neg (not_le.mpr hzρ), hχ0]
+  rw [g, ite_eq_right (not_le.mpr hzρ), hχ0]
   simp
 
 /-- The piece is the rational function on the whole inner ball. -/
@@ -110,13 +110,13 @@ theorem g_eqOn_inner : Set.EqOn P.g (fun z => (z - P.β) / (z - P.α)) (ball P.c
   intro z hz
   rw [Metric.mem_ball, dist_eq_norm] at hz
   by_cases h : ‖z - P.c‖ ≤ P.ρ
-  · rw [g, if_pos h]
+  · rw [g, ite_eq_left h]
   · exact P.g_consistent (not_le.mp h) hz.le
 
 /-- The piece agrees with `exp (χ L)` on the exterior region. -/
 theorem g_exp {z : ℂ} (hz : P.ρ < ‖z - P.c‖) :
     P.g z = Complex.exp ((P.χ (z - P.c) : ℝ) * P.L (z - P.c)) := by
-  rw [g, if_neg (not_le.mpr hz)]
+  rw [g, ite_eq_right (not_le.mpr hz)]
 
 theorem isOpen_exterior : IsOpen {w : ℂ | P.ρ < ‖w - P.c‖} :=
   isOpen_lt continuous_const (continuous_norm.comp (continuous_id.sub continuous_const))
@@ -170,16 +170,16 @@ theorem g_contDiffAt {z : ℂ} (hz : z ≠ P.α) : ContDiffAt ℝ ∞ P.g z := b
 /-- Non-vanishing off the divisor. -/
 theorem g_ne_zero {z : ℂ} (hzα : z ≠ P.α) (hzβ : z ≠ P.β) : P.g z ≠ 0 := by
   by_cases hcase : ‖z - P.c‖ ≤ P.ρ
-  · rw [g, if_pos hcase]
+  · rw [g, ite_eq_left hcase]
     exact div_ne_zero (sub_ne_zero.mpr hzβ) (sub_ne_zero.mpr hzα)
-  · rw [g, if_neg hcase]
+  · rw [g, ite_eq_right hcase]
     exact Complex.exp_ne_zero _
 
 theorem g_zero_at_zero : P.g P.β = 0 := by
   have hβmem : ‖P.β - P.c‖ < P.ρ := by
     have := P.hβ
     rwa [mem_ball, dist_zero_right] at this
-  rw [g, if_pos hβmem.le, sub_self, zero_div]
+  rw [g, ite_eq_left hβmem.le, sub_self, zero_div]
 
 /-! ## The `(0,1)` logarithmic-derivative coefficient -/
 

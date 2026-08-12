@@ -144,7 +144,7 @@ lemma ord_add_one_eq (p : ℍ) :
     rw [Filter.EventuallyEq, eventually_nhdsWithin_iff]
     filter_upwards [isOpen_lt continuous_const continuous_im |>.mem_nhds
       (show 0 < (p_cplx + 1).im by simp [hp_def, p.im_pos])] with z hz _
-    simp only [hG_def]; rw [dif_pos hz, dif_pos (by simp [sub_im, hz] : 0 < (z - 1).im)]
+    simp only [hG_def]; rw [dite_eq_left hz, dite_eq_left (by simp [sub_im, hz] : 0 < (z - 1).im)]
     set z₀ : ℍ := ⟨z - 1, by simp [sub_im, hz]⟩
     have h_period := SlashInvariantForm.vAdd_width_periodic 1 k 1 f.toSlashInvariantForm z₀
     have h_vadd_coe : ((1 : ℝ) +ᵥ z₀ : ℍ) = ⟨z, hz⟩ :=
@@ -192,7 +192,7 @@ private lemma modform_G_S_identity
   have h_neg_inv_im : 0 < (-z⁻¹).im := by
     rw [neg_inv, Complex.inv_im]
     exact div_pos (by simp [hz]) (Complex.normSq_pos.mpr (neg_ne_zero.mpr hz_ne))
-  simp only [dif_pos h_neg_inv_im, dif_pos hz]
+  simp only [dite_eq_left h_neg_inv_im, dite_eq_left hz]
   have h_eq := modform_comp_ofComplex_S_identity f z hz
   rw [show -(1 : ℂ)/z = -z⁻¹ from by field_simp] at h_eq
   rw [show f (↑(UpperHalfPlane.ofComplex (-z⁻¹))) = f ⟨-z⁻¹, h_neg_inv_im⟩ from by
@@ -214,7 +214,7 @@ private lemma modform_G_meromorphicAt
   exact ((h_diffOn w hw).differentiableAt
     (UpperHalfPlane.isOpen_upperHalfPlaneSet.mem_nhds hw)).congr_of_eventuallyEq (by
       filter_upwards [UpperHalfPlane.isOpen_upperHalfPlaneSet.mem_nhds hw] with u hu
-      simp only [hG_def, Function.comp_apply, dif_pos hu,
+      simp only [hG_def, Function.comp_apply, dite_eq_left hu,
         UpperHalfPlane.ofComplex_apply_of_im_pos hu])
 
 private lemma meromorphicOrderAt_zpow_eq_zero (p_cplx : ℂ) (hp_ne : p_cplx ≠ 0) :

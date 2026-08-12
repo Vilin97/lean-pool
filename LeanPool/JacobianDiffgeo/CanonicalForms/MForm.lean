@@ -226,11 +226,11 @@ open scoped Classical in
 `Form1.ofCoeffs`). -/
 noncomputable def ofCoeffs {ι : Type*} (D : MFormCoeffData X ι) : MFormData X where
   coeffAt x z := if z ∈ (chartAt ℂ x).target then D.rawCoeffAt (chartAt ℂ x) z else 0
-  coeffAt_zero_off x z hz := if_neg hz
+  coeffAt_zero_off x z hz := ite_eq_right hz
   meromorphicOn_coeffAt x := by
     have hf : MeromorphicOn (D.rawCoeffAt (chartAt ℂ x)) (chartAt ℂ x).target :=
       fun z hz => D.meromorphicAt_rawCoeffAt (chartAt ℂ x) (chart_mem_maximalAtlas x) hz
-    exact hf.congr (fun z hz => (if_pos hz).symm) (chartAt ℂ x).open_target
+    exact hf.congr (fun z hz => (ite_eq_left hz).symm) (chartAt ℂ x).open_target
   compat x y z hz := by
     obtain ⟨p, hp, rfl⟩ := hz
     have hyt : chartAt ℂ y p ∈ (chartAt ℂ y).target := (chartAt ℂ y).map_source hp.2
@@ -243,7 +243,7 @@ noncomputable def ofCoeffs {ι : Type*} (D : MFormCoeffData X ι) : MFormData X 
       deriv (⇑(chartAt ℂ x) ∘ ⇑(chartAt ℂ y).symm) (chartAt ℂ y p) *
         (if chartAt ℂ x ((chartAt ℂ y).symm (chartAt ℂ y p)) ∈ (chartAt ℂ x).target then
           D.rawCoeffAt (chartAt ℂ x) (chartAt ℂ x ((chartAt ℂ y).symm (chartAt ℂ y p))) else 0)
-    rw [if_pos hyt, hsy, if_pos hxt]
+    rw [ite_eq_left hyt, hsy, ite_eq_left hxt]
     obtain ⟨i, hi⟩ := D.exists_mem p
     have hpi : (chartAt ℂ y).symm (chartAt ℂ y p) ∈ (D.chart i).source := by
       rw [hsy]; exact hi
@@ -277,7 +277,7 @@ theorem coeffAt_ofCoeffs {ι : Type*} (D : MFormCoeffData X ι) {x : X} {i : ι}
     rw [(chartAt ℂ x).left_inv hp.2]; exact hp.1
   change (if chartAt ℂ x p ∈ (chartAt ℂ x).target then D.rawCoeffAt (chartAt ℂ x) (chartAt ℂ x p)
     else 0) = _
-  rw [if_pos hxt]
+  rw [ite_eq_left hxt]
   exact D.rawCoeffAt_eq (chart_mem_maximalAtlas x) i hxt hp'
 
 end MFormData

@@ -172,7 +172,7 @@ private theorem sum_selectedEdges (F : Finset E) (x : ↑F → F₂) (v : V) :
   rw [selectedEdges, Finset.sum_filter, ← Finset.sum_attach]
   apply Finset.sum_congr rfl
   intro e _
-  simp only [vectorCoeff, dif_pos e.2]
+  simp only [vectorCoeff, dite_eq_left e.2]
   rcases F₂_eq_zero_or_one (x e) with hx | hx
   · simp [hx]
   · simp [hx]

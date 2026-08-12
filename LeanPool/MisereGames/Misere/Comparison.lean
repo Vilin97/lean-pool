@@ -174,7 +174,7 @@ theorem rootedAdjoint_mem_of_isAmbient (h_root : A r) (h_sub : A ≤ IsAmbient)
   unfold rootedAdjoint
   by_cases hleft : IsEnd .left g
   · by_cases hright : IsEnd .right g
-    · rw [if_pos ⟨hleft, hright⟩]
+    · rw [ite_eq_left ⟨hleft, hright⟩]
       apply ClosedUnderDicotic.closed_dicotic (IsAmbient := IsAmbient)
       · exact h_root_mem
       · exact h_root_mem
@@ -182,7 +182,7 @@ theorem rootedAdjoint_mem_of_isAmbient (h_root : A r) (h_sub : A ≤ IsAmbient)
       · exact h_root_nonempty
       · unfold rootedAdjoint at hAdjAmbient
         simpa [hleft, hright] using hAdjAmbient
-    · rw [if_neg (fun h => hright h.2), if_pos hleft]
+    · rw [ite_eq_right (fun h => hright h.2), ite_eq_left hleft]
       apply ClosedUnderDicotic.closed_dicotic (IsAmbient := IsAmbient)
       · exact hAdjRange .right
       · exact h_root_mem
@@ -191,7 +191,7 @@ theorem rootedAdjoint_mem_of_isAmbient (h_root : A r) (h_sub : A ≤ IsAmbient)
       · unfold rootedAdjoint at hAdjAmbient
         simpa [hleft, hright] using hAdjAmbient
   · by_cases hright : IsEnd .right g
-    · rw [if_neg (fun h => hleft h.1), if_neg hleft, if_pos hright]
+    · rw [ite_eq_right (fun h => hleft h.1), ite_eq_right hleft, ite_eq_left hright]
       apply ClosedUnderDicotic.closed_dicotic (IsAmbient := IsAmbient)
       · exact h_root_mem
       · exact hAdjRange .left
@@ -199,7 +199,7 @@ theorem rootedAdjoint_mem_of_isAmbient (h_root : A r) (h_sub : A ≤ IsAmbient)
       · exact hAdjRange_nonempty hleft
       · unfold rootedAdjoint at hAdjAmbient
         simpa [hleft, hright] using hAdjAmbient
-    · rw [if_neg (fun h => hleft h.1), if_neg hleft, if_neg hright]
+    · rw [ite_eq_right (fun h => hleft h.1), ite_eq_right hleft, ite_eq_right hright]
       apply ClosedUnderDicotic.closed_dicotic (IsAmbient := IsAmbient)
       · exact hAdjRange .right
       · exact hAdjRange .left

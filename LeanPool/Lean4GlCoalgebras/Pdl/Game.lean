@@ -295,16 +295,16 @@ lemma same_winner_of_same_in_cone {i g} {sI : Strategy g i} {sJ sJ' : Strategy g
     : winner sI sJ p = winner sI sJ' p := by
   by_cases p_has_moves : (Game.moves p).Nonempty
   · by_cases turn : Game.turn p = i
-    · conv_lhs => unfold winner; rw [dif_pos p_has_moves, dif_pos turn]
-      conv_rhs => unfold winner; rw [dif_pos p_has_moves, dif_pos turn]
+    · conv_lhs => unfold winner; rw [dite_eq_left p_has_moves, dite_eq_left turn]
+      conv_rhs => unfold winner; rw [dite_eq_left p_has_moves, dite_eq_left turn]
       apply same_winner_of_same_in_cone
       intro r r_in
       apply same_cone r
       apply @inMyCone_trans g (other i) p (sI p turn p_has_moves) r sJ ?_ r_in
       apply @inMyCone.oStep (other i) g sJ _ p _ inMyCone.nil (by simp_all) (by simp)
     · have other_turn : Game.turn p = other i := Player.not_eq_i_eq_other.mp turn
-      conv_lhs => unfold winner; rw [dif_pos p_has_moves, dif_neg turn]
-      conv_rhs => unfold winner; rw [dif_pos p_has_moves, dif_neg turn]
+      conv_lhs => unfold winner; rw [dite_eq_left p_has_moves, dite_eq_right turn]
+      conv_rhs => unfold winner; rw [dite_eq_left p_has_moves, dite_eq_right turn]
       have := @same_winner_of_same_in_cone _ g sI sJ sJ' (sJ' p other_turn p_has_moves).val ?_
       · convert this using 2
         rw [same_cone p inMyCone.nil]
@@ -315,8 +315,8 @@ lemma same_winner_of_same_in_cone {i g} {sI : Strategy g i} {sJ sJ' : Strategy g
           rw [same_cone p .nil]
         rw [← this]
         apply @inMyCone.myStep _ g sJ _ p inMyCone.nil
-  · conv_lhs => unfold winner; rw [dif_neg p_has_moves]
-    conv_rhs => unfold winner; rw [dif_neg p_has_moves]
+  · conv_lhs => unfold winner; rw [dite_eq_right p_has_moves]
+    conv_rhs => unfold winner; rw [dite_eq_right p_has_moves]
 termination_by p
 decreasing_by all_goals apply g.move_rel; exact Subtype.mem _
 

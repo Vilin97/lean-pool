@@ -117,13 +117,13 @@ theorem sensitivity_ge_sqrt_degree {n : ℕ} (f : BoolFun n) (hd : 1 ≤ f.degre
       · have : e ⟨j, hj⟩ ≠ i := fun h => hji (by rw [← toN_e j hj, h])
         rw [flipBit_apply_ne _ _ this, flipBit_apply_ne _ _ hji]
         change q (e ⟨j, hj⟩) = (if h : j ∈ S then q (e ⟨j, h⟩) else false)
-        rw [dif_pos hj]
+        rw [dite_eq_left hj]
     · simp only [hj, dite_false]
       have : j ≠ toN i := fun h => hj (h ▸ toN_mem i)
       rw [flipBit_apply_ne _ _ this]
       change false = embedQ j
       change false = (if h : j ∈ S then q (e ⟨j, h⟩) else false)
-      rw [dif_neg hj]
+      rw [dite_eq_right hj]
   have g_to_f : ∀ i, g.sensitiveAt q i → f.sensitiveAt embedQ (toN i) := by
     intro i hi; unfold BoolFun.sensitiveAt at hi ⊢; rwa [← g_flip_eq]
   calc (H.filter (fun p => ∃ i, p = flipBit q i)).card

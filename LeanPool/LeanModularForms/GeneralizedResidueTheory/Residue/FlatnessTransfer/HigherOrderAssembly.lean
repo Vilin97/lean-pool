@@ -317,7 +317,7 @@ private theorem assembly_regNF_differentiableWithinAt_pole
     · have hw_ne_z : w ≠ z := fun heq => hw_S (heq ▸ hz_S)
       have h_fw : f w - meromorphicPrincipalPart f z w = g_corr z hz_S w :=
         hV_eq ⟨hw_V, hw_ne_z⟩
-      simp only [dif_neg hw_S, assembly_reg, assembly_totalPP]
+      simp only [dite_eq_right hw_S, assembly_reg, assembly_totalPP]
       rw [show (∑ s ∈ S0, meromorphicPrincipalPart f s w) =
           meromorphicPrincipalPart f z w +
           ∑ s' ∈ S0.erase z, meromorphicPrincipalPart f s' w from
@@ -562,7 +562,7 @@ private theorem cpv_perTerm_crossed_zero_order (S0 : Finset ℂ) (f : ℂ → �
     (tendsto_nhds_iff_meromorphicOrderAt_nonneg hMero_s).mp ⟨g_loc s, hf_tends⟩
   have h_pp_zero : meromorphicPrincipalPart f s = fun _ => 0 := by
     unfold meromorphicPrincipalPart
-    exact dif_neg (fun h => absurd h.2 (not_lt.mpr h_ord_nn))
+    exact dite_eq_right (fun h => absurd h.2 (not_lt.mpr h_ord_nn))
   have h_res_zero : residueAt f s = 0 := by
     have hf_eq_g : ∀ᶠ (z : ℂ) in 𝓝[≠] s, f z = g_loc z := by
       filter_upwards [hf_eq_loc] with z hz
@@ -728,7 +728,7 @@ private theorem assembly_errNF_eventuallyEq (f : ℂ → ℂ) (s : ℂ)
   refine ⟨Metric.ball s r, Metric.ball_mem_nhds s hr_pos, fun z hz => ?_⟩
   by_cases hzs : z = s
   · subst hzs; simp [assembly_errNF]
-  · simp only [assembly_errNF, if_neg hzs, assembly_polarHigher, assembly_errLoc]
+  · simp only [assembly_errNF, ite_eq_right hzs, assembly_polarHigher, assembly_errLoc]
     have hz_in_1 : z ∈ Metric.ball s r1 ∩ {s}ᶜ :=
       ⟨Metric.mem_ball.mpr ((Metric.mem_ball.mp hz).trans_le (min_le_left _ _)),
        Set.mem_compl_singleton_iff.mpr hzs⟩
@@ -754,7 +754,7 @@ private theorem assembly_errNF_eventuallyEq (f : ℂ → ℂ) (s : ℂ)
           push Not at h
           have : k.val = 0 := by omega
           exact hk (Fin.ext this)
-        simp only [hkval, if_true, sub_self]
+        simp only [hkval, ite_true, sub_self]
       · intro h; exact absurd (Finset.mem_univ _) h
     rw [h_a0_eq] at h_sum_split
     linear_combination h_sum_split
@@ -855,11 +855,11 @@ private theorem cpv_perTerm_crossed_positive_order
       (assembly_errNF_eventuallyEq f s hN_s_pos a_s g_loc g_rp hf_eq_loc hg_rp_eq h_a0)
       (hg_loc_an.sub hg_rp_an) (fun w hw => by
         change assembly_errNF f s g_loc g_rp a_s w = term_s w - _
-        simp only [assembly_errNF, if_neg hw, assembly_polarHigher, hterm_s])
+        simp only [assembly_errNF, ite_eq_right hw, assembly_polarHigher, hterm_s])
       (differentiableOn_ppMinusRes f s (hMero s hs)) (assembly_polarHigher_differentiableOn a_s s)
   exact cpv_tendsto_zero_of_add_split U S0 γ hγ_in_U term_s err_nf
     (assembly_polarHigher a_s s) s hs (fun z hz => by
-      simp only [err_nf, assembly_errNF, if_neg hz, assembly_polarHigher]; ring)
+      simp only [err_nf, assembly_errNF, ite_eq_right hz, assembly_polarHigher]; ring)
     (hD.continuousOn.mono Set.sdiff_subset)
     ((assembly_polarHigher_differentiableOn a_s s).continuousOn.mono fun z ⟨_, hz⟩ =>
       Set.mem_compl_singleton_iff.mpr fun heq => hz (Finset.mem_coe.mpr (heq ▸ hs)))
@@ -959,7 +959,7 @@ private theorem assembly_abstract_crossings_case (U : Set ℂ) (hU : IsOpen U)
     intro z hz_not_S0
     have hz_not_S : z ∉ S0 := fun hh => hz_not_S0 (Finset.mem_coe.mpr hh)
     change h z = (if _ : z ∈ S0 then _ else assembly_reg S0 f z) + assembly_pol S0 f z
-    rw [dif_neg hz_not_S]
+    rw [dite_eq_right hz_not_S]
     simp only [hh_eq, assembly_reg, assembly_pol, assembly_totalPP, Finset.sum_sub_distrib]; ring
   exact cpv_tendsto_zero_of_add_split_set U S0 γ hγ_in_U h h_reg_nf (assembly_pol S0 f)
     h_fun_eq_off_S0 (h_reg_nf_diff_U.continuousOn.mono Set.sdiff_subset)

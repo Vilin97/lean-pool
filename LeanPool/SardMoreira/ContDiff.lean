@@ -161,7 +161,7 @@ theorem ContinuousLinearMap.IsInvertible.hasFDerivAt {f : E → F} {x : E}
 theorem OpenPartialHomeomorph.hasFDerivAt_symm_inverse (f : OpenPartialHomeomorph E F) {y : F}
     (hy : y ∈ f.target) (hf' : (fderiv 𝕜 f (f.symm y)).IsInvertible) :
     HasFDerivAt f.symm (fderiv 𝕜 f (f.symm y)).inverse y := by
-  rw [ContinuousLinearMap.inverse, dif_pos hf']
+  rw [ContinuousLinearMap.inverse, dite_eq_left hf']
   exact hf'.hasFDerivAt.of_local_left_inverse (f.symm.continuousAt hy)
     <| f.eventually_right_inverse hy
 

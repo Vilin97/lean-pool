@@ -676,7 +676,7 @@ lemma cubeToNat_gShift_erase_max {n : ℕ} {x : Cube n} (hx : x.Nonempty) (h2 : 
       grind +suggestions
     · assumption
   · exfalso
-    have h_shift : gShift x = x.erase (x.min' hx) := dif_pos hx
+    have h_shift : gShift x = x.erase (x.min' hx) := dite_eq_left hx
     rw [h_shift, Finset.mem_erase] at hmax
     have h_mem : x.max' hx ∈ x := Finset.max'_mem x hx
     have h_eq : x.max' hx = x.min' hx := by tauto

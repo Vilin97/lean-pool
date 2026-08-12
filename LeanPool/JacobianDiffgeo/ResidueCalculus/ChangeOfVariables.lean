@@ -86,7 +86,7 @@ theorem resAt_comp_mul_deriv {φ : ℂ → ℂ} (hφ : AnalyticAt ℂ φ w₀) (
     congr 1
     by_cases hkm1 : k = -1
     · subst hkm1
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       -- log-derivative argument: `(φ - z₀)⁻¹ · φ' = deriv g / g` for `g := φ - z₀`, order `1`.
       have hgan : AnalyticAt ℂ (fun w => φ w - z₀) w₀ := hφ.sub analyticAt_const
       have horder1 : analyticOrderAt (fun w => φ w - φ w₀) w₀ = 1 :=
@@ -105,7 +105,7 @@ theorem resAt_comp_mul_deriv {φ : ℂ → ℂ} (hφ : AnalyticAt ℂ φ w₀) (
         funext w
         rw [zpow_neg_one, deriv_sub_const, div_eq_inv_mul]
       rw [hfun_eq, hresdivg]
-    · rw [if_neg hkm1]
+    · rw [ite_eq_right hkm1]
       -- derivative argument: `(φ - z₀)^k · φ' = deriv F` for `F := (k+1)⁻¹ · (φ - z₀)^(k+1)`.
       have hkk1 : ((k : ℂ) + 1) ≠ 0 := by
         intro hcon
@@ -141,9 +141,9 @@ theorem resAt_comp_mul_deriv {φ : ℂ → ℂ} (hφ : AnalyticAt ℂ φ w₀) (
   rw [Finset.sum_congr rfl hterm]
   by_cases ha : a ≤ -1
   · rw [Finset.sum_eq_single (-1)
-      (fun k hk hkne => by rw [if_neg hkne, mul_zero])
+      (fun k hk hkne => by rw [ite_eq_right hkne, mul_zero])
       (fun hnmem => absurd (Finset.mem_Icc.mpr ⟨ha, le_refl _⟩) hnmem)]
-    rw [if_pos rfl, mul_one]
+    rw [ite_eq_left rfl, mul_one]
     rfl
   · push Not at ha
     have hempty : Finset.Icc a (-1) = ∅ := Finset.Icc_eq_empty (by omega)

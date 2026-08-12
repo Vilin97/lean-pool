@@ -237,7 +237,7 @@ theorem mind_change_characterization (X : Type u)
       -- Unfold MindChangeOrdinal: Finite + correct convergence → (card : Ordinal) < omega0
       change MindChangeOrdinal X L c T.toDataStream < Ordinal.omega0
       unfold MindChangeOrdinal
-      rw [dif_pos hfin, if_pos ⟨t₀ + 1, hpref⟩]
+      rw [dite_eq_left hfin, ite_eq_left ⟨t₀ + 1, hpref⟩]
       exact Ordinal.natCast_lt_omega0 _⟩
   · -- Backward: bounded MindChangeOrdinal → EXLearnable
     intro ⟨L, hL⟩
@@ -247,7 +247,7 @@ theorem mind_change_characterization (X : Type u)
     unfold MindChangeOrdinal at hmco
     by_cases hfin : { t : ℕ | L.conjecture (T.toDataStream.prefix t) ≠
                                L.conjecture (T.toDataStream.prefix (t + 1)) }.Finite
-    · rw [dif_pos hfin] at hmco
+    · rw [dite_eq_left hfin] at hmco
       by_cases hconv : ∃ t₀, ∀ t ≥ t₀, L.conjecture (T.toDataStream.prefix t) = c
       · -- Extract convergence and bridge back to dataUpTo
         obtain ⟨t₀, ht₀⟩ := hconv
@@ -255,6 +255,6 @@ theorem mind_change_characterization (X : Type u)
           rw [bridge]
           exact ht₀ (t + 1) (by omega)⟩
       · -- Incorrect convergence → MindChangeOrdinal = omega0, contradicts < omega0
-        rw [if_neg hconv] at hmco; exact absurd hmco (lt_irrefl _)
+        rw [ite_eq_right hconv] at hmco; exact absurd hmco (lt_irrefl _)
     · -- Infinite changes → MindChangeOrdinal = omega0, contradicts < omega0
-      rw [dif_neg hfin] at hmco; exact absurd hmco (lt_irrefl _)
+      rw [dite_eq_right hfin] at hmco; exact absurd hmco (lt_irrefl _)

@@ -606,7 +606,7 @@ noncomputable def toUnconditionalSchauderBasis
                   exact
                     (Finset.sum_eq_single (s := Finset.range k) (a := n)
                       (f := fun m : ℕ => if m = n then a n else 0)
-                      (fun m _hm hmn => if_neg hmn)
+                      (fun m _hm hmn => ite_eq_right hmn)
                       (fun hn => False.elim (hn hnmem))).trans (by simp)
       have hscalar :
           Filter.Tendsto

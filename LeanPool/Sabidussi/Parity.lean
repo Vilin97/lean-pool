@@ -29,7 +29,7 @@ private theorem orderedPairBracket_inner_castSucc {n : ℕ} (f : Fin (n + 1) →
       ∑ j : Fin n, if j < i then bracket (f i.castSucc) (f j.castSucc) else 0 := by
   rw [Fin.sum_univ_castSucc]
   have hnlt : ¬ Fin.last n < i.castSucc := (Fin.castSucc_lt_last i).asymm
-  rw [if_neg hnlt, add_zero]
+  rw [ite_eq_right hnlt, add_zero]
   simp
 
 private theorem orderedPairBracket_inner_last {n : ℕ} (f : Fin (n + 1) → Color) :

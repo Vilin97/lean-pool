@@ -112,7 +112,7 @@ lemma tauWitness_natAbs (R : RamanujanTau) (k : ℕ) (ℓ : ℕ)
     (hw : ∃ p : ℕ+, (p : ℕ).Prime ∧ (R.τ (p ^ (2 * k))).natAbs = ℓ) :
     (tauWitness R k ℓ).natAbs = ℓ := by
   unfold tauWitness
-  rw [dif_pos hw]
+  rw [dite_eq_left hw]
   exact hw.choose_spec.2
 
 lemma tauWitness_mem_oddPrimesSigned (R : RamanujanTau) (k : ℕ) (ℓ : ℕ)
@@ -127,7 +127,8 @@ lemma tauWitness_mem_oddPrimesSigned (R : RamanujanTau) (k : ℕ) (ℓ : ℕ)
 lemma tauWitness_mem_X2k (R : RamanujanTau) (k : ℕ) (ℓ : ℕ)
     (hw : ∃ p : ℕ+, (p : ℕ).Prime ∧ (R.τ (p ^ (2 * k))).natAbs = ℓ) :
     tauWitness R k ℓ ∈ X2k R k := by
-  have h₁ : tauWitness R k ℓ = R.τ (hw.choose ^ (2 * k)) := by simp only [tauWitness, dif_pos hw]
+  have h₁ : tauWitness R k ℓ = R.τ (hw.choose ^ (2 * k)) := by
+    simp only [tauWitness, dite_eq_left hw]
   rw [h₁]
   exact ⟨hw.choose, hw.choose_spec.1, rfl⟩
 
@@ -2100,7 +2101,7 @@ lemma witnessP_E2_spec (R : RamanujanTau) (X : ℝ) (ℓ : ℕ)
     (R.τ ((witnessPE2 R X ℓ) ^ 2)).natAbs = ℓ ∧
     (witnessPE2 R X ℓ : ℝ) > X ^ ((2 : ℝ) / 11) := by
   unfold witnessPE2
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact h.choose_spec
 
 /-- The map sending `ℓ` to `(witnessPE2 R X ℓ, τ (witnessPE2 R X ℓ ^ 2))`. -/
@@ -3042,7 +3043,7 @@ lemma radical_pow (n : ℕ) (k : ℕ) (hn : 0 < n) (hk : 0 < k) :
     rw [Nat.primeFactors_pow]
     omega
   unfold Nat.radical
-  rw [if_neg (by positivity : n ^ k ≠ 0), if_neg (by omega : n ≠ 0), h₁]
+  rw [ite_eq_right (by positivity : n ^ k ≠ 0), ite_eq_right (by omega : n ≠ 0), h₁]
 
 lemma radical_prime (p : ℕ) (hp : p.Prime) : Nat.radical p = p := by
   simp [Nat.radical, hp.ne_zero, hp.primeFactors]
@@ -3825,7 +3826,7 @@ private lemma witnessP_spec (R : RamanujanTau) (X : ℝ) (ℓ : ℕ)
      (witnessP R X ℓ : ℝ) > X ^ ((1 : ℝ) / 11) ∧
      (R.τ (witnessP R X ℓ ^ 4)).natAbs = ℓ) := by
   unfold witnessP
-  rw [dif_pos hℓ]
+  rw [dite_eq_left hℓ]
   exact hℓ.choose_spec
 
 private lemma witnessMap_mapsTo (R : RamanujanTau) (X : ℝ) :

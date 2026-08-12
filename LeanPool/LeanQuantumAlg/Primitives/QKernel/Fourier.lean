@@ -101,11 +101,11 @@ theorem isTrigPolynomialVec_featState (W : Fin (N + 1) → Matrix (Fin d) (Fin d
             = fun x =>
               W ⟨j + 1, by omega⟩
                 *ᵥ (diagPhaseGate lam (x ⟨j, h⟩) *ᵥ featState W lam ψ j x) := by
-          funext x; simp only [featState, dif_pos h]
+          funext x; simp only [featState, dite_eq_left h]
         rw [heq]
         exact (ih.phaseMul lam ⟨j, h⟩).constMul (W ⟨j + 1, by omega⟩)
       · have heq : featState W lam ψ (j + 1) = featState W lam ψ j := by
-          funext x; simp only [featState, dif_neg h]
+          funext x; simp only [featState, dite_eq_right h]
         rw [heq]; exact ih
 
 /-! ### Constructive feature components (explicit trigonometric polynomials) -/
@@ -167,11 +167,11 @@ theorem featState_eq_featCompC (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ)
       · have hs : featState W lam ψ (j + 1) x m
             = (W ⟨j + 1, by omega⟩
               *ᵥ (diagPhaseGate lam (x ⟨j, h⟩) *ᵥ featState W lam ψ j x)) m := by
-          simp only [featState, dif_pos h]
+          simp only [featState, dite_eq_left h]
         have hc : featCompC W lam ψ (j + 1) m
             = tpVecConstMul (W ⟨j + 1, by omega⟩)
               (tpVecPhase lam ⟨j, h⟩ (featCompC W lam ψ j)) m := by
-          simp only [featCompC, dif_pos h]
+          simp only [featCompC, dite_eq_left h]
         rw [hs, hc, tpVecConstMul_eval,
           show (W ⟨j + 1, by omega⟩
               *ᵥ (diagPhaseGate lam (x ⟨j, h⟩) *ᵥ featState W lam ψ j x)) m
@@ -182,9 +182,9 @@ theorem featState_eq_featCompC (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ)
         congr 1
         rw [diagPhaseGate, Matrix.mulVec_diagonal, ih x i]
       · have hs : featState W lam ψ (j + 1) x m = featState W lam ψ j x m := by
-          simp only [featState, dif_neg h]
+          simp only [featState, dite_eq_right h]
         have hc : featCompC W lam ψ (j + 1) m = featCompC W lam ψ j m := by
-          simp only [featCompC, dif_neg h]
+          simp only [featCompC, dite_eq_right h]
         rw [hs, hc]; exact ih x m
 
 /-- The trigonometric-polynomial witness for component `m` of the full feature state. -/
@@ -236,7 +236,7 @@ theorem featCompC_layer (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ) (lam : 
       · have hfc : featCompC W lam ψ (j + 1) m
             = tpVecConstMul (W ⟨j + 1, by omega⟩)
               (tpVecPhase lam ⟨j, hj⟩ (featCompC W lam ψ j)) m := by
-          simp only [featCompC, dif_pos hj]
+          simp only [featCompC, dite_eq_left hj]
         rw [hfc, tpVecConstMul_freqs] at hω
         simp only [tpVecPhase_freqs, Finset.mem_biUnion, Finset.mem_image] at hω
         obtain ⟨i, -, ω', hω', rfl⟩ := hω
@@ -246,9 +246,9 @@ theorem featCompC_layer (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ) (lam : 
         refine ⟨fun hlt1 => ?_, fun hge2 => ?_⟩
         · by_cases hak : a = (⟨j, hj⟩ : Fin N)
           · have haj : (a : ℕ) = j := by rw [hak]
-            rw [if_pos hak, hge (by omega)]
+            rw [ite_eq_left hak, hge (by omega)]
             exact ⟨i, by ring⟩
-          · rw [if_neg hak, add_zero]
+          · rw [ite_eq_right hak, add_zero]
             refine hlt ?_
             have hne : (a : ℕ) ≠ j := fun he => hak (Fin.ext he)
             omega
@@ -257,10 +257,10 @@ theorem featCompC_layer (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ) (lam : 
             have hcontra : (a : ℕ) = j := by
               rw [he]
             omega
-          rw [if_neg hak, add_zero]
+          rw [ite_eq_right hak, add_zero]
           exact hge (by omega)
       · have hfc : featCompC W lam ψ (j + 1) m = featCompC W lam ψ j m := by
-          simp only [featCompC, dif_neg hj]
+          simp only [featCompC, dite_eq_right hj]
         rw [hfc] at hω
         obtain ⟨hlt, hge⟩ := ih m ω hω a
         have hN : N ≤ j := Nat.not_lt.mp hj

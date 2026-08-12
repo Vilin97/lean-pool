@@ -76,7 +76,7 @@ lemma primeFactors_rad {m : ℕ} (hm : m ≠ 0) : (rad m).primeFactors = m.prime
 lemma factorization_rad {m : ℕ} (hm : m ≠ 0) (p : ℕ) :
     (rad m).factorization p = if p ∈ m.primeFactors then 1 else 0 := by
   by_cases hp : p ∈ m.primeFactors
-  · simp only [hp, if_true]
+  · simp only [hp, ite_true]
     have hpprime : p.Prime := (Nat.mem_primeFactors.mp hp).1
     unfold rad
     rw [Nat.support_factorization]
@@ -86,7 +86,7 @@ lemma factorization_rad {m : ℕ} (hm : m ≠ 0) (p : ℕ) :
     · exact Nat.Prime.factorization_self hpprime
     · simp_all
     · intro h; exact absurd hp h
-  · simp only [hp, if_false]
+  · simp only [hp, ite_false]
     by_cases hpp : p.Prime
     · rw [Nat.factorization_eq_zero_of_not_dvd]
       intro hdvd
@@ -316,7 +316,7 @@ lemma div_le_factorization_F {k n p : ℕ} (hn : 1 ≤ n) (hp : p.Prime) :
     Ioc_dvd_count (n - 1) (n - 1 + k) p (by omega)
   -- ⌊(a+k)/p⌋ − ⌊a/p⌋ ≥ ⌊k/p⌋.
   have hkey : k / p ≤ (n - 1 + k) / p - (n - 1) / p := by
-    have h1 : (n - 1) / p + k / p ≤ (n - 1 + k) / p := Nat.add_div_le_add_div (n - 1) k p
+    have h1 : (n - 1) / p + k / p ≤ (n - 1 + k) / p := Nat.div_add_div_le_add_div
     omega
   omega
 
@@ -335,16 +335,16 @@ lemma L_dvd_F {k n : ℕ} (hn : 1 ≤ n) : L k ∣ F k n := by
       Finset.sum_eq_single p
         (fun q hq hqp => by
           have hqp' : q.Prime := Nat.prime_of_mem_primesBelow hq
-          rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, if_neg hqp])
+          rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, ite_eq_right hqp])
         (fun h => absurd hp h)
-    rw [hsingle, Nat.Prime.factorization_pow hpp, Finsupp.single_apply, if_pos rfl]
+    rw [hsingle, Nat.Prime.factorization_pow hpp, Finsupp.single_apply, ite_eq_left rfl]
     exact div_le_factorization_F hn hpp
   · have hzero : (∑ q ∈ Nat.primesBelow k, (q ^ (k / q)).factorization p) = 0 := by
       apply Finset.sum_eq_zero
       intro q hq
       have hqp' : q.Prime := Nat.prime_of_mem_primesBelow hq
       have hne : q ≠ p := by rintro rfl; exact hp hq
-      rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, if_neg hne]
+      rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, ite_eq_right hne]
     rw [hzero]; exact Nat.zero_le _
 
 /-- `L k ≤ S k n` (the smooth part): `L ∣ F` and `L`'s primes are exactly the smooth primes, so in
@@ -372,7 +372,7 @@ lemma L_le_smooth {k n : ℕ} (hn : 1 ≤ n) : L k ∣ Ssmooth k n := by
               (fun q hq hqp => by
                 simp_all)
               (fun h => absurd hmem h)]
-        rw [Nat.Prime.factorization_pow hpp, Finsupp.single_apply, if_pos rfl]
+        rw [Nat.Prime.factorization_pow hpp, Finsupp.single_apply, ite_eq_left rfl]
       · -- p ∤ F ⇒ v_p(F) = 0
         rw [Nat.factorization_eq_zero_of_not_dvd]
         · exact Nat.zero_le _
@@ -387,7 +387,7 @@ lemma L_le_smooth {k n : ℕ} (hn : 1 ≤ n) : L k ∣ Ssmooth k n := by
       intro q hq
       have hqp' : q.Prime := Nat.prime_of_mem_primesBelow hq
       have hne : q ≠ p := by rintro rfl; exact hp hq
-      rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, if_neg hne]
+      rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, ite_eq_right hne]
     rw [hzero]; exact Nat.zero_le _
 
 /-! ## `rad (F k n)` factored through the smooth/rough split -/

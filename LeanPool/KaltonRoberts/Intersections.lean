@@ -129,7 +129,7 @@ lemma WeightedCollection.productInter_itemFreq
     · have hxk : ∀ k : Fin ℓ, i ∈ C.sets (x k) := by
         simpa [finsetInter, Finset.mem_inf] using hx
       simp [hx, hxk]
-    · simp only [hx, if_false]
+    · simp only [hx, ite_false]
       exact Finset.prod_nonneg fun k _ => by
         by_cases hk : i ∈ C.sets (x k) <;> simp [hk, C.weight_nonneg]
 
@@ -196,7 +196,7 @@ lemma WeightedCollection.productInter_avgDeficit
             apply Finset.prod_congr rfl
             simp_all
           rw [h_erase]
-          simp +decide only [if_true]
+          simp +decide only [ite_true]
           ring_nf
       simp_all only [mul_ite, mul_one, sum_ite_irrel]
       rw [← Finset.mul_prod_erase _
@@ -204,7 +204,7 @@ lemma WeightedCollection.productInter_avgDeficit
           if x = k then ∑ x : C.J, C.weight x * deficit f M (C.sets x) else ∑ x : C.J,
             C.weight x)
         (Finset.mem_univ k)]
-      simp +decide only [if_true]
+      simp +decide only [ite_true]
       have h_erase : (∏ x ∈ Finset.univ.erase k,
           if x = k then ∑ x : C.J, C.weight x * deficit f M (C.sets x) else ∑ x : C.J,
             C.weight x) =
@@ -354,7 +354,7 @@ lemma WeightedCollection.mixedInter_itemFreq_le
         · have hxj : ∀ j : Fin k, i ∈ C.sets (x j) := by
             simpa [finsetInter, Finset.mem_inf] using hx
           simp [hx, hxj]
-        · simp only [hx, if_false]
+        · simp only [hx, ite_false]
           rw [mul_zero]
           apply Finset.prod_nonneg
           intro j _

@@ -49,7 +49,7 @@ def MulBound (f : ℳ X) (D E : RS.Divisor X) : Prop :=
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem mulBound_zero (D E : RS.Divisor X) : MulBound (0 : ℳ X) D E := by
   intro x
-  rw [RS.MeroGermOn.ord_zero, if_pos ⟨isOpen_univ, mem_univ x⟩]
+  rw [RS.MeroGermOn.ord_zero, ite_eq_left ⟨isOpen_univ, mem_univ x⟩]
   exact le_top
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in

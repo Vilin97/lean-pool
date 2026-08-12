@@ -57,7 +57,7 @@ private lemma residue_sum_ifs_eq_mul_deriv {S0 : Finset ℂ} {f : ℂ → ℂ} {
     {t : ℝ} {ε : ℝ} (hall : ∀ s ∈ S0, ε < ‖γ t - s‖) :
     ∑ s ∈ S0, (if ε < ‖γ t - s‖ then residueSimplePole f s / (γ t - s) * deriv γ t
       else 0) = (∑ s ∈ S0, residueSimplePole f s / (γ t - s)) * deriv γ t := by
-  rw [Finset.sum_mul]; apply Finset.sum_congr rfl; intro s hs; rw [if_pos (hall s hs)]
+  rw [Finset.sum_mul]; apply Finset.sum_congr rfl; intro s hs; rw [ite_eq_left (hall s hs)]
 
 private lemma residueSimplePole_norm_bound (S0 : Finset ℂ) (f : ℂ → ℂ)
     (hS0_ne : S0.Nonempty) :
@@ -139,7 +139,7 @@ private lemma pointwise_ae_limit_off_crossing (S0 : Finset ℂ) (f g_reg : ℂ �
               _ ≤ ‖γ.toFun t - s‖ := Finset.inf'_le _ hs
           have hM_eval : cauchyPrincipalValueIntegrandOn S0 f γ.toFun ε t =
               f (γ.toFun t) * deriv γ.toFun t := by
-            simp only [cauchyPrincipalValueIntegrandOn]; rw [if_neg]; push Not; exact hall_far
+            simp only [cauchyPrincipalValueIntegrandOn]; rw [ite_eq_right]; push Not; exact hall_far
           rw [hM_eval, residue_sum_ifs_eq_mul_deriv hall_far, ← sub_mul]
           simp_all
     _ = 0 := h_crossing_null
@@ -160,7 +160,7 @@ private lemma norm_A_int_bound_all_far (S0 : Finset ℂ) (f g_reg : ℂ → ℂ)
         then residueSimplePole f s / (γ.toFun t - s) * deriv γ.toFun t else 0)‖ ≤ B := by
   simp only [cauchyPrincipalValueIntegrandOn]
   have h_neg : ¬∃ s ∈ S0, ‖γ.toFun t - s‖ ≤ ε := by push Not; exact hall
-  rw [if_neg h_neg, residue_sum_ifs_eq_mul_deriv hall, ← sub_mul]
+  rw [ite_eq_right h_neg, residue_sum_ifs_eq_mul_deriv hall, ← sub_mul]
   have h_not_in := γt_not_mem_S0_of_all_far hε hall
   rw [show f (γ.toFun t) - ∑ s ∈ S0, residueSimplePole f s / (γ.toFun t - s) =
     g_reg (γ.toFun t) from by rw [hg_decomp (γ.toFun t) h_not_in]; ring]
@@ -223,7 +223,7 @@ private lemma norm_A_int_bound_some_near (S0 : Finset ℂ) (f : ℂ → ℂ) (γ
       ∑ s ∈ S0, (if ‖γ.toFun t - s‖ > ε
         then residueSimplePole f s / (γ.toFun t - s) * deriv γ.toFun t else 0)‖ ≤ B := by
   simp only [cauchyPrincipalValueIntegrandOn]
-  rw [if_pos ⟨s₀, hs₀, hs₀_near⟩]; simp only [zero_sub, norm_neg]
+  rw [ite_eq_left ⟨s₀, hs₀, hs₀_near⟩]; simp only [zero_sub, norm_neg]
   have h_γ'_bound : ‖deriv γ.toFun t‖ ≤ Mγ' := hMγ' t ht
   have h_factor :
       ∑ s ∈ S0, (if ‖γ.toFun t - s‖ > ε

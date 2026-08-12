@@ -196,8 +196,8 @@ theorem wayBelow_finite_support {ι : Type*} {E : ι → Type*} [∀ i, Complete
     rw [Pi.le_def]; intro j
     simp only [hZ]
     by_cases hjF : j ∈ F
-    · rw [if_pos hjF, if_pos (hFG hjF)]
-    · rw [if_neg hjF]; exact bot_le
+    · rw [ite_eq_left hjF, ite_eq_left (hFG hjF)]
+    · rw [ite_eq_right hjF]; exact bot_le
   have h𝒵ne : 𝒵.Nonempty := ⟨Z ∅, ∅, rfl⟩
   have h𝒵dir : DirectedOn (· ≤ ·) 𝒵 := by
     rintro _ ⟨F, rfl⟩ _ ⟨G, rfl⟩
@@ -210,8 +210,8 @@ theorem wayBelow_finite_support {ι : Type*} {E : ι → Type*} [∀ i, Complete
       rw [Pi.le_def]; intro j
       simp only [hZ]
       by_cases hjF : j ∈ F
-      · rw [if_pos hjF]
-      · rw [if_neg hjF]; exact bot_le
+      · rw [ite_eq_left hjF]
+      · rw [ite_eq_right hjF]; exact bot_le
     · rw [Pi.le_def]; intro j
       rw [sSup_apply_eq_sSup_image]
       refine le_sSup ⟨Z {j}, ⟨{j}, rfl⟩, ?_⟩

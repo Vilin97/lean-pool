@@ -230,10 +230,10 @@ private lemma smul_one_eval (T : 𝕋 P Z) (D : HeckeCoset P) (m : HeckeLeftCose
   rw [Finsupp.finsetSum_apply]
   simp_rw [Finsupp.finsetSum_apply, Finsupp.single_apply]
   rw [Finset.sum_eq_single D]
-  · rw [Finset.sum_eq_single_of_mem m hm (fun b _ hb => if_neg hb), if_pos rfl]
+  · rw [Finset.sum_eq_single_of_mem m hm (fun b _ hb => ite_eq_right hb), ite_eq_left rfl]
   · intro D' _ hne
     exact Finset.sum_eq_zero fun i hi =>
-      if_neg (fun heq => absurd (heq ▸ hi)
+      ite_eq_right (fun heq => absurd (heq ▸ hi)
         (Finset.disjoint_left.mp
           (smulOrbit_disjoint_of_ne P (HeckeCoset.rep D) (HeckeCoset.rep D')
             (HeckeLeftCoset.rep (HeckeLeftCoset.one P))

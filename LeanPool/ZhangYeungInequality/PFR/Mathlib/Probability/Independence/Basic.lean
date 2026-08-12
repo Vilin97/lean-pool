@@ -227,7 +227,7 @@ lemma _root_.ProbabilityTheory.iIndepFun_iff' [MeasurableSpace Ω] {β : ι → 
   rw [iIndepFun_iff]
   refine forall_congr' fun s ↦ ⟨fun h f hf ↦ h fun i _ ↦ hf _, fun h f hf ↦ ?_⟩
   let g (i : ι) : Set Ω := if i ∈ s then f i else univ
-  have (i : ι) (hi : i ∈ s) : f i = g i := (if_pos hi).symm
+  have (i : ι) (hi : i ∈ s) : f i = g i := (ite_eq_left hi).symm
   convert @h g _ using 2
   · exact iInter₂_congr this
   · rw [this _ ‹_›]

@@ -123,7 +123,7 @@ include h_comm
 lemma functorOnObj_apply_one {x : X} (hx : x ∈ X₁) : F₁.obj ⟨x, hx⟩ = F_obj ⟨x⟩ := by
   have := h_comm
   refine Eq.symm ?_
-  exact dif_pos hx
+  exact dite_eq_left hx
 lemma functorOnObj_apply_two {x : X} (hx₂ : x ∈ X₂) :
     F₂.obj ⟨x, hx₂⟩ = F_obj ⟨x⟩ := by
   by_cases hx₁ : x ∈ X₁
@@ -141,10 +141,10 @@ lemma functorOnObj_apply_two {x : X} (hx₂ : x ∈ X₂) :
         _ = F₂.obj (⟨x, hx₂⟩) := rfl
     rw [this.symm]
     refine Eq.symm ?_
-    exact dif_pos hx₁
+    exact dite_eq_left hx₁
   case neg =>
     refine Eq.symm ?_
-    exact dif_neg hx₁
+    exact dite_eq_right hx₁
 /- ### Functor on Maps -/
 /-
   Define the mapping behaviour on paths that are fully covered by one set
@@ -246,7 +246,7 @@ def FunctorOnHomOfCovered {γ : Dipath x y} (hγ : covered hX γ) :
     (fun hγ => FunctorOnHomOfCoveredAux₂ hX h_comm hγ)
 local notation "F₀" => FunctorOnHomOfCovered hX h_comm
 lemma functorOnHomOfCovered_apply_left {γ : Dipath x y} (hγ : range γ ⊆ X₁) :
-    F₀ (Or.inl hγ) = FunctorOnHomOfCoveredAux₁ hX h_comm hγ := dif_pos hγ
+    F₀ (Or.inl hγ) = FunctorOnHomOfCoveredAux₁ hX h_comm hγ := dite_eq_left hγ
 lemma functorOnHomOfCovered_apply_left' {γ : Dipath x y} (hγ : range γ ⊆ X₁) :
     F₀ (covered_partwise_of_covered 0 (Or.inl hγ)) = FunctorOnHomOfCoveredAux₁ hX h_comm hγ :=
   functorOnHomOfCovered_apply_left _ _ _
@@ -255,7 +255,7 @@ lemma functorOnHomOfCovered_apply_right {γ : Dipath x y} (hγ : range γ ⊆ X�
   by_cases hγ₁ : range γ ⊆ X₁
   · rw [functorOnHomOfCovered_apply_left hX h_comm hγ₁]
     exact functorOnHomOfCoveredAux_equal hX h_comm hγ₁ hγ
-  · apply dif_neg hγ₁
+  · apply dite_eq_right hγ₁
 lemma functorOnHomOfCovered_equal {γ₁ γ₂ : Dipath x y} (h : γ₁ = γ₂)
     (hγ₁ : covered hX γ₁) (hγ₂ : covered hX γ₂) :
     F₀ hγ₁ = F₀ hγ₂ := by subst_vars; rfl

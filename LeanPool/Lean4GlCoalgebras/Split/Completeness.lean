@@ -301,11 +301,11 @@ lemma rewind_turn {g n} :
     simp only [Fin.val_succ, Fin.val_castSucc] at ih ⊢
     by_cases hk : Even k_val
     · have h : ¬ Even (k_val + 1) := by grind
-      simp only [h, hk, if_false, if_true] at ih ⊢
+      simp only [h, hk, ite_false, ite_true] at ih ⊢
       simp only [← ih]
       exact rewind_turn_one_step
     · have h : Even (k_val + 1) := by grind
-      simp only [h, hk, if_true, if_false] at ih ⊢
+      simp only [h, hk, ite_true, ite_false] at ih ⊢
       have ih := congrArg other ih
       simp at ih
       simp only [← ih]
@@ -430,7 +430,7 @@ lemma rewind_history_one_step_correspondence {Γ g} (strat : Strategy coalgebraG
         by_cases hmem : Δ' ∈ Δ0 :: Δs
         · simp [hmem] at hΔ'
         · simp only [hmem] at hΔ'
-          simp only [if_false] at hΔ'
+          simp only [ite_false] at hΔ'
           cases hΔ'
           simp only [builderRuleApp, List.getElem_cons_zero]
           exact f_of_mem_ruleApps R_mem
@@ -545,7 +545,7 @@ lemma rewind_history_correspondence_aux (Γ) (info : SplitSequent ⊕ RuleApp)
           (n + 1) h2 (by simpa using rec_h3) (by simpa using rec_h4) h6 rec_cone).1 rfl
       · have h : 2 * (n + 1) = 2 * n + 1 + 1 := by omega
         simp only [h]
-        simp only [reduceCtorEq, if_false, IsEmpty.forall_iff, and_true] at h3 h4 ⊢
+        simp only [reduceCtorEq, ite_false, IsEmpty.forall_iff, and_true] at h3 h4 ⊢
         unfold rewindHistory
         have for_termination_2 : Γs.tail.length + Rs.length < Γs.length + Rs.length := by
           cases Γs_def : Γs
@@ -606,9 +606,9 @@ def repNext (Γ : SplitSequent) {Δ : SplitSequent} {strat : Strategy coalgebraG
         have length := history_length_in_cone strat g.1 g.2.1
         have hlen := length.2 g.2.2
         have hfind := (Fin.find _ (List.mem_iff_get.1 rep)).2
-        simp only [g.2.2, reduceCtorEq, if_false]
+        simp only [g.2.2, reduceCtorEq, ite_false]
         omega⟩
-      simp only [g.2.2, Nat.even_mul, even_two, true_or, if_true] at this
+      simp only [g.2.2, Nat.even_mul, even_two, true_or, ite_true] at this
       convert this using 2
       unfold repPos
       congr 1⟩
@@ -1023,7 +1023,7 @@ lemma maximal_path_ends_in_prover_turn {Γ : SplitSequent}
         rcases z_in with ⟨Γ, _Γ_R, z_eq⟩
         by_cases Γ_mem : Γ ∈ Γs
         · simp_all
-        · simp only [Γ_mem, if_false, Option.some.injEq] at z_eq
+        · simp only [Γ_mem, ite_false, Option.some.injEq] at z_eq
           cases z_eq
           simp [isBox]
 

@@ -247,13 +247,13 @@ theorem productBasisOrthonormal
             gaussianInner (d := 1) (fun z : CSpace 1 => oneDimPhi (κ q) (α q) (z 0))
               (fun z : CSpace 1 => oneDimPhi (κ q) (α q) (z 0)) = 1 := fun q => by
         have hov := oneVariableBasisOrthonormal (k := κ q) (m := α q) (n := α q)
-        rwa [if_pos rfl] at hov
+        rwa [ite_eq_left rfl] at hov
       simp [hcoord]
     · obtain ⟨q, hq⟩ : ∃ q : Fin d, α q ≠ β q := by simpa [funext_iff] using h
-      rw [if_neg h, Finset.prod_eq_zero_iff]
+      rw [ite_eq_right h, Finset.prod_eq_zero_iff]
       refine ⟨q, Finset.mem_univ q, ?_⟩
       have hov := oneVariableBasisOrthonormal (k := κ q) (m := α q) (n := β q)
-      rwa [if_neg hq] at hov
+      rwa [ite_eq_right hq] at hov
   exact hfactor.2.trans hprod
 
 /-- The distinguished basis vector has Gaussian norm one. -/
@@ -405,7 +405,7 @@ theorem totalDegreePiecePhaseLaw
   refine Finset.sum_congr rfl ?_
   intro α hα
   by_cases hdeg : totalDegree α = n
-  · rw [if_pos hdeg, productBasisPhaseLaw]
+  · rw [ite_eq_left hdeg, productBasisPhaseLaw]
     simp [hdeg, mul_assoc, mul_left_comm, mul_comm]
   · simp [hdeg]
 
@@ -505,7 +505,7 @@ private lemma annulusInner_finite_sum_basis
             else 0)) := by
     funext z
     by_cases hz : z ∈ productAnnulus j
-    · rw [if_pos hz, Finset.sum_mul]
+    · rw [ite_eq_left hz, Finset.sum_mul]
       refine Finset.sum_congr rfl ?_
       intro α hα
       simp [hz, mul_assoc]
@@ -561,7 +561,7 @@ private lemma annulusInner_finite_sum
             else 0) := by
     funext z
     by_cases hz : z ∈ productAnnulus j
-    · rw [if_pos hz, map_sum, Finset.mul_sum]
+    · rw [ite_eq_left hz, map_sum, Finset.mul_sum]
       refine Finset.sum_congr rfl fun β _ => ?_
       simp [hz, mul_assoc, mul_comm]
     · simp [hz]

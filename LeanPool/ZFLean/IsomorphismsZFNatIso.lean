@@ -159,9 +159,10 @@ theorem deletePointIsoMap_bijective {k : ZFNat} {ℓ : ZFSet}
                 enter [1]
                 change s < L
             rcases L_lt_k with L_lt_s | rfl
-            · rw [ite_cond_eq_false (h := eq_false (nomatch lt_irrefl <| lt_trans · L_lt_s))]
+            · rw [ite_eq_right_of_eq_false
+                (h := eq_false (nomatch lt_irrefl <| lt_trans · L_lt_s))]
               rfl
-            · rw [ite_cond_eq_false (h := eq_false lt_irrefl)]
+            · rw [ite_eq_right_of_eq_false (h := eq_false lt_irrefl)]
               rfl
         · rintro rfl
           nomatch not_lt_zero L_lt_k
@@ -226,7 +227,7 @@ theorem deletePointIsoMap_bijective {k : ZFNat} {ℓ : ZFSet}
                 · conv =>
                     enter [1]
                     change s < L
-                  rw [ite_cond_eq_false
+                  rw [ite_eq_right_of_eq_false
                     (h := eq_false (nomatch lt_irrefl <| lt_trans · L_lt_s))]
               · subst s
                 rw [mem_sep, pair_mem_prod, π₁_pair, π₂_pair]
@@ -246,7 +247,7 @@ theorem deletePointIsoMap_bijective {k : ZFNat} {ℓ : ZFSet}
                 · conv =>
                     enter [1]
                     change L < L
-                  rw [ite_cond_eq_false (h := eq_false lt_irrefl)]
+                  rw [ite_eq_right_of_eq_false (h := eq_false lt_irrefl)]
             · contradiction
         · intro eq_zero
           have := Or.resolve_right y_lt_ℓ (Subtype.coe_ne_coe.mp y_ne_ℓ)

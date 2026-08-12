@@ -105,8 +105,8 @@ theorem norm_ketPlusVec : ‖ketPlusVec‖ = 1 := by
   norm_num
 
 theorem norm_ketMinusVec : ‖ketMinusVec‖ = 1 := by
-  rw [norm_eq_two_terms, ketMinusVec_apply, ketMinusVec_apply, if_pos rfl,
-    if_neg (show (1 : Fin (2 ^ 1)) ≠ 0 by decide), norm_neg, ← two_mul,
+  rw [norm_eq_two_terms, ketMinusVec_apply, ketMinusVec_apply, ite_eq_left rfl,
+    ite_eq_right (show (1 : Fin (2 ^ 1)) ≠ 0 by decide), norm_neg, ← two_mul,
     norm_sq_invSqrt2]
   norm_num
 
@@ -147,8 +147,8 @@ theorem probQubit0_ket0_tensor_add_ket1_tensor {n : ℕ}
     Real.sq_sqrt (Finset.sum_nonneg fun i _ => sq_nonneg ‖alpha i‖)]
   refine Finset.sum_congr rfl fun y _ => ?_
   rw [PiLp.add_apply, StateVector.tensor_apply_prod, StateVector.tensor_apply_prod,
-    ket0, ket1, ket_apply, ket_apply, if_pos rfl,
-    if_neg (show (0 : Fin (2 ^ 1)) ≠ 1 by decide), one_mul, zero_mul,
+    ket0, ket1, ket_apply, ket_apply, ite_eq_left rfl,
+    ite_eq_right (show (0 : Fin (2 ^ 1)) ≠ 1 by decide), one_mul, zero_mul,
     add_zero]
 
 /-- On `|0> ⊗ alpha + |1> ⊗ beta` the probability of reading `1` on qubit 0 is
@@ -163,8 +163,8 @@ theorem probQubit1_ket0_tensor_add_ket1_tensor {n : ℕ}
     Real.sq_sqrt (Finset.sum_nonneg fun i _ => sq_nonneg ‖beta i‖)]
   refine Finset.sum_congr rfl fun y _ => ?_
   rw [PiLp.add_apply, StateVector.tensor_apply_prod, StateVector.tensor_apply_prod,
-    ket0, ket1, ket_apply, ket_apply, if_pos rfl,
-    if_neg (show (1 : Fin (2 ^ 1)) ≠ 0 by decide), one_mul, zero_mul,
+    ket0, ket1, ket_apply, ket_apply, ite_eq_left rfl,
+    ite_eq_right (show (1 : Fin (2 ^ 1)) ≠ 0 by decide), one_mul, zero_mul,
     zero_add]
 
 end

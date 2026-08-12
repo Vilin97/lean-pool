@@ -306,7 +306,7 @@ lemma sum_range_normalizationSmallPrimePart_eq
       = ∑ n ∈ Finset.range N, ∑ p ∈ n.divisorsAntidiagonal, F p.1 p.2 := by
           refine Finset.sum_congr rfl fun n hn => ?_
           by_cases hx : x ≤ n
-          · rw [normalizationSmallPrimePart, if_pos hx, smallPrimeEntryWeight,
+          · rw [normalizationSmallPrimePart, ite_eq_left hx, smallPrimeEntryWeight,
               smallPrimeDivisorSum_eq_sum_divisorsAntidiagonal, Finset.mul_sum]
             refine Finset.sum_congr rfl fun p hp => ?_
             rcases Nat.mem_divisorsAntidiagonal.1 hp with ⟨hp_mul, _⟩
@@ -367,7 +367,8 @@ lemma tsum_firstEntryPairWeight_fiber_prod {x Y n : ℕ} (hx : 1 ≤ x) :
       Finset.tsum_subtype' n.divisorsAntidiagonal fun mq => firstEntryPairWeight x Y mq,
       Nat.sum_divisorsAntidiagonal' (f := fun m q => firstEntryPairWeight x Y (m, q))]
     by_cases hxn : x ≤ n
-    · rw [normalizationFirstEntryPart, if_pos hxn, firstEntryEntryWeight, firstEntryDivisorSum]
+    · rw [normalizationFirstEntryPart, ite_eq_left hxn, firstEntryEntryWeight,
+        firstEntryDivisorSum]
       calc
         ∑ q ∈ n.divisors, firstEntryPairWeight x Y (n / q, q) =
             ∑ q ∈ n.divisors,
@@ -384,8 +385,8 @@ lemma tsum_firstEntryPairWeight_fiber_prod {x Y n : ℕ} (hx : 1 ≤ x) :
                    ⟨hYq, by simpa [hmul] using hxn⟩⟩
               have hmq_ge : 1 ≤ n / q := Nat.succ_le_of_lt hmq_pos
               by_cases hcond : Y ≤ q ∧ n / q < x
-              · rw [firstEntryPairWeight_eq (x := x) (Y := Y) hmq_ge hcond.2, if_pos hcond,
-                  if_pos (hiff.2 hcond.1)]
+              · rw [firstEntryPairWeight_eq (x := x) (Y := Y) hmq_ge hcond.2, ite_eq_left hcond,
+                  ite_eq_left (hiff.2 hcond.1)]
                 have hmul' : q * (n / q) = n := (mul_comm q (n / q)).trans hmul
                 simpa [div_eq_mul_inv, Nat.cast_mul, mul_comm, mul_left_comm, mul_assoc, hmul']
                   using (entryWeightFactor_mul_vonMangoldt_eq_smallFactor q (n / q)).symm
@@ -394,7 +395,7 @@ lemma tsum_firstEntryPairWeight_fiber_prod {x Y n : ℕ} (hx : 1 ≤ x) :
               ∑ q ∈ n.divisors.filter (fun q => Y ≤ q ∧ n / q < x), Λ q := by
               rw [← Finset.mul_sum, ← Finset.sum_filter]
         _ = entryWeightFactor n * firstEntryDivisorSum x Y n := by simp [firstEntryDivisorSum]
-    · rw [normalizationFirstEntryPart, if_neg hxn]
+    · rw [normalizationFirstEntryPart, ite_eq_right hxn]
       refine Finset.sum_eq_zero fun q hq => ?_
       have hq_dvd : q ∣ n := (Nat.mem_divisors.mp hq).1
       have hmq_pos : 0 < n / q :=

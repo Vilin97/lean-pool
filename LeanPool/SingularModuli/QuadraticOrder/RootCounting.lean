@@ -418,9 +418,9 @@ theorem cardSqrts_prime_pow_coprime (hp2 : p ≠ 2) (n : ℕ) (hn : 0 < n)
     have h_prime := cardSqrts_prime p hp2 c
     by_cases h : legendreSym p c = 1
     · rw [h] at h_prime
-      rw [if_pos h]
+      rw [ite_eq_left h]
       omega
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       have h_c_nz : (c : ZMod p) ≠ 0 := by
         intro h0
         apply hc

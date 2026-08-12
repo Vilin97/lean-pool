@@ -102,7 +102,7 @@ theorem sectorCurve_seg2 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 1 2) :
     sectorCurve r α t = ↑r * exp (I * ↑((t - 1) * α)) := by
   rcases eq_or_lt_of_le ht.1 with rfl | h1
   · simp [sectorCurve, Complex.exp_zero]
-  · simp only [sectorCurve, if_neg (not_le.mpr h1), if_pos ht.2]
+  · simp only [sectorCurve, ite_eq_right (not_le.mpr h1), ite_eq_left ht.2]
 
 /-- Segment 3: for t in [2,3], the sector curve is `(3-t)*r * exp(i*alpha)`. -/
 theorem sectorCurve_seg3 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 2 3) :
@@ -111,8 +111,8 @@ theorem sectorCurve_seg3 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 2 3) :
   · simp only [sectorCurve, show ¬(2 : ℝ) ≤ 1 from by norm_num,
       show (2 : ℝ) ≤ 2 from le_refl 2, ↓reduceIte]
     push_cast; ring_nf
-  · simp only [sectorCurve, if_neg (not_le.mpr (lt_trans one_lt_two h2)),
-      if_neg (not_le.mpr h2)]
+  · simp only [sectorCurve, ite_eq_right (not_le.mpr (lt_trans one_lt_two h2)),
+      ite_eq_right (not_le.mpr h2)]
 
 /-- The sector curve is continuous on [0,3]. -/
 theorem sectorCurve_continuousOn (r : ℝ) (α : ℝ) :
@@ -163,7 +163,7 @@ theorem deriv_sectorCurve_seg1 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Ioo 0 
   have h_eq : sectorCurve r α =ᶠ[𝓝 t] fun s => ↑(s * r) := by
     have h_nhds : Iio 1 ∈ 𝓝 t := Iio_mem_nhds ht.2
     filter_upwards [h_nhds] with s hs
-    simp only [sectorCurve, if_pos (le_of_lt (mem_Iio.mp hs))]
+    simp only [sectorCurve, ite_eq_left (le_of_lt (mem_Iio.mp hs))]
   rw [Filter.EventuallyEq.deriv_eq h_eq]
   have h1 : HasDerivAt (fun s => s * r) r t := by simpa using (hasDerivAt_id t).mul_const r
   exact h1.ofReal_comp.deriv
@@ -201,8 +201,8 @@ theorem deriv_sectorCurve_seg3 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Ioo 2 
     have h_nhds : Ioi 2 ∈ 𝓝 t := Ioi_mem_nhds ht.1
     filter_upwards [h_nhds] with s hs
     simp only [sectorCurve,
-      if_neg (not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) (mem_Ioi.mp hs))),
-      if_neg (not_le.mpr (mem_Ioi.mp hs))]
+      ite_eq_right (not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) (mem_Ioi.mp hs))),
+      ite_eq_right (not_le.mpr (mem_Ioi.mp hs))]
   rw [Filter.EventuallyEq.deriv_eq h_eq]
   have h_inner : HasDerivAt (fun s => (↑((3 - s) * r) : ℂ)) (↑(-r)) t := by
     have h1 : HasDerivAt (fun s => (3 - s) * r) (-r) t := by
@@ -313,7 +313,7 @@ private theorem pv_cutoff_F_integrable_0_delta (r : ℝ) (hr : 0 < r) (α : ℝ)
   have hδ1 : δ < 1 := by rwa [div_lt_one hr]
   apply (intervalIntegrable_const (c := (0 : ℂ))).congr
   intro t ht; rw [Set.uIoc_of_le hδ.le] at ht
-  dsimp only [F]; simp only [sub_zero]; rw [if_neg (not_lt.mpr _)]
+  dsimp only [F]; simp only [sub_zero]; rw [ite_eq_right (not_lt.mpr _)]
   rw [sectorCurve_norm_seg1 r hr α t ⟨le_of_lt ht.1, le_trans ht.2 (le_of_lt hδ1)⟩]
   exact le_trans (mul_le_mul_of_nonneg_right ht.2 hr.le)
     (le_of_eq (by rw [hδ_def]; field_simp))
@@ -330,7 +330,7 @@ private theorem pv_cutoff_F_integrable_3delta_3 (r : ℝ) (hr : 0 < r) (α : ℝ
   have hδ1 : δ < 1 := by rwa [div_lt_one hr]
   apply (intervalIntegrable_const (c := (0 : ℂ))).congr
   intro t ht; rw [Set.uIoc_of_le (by linarith : 3 - δ ≤ 3)] at ht
-  dsimp only [F]; simp only [sub_zero]; rw [if_neg (not_lt.mpr _)]
+  dsimp only [F]; simp only [sub_zero]; rw [ite_eq_right (not_lt.mpr _)]
   have h2 : 2 ≤ t := by linarith [ht.1]
   rw [sectorCurve_norm_seg3' r hr α t ⟨h2, ht.2⟩]
   have : (3 - t) * r ≤ δ * r := mul_le_mul_of_nonneg_right (by linarith [ht.1]) hr.le
@@ -353,7 +353,7 @@ private theorem pv_cutoff_F_integrable_delta_1 (r : ℝ) (hr : 0 < r) (α : ℝ)
       (continuousAt_inv₀ (ne_of_gt ht_pos))).continuousWithinAt
   rw [intervalIntegrable_iff, Set.uIoc_of_le hδ1.le]
   have h_eq : ∀ t ∈ Ioo δ (1 : ℝ), F t = (↑(t⁻¹) : ℂ) := fun t ⟨htδ, ht1⟩ => by
-    dsimp only [F]; simp only [sub_zero]; rw [if_pos]
+    dsimp only [F]; simp only [sub_zero]; rw [ite_eq_left]
     · exact pv_integrand_seg1 r hr α t ⟨lt_trans hδ htδ, ht1⟩
     · rw [sectorCurve_norm_seg1 r hr α t ⟨le_of_lt (lt_trans hδ htδ), le_of_lt ht1⟩]
       calc ε = δ * r := by rw [hδ_def]; field_simp
@@ -376,7 +376,7 @@ private theorem pv_cutoff_F_integrable_1_2 (r : ℝ) (hr : 0 < r) (α : ℝ) (ε
   rw [intervalIntegrable_iff, Set.uIoc_of_le (by norm_num : (1 : ℝ) ≤ 2)]
   have h_eq : ∀ t ∈ Ioo (1 : ℝ) 2, F t = I * ↑α := by
     intro t ⟨ht1, ht2⟩
-    dsimp only [F]; simp only [sub_zero]; rw [if_pos]
+    dsimp only [F]; simp only [sub_zero]; rw [ite_eq_left]
     · rw [sectorCurve_seg2 r α t ⟨le_of_lt ht1, le_of_lt ht2⟩,
           deriv_sectorCurve_seg2 r α t ⟨ht1, ht2⟩]
       have : (r : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (ne_of_gt hr)
@@ -408,7 +408,7 @@ private theorem pv_cutoff_F_integrable_2_3delta (r : ℝ) (hr : 0 < r) (α : ℝ
   rw [intervalIntegrable_iff, Set.uIoc_of_le h3δ.le]
   have h_eq : ∀ t ∈ Ioo (2 : ℝ) (3 - δ), F t = -(↑((3 - t)⁻¹) : ℂ) := by
     intro t ⟨ht2, ht3δ⟩
-    dsimp only [F]; simp only [sub_zero]; rw [if_pos]
+    dsimp only [F]; simp only [sub_zero]; rw [ite_eq_left]
     · have h3 : t < 3 := by linarith
       rw [sectorCurve_seg3 r α t ⟨le_of_lt ht2, le_of_lt h3⟩,
           deriv_sectorCurve_seg3 r α t ⟨ht2, h3⟩]
@@ -499,7 +499,7 @@ private theorem pv_cutoff_integral_seg1_eq_inv (r : ℝ) (hr : 0 < r) (α : ℝ)
   have hδ : 0 < δ := div_pos hε hr
   have hδ1 : δ < 1 := by rwa [div_lt_one hr]
   have h_on_Ioo : ∀ t ∈ Ioo δ 1, F t = (↑(t⁻¹) : ℂ) := fun t ⟨htδ, ht1⟩ => by
-    dsimp only [F]; simp only [sub_zero]; rw [if_pos]
+    dsimp only [F]; simp only [sub_zero]; rw [ite_eq_left]
     · rw [sectorCurve_seg1 r α t ⟨le_of_lt (lt_trans hδ htδ), le_of_lt ht1⟩,
           deriv_sectorCurve_seg1 r α t ⟨lt_trans hδ htδ, ht1⟩]
       have ht_ne : (t : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (ne_of_gt (lt_trans hδ htδ))
@@ -522,7 +522,7 @@ private theorem pv_cutoff_integral_seg2_eq_Ialpha (r : ℝ) (hr : 0 < r) (α : �
       then (sectorCurve r α t)⁻¹ * deriv (sectorCurve r α) t else 0
   have h_on_Ioo : ∀ t ∈ Ioo 1 2, F t = I * ↑α := by
     intro t ⟨ht1, ht2⟩
-    dsimp only [F]; simp only [sub_zero]; rw [if_pos]
+    dsimp only [F]; simp only [sub_zero]; rw [ite_eq_left]
     · rw [sectorCurve_seg2 r α t ⟨le_of_lt ht1, le_of_lt ht2⟩,
           deriv_sectorCurve_seg2 r α t ⟨ht1, ht2⟩]
       have : (r : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (ne_of_gt hr)
@@ -553,7 +553,7 @@ private theorem pv_cutoff_integral_seg3_eq_neg_inv (r : ℝ) (hr : 0 < r) (α : 
   have h3δ : 2 < 3 - δ := by linarith
   have h_on_Ioo : ∀ t ∈ Ioo 2 (3 - δ), F t = -(↑((3 - t)⁻¹) : ℂ) := by
     intro t ⟨ht2, ht3δ⟩
-    dsimp only [F]; simp only [sub_zero]; rw [if_pos]
+    dsimp only [F]; simp only [sub_zero]; rw [ite_eq_left]
     · have h3 : t < 3 := by linarith
       rw [sectorCurve_seg3 r α t ⟨le_of_lt ht2, le_of_lt h3⟩,
           deriv_sectorCurve_seg3 r α t ⟨ht2, h3⟩]
@@ -591,7 +591,7 @@ theorem pv_sector_cutoff_eq (r : ℝ) (hr : 0 < r) (α : ℝ)
     rw [show ∫ t in (0 : ℝ)..δ, F t = ∫ t in (0 : ℝ)..δ, (0 : ℂ) from by
       apply intervalIntegral.integral_congr; intro t ht
       rw [Set.uIcc_of_le (le_of_lt hδ)] at ht
-      dsimp only [F]; simp only [sub_zero]; rw [if_neg (not_lt.mpr _)]
+      dsimp only [F]; simp only [sub_zero]; rw [ite_eq_right (not_lt.mpr _)]
       rw [sectorCurve_norm_seg1 r hr α t ⟨ht.1, le_trans ht.2 (le_of_lt hδ1)⟩]
       calc t * r ≤ δ * r := by nlinarith [ht.2]
         _ = ε := by rw [hδ_def]; field_simp]
@@ -600,7 +600,7 @@ theorem pv_sector_cutoff_eq (r : ℝ) (hr : 0 < r) (α : ℝ)
     rw [show ∫ t in (3 - δ)..(3 : ℝ), F t = ∫ t in (3 - δ)..(3 : ℝ), (0 : ℂ) from by
       apply intervalIntegral.integral_congr; intro t ht
       rw [Set.uIcc_of_le (by linarith : 3 - δ ≤ 3)] at ht
-      dsimp only [F]; simp only [sub_zero]; rw [if_neg (not_lt.mpr _)]
+      dsimp only [F]; simp only [sub_zero]; rw [ite_eq_right (not_lt.mpr _)]
       rw [sectorCurve_norm_seg3' r hr α t ⟨by linarith [ht.1], ht.2⟩]
       calc (3 - t) * r ≤ δ * r := by nlinarith [ht.1]
         _ = ε := by rw [hδ_def]; field_simp]

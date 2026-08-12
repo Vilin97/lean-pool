@@ -283,10 +283,10 @@ theorem congr_ASymm_eq_compBasisSymm (r : Block) (d : DirIdx) :
   · -- Fixed point: both `ASymm` and `compBasisSymm` are just the directed object.
     have hAS : ASymm d = A d := by
       unfold N1000000OrbitalBasis.ASymm
-      rw [dif_pos hFix]
+      rw [dite_eq_left hFix]
     have hCB : compBasisSymm r d = compBasis r d := by
       unfold compBasisSymm
-      -- Avoid unfolding `tTr` by using `if_pos` directly.
+      -- Avoid unfolding `tTr` by using `ite_eq_left` directly.
       simp_all
     rw [hAS, hCB]
     exact congr_A_eq_compBasis (r := r) (d := d)
@@ -298,11 +298,11 @@ theorem congr_ASymm_eq_compBasisSymm (r : Block) (d : DirIdx) :
         fin_cases d <;> decide⟩
     have hAS : ASymm d = A d + A dTr := by
       unfold N1000000OrbitalBasis.ASymm
-      rw [dif_neg hFix]
+      rw [dite_eq_right hFix]
     have hCB : compBasisSymm r d = compBasis r d + compBasis r (invDir d) := by
       unfold compBasisSymm
-      -- Avoid unfolding `tTr` by using `if_neg` directly.
-      simpa using (if_neg hFix :
+      -- Avoid unfolding `tTr` by using `ite_eq_right` directly.
+      simpa using (ite_eq_right hFix :
         (if tTr[d.1]! = d.1 then compBasis r d else compBasis r d + compBasis r (invDir d))
           = (compBasis r d + compBasis r (invDir d)))
     -- Rewrite both sides using these decompositions.

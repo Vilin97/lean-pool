@@ -331,14 +331,14 @@ lemma mem_MPS_pow_of_coeff_vanish
     have tsub_val (s j : Fin 3) (hle : single s 1 ≤ m) :
         (m - single s 1 : Fin 3 →₀ ℕ) j = m j - (single s 1 : Fin 3 →₀ ℕ) j :=
       Finsupp.tsub_apply _ _ _
-    have h_g1_van (d : Fin 3 →₀ ℕ) (hd : d 0 ≠ 0) : g₁ d = 0 := if_neg hd
+    have h_g1_van (d : Fin 3 →₀ ℕ) (hd : d 0 ≠ 0) : g₁ d = 0 := ite_eq_right hd
     have h_g2_van_0 (d : Fin 3 →₀ ℕ) (hd : d 0 ≠ 0) : g₂ d = 0 :=
-      if_neg (not_and_of_not_left _ hd)
+      ite_eq_right (not_and_of_not_left _ hd)
     have h_g2_van_1 (d : Fin 3 →₀ ℕ) (hd : d 1 ≠ 0) : g₂ d = 0 :=
-      if_neg (not_and_of_not_right _ hd)
+      ite_eq_right (not_and_of_not_right _ hd)
     -- Case split on which X_i "captures" monomial m
     by_cases hm0 : single (0 : Fin 3) 1 ≤ m
-    · rw [if_pos hm0]
+    · rw [ite_eq_left hm0]
       set d₀ := m - single (0 : Fin 3) 1
       have hd₀_add : d₀ + single 0 1 = m := tsub_add_cancel_of_le hm0
       have hm0v := single_le_iff.mp hm0
@@ -346,7 +346,7 @@ lemma mem_MPS_pow_of_coeff_vanish
       rw [hd₀_add, coeff_apply]
       have h0_ne (s : Fin 3) (hs : s ≠ 0) (hle : single s 1 ≤ m) :
           (m - single s 1 : Fin 3 →₀ ℕ) 0 ≠ 0 := by
-        rw [tsub_val s 0 hle, single_apply, if_neg hs]
+        rw [tsub_val s 0 hle, single_apply, ite_eq_right hs]
         omega
       have t1 : ∀ h1 : single (1 : Fin 3) 1 ≤ m,
           g₁ (m - single (1 : Fin 3) 1) = 0 :=
@@ -355,15 +355,15 @@ lemma mem_MPS_pow_of_coeff_vanish
           g₂ (m - single (2 : Fin 3) 1) = 0 :=
         fun h2 => h_g2_van_0 _ (h0_ne 2 (by decide) h2)
       by_cases h1 : single (1 : Fin 3) 1 ≤ m <;> by_cases h2 : single (2 : Fin 3) 1 ≤ m
-      · simp only [if_pos h1, if_pos h2, t1 h1, t2 h2, add_zero]
-      · simp only [if_pos h1, if_neg h2, t1 h1, add_zero]
-      · simp only [if_neg h1, if_pos h2, t2 h2, add_zero]
-      · simp only [if_neg h1, if_neg h2, add_zero]
-    · rw [if_neg hm0, zero_add]
+      · simp only [ite_eq_left h1, ite_eq_left h2, t1 h1, t2 h2, add_zero]
+      · simp only [ite_eq_left h1, ite_eq_right h2, t1 h1, add_zero]
+      · simp only [ite_eq_right h1, ite_eq_left h2, t2 h2, add_zero]
+      · simp only [ite_eq_right h1, ite_eq_right h2, add_zero]
+    · rw [ite_eq_right hm0, zero_add]
       have hm0v : m 0 = 0 := by simp [single_le_iff] at hm0
                                 omega
       by_cases hm1 : single (1 : Fin 3) 1 ≤ m
-      · rw [if_pos hm1]
+      · rw [ite_eq_left hm1]
         set d₁ := m - single (1 : Fin 3) 1
         have hd₁_add : d₁ + single 1 1 = m := tsub_add_cancel_of_le hm1
         have hm1v := single_le_iff.mp hm1
@@ -372,20 +372,20 @@ lemma mem_MPS_pow_of_coeff_vanish
           rw [tsub_val 1 0 hm1, single_apply]
           simpa only [Fin.isValue, one_ne_zero, ↓reduceIte, tsub_zero] using hm0v
         change f m = (if d₁ 0 = 0 then coeff (d₁ + single 1 1) f else 0) + _
-        rw [if_pos hd₁_0, hd₁_add, coeff_apply]
+        rw [ite_eq_left hd₁_0, hd₁_add, coeff_apply]
         have h1_ne : ∀ h2 : single (2 : Fin 3) 1 ≤ m,
             (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 1 ≠ 0 := by
           intro h2
-          rw [tsub_val 2 1 h2, single_apply, if_neg (by decide : (2 : Fin 3) ≠ 1)]
+          rw [tsub_val 2 1 h2, single_apply, ite_eq_right (by decide : (2 : Fin 3) ≠ 1)]
           omega
         by_cases h2 : single (2 : Fin 3) 1 ≤ m
-        · simp only [if_pos h2, h_g2_van_1 _ (h1_ne h2), add_zero]
-        · simp only [if_neg h2, add_zero]
-      · rw [if_neg hm1, zero_add]
+        · simp only [ite_eq_left h2, h_g2_van_1 _ (h1_ne h2), add_zero]
+        · simp only [ite_eq_right h2, add_zero]
+      · rw [ite_eq_right hm1, zero_add]
         have hm1v : m 1 = 0 := by simp [single_le_iff] at hm1
                                   omega
         by_cases hm2 : single (2 : Fin 3) 1 ≤ m
-        · rw [if_pos hm2]
+        · rw [ite_eq_left hm2]
           set d₂ := m - single (2 : Fin 3) 1
           have hd₂_add : d₂ + single 2 1 = m := tsub_add_cancel_of_le hm2
           have hd₂_0 : d₂ 0 = 0 := by
@@ -397,9 +397,9 @@ lemma mem_MPS_pow_of_coeff_vanish
             rw [tsub_val 2 1 hm2, single_apply]
             simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm1v
           change f m = if d₂ 0 = 0 ∧ d₂ 1 = 0 then coeff (d₂ + single 2 1) f else 0
-          rw [if_pos ⟨hd₂_0, hd₂_1⟩, hd₂_add, coeff_apply]
+          rw [ite_eq_left ⟨hd₂_0, hd₂_1⟩, hd₂_add, coeff_apply]
         · -- All exponents zero: m = 0, so coeff 0 f = constantCoeff f = 0
-          rw [if_neg hm2]
+          rw [ite_eq_right hm2]
           have hm2v : m 2 = 0 := by simp [single_le_iff] at hm2
                                     omega
           have : m = 0 := by ext i
@@ -532,13 +532,13 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
   have tsub_val (s j : Fin 3) (hle : single s 1 ≤ m) :
       (m - single s 1 : Fin 3 →₀ ℕ) j = m j - (single s 1 : Fin 3 →₀ ℕ) j :=
     Finsupp.tsub_apply _ _ _
-  have h_g1_van (d : Fin 3 →₀ ℕ) (hd : d 0 ≠ 0) : g₁ d = 0 := if_neg hd
+  have h_g1_van (d : Fin 3 →₀ ℕ) (hd : d 0 ≠ 0) : g₁ d = 0 := ite_eq_right hd
   have h_g2_van_0 (d : Fin 3 →₀ ℕ) (hd : d 0 ≠ 0) : g₂ d = 0 :=
-    if_neg (not_and_of_not_left _ hd)
+    ite_eq_right (not_and_of_not_left _ hd)
   have h_g2_van_1 (d : Fin 3 →₀ ℕ) (hd : d 1 ≠ 0) : g₂ d = 0 :=
-    if_neg (not_and_of_not_right _ hd)
+    ite_eq_right (not_and_of_not_right _ hd)
   by_cases hm0 : single (0 : Fin 3) 1 ≤ m
-  · rw [if_pos hm0]
+  · rw [ite_eq_left hm0]
     set d₀ := m - single (0 : Fin 3) 1
     have hd₀_add : d₀ + single 0 1 = m := tsub_add_cancel_of_le hm0
     have hm0v := single_le_iff.mp hm0
@@ -546,7 +546,7 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
     rw [hd₀_add, coeff_apply]
     have h0_ne (s : Fin 3) (hs : s ≠ 0) (hle : single s 1 ≤ m) :
         (m - single s 1 : Fin 3 →₀ ℕ) 0 ≠ 0 := by
-      rw [tsub_val s 0 hle, single_apply, if_neg hs]
+      rw [tsub_val s 0 hle, single_apply, ite_eq_right hs]
       simp
       omega
     have t1 : ∀ h1 : single (1 : Fin 3) 1 ≤ m,
@@ -555,11 +555,11 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
         g₂ (m - single (2 : Fin 3) 1) = 0 := fun h2 => h_g2_van_0 _ (h0_ne 2 (by decide) h2)
     by_cases h1 : single (1 : Fin 3) 1 ≤ m <;> by_cases h2 : single (2 : Fin 3) 1 ≤ m <;>
       simp only [h1, h2, t1, t2, ↓reduceIte, add_zero]
-  · rw [if_neg hm0, zero_add]
+  · rw [ite_eq_right hm0, zero_add]
     have hm0v : m 0 = 0 := by simp [single_le_iff] at hm0
                               omega
     by_cases hm1 : single (1 : Fin 3) 1 ≤ m
-    · rw [if_pos hm1]
+    · rw [ite_eq_left hm1]
       set d₁ := m - single (1 : Fin 3) 1
       have hd₁_add : d₁ + single 1 1 = m := tsub_add_cancel_of_le hm1
       have hm1v := single_le_iff.mp hm1
@@ -568,7 +568,7 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
         rw [tsub_val 1 0 hm1, single_apply]
         simpa only [Fin.isValue, one_ne_zero, ↓reduceIte, tsub_zero] using hm0v
       change f m = (if d₁ 0 = 0 then coeff (d₁ + single 1 1) f else 0) + _
-      rw [if_pos hd₁_0, hd₁_add, coeff_apply]
+      rw [ite_eq_left hd₁_0, hd₁_add, coeff_apply]
       have h1_ne : ∀ h2 : single (2 : Fin 3) 1 ≤ m,
           (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 1 ≠ 0 := by
         intro h2
@@ -578,11 +578,11 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
       by_cases h2 : single (2 : Fin 3) 1 ≤ m <;>
         simp only [h2, ↓reduceIte, add_zero]
       exact (h_g2_van_1 _ (h1_ne ‹_›) ▸ add_zero (f m)).symm
-    · rw [if_neg hm1, zero_add]
+    · rw [ite_eq_right hm1, zero_add]
       have hm1v : m 1 = 0 := by simp [single_le_iff] at hm1
                                 omega
       by_cases hm2 : single (2 : Fin 3) 1 ≤ m
-      · rw [if_pos hm2]
+      · rw [ite_eq_left hm2]
         set d₂ := m - single (2 : Fin 3) 1
         have hd₂_add : d₂ + single 2 1 = m := tsub_add_cancel_of_le hm2
         have hd₂_0 : d₂ 0 = 0 := by
@@ -594,8 +594,8 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
           rw [tsub_val 2 1 hm2, single_apply]
           simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm1v
         change f m = if d₂ 0 = 0 ∧ d₂ 1 = 0 then coeff (d₂ + single 2 1) f else 0
-        rw [if_pos ⟨hd₂_0, hd₂_1⟩, hd₂_add, coeff_apply]
-      · rw [if_neg hm2]
+        rw [ite_eq_left ⟨hd₂_0, hd₂_1⟩, hd₂_add, coeff_apply]
+      · rw [ite_eq_right hm2]
         have hm2v : m 2 = 0 := by simp [single_le_iff] at hm2
                                   omega
         have : m = 0 := by ext i

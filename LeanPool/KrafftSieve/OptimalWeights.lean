@@ -125,7 +125,7 @@ The truly multidimensional weight function is supported on $\mathcal{A}_n$.
 lemma W_truly_multi_support (n : ℕ) (lambda : Finset (Fin (w n)) → ℝ) (x : ZMod (q n))
     (hx : x.val ∉ evalInterval n) :
   wTrulyMulti n lambda x = 0 := by
-    exact if_neg hx
+    exact ite_eq_right hx
 
 /--
 Lemma: The first moment $sum1$ of the truly multidimensional weight is equal to
@@ -135,7 +135,7 @@ lemma S_1_eq_Q_1 (n : ℕ) (lambda : Finset (Fin (w n)) → ℝ) :
     sum1 n (wTrulyMulti n lambda) = q1 n lambda := by
   unfold q1 sum1 wTrulyMulti pMulti; norm_cast
   simp only [ZMod.val_natCast, Finset.powerset_univ]
-  rw [ Finset.sum_congr rfl fun x hx => if_pos ?_ ]
+  rw [ Finset.sum_congr rfl fun x hx => ite_eq_left ?_ ]
   · simp only [sq, Finset.sum_mul, Finset.mul_sum, matrix1]
     rw [Finset.sum_comm, Finset.sum_congr rfl fun _ _ => Finset.sum_comm]
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ =>
@@ -217,7 +217,7 @@ theorem mu_min_lt_one_implies_sufficiency (n : ℕ) (h : muMin n < 1) :
   have h_ratio_lt_one : q2 n lambda < q1 n lambda := by
     -- By definition of Ratio, we have r = q2 n lambda / q1 n lambda.
     have h_ratio_def : r = q2 n lambda / q1 n lambda := by
-      exact hlambda_ratio.trans ( if_neg hlambda_pos.ne' ) |> Eq.trans <| rfl
+      exact hlambda_ratio.trans ( ite_eq_right hlambda_pos.ne' ) |> Eq.trans <| rfl
     generalize_proofs at *; (
     rw [ eq_div_iff ] at h_ratio_def <;> nlinarith [ hr.2 ])
   exact sufficiency_of_Q n lambda h_ratio_lt_one
@@ -711,7 +711,7 @@ theorem W_opt_is_sufficient_iff (n : ℕ) :
   · have this := lambda_opt_spec n
     unfold wOpt
     unfold Ratio at this
-    rw [ ← this.2, if_neg this.1.ne' ]
+    rw [ ← this.2, ite_eq_right this.1.ne' ]
     intro h
     rw [ S_2_eq_Q_2, S_1_eq_Q_1 ]
     rw [ div_lt_iff₀ this.1 ] at h

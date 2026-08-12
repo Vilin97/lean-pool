@@ -1469,10 +1469,10 @@ lemma isRainbow_eq_colors (T : Triangle) :
     funext i; fin_cases i <;> rfl
   rw [hcomp]
   by_cases hs : Function.Surjective (![coloring v (T 0), coloring v (T 1), coloring v (T 2)])
-  · rw [if_pos hs]
+  · rw [ite_eq_left hs]
     obtain ⟨h01, h12, h02⟩ := (surj_iff_distinct _ _ _).mp hs
     unfold rainbowB; simp_all
-  · rw [if_neg hs, surj_iff_distinct] at *
+  · rw [ite_eq_right hs, surj_iff_distinct] at *
     unfold rainbowB; revert hs
     simp_all
 

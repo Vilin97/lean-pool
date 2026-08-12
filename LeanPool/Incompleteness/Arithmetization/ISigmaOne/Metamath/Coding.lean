@@ -812,21 +812,21 @@ lemma mem_iff_mem_bitIndices {x s : ℕ} : x ∈ s ↔ x ∈ s.bitIndices := by
     cases b
     · cases x with
       | zero =>
-        simp only [Nat.bit, cond_false, Nat.bitIndices_two_mul, List.mem_map,
+        simp only [Nat.bit, Bool.cond_false, Nat.bitIndices_two_mul, List.mem_map,
           Nat.add_eq_zero_iff, one_ne_zero, and_false, exists_const, iff_false]
         exact zero_not_mem s
       | succ x =>
-        simp only [Nat.bit, cond_false, Nat.bitIndices_two_mul, List.mem_map,
+        simp only [Nat.bit, Bool.cond_false, Nat.bitIndices_two_mul, List.mem_map,
           Nat.add_right_cancel_iff, exists_eq_right]
         exact Iff.trans (succ_mem_two_mul_iff (i := x) (a := s) (V := ℕ)) ih
     · cases x with
       | zero =>
-        simp only [Nat.bit, cond_true, Nat.bitIndices_two_mul_add_one, List.mem_cons,
+        simp only [Nat.bit, Bool.cond_true, Nat.bitIndices_two_mul_add_one, List.mem_cons,
           List.mem_map, Nat.add_eq_zero_iff, one_ne_zero, and_false, exists_const, or_false,
           iff_true]
         exact zero_mem_double_add_one s
       | succ x =>
-        simp only [Nat.bit, cond_true, Nat.bitIndices_two_mul_add_one, List.mem_cons,
+        simp only [Nat.bit, Bool.cond_true, Nat.bitIndices_two_mul_add_one, List.mem_cons,
           Nat.add_eq_zero_iff, one_ne_zero, and_false, List.mem_map, Nat.add_right_cancel_iff,
           exists_eq_right, false_or]
         exact Iff.trans (succ_mem_two_mul_succ_iff (i := x) (a := s) (V := ℕ)) ih

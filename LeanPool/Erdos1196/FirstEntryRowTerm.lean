@@ -57,10 +57,10 @@ lemma firstEntryPairWeight_eq {x Y m q : ℕ} (hm1 : 1 ≤ m) (hmx : m < x) :
           Λ q / ((q : ℝ) * (Real.log ((m * q : ℕ) : ℝ)) ^ 2)
         else 0) := by
   by_cases hq : entryThreshold x Y m ≤ q
-  · rw [firstEntryPairWeight, if_pos ⟨hm1, hmx, hq⟩, if_pos hq, Nat.cast_mul,
+  · rw [firstEntryPairWeight, ite_eq_left ⟨hm1, hmx, hq⟩, ite_eq_left hq, Nat.cast_mul,
       div_eq_mul_inv, div_eq_mul_inv]
     ring_nf
-  · rw [firstEntryPairWeight, if_neg, if_neg hq]
+  · rw [firstEntryPairWeight, ite_eq_right, ite_eq_right hq]
     · simp
     · exact fun h => hq h.2.2
 

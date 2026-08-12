@@ -32,7 +32,7 @@ theorem searchRowChoiceAt_mem (centre : Vertex) (index : Fin 35) :
     unfold searchRowChoiceAt
     change (if h : index.val < (searchRowChoices.getD centre.val #[]).size then
       (searchRowChoices.getD centre.val #[])[index.val] else ⟨0, 0⟩) = _
-    rw [dif_pos hindex]
+    rw [dite_eq_left hindex]
   rw [hequal]
   exact Array.getElem_mem hindex
 
@@ -81,7 +81,7 @@ theorem searchRowChoice_pairMask_of_mem
     unfold searchRowChoiceAt
     change (if h : index < (searchRowChoices.getD centre.val #[]).size then
       (searchRowChoices.getD centre.val #[])[index] else ⟨0, 0⟩) = _
-    rw [dif_pos hindex]
+    rw [dite_eq_left hindex]
   rw [← hat]
   exact searchRowChoiceAt_pairMask centre boundedIndex
 

@@ -44,7 +44,7 @@ theorem gapVal_eq_nnDistC (c : ℤ → ℝ) (hsymm : ∀ t : ℤ, c (-t) = c t) 
     rw [← Finset.card_pos, Finset.card_erase_of_mem (Finset.mem_range.mpr (by omega)),
       Finset.card_range]
     omega
-  rw [gapVal, dif_pos hIcc, nnDistC, dif_pos hEr]
+  rw [gapVal, dite_eq_left hIcc, nnDistC, dite_eq_left hEr]
   apply le_antisymm
   · refine Finset.le_inf' _ _ (fun j hj => ?_)
     rw [Finset.mem_erase, Finset.mem_range] at hj

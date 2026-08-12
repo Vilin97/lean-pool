@@ -37,11 +37,11 @@ noncomputable def TAd (a d : ℕ) : HeckeAlgebra 2 :=
 /-- Unfold `TAd` to `TElem` when all positivity and divisibility conditions hold. -/
 lemma T_ad_of_pos (a d : ℕ) (ha : 0 < a) (hd : 0 < d) (h : a ∣ d) :
     TAd a d = TElem ![a, d] :=
-  dif_pos ⟨ha, hd, h⟩
+  dite_eq_left ⟨ha, hd, h⟩
 
 /-- `TAd a d` is zero when the positivity or divisibility conditions fail. -/
 lemma T_ad_eq_zero {a d : ℕ} (h : ¬(0 < a ∧ 0 < d ∧ a ∣ d)) : TAd a d = 0 :=
-  dif_neg h
+  dite_eq_right h
 
 /-- `T(p,p)`: the scalar double coset for prime `p`, equal to `TAd p p`. -/
 noncomputable def TPp (p : ℕ) : HeckeAlgebra 2 := TAd p p

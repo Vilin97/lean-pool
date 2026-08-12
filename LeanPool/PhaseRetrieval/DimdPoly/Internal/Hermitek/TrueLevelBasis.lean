@@ -337,14 +337,14 @@ theorem gaussian_monomial_moments :
   by_cases hab : a = b
   · -- Diagonal case: a = b
     subst hab
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     have hre : ∀ z : ℂ, (z ^ a * star z ^ a).re * Real.exp (-‖z‖ ^ 2) =
         ‖z‖ ^ (2 * a) * Real.exp (-‖z‖ ^ 2) := by
       intro z; rw [show star z = (starRingEnd ℂ) z from rfl, zpow_conj_diag_re]
     simp_rw [hre]; rw [integral_norm_pow_exp_gaussian]
     rw [show (1 : ℝ) / π * (π * ↑(Nat.factorial a)) = ↑(Nat.factorial a) from by field_simp]
   · -- Off-diagonal case: a ≠ b
-    rw [if_neg hab, gaussian_monomial_moments_off_diag hab, mul_zero]
+    rw [ite_eq_right hab, gaussian_monomial_moments_off_diag hab, mul_zero]
 
 /-- Explicit finite expansion for the true Hermite basis vector `Phi k n`. -/
 theorem phi_explicit :
@@ -884,12 +884,12 @@ private lemma alternating_vandermonde_coeff (k s N : ℕ) :
 private theorem alternating_vandermonde_zero (k s : ℕ) :
     ∑ j ∈ Finset.range (k + 1), (-1 : ℤ) ^ j * ↑(k.choose j) *
       ↑((k + s - j).choose k) = 1 := by
-  simpa [if_pos (Nat.le_refl k)] using alternating_vandermonde_coeff k s k
+  simpa [ite_eq_left (Nat.le_refl k)] using alternating_vandermonde_coeff k s k
 
 private theorem alternating_vandermonde_vanish (k s r : ℕ) (hr : r < k) :
     ∑ j ∈ Finset.range (k + 1), (-1 : ℤ) ^ j * ↑(k.choose j) *
       ↑((k + s - j).choose r) = 0 := by
-  simpa [if_neg (Nat.not_le_of_lt hr)] using alternating_vandermonde_coeff k s r
+  simpa [ite_eq_right (Nat.not_le_of_lt hr)] using alternating_vandermonde_coeff k s r
 
 /-! ## Double-sum identity for phi_orthonormal diagonal case -/
 
@@ -1233,7 +1233,7 @@ theorem phi_orthonormal :
   by_cases hmn : m = n
   · -- Diagonal case: m = n
     subst hmn
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     unfold weightedInner HermiteLEAN.weightedInner
     have hint : ∫ (z : ℂ), Phi k m z * (starRingEnd ℂ) (Phi k m z) *
         ↑(rexp (-‖z‖ ^ 2)) = ↑Real.pi := by
@@ -1246,7 +1246,7 @@ theorem phi_orthonormal :
       exact norm_sq_phi_integral k m
     rw [hint]; field_simp [Real.pi_ne_zero]
   · -- Off-diagonal case: m ≠ n. Use rotation trick on ℂ-valued integrand.
-    rw [if_neg hmn]
+    rw [ite_eq_right hmn]
     -- The ℂ-valued integrand
     set f : ℂ → ℂ := fun z =>
       Phi k m z * star (Phi k n z) * (↑(Real.exp (-‖z‖ ^ 2)) : ℂ) with hf_def
@@ -2367,12 +2367,12 @@ theorem truncate_unique :
       apply tsum_eq_sum
       intro n hn
       rw [Finset.mem_range] at hn
-      rw [hcoeffs n, dif_neg hn, zero_mul]]
+      rw [hcoeffs n, dite_eq_right hn, zero_mul]]
   rw [Finset.sum_range]
   congr 1
   ext ⟨n, hn⟩
   simp only []
-  rw [hcoeffs n, dif_pos hn]
+  rw [hcoeffs n, dite_eq_left hn]
 
 /-- Truncation converges pointwise to G -/
 private lemma truncate_tendsto_pointwise {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ Hk k) (z : ℂ) :
@@ -3905,7 +3905,7 @@ theorem truncCirclePoly_tendsto_circleSeries :
       intro c
       dsimp [f]
       have hnot : ¬ (c + (J + 1) < J + 1) := by exact Nat.not_lt_of_ge (Nat.le_add_left (J + 1) c)
-      rw [if_neg hnot]
+      rw [ite_eq_right hnot]
     rw [← hkey]
     have hinj : Function.Injective (fun n : ℕ => n + (J + 1)) := by
       intro a b hab
@@ -4583,7 +4583,7 @@ private lemma hermiteSeries_truncation_lintegral_bound {k : ℕ} (h : ℕ → �
     intro m hm
     have hm' : (m : ℕ) < (N + (J + 1)) + 1 := by omega
     rw [hermiteCoeff_finiteHermiteSum
-      (k := k) (a := fun q : Fin ((N + (J + 1)) + 1) => h q.1) m.1, dif_pos hm']
+      (k := k) (a := fun q : Fin ((N + (J + 1)) + 1) => h q.1) m.1, dite_eq_left hm']
   have hDiff_mem : (fun z : ℂ => GN N z - SJ z) ∈ Hk k := by
     simpa [hSJ'] using sub_truncate_mem_Hk hGN_mem J
   have hParseval :
@@ -4605,12 +4605,12 @@ private lemma hermiteSeries_truncation_lintegral_bound {k : ℕ} (h : ℕ → �
     · by_cases hlt : m < (N + (J + 1)) + 1
       · rw [hermiteCoeff_finiteHermiteSum (k := k) (a := fun q : Fin ((N + (J + 1)) + 1) =>
           h q.1) m,
-          dif_pos hlt]
+          dite_eq_left hlt]
         have hm' : ¬ m ≤ J := by omega
         simp [s, hm']
       · rw [hermiteCoeff_finiteHermiteSum (k := k) (a := fun q : Fin ((N + (J + 1)) + 1) =>
           h q.1) m,
-          dif_neg hlt]
+          dite_eq_right hlt]
         have hm' : ¬ m ≤ J := by omega
         simp [s, hm']
   have hs_summ : Summable s := by
@@ -4619,7 +4619,7 @@ private lemma hermiteSeries_truncation_lintegral_bound {k : ℕ} (h : ℕ → �
       by_cases hm : m < J + 1
       · have hm' : m ≤ J := by omega
         simp [s, hm']
-      · simp only [s, if_neg hm]
+      · simp only [s, ite_eq_right hm]
         positivity
     refine Summable.of_nonneg_of_le hs_nonneg_term ?_ hh
     intro m
@@ -4685,7 +4685,7 @@ private lemma hermiteSeries_truncation_tail_bound {k : ℕ} (h : ℕ → ℂ)
       intro m hm
       have hm' : (m : ℕ) < (N + (J + 1)) + 1 := by omega
       rw [hermiteCoeff_finiteHermiteSum
-        (k := k) (a := fun q : Fin ((N + (J + 1)) + 1) => h q.1) m.1, dif_pos hm']
+        (k := k) (a := fun q : Fin ((N + (J + 1)) + 1) => h q.1) m.1, dite_eq_left hm']
     simpa [hSJ'] using (sub_truncate_mem_Hk hGN_mem J).1
   have hFatou :
       ∫⁻ z : ℂ, ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
@@ -4727,7 +4727,7 @@ private lemma hermiteSeries_truncation_tail_bound {k : ℕ} (h : ℕ → ℂ)
       by_cases hm : m < J + 1
       · have hm' : m ≤ J := by omega
         simp [s, hm']
-      · simp only [s, if_neg hm]
+      · simp only [s, ite_eq_right hm]
         positivity
     exact tsum_nonneg hs_nonneg_term
   have hShift :
@@ -4738,7 +4738,7 @@ private lemma hermiteSeries_truncation_tail_bound {k : ℕ} (h : ℕ → ℂ)
       intro c
       dsimp [s]
       have hnot : ¬ (c + (J + 1) < J + 1) := by omega
-      rw [if_neg hnot]
+      rw [ite_eq_right hnot]
     rw [← hkey]
     have hinj : Function.Injective (fun n : ℕ => n + (J + 1)) := by
       intro a b hab

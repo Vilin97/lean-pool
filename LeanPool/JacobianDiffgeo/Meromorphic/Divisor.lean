@@ -149,7 +149,7 @@ noncomputable def divisorOn [T1Space X] [IsManifold 𝓘(ℂ) ω X] (φ : MeroGe
     by_contra hxU
     apply hx
     obtain ⟨f, hf, rfl⟩ := exists_rep φ
-    rw [ord_apply_mk, if_neg (fun h => hxU h.2)]
+    rw [ord_apply_mk, ite_eq_right (fun h => hxU h.2)]
     exact WithTop.untop₀_zero
   supportLocallyFiniteWithinDomain' := by
     intro z hz
@@ -191,7 +191,7 @@ noncomputable def divisorOn [T1Space X] [IsManifold 𝓘(ℂ) ω X] (φ : MeroGe
         rintro y ⟨-, hyS⟩
         simp only [Function.mem_support, ne_eq] at hyS
         apply hyS
-        rw [ord_apply_mk, if_neg (fun h => hU h.1)]
+        rw [ord_apply_mk, ite_eq_right (fun h => hU h.1)]
         exact WithTop.untop₀_zero
       rw [hempty]; exact Set.finite_empty
 
@@ -210,7 +210,7 @@ noncomputable abbrev divisor [T1Space X] [IsManifold 𝓘(ℂ) ω X] (φ : ℳ X
     divisor (0 : ℳ X) = 0 := by
   apply Function.locallyFinsuppWithin.ext
   intro y
-  rw [divisor_apply, MeroGermOn.ord_zero, if_pos ⟨isOpen_univ, mem_univ y⟩]
+  rw [divisor_apply, MeroGermOn.ord_zero, ite_eq_left ⟨isOpen_univ, mem_univ y⟩]
   simp
 
 variable [T1Space X] [IsManifold 𝓘(ℂ) ω X]
@@ -242,7 +242,7 @@ theorem divisor_algebraMap (c : ℂ) : divisor (algebraMap ℂ (ℳ X) c) = 0 :=
   rcases eq_or_ne c 0 with rfl | hc
   · rw [map_zero]
     show (MeroGermOn.ord (0 : ℳ X) y).untop₀ = 0
-    rw [MeroGermOn.ord_zero, if_pos ⟨isOpen_univ, mem_univ y⟩]
+    rw [MeroGermOn.ord_zero, ite_eq_left ⟨isOpen_univ, mem_univ y⟩]
     exact WithTop.untop₀_top
   · rw [MeroGermOn.ord_algebraMap isOpen_univ (mem_univ y) hc]; rfl
 

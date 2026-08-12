@@ -516,7 +516,7 @@ lemma exp_cutoff_integral_eq_ratio
       simp only [f]
       have ht_Icc : t ∈ Icc σ₁ σ₂ := by
         rw [Set.uIoc_of_le hσ₁₂.le] at ht; exact Ioc_subset_Icc_self ht
-      rw [if_neg (not_lt.mpr (h_middle t ht_Icc))]
+      rw [ite_eq_right (not_lt.mpr (h_middle t ht_Icc))]
   change cexp (∫ t in γ.a..γ.b, f t) = _
   obtain ⟨Md, hMd⟩ := piecewiseC1Immersion_deriv_bounded γ
   let P := γ.partition
@@ -530,7 +530,10 @@ lemma exp_cutoff_integral_eq_ratio
     · rw [h, sub_self, norm_zero] at hσ₁_val; linarith
     · have := h_left γ.a ⟨le_refl _, h'⟩; rw [h, sub_self, norm_zero] at this; linarith
   have hf_val : ∀ t, ε < ‖γ.toFun t - z₀‖ →
-      f t = (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t := by intro t h; simp only [f]; exact if_pos h
+      f t = (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t := by
+    intro t h
+    simp only [f]
+    exact ite_eq_left h
   have hσ₁_mem : σ₁ ∈ Set.uIcc γ.a γ.b := by
     rw [Set.uIcc_of_le γ.hab.le]; exact ⟨hσ₁, hσ₁₂.le.trans hσ₂⟩
   have hσ₂_mem : σ₂ ∈ Set.uIcc γ.a γ.b := by
@@ -577,10 +580,12 @@ lemma exp_cutoff_integral_eq_ratio
            lt_of_le_of_ne (not_lt.mp h₂) ht_ne_σ₂⟩
         have h_nhds : ∀ᶠ s in 𝓝 t, f s = 0 :=
           Filter.eventually_of_mem (Ioo_mem_nhds ht_mid.1 ht_mid.2) fun s hs => by
-            simp only [f]; exact if_neg (not_lt.mpr (h_middle s ⟨hs.1.le, hs.2.le⟩))
+            simp only [f]; exact ite_eq_right (not_lt.mpr (h_middle s ⟨hs.1.le, hs.2.le⟩))
         exact continuousWithinAt_const.congr_of_eventuallyEq
           (h_nhds.filter_mono nhdsWithin_le_nhds)
-          (by simp only [f]; exact if_neg (not_lt.mpr (h_middle t ⟨ht_mid.1.le, ht_mid.2.le⟩)))
+          (by
+            simp only [f]
+            exact ite_eq_right (not_lt.mpr (h_middle t ⟨ht_mid.1.le, ht_mid.2.le⟩)))
   have h_int : IntervalIntegrable f volume γ.a γ.b :=
     intervalIntegrable_of_piecewise_continuousOn_bounded (Md / ε) γ.hab.le hf_cont_off hf_bnd
   let F : ℝ → ℂ := fun t => ∫ s in γ.a..t, f s
@@ -878,7 +883,7 @@ lemma tendsto_exp_cutoff_integral_crossing
       (∀ t ∈ Ioc (σ₂ ε) γ.b, ε < ‖γ.toFun t - z₀‖) ∧
       (∀ t ∈ Icc (σ₁ ε) (σ₂ ε), ‖γ.toFun t - z₀‖ ≤ ε) := by
     intro ε hε
-    simpa only [σ₁, σ₂, hε, dif_pos] using (hbnd ε hε).choose_spec.choose_spec
+    simpa only [σ₁, σ₂, hε, dite_eq_left] using (hbnd ε hε).choose_spec.choose_spec
   have hIoo_ev : ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε ∈ Ioo 0 δ := Ioo_mem_nhdsGT hδ
   have h_eq : ∀ᶠ ε in 𝓝[>] (0 : ℝ),
       Complex.exp (∫ t in γ.a..γ.b,

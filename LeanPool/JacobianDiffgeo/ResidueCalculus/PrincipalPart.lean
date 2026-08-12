@@ -124,7 +124,7 @@ theorem MeromorphicAt.exists_principalPart_add_analyticAt (hf : MeromorphicAt f 
       refine ⟨r, hran, ?_, ?_⟩
       · intro j
         rw [hrcoeff j, laurentCoeffAt_of_eventuallyEq h₁u h₃u (j : ℤ),
-          if_pos (by omega : (meromorphicOrderAt f z₀).untop₀ ≤ (j : ℤ))]
+          ite_eq_left (by omega : (meromorphicOrderAt f z₀).untop₀ ≤ (j : ℤ))]
         congr 1
         omega
       · filter_upwards [h₃u, self_mem_nhdsWithin] with z hz hz'
@@ -164,7 +164,7 @@ theorem MeromorphicAt.exists_principalPart_add_analyticAt (hf : MeromorphicAt f 
           simp only [Finset.mem_range] at hd
           have hcoeff : laurentCoeffAt f z₀ ((meromorphicOrderAt f z₀).untop₀ + (d : ℤ))
               = taylorCoeffAt u z₀ d := by
-            rw [laurentCoeffAt_of_eventuallyEq h₁u h₃u _, if_pos (by omega)]
+            rw [laurentCoeffAt_of_eventuallyEq h₁u h₃u _, ite_eq_left (by omega)]
             congr 1
             omega
           rw [hcoeff, ← zpow_natCast (z - z₀) d,
@@ -228,12 +228,12 @@ theorem eq_principalPart_of_eventuallyEq {c : ℤ → ℂ} {s : Finset ℤ}
     rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq]
   refine ⟨?_, ?_, ?_⟩
   · intro k hk
-    rw [hkey k, if_pos hk, if_neg (not_le.2 (hs k hk)), add_zero]
+    rw [hkey k, ite_eq_left hk, ite_eq_right (not_le.2 (hs k hk)), add_zero]
   · intro k hk hks
-    rw [hkey k, if_neg hks, if_neg (not_le.2 hk), add_zero]
+    rw [hkey k, ite_eq_right hks, ite_eq_right (not_le.2 hk), add_zero]
   · intro j
-    rw [hkey (j : ℤ), if_neg (fun hmem => absurd (hs _ hmem) (by omega)),
-      if_pos (Int.natCast_nonneg j), zero_add]
+    rw [hkey (j : ℤ), ite_eq_right (fun hmem => absurd (hs _ hmem) (by omega)),
+      ite_eq_left (Int.natCast_nonneg j), zero_add]
     simp
 
 end RS

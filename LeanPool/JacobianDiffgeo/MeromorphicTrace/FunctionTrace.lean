@@ -73,13 +73,13 @@ omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) 
     [IsManifold 𝓘(ℂ, ℂ) ω Y] in
 theorem trace_def (F : X → Y) (h : X → ℂ) (y₀ : Y) (hS : Nonempty (RS.FiberStack F y₀)) :
     trace F h y₀ = ∑ i, traceZk (h ∘ (hS.some.A i).e.symm) (RS.multiplicity F (hS.some.pt i))
-      ((hS.some.A i).e' y₀) := dif_pos hS
+      ((hS.some.A i).e' y₀) := dite_eq_left hS
 
 open scoped Classical in
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space Y]
     [IsManifold 𝓘(ℂ, ℂ) ω Y] in
 theorem trace_of_not_nonempty (hns : ¬ Nonempty (RS.FiberStack F y₀)) : trace F h y₀ = 0 :=
-  dif_neg hns
+  dite_eq_right hns
 
 /-- A positive-dimensional charted space over `ℂ` (in particular perfect — no isolated points,
 `RS.nhdsNE_neBot`) that is `Nonempty` is infinite. -/

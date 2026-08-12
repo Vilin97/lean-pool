@@ -122,9 +122,9 @@ lemma sum_zetaM_zpow_mul [NeZero m] (n : ℤ) :
   simp_rw [hval]
   rw [sum_zmod_eq_range m (fun k ↦ (zetaM m ^ n) ^ k)]
   by_cases hdvd : (m : ℤ) ∣ n
-  · rw [if_pos hdvd, (zetaM_zpow_eq_one_iff n).mpr hdvd]
+  · rw [ite_eq_left hdvd, (zetaM_zpow_eq_one_iff n).mpr hdvd]
     simp
-  · rw [if_neg hdvd]
+  · rw [ite_eq_right hdvd]
     have hx1 : zetaM m ^ n ≠ 1 := fun h ↦ hdvd ((zetaM_zpow_eq_one_iff n).mp h)
     rw [geom_sum_eq hx1]
     have hxm : (zetaM m ^ n) ^ m = 1 := by
@@ -259,8 +259,8 @@ lemma mdifferentiable_coeff_prod_X_sub_C {ι : Type*} (a : ι → ℍ → ℂ)
       have h1 : MDiff (fun _ : ℍ ↦ (if 1 = p then (1 : ℂ) else 0)) := mdifferentiable_const
       have h2 : MDiff (fun τ : ℍ ↦ (if p = 0 then a j τ else 0)) := by
         by_cases hp0 : p = 0
-        · simp only [hp0, if_true]; exact ha j
-        · simp only [hp0, if_false]; exact mdifferentiable_const
+        · simp only [hp0, ite_true]; exact ha j
+        · simp only [hp0, ite_false]; exact mdifferentiable_const
       exact h1.sub h2
     -- expand the product coefficient via `coeff_mul` into a Pi-sum of holomorphic terms
     have hexp : (fun τ : ℍ ↦ ((∏ i ∈ insert j s, (X - C (a i τ))).coeff n : ℂ))
@@ -548,9 +548,9 @@ theorem exists_PhiQ [Fact m.Prime]
   ext k
   rw [specializeY, coe_mapRingHom, coeff_map, hPcoeff]
   by_cases hk : k < m + 2
-  · rw [if_pos hk]
+  · rw [ite_eq_left hk]
     exact hQ k τ
-  · rw [if_neg hk, map_zero]
+  · rw [ite_eq_right hk, map_zero]
     exact coeff_eq_zero_of_natDegree_lt (lt_of_le_of_lt (orbitPoly_natDegree_le τ) (by omega))
 
 end Chudnovsky
@@ -1022,11 +1022,11 @@ lemma hasSum_I [NeZero m] (k : ℕ) (τ : ℍ) :
       (fun p : ℕ ↦ (CIint m k p : ℂ) * q τ ^ p) p = 0 := by
     intro p hp
     have hnd : ¬ m ∣ p := fun hd ↦ hp (by obtain ⟨n, hn⟩ := hd; exact ⟨n, hn.symm⟩)
-    simp only [CIint, if_neg hnd, Int.cast_zero, zero_mul]
+    simp only [CIint, ite_eq_right hnd, Int.cast_zero, zero_mul]
   have hcomp : ((fun p : ℕ ↦ (CIint m k p : ℂ) * q τ ^ p) ∘ fun n : ℕ ↦ m * n)
       = fun n : ℕ ↦ ((PowerSeries.coeff n (jqInt ^ k) : ℤ) : ℂ) * q τ ^ (m * n) := by
     funext n
-    simp only [Function.comp_apply, CIint, if_pos (dvd_mul_right m n),
+    simp only [Function.comp_apply, CIint, ite_eq_left (dvd_mul_right m n),
       Nat.mul_div_cancel_left n hmpos]
   rw [← Function.Injective.hasSum_iff (fun a b hab ↦ Nat.eq_of_mul_eq_mul_left hmpos hab) hz, hcomp]
   exact hI_n
@@ -1080,15 +1080,15 @@ lemma hasSum_A [NeZero m] (k : ℕ) (τ : ℍ) :
   · -- injectivity
     intro x y hxy
     have hx : (m ^ 2 - 1) * k ≤ m * (x : ℕ) := by
-      by_contra hlt; exact x.2 (by simp only [CAint, if_neg hlt, Int.cast_zero, zero_mul])
+      by_contra hlt; exact x.2 (by simp only [CAint, ite_eq_right hlt, Int.cast_zero, zero_mul])
     have hy : (m ^ 2 - 1) * k ≤ m * (y : ℕ) := by
-      by_contra hlt; exact y.2 (by simp only [CAint, if_neg hlt, Int.cast_zero, zero_mul])
+      by_contra hlt; exact y.2 (by simp only [CAint, ite_eq_right hlt, Int.cast_zero, zero_mul])
     simp only at hxy
     exact Subtype.ext (Nat.eq_of_mul_eq_mul_left hmpos (by omega))
   · -- support of the collapsed series is covered
     intro n hn
     have hdvd : (m : ℤ) ∣ ((n : ℤ) - (k : ℤ)) := by
-      by_contra hnd; exact hn (by simp only [if_neg hnd, mul_zero, zero_mul])
+      by_contra hnd; exact hn (by simp only [ite_eq_right hnd, mul_zero, zero_mul])
     have hcoeff_ne : PowerSeries.coeff n (jqInt ^ k) ≠ 0 := by
       intro h0; exact hn (by simp only [h0, Int.cast_zero, zero_mul])
     obtain ⟨s, hs⟩ := hdvd
@@ -1100,7 +1100,7 @@ lemma hasSum_A [NeZero m] (k : ℕ) (τ : ℍ) :
     · -- the preimage lies in the support
       change (CAint m k ((n + (m ^ 2 - 1) * k) / m) : ℂ) * q τ ^ _ ≠ 0
       have hle : (m ^ 2 - 1) * k ≤ m * ((n + (m ^ 2 - 1) * k) / m) := by omega
-      rw [CAint, if_pos hle, hmp, Nat.add_sub_cancel]
+      rw [CAint, ite_eq_left hle, hmp, Nat.add_sub_cancel]
       simp only [ne_eq, mul_eq_zero, not_or]
       refine ⟨?_, pow_ne_zero _ (by rw [q_eq]; exact Complex.exp_ne_zero _)⟩
       exact_mod_cast mul_ne_zero (Nat.cast_ne_zero.mpr (NeZero.ne m)) hcoeff_ne
@@ -1110,12 +1110,12 @@ lemma hasSum_A [NeZero m] (k : ℕ) (τ : ℍ) :
   · -- the coefficient identity on the support
     rintro ⟨p, hp⟩
     have hle : (m ^ 2 - 1) * k ≤ m * p := by
-      by_contra hlt; exact hp (by simp only [CAint, if_neg hlt, Int.cast_zero, zero_mul])
+      by_contra hlt; exact hp (by simp only [CAint, ite_eq_right hlt, Int.cast_zero, zero_mul])
     have hdvd : (m : ℤ) ∣ (((m * p - (m ^ 2 - 1) * k : ℕ) : ℤ) - (k : ℤ)) :=
       ⟨(p : ℤ) - (m : ℤ) * k, by rw [Nat.cast_sub hle, cast_c]; push_cast; ring⟩
     have hexp : (m ^ 2 - 1) * k + (m * p - (m ^ 2 - 1) * k) = m * p := Nat.add_sub_cancel' hle
     dsimp only
-    rw [hexp, hqm, if_pos hdvd, CAint, if_pos hle]
+    rw [hexp, hqm, ite_eq_left hdvd, CAint, ite_eq_left hle]
     push_cast
     ring
 

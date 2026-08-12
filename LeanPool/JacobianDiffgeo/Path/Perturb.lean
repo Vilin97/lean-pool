@@ -170,12 +170,12 @@ private theorem homotopic_truncateOfLE_trans {Y : Type*} [TopologicalSpace Y] {x
   have hρ0 : ρ 0 = 0 := by
     apply Subtype.ext
     change (if ((0 : ℝ)) ≤ 1 / 2 then min (2 * (0 : ℝ)) d else max (2 * (0 : ℝ) - 1) d) = (0 : ℝ)
-    rw [if_pos (by norm_num : (0 : ℝ) ≤ 1 / 2)]
+    rw [ite_eq_left (by norm_num : (0 : ℝ) ≤ 1 / 2)]
     norm_num [min_eq_left h0d]
   have hρ1 : ρ 1 = 1 := by
     apply Subtype.ext
     change (if ((1 : ℝ)) ≤ 1 / 2 then min (2 * (1 : ℝ)) d else max (2 * (1 : ℝ) - 1) d) = (1 : ℝ)
-    rw [if_neg (by norm_num : ¬((1 : ℝ) ≤ 1 / 2))]
+    rw [ite_eq_right (by norm_num : ¬((1 : ℝ) ≤ 1 / 2))]
     norm_num [max_eq_left hd1]
   have hkey : (γ.truncateOfLE hcd).trans (γ.truncateOfLE hde) =
       (γ.truncateOfLE (hcd.trans hde)).reparam ρ hρcont hρ0 hρ1 := by
@@ -187,7 +187,7 @@ private theorem homotopic_truncateOfLE_trans {Y : Type*} [TopologicalSpace Y] {x
         γ.extend (min (max ((ρ u : ↥unitInterval) : ℝ) c) e)
       have hρu : ((ρ u : ↥unitInterval) : ℝ) = min (2 * (u : ℝ)) d := by
         change (if (u : ℝ) ≤ 1 / 2 then min (2 * (u : ℝ)) d else max (2 * (u : ℝ) - 1) d) = _
-        rw [if_pos h]
+        rw [ite_eq_left h]
       rw [hρu]
       rcases le_total (2 * (u : ℝ)) d with hv | hv
       · rw [min_eq_left hv, min_eq_left (max_le hv hcd),
@@ -198,7 +198,7 @@ private theorem homotopic_truncateOfLE_trans {Y : Type*} [TopologicalSpace Y] {x
         γ.extend (min (max ((ρ u : ↥unitInterval) : ℝ) c) e)
       have hρu : ((ρ u : ↥unitInterval) : ℝ) = max (2 * (u : ℝ) - 1) d := by
         change (if (u : ℝ) ≤ 1 / 2 then min (2 * (u : ℝ)) d else max (2 * (u : ℝ) - 1) d) = _
-        rw [if_neg h]
+        rw [ite_eq_right h]
       rw [hρu, max_eq_left (hcd.trans (le_max_right (2 * (u : ℝ) - 1) d))]
   rw [hkey]
   exact ⟨Path.Homotopy.reparam (γ.truncateOfLE (hcd.trans hde)) ρ hρcont hρ0 hρ1⟩

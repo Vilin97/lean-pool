@@ -136,7 +136,7 @@ theorem sum_includeBlock {R k : Type _} [CommSemiring R] [Fintype k] [DecidableE
     {s : k → Type _} (x : PiMat R k s) :
     ∑ i, includeBlock (x i) = x := by
   ext
-  simp only [Finset.sum_apply, includeBlock_apply, Finset.sum_dite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_apply, includeBlock_apply, Finset.sum_dite_eq', Finset.mem_univ, ite_true]
   rfl
 
 theorem blockDiagonal'_includeBlock_trace {R k : Type _} [CommSemiring R] [Fintype k]
@@ -146,7 +146,7 @@ theorem blockDiagonal'_includeBlock_trace {R k : Type _} [CommSemiring R] [Finty
   calc
     (blockDiagonal' (includeBlock (x j))).trace
       = ∑ i, (includeBlock (x j) i).trace :=
-      by simp_rw [Matrix.trace, Matrix.diag, blockDiagonal'_apply, dif_pos,
+      by simp_rw [Matrix.trace, Matrix.diag, blockDiagonal'_apply, dite_eq_left,
       Finset.sum_sigma']; rfl
     _ = ∑ i, ∑ a, includeBlock (x j) i a a := rfl
     _ = ∑ i, ∑ a, dite (j = i) (fun h => by rw [← h]; exact (x j))
@@ -157,7 +157,7 @@ theorem blockDiagonal'_includeBlock_trace {R k : Type _} [CommSemiring R] [Finty
       (fun _ => (0 : R)) := by congr; ext; congr; ext; aesop
     _ = (x j).trace := by
         simp_rw [Finset.sum_dite_irrel, Finset.sum_const_zero,
-          Finset.sum_dite_eq, Finset.mem_univ, if_true]
+          Finset.sum_dite_eq, Finset.mem_univ, ite_true]
         rfl
 
 open scoped Matrix
@@ -166,7 +166,7 @@ theorem single_hMul_trace {R n p : Type _} [Semiring R] [Fintype p] [DecidableEq
     [Fintype n] [DecidableEq n] (i : n) (j : p) (x : Matrix p n R) :
     Matrix.trace (single i j (1 : R) * x) = x j i := by
   simp_rw [Matrix.trace, Matrix.diag, mul_apply, single, of_apply, boole_mul, ite_and,
-    Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem ext_iff_trace {R n p : Type _} [Fintype n] [Fintype p]
     [CommSemiring R] (x y : Matrix n p R) : x = y ↔ ∀ a, (x * a).trace = (y * a).trace := by
@@ -391,7 +391,7 @@ theorem includeBlock_apply_same {R k : Type _} [CommSemiring R] [DecidableEq k]
 theorem includeBlock_apply_ne_same {R k : Type _} [CommSemiring R] [DecidableEq k]
     {s : k → Type _} {i j : k}
     (x : Matrix (s i) (s i) R) (h : i ≠ j) : includeBlock x j = 0 := by
-  simp only [includeBlock_apply, h, dif_neg, not_false_iff]
+  simp only [includeBlock_apply, h, dite_eq_right, not_false_iff]
 
 theorem includeBlock_apply_single {R k : Type _} [CommSemiring R] [DecidableEq k]
     {s : k → Type _} [∀ i, DecidableEq (s i)] {i : k}
@@ -681,7 +681,7 @@ theorem apply_of_ne {R : Type _} [CommSemiring R] {k : Type _} [DecidableEq k]
     {s : k → Type _} {x : Matrix (Σ i, s i) (Σ i, s i) R} (hx : x.IsBlockDiagonal) (i j : Σ i, s i)
     (h : i.1 ≠ j.1) : x i j = 0 := by
   rw [← hx.eq]
-  simp_rw [blockDiagonal'_apply, blockDiag'_apply, dif_neg h]
+  simp_rw [blockDiagonal'_apply, blockDiag'_apply, dite_eq_right h]
 
 theorem apply_of_ne_coe {R : Type _} [CommSemiring R] {k : Type _} [DecidableEq k] {s : k → Type _}
     (x : (BlockDiagonals R k s)) (i j : Σ i, s i)

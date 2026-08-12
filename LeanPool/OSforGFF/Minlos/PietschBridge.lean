@@ -344,7 +344,7 @@ private lemma Seminorm.continuous_smul_add (R : Seminorm ℝ E) (x y : E) :
     _ < ε := by
         by_cases hRx : R x = 0
         · simpa [hRx] using hε
-        · rw [if_neg hRx] at hst'
+        · rw [ite_eq_right hRx] at hst'
           calc |t - s| * R x < ε / R x * R x :=
                 mul_lt_mul_of_pos_right hst' (lt_of_le_of_ne (apply_nonneg R x) (Ne.symm hRx))
             _ = ε := div_mul_cancel₀ ε hRx
@@ -415,7 +415,7 @@ lemma Seminorm.sq_sum_orthonormal (R : Seminorm ℝ E) (hR : R.IsHilbertian)
           R.innerProd_comm]
       have h0 : R.innerProd (v (Fin.castSucc j)) (v (Fin.last n)) = 0 := by
         have := hv (Fin.castSucc j) (Fin.last n)
-        rw [if_neg (Fin.castSucc_ne_last j)] at this; exact this
+        rw [ite_eq_right (Fin.castSucc_ne_last j)] at this; exact this
       simp [h0]
     rw [R.sq_add_of_innerProd_eq_zero hR u w horth, hIH, hw]
 

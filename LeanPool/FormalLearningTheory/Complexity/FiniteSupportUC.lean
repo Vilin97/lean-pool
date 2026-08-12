@@ -126,7 +126,7 @@ private theorem liftClass_growth_bound
       constructor
       · intro ⟨hh_SH, hah⟩
         obtain ⟨x, hxS, hxH⟩ := Finset.mem_image.mp hh_SH
-        simp only [dif_pos hxS] at hxH
+        simp only [dite_eq_left hxS] at hxH
         have hx_eq := (hno_inr x hxS).choose_spec
         have hab : a (getH x hxS) = decide (getH x hxS ∈ t) := by
           have h1 := hcf ⟨x, hxS⟩
@@ -138,7 +138,7 @@ private theorem liftClass_growth_bound
       · intro hht
         refine ⟨ht hht, ?_⟩
         obtain ⟨x, hxS, hxH⟩ := Finset.mem_image.mp (ht hht)
-        simp only [dif_pos hxS] at hxH
+        simp only [dite_eq_left hxS] at hxH
         have hx_eq := (hno_inr x hxS).choose_spec
         have hab : a (getH x hxS) = decide (getH x hxS ∈ t) := by
           have h1 := hcf ⟨x, hxS⟩
@@ -204,7 +204,7 @@ private theorem liftClass_growth_bound
           (by simp [hfby])
       · rfl
     change c ↑y = f ⟨↑y, hx_mem⟩
-    rw [hcgy, key]; simp only [fb, dif_pos hyT]
+    rw [hcgy, key]; simp only [fb, dite_eq_left hyT]
   calc RS_fs.card
       = 𝒜.card := h1
     _ ≤ 𝒜.shatterer.card := Finset.card_le_card_shatterer 𝒜

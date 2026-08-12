@@ -56,10 +56,10 @@ theorem witness_sound :
   intro y e' h
   unfold witnessOpt at h
   by_cases hwt : wt y ≤ S.τ
-  · simp only [hwt, if_true, Option.some.injEq] at h
+  · simp only [hwt, ite_true, Option.some.injEq] at h
     subst h
     exact ⟨rfl, hwt⟩
-  · simp only [hwt, if_false] at h
+  · simp only [hwt, ite_false] at h
     exact absurd h (by simp)
 
 /-- Verifier with the degenerate support bound `supportLb`. -/

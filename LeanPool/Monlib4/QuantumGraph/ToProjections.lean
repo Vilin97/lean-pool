@@ -763,7 +763,7 @@ private theorem orthogonal_projection_of_dim_one {𝕜 E : Type _} [RCLike 𝕜]
     exact (u.orthonormal.ne_zero 0) (Subtype.ext h)
   have : ‖(u 0 : E)‖ = 1 := by
     rw [@norm_eq_sqrt_re_inner 𝕜, Real.sqrt_eq_one]
-    simp_rw [← Submodule.coe_inner, orthonormal_iff_ite.mp u.orthonormal, if_true,
+    simp_rw [← Submodule.coe_inner, orthonormal_iff_ite.mp u.orthonormal, ite_true,
       RCLike.one_re]
   use ⟨u 0, hcc⟩
   simp only [this, RCLike.ofReal_one, one_div_one, one_smul, one_pow]

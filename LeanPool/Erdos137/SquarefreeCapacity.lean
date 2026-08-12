@@ -173,8 +173,8 @@ lemma sqfreeBlockProduct_factorization_le_count {k n p : ℕ} (hn : 1 ≤ n) :
         unfold SqfreeBlockIndices at hi
         rw [Finset.mem_filter] at hi
         by_cases hpi : p ∣ (n + i)
-        · rw [if_pos hpi]; exact Squarefree.natFactorization_le_one p hi.2
-        · rw [if_neg hpi, Nat.factorization_eq_zero_of_not_dvd hpi]
+        · rw [ite_eq_left hpi]; exact Squarefree.natFactorization_le_one p hi.2
+        · rw [ite_eq_right hpi, Nat.factorization_eq_zero_of_not_dvd hpi]
     _ = #(BlockDvdIndices k n p) := by
         unfold BlockDvdIndices
         simp_all
@@ -189,20 +189,20 @@ lemma smoothCapacity_factorization (k p : ℕ) :
     have := (Nat.prime_of_mem_primesBelow hq).pos; positivity)]
   rw [Finset.sum_apply']
   by_cases hp : p ∈ Nat.primesBelow k
-  · rw [if_pos hp]
+  · rw [ite_eq_left hp]
     have hpp : p.Prime := Nat.prime_of_mem_primesBelow hp
     rw [Finset.sum_eq_single p
           (fun q hq hqp => by
             have hqp' : q.Prime := Nat.prime_of_mem_primesBelow hq
-            rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, if_neg hqp])
+            rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, ite_eq_right hqp])
           (fun h => absurd hp h)]
-    rw [Nat.Prime.factorization_pow hpp, Finsupp.single_apply, if_pos rfl]
-  · rw [if_neg hp]
+    rw [Nat.Prime.factorization_pow hpp, Finsupp.single_apply, ite_eq_left rfl]
+  · rw [ite_eq_right hp]
     apply Finset.sum_eq_zero
     intro q hq
     have hqp' : q.Prime := Nat.prime_of_mem_primesBelow hq
     have hne : q ≠ p := by rintro rfl; exact hp hq
-    rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, if_neg hne]
+    rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, ite_eq_right hne]
 
 /-! ## Main results -/
 
@@ -219,14 +219,14 @@ theorem powerful_sqfree_product_dvd_smooth_capacity {k n : ℕ} (hn : 1 ≤ n)
   rw [smoothCapacity_factorization k p]
   by_cases hp : p ∈ Nat.primesBelow k
   · -- small prime: valuation ≤ count ≤ ⌊k/p⌋+1.
-    rw [if_pos hp]
+    rw [ite_eq_left hp]
     have hpp : p.Prime := Nat.prime_of_mem_primesBelow hp
     have h1 : (SqfreeBlockProduct k n).factorization p ≤ #(BlockDvdIndices k n p) :=
       sqfreeBlockProduct_factorization_le_count hn
     have h2 : #(BlockDvdIndices k n p) ≤ k / p + 1 := blockDvdIndices_card_le hn hpp.pos
     exact le_trans h1 h2
   · -- non-small prime ⟹ valuation 0 (either non-prime, or prime ≥ k dividing no sqfree term).
-    rw [if_neg hp]
+    rw [ite_eq_right hp]
     -- It suffices that `(SqfreeBlockProduct k n).factorization p = 0`.
     by_cases hpp : p.Prime
     · -- prime but `p ∉ primesBelow k` ⟹ `k ≤ p`; no squarefree term is divisible by `p`.
@@ -302,14 +302,14 @@ lemma L_dvd_factorial (k : ℕ) : L k ∣ Nat.factorial k := by
     rw [Finset.sum_eq_single p
       (fun q hq hqp => by
         have hqprime : q.Prime := Nat.prime_of_mem_primesBelow hq
-        rw [Nat.Prime.factorization_pow hqprime, Finsupp.single_apply, if_neg hqp])
+        rw [Nat.Prime.factorization_pow hqprime, Finsupp.single_apply, ite_eq_right hqp])
       (fun h => absurd hp h)]
-    rw [Nat.Prime.factorization_pow hpp, Finsupp.single_apply, if_pos rfl]
+    rw [Nat.Prime.factorization_pow hpp, Finsupp.single_apply, ite_eq_left rfl]
     exact div_le_factorization_factorial hpp
   · rw [Finset.sum_eq_zero (fun q hq => by
       have hqprime : q.Prime := Nat.prime_of_mem_primesBelow hq
       have hne : q ≠ p := by rintro rfl; exact hp hq
-      rw [Nat.Prime.factorization_pow hqprime, Finsupp.single_apply, if_neg hne])]
+      rw [Nat.Prime.factorization_pow hqprime, Finsupp.single_apply, ite_eq_right hne])]
     exact Nat.zero_le _
 
 lemma L_le_factorial (k : ℕ) : L k ≤ Nat.factorial k :=

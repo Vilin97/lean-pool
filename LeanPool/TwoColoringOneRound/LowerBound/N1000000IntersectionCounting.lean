@@ -361,7 +361,7 @@ theorem gOfEmbeddingVal_val_of_rowMatch_some {k : DirIdx} (u : BaseOrbit k) (a d
   have hchoose : Classical.choose ((Option.ne_none_iff_exists').1 hne) = l :=
     Option.some_injective _ (hspec.symm.trans hrow)
   dsimp [gOfEmbeddingVal]
-  rw [dif_neg hne]
+  rw [dite_eq_right hne]
   simp [hchoose]
 
 theorem gOfEmbeddingVal_val_of_rowMatch_none {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
@@ -372,7 +372,7 @@ theorem gOfEmbeddingVal_val_of_rowMatch_none {k : DirIdx} (u : BaseOrbit k) (a d
       (e ⟨j.1, ⟨j.2, hrow⟩⟩).1 := by
   classical
   dsimp [gOfEmbeddingVal]
-  rw [dif_pos hrow]
+  rw [dite_eq_left hrow]
 
 private theorem gOfEmbeddingVal_injective {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
     (hcons : consistent (maskAt k) (maskAt a) (maskAt d) = true)

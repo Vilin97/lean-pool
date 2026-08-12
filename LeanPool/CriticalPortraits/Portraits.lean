@@ -171,14 +171,14 @@ lemma eraseMin_subset {N : ℕ} (S : Finset (ZMod N)) : eraseMin S ⊆ S := by
 lemma eraseMin_card {N : ℕ} (S : Finset (ZMod N)) (h : S.Nonempty) :
     (eraseMin S).card = S.card - 1 := by
   unfold eraseMin
-  rw [dif_pos h, Finset.card_erase_of_mem (minVal_mem S h)]
+  rw [dite_eq_left h, Finset.card_erase_of_mem (minVal_mem S h)]
 
 /-- Membership in `eraseMin`: everything of `S` except its `.val`-minimum (nonempty `S`).
     The clean characterization the downstream membership reasoning will use. -/
 lemma mem_eraseMin {N : ℕ} (S : Finset (ZMod N)) (h : S.Nonempty) (x : ZMod N) :
     x ∈ eraseMin S ↔ x ∈ S ∧ x ≠ minVal S h := by
   unfold eraseMin
-  rw [dif_pos h, Finset.mem_erase]
+  rw [dite_eq_left h, Finset.mem_erase]
   tauto
 
 /-- `T(P)`: delete the lowest-level point of every set, then take the union. -/

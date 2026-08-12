@@ -224,8 +224,8 @@ noncomputable def centerTensor
     Subalgebra.center K B ⊗[K] Subalgebra.center K C ≃ₗ[K]
     Subalgebra.center K (B ⊗[K] C) :=
     LinearEquiv.ofInjective (centerTensorCenter K B C) (centerTensorCenter_injective K B C) ≪≫ₗ
-    (show _ ≃ₗ[K] Subalgebra.toSubmodule (Subalgebra.center K (B ⊗[K] C)) from LinearEquiv.ofLinear
-      (Submodule.inclusion (by
+    (show _ ≃ₗ[K] Subalgebra.toSubmodule (Subalgebra.center K (B ⊗[K] C)) from
+      LinearEquiv.ofLinearMap (Submodule.inclusion (by
         rw [center_tensorProduct]
         intro x hx
         simp only [LinearMap.mem_range, Subalgebra.mem_toSubmodule, AlgHom.mem_range] at hx ⊢
@@ -455,8 +455,8 @@ lemma _root_.IsCentralSimple.TensorProduct.map_comap_le_span_of_isSimple_isCentr
         conv_rhs => rw [← mem]
         congr 1
         refine Finset.sum_congr rfl fun i _ => ?_
-        rw [dif_pos i.2]) i₀ hi₀
-      rw [if_pos rfl] at LI
+        rw [dite_eq_left i.2]) i₀ hi₀
+      rw [ite_eq_left rfl] at LI
       exact zero_ne_one LI.symm
     rw [hI, TwoSidedIdeal.coe_top_set, TwoSidedIdeal.le_iff]
     rintro x -

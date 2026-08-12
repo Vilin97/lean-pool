@@ -114,18 +114,18 @@ private theorem scatter_conjTranspose_mul_self (ι : {r : Fin n // p r} ↪ Fin 
   by_cases hr : p r
   · by_cases hr' : p r'
     · -- both in support: sum collapses via injectivity
-      simp only [hr, hr', dif_pos]
+      simp only [hr, hr', dite_eq_left]
       -- product of two indicators, summed over the column index
       simp only [mul_ite, mul_one, mul_zero]
       rw [Finset.sum_ite_eq Finset.univ (ι ⟨r', hr'⟩)
         (fun x => if ι ⟨r, hr⟩ = x then (1 : ℝ) else 0)]
-      simp only [Finset.mem_univ, if_true]
+      simp only [Finset.mem_univ, ite_true]
       by_cases hrr' : r = r'
       · subst hrr'; simp
       · have hne : ι ⟨r, hr⟩ ≠ ι ⟨r', hr'⟩ := by
           intro h
           exact hrr' (congrArg Subtype.val (ι.injective h))
-        rw [if_neg hne, if_neg hrr']
+        rw [ite_eq_right hne, ite_eq_right hrr']
     · -- r in support, r' not: diagonal entry is 0, sum is 0
       have hrr' : r ≠ r' := fun h => hr' (h ▸ hr)
       simp [hr', hrr']
@@ -172,7 +172,7 @@ theorem exists_conjTranspose_mul_self_of_rank_le (hG : G.PosSemidef) (hrank : G.
     rw [diagonal_mul]
     by_cases hr : μ r ≠ 0
     · simp [hr]
-    · simp only [hr, if_false, zero_mul]
+    · simp only [hr, ite_false, zero_mul]
       -- row `r` of `N` is zero because `s r = √0 = 0`
       have hμ0 : μ r = 0 := not_not.mp hr
       have hsr : s r = 0 := by rw [hs]; simp [hμ0]
@@ -183,7 +183,7 @@ theorem exists_conjTranspose_mul_self_of_rank_le (hG : G.PosSemidef) (hrank : G.
         rw [diagonal_apply]
         by_cases hrx : r = x
         · subst hrx; simp [hsr]
-        · rw [if_neg hrx]; ring
+        · rw [ite_eq_right hrx]; ring
       rw [this]
   -- assemble: `(S*N)ᴴ * (S*N) = Nᴴ * (Sᴴ*S) * N = Nᴴ * N = G`
   rw [conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Sᴴ S N, hSS, hdiagN, hNG]

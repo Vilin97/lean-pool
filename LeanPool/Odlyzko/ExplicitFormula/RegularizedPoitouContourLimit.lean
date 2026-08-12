@@ -1797,12 +1797,12 @@ theorem norm_regularizedArchimedeanIntegrand_le_majorant
   rw [Real.norm_eq_abs,
     abs_of_nonneg (regularizedArchimedeanIntegrand_nonneg hδ hx y)]
   by_cases hx1 : x ≤ 1
-  · rw [regularizedArchimedeanMajorant, if_pos hx1]
+  · rw [regularizedArchimedeanMajorant, ite_eq_left hx1]
     exact
       (regularizedArchimedeanIntegrand_le_linear hδ hx y).trans
         (mul_le_mul_of_nonneg_right
           (by linarith : y ^ 2 / 5 + δ ≤ y ^ 2 / 5 + 1) hx.le)
-  · rw [regularizedArchimedeanMajorant, if_neg hx1]
+  · rw [regularizedArchimedeanMajorant, ite_eq_right hx1]
     have hxone : 1 ≤ x := le_of_not_ge hx1
     calc
       regularizedArchimedeanIntegrand y δ x ≤

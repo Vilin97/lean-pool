@@ -139,13 +139,13 @@ theorem isAcc_α_F' (β : Iio (succ κ).ord) : IsAccPt α (F' β) :=
   isAcc_α.mono (by exact fun x hx y ⟨z, hz⟩ ↦ hx y ⟨z, hz⟩)
 
 theorem restrict_subset_α (β : Iio (succ κ).ord) : restrict (F' β) α ⊆ f α := by
-  rw [restrict, dif_pos (isAcc_α_F' _)]
+  rw [restrict, dite_eq_left (isAcc_α_F' _)]
   exact inter_subset_left
 
 theorem restrict_subset_restrict {C D : Club Ϟ} (h : C ⊆ D) (ha : IsAccPt α C) :
     restrict C α ⊆ restrict D α := by
   unfold restrict
-  rw [dif_pos ha, dif_pos (by exact ha.mono h)]
+  rw [dite_eq_left ha, dite_eq_left (by exact ha.mono h)]
   exact inter_subset_inter (fun _ H ↦ H) h
 
 theorem restrict_not_subset (β : Iio (succ κ).ord) :
@@ -156,7 +156,7 @@ theorem restrict_not_subset (β : Iio (succ κ).ord) :
 
 theorem restrict_subset {β γ : Iio (succ κ).ord} (h : β < γ) :
     (restrict (F' γ) α).carrier ⊆ (F β).carrier := by
-  rw [restrict, dif_pos (isAcc_α_F' γ)]
+  rw [restrict, dite_eq_left (isAcc_α_F' γ)]
   refine inter_subset_right.trans ?_
   intro x xmem
   exact xmem (F β).carrier ⟨⟨β, h⟩, rfl⟩
@@ -205,7 +205,7 @@ theorem exists_isClubGuessing_of_cof_uncountable {Ϟ : Ordinal} {κ : Cardinal} 
     obtain ⟨δ, hδ⟩ := hf ⟨C.1 ∩ Iio Ϟ, C.2.inter_Iio⟩
     use ⟨δ.1, δ.2.1⟩
     unfold g
-    rw [dif_pos δ.2.2]
+    rw [dite_eq_left δ.2.2]
     exact hδ.trans inter_subset_left
 
 end Ordinal

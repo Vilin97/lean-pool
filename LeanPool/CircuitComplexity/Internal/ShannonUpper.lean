@@ -170,7 +170,7 @@ private theorem binop_wireValue_c₁ {N G₁ G₂ : Nat} [NeZero N]
         -- Change goal to use binopGWP
         change (binopGWP c₁ c₂ ⟨n - N, _⟩).val.eval _ = _
         -- Unfold binopGWP for the first branch
-        simp only [binopGWP, dif_pos hg]
+        simp only [binopGWP, dite_eq_left hg]
         rw [mkGate2'_eval (c₁.gates ⟨n - N, hg⟩).op, andOr2_gate_eval_two_inputs]
         have hacyc0 : (gw 0 (c₁.gates ⟨n - N, hg⟩)).val < n := by
           have := c₁.acyclic ⟨_, hg⟩ ⟨0, by rw [andOr2_fanIn]; omega⟩; simp [gw] at this ⊢; omega
@@ -197,10 +197,10 @@ private theorem binop_wireValue_c₂ {N G₁ G₂ : Nat} [NeZero N]
       intro hn
       by_cases hlt : n < N
       · -- Input wire: remap₂ preserves it
-        simp only [remap₂, dif_pos hlt]
+        simp only [remap₂, dite_eq_left hlt]
         rw [Circuit.wireValue_lt _ _ _ hlt, Circuit.wireValue_lt _ _ _ hlt]
       · -- Gate wire: remap₂ shifts by G₁ + 1
-        simp only [remap₂, dif_neg hlt]
+        simp only [remap₂, dite_eq_right hlt]
         have hge : ¬(n + G₁ + 1 < N) := by omega
         rw [Circuit.wireValue_ge _ _ _ hge, Circuit.wireValue_ge _ _ _ hlt]
         have hg₂ : n - N < G₂ := by omega
@@ -211,7 +211,7 @@ private theorem binop_wireValue_c₂ {N G₁ G₂ : Nat} [NeZero N]
         have hb1 : ¬(n + G₁ + 1 - N < G₁) := by omega
         have hb2 : ¬(n + G₁ + 1 - N = G₁) := by omega
         have hb3 : n + G₁ + 1 - N < G₁ + 1 + G₂ := by omega
-        simp only [binopGWP, dif_neg hb1, dif_neg hb2, dif_pos hb3]
+        simp only [binopGWP, dite_eq_right hb1, dite_eq_right hb2, dite_eq_left hb3]
         rw [mkGate2'_eval (c₂.gates ⟨n + G₁ + 1 - N - G₁ - 1, by omega⟩).op,
           andOr2_gate_eval_two_inputs]
         -- Simplify gate index
@@ -1021,9 +1021,9 @@ private theorem or_andLayerSem_eq_f (N : Nat) [NeZero N]
   have hP_ne : ∀ y, y < 2 ^ dataBits N → y ≠ dataSum N hN x →
     (if h : y < 2 ^ dataBits N then andLayerSem N f hN x y h else false) = false := by
     intro y hy hne
-    rw [dif_pos hy, andLayerSem_ne N f hN x y hy hne]
+    rw [dite_eq_left hy, andLayerSem_ne N f hN x y hy hne]
   have hfoldl := foldl_or_unique_true (dataSum N hN x) hds_lt hP_ne
-  rw [hfoldl, dif_pos hds_lt, andLayerSem_eq N f hN x]
+  rw [hfoldl, dite_eq_left hds_lt, andLayerSem_eq N f hN x]
 
 /-- The OR chain accumulates AND-layer semantic values.
 
@@ -1072,11 +1072,11 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
       change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
       unfold shannonGateArray
       simp only [show N + 1 + j - N = 1 + j from by omega]
-      rw [dif_neg (by omega : ¬(1 + j = 0))]
-      rw [dif_pos (by unfold oC; omega : 1 + j < oC (dataBits N))]
+      rw [dite_eq_right (by omega : ¬(1 + j = 0))]
+      rw [dite_eq_left (by unfold oC; omega : 1 + j < oC (dataBits N))]
       simp only [show 1 + j - 1 = j from by omega]
       by_cases hjL1 : j < 4
-      · rw [dif_pos hjL1]
+      · rw [dite_eq_left hjL1]
         simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
@@ -1114,7 +1114,7 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
           show addrBits N + 0 = addrBits N from by omega, Nat.testBit_zero]
         cases x ⟨addrBits N, by omega⟩ <;> cases x ⟨addrBits N + 1, by omega⟩ <;>
           cases j.testBit 1 <;> cases (decide (j % 2 = 1)) <;> simp_all
-      · rw [dif_neg hjL1]
+      · rw [dite_eq_right hjL1]
         simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
@@ -1248,13 +1248,13 @@ private theorem colOutput_addrLeaf (N : Nat) [NeZero N]
       change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
       unfold shannonGateArray
       simp only [show N + oC q + j - N = oC q + j from by omega]
-      rw [dif_neg (by unfold oC; omega : ¬(oC q + j = 0))]
-      rw [dif_neg (by unfold oC; omega : ¬(oC q + j < oC q))]
-      rw [dif_pos (by unfold oD oC; omega : oC q + j < oD k q)]
+      rw [dite_eq_right (by unfold oC; omega : ¬(oC q + j = 0))]
+      rw [dite_eq_right (by unfold oC; omega : ¬(oC q + j < oC q))]
+      rw [dite_eq_left (by unfold oD oC; omega : oC q + j < oD k q)]
       simp_rw [show oC q + j - oC (dataBits N) = j from by
         change oC q + j - oC q = j; omega]
       by_cases hjL1 : j < 4
-      · rw [dif_pos hjL1]
+      · rw [dite_eq_left hjL1]
         simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
@@ -1283,7 +1283,7 @@ private theorem colOutput_addrLeaf (N : Nat) [NeZero N]
         simp only [Fin.forall_fin_two, Fin.val_zero, Fin.val_one, Nat.testBit_zero]
         cases x ⟨0, hN2 0 (by omega)⟩ <;> cases x ⟨1, hN2 1 (by omega)⟩ <;>
           cases j.testBit 1 <;> cases (decide (j % 2 = 1)) <;> simp_all
-      · rw [dif_neg hjL1]
+      · rw [dite_eq_right hjL1]
         simp only [mkG, Gate.eval, andOr2_basis_eval, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
@@ -1395,7 +1395,7 @@ private theorem colOutput_constFalse (N : Nat) [NeZero N]
   change (shannonGateArray N f hN ⟨N - N, by omega⟩).val.eval
     ((shannonCircuit N f hN).wireValue x) = false
   unfold shannonGateArray
-  rw [dif_pos (show N - N = 0 from by omega)]
+  rw [dite_eq_left (show N - N = 0 from by omega)]
   simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
     Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
   simp_all
@@ -1507,7 +1507,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
       unfold shannonGateArray
       simp only [show N + oD k q + p * (2 ^ k - 1) + 0 - N =
         oD k q + p * (2 ^ k - 1) from by omega]
-      rw [dif_neg h_ne0, dif_neg h_ge_oC, dif_neg h_ge_oD, dif_pos h_lt_oE]
+      rw [dite_eq_right h_ne0, dite_eq_right h_ge_oC, dite_eq_right h_ge_oD, dite_eq_left h_lt_oE]
       simp only [show addrBits N = k from rfl, show dataBits N = q from rfl]
       simp only [show oD k q + p * (2 ^ k - 1) - oD k q =
         p * (2 ^ k - 1) from by omega]
@@ -1544,7 +1544,8 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
       unfold shannonGateArray
       simp only [show N + oD k q + p * (2 ^ k - 1) + (r' + 1) - N =
         oD k q + p * (2 ^ k - 1) + (r' + 1) from by omega]
-      rw [dif_neg h_ne0', dif_neg h_ge_oC', dif_neg h_ge_oD', dif_pos h_lt_oE']
+      rw [dite_eq_right h_ne0', dite_eq_right h_ge_oC', dite_eq_right h_ge_oD',
+        dite_eq_left h_lt_oE']
       simp only [show addrBits N = k from rfl, show dataBits N = q from rfl]
       simp_rw [show (oD k q + p * (2 ^ k - 1) + (r' + 1) - oD k q) =
         p * (2 ^ k - 1) + (r' + 1) from by omega]
@@ -1611,15 +1612,18 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
     unfold shannonGateArray
     simp only [show N + oE (addrBits N) (dataBits N) + y - N =
       oE (addrBits N) (dataBits N) + y from by omega]
-    rw [dif_neg (by unfold oE oD oC; have := pow_ge_4 (dataBits N) (dataBits_ge_two N hN); omega :
+    rw [dite_eq_right (by
+      unfold oE oD oC
+      have := pow_ge_4 (dataBits N) (dataBits_ge_two N hN)
+      omega :
       ¬(oE (addrBits N) (dataBits N) + y = 0))]
-    rw [dif_neg (by unfold oE oD oC; omega :
+    rw [dite_eq_right (by unfold oE oD oC; omega :
       ¬(oE (addrBits N) (dataBits N) + y < oC (dataBits N)))]
-    rw [dif_neg (by unfold oE oD; omega :
+    rw [dite_eq_right (by unfold oE oD; omega :
       ¬(oE (addrBits N) (dataBits N) + y < oD (addrBits N) (dataBits N)))]
-    rw [dif_neg (by unfold oE; omega :
+    rw [dite_eq_right (by unfold oE; omega :
       ¬(oE (addrBits N) (dataBits N) + y < oE (addrBits N) (dataBits N)))]
-    rw [dif_pos (by unfold oF; omega :
+    rw [dite_eq_left (by unfold oF; omega :
       oE (addrBits N) (dataBits N) + y < oF (addrBits N) (dataBits N))]
     simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
       Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and, ite_self, Bool.false_xor]
@@ -1644,14 +1648,14 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
     unfold shannonGateArray
     simp only [show N + oF (addrBits N) (dataBits N) + 0 - N =
       oF (addrBits N) (dataBits N) + 0 from by omega]
-    rw [dif_neg (by unfold oF oE oD oC; omega : ¬(oF (addrBits N) (dataBits N) + 0 = 0))]
-    rw [dif_neg (by unfold oF oE oD oC; omega :
+    rw [dite_eq_right (by unfold oF oE oD oC; omega : ¬(oF (addrBits N) (dataBits N) + 0 = 0))]
+    rw [dite_eq_right (by unfold oF oE oD oC; omega :
       ¬(oF (addrBits N) (dataBits N) + 0 < oC (dataBits N)))]
-    rw [dif_neg (by unfold oF oE oD; omega :
+    rw [dite_eq_right (by unfold oF oE oD; omega :
       ¬(oF (addrBits N) (dataBits N) + 0 < oD (addrBits N) (dataBits N)))]
-    rw [dif_neg (by unfold oF oE; omega :
+    rw [dite_eq_right (by unfold oF oE; omega :
       ¬(oF (addrBits N) (dataBits N) + 0 < oE (addrBits N) (dataBits N)))]
-    rw [dif_neg (by omega :
+    rw [dite_eq_right (by omega :
       ¬(oF (addrBits N) (dataBits N) + 0 < oF (addrBits N) (dataBits N)))]
     simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
       Fin.foldl_succ_last, Fin.foldl_zero, Bool.false_or, ite_self, Bool.false_xor]
@@ -1670,8 +1674,8 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
         andLayer_sem 1 (by omega) (by linarith)]
     simp only [show List.range (0 + 2) = [0, 1] from by decide,
       List.foldl_cons, List.foldl_nil,
-      Bool.false_or, dif_pos (show 0 < 2 ^ dataBits N from by omega),
-      dif_pos (show 1 < 2 ^ dataBits N from by omega)]
+      Bool.false_or, dite_eq_left (show 0 < 2 ^ dataBits N from by omega),
+      dite_eq_left (show 1 < 2 ^ dataBits N from by omega)]
   | succ r' ih =>
     rw [Circuit.wireValue_ge _ _ _ (show ¬((⟨N + oF (addrBits N) (dataBits N) + (r' + 1), hW⟩ :
         Fin _).val < N) from by change ¬(N + oF (addrBits N) (dataBits N) + (r' + 1) < N); omega)]
@@ -1679,15 +1683,15 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
     unfold shannonGateArray
     simp only [show N + oF (addrBits N) (dataBits N) + (r' + 1) - N =
       oF (addrBits N) (dataBits N) + (r' + 1) from by omega]
-    rw [dif_neg (by unfold oF oE oD oC; omega :
+    rw [dite_eq_right (by unfold oF oE oD oC; omega :
       ¬(oF (addrBits N) (dataBits N) + (r' + 1) = 0))]
-    rw [dif_neg (by unfold oF oE oD oC; omega :
+    rw [dite_eq_right (by unfold oF oE oD oC; omega :
       ¬(oF (addrBits N) (dataBits N) + (r' + 1) < oC (dataBits N)))]
-    rw [dif_neg (by unfold oF oE oD; omega :
+    rw [dite_eq_right (by unfold oF oE oD; omega :
       ¬(oF (addrBits N) (dataBits N) + (r' + 1) < oD (addrBits N) (dataBits N)))]
-    rw [dif_neg (by unfold oF oE; omega :
+    rw [dite_eq_right (by unfold oF oE; omega :
       ¬(oF (addrBits N) (dataBits N) + (r' + 1) < oE (addrBits N) (dataBits N)))]
-    rw [dif_neg (by omega :
+    rw [dite_eq_right (by omega :
       ¬(oF (addrBits N) (dataBits N) + (r' + 1) < oF (addrBits N) (dataBits N)))]
     simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
       Fin.foldl_succ_last, Fin.foldl_zero, Bool.false_or, ite_self, Bool.false_xor]
@@ -1713,13 +1717,13 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
     have hr2 : r' + 2 < 2 ^ dataBits N := by omega
     rw [show andLayerSem N f hN x (r' + 2) hr2 =
       (if h : r' + 2 < 2 ^ dataBits N then andLayerSem N f hN x (r' + 2) h else false) from
-      by rw [dif_pos hr2]]
+      by rw [dite_eq_left hr2]]
     rw [Bool.or_assoc]
     simp only [show r' + 1 + 2 = r' + 2 + 1 from by omega,
       show r' + 2 = r' + 1 + 1 from by omega,
       List.range_succ, List.foldl_append, List.foldl_cons, List.foldl_nil,
-      dif_pos (show r' + 2 < 2 ^ dataBits N from by omega),
-      dif_pos (show r' + 1 < 2 ^ dataBits N from by omega),
+      dite_eq_left (show r' + 2 < 2 ^ dataBits N from by omega),
+      dite_eq_left (show r' + 1 < 2 ^ dataBits N from by omega),
       Bool.or_assoc]
 
 private theorem lastOrChain_eq_f (N : Nat) [NeZero N]
@@ -1817,6 +1821,5 @@ theorem shannon_construction (N : Nat) [NeZero N] (hN : 16 ≤ N)
 end ShannonUpper
 
 end CircuitComplexity
-
 
 

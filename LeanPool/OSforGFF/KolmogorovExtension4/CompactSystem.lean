@@ -207,7 +207,7 @@ theorem nonempty_iInter_projCylinder_inter_piCylinderSet (hs : ∀ n, s n ∈ cl
             (x ⟨j, subset_allProj hs i j.2⟩)) =
         fun j : Js (hs i) ↦ y ⟨j, subset_allProj hs i j.2⟩ := by
       ext j
-      rw [if_pos]
+      rw [ite_eq_left]
       refine le_trans (le_of_eq ?_) ((indexProj_le hs i j).trans hi)
       congr
     rw [this]
@@ -223,12 +223,12 @@ theorem nonempty_iInter_projCylinder_inter_piCylinderSet (hs : ∀ n, s n ∈ cl
         exact biInter_subset_of_mem hi_le
       rw [mem_projCylinder] at hy'
       refine ⟨fun j ↦ y ⟨j, subset_allProj hs _ j.2⟩, hy', ?_⟩
-      simp_rw [z, if_pos hi_le]
+      simp_rw [z, ite_eq_left hi_le]
     · rw [mem_piCylinderSet] at hx
       specialize hx i
       obtain ⟨x', hx'_mem, hx'_eq⟩ := hx
       refine ⟨x', hx'_mem, ?_⟩
-      simp_rw [z, if_neg hi_le]
+      simp_rw [z, ite_eq_right hi_le]
       exact hx'_eq
 
 theorem nonempty_iInter_projCylinder (hs : ∀ n, s n ∈ closedCompactCylinders α)

@@ -778,7 +778,6 @@ theorem summable_auxil_1 (k : ℕ) (z : ℍ) :
     conv =>
       enter [1]
       ext b
-      simp
       rw [H b, H2 b]
     have hsum := hsum k z
     apply Summable.of_nonneg_of_le _ _ hsum

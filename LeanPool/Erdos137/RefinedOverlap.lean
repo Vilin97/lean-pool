@@ -119,20 +119,20 @@ lemma wgRefinedCap_factorization (g k p : ℕ) :
     have := (Nat.prime_of_mem_primesBelow hq).pos; positivity)]
   rw [Finset.sum_apply']
   by_cases hp : p ∈ Nat.primesBelow (k + 1)
-  · rw [if_pos hp]
+  · rw [ite_eq_left hp]
     have hpp : p.Prime := Nat.prime_of_mem_primesBelow hp
     rw [Finset.sum_eq_single p
           (fun q hq hqp => by
             have hqp' : q.Prime := Nat.prime_of_mem_primesBelow hq
-            rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, if_neg hqp])
+            rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, ite_eq_right hqp])
           (fun h => absurd hp h)]
-    rw [Nat.Prime.factorization_pow hpp, Finsupp.single_apply, if_pos rfl]
-  · rw [if_neg hp]
+    rw [Nat.Prime.factorization_pow hpp, Finsupp.single_apply, ite_eq_left rfl]
+  · rw [ite_eq_right hp]
     apply Finset.sum_eq_zero
     intro q hq
     have hqp' : q.Prime := Nat.prime_of_mem_primesBelow hq
     have hne : q ≠ p := by rintro rfl; exact hp hq
-    rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, if_neg hne]
+    rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, ite_eq_right hne]
 
 /-! ## The key divisibility -/
 
@@ -152,20 +152,20 @@ theorem Wg_dvd_refinedCap (hg : 1 ≤ g) {k n : ℕ} (hn : 1 ≤ n) :
   rw [factorization_Wg hn p, wgRefinedCap_factorization g k p]
   by_cases hp : p ∈ Nat.primesBelow (k + 1)
   · -- `p ≤ k` prime: overlapg - 1 ≤ min(⌊k/p⌋, ⌊k/g⌋).
-    rw [if_pos hp]
+    rw [ite_eq_left hp]
     by_cases hpB : p ∈ (Bg g k n).primeFactors
-    · simp only [hpB, if_true]
+    · simp only [hpB, ite_true]
       have h1 : overlapg g k n p ≤ k / p + 1 := overlapg_le hg hn
       have h2 : overlapg g k n p ≤ k / g := overlapg_le_numBlocks g k n p
       -- `overlapg - 1 ≤ min(⌊k/p⌋, ⌊k/g⌋)`. (Use explicit `Nat` lemmas: `omega`'s `Nat.div`
       -- preprocessing mishandles the two division atoms here.)
       exact Nat.le_min.mpr
         ⟨Nat.sub_le_iff_le_add.mpr h1, le_trans (Nat.sub_le _ 1) h2⟩
-    · simp only [hpB, if_false]; exact Nat.zero_le _
+    · simp only [hpB, ite_false]; exact Nat.zero_le _
   · -- `p ∉ primesBelow (k+1)`: either not prime, or `p > k`; either way `v_p(Wg) = 0`.
-    rw [if_neg hp]
+    rw [ite_eq_right hp]
     by_cases hpB : p ∈ (Bg g k n).primeFactors
-    · simp only [hpB, if_true]
+    · simp only [hpB, ite_true]
       have hpp : p.Prime := (Nat.mem_primeFactors.mp hpB).1
       -- `p ∉ primesBelow (k+1)` and `p` prime ⟹ `k + 1 ≤ p`, i.e. `p > k`, so `⌊k/p⌋ = 0`.
       have hkp : k + 1 ≤ p := by
@@ -177,7 +177,7 @@ theorem Wg_dvd_refinedCap (hg : 1 ≤ g) {k n : ℕ} (hn : 1 ≤ n) :
       have h1 : o ≤ k / p + 1 := overlapg_le hg hn
       rw [hdiv0] at h1
       omega
-    · simp only [hpB, if_false]; exact Nat.zero_le _
+    · simp only [hpB, ite_false]; exact Nat.zero_le _
 
 /-- **Size form of the refined overlap bound.** `Wg g k n ≤ WgRefinedCap g k`, immediate from the
 divisibility `Wg_dvd_refinedCap` via `Nat.le_of_dvd`. The deterministic improvement of

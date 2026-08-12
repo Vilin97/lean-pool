@@ -253,7 +253,7 @@ private theorem ASymm_varOrbit_entry_one_of_orbit {u v : V} {d0 : DirIdx} {i0 : 
     by_cases hFix : N1000000Witness.tTr[(varOrbit i0).1]! = (varOrbit i0).1
     · simp [ASymm, hFix, A, this]
     · unfold ASymm
-      rw [dif_neg hFix]
+      rw [dite_eq_right hFix]
       rw [A_tTr_mk_eq_A_invDir (d := varOrbit i0)]
       rw [Matrix.add_apply]
       have hNeInv : dirMask v u ≠ maskAt (invDir (varOrbit i0)) := by
@@ -274,7 +274,7 @@ private theorem ASymm_varOrbit_entry_one_of_orbit {u v : V} {d0 : DirIdx} {i0 : 
         simpa [invDir, hFix] using this
       simp [ASymm, hFix, A, hMask]
     · unfold ASymm
-      rw [dif_neg hFix]
+      rw [dite_eq_right hFix]
       rw [A_tTr_mk_eq_A_invDir (d := varOrbit i0)]
       rw [Matrix.add_apply]
       have hNeVar : dirMask v u ≠ maskAt (varOrbit i0) := by
@@ -354,7 +354,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
         unfold ASymm
         -- Reduce the `dite` branch by hand (simp can struggle to rewrite the function position
         -- here).
-        rw [dif_neg hFix]
+        rw [dite_eq_right hFix]
         rw [Matrix.add_apply]
         -- First summand vanishes since `dirMask v u ≠ maskAt (varOrbit i)`.
         have hA1 : A (varOrbit i) u v = 0 := by simp [A, hNe1]
@@ -414,7 +414,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
             exact hNot (Or.inr this)
           -- Unfold `ASymm` into the non-fixed case and rewrite the transpose term as `invDir`.
           unfold ASymm
-          rw [dif_neg hFix]
+          rw [dite_eq_right hFix]
           rw [A_tTr_mk_eq_A_invDir (d := varOrbit i)]
           simp_all
       -- Use `Finset.sum_eq_single` to extract the `i0` term.

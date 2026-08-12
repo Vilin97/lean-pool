@@ -184,7 +184,7 @@ lemma transformSeq_props {k : ℕ} {b : Fin (k + 1) → ℕ}
       by_cases h : ((Finset.univ : Finset (Fin (k + 1))).filter
           (fun j => baseSeq k j < b j)).Nonempty
       · -- h.Nonempty branch: b' = update b (max') (b max' - 1)
-        simp only [dif_pos h]
+        simp only [dite_eq_left h]
         refine ⟨?_, ?_, ?_⟩
         · -- ValidSeq of the update
           convert h_valid_b'

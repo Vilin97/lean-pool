@@ -100,7 +100,7 @@ private lemma remainder_annulus_pw_bound
       then (γ t - γ t₀)⁻¹ * deriv γ t - (↑(t - t₀))⁻¹
       else 0‖ ≤ max 0 C := by
   by_cases hcond : ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁
-  · rw [if_pos hcond]
+  · rw [ite_eq_left hcond]
     have ht_in_Icc : t ∈ Set.Icc a b := by
       rw [Set.uIoc_eq_union] at ht; rcases ht with h | h
       · exact Set.Ioc_subset_Icc_self h

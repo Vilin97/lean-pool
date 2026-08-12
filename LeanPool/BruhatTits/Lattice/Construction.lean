@@ -198,7 +198,7 @@ lemma twist_le_twist_iff [Fintype ι] (b : Basis ι K (ι → K)) {ϖ : R}
     rw [← Finset.sum_sub_distrib] at heq
     simp_rw [Subring.smul_def, smul_smul, ← sub_smul] at heq
     have hzero := Fintype.linearIndependent_iff.mp b.linearIndependent _ heq i
-    rw [if_pos rfl] at hzero
+    rw [ite_eq_left rfl] at hzero
     rw [sub_eq_zero] at hzero
     have : ϖ.val ≠ 0 := by simpa using hϖ.ne_zero
     have : ϖ.val ^ g i ≠ 0 := zpow_ne_zero (g i) this

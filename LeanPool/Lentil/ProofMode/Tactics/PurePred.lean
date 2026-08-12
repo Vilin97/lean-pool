@@ -32,7 +32,7 @@ theorem Entails_pull_pure {σ : Type u} {hyps : List (NamedPred σ)} {goal : pre
   rwa [← Entails_pure_fact_intro]
 
 private def pullPureTacDSimps := #[``List.findIdx, ``List.findIdx.go, ``List.eraseIdx, ``String.reduceBEq,
-  ``String.reduceBNe, ``cond_false, ``cond_true, ``Option.elim]
+  ``String.reduceBNe, ``Bool.cond_false, ``Bool.cond_true, ``Option.elim]
 
 /--
 `tla_pull_pure h₁ h₂ ...` moves pure temporal hypotheses into Lean's local

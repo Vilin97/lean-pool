@@ -49,9 +49,9 @@ noncomputable def ord (φ : MeroGermOn X U) (x : X) : WithTop ℤ :=
       change (if IsOpen U ∧ x ∈ U then ordAtX f x else 0) =
         (if IsOpen U ∧ x ∈ U then ordAtX g x else 0)
       by_cases hgate : IsOpen U ∧ x ∈ U
-      · rw [if_pos hgate, if_pos hgate]
+      · rw [ite_eq_left hgate, ite_eq_left hgate]
         exact ordAtX_congr (((eventuallyEq_codiscreteWithin_iff_of_isOpen hgate.1).1 hfg) x hgate.2)
-      · rw [if_neg hgate, if_neg hgate])
+      · rw [ite_eq_right hgate, ite_eq_right hgate])
 
 open scoped Classical in
 theorem ord_apply_mk (f : X → ℂ) (hf : MeromorphicOnX f U) (x : X) :
@@ -59,7 +59,7 @@ theorem ord_apply_mk (f : X → ℂ) (hf : MeromorphicOnX f U) (x : X) :
 
 @[simp] theorem ord_mk (hU : IsOpen U) (hx : x ∈ U) {f : X → ℂ} {hf : MeromorphicOnX f U} :
     (mk f hf).ord x = ordAtX f x := by
-  rw [ord_apply_mk, if_pos ⟨hU, hx⟩]
+  rw [ord_apply_mk, ite_eq_left ⟨hU, hx⟩]
 
 theorem ord_restrict (h : V ⊆ U) (hV : IsOpen V) (hU : IsOpen U) {x : X} (hx : x ∈ V)
     (φ : MeroGermOn X U) : (restrict h φ).ord x = φ.ord x := by
@@ -73,9 +73,9 @@ open scoped Classical in
 theorem ord_zero : (0 : MeroGermOn X U).ord x = if IsOpen U ∧ x ∈ U then ⊤ else 0 := by
   rw [← mk_zero, ord_apply_mk]
   by_cases hgate : IsOpen U ∧ x ∈ U
-  · rw [if_pos hgate, if_pos hgate]
+  · rw [ite_eq_left hgate, ite_eq_left hgate]
     exact ordAtX_zero
-  · rw [if_neg hgate, if_neg hgate]
+  · rw [ite_eq_right hgate, ite_eq_right hgate]
 
 theorem ord_one (hU : IsOpen U) (hx : x ∈ U) : (1 : MeroGermOn X U).ord x = 0 := by
   rw [← mk_one, ord_mk hU hx]
@@ -106,8 +106,8 @@ theorem ord_neg (φ : MeroGermOn X U) : (-φ).ord x = φ.ord x := by
   obtain ⟨f, hf, rfl⟩ := exists_rep φ
   rw [mk_neg, ord_apply_mk, ord_apply_mk]
   by_cases hgate : IsOpen U ∧ x ∈ U
-  · rw [if_pos hgate, if_pos hgate, ordAtX_neg]
-  · rw [if_neg hgate, if_neg hgate]
+  · rw [ite_eq_left hgate, ite_eq_left hgate, ordAtX_neg]
+  · rw [ite_eq_right hgate, ite_eq_right hgate]
 
 theorem ord_smul (hU : IsOpen U) (hx : x ∈ U) (hc : c ≠ 0) (φ : MeroGermOn X U) :
     (c • φ).ord x = φ.ord x := by
@@ -117,7 +117,7 @@ theorem ord_smul (hU : IsOpen U) (hx : x ∈ U) (hc : c ≠ 0) (φ : MeroGermOn 
 
 theorem ord_algebraMap (hU : IsOpen U) (hx : x ∈ U) (hc : c ≠ 0) :
     (algebraMap ℂ (MeroGermOn X U) c).ord x = 0 := by
-  rw [algebraMap_mk, ord_mk hU hx, ordAtX_const, if_neg hc]
+  rw [algebraMap_mk, ord_mk hU hx, ordAtX_const, ite_eq_right hc]
 
 /-! ### `evalAt` (D5) -/
 
@@ -135,13 +135,13 @@ noncomputable def evalAt (φ : MeroGermOn X U) (x : X) : ℂ :=
           (eventuallyEq_codiscreteWithin_iff_of_isOpen hxU.1).1 hfg x hxU.2
         have hgate' : (IsOpen U ∧ x ∈ U) ∧ 0 ≤ ordAtX g x :=
           ⟨hxU, (ordAtX_congr hfg') ▸ hgate.2⟩
-        rw [if_pos hgate, if_pos hgate']
+        rw [ite_eq_left hgate, ite_eq_left hgate']
         exact limUnder_congr hfg'
       · have hgate2 : ¬((IsOpen U ∧ x ∈ U) ∧ 0 ≤ ordAtX g x) := by
           rintro ⟨hxU, hg0⟩
           exact hgate ⟨hxU, (ordAtX_congr
             ((eventuallyEq_codiscreteWithin_iff_of_isOpen hxU.1).1 hfg x hxU.2)).symm ▸ hg0⟩
-        rw [if_neg hgate, if_neg hgate2])
+        rw [ite_eq_right hgate, ite_eq_right hgate2])
 
 open scoped Classical in
 theorem evalAt_apply_mk (f : X → ℂ) (hf : MeromorphicOnX f U) (x : X) :
@@ -154,7 +154,7 @@ theorem tendsto_evalAt (hU : IsOpen U) (hx : x ∈ U) (φ : MeroGermOn X U) (h :
   subst hrep
   rw [ord_mk hU hx] at h
   obtain ⟨d, hd⟩ := (tendsto_nhds_iff_ordAtX_nonneg (hf x hx)).2 h
-  rw [evalAt_apply_mk, if_pos ⟨⟨hU, hx⟩, h⟩, hd.limUnder_eq]
+  rw [evalAt_apply_mk, ite_eq_left ⟨⟨hU, hx⟩, h⟩, hd.limUnder_eq]
   exact hd
 
 @[simp] theorem evalAt_of_not_nonneg {φ : MeroGermOn X U} {x : X} (h : ¬ 0 ≤ φ.ord x) :
@@ -163,8 +163,8 @@ theorem tendsto_evalAt (hU : IsOpen U) (hx : x ∈ U) (φ : MeroGermOn X U) (h :
   rw [evalAt_apply_mk]
   by_cases hgate : IsOpen U ∧ x ∈ U
   · rw [ord_mk hgate.1 hgate.2] at h
-    exact if_neg (fun hc => h hc.2)
-  · exact if_neg (fun hc => hgate hc.1)
+    exact ite_eq_right (fun hc => h hc.2)
+  · exact ite_eq_right (fun hc => hgate hc.1)
 
 /-! From here on, chart invariance is needed (`ContMDiffAt`/`AnalyticAt` bridges). -/
 

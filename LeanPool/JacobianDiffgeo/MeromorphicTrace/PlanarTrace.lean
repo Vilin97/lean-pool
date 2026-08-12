@@ -424,7 +424,7 @@ theorem traceZk_zpow (hk : k ≠ 0) (e : ℤ) {w : ℂ} (hw : w ≠ 0) :
     rw [← zpow_natCast ζ i, ← zpow_mul, mul_comm (i : ℤ) e, zpow_mul, zpow_natCast]
   rw [h1, Finset.sum_congr rfl h2, ← Finset.sum_mul]
   by_cases hdvd : (k : ℤ) ∣ e
-  · rw [if_pos hdvd]
+  · rw [ite_eq_left hdvd]
     have hζe : ζ ^ e = 1 := (hζ.zpow_eq_one_iff_dvd e).2 hdvd
     have hsum : ∑ i ∈ Finset.range k, (ζ ^ e) ^ i = (k : ℂ) := by
       rw [hζe]
@@ -436,7 +436,7 @@ theorem traceZk_zpow (hk : k ≠ 0) (e : ℤ) {w : ℂ} (hw : w ≠ 0) :
         _ = (z₁ ^ k) ^ (e / (k : ℤ)) := by rw [zpow_natCast]
         _ = w ^ (e / (k : ℤ)) := by rw [hz₁]
     rw [hsum, hz₁e]
-  · rw [if_neg hdvd]
+  · rw [ite_eq_right hdvd]
     have hζe : ζ ^ e ≠ 1 := fun hone => hdvd ((hζ.zpow_eq_one_iff_dvd e).1 hone)
     have hpow1 : (ζ ^ e) ^ k = 1 := by
       rw [← zpow_natCast (ζ ^ e) k, ← zpow_mul, mul_comm e (k : ℤ), zpow_mul, zpow_natCast,
@@ -619,18 +619,18 @@ theorem laurentCoeffAt_traceZk (hh : MeromorphicAt h 0) (hk : k ≠ 0) (m : ℤ)
       intro d _
       simp only [hT_def]
       by_cases hdvd : (k : ℤ) ∣ (n₀ + (d : ℤ))
-      · simp only [if_pos hdvd]
+      · simp only [ite_eq_left hdvd]
         have h1 : MeromorphicAt (fun w : ℂ => w ^ ((n₀ + (d : ℤ)) / (k : ℤ))) 0 := by
           simpa using (MeromorphicAt.id (0 : ℂ)).fun_zpow ((n₀ + (d : ℤ)) / (k : ℤ))
         exact (MeromorphicAt.const _ _).mul ((MeromorphicAt.const _ _).mul h1)
-      · simp only [if_neg hdvd, mul_zero]
+      · simp only [ite_eq_right hdvd, mul_zero]
         exact MeromorphicAt.const 0 0
     have hterm_coeff : ∀ d ∈ Finset.range M, laurentCoeffAt (T d) 0 m
         = if n₀ + (d : ℤ) = (k : ℤ) * m then (k : ℂ) * taylorCoeffAt u 0 d else 0 := by
       intro d _
       simp only [hT_def]
       by_cases hdvd : (k : ℤ) ∣ (n₀ + (d : ℤ))
-      · simp only [if_pos hdvd]
+      · simp only [ite_eq_left hdvd]
         have hk0' : (k : ℤ) ≠ 0 := by exact_mod_cast hk
         have hmono : laurentCoeffAt (fun w : ℂ => w ^ ((n₀ + (d : ℤ)) / (k : ℤ))) 0 m
             = if m = (n₀ + (d : ℤ)) / (k : ℤ) then 1 else 0 := by
@@ -641,12 +641,13 @@ theorem laurentCoeffAt_traceZk (hh : MeromorphicAt h 0) (hk : k ≠ 0) (m : ℤ)
           rw [hfun, laurentCoeffAt_zpow_monomial]
         rw [laurentCoeffAt_const_mul, laurentCoeffAt_const_mul, hmono]
         by_cases hcase : n₀ + (d : ℤ) = (k : ℤ) * m
-        · rw [if_pos hcase, if_pos (by rw [hcase, Int.mul_ediv_cancel_left m hk0']), mul_one]
+        · rw [ite_eq_left hcase,
+            ite_eq_left (by rw [hcase, Int.mul_ediv_cancel_left m hk0']), mul_one]
           ring
-        · rw [if_neg hcase, if_neg (fun hcon => hcase
+        · rw [ite_eq_right hcase, ite_eq_right (fun hcon => hcase
             (by rw [hcon]; exact (Int.mul_ediv_cancel' hdvd).symm)), mul_zero, mul_zero]
-      · simp only [if_neg hdvd, mul_zero]
-        rw [laurentCoeffAt_zero_fun, if_neg]
+      · simp only [ite_eq_right hdvd, mul_zero]
+        rw [laurentCoeffAt_zero_fun, ite_eq_right]
         intro hcon
         exact hdvd ⟨m, hcon⟩
     have hPmero : MeromorphicAt (fun w => ∑ d ∈ Finset.range M, T d w) 0 :=
@@ -660,7 +661,7 @@ theorem laurentCoeffAt_traceZk (hh : MeromorphicAt h 0) (hk : k ≠ 0) (m : ℤ)
           fun w => (w - 0) ^ s' * G w := by
         filter_upwards with w
         rw [sub_zero]
-      rw [laurentCoeffAt_of_eventuallyEq hGan hBpres m, if_neg (by omega : ¬ s' ≤ m)]
+      rw [laurentCoeffAt_of_eventuallyEq hGan hBpres m, ite_eq_right (by omega : ¬ s' ≤ m)]
     -- Final assembly.
     rw [laurentCoeffAt_congr hkey m, laurentCoeffAt_fun_add hPmero hBmero m, hB, add_zero,
       laurentCoeffAt_fun_sum hterm_mero m, Finset.sum_congr rfl hterm_coeff, hRHS]
@@ -681,7 +682,7 @@ theorem laurentCoeffAt_traceZk (hh : MeromorphicAt h 0) (hk : k ≠ 0) (m : ℤ)
           exact_mod_cast hz
         · rintro rfl
           rw [hd₀z]; ring
-      rw [if_pos hcase]
+      rw [ite_eq_left hcase]
       calc ∑ d ∈ Finset.range M,
             (if n₀ + (d : ℤ) = (k : ℤ) * m then (k : ℂ) * taylorCoeffAt u 0 d else 0)
           = ∑ d ∈ Finset.range M,
@@ -690,11 +691,11 @@ theorem laurentCoeffAt_traceZk (hh : MeromorphicAt h 0) (hk : k ≠ 0) (m : ℤ)
         _ = if d₀ ∈ Finset.range M then (k : ℂ) * taylorCoeffAt u 0 d₀ else 0 :=
             Finset.sum_ite_eq' _ _ _
         _ = (k : ℂ) * taylorCoeffAt u 0 d₀ := by
-            rw [if_pos (Finset.mem_range.mpr hd₀M)]
-    · rw [if_neg hcase, mul_zero]
+            rw [ite_eq_left (Finset.mem_range.mpr hd₀M)]
+    · rw [ite_eq_right hcase, mul_zero]
       apply Finset.sum_eq_zero
       intro d _
-      apply if_neg
+      apply ite_eq_right
       intro hcon
       rw [not_le] at hcase
       have hd0 : (0 : ℤ) ≤ (d : ℤ) := Int.natCast_nonneg d

@@ -229,7 +229,7 @@ theorem finalState_oracle (s : Fin (2 ^ n)) :
   rw [← Finset.mul_sum]
   by_cases hys : y = s
   · simp_all
-  · rw [if_neg hys, sum_walshSign_mul_walshSign hys, mul_zero]
+  · rw [ite_eq_right hys, sum_walshSign_mul_walshSign hys, mul_zero]
 
 /-- The final Bernstein-Vazirani joint state, annotated with one oracle query. -/
 def timedFinalJointState (s : Fin (2 ^ n)) : Timed (PureState (n + 1)) :=

@@ -115,7 +115,7 @@ theorem gapVal_eq_record (hr : RecordsContinue r) {N : ℕ} (hN : 2 ≤ N) {n m 
     omega
   refine ⟨i, hmi, hin, ?_⟩
   have hgap : gapVal r N q = (Finset.Icc 1 (max q (N - q))).inf' hne r := by
-    rw [gapVal, dif_pos hne]
+    rw [gapVal, dite_eq_left hne]
   rw [hgap]
   apply le_antisymm
   · exact Finset.inf'_le _ (Finset.mem_Icc.mpr ⟨bestDenom_pos r hr i, hi1⟩)

@@ -226,10 +226,10 @@ theorem tensor_ket (x : Fin (2 ^ m)) (y : Fin (2 ^ n)) :
       exact h (by
         rw [← Equiv.apply_symm_apply (prodEquiv (m := m) (n := n)) i]
         exact congrArg prodEquiv (Prod.ext h1 h2))
-    rw [if_neg h]
+    rw [ite_eq_right h]
     rcases not_and_or.mp h' with h1 | h2
-    · rw [if_neg h1, zero_mul]
-    · rw [if_neg h2, mul_zero]
+    · rw [ite_eq_right h1, zero_mul]
+    · rw [ite_eq_right h2, mul_zero]
 
 theorem norm_tensor (ψ : PureState m) (φ : PureState n) :
     ‖ψ.tensor φ‖ = ‖ψ‖ * ‖φ‖ := by

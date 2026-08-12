@@ -144,7 +144,7 @@ theorem pv_tendsto_of_crossing_limit_asymmetric
       intro t ht
       rw [uIoc_of_le (le_of_lt h_mid_lt)] at ht
       simp only [hF_def]
-      rw [if_neg (not_lt.mpr _)]
+      rw [ite_eq_right (not_lt.mpr _)]
       exact h_near ε hε_pos hε_lt t ⟨le_of_lt ht.1, ht.2⟩
     -- F = (γ t - s)⁻¹ * deriv γ t a.e. on [a, t₀ - δL]
     have hF_left : ∀ᵐ t ∂volume, t ∈ uIoc a (t₀ - δ_left ε) →
@@ -154,7 +154,7 @@ theorem pv_tendsto_of_crossing_limit_asymmetric
       filter_upwards [h_ne] with t ht_ne ht_mem
       rw [uIoc_of_le (le_of_lt h_left_lt)] at ht_mem
       simp only [hF_def]
-      rw [if_pos]
+      rw [ite_eq_left]
       apply h_far_left ε hε_pos hε_lt t
       exact ⟨le_of_lt ht_mem.1,
         lt_of_le_of_ne ht_mem.2 (fun h => ht_ne (Set.mem_singleton_iff.mpr h))⟩

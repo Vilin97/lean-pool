@@ -128,7 +128,7 @@ private lemma integral_fourier_ne_zero (k : ℤ) (hk : k ≠ 0) :
     ∫ t : AddCircle T, (fourier k t : ℂ) ∂AddCircle.haarAddCircle = 0 := by
   have h := congr_fun (fourierCoeff_fourier (T := T) 0) (-k)
   simp only [fourierCoeff, fourier_zero, Pi.single_apply, neg_neg, smul_eq_mul, mul_one] at h
-  rwa [if_neg (by omega)] at h
+  rwa [ite_eq_right (by omega)] at h
 
 /-- Continuous functions on `AddCircle T` are integrable w.r.t. Haar measure. -/
 private lemma addCircle_integrable {f : AddCircle T → ℂ} (hf : Continuous f) :

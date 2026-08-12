@@ -173,7 +173,7 @@ theorem FPT_box (φ : Formula) (n : Nat) :
         single n (single n ⊤ (□φ)) (⊡ (at n ⟷ single n ⊤ (□ φ))) =
           (⊡ (((single n ⊤ (□φ)) ⟷ ((single n ⊤ (□ φ)))))) := by
       clear *-
-      simp only [single, Formula.neg, beq_self_eq_true, if_true, Formula.and.injEq,
+      simp only [single, Formula.neg, beq_self_eq_true, ite_true, Formula.and.injEq,
         Formula.or.injEq, Formula.box.injEq, Formula.diamond.injEq, true_and, and_true,
         and_self]
       constructor
@@ -198,7 +198,7 @@ theorem FPT_diamond (φ : Formula) (n : Nat) :
         single n (single n ⊥ (◇φ)) (⊡ (at n ⟷ single n ⊥ (◇ φ))) =
           (⊡ (((single n ⊥ (◇φ)) ⟷ ((single n ⊥ (◇ φ)))))) := by
       clear *-
-      simp only [single, Formula.neg, beq_self_eq_true, if_true, Formula.and.injEq,
+      simp only [single, Formula.neg, beq_self_eq_true, ite_true, Formula.and.injEq,
         Formula.or.injEq, Formula.box.injEq, Formula.diamond.injEq, true_and, and_true,
         and_self]
       constructor

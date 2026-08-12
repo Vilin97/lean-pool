@@ -253,7 +253,7 @@ private theorem analytic_correction_differentiableOn (S : Finset ℂ) (f : ℂ �
       exact (h_ev.differentiableAt_iff.mpr
         ((h_g_diff_off z ⟨hz, hzS⟩).differentiableAt
           ((hU.sdiff S.finite_toSet.isClosed).mem_nhds ⟨hz, hzS⟩))).differentiableWithinAt
-  · intro z ⟨_, hzS⟩; simp only [if_neg hzS]
+  · intro z ⟨_, hzS⟩; simp only [ite_eq_right hzS]
 
 private theorem image_subset_diff_of_avoids (S : Finset ℂ) (U : Set ℂ)
     (γ : PiecewiseC1Immersion) (h_null : IsNullHomologous γ U)

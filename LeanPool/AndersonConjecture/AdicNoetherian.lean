@@ -673,7 +673,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
       have hcLim_spec : ∀ g, g ∈ genS → ∀ n,
           pc n g ≡ cLim g [SMOD (Mi ^ n • ⊤ : Submodule R (AdicCompletion Mi R))] := by
         intro g hg n
-        simpa only [cLim, dif_pos hg] using (hpc_lim g hg).choose_spec n
+        simpa only [cLim, dite_eq_left hg] using (hpc_lim g hg).choose_spec n
       -- Step 7: L = y₀ + ∑ cLim(g) * g by Hausdorff, hence L ∈ I₀
       suffices hL_eq : L = y₀ + sumG cLim from
         hL_eq ▸ I₀.add_mem hy₀ (hsum_in_I₀ cLim)
@@ -721,12 +721,12 @@ private def adicCompletion_ideal_fg_proof : PLift (
         rcases hg with hg | hg
         · rw [Finset.mem_image] at hg
           obtain ⟨a, ha, rfl⟩ := hg
-          rw [dif_pos ha, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
+          rw [dite_eq_left ha, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
           rw [hlJ_eq a ha]
           exact Ideal.subset_span ha
         · rw [Finset.mem_image] at hg
           obtain ⟨r, hr, rfl⟩ := hg
-          rw [dif_pos hr, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
+          rw [dite_eq_left hr, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
           have hr_pow : r ∈ Mi ^ n0 := hFN_le n0 (hS_F ▸ Ideal.subset_span hr)
           have : (evalₐ Mi n0) (lF r hr) =
             Ideal.Quotient.factorPow Mi (Nat.le_succ n0) (evalₐ Mi (n0 + 1) (lF r hr)) :=

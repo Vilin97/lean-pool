@@ -45,10 +45,10 @@ theorem pairWith_injective (v : ι) : Function.Injective (pairWith v) := by
   intro a b hab
   by_cases ha : a < v <;> by_cases hb : b < v
   · simpa [pairWith, ha, hb] using congrArg Prod.fst hab
-  · simp only [pairWith, ha, hb, if_pos] at hab
+  · simp only [pairWith, ha, hb, ite_eq_left] at hab
     have hav : a = v := congrArg Prod.fst hab
     exact (ne_of_lt ha hav).elim
-  · simp only [pairWith, ha, hb, if_pos] at hab
+  · simp only [pairWith, ha, hb, ite_eq_left] at hab
     have hvb : v = b := congrArg Prod.fst hab
     exact (ne_of_gt hb hvb).elim
   · simpa [pairWith, ha, hb] using congrArg Prod.snd hab
@@ -121,15 +121,15 @@ theorem pairWith_map_injectiveOn_orderedPairs
     Set.InjOn (fun e : κ × κ ↦ pairWith (f e.1) (f e.2)) {e | e.1 < e.2} := by
   intro e he g hg heq
   by_cases heOrder : f e.2 < f e.1 <;> by_cases hgOrder : f g.2 < f g.1
-  · simp only [pairWith, heOrder, hgOrder, if_pos] at heq
+  · simp only [pairWith, heOrder, hgOrder, ite_eq_left] at heq
     apply Prod.ext
     · exact hf (congrArg Prod.snd heq)
     · exact hf (congrArg Prod.fst heq)
-  · simp only [pairWith, heOrder, hgOrder, if_pos] at heq
+  · simp only [pairWith, heOrder, hgOrder, ite_eq_left] at heq
     have heSecond : e.2 = g.1 := hf (congrArg Prod.fst heq)
     have heFirst : e.1 = g.2 := hf (congrArg Prod.snd heq)
     exact ((not_lt_of_ge (heFirst ▸ heSecond ▸ hg.le)) he).elim
-  · simp only [pairWith, heOrder, hgOrder, if_pos] at heq
+  · simp only [pairWith, heOrder, hgOrder, ite_eq_left] at heq
     have heFirst : e.1 = g.2 := hf (congrArg Prod.fst heq)
     have heSecond : e.2 = g.1 := hf (congrArg Prod.snd heq)
     exact ((not_lt_of_ge (heFirst ▸ heSecond ▸ hg.le)) he).elim

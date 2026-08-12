@@ -340,7 +340,7 @@ private theorem soa_mistakes_bounded {X : Type} {C : ConceptClass X Bool}
     rw [SOA_mistakesFrom_cons]
     by_cases hmistake : (SOA X C).predict history x ≠ c x
     · -- SOA makes a mistake: Ldim strictly decreases (M-Potential: φ decreases)
-      rw [if_pos hmistake]
+      rw [ite_eq_left hmistake]
       have hc_vs : c ∈ versionSpace C history := target_in_versionSpace hcC hcons
       have hdecrease := ldim_strict_decrease_on_mistake hc_vs hmistake hfin
       have hcons' := cons_history_append (c := c) (x := x) hcons
@@ -366,7 +366,7 @@ private theorem soa_mistakes_bounded {X : Type} {C : ConceptClass X Bool}
         have ih_result := ih (history ++ [(x, c x)]) hcons' d' hd_new hfin_new
         omega
     · -- SOA predicts correctly: no mistake, φ doesn't decrease but bound holds
-      rw [if_neg hmistake]; simp only [Nat.zero_add]
+      rw [ite_eq_right hmistake]; simp only [Nat.zero_add]
       have hcons' := cons_history_append (c := c) (x := x) hcons
       have hle_new : LittlestoneDim X (versionSpace C (history ++ [(x, c x)])) ≤
           ↑(↑d : WithTop ℕ) := ldim_versionSpace_append_le.trans hd

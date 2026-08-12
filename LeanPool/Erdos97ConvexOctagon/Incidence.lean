@@ -65,7 +65,7 @@ private lemma row_pair_sum (Q : OctagonIncidence) (a v : Vertex) :
           (Q.targets v).erase a := by
       ext b
       simp [and_comm]
-    rw [if_pos ha]
+    rw [ite_eq_left ha]
     simp only [ha, true_and, Finset.sum_boole, hfilter]
     rw [Finset.card_erase_of_mem ha, Q.card_targets]
     norm_num

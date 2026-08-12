@@ -748,7 +748,7 @@ private lemma edge_card_le_of_noLargePartition
     intro v hv
     simp only [Finset.mem_filter]
     refine ⟨h2 v hv, ?_⟩
-    simp only [Finset.filter_singleton, if_pos hv, Finset.card_singleton]
+    simp only [Finset.filter_singleton, ite_eq_left hv, Finset.card_singleton]
   exact le_trans (Finset.card_le_card h3) h1
 
 private lemma vertexSet_card_le_sum_card (edges : Finset (Finset ℕ)) :
@@ -2453,9 +2453,9 @@ theorem thm_main :
       lowerBoundWitness := ?_
       lowerBoundH := ?_ }
   · intro n hn
-    simpa [G, dif_pos hn] using ((A_witnessStrong n hn).toWitnessData).edgeCard
+    simpa [G, dite_eq_left hn] using ((A_witnessStrong n hn).toWitnessData).edgeCard
   · intro n hn
-    simpa [G, dif_pos hn] using ((A_witnessStrong n hn).toWitnessData).noLargePartition
+    simpa [G, dite_eq_left hn] using ((A_witnessStrong n hn).toWitnessData).noLargePartition
   · intro n hn
     have h1 : 1 ≤ n := by omega
     have hV := ((A_witnessStrong n h1).toWitnessData).vertexCard
@@ -2464,7 +2464,7 @@ theorem thm_main :
         25 * (vertexSet (((A_witnessStrong n h1).toWitnessData).edges)).card ≥
           26 * k n := by
       omega
-    simpa [G, dif_pos h1] using hBound
+    simpa [G, dite_eq_left h1] using hBound
   · intro n hn
     have h1 : 1 ≤ n := by omega
     have hA := A_le_H n h1

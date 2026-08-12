@@ -67,7 +67,7 @@ lemma X0_not_mem_conjI :
   have hle1 : ¬ (Finsupp.single (0 : Fin 3) 2 ≤ Finsupp.single (0 : Fin 3) 1) := by
     simp only [Fin.isValue, Finsupp.single_le_iff, Finsupp.single_eq_same,
       Nat.not_ofNat_le_one, not_false_eq_true]
-  rw [if_neg hle1, zero_sub, mul_assoc,
+  rw [ite_eq_right hle1, zero_sub, mul_assoc,
       show (X (1 : Fin 3) : MvPowerSeries (Fin 3) ℂ) =
         monomial (Finsupp.single 1 1) 1 from rfl,
       coeff_monomial_mul] at h2
@@ -76,7 +76,7 @@ lemma X0_not_mem_conjI :
     have := h (1 : Fin 3)
     simp only [Fin.isValue, Finsupp.single_eq_same, ne_eq, one_ne_zero, not_false_eq_true,
       Finsupp.single_eq_of_ne, nonpos_iff_eq_zero] at this
-  rw [if_neg hle2, neg_zero] at h2
+  rw [ite_eq_right hle2, neg_zero] at h2
   exact one_ne_zero h2
 
 /-- Q is not the zero ideal of T. (xbar ≠ 0 since X₀ ∉ conjI.) -/

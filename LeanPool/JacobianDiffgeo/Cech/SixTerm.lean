@@ -673,7 +673,7 @@ theorem exists_realization (_h : D ≤ D') (w : Window D D') :
   have hOc : ∀ q : diffSupp D D', O (q : X) = N q ⊓ compOpens (S'.erase (q : X)) := by
     intro q
     simp only [hOdef]
-    rw [dif_pos q.2, Subtype.coe_eta]
+    rw [dite_eq_left q.2, Subtype.coe_eta]
   have hO : ∀ p ∈ diffSupp D D', p ∈ O p := by
     intro p hp
     rw [show O p = N ⟨p, hp⟩ ⊓ compOpens (S'.erase p) from hOc ⟨p, hp⟩]
@@ -744,7 +744,7 @@ theorem exists_realization (_h : D ≤ D') (w : Window D D') :
         (ψ hk.choose : RS.MeroGermOn X ((chartAt ℂ (hk.choose : X)).source)),
         hmemg i hk⟩ := by
       simp only [hgdef]
-      rw [dif_pos hk]
+      rw [dite_eq_left hk]
     rw [hgi]
     exact hgen hk.choose hk.choose_spec hchoice
   refine ⟨𝒱, g, memLD_of_isAdapted hadapt (B1_le_Z1 D' 𝒱 ⟨g, rfl⟩), ?_, hadapt⟩
@@ -757,7 +757,7 @@ theorem exists_realization (_h : D ≤ D') (w : Window D D') :
       (windowDefect (g i : RS.MeroGermOn X (𝒱.U i : Set X))
         (ψ q : RS.MeroGermOn X ((chartAt ℂ (q : X)).source))).ord (q : X) := by
     rw [hdz, RS.MeroGermOn.ord_zero,
-      if_pos ⟨(𝒱.U i).2.inter (chartAt ℂ (q : X)).open_source, hqi,
+      ite_eq_left ⟨(𝒱.U i).2.inter (chartAt ℂ (q : X)).open_source, hqi,
         mem_chart_source ℂ (q : X)⟩]
     exact le_top
   exact windowDefect_bound_of_mk_eq hqi ((hψ q).trans hψ'.symm) hb0

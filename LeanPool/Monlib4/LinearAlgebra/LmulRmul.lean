@@ -177,7 +177,7 @@ theorem LinearMap.mulLeft_eq_one_or_zero_iff_mulRight_tfae {H₁ : Type _} [Semi
     List.TFAE [LinearMap.mulLeft R x = ite p 1 0,
       LinearMap.mulRight R x = ite p 1 0, x = ite p 1 0] := by
   by_cases h : p
-  · simp_rw [h, if_true, LinearMap.mulLeft_eq_one_iff, LinearMap.mulRight_eq_one_iff]
+  · simp_rw [h, ite_true, LinearMap.mulLeft_eq_one_iff, LinearMap.mulRight_eq_one_iff]
     tfae_finish
   · simp_all
 

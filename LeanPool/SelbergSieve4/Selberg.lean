@@ -73,7 +73,7 @@ local notation3 "γ" => SelbergSieve.selbergWeights s
 
 theorem selbergWeights_eq_zero_of_not_dvd {d : ℕ} (hd : ¬ d ∣ P) :
     γ d = 0 := by
-  rw [selbergWeights, if_neg hd]
+  rw [selbergWeights, ite_eq_right hd]
 
 theorem selbergWeights_eq_zero (d : ℕ) (hd : ¬d ^ 2 ≤ y) :
     γ d = 0 := by
@@ -81,7 +81,7 @@ theorem selbergWeights_eq_zero (d : ℕ) (hd : ¬d ^ 2 ≤ y) :
   split_ifs with h
   · rw [mul_eq_zero_of_right _]
     apply Finset.sum_eq_zero
-    refine fun m hm => if_neg ?_
+    refine fun m hm => ite_eq_right ?_
     intro hyp
     have : (d^2:ℝ) ≤ (d*m)^2 := by
       norm_cast;
@@ -96,7 +96,7 @@ theorem selbergWeights_mul_mu_nonneg (d : ℕ) (hdP : d ∣ P) :
   by
   have := s.selbergBoundingSum_nonneg
   dsimp only [selbergWeights]
-  rw [if_pos hdP]; rw [mul_assoc]
+  rw [ite_eq_left hdP]; rw [mul_assoc]
   trans ((μ d :ℝ)^2 * (ν d)⁻¹ * g d * S⁻¹ * ∑ m ∈ divisors P,
           if (d * m) ^ 2 ≤ y ∧ Coprime m d then g m else 0)
   swap
@@ -125,7 +125,7 @@ lemma sum_mul_subst (k n : ℕ) {f : ℕ → ℝ} (h : ∀ l, l ∣ n → ¬ k �
   swap
   · rw [sum_eq_zero, sum_eq_zero]
     · rintro m _
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro h
       apply hkn
       exact (Nat.dvd_mul_right k m).trans h
@@ -138,9 +138,9 @@ lemma sum_mul_subst (k n : ℕ) {f : ℕ → ℝ} (h : ∀ l, l ∣ n → ¬ k �
     · rw [h l (dvd_of_mem_divisors hl) hkl, sum_eq_zero]
       simp_all
     rw [sum_eq_single (l/k)]
-    · rw[if_pos]; rw [Nat.mul_div_cancel' hkl]
+    · rw[ite_eq_left]; rw [Nat.mul_div_cancel' hkl]
     · intro m hmn hmlk
-      apply if_neg; revert hmlk; contrapose!; intro hlkm
+      apply ite_eq_right; revert hmlk; contrapose!; intro hlkm
       rw [hlkm, mul_comm, Nat.mul_div_cancel]
       aesopDiv
     · contrapose!; intro _
@@ -155,14 +155,14 @@ theorem selbergWeights_eq_dvds_sum (d : ℕ) :
         ∑ l ∈ divisors P, if d ∣ l ∧ l ^ 2 ≤ y then g l else 0 := by
   by_cases h_dvd : d ∣ P
   swap
-  · dsimp only [selbergWeights]; rw [if_neg h_dvd]
+  · dsimp only [selbergWeights]; rw [ite_eq_right h_dvd]
     rw [sum_eq_zero]
     · ring
     · intro l hl; rw [mem_divisors] at hl
-      rw [if_neg]; push Not; intro h
+      rw [ite_eq_right]; push Not; intro h
       exfalso; exact h_dvd (dvd_trans h hl.left)
   dsimp only [selbergWeights]
-  rw [if_pos h_dvd]
+  rw [ite_eq_left h_dvd]
   repeat rw [mul_sum]
   -- change of variables l=m*d
   apply symm
@@ -230,7 +230,7 @@ local notation3 "μ⁺" => SelbergSieve.selbergMuPlus s
 
 theorem weight_one_of_selberg : γ 1 = 1 := by
   dsimp only [selbergWeights]
-  rw [if_pos (one_dvd P), s.nu_mult.left, s.selbergTerms_mult.left]
+  rw [ite_eq_left (one_dvd P), s.nu_mult.left, s.selbergTerms_mult.left]
   -- rw [ArithmeticFunction.moebius_apply_one, Int.cast_one]
   simp only [inv_one, mul_one, isUnit_one, IsUnit.squarefree, moebius_apply_of_squarefree,
     cardFactors_one, _root_.pow_zero, Int.cast_one, selbergBoundingSum, cast_pow, one_mul,
@@ -329,7 +329,7 @@ theorem selbergBoundingSum_ge {d : ℕ} (hdP : d ∣ P) :
     split_ifs with hkd
     swap
     · rw [sum_eq_zero]; intro l _
-      rw [if_neg]
+      rw [ite_eq_right]
       push Not; intro h; exfalso
       rw [h] at hkd
       exact hkd <| Nat.gcd_dvd_left d l
@@ -343,7 +343,7 @@ theorem selbergBoundingSum_ge {d : ℕ} (hdP : d ∣ P) :
         rw [coprime_comm]
         apply h.2.coprime_dvd_right hkd
     · intro l _ hkl
-      apply if_neg
+      apply ite_eq_right
       push Not; intro h; exfalso
       rw [h] at hkl
       exact hkl (Nat.gcd_dvd_right d l)
@@ -383,7 +383,7 @@ theorem selbergBoundingSum_ge {d : ℕ} (hdP : d ∣ P) :
         moebius_sq_eq_one_of_squarefree]
       · ring
       · exact Squarefree.squarefree_of_dvd hdP s.prodPrimes_squarefree
-    dsimp only [selbergWeights]; rw [if_pos hdP]
+    dsimp only [selbergWeights]; rw [ite_eq_left hdP]
     ring
 
 theorem selberg_bound_weights (d : ℕ) : |γ d| ≤ 1 := by
@@ -420,10 +420,10 @@ theorem selberg_bound_muPlus (n : ℕ) (hn : n ∈ divisors P) :
     rw [apply_ite abs, abs_zero, abs_mul]
     simp only [f]
     by_cases h : n = d1.lcm d2
-    · rw [if_pos h, if_pos h]
+    · rw [ite_eq_left h, ite_eq_left h]
       apply mul_le_one₀ (s.selberg_bound_weights d1) (abs_nonneg <| γ d2)
         (s.selberg_bound_weights d2)
-    · rw [if_neg h, if_neg h]
+    · rw [ite_eq_right h, ite_eq_right h]
   · rw [← Finset.sum_product']
   · rw [← sum_filter, Finset.sum_const, nsmul_one]
   · rw [← Nat.card_pair_lcm_eq (s.squarefree_of_mem_divisors_prodPrimes hn)]

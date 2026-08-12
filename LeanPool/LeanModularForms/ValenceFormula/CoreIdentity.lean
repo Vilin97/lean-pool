@@ -262,7 +262,7 @@ private lemma rho_singleton_sum_eq (S : Finset UpperHalfPlane)
     exact ⟨hS_complete _ ellipticPointRhoPlusOne_mem_fd
       (by rwa [ord_rho_plus_one_eq_ord_rho_via_vAdd]),
       ellipticPointRhoPlusOne_norm, ellipticPointRhoPlusOne_re_pos⟩
-  rw [if_pos hρ1_in_RA, if_pos hρ_in_LA, Finset.sum_singleton, Finset.sum_singleton]
+  rw [ite_eq_left hρ1_in_RA, ite_eq_left hρ_in_LA, Finset.sum_singleton, Finset.sum_singleton]
   exact_mod_cast congr_arg (Int.cast (R := ℂ)) (ord_rho_plus_one_eq_ord_rho_via_vAdd f)
 
 /-- Non-elliptic right-arc ord sum equals non-elliptic left-arc ord sum. -/
@@ -515,14 +515,14 @@ theorem valence_formula_orbit_sum (S : Finset UpperHalfPlane) (hS : ∀ p ∈ S,
     rw [h_ne_int]; apply Finset.sum_congr rfl
     intro s hs
     simp only [INT, Finset.mem_filter] at hs
-    rw [if_pos ⟨hs.2.2.2.2.1, hs.2.2.2.2.2⟩, one_mul]
+    rw [ite_eq_left ⟨hs.2.2.2.2.1, hs.2.2.2.2.2⟩, one_mul]
   have h_bdry_sum :
       ∑ x ∈ BDRY,
         (if ‖(x : ℂ)‖ > 1 ∧ |(x : ℂ).re| < 1/2 then (1 : ℂ) else 1/2) *
           ↑(orderOfVanishingAt' (⇑f) x) =
       (1/2 : ℂ) * ∑ x ∈ BDRY, (orderOfVanishingAt' (⇑f) x : ℂ) := by
     rw [Finset.mul_sum]; apply Finset.sum_congr rfl; intro s hs
-    rw [if_neg (show ¬(‖(s : ℂ)‖ > 1 ∧ |(s : ℂ).re| < 1/2) from
+    rw [ite_eq_right (show ¬(‖(s : ℂ)‖ > 1 ∧ |(s : ℂ).re| < 1/2) from
       (Finset.mem_filter.mp hs).2)]
   linear_combination h_int_sum + h_bdry_sum + h_bdry_identity - h_split
 

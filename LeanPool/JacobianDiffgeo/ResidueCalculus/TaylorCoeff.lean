@@ -166,12 +166,12 @@ theorem taylorCoeffAt_sub_pow_mul (hg : AnalyticAt ℂ g z₀) (d j : ℕ) :
     taylorCoeffAt (fun z => (z - z₀) ^ d * g z) z₀ j
       = if j < d then 0 else taylorCoeffAt g z₀ (j - d) := by
   induction d generalizing j with
-  | zero => simp only [pow_zero, one_mul, Nat.not_lt_zero, if_false, Nat.sub_zero]
+  | zero => simp only [pow_zero, one_mul, Nat.not_lt_zero, ite_false, Nat.sub_zero]
   | succ d ih =>
     cases j with
     | zero =>
       simp only [taylorCoeffAt_zero_apply, sub_self, zero_pow (Nat.succ_ne_zero d), zero_mul,
-        Nat.zero_lt_succ, if_true]
+        Nat.zero_lt_succ, ite_true]
     | succ j =>
       have hfun : (fun z => (z - z₀) ^ (d + 1) * g z)
           = fun z => (z - z₀) * ((z - z₀) ^ d * g z) := by
@@ -220,7 +220,7 @@ theorem AnalyticAt.exists_taylor_remainder (hg : AnalyticAt ℂ g z₀) (m : ℕ
   have hzero : ∀ k < m, (Function.swap dslope z₀)^[k] G z₀ = 0 := by
     intro k hk
     have h0 := hGcoeff k
-    rw [if_pos hk, sub_self] at h0
+    rw [ite_eq_left hk, sub_self] at h0
     exact h0
   have h1 : (fun z => (z - z₀) ^ m * (Function.swap dslope z₀)^[m] G z) = G := by
     funext z
@@ -230,7 +230,7 @@ theorem AnalyticAt.exists_taylor_remainder (hg : AnalyticAt ℂ g z₀) (m : ℕ
   · intro j
     have h2 := taylorCoeffAt_sub_pow_mul (AnalyticAt.iterate_dslope hGan m) m (j + m)
     rw [h1, hGcoeff (j + m)] at h2
-    simp only [if_neg (show ¬ j + m < m by omega), sub_zero, Nat.add_sub_cancel] at h2
+    simp only [ite_eq_right (show ¬ j + m < m by omega), sub_zero, Nat.add_sub_cancel] at h2
     exact h2.symm
   · intro z
     have hpt := congrFun h1 z

@@ -287,7 +287,7 @@ theorem rootedAdjoint_moves (r : G) (p : Player) (g : G) :
       if IsEnd (-p) g then {r} else (rootedAdjoint r ·) '' moves (-p) g := by
   rw [rootedAdjoint]
   by_cases hl : IsEnd .left g <;> by_cases hr : IsEnd .right g <;> cases p <;>
-    simp only [hl, hr, and_true, and_false, and_self, if_true, if_false,
+    simp only [hl, hr, and_true, and_false, and_self, ite_true, ite_false,
       Player.neg_left, Player.neg_right, leftMoves_ofSets, rightMoves_ofSets,
       Set.image_eq_range]
 

@@ -41,21 +41,21 @@ private theorem exists_total_nearest_projection
     ?_, ?_, ?_⟩
   · intro x hx
     dsimp only
-    rw [dif_pos hx]
+    rw [dite_eq_left hx]
     exact (hTub.uniqueProj x hx).choose_spec.1
   · intro x hxS
     dsimp only
     have hxU : x ∈ U := hTub.subset hxS
-    rw [dif_pos hxU]
+    rw [dite_eq_left hxU]
     have hself : x ∈ S ∧ dist x x = Metric.infDist x S :=
       ⟨hxS, by rw [dist_self]; exact (Metric.infDist_zero_of_mem hxS).symm⟩
     exact ((hTub.uniqueProj x hxU).choose_spec.2 x hself).symm
   · intro x
     dsimp only
     by_cases hx : x ∈ U
-    · rw [dif_pos hx]
+    · rw [dite_eq_left hx]
       exact (hTub.uniqueProj x hx).choose_spec.1.1
-    · rw [dif_neg hx]
+    · rw [dite_eq_right hx]
       exact hS_ne.some_mem
 
 /-- At every global minimizer, the gradient vanishes. -/
@@ -215,7 +215,7 @@ private theorem open_neighborhood_from_local_balls
   let α' : E d → ℝ := fun m => if hm : m ∈ S then α m hm else 1
   have hα'_spec : ∀ m (hm : m ∈ S), α' m = α m hm := by
     intro m hm
-    simp only [α', dif_pos hm]
+    simp only [α', dite_eq_left hm]
   refine ⟨⋃ m ∈ S, Metric.ball m (α' m), ?_, ?_, ?_, ?_⟩
   · exact isOpen_biUnion (fun m _ => Metric.isOpen_ball)
   · intro m hm

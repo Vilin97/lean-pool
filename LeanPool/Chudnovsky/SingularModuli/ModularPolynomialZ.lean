@@ -143,9 +143,9 @@ theorem exists_intPoly_of_coeff_mem_bot {P : Polynomial ℂ}
   ext k
   rw [coeff_map, hQcoeff]
   by_cases hk : k < P.natDegree + 1
-  · rw [if_pos hk, eq_intCast (Int.castRingHom ℂ) (c k)]
+  · rw [ite_eq_left hk, eq_intCast (Int.castRingHom ℂ) (c k)]
     exact (hc k).symm
-  · rw [if_neg hk, map_zero]
+  · rw [ite_eq_right hk, map_zero]
     exact coeff_eq_zero_of_natDegree_lt (by omega)
 
 /-! ## (B6) The modular polynomial `Φ_m ∈ ℤ[Y][X]`
@@ -198,9 +198,9 @@ theorem exists_PhiZ [Fact m.Prime]
   ext k
   rw [specializeZ, coe_mapRingHom, coeff_map, hPcoeff]
   by_cases hk : k < m + 2
-  · rw [if_pos hk, coe_eval₂RingHom]
+  · rw [ite_eq_left hk, coe_eval₂RingHom]
     exact hQ k τ
-  · rw [if_neg hk, map_zero]
+  · rw [ite_eq_right hk, map_zero]
     exact coeff_eq_zero_of_natDegree_lt (lt_of_le_of_lt (orbitPoly_natDegree_le τ) (by omega))
 
 /-! ## Evaluation of the orbit polynomial and the root bridge
@@ -354,7 +354,7 @@ lemma goodQ_one {h : ℝ} (_hh : 0 < h) {R : Subring ℂ} : GoodQ h R (fun _ : �
     rw [h1, qExpansion_one]
     rcases eq_or_ne n 0 with rfl | hn
     · simp
-    · rw [PowerSeries.coeff_one, if_neg hn]; exact R.zero_mem
+    · rw [PowerSeries.coeff_one, ite_eq_right hn]; exact R.zero_mem
 
 lemma goodQ_smul {h : ℝ} (hh : 0 < h) {R : Subring ℂ} {g : ℍ → ℂ} (hg : GoodQ h R g)
     {c : ℂ} (hc : c ∈ R) : GoodQ h R (fun τ ↦ c * g τ) where
@@ -429,8 +429,8 @@ lemma goodQ_q (R : Subring ℂ) : GoodQ 1 R (fun τ : ℍ ↦ q τ) where
       (periodic_comp_ofComplex_of_vadd q_vadd_one) mdifferentiable_q isBoundedAtImInfty_q hHS n
     rw [← this]
     by_cases hn : n = 1
-    · rw [if_pos hn]; exact R.one_mem
-    · rw [if_neg hn]; exact R.zero_mem
+    · rw [ite_eq_left hn]; exact R.one_mem
+    · rw [ite_eq_right hn]; exact R.zero_mem
 
 lemma goodQ_jq (R : Subring ℂ) : GoodQ 1 R (fun τ : ℍ ↦ j τ * q τ) where
   per := periodic_comp_ofComplex_of_vadd (fun τ ↦ by rw [j_vadd_one, q_vadd_one])
@@ -691,8 +691,8 @@ lemma goodQ_w [NeZero m] (R : Subring ℂ) : GoodQ (m : ℝ) R (fun τ : ℍ ↦
     isBoundedAtImInfty_wParam hHS n
   rw [← this]
   by_cases hn : n = 1
-  · rw [if_pos hn]; exact R.one_mem
-  · rw [if_neg hn]; exact R.zero_mem
+  · rw [ite_eq_left hn]; exact R.one_mem
+  · rw [ite_eq_right hn]; exact R.zero_mem
 
 lemma goodQ_G [NeZero m] (i : Option (ZMod m)) :
     GoodQ (m : ℝ) RI (fun τ : ℍ ↦ f m i τ * wParam m τ ^ (m ^ 2)) := by

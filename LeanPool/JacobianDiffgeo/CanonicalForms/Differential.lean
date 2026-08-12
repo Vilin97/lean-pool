@@ -105,11 +105,11 @@ open scoped Classical in
 (no poles). `compat` is exactly `coeffIn_trans` — no new work. -/
 noncomputable def ofForm1 (η : Form1 X) : MFormData X where
   coeffAt x z := if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) η z else 0
-  coeffAt_zero_off x z hz := if_neg hz
+  coeffAt_zero_off x z hz := ite_eq_right hz
   meromorphicOn_coeffAt x := by
     have hf : MeromorphicOn (coeffIn (chartAt ℂ x) η) (chartAt ℂ x).target :=
       (η.analyticOnNhd_coeffIn (chart_mem_maximalAtlas x)).meromorphicOn
-    exact hf.congr (fun z hz => (if_pos hz).symm) (chartAt ℂ x).open_target
+    exact hf.congr (fun z hz => (ite_eq_left hz).symm) (chartAt ℂ x).open_target
   compat x y z hz := by
     obtain ⟨p, hp, rfl⟩ := hz
     have hyt : chartAt ℂ y p ∈ (chartAt ℂ y).target := (chartAt ℂ y).map_source hp.2
@@ -121,7 +121,7 @@ noncomputable def ofForm1 (η : Form1 X) : MFormData X where
       deriv (⇑(chartAt ℂ x) ∘ ⇑(chartAt ℂ y).symm) (chartAt ℂ y p) *
         (if chartAt ℂ x ((chartAt ℂ y).symm (chartAt ℂ y p)) ∈ (chartAt ℂ x).target then
           coeffIn (chartAt ℂ x) η (chartAt ℂ x ((chartAt ℂ y).symm (chartAt ℂ y p))) else 0)
-    rw [if_pos hyt, if_pos hxt]
+    rw [ite_eq_left hyt, ite_eq_left hxt]
     exact coeffIn_trans (chart_mem_maximalAtlas x) (chart_mem_maximalAtlas y) η ⟨p, hp, rfl⟩
 
 open scoped Classical in
@@ -130,20 +130,20 @@ theorem ofForm1_add (η η' : Form1 X) : ofForm1 (η + η') = ofForm1 η + ofFor
   change (if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) (η + η') z else 0) =
     (if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) η z else 0) +
       (if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) η' z else 0)
-  rw [if_pos hz, if_pos hz, if_pos hz, coeffIn_add]
+  rw [ite_eq_left hz, ite_eq_left hz, ite_eq_left hz, coeffIn_add]
 
 open scoped Classical in
 theorem ofForm1_smul (c : ℂ) (η : Form1 X) : ofForm1 (c • η) = c • ofForm1 η := by
   ext x z hz
   change (if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) (c • η) z else 0) =
     c * (if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) η z else 0)
-  rw [if_pos hz, if_pos hz, coeffIn_smul]
+  rw [ite_eq_left hz, ite_eq_left hz, coeffIn_smul]
 
 open scoped Classical in
 theorem ofForm1_zero : ofForm1 (0 : Form1 X) = 0 := by
   ext x z hz
   change (if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) (0 : Form1 X) z else 0) = 0
-  rw [if_pos hz, coeffIn_zero]
+  rw [ite_eq_left hz, coeffIn_zero]
 
 /-- The holomorphic-to-meromorphic bridge as a `ℂ`-linear map (item 3(d) of the task brief). -/
 noncomputable def _root_.RS.Form1.toMFormData : Form1 X →ₗ[ℂ] MFormData X where
@@ -156,7 +156,7 @@ noncomputable def _root_.RS.Form1.toMFormData : Form1 X →ₗ[ℂ] MFormData X 
 theorem ofForm1_ord_nonneg (η : Form1 X) (x : X) : 0 ≤ (ofForm1 η).ord x := by
   have heq : (ofForm1 η).coeffAt x =ᶠ[nhds (chartAt ℂ x x)] coeffIn (chartAt ℂ x) η := by
     filter_upwards [(chartAt ℂ x).open_target.mem_nhds (mem_chart_target ℂ x)] with z hz
-    exact if_pos hz
+    exact ite_eq_left hz
   change 0 ≤ meromorphicOrderAt ((ofForm1 η).coeffAt x) (chartAt ℂ x x)
   rw [meromorphicOrderAt_congr (heq.filter_mono nhdsWithin_le_nhds)]
   exact (η.analyticAt_coeffAt x).meromorphicOrderAt_nonneg
@@ -200,7 +200,7 @@ open scoped Classical in
 `deriv_comp_chart_congr` instantiated at `g := f.holoRepr`. -/
 noncomputable def d (f : ℳ X) : MFormData X where
   coeffAt x z := if z ∈ (chartAt ℂ x).target then deriv (f.holoRepr ∘ (chartAt ℂ x).symm) z else 0
-  coeffAt_zero_off x z hz := if_neg hz
+  coeffAt_zero_off x z hz := ite_eq_right hz
   meromorphicOn_coeffAt x := by
     have hh : MeromorphicOn (deriv (f.holoRepr ∘ (chartAt ℂ x).symm)) (chartAt ℂ x).target := by
       intro z₀ hz₀
@@ -211,7 +211,7 @@ noncomputable def d (f : ℳ X) : MFormData X where
       have hmerof : MeromorphicAtX f.holoRepr ((chartAt ℂ x).symm z₀) :=
         MeroGermOn.meromorphicOnX_holoRepr isOpen_univ f _ (mem_univ _)
       exact (hiff.mp hmerof).deriv
-    exact hh.congr (fun z hz => (if_pos hz).symm) (chartAt ℂ x).open_target
+    exact hh.congr (fun z hz => (ite_eq_left hz).symm) (chartAt ℂ x).open_target
   compat x y z hz := by
     obtain ⟨p, hp, rfl⟩ := hz
     have hyt : chartAt ℂ y p ∈ (chartAt ℂ y).target := (chartAt ℂ y).map_source hp.2
@@ -224,11 +224,11 @@ noncomputable def d (f : ℳ X) : MFormData X where
         (if chartAt ℂ x ((chartAt ℂ y).symm (chartAt ℂ y p)) ∈ (chartAt ℂ x).target then
           deriv (f.holoRepr ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x ((chartAt ℂ y).symm
             (chartAt ℂ y p))) else 0)
-    rw [if_pos hyt, if_pos hxt]
+    rw [ite_eq_left hyt, ite_eq_left hxt]
     exact deriv_comp_chart_congr (chart_mem_maximalAtlas x) (chart_mem_maximalAtlas y) ⟨p, hp, rfl⟩
 
 theorem coeffAt_d (f : ℳ X) (x : X) {z : ℂ} (hz : z ∈ (chartAt ℂ x).target) :
-    (d f).coeffAt x z = deriv (f.holoRepr ∘ ⇑(chartAt ℂ x).symm) z := if_pos hz
+    (d f).coeffAt x z = deriv (f.holoRepr ∘ ⇑(chartAt ℂ x).symm) z := ite_eq_left hz
 
 /-- `d` of a constant is `0` (no poles at all, hence no junk subtlety). -/
 theorem d_const (c : ℂ) : d (algebraMap ℂ (ℳ X) c) = 0 := by
@@ -340,10 +340,10 @@ theorem ofForm1_injective : Function.Injective (ofForm1 : Form1 X → MForm X) :
     filter_upwards [hEqv x, htarget] with z hz hzt
     have hL : (MFormData.ofForm1 η).coeffAt x z = coeffIn (chartAt ℂ x) η z := by
       change (if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) η z else 0) = _
-      rw [if_pos hzt]
+      rw [ite_eq_left hzt]
     have hR : (MFormData.ofForm1 η').coeffAt x z = coeffIn (chartAt ℂ x) η' z := by
       change (if z ∈ (chartAt ℂ x).target then coeffIn (chartAt ℂ x) η' z else 0) = _
-      rw [if_pos hzt]
+      rw [ite_eq_left hzt]
     rw [← hL, ← hR]
     exact hz
   have hη : Tendsto (coeffIn (chartAt ℂ x) η) (𝓝[≠] (chartAt ℂ x x))
@@ -487,7 +487,7 @@ theorem d_add (f g : ℳ X) : d (f + g) = d f + d g := by
       else 0) =
     (if z ∈ (chartAt ℂ x).target then deriv (f.holoRepr ∘ ⇑(chartAt ℂ x).symm) z else 0) +
       (if z ∈ (chartAt ℂ x).target then deriv (g.holoRepr ∘ ⇑(chartAt ℂ x).symm) z else 0)
-  rw [if_pos hz, if_pos hz, if_pos hz, hdz]
+  rw [ite_eq_left hz, ite_eq_left hz, ite_eq_left hz, hdz]
   have hsplit : (f.holoRepr + g.holoRepr) ∘ ⇑(chartAt ℂ x).symm =
       (f.holoRepr ∘ ⇑(chartAt ℂ x).symm) + (g.holoRepr ∘ ⇑(chartAt ℂ x).symm) := rfl
   rw [hsplit, deriv_add hfz.differentiableAt hgz.differentiableAt]
@@ -515,7 +515,7 @@ theorem resAt_dlog (f : ℳ X) (x : X) :
     simp only [Function.comp_apply, Pi.inv_apply] at hzinv
     change f⁻¹.holoRepr ((chartAt ℂ x).symm z) *
         (if z ∈ (chartAt ℂ x).target then deriv (f.holoRepr ∘ ⇑(chartAt ℂ x).symm) z else 0) = _
-    rw [if_pos hz, hzinv]
+    rw [ite_eq_left hz, hzinv]
     show (f.holoRepr ((chartAt ℂ x).symm z))⁻¹ * deriv (f.holoRepr ∘ ⇑(chartAt ℂ x).symm) z =
       deriv (f.holoRepr ∘ ⇑(chartAt ℂ x).symm) z / (f.holoRepr ∘ ⇑(chartAt ℂ x).symm) z
     rw [div_eq_mul_inv, mul_comm]

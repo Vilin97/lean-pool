@@ -190,7 +190,7 @@ lemma alternatingWord_reverse :
     simp only [List.concat_eq_append, List.reverse_append, List.reverse_singleton,
       List.singleton_append]
     rw [h]
-    simp only [alternatingWord_succ', Nat.not_even_bit1, even_two_mul, if_false, if_true]
+    simp only [alternatingWord_succ', Nat.not_even_bit1, even_two_mul, ite_false, ite_true]
 
 instance instMul : Mul (cs.Reflection × ZMod 2 → cs.Reflection × ZMod 2) where
   mul := fun f g => f ∘ g
@@ -277,13 +277,13 @@ lemma permutationMap_ofList_mk_2 (l : List B) :
     · have lhs : cs.simple i = cs.wordProd l * t.1 * (cs.wordProd l)⁻¹ := by
         rw [← h']
         simp [mul_assoc]
-      rw [if_pos lhs, if_pos h']
+      rw [ite_eq_left lhs, ite_eq_left h']
     · have lhs_ne : ¬cs.simple i = cs.wordProd l * t.1 * (cs.wordProd l)⁻¹ := by
         intro h''
         apply h'
         rw [h'']
         simp [mul_assoc]
-      rw [if_neg lhs_ne, if_neg h']
+      rw [ite_eq_right lhs_ne, ite_eq_right h']
 
 lemma permutationMap_ofList_mk (l : List B) (t : cs.Reflection) (z : ZMod 2) :
   (permutationMapOfList cs l ⟨t,z⟩) = ⟨cs.conjOfReflection t (π l),
@@ -304,10 +304,10 @@ theorem permutationMap_isLiftable : M.IsLiftable (cs.permutationMap) := by
       have : 2 * (p + 1) = 2 * p + 1 + 1 := by ring_nf
       rw[this]
       rw[alternatingWord_succ']
-      rw [if_neg (Nat.not_even_bit1 p)]
+      rw [ite_eq_right (Nat.not_even_bit1 p)]
       rw[permutationMapOfList]
       rw[alternatingWord_succ']
-      rw [if_pos (even_two_mul p)]
+      rw [ite_eq_left (even_two_mul p)]
       rw[permutationMapOfList]
       simp[mul_assoc]
   rw[h (M i j)]
@@ -472,13 +472,13 @@ lemma permutationMap_lift_of_reflection (t : cs.Reflection) : ∀ (z : ZMod 2),
                 cs.simple i := by
           rw [h']
           simp
-        rw [if_pos first_eq]
+        rw [ite_eq_left first_eq]
         have : cs.simple i = cs.wordProd l * cs.simple p * (cs.wordProd l)⁻¹ := by
           apply (mul_right_inj (cs.simple i)).mpr at h'
           simp only[mul_assoc, mul_one] at h'
           rw[← h']
           simp[mul_assoc]
-        rw [if_pos this]
+        rw [ite_eq_left this]
         simp[ZMod]
         rfl
       · have first_ne :
@@ -494,7 +494,7 @@ lemma permutationMap_lift_of_reflection (t : cs.Reflection) : ∀ (z : ZMod 2),
           apply h'
           have hmul := congrArg (fun x => cs.simple i * x) h''
           simpa [mul_assoc, cs.simple_mul_simple_self] using hmul.symm
-        rw [if_neg first_ne, if_neg second_ne]
+        rw [ite_eq_right first_ne, ite_eq_right second_ne]
         simp
 
 lemma isLeftInversion_iff_parityReflectionOccurrences_eq_one (l : List B) (t : cs.Reflection) :

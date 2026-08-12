@@ -164,7 +164,7 @@ theorem dstar13 : delta astar 13 = (7 : ℝ) / 47 := by
 theorem nnDist_eq_inf (α : Fin 2 → ℝ) {q : ℕ} (hq : q ≤ 13)
     (hne : (Finset.Icc 1 (max q (13 - q))).Nonempty) :
     nnDist α 13 q = (Finset.Icc 1 (max q (13 - q))).inf' hne (fun n => delta α (n : ℤ)) := by
-  rw [← gapVal_eq_nnDist α (by norm_num) hq, gapVal, dif_pos hne]; rfl
+  rw [← gapVal_eq_nnDist α (by norm_num) hq, gapVal, dite_eq_left hne]; rfl
 
 /-- **`card ≥ 5` from the four record drops.** If the defect drops strictly below the whole
 preceding

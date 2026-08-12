@@ -117,13 +117,13 @@ omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem T.mk_apply_mem {D : RS.Divisor X} {S : Finset X} {x : ∀ p : (S : Set X), TailAt (p : X) D}
     {p : X} (hp : p ∈ S) : T.mk D S x p = x ⟨p, hp⟩ := by
   unfold T.mk
-  rw [DFinsupp.mk_apply, dif_pos hp]
+  rw [DFinsupp.mk_apply, dite_eq_left hp]
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem T.mk_apply_not_mem {D : RS.Divisor X} {S : Finset X}
     {x : ∀ p : (S : Set X), TailAt (p : X) D} {p : X} (hp : p ∉ S) : T.mk D S x p = 0 := by
   unfold T.mk
-  rw [DFinsupp.mk_apply, dif_neg hp]
+  rw [DFinsupp.mk_apply, dite_eq_right hp]
 
 /-! ### `windowToT` (D4): the finite skyscraper embeds in the tail space -/
 

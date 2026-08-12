@@ -136,7 +136,7 @@ lemma injective_pushoutInr' : Function.Injective <| pushoutInr' f g := by
       have hgx : g x ∈ Set.range g := Set.mem_range_self x
       simp only [hom_comp, hom_ofHom, ContinuousMap.const_comp, ContinuousMap.comp_apply,
         ContinuousMap.const_apply, ContinuousMap.coe_mk, pY, pZ]
-      rw [dif_neg (not_not.mpr hgx)] )
+      rw [dite_eq_right (not_not.mpr hgx)] )
     let inr' := (pushout.inr f g).hom.restrict {z | z ∉ Set.range g}
     change Function.Injective inr'
     have : pYZ.hom ∘ inr' = ContinuousMap.id _ := by
@@ -147,7 +147,7 @@ lemma injective_pushoutInr' : Function.Injective <| pushoutInr' f g := by
       change (pYZ.hom ((pushout.inr f g).hom z) : Z) = _
       have hfinal : (pushout.inr f g ≫ pYZ).hom z = (⟨z, hz⟩ : {z | z ∉ Set.range g}) := by
         rw [heq]
-        exact dif_pos hz
+        exact dite_eq_left hz
       exact congrArg Subtype.val hfinal
     have : Function.Injective (pYZ.hom ∘ inr') := by
       rw [this]
@@ -203,7 +203,7 @@ lemma pushoutInr_neq_pushoutInl_of_mem_compl_range :
       have hr : (pushout.inr f g ≫ pYZ).hom z = (⟨true⟩ : ULift Bool) := by
         rw [pushout.inr_desc]
         change (if _ : z ∉ Set.range g then (⟨true⟩ : ULift Bool) else ⟨false⟩) = ⟨true⟩
-        exact dif_pos hz
+        exact dite_eq_left hz
       change (pushout.inr f g ≫ pYZ).hom z ≠ (pushout.inl f g ≫ pYZ).hom y
       rw [hl, hr]
       decide

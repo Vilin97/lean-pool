@@ -140,14 +140,14 @@ noncomputable def rootS (a b : ℕ) (f : ι) : ι :=
 
 lemma rootS_mem_containersS {a b : ℕ} {f : ι} (hf : f ∈ Sstrict fam a b) :
     rootS fam a b f ∈ containersS fam a b f := by
-  unfold rootS; rw [dif_pos hf]
+  unfold rootS; rw [dite_eq_left hf]
   exact (Finset.exists_max_image (containersS fam a b f) (fun g => fam.hi g - fam.lo g)
     (containersS_nonempty fam hf)).choose_spec.1
 
 lemma rootS_max {a b : ℕ} {f : ι} (hf : f ∈ Sstrict fam a b) :
     ∀ g ∈ containersS fam a b f,
       fam.hi g - fam.lo g ≤ fam.hi (rootS fam a b f) - fam.lo (rootS fam a b f) := by
-  unfold rootS; rw [dif_pos hf]
+  unfold rootS; rw [dite_eq_left hf]
   exact (Finset.exists_max_image (containersS fam a b f) (fun g => fam.hi g - fam.lo g)
     (containersS_nonempty fam hf)).choose_spec.2
 
@@ -597,7 +597,7 @@ noncomputable def loV [NeZero (d * m)] (P : Finset (Finset (ZMod (d * m))))
 lemma loV_eq [NeZero (d * m)] {P : Finset (Finset (ZMod (d * m)))} {x : ZMod (d * m)}
     (hx : x ∈ T P) :
     loV P x = (predIn P x hx).val / m := by
-  unfold loV; rw [dif_pos hx]
+  unfold loV; rw [dite_eq_left hx]
 
 /-- The survivor's value decomposes as `colV + hiV*m`. -/
 lemma top_val_eq {x : ZMod (d * m)} : x.val = colV x + hiV x * m := by

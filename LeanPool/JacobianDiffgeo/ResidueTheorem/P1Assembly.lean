@@ -358,7 +358,7 @@ theorem sum_resAt_eq_zero (Θ : RS.MForm (OnePoint ℂ)) : ∑ᶠ y, Θ.resAt y 
         exact_mod_cast hlt
       have := WithTop.coe_lt_coe.1 hlt'
       omega
-    rw [if_pos hmem]
+    rw [ite_eq_left hmem]
     rfl
   -- the residue at ∞
   have hres_infty : (RS.MForm.mk θ).resAt (∞ : OnePoint ℂ) = -∑ a ∈ P, RS.resAt R a := by

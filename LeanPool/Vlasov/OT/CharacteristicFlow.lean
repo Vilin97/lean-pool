@@ -2652,7 +2652,7 @@ theorem exists_vlasov_characteristicFlow_tight
               (Set.Icc (0 : ℝ) ((N : ℝ) * δ')) t := by
       intro z hz t ht
       have h_func_eq : γ_func z = Classical.choose (h_perZ z hz) := by
-        simp only [γ_func, dif_pos hz]
+        simp only [γ_func, dite_eq_left hz]
       have h_ode := (Classical.choose_spec (h_perZ z hz)).2
       have h_pos_dw := (h_ode t ht).1
       have h_vel_dw := (h_ode t ht).2
@@ -2675,7 +2675,7 @@ theorem exists_vlasov_characteristicFlow_tight
       have h_init : Classical.choose (h_perZ z hz) 0 = z :=
         (Classical.choose_spec (h_perZ z hz)).1
       have h_func_eq : γ_func z = Classical.choose (h_perZ z hz) := by
-        simp only [γ_func, dif_pos hz]
+        simp only [γ_func, dite_eq_left hz]
       refine ⟨?_, ?_⟩
       · change (γ_func z 0).1 = z.1
         rw [h_func_eq, h_init]
@@ -6697,7 +6697,7 @@ theorem picard_iterate_exists_limit {d : ℕ} [NeZero d]
   have hρ_spec : ∀ t (ht : t ∈ Set.Icc (0 : ℝ) T),
       ρ_lim t = Classical.choose (h_per_t t ht) := by
     intro t ht
-    simp only [ρ_lim, dif_pos ht]
+    simp only [ρ_lim, dite_eq_left ht]
   -- Step 5: verify the four VlasovMeasureCurve fields.
   -- isProb: universal in t.
   have h_isProb : ∀ t, IsProbabilityMeasure (ρ_lim t) := by
@@ -6705,7 +6705,7 @@ theorem picard_iterate_exists_limit {d : ℕ} [NeZero d]
     by_cases ht : t ∈ Set.Icc (0 : ℝ) T
     · rw [hρ_spec t ht]
       exact (Classical.choose_spec (h_per_t t ht)).1
-    · simp only [ρ_lim, dif_neg ht]
+    · simp only [ρ_lim, dite_eq_right ht]
       exact (x 0).isProb t
   -- hasMoment: from the placeholder's strengthened conclusion.
   have h_hasMoment : ∀ t ∈ Set.Icc (0 : ℝ) T, ∫ y, ‖y‖ ∂(ρ_lim t) ≤ M t := by

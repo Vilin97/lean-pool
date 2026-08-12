@@ -183,7 +183,7 @@ theorem p_3
   · have b_in_inter :
         b ∈ star ell a c ∩ star ell b d := by
       rw [inter_def]
-      simp only [star, mem_ofPred_eq, if_true_left]
+      simp only [star, mem_ofPred_eq, ite_true_left]
       constructor
       · split
         case left.isTrue eq =>
@@ -340,11 +340,11 @@ theorem p_9
       use b
       constructor
       · unfold star
-        simp only [mem_ofPred_eq, if_true_left]
+        simp only [mem_ofPred_eq, ite_true_left]
         intro _
         apply PG.l1 b d
       · unfold star
-        simp only [mem_ofPred_eq, if_true_left]
+        simp only [mem_ofPred_eq, ite_true_left]
         intro _
         apply PG.l1 a b
     · -- So we may assume that c ∉ b ⋆ d and a ≠ c.
@@ -448,7 +448,7 @@ theorem abc_inter_sing
       simp_all
   · intro x x_in_a; simp only [mem_singleton_iff] at x_in_a; rw [x_in_a]
     rw [inter_def]
-    simp only [star, mem_ofPred_eq, if_true_left]
+    simp only [star, mem_ofPred_eq, ite_true_left]
     constructor
     all_goals intro _
     · apply PG.l1 a b

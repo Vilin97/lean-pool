@@ -163,7 +163,7 @@ lemma round_near_eq_of (q : ℚ) (z : ℤ) :
     rw [roundNearInt, fract_eq]
     have : 1/2 < q - (z - 1) := by
       linarith
-    simp_rw [if_neg (not_lt_of_gt this), if_pos this]
+    simp_rw [ite_eq_right (not_lt_of_gt this), ite_eq_left this]
     symm
     apply Int.ceil_eq_iff.mpr ⟨?_, le_of_lt h3⟩
     linarith
@@ -225,7 +225,7 @@ lemma round_near_sub_half (z : ℤ) (h : z % 2 = 0) :
   simp only [Int.fract_intCast_add, this, lt_self_iff_false, ↓reduceIte]
   rw [add_comm, Int.ceil_add_intCast]
   have : ⌈(-(1 / 2) : ℚ)⌉ = 0 := by norm_num
-  rw [this, zero_add, if_neg]
+  rw [this, zero_add, ite_eq_right]
   rw [add_comm]
   have : ⌊(z : ℚ) + -(1/2)⌋ = z - 1 := by
     apply Int.floor_eq_iff.mpr
@@ -302,7 +302,7 @@ lemma round_near_eq_iff (q : ℚ) (z : ℤ) :
       exact round_of_add_half (roundNearInt q)
   intro h
   by_cases h' : z % 2 = 0
-  · rw [roundNearInterval, if_pos h'] at h
+  · rw [roundNearInterval, ite_eq_left h'] at h
     apply le_antisymm
     · rw [<-round_near_add_half z h']
       apply round_near_le_round_near
@@ -310,7 +310,7 @@ lemma round_near_eq_iff (q : ℚ) (z : ℤ) :
     rw [<-round_near_sub_half z h']
     apply round_near_le_round_near
     linarith [h.1]
-  rw [roundNearInterval, if_neg h'] at h
+  rw [roundNearInterval, ite_eq_right h'] at h
   exact (round_near_eq_of q z h).symm
 
 

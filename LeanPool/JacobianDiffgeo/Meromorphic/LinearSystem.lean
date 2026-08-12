@@ -60,7 +60,7 @@ noncomputable def LinSys (D : Divisor X) : Submodule ℂ (ℳ X) where
   carrier := {φ | ∀ x, ((-(D x) : ℤ) : WithTop ℤ) ≤ φ.ord x}
   zero_mem' := by
     intro x
-    rw [MeroGermOn.ord_zero, if_pos ⟨isOpen_univ, mem_univ x⟩]
+    rw [MeroGermOn.ord_zero, ite_eq_left ⟨isOpen_univ, mem_univ x⟩]
     exact le_top
   add_mem' := by
     intro φ ψ hφ hψ x
@@ -68,7 +68,7 @@ noncomputable def LinSys (D : Divisor X) : Submodule ℂ (ℳ X) where
   smul_mem' := by
     intro a φ hφ x
     rcases eq_or_ne a 0 with rfl | ha
-    · rw [zero_smul, MeroGermOn.ord_zero, if_pos ⟨isOpen_univ, mem_univ x⟩]
+    · rw [zero_smul, MeroGermOn.ord_zero, ite_eq_left ⟨isOpen_univ, mem_univ x⟩]
       exact le_top
     · rw [MeroGermOn.ord_smul isOpen_univ (mem_univ x) ha]
       exact hφ x
@@ -89,9 +89,11 @@ theorem mem_linSys_iff_eq_zero_or_le_divisor [ConnectedSpace X] {φ : ℳ X} :
       rw [Divisor.neg_apply, divisor_apply]
       exact WithTop.untop₀_le_untop₀ (Mero.ord_ne_top hφ x) (hmem x)
   · rintro (rfl | hle)
-    · intro x; rw [MeroGermOn.ord_zero, if_pos ⟨isOpen_univ, mem_univ x⟩]; exact le_top
+    · intro x; rw [MeroGermOn.ord_zero, ite_eq_left ⟨isOpen_univ, mem_univ x⟩]; exact le_top
     · by_cases hφ0 : φ = 0
-      · intro x; rw [hφ0, MeroGermOn.ord_zero, if_pos ⟨isOpen_univ, mem_univ x⟩]; exact le_top
+      · intro x
+        rw [hφ0, MeroGermOn.ord_zero, ite_eq_left ⟨isOpen_univ, mem_univ x⟩]
+        exact le_top
       · intro x
         have h := Function.locallyFinsuppWithin.le_def.1 hle x
         rw [Divisor.neg_apply, divisor_apply] at h
@@ -133,7 +135,7 @@ omit [T1Space X] [IsManifold 𝓘(ℂ) ω X] in
 theorem algebraMap_mem_linSys (h : 0 ≤ D) (c : ℂ) : algebraMap ℂ (ℳ X) c ∈ LinSys D := by
   intro x
   rcases eq_or_ne c 0 with rfl | hc
-  · rw [map_zero, MeroGermOn.ord_zero, if_pos ⟨isOpen_univ, mem_univ x⟩]
+  · rw [map_zero, MeroGermOn.ord_zero, ite_eq_left ⟨isOpen_univ, mem_univ x⟩]
     exact le_top
   · rw [MeroGermOn.ord_algebraMap isOpen_univ (mem_univ x) hc]
     have hDx : (0 : ℤ) ≤ D x := Function.locallyFinsuppWithin.le_def.1 h x
@@ -230,7 +232,7 @@ noncomputable def LinSysOn (D : Divisor X) (U : Set X) : Submodule ℂ (MeroGerm
   carrier := {φ | IsOpen U → ∀ x ∈ U, ((-(D x) : ℤ) : WithTop ℤ) ≤ φ.ord x}
   zero_mem' := by
     intro hU x hx
-    rw [MeroGermOn.ord_zero, if_pos ⟨hU, hx⟩]
+    rw [MeroGermOn.ord_zero, ite_eq_left ⟨hU, hx⟩]
     exact le_top
   add_mem' := by
     intro φ ψ hφ hψ hU x hx
@@ -238,7 +240,7 @@ noncomputable def LinSysOn (D : Divisor X) (U : Set X) : Submodule ℂ (MeroGerm
   smul_mem' := by
     intro a φ hφ hU x hx
     rcases eq_or_ne a 0 with rfl | ha
-    · rw [zero_smul, MeroGermOn.ord_zero, if_pos ⟨hU, hx⟩]
+    · rw [zero_smul, MeroGermOn.ord_zero, ite_eq_left ⟨hU, hx⟩]
       exact le_top
     · rw [MeroGermOn.ord_smul hU hx ha]
       exact hφ hU x hx

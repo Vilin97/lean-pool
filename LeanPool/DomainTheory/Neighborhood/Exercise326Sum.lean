@@ -21,7 +21,7 @@ for:
   the injections `in₀, in₁` into the common domain `S = D₀ + D₁` and then applying
   the conditional
   `cond S : T × S × S → S` of Exercise 3.26. The three identities follow from
-  `cond_true/false/bot`.
+  `Bool.cond_true/false/bot`.
 
 * the discriminator **`which : D₀ + D₁ → T`** reading the tag (`0X ↦ true`, `1Y ↦
 false`,
@@ -74,13 +74,13 @@ theorem condSumEmb_toElementMap (t : TD.Element) (x : V₀.Element) (y : V₁.El
 theorem condSum_true (x : V₀.Element) (y : V₁.Element) :
     (condSum V₀ V₁ h₀ h₁).toElementMap (pair Example23.trueElt (pair x y))
       = (inMap₀ (h₀ := h₀) (h₁ := h₁)).toElementMap x := by
-  rw [condSum, toElementMap_comp, condSumEmb_toElementMap, cond_true]
+  rw [condSum, toElementMap_comp, condSumEmb_toElementMap, Bool.cond_true]
 
 /-- **Exercise 3.26.** `condSum(false, x, y) = in₁(y)`. -/
 theorem condSum_false (x : V₀.Element) (y : V₁.Element) :
     (condSum V₀ V₁ h₀ h₁).toElementMap (pair Example23.falseElt (pair x y))
       = (inMap₁ (h₀ := h₀) (h₁ := h₁)).toElementMap y := by
-  rw [condSum, toElementMap_comp, condSumEmb_toElementMap, cond_false]
+  rw [condSum, toElementMap_comp, condSumEmb_toElementMap, Bool.cond_false]
 
 /-- **Exercise 3.26.** `condSum(⊥, x, y) = ⊥`. -/
 theorem condSum_bot (x : V₀.Element) (y : V₁.Element) :

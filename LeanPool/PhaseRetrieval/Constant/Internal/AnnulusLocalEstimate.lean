@@ -58,7 +58,7 @@ private lemma sum_ite_mem_biUnion (S : Finset ℕ) (n : ℕ) (c : ℂ) :
   split_ifs with h
   · obtain ⟨ℓ, hℓS, hℓn⟩ := Finset.mem_biUnion.mp h
     rw [Finset.sum_eq_single ℓ (fun ℓ' hℓ'S hne => by
-      rw [if_neg]; intro h'
+      rw [ite_eq_right]; intro h'
       exact Finset.disjoint_left.mp
         ((freqBlock_pairwiseDisjoint S) (Finset.mem_coe.mpr hℓ'S)
           (Finset.mem_coe.mpr hℓS) hne) h' hℓn)
@@ -184,7 +184,7 @@ private lemma localPoly_eq_fourierSum {D : ℕ} (_hD : 1 ≤ D) (a : Fin D → �
     intro n hn hn_not
     change localFourierCoeff a j r n * fourier (n : ℤ) t = 0
     simp only [localFourierCoeff]
-    rw [dif_neg]
+    rw [dite_eq_right]
     · simp
     · intro ⟨h_mem, _, _⟩
       exact hn_not (Finset.mem_filter.mpr
@@ -296,7 +296,7 @@ private lemma localFourierCoeff_zero_outside {D : ℕ} (a : Fin D → ℂ)
     (j : ℕ) (r : ℝ) {n : ℕ} (hn : n ∉ activeFreqSet D j) :
     localFourierCoeff a j r n = 0 := by
   unfold localFourierCoeff
-  rw [dif_neg]
+  rw [dite_eq_right]
   intro ⟨h_mem, h1, hD⟩
   exact hn (Finset.mem_filter.mpr ⟨h_mem, hD⟩)
 

@@ -335,7 +335,7 @@ theorem exists_dbar_solution_ball (hR : 0 < R) (hg : ContDiffOn ℝ ∞ g (ball 
   have hu_tendsto : ∀ z ∈ ball c R, Tendsto (fun n => Fseq n z) atTop (𝓝 (u z)) := by
     intro z hz
     have h := hconv z hz
-    simp only [hu_def, dif_pos h]
+    simp only [hu_def, dite_eq_left h]
     exact h.choose_spec
   have hmain : ∀ z ∈ ball c R, ContDiffAt ℝ ∞ u z ∧ wirtingerDbar u z = g z := by
     intro z hz

@@ -1673,7 +1673,7 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
   · -- z = 0: kernel is 0, bound is trivially satisfied since 0^(-2) = 0
     have hz' : z = 0 := norm_eq_zero.mp hz
     simp only [hz', norm_zero, freeCovarianceKernel, freeCovariance, freeCovarianceBessel,
-               sub_zero, if_true, abs_zero]
+               sub_zero, ite_true, abs_zero]
     rw [Real.zero_rpow (by norm_num : (-2 : ℝ) ≠ 0), mul_zero]
   · -- z ≠ 0: use Bessel bounds
     have hr_pos : 0 < ‖z‖ := norm_pos_iff.mpr (norm_ne_zero_iff.mp hz)
@@ -1681,7 +1681,7 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
     have h_kernel : freeCovarianceKernel m z = (m / (4 * Real.pi^2 * ‖z‖)) * besselK1 (m * ‖z‖) :=
       by
       simp only [freeCovarianceKernel, freeCovariance, freeCovarianceBessel, zero_sub, norm_neg, hz,
-                 if_false]
+                 ite_false]
     rw [h_kernel]
     -- The kernel is nonnegative for m > 0 and z ≠ 0
     have hK_pos : 0 < besselK1 (m * ‖z‖) := besselK1_pos (m * ‖z‖) (by positivity)
@@ -1785,7 +1785,7 @@ lemma freeCovariance_exponential_bound (m : ℝ) (hm : 0 < m) (u v : SpaceTime)
   have hr_ne : r ≠ 0 := ne_of_gt hr_pos
   -- Unfold the covariance: C(u,v) = (m / (4π²r)) · K₁(mr)
   unfold freeCovarianceBessel
-  simp only [← hr_def, hr_ne, if_false]
+  simp only [← hr_def, hr_ne, ite_false]
   -- Use the Bessel asymptotic bound: K₁(mr) ≤ (sinh 1 + 2) · e^{-mr}
   have hK1_bound := besselK1_asymptotic (m * r) hmr_ge1
   -- Key step: m/r ≤ m² because r ≥ 1/m (from mr ≥ 1)

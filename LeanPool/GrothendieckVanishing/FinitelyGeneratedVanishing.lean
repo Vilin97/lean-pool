@@ -222,7 +222,7 @@ theorem finsetGeneratedSheaf_vanishing
       · subst h
         rw [← Category.assoc, Sigma.ι_desc]
         simp [g]
-      · rw [← Category.assoc, Sigma.ι_desc, dif_neg h, zero_comp]
+      · rw [← Category.assoc, Sigma.ι_desc, dite_eq_right h, zero_comp]
         have hfacBase :
             TopCat.Presheaf.finsetCoproductInclGen h_sub ≫ qIns = qS ≫ f := by
           simp [qIns, qS, f, TopCat.Presheaf.finsetImageInclGen]

@@ -43,7 +43,7 @@ theorem funsToPowRelF_isFunc {A B : ZFSet} :
   apply lambda_isFunc
   intro f hf
   rw [mem_funs] at hf
-  rw [dite_cond_eq_true (eq_true hf)]
+  rw [dite_eq_left_of_eq_true (eq_true hf)]
   apply sep_mem_powerset
   rw [mem_powerset]
 
@@ -56,7 +56,7 @@ theorem funsToPowRelG_isFunc {A B : ZFSet} :
   rw [mem_powerset] at hR
   apply mem_funs_of_lambda
   intro a ha
-  rw [dite_cond_eq_true (eq_true ha)]
+  rw [dite_eq_left_of_eq_true (eq_true ha)]
   apply sep_mem_powerset
   rw [mem_powerset]
 
@@ -75,13 +75,13 @@ theorem funsToPowRel_left_inverse {A B : ZFSet} :
     rw [lambda_spec] at fR_F Rg_G
     obtain ⟨_, _, rfl⟩ := fR_F
     obtain ⟨_, _, rfl⟩ := Rg_G
-    rw [dite_cond_eq_true (eq_true hf)]
+    rw [dite_eq_left_of_eq_true (eq_true hf)]
     conv_rhs => rw [lambda_eta hf]
     rw [lambda_ext_iff ?_]
     · intro a ha
-      rw [dite_cond_eq_true (eq_true ha), dite_cond_eq_true (eq_true ha)]
+      rw [dite_eq_left_of_eq_true (eq_true ha), dite_eq_left_of_eq_true (eq_true ha)]
       ext1 X
-      simp only [mem_prod, dite_else_false, mem_sep, pair_inj, exists_eq_right_right', π₁_pair,
+      simp only [mem_prod, dite_false_right, mem_sep, pair_inj, exists_eq_right_right', π₁_pair,
         π₂_pair, and_exists_self]
       constructor
       · simp_all
@@ -95,7 +95,7 @@ theorem funsToPowRel_left_inverse {A B : ZFSet} :
         · exact YB hX
         · exact ⟨⟨ha, YB hX⟩, hX⟩
     · intro a ha
-      rw [dite_cond_eq_true (eq_true ha)]
+      rw [dite_eq_left_of_eq_true (eq_true ha)]
       apply sep_mem_powerset
       rw [mem_powerset]
   · rintro ⟨f, hf, rfl⟩
@@ -113,18 +113,18 @@ theorem funsToPowRel_left_inverse {A B : ZFSet} :
           rw [lambda_ext_iff ?_]
           · intro a ha
             generalize_proofs _ _ ha_f_dom Fpfunc f_Fdom
-            rw [fapply_lambda (ha := by rwa [mem_funs]), dite_cond_eq_true (eq_true ha),
-              dite_cond_eq_true (eq_true ha), dite_cond_eq_true (eq_true hf)]
+            rw [fapply_lambda (ha := by rwa [mem_funs]), dite_eq_left_of_eq_true (eq_true ha),
+              dite_eq_left_of_eq_true (eq_true ha), dite_eq_left_of_eq_true (eq_true hf)]
             · ext1 z
               constructor
               · intro hz
-                simp only [mem_prod, dite_else_false, mem_sep, pair_inj, exists_eq_right_right',
+                simp only [mem_prod, dite_false_right, mem_sep, pair_inj, exists_eq_right_right',
                   π₁_pair, π₂_pair, and_exists_self]
                 have zB : z ∈ B := mem_powerset.mp (fapply_mem_range _ (ha_f_dom ha)) hz
                 exact ⟨zB, ⟨ha, zB⟩, hz⟩
               · simp_all
             · intro X hX
-              rw [dite_cond_eq_true (eq_true <| mem_funs.mp hX)]
+              rw [dite_eq_left_of_eq_true (eq_true <| mem_funs.mp hX)]
               apply sep_mem_powerset
               rw [mem_powerset]
           · simp_all
@@ -144,16 +144,16 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
     rw [lambda_spec] at Rf_G fS_F
     obtain ⟨_, _, rfl⟩ := Rf_G
     obtain ⟨_, _, rfl⟩ := fS_F
-    rw [dite_cond_eq_true (eq_true hS)]
+    rw [dite_eq_left_of_eq_true (eq_true hS)]
     ext1 ab
-    simp only [mem_prod, dite_eq_ite, dite_else_false, mem_sep, and_exists_self]
+    simp only [mem_prod, dite_eq_ite, dite_false_right, mem_sep, and_exists_self]
     constructor
     · rintro ⟨⟨a, ha, b, hb, rfl⟩, b_mem⟩
       simp only [π₁_pair, π₂_pair] at b_mem
       rw [fapply_lambda] at b_mem
       · simp_all
       · intro x hx
-        rw [ite_cond_eq_true (h := eq_true hx)]
+        rw [ite_eq_left_of_eq_true (h := eq_true hx)]
         apply sep_mem_powerset
         rw [mem_powerset]
       · exact ha
@@ -164,7 +164,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
       rw [fapply_lambda]
       · simp_all
       · intro x hx
-        rw [ite_cond_eq_true (h := eq_true hx)]
+        rw [ite_eq_left_of_eq_true (h := eq_true hx)]
         apply sep_mem_powerset
         rw [mem_powerset]
       · exact ha
@@ -186,16 +186,16 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
         · intros
           apply mem_funs_of_lambda
           intro _ ha
-          rw [dite_cond_eq_true (eq_true ha)]
+          rw [dite_eq_left_of_eq_true (eq_true ha)]
           apply sep_mem_powerset
           rw [mem_powerset]
         · rwa [mem_powerset]
       · apply fapply.def
       · rw [lambda_spec]
         refine ⟨fapply_mem_range _ _, by rwa [mem_powerset], ?_⟩
-        · rw [dite_cond_eq_true (eq_true ?_)]
+        · rw [dite_eq_left_of_eq_true (eq_true ?_)]
           · ext1 ab
-            simp only [mem_prod, dite_else_false, mem_sep, and_exists_self]
+            simp only [mem_prod, dite_false_right, mem_sep, and_exists_self]
             generalize_proofs G_pfunc _ S_Gdom fapply_pfunc a_dom
             have fapp_eq :
               ↑(@ᶻG ⟨S, S_Gdom⟩) =
@@ -206,7 +206,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
               · intros
                 apply mem_funs_of_lambda
                 intro _ ha
-                rw [dite_cond_eq_true (eq_true ha)]
+                rw [dite_eq_left_of_eq_true (eq_true ha)]
                 apply sep_mem_powerset
                 rw [mem_powerset]
               · rwa [mem_powerset]
@@ -233,18 +233,18 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
               conv at choose₂_spec =>
                 enter [2,1]
                 rw [choose₁_eq]
-              rw [lambda_spec, dite_cond_eq_true (eq_true ha)] at choose₂_spec
+              rw [lambda_spec, dite_eq_left_of_eq_true (eq_true ha)] at choose₂_spec
               simp_all
           · rw [fapply_lambda]
             · apply lambda_isFunc
               intro a ha
-              rw [dite_cond_eq_true (eq_true ha)]
+              rw [dite_eq_left_of_eq_true (eq_true ha)]
               apply sep_mem_powerset
               rw [mem_powerset]
             · intros
               apply mem_funs_of_lambda
               intro a ha
-              rw [dite_cond_eq_true (eq_true ha)]
+              rw [dite_eq_left_of_eq_true (eq_true ha)]
               apply sep_mem_powerset
               rw [mem_powerset]
             · rwa [mem_powerset]

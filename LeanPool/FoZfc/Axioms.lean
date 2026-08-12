@@ -135,7 +135,7 @@ theorem realize_fixedSnoc_makeTsN_2 [ModelSets V] {n : ℕ} {s : ℕ → V}
     · omega
   · unfold makeTsN replaceInitialValues
     simp only [Nat.succ_eq_add_one, zero_add, Nat.reduceAdd, Fin.ofNat_eq_cast]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     simp_all
 
 /-- Specialization of `makeTsN` to `![bv'' n, bv'' (n+1)]` with three snocs. -/
@@ -153,7 +153,7 @@ theorem realize_fixedSnoc_makeTsN_3 [ModelSets V] {n : ℕ} {s : ℕ → V}
     · omega
   · unfold makeTsN replaceInitialValues
     simp only [Nat.succ_eq_add_one, zero_add, Nat.reduceAdd, Fin.ofNat_eq_cast]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     simp_all
 
 /-- General `makeTsN` realization in terms of `replaceInitialValues`. -/
@@ -166,8 +166,9 @@ theorem realize_fixedSnoc_makeTsN [ModelSets V] {n m : ℕ} {s : ℕ → V}
   unfold makeTsN replaceInitialValues
   simp only [Fin.ofNat_eq_cast, Fin.val_natCast]
   by_cases h_k_le_m : k < m + 1
-  · rw [if_pos h_k_le_m, if_pos h_k_le_m, Nat.mod_eq_of_lt h_k_le_m, if_pos h_k_le_m]
-  · rw [if_neg h_k_le_m, if_neg h_k_le_m]
+  · rw [ite_eq_left h_k_le_m, ite_eq_left h_k_le_m, Nat.mod_eq_of_lt h_k_le_m,
+      ite_eq_left h_k_le_m]
+  · rw [ite_eq_right h_k_le_m, ite_eq_right h_k_le_m]
     simp
 
 namespace Term
@@ -182,7 +183,7 @@ theorem realize_fixedSnoc_0 [ModelSets V] {n : ℕ} {s : ℕ → V}
     funext k
     by_cases h_k_0 : k = 0
     · simp_all
-    · rw [if_neg h_k_0]
+    · rw [ite_eq_right h_k_0]
       unfold replaceInitialValues
       simp_all
 

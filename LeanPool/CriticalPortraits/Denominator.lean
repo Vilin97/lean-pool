@@ -522,7 +522,7 @@ lemma canIdx_spec {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (S : Finset (ZMod (d * m
     (hcard : S.card = d - 1) :
     canIdx hd hm S < d ∧ LevelCanonical d m (rhoPow (canIdx hd hm S) S) := by
   unfold canIdx
-  rw [dif_pos hcard]
+  rw [dite_eq_left hcard]
   exact (canonical_unique hd hm S hcard).choose_spec.1
 
 /-- Uniqueness characterization of `canIdx`. -/
@@ -530,7 +530,7 @@ lemma canIdx_eq {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (S : Finset (ZMod (d * m))
     (hcard : S.card = d - 1) {t : ℕ} (htd : t < d) (htLC : LevelCanonical d m (rhoPow t S)) :
     t = canIdx hd hm S := by
   unfold canIdx
-  rw [dif_pos hcard]
+  rw [dite_eq_left hcard]
   exact (canonical_unique hd hm S hcard).choose_spec.2 t ⟨htd, htLC⟩
 
 /-- For a canonical `(d-1)`-subset, the canonical index is `0`. -/

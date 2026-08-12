@@ -217,9 +217,9 @@ theorem Psi.one [hφ : φ.IsFaithfulPosMap] :
   simp only [mul_apply]
   simp only [single_eq, boole_mul]
   simp_rw [ite_and, Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true, ite_mul, zero_mul, Prod.swap, mul_ite, mul_zero,
+    Finset.mem_univ, ite_true, ite_mul, zero_mul, Prod.swap, mul_ite, mul_zero,
     Finset.sum_product_univ, Finset.sum_ite_irrel, Finset.sum_const_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   simp_rw [← mul_apply]
   rw [PosDef.rpow_mul_rpow]
   ring_nf

@@ -81,7 +81,7 @@ theorem centralSimple_over_extension_iff_nontrivial
       exact ineq1
     let e : K ⊗[k] Subalgebra.center k A ≃ₗ[k] Subalgebra.center k (K ⊗[k] A) :=
       (TensorProduct.congr (Submodule.topEquiv.symm ≪≫ₗ
-        show _ ≃ₗ[k] Subalgebra.toSubmodule (Subalgebra.center k K) from LinearEquiv.ofLinear
+        show _ ≃ₗ[k] Subalgebra.toSubmodule (Subalgebra.center k K) from LinearEquiv.ofLinearMap
         (Submodule.inclusion (by simp)) (Submodule.inclusion (by simp)) rfl rfl)
         (LinearEquiv.refl _ _)) ≪≫ₗ
       (IsCentralSimple.centerTensor k K A)

@@ -220,7 +220,8 @@ theorem nnDistE_eq_inf (α : Fin 2 → ℝ) {q : ℕ} (hq : q ≤ 11)
       (fun n => deltaN (euclNorm 2) α (n : ℤ)) := by
   unfold nnDistE
   rw [← gapVal_eq_nnDistC (deltaN (euclNorm 2) α)
-    (deltaN_neg (euclNorm 2) euclNorm_nonneg euclNorm_neg α) (by norm_num) hq, gapVal, dif_pos hne]
+    (deltaN_neg (euclNorm 2) euclNorm_nonneg euclNorm_neg α) (by norm_num) hq,
+    gapVal, dite_eq_left hne]
 
 /-- A strictly larger prefix has a strictly smaller infimum once a new element `m` beats the whole
 shorter prefix. -/

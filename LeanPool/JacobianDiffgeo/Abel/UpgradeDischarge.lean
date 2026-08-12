@@ -386,7 +386,7 @@ theorem exists_mero_of_sum_pathIntegral_eq_zero {ι : Type*} [Fintype ι] [Conne
     have hx₀ := hord (Classical.arbitrary X)
     rw [heq] at hx₀
     rw [RS.MeroGermOn.ord_zero] at hx₀
-    rw [if_pos ⟨isOpen_univ, Set.mem_univ _⟩] at hx₀
+    rw [ite_eq_left ⟨isOpen_univ, Set.mem_univ _⟩] at hx₀
     exact absurd hx₀.symm WithTop.coe_ne_top
   refine ⟨F, hF_ne, fun z => ?_⟩
   rw [hord z, htel z]
@@ -407,18 +407,18 @@ theorem weakSolutionUpgrade_of_surjective
   refine ⟨F, hF0, ?_, ?_, ?_⟩
   · rw [hord P]
     have h1 : (∑ _i : Fin 1, linkOrd Q P P) = 1 := by
-      simp [linkOrd, if_neg (fun h : P = Q => hPQ h.symm)]
+      simp [linkOrd, ite_eq_right (fun h : P = Q => hPQ h.symm)]
     rw [h1]
     rfl
   · rw [hord Q]
     have h1 : (∑ _i : Fin 1, linkOrd Q P Q) = -1 := by
-      simp [linkOrd, if_neg (fun h : Q = P => hPQ h)]
+      simp [linkOrd, ite_eq_right (fun h : Q = P => hPQ h)]
     rw [h1]
     rfl
   · intro z hzQ hzP
     rw [hord z]
     have h1 : (∑ _i : Fin 1, linkOrd Q P z) = 0 := by
-      simp [linkOrd, if_neg hzP, if_neg hzQ]
+      simp [linkOrd, ite_eq_right hzP, ite_eq_right hzQ]
     rw [h1]
     rfl
 
@@ -435,7 +435,7 @@ theorem weakSolutionUpgradeFinset_of_surjective {ι : Type*} [Fintype ι]
       (∑ j, linkOrd (a j) (x j) z) = 0 := by
     intro z hza hzx
     refine Finset.sum_eq_zero (fun j _ => ?_)
-    rw [linkOrd, if_neg (hzx j), if_neg (hza j), sub_self]
+    rw [linkOrd, ite_eq_right (hzx j), ite_eq_right (hza j), sub_self]
   refine ⟨F, hF0, ?_, ?_, ?_⟩
   · intro i
     rw [hord (x i)]
@@ -443,10 +443,10 @@ theorem weakSolutionUpgradeFinset_of_surjective {ι : Type*} [Fintype ι]
       have hsplit : ∀ j, linkOrd (a j) (x j) (x i)
           = (if i = j then (1 : ℤ) else 0) := by
         intro j
-        rw [linkOrd, if_neg (show ¬(x i = a j) from fun h => hax j i h.symm)]
+        rw [linkOrd, ite_eq_right (show ¬(x i = a j) from fun h => hax j i h.symm)]
         by_cases h : i = j
-        · rw [if_pos (congrArg x h), if_pos h, sub_zero]
-        · rw [if_neg (fun hh => h (hx hh)), if_neg h, sub_zero]
+        · rw [ite_eq_left (congrArg x h), ite_eq_left h, sub_zero]
+        · rw [ite_eq_right (fun hh => h (hx hh)), ite_eq_right h, sub_zero]
       rw [Finset.sum_congr rfl (fun j _ => hsplit j), Finset.sum_ite_eq]
       simp
     rw [h1]
@@ -457,10 +457,10 @@ theorem weakSolutionUpgradeFinset_of_surjective {ι : Type*} [Fintype ι]
       have hsplit : ∀ j, linkOrd (a j) (x j) (a i)
           = -(if i = j then (1 : ℤ) else 0) := by
         intro j
-        rw [linkOrd, if_neg (hax i j)]
+        rw [linkOrd, ite_eq_right (hax i j)]
         by_cases h : i = j
-        · rw [if_pos (congrArg a h), if_pos h, zero_sub]
-        · rw [if_neg (fun hh => h (ha hh)), if_neg h, zero_sub, neg_zero]
+        · rw [ite_eq_left (congrArg a h), ite_eq_left h, zero_sub]
+        · rw [ite_eq_right (fun hh => h (ha hh)), ite_eq_right h, zero_sub, neg_zero]
       rw [Finset.sum_congr rfl (fun j _ => hsplit j), Finset.sum_neg_distrib,
         Finset.sum_ite_eq]
       simp

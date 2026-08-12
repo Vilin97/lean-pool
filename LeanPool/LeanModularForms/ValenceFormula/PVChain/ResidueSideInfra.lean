@@ -220,7 +220,7 @@ private lemma orderOfVanishingAt'_eq_analyticOrderNatAt (s : ℍ) (_hs : f s = 0
   have h_eq : g₁ =ᶠ[𝓝[≠] (s : ℂ)] g₂ := by
     apply Filter.Eventually.filter_mono nhdsWithin_le_nhds
     filter_upwards [UpperHalfPlane.isOpen_upperHalfPlaneSet.mem_nhds s.im_pos] with w hw
-    simp only [g₁, g₂, modularFormCompOfComplex, Function.comp_apply, dif_pos hw,
+    simp only [g₁, g₂, modularFormCompOfComplex, Function.comp_apply, dite_eq_left hw,
       UpperHalfPlane.ofComplex_apply_of_im_pos hw]
   rw [meromorphicOrderAt_congr h_eq,
     (analyticAt_modform f (s : ℂ) s.im_pos).meromorphicOrderAt_eq]
@@ -317,7 +317,7 @@ lemma cpvExists_of_off_curve (γ : ℝ → ℂ) (hγ_cont : Continuous γ)
   apply intervalIntegral.integral_congr
   intro t ht
   rw [Set.uIcc_of_le hab] at ht
-  exact (if_pos (show ‖γ t - s‖ > ε from lt_of_lt_of_le hε.2 (ht₀_min ht))).symm
+  exact (ite_eq_left (show ‖γ t - s‖ > ε from lt_of_lt_of_le hε.2 (ht₀_min ht))).symm
 
 omit f hf in
 /-- CPV of `c · (z - s)⁻¹` from CPV of `(z - s)⁻¹` by scaling. -/
@@ -364,7 +364,7 @@ omit f hf in
 lemma logDerivPatched_eq_raw_off (F : ℂ → ℂ) (S0 : Finset ℂ)
     (hsp : ∀ s ∈ S0, HasSimplePoleAt F s) {z : ℂ} (hz : z ∉ S0) :
     logDerivPatched F S0 hsp z = F z :=
-  dif_neg hz
+  dite_eq_right hz
 
 omit f hf in
 private lemma logDerivPatched_eventuallyEq_raw_punctured (F : ℂ → ℂ) (S0 : Finset ℂ)
@@ -373,7 +373,7 @@ private lemma logDerivPatched_eventuallyEq_raw_punctured (F : ℂ → ℂ) (S0 :
   rw [Filter.EventuallyEq, eventually_nhdsWithin_iff]
   filter_upwards [(S0.erase s).finite_toSet.isClosed.isOpen_compl.mem_nhds
     (by simp [Set.mem_compl_iff])] with z hz hzne
-  exact dif_neg (fun habs => hz (Finset.mem_coe.mpr (Finset.mem_erase.mpr ⟨hzne, habs⟩)))
+  exact dite_eq_right (fun habs => hz (Finset.mem_coe.mpr (Finset.mem_erase.mpr ⟨hzne, habs⟩)))
 
 omit f hf in
 lemma hasSimplePoleAt_logDerivPatched (F : ℂ → ℂ) (S0 : Finset ℂ)
@@ -416,7 +416,7 @@ lemma logDerivPatched_hf_ext (F : ℂ → ℂ) (S0 : Finset ℂ) (hsp : ∀ s �
   by_cases hzs : z = s
   · subst hzs
     simp only [sub_self, div_zero, sub_zero]
-    unfold logDerivPatched; rw [dif_pos hs]
+    unfold logDerivPatched; rw [dite_eq_left hs]
   · have hz_not_S0 : z ∉ S0 :=
       fun habs =>
         hz_compl (Finset.mem_coe.mpr (Finset.mem_erase.mpr ⟨hzs, habs⟩))

@@ -282,7 +282,7 @@ lemma mul_rowEliminationListMatrix_prod_apply_aux
       rw [mul_transvection_apply_of_ne, ih hnk]
       · by_cases hi : n + 1 ≤ (j : ℕ)
         · simp only [n.le_succ.trans hi, ↓reduceIte, hi]
-        · rw [if_neg, if_neg]
+        · rw [ite_eq_right, ite_eq_right]
           · simpa using hi
           · intro hnj
             apply hni

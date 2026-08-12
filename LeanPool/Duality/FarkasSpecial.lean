@@ -67,7 +67,7 @@ omit [IsStrictOrderedRing F] in
 lemma EF.pos_smul_top {c : F≥0} (hc : 0 < c) : c • (⊤ : F∞) = ⊤ := by
   change EF.smulNN c ⊤ = ⊤
   change (if c = 0 then (0 : F∞) else ⊤) = ⊤
-  exact if_neg hc.ne.symm
+  exact ite_eq_right hc.ne.symm
 
 lemma EF.smul_top_neq_bot (c : F≥0) : c • (⊤ : F∞) ≠ ⊥ := by
   change EF.smulNN c ⊤ ≠ ⊥
@@ -95,7 +95,7 @@ lemma EF.zero_smul_nonbot {r : F∞} (hr : r ≠ ⊥) : (0 : F≥0) • r = 0 :=
   change EF.smulNN 0 r = 0
   match r with
   | ⊥ => simp at hr
-  | ⊤ => exact if_pos rfl
+  | ⊤ => exact ite_eq_left rfl
   | (f : F) => exact congr_arg toE (zero_mul f)
 
 omit [IsStrictOrderedRing F] in
@@ -202,7 +202,7 @@ lemma no_bot_dotWeig_zero {v : I → F∞} (hv : ∀ i, v i ≠ ⊥) :
     v ᵥ⬝ (0 : I → F≥0) = (0 : F∞) :=
   Finset.sum_eq_zero (fun (i : I) _ =>
     match hvi : v i with
-    | ⊤ => show EF.smulNN 0 ⊤ = 0 from if_pos rfl
+    | ⊤ => show EF.smulNN 0 ⊤ = 0 from ite_eq_left rfl
     | ⊥ => (hv i hvi).elim
     | (f : F) => EF.zero_smul_coe f)
 

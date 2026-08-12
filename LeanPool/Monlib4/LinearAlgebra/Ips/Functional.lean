@@ -67,7 +67,7 @@ theorem Module.Dual.apply (φ : Module.Dual R (Matrix n n R)) (a : Matrix n n R)
   simp_rw [Module.Dual.matrix, smul_single' _ _ (φ _)]
   simp_rw [Matrix.sum_mul, Matrix.smul_mul, trace_sum, trace_smul, Matrix.trace, Matrix.diag,
     mul_apply, single_eq, boole_mul, ite_and, Finset.sum_ite_irrel, Finset.sum_const_zero,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, ← ite_and, smul_eq_mul]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, ← ite_and, smul_eq_mul]
   have :
     ∀ ⦃i : n⦄ ⦃j : n⦄ ⦃a : R⦄,
       single i j (a : R) = fun k l => ite (i = k ∧ j = l) (a : R) (0 : R) :=
@@ -124,7 +124,7 @@ lemma Module.Dual.eq_piOf_pi {k : Type _} [Fintype k] [DecidableEq k] {s : k →
     _ = ∑ j : k, if i = j then trace (matrix (φ j) * includeBlock y j) else 0 :=
       by congr; ext; aesop
     _ = trace (matrix (φ i) * includeBlock y i) :=
-      by simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      by simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     _ = trace (matrix (φ i) * y) := by simp only [includeBlock_apply_same]
 
 lemma Module.Dual.eq_pi_piOf {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
@@ -214,7 +214,7 @@ theorem Module.Dual.pi.apply_single_block {k : Type _} [Fintype k] [DecidableEq 
       split_ifs <;> rfl
     _ = trace (matrix (φ i) * x i) := ?_
   simp_rw [Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   rfl
 
 theorem Module.Dual.pi.apply_single_block' {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
@@ -489,12 +489,12 @@ private lemma Module.Dual.tracial_posSemidef_matrix_eq_re_smul_one
     calc
       Q p q = ∑ i, ∑ j, Q i j * ∑ k, (single q r 1) j k * (single r p 1) k i := by
         simp only [single, of_apply, ite_and, Finset.sum_ite_irrel,
-          Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+          Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
           mul_ite, MulZeroClass.mul_zero, mul_one]
       _ = ∑ i, ∑ j, Q i j * ∑ k, (single r p 1) j k * (single q r 1) k i := by rw [h2]
       _ = ite (p = q) (Q r r) 0 := by
         simp only [single, of_apply, ite_and, Finset.sum_ite_irrel,
-          Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_ite,
+          Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, mul_ite,
           MulZeroClass.mul_zero, mul_one]
   have HH : Q = diagonal fun _ : n => Q i i := by ext; exact hdiag _ _ i
   have hre : ∀ p, Q p p = RCLike.re (Q p p) := fun p => by
@@ -506,7 +506,7 @@ private lemma Module.Dual.tracial_posSemidef_matrix_eq_re_smul_one
     rw [PosSemidef.complex] at hQ
     specialize hQ fun j => ite (i = j) 1 0
     simpa only [dotProduct, mulVec, dotProduct, Pi.star_apply, star_ite, star_zero, star_one,
-      boole_mul, mul_boole, Finset.sum_ite_eq, Finset.mem_univ, if_true] using hQ
+      boole_mul, mul_boole, Finset.sum_ite_eq, Finset.mem_univ, ite_true] using hQ
   refine ⟨(RCLike.nonneg_def'.mp hnn).2, ?_⟩
   simp only [smul_eq_diagonal_mul, Matrix.mul_one]
   rwa [← hre]

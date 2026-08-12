@@ -804,7 +804,7 @@ private theorem boost_two_thirds_to_pac (X : Type u) [MeasurableSpace X]
   -- Step 3: Prove the PAC bound.
   intro ε δ hε hδ D hD c hcC
   dsimp only
-  rw [dif_pos hε, dif_pos hδ]
+  rw [dite_eq_left hε, dite_eq_left hδ]
   have hε'_pos : 0 < ε / 7 := by positivity
   set kmin := Nat.ceil (36 / δ) + 2 with hkmin_def
   set n := max (Nat.find (hrate (ε / 7) hε'_pos)) (kmin - 1) with hn_def
@@ -846,7 +846,7 @@ private theorem boost_two_thirds_to_pac (X : Type u) [MeasurableSpace X]
     intro ω x
     simp only [L']
     have hblk_ne' : ¬ ((n + 1) * n / (((n + 1) * n).sqrt + 1) = 0) := hblk_ne
-    rw [if_neg hblk_ne']
+    rw [ite_eq_right hblk_ne']
     have hsqrt' : ((n + 1) * n).sqrt + 1 = n + 1 := by rw [hsqrt]
     have hblk' : (n + 1) * n / (((n + 1) * n).sqrt + 1) = n := by rw [hsqrt]; exact hblk
     -- Prove by showing the boosted_majority applications are definitionally equal
@@ -1148,7 +1148,7 @@ theorem ex_not_implies_pac :
     | true =>
       -- x is in the support, appeared at time tmap x hxfin ≤ t₀ ≤ t
       have hxfin : x ∈ hfin.toFinset := hfin.mem_toFinset.mpr hcxb
-      have htmap'_eq : tmap' x = tmap x hxfin := dif_pos hxfin
+      have htmap'_eq : tmap' x = tmap x hxfin := dite_eq_left hxfin
       have htx_le : tmap x hxfin ≤ t := by
         calc tmap x hxfin = tmap' x := htmap'_eq.symm
           _ ≤ hfin.toFinset.sup tmap' := Finset.le_sup hxfin

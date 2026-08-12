@@ -377,16 +377,16 @@ private lemma smulOrbit_indicator_eq_sum (g₁ : P.Δ)
     ∑ k : decompQuot P g₁,
       if smulOrbitElement P g₁ β k = x₀ then 1 else 0 := by
   by_cases hmem : x₀ ∈ smulOrbit P g₁ β
-  · rw [if_pos hmem]
+  · rw [ite_eq_left hmem]
     simp only [smulOrbit, Finset.mem_image] at hmem
     obtain ⟨q₀, _, hq₀⟩ := hmem
     rw [Finset.sum_eq_single q₀]
     · simp only [hq₀, ↓reduceIte]
-    · intro q _ hne; rw [if_neg]; intro heq
+    · intro q _ hne; rw [ite_eq_right]; intro heq
       exact hne (smulOrbit_map_injective P g₁ β (heq.trans hq₀.symm))
     · exact fun h => absurd (Finset.mem_univ _) h
-  · rw [if_neg hmem]; symm
-    exact Finset.sum_eq_zero fun q _ => if_neg fun heq =>
+  · rw [ite_eq_right hmem]; symm
+    exact Finset.sum_eq_zero fun q _ => ite_eq_right fun heq =>
       hmem (Finset.mem_image.mpr ⟨q, Finset.mem_univ _, heq⟩)
 
 open Classical in
@@ -527,11 +527,11 @@ private lemma smul_assoc_key (g₁ g₂ : P.Δ) (β₀ : P.Δ) :
         else (0 : ℤ)) = (m P g₂ g₁) D₀ := by
       rw [Finsupp.sum]
       rw [Finset.sum_eq_single D₀
-        (fun D hD hne => if_neg (Finset.disjoint_left.mp
+        (fun D hD hne => ite_eq_right (Finset.disjoint_left.mp
           (smulOrbit_disjoint_of_ne P (HeckeCoset.rep D₀) (HeckeCoset.rep D) β₀
             (by simp only [HeckeCoset.rep, Quotient.out_eq]; exact hne.symm)) hx₀))
         (fun h => absurd hD₀ h)]
-      exact if_pos hx₀
+      exact ite_eq_left hx₀
     rw [h_lhs]
     exact (smulOrbit_count_eq_m' P g₂ g₁ D₀ β₀ x₀ hx₀).symm
   · push Not at h_ex
@@ -539,7 +539,7 @@ private lemma smul_assoc_key (g₁ g₂ : P.Δ) (β₀ : P.Δ) :
         if x₀ ∈ smulOrbit P (HeckeCoset.rep a₁) β₀ then b
         else (0 : ℤ)) = 0 := by
       rw [Finsupp.sum]
-      exact Finset.sum_eq_zero (fun D hD => if_neg (h_ex D hD))
+      exact Finset.sum_eq_zero (fun D hD => ite_eq_right (h_ex D hD))
     rw [h_lhs]
     exact (Finset.sum_eq_zero fun j hj => by
       simp only [ite_eq_right_iff, one_ne_zero]

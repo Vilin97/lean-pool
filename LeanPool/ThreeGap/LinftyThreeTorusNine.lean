@@ -490,7 +490,7 @@ theorem nine_le_card_image {N : ℕ} (f : ℕ → ℝ) {q₀ q₁ q₂ q₃ q₄
 theorem nnDist_eq_inf (α : Fin 3 → ℝ) {q : ℕ} (hq : q ≤ 73)
     (hne : (Finset.Icc 1 (max q (73 - q))).Nonempty) :
     nnDist α 73 q = (Finset.Icc 1 (max q (73 - q))).inf' hne (fun n => delta α (n : ℤ)) := by
-  rw [← gapVal_eq_nnDist α (by norm_num) hq, gapVal, dif_pos hne]; rfl
+  rw [← gapVal_eq_nnDist α (by norm_num) hq, gapVal, dite_eq_left hne]; rfl
 
 /-- **`card ≥ 9` from the eight record drops** at `m = 50,51,54,55,67,68,71,72`, realized at
 `q = 24,23,22,19,18,6,5,2,1` (cutoffs `D = 49,50,51,54,55,67,68,71,72`). -/

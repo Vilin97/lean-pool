@@ -607,7 +607,7 @@ lemma bilinear_form_vanishes_on_orthogonal_complement
           exact hf (evalMapRestricted A s P_res) (LinearMap.mem_range_self _ _)
         unfold B at h_orth
         simp only [Matrix.toBilin_apply, Matrix.one_apply, evalMapRestricted,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true,
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true,
         mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Pi.basisFun_repr] at h_orth
         convert h_orth
         rfl
@@ -727,7 +727,6 @@ lemma Croot_Lev_Pach_lemma_generalised_1st_part
           · intro h
             rcases h with h | h <;> exact h.1
         · intro m hm
-          conv => lhs; arg 2; change monomial m (coeff m p);
           rw [← mul_one (coeff m p)]; simp only [← smul_eq_mul]; rw [← smul_monomial]
           simp only [smul_eval]
           -- Here we use the preliminary lemma `eval_split` to show that
@@ -975,11 +974,11 @@ theorem bannai_bannai_stanton_bound {d s : ℕ} (S : Set (EuclideanSpace ℝ (Fi
   have M_eval (a b : A) : M a b = if a = b then ∏ r ∈ D, r ^ 2  else 0 := by
     simp only [M, P, productDistPoly, map_prod, map_sub, eval_C]
     by_cases hab : a = b
-    · rw [if_pos hab]
+    · rw [ite_eq_left hab]
       simp_all only [P, D, A, distPolyFrom, map_sum, map_pow,
       map_sub, eval_X, eval_C, sub_self, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
         zero_pow, Finset.sum_const_zero, sub_zero]
-    · rw [if_neg hab, h_eval]
+    · rw [ite_eq_right hab, h_eval]
       -- We want to use our productDistPolyFrom b at a.
       have h_eval_prod : ∏ x ∈ D, (x ^ 2 - (eval a.1) (distPolyFrom b.1))
       = eval a.1 (productDistPolyFrom b.1 D) := by
@@ -1007,11 +1006,11 @@ theorem bannai_bannai_stanton_bound {d s : ℕ} (S : Set (EuclideanSpace ℝ (Fi
     apply Finset.sum_pos'
     · ring_nf
       intro a h
-      rw [if_pos (Finset.mem_univ a)]
+      rw [ite_eq_left (Finset.mem_univ a)]
       nlinarith
     · obtain ⟨a, ha⟩ := Function.ne_iff.mp hv
       use a, Finset.mem_univ a
-      rw [if_pos (Finset.mem_univ a)]
+      rw [ite_eq_left (Finset.mem_univ a)]
       have h1 : 0 < v a ^ 2 := sq_pos_of_ne_zero ha
       nlinarith
   -- We can now conclude the proof, by doing a disjunction of

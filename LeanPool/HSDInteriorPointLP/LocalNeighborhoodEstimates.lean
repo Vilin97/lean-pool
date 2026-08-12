@@ -299,11 +299,11 @@ theorem abs_eq_two_posPart_sub (a : ℝ) :
   unfold posPart
   by_cases h : 0 ≤ a
   · have h_abs : |a| = a := abs_of_nonneg h
-    rw [if_pos h, h_abs]
+    rw [ite_eq_left h, h_abs]
     ring
   · have hlt : a < 0 := lt_of_not_ge h
     have h_abs : |a| = -a := abs_of_neg hlt
-    rw [if_neg h, h_abs]
+    rw [ite_eq_right h, h_abs]
     ring
 
 /-- The positive part of each vector second-order complementarity product is bounded
@@ -321,7 +321,7 @@ theorem corrector_component_posPart_bound {n : Nat}
   have hquad := corrector_component_second_order_upper w d hdir i
   unfold posPart
   by_cases hδ : 0 ≤ d.dx i * d.ds i
-  · rw [if_pos hδ]
+  · rw [ite_eq_left hδ]
     have hcoef : 2 * mu w ≤ 4 * (w.x i * w.s i) := by
       nlinarith
     have hmul : 2 * mu w * (d.dx i * d.ds i) ≤
@@ -337,7 +337,7 @@ theorem corrector_component_posPart_bound {n : Nat}
         _ ≤ (mu w - w.x i * w.s i) ^ 2 := hbound
     have hden : 0 < 2 * mu w := by nlinarith
     exact (le_div_iff₀ hden).2 hbound'
-  · rw [if_neg hδ]
+  · rw [ite_eq_right hδ]
     have hden_nonneg : 0 ≤ 2 * mu w := by nlinarith
     exact div_nonneg (sq_nonneg _) hden_nonneg
 
@@ -353,7 +353,7 @@ theorem corrector_scalar_posPart_bound {n : Nat}
   have hquad := corrector_scalar_second_order_upper w d hdir
   unfold posPart
   by_cases hδ : 0 ≤ d.dtau * d.dkappa
-  · rw [if_pos hδ]
+  · rw [ite_eq_left hδ]
     have hcoef : 2 * mu w ≤ 4 * (w.tau * w.kappa) := by
       nlinarith
     have hmul : 2 * mu w * (d.dtau * d.dkappa) ≤
@@ -369,7 +369,7 @@ theorem corrector_scalar_posPart_bound {n : Nat}
         _ ≤ (mu w - w.tau * w.kappa) ^ 2 := hbound
     have hden : 0 < 2 * mu w := by nlinarith
     exact (le_div_iff₀ hden).2 hbound'
-  · rw [if_neg hδ]
+  · rw [ite_eq_right hδ]
     have hden_nonneg : 0 ≤ 2 * mu w := by nlinarith
     exact div_nonneg (sq_nonneg _) hden_nonneg
 

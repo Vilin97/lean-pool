@@ -48,13 +48,15 @@ lemma primorial_squarefree (n : ℕ) : Squarefree (primorial n) := by
 theorem zeta_pos_of_prime :
     ∀ (p : ℕ), Nat.Prime p → (0 : ℝ) < (↑ζ : ArithmeticFunction ℝ) p := by
   intro p hp
-  rw [ArithmeticFunction.natCoe_apply, ArithmeticFunction.zeta_apply, if_neg (Nat.Prime.ne_zero hp)]
+  rw [ArithmeticFunction.natCoe_apply, ArithmeticFunction.zeta_apply,
+    ite_eq_right (Nat.Prime.ne_zero hp)]
   norm_num
 
 theorem zeta_lt_self_of_prime :
     ∀ (p : ℕ), Nat.Prime p → (↑ζ : ArithmeticFunction ℝ) p < (p : ℝ) := by
   intro p hp
-  rw [ArithmeticFunction.natCoe_apply, ArithmeticFunction.zeta_apply, if_neg (Nat.Prime.ne_zero hp)]
+  rw [ArithmeticFunction.natCoe_apply, ArithmeticFunction.zeta_apply,
+    ite_eq_right (Nat.Prime.ne_zero hp)]
   norm_num
   exact Nat.succ_le_iff.mp (Nat.Prime.two_le hp)
 
@@ -69,7 +71,7 @@ def primeSieve (N : ℕ) (y : ℝ) (hy : 1 ≤ y) : SelbergSieve := {
   nu := (ζ : ArithmeticFunction ℝ).pdiv .id
   nu_mult := by arith_mult
   nu_pos_of_prime := fun p hp _ => by
-    simp [if_neg hp.ne_zero, Nat.pos_of_ne_zero hp.ne_zero]
+    simp [ite_eq_right hp.ne_zero, Nat.pos_of_ne_zero hp.ne_zero]
   nu_lt_one_of_prime := fun p hp _ => by
     simpa [hp.ne_zero] using
       (inv_lt_one_of_one_lt₀ (by norm_cast; exact hp.one_lt) : (p : ℝ)⁻¹ < 1)
@@ -259,14 +261,14 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
       ∀ p, Nat.factorization (i a ha) p = if hp : p ∈ d.primeFactors then a p hp else 0 := by
     intro a ha p
     by_cases hp : p ∈ d.primeFactors
-    · rw [dif_pos hp, Nat.factorization_prod, Finset.sum_apply',
+    · rw [dite_eq_left hp, Nat.factorization_prod, Finset.sum_apply',
         Finset.sum_eq_single ⟨p, hp⟩, Nat.factorization_pow, Finsupp.smul_apply,
           Nat.Prime.factorization_self (Nat.prime_of_mem_primeFactors hp)]
       · ring
       · simp_all
       · simp_all
       · exact fun q _ => pow_ne_zero _ (ne_of_gt (Nat.pos_of_mem_primeFactors q.2))
-    · rw [dif_neg hp]
+    · rw [dite_eq_right hp]
       by_cases hpp : p.Prime
       swap
       · apply Nat.factorization_eq_zero_of_not_prime _ hpp
@@ -296,7 +298,7 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
     · rw [Finsupp.le_iff]; intro p _
       rw [hfact_i a ha]
       by_cases hp : p ∈ d.primeFactors
-      · rw [dif_pos hp]
+      · rw [dite_eq_left hp]
         rw [Nat.factorization_pow, Finsupp.smul_apply]
         simp_rw [Finset.mem_pi, Finset.mem_Icc] at ha
         trans (M • 1)
@@ -306,12 +308,12 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
           rw [Nat.mem_primeFactors_of_ne_zero hd.ne_zero] at hp
           rw [←Nat.Prime.dvd_iff_one_le_factorization hp.1 hd.ne_zero]
           exact hp.2
-      · rw [dif_neg hp]; norm_num
+      · rw [dite_eq_right hp]; norm_num
     · apply pow_ne_zero _ hd.ne_zero
     · rw [Finsupp.le_iff]; intro p hp
       rw [Nat.support_factorization] at hp
       rw [hfact_i a ha]
-      rw [dif_pos hp]
+      rw [dite_eq_left hp]
       trans 1
       · exact hd.natFactorization_le_one p
       simp_rw [Finset.mem_pi, Finset.mem_Icc] at ha
@@ -334,7 +336,7 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
     apply_fun Nat.factorization at hiab
     ext p hp
     obtain hiabp := DFunLike.ext_iff.mp hiab p
-    rw [hfact_i a ha, hfact_i b hb, dif_pos hp, dif_pos hp] at hiabp
+    rw [hfact_i a ha, hfact_i b hb, dite_eq_left hp, dite_eq_left hp] at hiabp
     exact hiabp
   have i_surj : ∀ (b : ℕ), b ∈ (d^M).divisors.filter (d ∣ ·) → ∃ a ha, i a ha = b := by
     intro b hb
@@ -365,8 +367,8 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
     rw [hfact_i (fun p _ => (Nat.factorization b) p) h p]
     rw [Finset.mem_filter, Nat.mem_divisors] at hb
     by_cases hp : p ∈ d.primeFactors
-    · rw [dif_pos hp]
-    · rw [dif_neg hp, eq_comm, Nat.factorization_eq_zero_iff, ←or_assoc]
+    · rw [dite_eq_left hp]
+    · rw [dite_eq_right hp, eq_comm, Nat.factorization_eq_zero_iff, ←or_assoc]
       rw [Nat.mem_primeFactors] at hp
       left
       push Not at hp
@@ -536,7 +538,7 @@ theorem boundingSum_ge_sum (s : SelbergSieve) (hnu : s.nu = (ζ : ArithmeticFunc
     · intro p hpp _
       rw [hnu]
       simpa [ArithmeticFunction.pdiv_apply, ArithmeticFunction.natCoe_apply,
-        ArithmeticFunction.zeta_apply, if_neg hpp.ne_zero, ArithmeticFunction.id_apply,
+        ArithmeticFunction.zeta_apply, ite_eq_right hpp.ne_zero, ArithmeticFunction.id_apply,
         one_div] using
           (inv_lt_one_of_one_lt₀ (by norm_cast; exact hpp.one_lt) : (p : ℝ)⁻¹ < 1)
   apply le_of_eq
@@ -605,7 +607,7 @@ theorem primeSieve_rem_eq (N : ℕ) (y : ℝ) (hy : 1 ≤ y) (d : ℕ) (hd : d �
   rw [primeSieve_multSum_eq (hd := hd)]
   unfold primeSieve
   rw [ArithmeticFunction.pdiv_apply, ArithmeticFunction.natCoe_apply,
-    ArithmeticFunction.zeta_apply, if_neg hd]
+    ArithmeticFunction.zeta_apply, ite_eq_right hd]
   rw [ArithmeticFunction.natCoe_apply, ArithmeticFunction.id_apply]
   ring_nf
 

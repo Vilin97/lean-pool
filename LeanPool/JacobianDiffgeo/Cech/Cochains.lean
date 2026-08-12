@@ -71,7 +71,7 @@ namespace MeroGermOn
 presheaf laws. Used to move gluing targets `⋃ i, ↑(U i)` against `↑Ω`. -/
 noncomputable def congrSet {U V : Set X} (h : U = V) :
     RS.MeroGermOn X U ≃ₗ[ℂ] RS.MeroGermOn X V :=
-  LinearEquiv.ofLinear (RS.MeroGermOn.restrict h.ge).toLinearMap
+  LinearEquiv.ofLinearMap (RS.MeroGermOn.restrict h.ge).toLinearMap
     (RS.MeroGermOn.restrict h.le).toLinearMap
     (LinearMap.ext fun φ => by
       change RS.MeroGermOn.restrict h.ge (RS.MeroGermOn.restrict h.le φ) = φ
@@ -268,6 +268,6 @@ theorem Z1.ord_diag {f : C1 D 𝒰} (hf : f ∈ Z1 D 𝒰) (i : Fin 𝒰.n) {x :
   rw [hzero] at this
   rw [← this]
   simp only [ZeroMemClass.coe_zero, RS.MeroGermOn.ord_zero]
-  exact if_pos ⟨(𝒰.U i ⊓ 𝒰.U i ⊓ 𝒰.U i : Opens X).2, hxx⟩
+  exact ite_eq_left ⟨(𝒰.U i ⊓ 𝒰.U i ⊓ 𝒰.U i : Opens X).2, hxx⟩
 
 end RS.Cech

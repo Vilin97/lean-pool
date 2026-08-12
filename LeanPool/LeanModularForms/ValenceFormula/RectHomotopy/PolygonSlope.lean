@@ -381,7 +381,7 @@ lemma fdPolygon_deriv_bounded :
     · have heq : deriv fdPolygon t = deriv fdPolygonSeg1 t := by
         apply Filter.EventuallyEq.deriv_eq
         filter_upwards [eventually_lt_nhds h_seg1] with s hs
-        simp only [fdPolygon, show s ≤ 1 from le_of_lt hs, if_true, fdPolygonSeg1]
+        simp only [fdPolygon, show s ≤ 1 from le_of_lt hs, ite_true, fdPolygonSeg1]
       rw [heq, fdPolygon_deriv_seg1]; simp only
       rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one,
         HHeight_sub_sqrt3_half, norm_one]; norm_num
@@ -391,7 +391,7 @@ lemma fdPolygon_deriv_bounded :
           apply Filter.EventuallyEq.deriv_eq
           filter_upwards [eventually_gt_nhds h_seg2.2, eventually_lt_nhds h_seg2.1] with s hs1 hs2
           simp only [fdPolygon, show ¬s ≤ 1 from not_le.mpr hs1,
-            show s ≤ 2 from le_of_lt hs2, if_true, if_false, fdPolygonSeg2]
+            show s ≤ 2 from le_of_lt hs2, ite_true, ite_false, fdPolygonSeg2]
         rw [heq, fdPolygon_deriv_seg2]
         calc ‖iPoint - rho'‖ ≤ ‖iPoint‖ + ‖rho'‖ := norm_sub_le _ _
           _ = 1 + 1 := by rw [i_point_norm, rho'_norm]
@@ -405,7 +405,7 @@ lemma fdPolygon_deriv_bounded :
             simp only [fdPolygon,
               show ¬s ≤ 1 from not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) hs1),
               show ¬s ≤ 2 from not_le.mpr hs1, show s ≤ 3 from le_of_lt hs2,
-              if_true, if_false, fdPolygonSeg3]
+              ite_true, ite_false, fdPolygonSeg3]
           rw [heq, fdPolygon_deriv_seg3]
           calc ‖rho - iPoint‖ ≤ ‖rho‖ + ‖iPoint‖ := norm_sub_le _ _
             _ = 1 + 1 := by rw [rho_norm, i_point_norm]
@@ -420,7 +420,7 @@ lemma fdPolygon_deriv_bounded :
                 show ¬s ≤ 1 from not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 3) hs1),
                 show ¬s ≤ 2 from not_le.mpr (lt_trans (by norm_num : (2 : ℝ) < 3) hs1),
                 show ¬s ≤ 3 from not_le.mpr hs1, show s ≤ 4 from le_of_lt hs2,
-                if_true, if_false, fdPolygonSeg4]
+                ite_true, ite_false, fdPolygonSeg4]
             rw [heq, fdPolygon_deriv_seg4]; simp only
             rw [Complex.norm_mul, Complex.norm_I, mul_one,
               HHeight_sub_sqrt3_half, norm_one]; norm_num
@@ -434,14 +434,14 @@ lemma fdPolygon_deriv_bounded :
                   show ¬s ≤ 1 from not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 4) hs1),
                   show ¬s ≤ 2 from not_le.mpr (lt_trans (by norm_num : (2 : ℝ) < 4) hs1),
                   show ¬s ≤ 3 from not_le.mpr (lt_trans (by norm_num : (3 : ℝ) < 4) hs1),
-                  show ¬s ≤ 4 from not_le.mpr hs1, if_false, fdPolygonSeg5]
+                  show ¬s ≤ 4 from not_le.mpr hs1, ite_false, fdPolygonSeg5]
               rw [heq, fdPolygon_deriv_seg5]; simp only [norm_one]; norm_num
             · push Not at h_seg5
               by_cases h_zero : t = 0
               · have heq : deriv fdPolygon t = deriv fdPolygonSeg1 t := by
                   apply Filter.EventuallyEq.deriv_eq; rw [h_zero]
                   filter_upwards [Iio_mem_nhds (by norm_num : (0 : ℝ) < 1)] with s hs
-                  simp only [fdPolygon, show s ≤ 1 from le_of_lt hs, if_true, fdPolygonSeg1]
+                  simp only [fdPolygon, show s ≤ 1 from le_of_lt hs, ite_true, fdPolygonSeg1]
                 rw [heq, fdPolygon_deriv_seg1]; simp only
                 rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one,
                   HHeight_sub_sqrt3_half, norm_one]; norm_num
@@ -453,7 +453,7 @@ lemma fdPolygon_deriv_bounded :
                       show ¬s ≤ 1 from not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 4) hs),
                       show ¬s ≤ 2 from not_le.mpr (lt_trans (by norm_num : (2 : ℝ) < 4) hs),
                       show ¬s ≤ 3 from not_le.mpr (lt_trans (by norm_num : (3 : ℝ) < 4) hs),
-                      show ¬s ≤ 4 from not_le.mpr hs, if_false, fdPolygonSeg5]
+                      show ¬s ≤ 4 from not_le.mpr hs, ite_false, fdPolygonSeg5]
                   rw [heq, fdPolygon_deriv_seg5]; simp only [norm_one]; norm_num
                 · exfalso
                   have ht_le4 : t ≤ 4 := by grind

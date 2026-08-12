@@ -610,7 +610,7 @@ theorem logDeriv_GammaSeq_succ_eq
           (((k + 1 : ℕ) : ℂ)⁻¹)) =
         (harmonic (n + 1) : ℂ) :=
     sum_range_natCast_inv_eq_harmonic (n + 1)
-  rw [Real.eulerMascheroniSeq', if_neg (Nat.succ_ne_zero n)]
+  rw [Real.eulerMascheroniSeq', ite_eq_right (Nat.succ_ne_zero n)]
   rw [Finset.sum_sub_distrib, hharm]
   push_cast
   have hlog :

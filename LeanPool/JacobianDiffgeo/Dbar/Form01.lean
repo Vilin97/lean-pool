@@ -174,7 +174,7 @@ noncomputable def rawCoeffAt (x : X) (z : ℂ) : ℂ :=
   else 0
 
 theorem rawCoeffAt_of_not_mem {x : X} {z : ℂ} (hz : z ∉ (chartAt ℂ x).target) :
-    Data.rawCoeffAt x z = 0 := dif_neg hz
+    Data.rawCoeffAt x z = 0 := dite_eq_right hz
 
 theorem rawCoeffAt_of_mem {x : X} {z : ℂ} (hz : z ∈ (chartAt ℂ x).target) :
     Data.rawCoeffAt x z =
@@ -182,7 +182,7 @@ theorem rawCoeffAt_of_mem {x : X} {z : ℂ} (hz : z ∈ (chartAt ℂ x).target) 
           (deriv (⇑(Data.chart (Data.idx ((chartAt ℂ x).symm z))) ∘ ⇑(chartAt ℂ x).symm) z) *
         Data.coeff (Data.idx ((chartAt ℂ x).symm z))
           (Data.chart (Data.idx ((chartAt ℂ x).symm z)) ((chartAt ℂ x).symm z)) :=
-  dif_pos hz
+  dite_eq_left hz
 
 /-- **Master computation**: in the preferred chart at `x`, at a target point `z` whose base point
 lies in the `i`-th data chart, the raw coefficient is the `i`-th coefficient transported by the

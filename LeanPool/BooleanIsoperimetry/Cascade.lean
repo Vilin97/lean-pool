@@ -158,7 +158,7 @@ lemma binomPrefix_pred_add_choosePred (n r : ℕ) :
     binomPrefix n (r - 1) + choosePred n r = binomPrefix n r := by
   rcases r with _ | r
   · simp [choosePred, binomPrefix_zero]
-  · simp only [Nat.add_sub_cancel, choosePred, Nat.succ_ne_zero, if_false,
+  · simp only [Nat.add_sub_cancel, choosePred, Nat.succ_ne_zero, ite_false,
       Nat.add_sub_cancel]
     rw [binomPrefix_succ]
 
@@ -555,7 +555,7 @@ lemma gShift_embed0 {n : ℕ} (v : Cube n) :
   unfold gShift
   by_cases h : v.Nonempty
   · have h0 : (embed0 v).Nonempty := by unfold embed0; simp [h]
-    simp only [h, h0, dif_pos]
+    simp only [h, h0, dite_eq_left]
     have hmin : (embed0 v).min' h0 = Fin.castSucc (v.min' h) := by
       apply le_antisymm
       · apply Finset.min'_le
@@ -595,7 +595,7 @@ lemma gShift_embed1 {n : ℕ} (v : Cube n) :
       unfold embed1
       exact Finset.insert_nonempty _ _
     unfold gShift
-    simp only [h, h1, dif_pos, if_pos]
+    simp only [h, h1, dite_eq_left, ite_eq_left]
     have hmin : (embed1 v).min' h1 = Fin.castSucc (v.min' h) := by
       apply le_antisymm
       · apply Finset.min'_le
@@ -819,7 +819,7 @@ lemma H_increment_lower (n p : ℕ) (hp : p + 1 ≤ 2 ^ n) :
             (Finset.mem_insert.mp hy).elim ge_of_eq fun hy => (ha_lt y hy).le)
       refine Finset.mem_filter.mpr ⟨Finset.mem_univ _, ?_⟩
       unfold gShift
-      rw [dif_pos (Finset.insert_nonempty a w), hmin, Finset.erase_insert ha_notMem]
+      rw [dite_eq_left (Finset.insert_nonempty a w), hmin, Finset.erase_insert ha_notMem]
     -- Since `gShift⁻¹(w)` is a subset of `filter (rank (gShift ·) = p)`, we have
     -- `H n (p + 1) ≥ H n p + |gShift⁻¹(w)|`.
     have h_filter :

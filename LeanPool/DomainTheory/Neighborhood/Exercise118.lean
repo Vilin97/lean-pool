@@ -51,8 +51,8 @@ theorem appendSeq_mem {α : Type*} {C : Set (Set α)} {X1 : ℕ → Set α} {n1 
   intro i hi
   simp only [appendSeq]
   by_cases h : i < n1
-  · rw [if_pos h]; exact h1 i h
-  · rw [if_neg h]; exact h2 (i - n1) (by omega)
+  · rw [ite_eq_left h]; exact h1 i h
+  · rw [ite_eq_right h]; exact h2 (i - n1) (by omega)
 
 namespace NeighborhoodSystem
 
@@ -78,7 +78,7 @@ theorem interUpTo_appendSeq_left (X1 : ℕ → Set α) (n1 : ℕ) (X2 : ℕ → 
     intro hk
     rw [interUpTo_succ, interUpTo_succ, ih (Nat.le_of_succ_le hk)]
     have happ : appendSeq X1 n1 X2 k = X1 k := by
-      simp only [appendSeq, if_pos (Nat.lt_of_succ_le hk)]
+      simp only [appendSeq, ite_eq_left (Nat.lt_of_succ_le hk)]
     rw [happ]
 
 /-- The key identity: `⋂_{i<n1+n2} (X1 ++ X2)ᵢ = (⋂_{i<n1} X1ᵢ) ∩ (⋂_{i<n2} X2ᵢ)`. -/
@@ -93,7 +93,7 @@ theorem interUpTo_appendSeq (X1 : ℕ → Set α) (n1 : ℕ) (X2 : ℕ → Set �
   | succ j ih =>
     rw [Nat.add_succ, interUpTo_succ, ih]
     have happ : appendSeq X1 n1 X2 (n1 + j) = X2 j := by
-      simp only [appendSeq, if_neg (by omega : ¬ n1 + j < n1)]
+      simp only [appendSeq, ite_eq_right (by omega : ¬ n1 + j < n1)]
       simp_all
     rw [happ, interUpTo_succ, Set.inter_assoc]
 

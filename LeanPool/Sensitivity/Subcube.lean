@@ -71,7 +71,7 @@ theorem embed_indicator_subset (free S T : Finset (Fin n))
   funext j
   simp only [embed]
   by_cases hj : j ∈ free
-  · simp only [if_pos hj]
+  · simp only [ite_eq_left hj]
   · have : j ∉ T := fun hjT => absurd (hS (hT hjT)) hj
     simp [indicator, this]
 

@@ -99,7 +99,7 @@ theorem Function.sum_update_eq_self {ι₁ : Type _} [DecidableEq ι₁] [Fintyp
     [∀ i₁ : ι₁, AddCommGroup (M₁ i₁)] (x : ∀ i, M₁ i) :
     ∑ x_1 : ι₁, Function.update (0 : Π (j : ι₁), M₁ j) x_1 (x x_1) = x := by
   ext
-  simp only [Finset.sum_apply, Function.update, Finset.sum_dite_eq, Finset.mem_univ, if_true,
+  simp only [Finset.sum_apply, Function.update, Finset.sum_dite_eq, Finset.mem_univ, ite_true,
     Pi.zero_apply]
 
 theorem directSumTensorInvFun_apply_to_fun {R : Type _} [CommRing R] {ι₁ : Type _} {ι₂ : Type _}
@@ -163,7 +163,7 @@ theorem directSumTensorToFun_apply_inv_fun {R : Type _} [CommRing R] {ι₁ : Ty
     Pi.tensorProj_apply_pi_tensorOf, Fintype.sum_prod_type, AddHom.coe_mk, map_sum]
   ext
   simp only [← Finset.sum_product', Finset.univ_product_univ, Finset.sum_ite_eq,
-    Finset.sum_apply, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_apply, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 /-- Linear equivalence between tensor products of finite dependent products and products of tensor
 factors. -/

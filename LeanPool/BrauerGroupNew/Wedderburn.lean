@@ -505,7 +505,7 @@ lemma WedderburnArtin_algebra_version' (R : Type u) (A : Type v) [CommRing R] [R
   · ext x : 1
     simp only [MulOpposite.unop_zero, LinearMap.zero_apply]
     rw [show (0 : I) = Function.update (0 : Fin n → I) i (r • x) j
-      by simp [Function.update, if_neg (Ne.symm h)]]
+      by simp [Function.update, ite_eq_right (Ne.symm h)]]
     refine congr_fun (e.injective ?_) j
     simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, LinearMap.coe_mk, AddHom.coe_mk,
       Function.comp_apply]

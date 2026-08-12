@@ -644,7 +644,7 @@ lemma tailEstimate :
     · have hcutoff_nonneg : 0 ≤ tailCutoffCoeff y q := by
         have hq_pos : 0 < (q : ℝ) := by
           exact_mod_cast (show 0 < q from lt_of_lt_of_le (by decide : 0 < 2) (le_trans hy hyq))
-        rw [tailCutoffCoeff, if_pos hyq]
+        rw [tailCutoffCoeff, ite_eq_left hyq]
         exact div_nonneg ArithmeticFunction.vonMangoldt_nonneg hq_pos.le
       exact mul_nonneg (tailKernel_nonneg m q) hcutoff_nonneg
     · simp [coeff, tailCutoffCoeff, hyq]
@@ -747,7 +747,7 @@ lemma tailEstimate :
       by_cases hyq : y ≤ q
       · have hcast : ((m : ℝ) * q) = ((m * q : ℕ) : ℝ) := by
           norm_num [Nat.cast_mul]
-        rw [if_pos hyq, tailCutoffCoeff, if_pos hyq]
+        rw [ite_eq_left hyq, tailCutoffCoeff, ite_eq_left hyq]
         unfold tailKernel
         rw [hcast]
         field_simp

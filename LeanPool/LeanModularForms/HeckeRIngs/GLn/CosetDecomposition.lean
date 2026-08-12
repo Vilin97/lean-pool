@@ -298,13 +298,13 @@ theorem upperTriMat_distinct_cosets (a : Fin n → ℕ)
       have h_sum := @coset_sum_eq n a hdiv B₂ σ i j ih'
       rw [h_sum] at h_eq
       rcases lt_trichotomy i j with hij | rfl | hij
-      · rw [if_neg (Fin.ne_of_lt hij)]
+      · rw [ite_eq_right (Fin.ne_of_lt hij)]
         exact @coset_entry_zero_of_lt n a hpos hdiv B₁ B₂ σ i j hij
           (by simp only [hij, ↓reduceIte] at h_eq; exact h_eq)
       · simp only [lt_irrefl, ↓reduceIte, M₁, upperTriMat_apply_diag] at h_eq ⊢
         have h_ai_ne : (a i : ℤ) ≠ 0 := by exact_mod_cast (hpos i).ne'
         exact mul_right_cancel₀ h_ai_ne (by linarith)
-      · rw [if_neg (Fin.ne_of_gt hij)]
+      · rw [ite_eq_right (Fin.ne_of_gt hij)]
         simp only [show ¬(i < j) from not_lt.mpr (le_of_lt hij), ↓reduceIte,
           M₁, upperTriMat_apply_gt _ _ _ _ hij] at h_eq
         have : (a j : ℤ) ≠ 0 := by exact_mod_cast (hpos j).ne'

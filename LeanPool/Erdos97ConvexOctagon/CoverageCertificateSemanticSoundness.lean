@@ -119,13 +119,13 @@ private theorem remaining_selected_le_capacity
           exact Q.centre_not_mem target hselected
         have hselectedB := decide_eq_true hselected
         have hneB := decide_eq_true hne
-        simp only [List.filter_cons, hselectedB, hneB, if_true,
+        simp only [List.filter_cons, hselectedB, hneB, ite_true,
           List.length_cons]
         exact Nat.succ_le_succ induction
       · by_cases hne : centre ≠ target
         · have hselectedB := decide_eq_false hselected
           have hneB := decide_eq_true hne
-          simp only [List.filter_cons, hselectedB, hneB, if_true,
+          simp only [List.filter_cons, hselectedB, hneB, ite_true,
             List.length_cons]
           exact Nat.le_succ_of_le induction
         · have hselectedB := decide_eq_false hselected

@@ -36,7 +36,7 @@ private lemma ite_const_eq_iff_of_ne {P Q : Prop} [Decidable P] [Decidable Q] {c
   · intro hp
     simp_all
   · intro hq
-    rw [if_pos hq] at h
+    rw [ite_eq_left hq] at h
     by_contra hp
     simp_all
 
@@ -247,7 +247,7 @@ private lemma singular_annulus_f_lin_bound
     ‖(if ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁
       then (↑(t - t₀) : ℂ)⁻¹ else (0 : ℂ))‖ ≤ 2 * ‖L‖ / ε₂ := by
   by_cases hcond : ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁
-  · rw [if_pos hcond]
+  · rw [ite_eq_left hcond]
     have hlo : ε₂ / (2 * ‖L‖) < |t - t₀| := by
       calc ε₂ / (2 * ‖L‖)
           < ε₂ / ‖L‖ := div_lt_div_of_pos_left hε₂_pos hL_pos (by linarith)
@@ -386,9 +386,9 @@ private lemma singular_annulus_lin_integral_zero
   have h_cond_iff := norm_annulus_condition_iff hL_pos
     (ε₁ := ε₁) (ε₂ := ε₂) (t₀ := t₀)
   have hφ_zero : ∀ t, ¬(c₁ < |t - t₀| ∧ |t - t₀| ≤ c₂) → φ t = 0 :=
-    fun t hnt => if_neg (mt (h_cond_iff t).mp hnt)
+    fun t hnt => ite_eq_right (mt (h_cond_iff t).mp hnt)
   have hφ_val : ∀ t, c₁ < |t - t₀| ∧ |t - t₀| ≤ c₂ → φ t = (↑(t - t₀) : ℂ)⁻¹ :=
-    fun t ht => if_pos ((h_cond_iff t).mpr ht)
+    fun t ht => ite_eq_left ((h_cond_iff t).mpr ht)
   have ha_lt_mc₂ : a < t₀ - c₂ := by linarith [lt_of_lt_of_le hc₂_lt_dist (min_le_left _ _)]
   have hpc₂_lt_b : t₀ + c₂ < b := by linarith [lt_of_lt_of_le hc₂_lt_dist (min_le_right _ _)]
   have h_split := integral_split_five

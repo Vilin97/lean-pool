@@ -949,9 +949,9 @@ private theorem partialEquationRight_proves_eq_aux {𝕏 : Proof} [fin_X : Finty
     have ⟨eq₁, eq₂⟩ := p_def
     by_cases eq : interpolant 𝕏 (at encodeVar y) = interpolant 𝕏 (at encodeVar z) <;>
       subst eq₁ eq₂
-    · rw [dif_pos eq]
+    · rw [dite_eq_left eq]
       simp [Ext.f]
-    · rw [dif_neg eq]
+    · rw [dite_eq_right eq]
       simp [Ext.f]
   · simp [partialRightBoxₗ]
     split <;> simp_all [Ext.f]
@@ -994,9 +994,9 @@ private theorem partialEquationLeft_proves_eq_aux {𝕏 : Proof} [fin_X : Fintyp
     have ⟨eq₁, eq₂⟩ := p_def
     by_cases eq : interpolant 𝕏 (at encodeVar y) = interpolant 𝕏 (at encodeVar z) <;>
       subst eq₁ eq₂
-    · rw [dif_pos eq]
+    · rw [dite_eq_left eq]
       simp [Ext.f]
-    · rw [dif_neg eq]
+    · rw [dite_eq_right eq]
       simp [Ext.f]
   · simp [partialLeftAndᵣ]
     split <;> simp_all only [List.cons.injEq, and_true, ↓existsAndEq, Ext.f,
@@ -1798,7 +1798,7 @@ theorem partialInterpolationLeft_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X
   case boxₗ | boxᵣ =>
     by_cases eq : interpolant 𝕏 (at (encodeVar x)) = interpolant 𝕏 (equation x)
     · unfold partialInterpolationLeft
-      rw [dif_pos eq, partialEquationLeft]
+      rw [dite_eq_left eq, partialEquationLeft]
       split <;> simp_all only [RuleApp.boxₗ.injEq, RuleApp.boxᵣ.injEq, reduceCtorEq]
       intro f f_zero f_last f_succ
       use 0
@@ -1806,7 +1806,7 @@ theorem partialInterpolationLeft_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X
       split <;> simp_all
       simp [Ext.r, Ext.RuleApp.isBox]
     · unfold partialInterpolationLeft
-      rw [dif_neg eq]
+      rw [dite_eq_right eq]
       intro f f_zero f_last f_succ
       use 1
       cases n
@@ -1904,7 +1904,7 @@ theorem partialInterpolationRight_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.
   case boxₗ | boxᵣ =>
     by_cases eq : interpolant 𝕏 (at (encodeVar x)) = interpolant 𝕏 (equation x)
     · unfold partialInterpolationRight
-      rw [dif_pos eq, partialEquationRight]
+      rw [dite_eq_left eq, partialEquationRight]
       split <;> simp_all only [RuleApp.boxₗ.injEq, RuleApp.boxᵣ.injEq, reduceCtorEq]
       intro f f_zero f_last f_succ
       use 0
@@ -1912,7 +1912,7 @@ theorem partialInterpolationRight_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.
       split <;> simp_all
       simp [Ext.r, Ext.RuleApp.isBox]
     · unfold partialInterpolationRight
-      rw [dif_neg eq]
+      rw [dite_eq_right eq]
       intro f f_zero f_last f_succ
       use 1
       cases n

@@ -125,8 +125,8 @@ theorem cechCount : Module.finrank ℂ (RS.Cech.H1 (0 : RS.Divisor X)) ≤ genus
       rw [hD₀def, hBdef, hEdef]
       simp only [Function.locallyFinsuppWithin.single_apply]
       by_cases hx : x = P
-      · rw [if_pos hx, if_pos hx, if_pos hx]; omega
-      · rw [if_neg hx, if_neg hx, if_neg hx]; omega)
+      · rw [ite_eq_left hx, ite_eq_left hx, ite_eq_left hx]; omega
+      · rw [ite_eq_right hx, ite_eq_right hx, ite_eq_right hx]; omega)
   -- The evaluation map `Φ : L(B) →ₗ H¹(E)`, `q ↦ (q·) ξ`.
   let Φ : RS.LinSys B →ₗ[ℂ] RS.Cech.H1 E :=
     { toFun := fun q => RS.Cech.mulH1 (q : ℳ X) (hbound q) ξ

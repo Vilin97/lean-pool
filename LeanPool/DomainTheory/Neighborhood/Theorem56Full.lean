@@ -230,7 +230,7 @@ structure LamDef {n : ℕ} (φ : ApproximableMap 𝒩 N) (f : List.Vector ℕ n 
 /-- Every coordinate `j < n` of `vecElem v` is the total `v.get j`. -/
 theorem component_vecElem_lt {n : ℕ} (v : List.Vector ℕ n) {j : ℕ} (hj : j < n) :
     component (vecElem v) j = natElem (v.get ⟨j, hj⟩) := by
-  rw [component_vecElem, dif_pos hj]
+  rw [component_vecElem, dite_eq_left hj]
 
 /-- `vecElem v` has total coordinates throughout its arity. -/
 theorem vecElem_totals {n : ℕ} (v : List.Vector ℕ n) :
@@ -240,7 +240,7 @@ theorem vecElem_totals {n : ℕ} (v : List.Vector ℕ n) :
 /-- A coordinate that an `argElem` sets to `none` is `⊥`. -/
 theorem component_argElem_none {n : ℕ} (a : Fin n → Option ℕ) (i : Fin n) (hi : a i = none) :
     component (argElem a) (i : ℕ) = N.bot := by
-  rw [component_argElem, dif_pos i.isLt, Fin.eta, hi]; rfl
+  rw [component_argElem, dite_eq_left i.isLt, Fin.eta, hi]; rfl
 
 /-- **Master constructor.** Wrapping an `inner` map (correct on total arguments)
 in `strictGuardN n`
@@ -333,7 +333,7 @@ theorem tupleMap_vecElem_eq {m nn : ℕ} (φg : Fin nn → ApproximableMap 𝒩 
   · rw [component_tupleMap nn φg (vecElem v) i hi, component_vecElem_lt w hi]
     exact (hg ⟨i, hi⟩).defined v (w.get ⟨i, hi⟩) (hw ⟨i, hi⟩)
   · rw [component_tupleMap_ge nn φg (vecElem v) i (Nat.le_of_not_lt hi), component_vecElem,
-      dif_neg hi]
+      dite_eq_right hi]
 
 /-- The tuple of realisers, applied to a total argument, is arg-like. -/
 theorem tupleMap_argLike {m nn : ℕ} (φg : Fin nn → ApproximableMap 𝒩 N)
@@ -440,14 +440,14 @@ theorem push_natElem_vecElem {n : ℕ} (a : ℕ) (u : List.Vector ℕ n) :
   intro j
   cases j with
   | zero =>
-    rw [component_push_zero, component_vecElem, dif_pos (Nat.succ_pos n)]
+    rw [component_push_zero, component_vecElem, dite_eq_left (Nat.succ_pos n)]
     exact congrArg natElem (List.Vector.get_cons_zero a u).symm
   | succ k =>
     rw [component_push_succ, component_vecElem, component_vecElem]
     by_cases hk : k < n
-    · rw [dif_pos hk, dif_pos (show k + 1 < n + 1 by omega)]
+    · rw [dite_eq_left hk, dite_eq_left (show k + 1 < n + 1 by omega)]
       exact congrArg natElem (List.Vector.get_cons_succ a u ⟨k, hk⟩).symm
-    · rw [dif_neg hk, dif_neg (show ¬ k + 1 < n + 1 by omega)]
+    · rw [dite_eq_right hk, dite_eq_right (show ¬ k + 1 < n + 1 by omega)]
 
 /-! ### Primitive recursion.
 
@@ -848,7 +848,8 @@ theorem oneArg_natElem (a : ℕ) :
     (oneArg).toElementMap (natElem a) = vecElem (a ::ᵥ (List.Vector.nil : List.Vector ℕ 0)) := by
   rw [oneArg, toElementMap_comp, toElementMap_paired, toElementMap_idMap, toElementMap_constMap]
   rw [show 𝒩.bot = vecElem (List.Vector.nil : List.Vector ℕ 0) from ?_, push_natElem_vecElem]
-  exact eq_of_component_eq (fun i => by rw [component_bot, component_vecElem, dif_neg (by omega)])
+  exact eq_of_component_eq fun i => by
+    rw [component_bot, component_vecElem, dite_eq_right (by omega)]
 
 theorem oneArg_bot : (oneArg).toElementMap N.bot = 𝒩.bot := by
   rw [oneArg, toElementMap_comp, toElementMap_paired, toElementMap_idMap, toElementMap_constMap]

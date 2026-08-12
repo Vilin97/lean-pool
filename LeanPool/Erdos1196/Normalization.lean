@@ -41,7 +41,7 @@ lemma hasSum_normalizationFirstEntryPart {x Y : ℕ} (hx : 1 ≤ x)
     dsimp [row]
     rw [firstEntryPairWeight_row]
     by_cases hm : 1 ≤ m ∧ m < x
-    · rw [if_pos hm, tsum_mul_left, firstEntryTail, if_pos hm]
+    · rw [ite_eq_left hm, tsum_mul_left, firstEntryTail, ite_eq_left hm]
     · simp [hm]
   have hIcc : ∀ m : ℕ, (1 ≤ m ∧ m < x) ↔ m ∈ Finset.Icc 1 (x - 1) := by
     intro m
@@ -52,7 +52,7 @@ lemma hasSum_normalizationFirstEntryPart {x Y : ℕ} (hx : 1 ≤ x)
     rw [firstEntryPairWeight_row]
     by_cases hm : 1 ≤ m ∧ m < x
     · rcases hm with ⟨hm1, hmx⟩
-      rw [if_pos ⟨hm1, hmx⟩]
+      rw [ite_eq_left ⟨hm1, hmx⟩]
       exact (hsummable hm1 hmx).mul_left (1 / (m : ℝ))
     · simp [hm]
   have hrow_zero : ∀ m ∉ Finset.Icc 1 (x - 1), row m = 0 := fun m hm => by
@@ -63,7 +63,7 @@ lemma hasSum_normalizationFirstEntryPart {x Y : ℕ} (hx : 1 ≤ x)
   have hpair_nonneg : ∀ p : ℕ × ℕ, 0 ≤ firstEntryPairWeight x Y p := by
     rintro ⟨m, q⟩
     by_cases hp : 1 ≤ m ∧ m < x ∧ entryThreshold x Y m ≤ q
-    · rw [firstEntryPairWeight, if_pos hp, Nat.cast_mul]
+    · rw [firstEntryPairWeight, ite_eq_left hp, Nat.cast_mul]
       exact div_nonneg ArithmeticFunction.vonMangoldt_nonneg (by positivity)
     · simp [firstEntryPairWeight, hp]
   have hpair : Summable (fun p : ℕ × ℕ => firstEntryPairWeight x Y p) :=

@@ -82,7 +82,7 @@ private theorem orderedPairSum_succ (k : ℕ) (f : Fin (k + 1) → Color) :
   · apply Fintype.sum_congr
     intro i
     rw [Fin.sum_univ_castSucc]
-    rw [if_neg (not_lt_of_ge (Fin.castSucc_lt_last i).le)]
+    rw [ite_eq_right (not_lt_of_ge (Fin.castSucc_lt_last i).le)]
     simp
   · rw [Fin.sum_univ_castSucc]
     simp
@@ -229,7 +229,7 @@ theorem interaction_symm
       exact Finset.sum_comm
     have hsum :
         W.interaction hmin v u cv cu + W.interaction hmin u v cu cv = 0 := by
-      simp only [interaction, if_neg hvu, if_neg (Ne.symm hvu)]
+      simp only [interaction, ite_eq_right hvu, ite_eq_right (Ne.symm hvu)]
       rw [hswap, ← Finset.sum_add_distrib]
       simp_rw [← Finset.sum_add_distrib]
       calc
@@ -256,7 +256,7 @@ theorem interaction_symm
                 rcases lt_trichotomy j.1 i.1 with hji | heq | hij'
                 · simp [hji, not_lt_of_ge hji.le]
                 · exact (hij heq.symm).elim
-                · rw [if_neg (not_lt_of_ge hij'.le), if_pos hij', zero_add]
+                · rw [ite_eq_right (not_lt_of_ge hij'.le), ite_eq_left hij', zero_add]
                   exact bracket_comm _ _
         _ = ∑ i : W.Occurrence v,
               bracket (W.frameDifference hmin v cv i)
@@ -280,7 +280,7 @@ theorem sum_interaction_choices
   by_cases hvu : v = u
   · subst u
     simp [interaction]
-  · simp only [interaction, if_neg hvu]
+  · simp only [interaction, ite_eq_right hvu]
     rw [Finset.sum_comm]
     apply Fintype.sum_eq_zero
     intro i
@@ -288,7 +288,7 @@ theorem sum_interaction_choices
     apply Fintype.sum_eq_zero
     intro j
     by_cases hji : j.1 < i.1
-    · simp only [hji, if_pos]
+    · simp only [hji, ite_eq_left]
       calc
         (∑ cu, bracket (W.frameDifference hmin v cv i)
             (W.frameDifference hmin u cu j)) =
@@ -452,7 +452,7 @@ theorem orderedLetterInteraction_chosen_eq_interaction
     W.orderedLetterInteraction (W.chosenDifference hmin choice) v u =
       W.interaction hmin v u (choice v) (choice u) := by
   unfold orderedLetterInteraction interaction
-  rw [if_neg hvu]
+  rw [ite_eq_right hvu]
   apply Fintype.sum_congr
   intro i
   apply Fintype.sum_congr

@@ -127,7 +127,7 @@ private def close_up_aux_b2_nonzero_proof
     have hdiv_b2 : ∀ x ∈ s', x = p * div_p_b2 x := by
       intro x hx
       change x = p * (if h : p ∣ x then Classical.choose h else x)
-      rw [dif_pos (hp_dvd x hx)]
+      rw [dite_eq_left (hp_dvd x hx)]
       exact Classical.choose_spec (hp_dvd x hx)
     let s'_div := s'.image div_p_b2
     have h_ie_b2 : span (↑s' : Set R.carrier) =

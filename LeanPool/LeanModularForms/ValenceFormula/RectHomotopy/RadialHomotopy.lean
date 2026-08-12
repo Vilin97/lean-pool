@@ -213,7 +213,7 @@ lemma polygonToCircleRadial_deriv_cont_on_piece (p : ℂ) (hp_norm : ‖p‖ > 1
     by_cases h1 : t < 1
     · have heq : fdPolygon =ᶠ[𝓝 t] fdPolygonSeg1 := by
         filter_upwards [eventually_lt_nhds h1, eventually_gt_nhds ht_sub.1] with u hu1 _
-        simp only [fdPolygon, show u ≤ 1 from le_of_lt hu1, if_true, fdPolygonSeg1]
+        simp only [fdPolygon, show u ≤ 1 from le_of_lt hu1, ite_true, fdPolygonSeg1]
       exact ((contDiff_one_iff_deriv.mpr ⟨fdPolygon_seg1_differentiable,
         by rw [fdPolygon_deriv_seg1]; exact continuous_const⟩).contDiffAt).congr_of_eventuallyEq heq
     · push Not at h1
@@ -221,7 +221,7 @@ lemma polygonToCircleRadial_deriv_cont_on_piece (p : ℂ) (hp_norm : ‖p‖ > 1
       · have h1' : t > 1 := lt_of_le_of_ne h1 (Ne.symm ht_ne1)
         have heq : fdPolygon =ᶠ[𝓝 t] fdPolygonSeg2 := by
           filter_upwards [eventually_gt_nhds h1', eventually_lt_nhds h2] with u hu1 hu2
-          simp only [fdPolygon, not_le.mpr hu1, le_of_lt hu2, if_true, if_false, fdPolygonSeg2]
+          simp only [fdPolygon, not_le.mpr hu1, le_of_lt hu2, ite_true, ite_false, fdPolygonSeg2]
         exact ((contDiff_one_iff_deriv.mpr ⟨fdPolygon_seg2_differentiable,
           by rw [fdPolygon_deriv_seg2]; exact continuous_const⟩
           ).contDiffAt).congr_of_eventuallyEq heq
@@ -231,7 +231,7 @@ lemma polygonToCircleRadial_deriv_cont_on_piece (p : ℂ) (hp_norm : ‖p‖ > 1
           have heq : fdPolygon =ᶠ[𝓝 t] fdPolygonSeg3 := by
             filter_upwards [eventually_gt_nhds h2', eventually_lt_nhds h3] with u hu1 hu2
             simp only [fdPolygon, not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) hu1),
-              not_le.mpr hu1, le_of_lt hu2, if_true, if_false, fdPolygonSeg3]
+              not_le.mpr hu1, le_of_lt hu2, ite_true, ite_false, fdPolygonSeg3]
           exact ((contDiff_one_iff_deriv.mpr ⟨fdPolygon_seg3_differentiable,
             by rw [fdPolygon_deriv_seg3]; exact continuous_const⟩
             ).contDiffAt).congr_of_eventuallyEq heq
@@ -243,7 +243,7 @@ lemma polygonToCircleRadial_deriv_cont_on_piece (p : ℂ) (hp_norm : ‖p‖ > 1
               simp only [fdPolygon,
                 not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 3) hu1),
                 not_le.mpr (lt_trans (by norm_num : (2 : ℝ) < 3) hu1),
-                not_le.mpr hu1, le_of_lt hu2, if_true, if_false, fdPolygonSeg4]
+                not_le.mpr hu1, le_of_lt hu2, ite_true, ite_false, fdPolygonSeg4]
             exact ((contDiff_one_iff_deriv.mpr ⟨fdPolygon_seg4_differentiable,
               by rw [fdPolygon_deriv_seg4]; exact continuous_const⟩
               ).contDiffAt).congr_of_eventuallyEq heq
@@ -254,7 +254,7 @@ lemma polygonToCircleRadial_deriv_cont_on_piece (p : ℂ) (hp_norm : ‖p‖ > 1
               simp only [fdPolygon, not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 4) hu1),
                 not_le.mpr (lt_trans (by norm_num : (2 : ℝ) < 4) hu1),
                 not_le.mpr (lt_trans (by norm_num : (3 : ℝ) < 4) hu1),
-                not_le.mpr hu1, if_false, fdPolygonSeg5]
+                not_le.mpr hu1, ite_false, fdPolygonSeg5]
             exact ((contDiff_one_iff_deriv.mpr ⟨fdPolygon_seg5_differentiable,
               by rw [fdPolygon_deriv_seg5]; exact continuous_const⟩
               ).contDiffAt).congr_of_eventuallyEq heq

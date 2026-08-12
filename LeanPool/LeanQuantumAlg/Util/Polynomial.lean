@@ -154,7 +154,7 @@ theorem coeff_X_sq_mul (P : ℂ[X]) (n : ℕ) :
   rw [h, coeff_X_mul' (X * P) n]
   rcases n with - | m
   · simp
-  · rw [if_neg (Nat.succ_ne_zero m), Nat.succ_sub_one, coeff_X_mul' P m]
+  · rw [ite_eq_right (Nat.succ_ne_zero m), Nat.succ_sub_one, coeff_X_mul' P m]
     simp_all
 
 theorem HasParity.X_mul {P : ℂ[X]} {p : ℕ} (hP : HasParity P p) :
@@ -163,7 +163,7 @@ theorem HasParity.X_mul {P : ℂ[X]} {p : ℕ} (hP : HasParity P p) :
   rw [coeff_X_mul'] at hk
   by_cases hk0 : k = 0
   · simp [hk0] at hk
-  · rw [if_neg hk0] at hk
+  · rw [ite_eq_right hk0] at hk
     have := hP _ hk
     omega
 
@@ -176,7 +176,7 @@ theorem HasParity.one_sub_X_sq_mul {P : ℂ[X]} {p : ℕ} (hP : HasParity P p) :
   rw [coeff_X_sq_mul] at hk
   by_cases hk2 : k < 2
   · simp [hk2] at hk
-  · rw [if_neg hk2] at hk
+  · rw [ite_eq_right hk2] at hk
     have := hP _ hk
     omega
 
@@ -237,9 +237,9 @@ theorem reflect_succ {F : ℂ[X]} {L : ℕ} (hF : F.natDegree ≤ L) :
   ext k
   rw [Polynomial.coeff_reflect, coeff_X_mul']
   rcases Nat.eq_zero_or_pos k with rfl | hk
-  · rw [if_pos rfl, Polynomial.revAt_le (Nat.zero_le _)]
+  · rw [ite_eq_left rfl, Polynomial.revAt_le (Nat.zero_le _)]
     exact Polynomial.coeff_eq_zero_of_natDegree_lt (by omega)
-  · rw [if_neg (by omega)]
+  · rw [ite_eq_right (by omega)]
     rcases Nat.lt_or_ge k (L + 2) with hk2 | hk2
     · rw [Polynomial.revAt_le (by omega), Polynomial.coeff_reflect,
         Polynomial.revAt_le (by omega)]
@@ -257,18 +257,18 @@ theorem reflect_X_mul {F : ℂ[X]} {L : ℕ} (hF : F.natDegree ≤ L) :
   rw [Polynomial.coeff_reflect, Polynomial.coeff_reflect]
   rcases Nat.lt_or_ge k (L + 1) with hk | hk
   · rw [Polynomial.revAt_le (by omega), Polynomial.revAt_le (by omega),
-      coeff_X_mul', if_neg (by omega)]
+      coeff_X_mul', ite_eq_right (by omega)]
     congr 1
     omega
   · rcases Nat.lt_or_ge k (L + 2) with hk2 | hk2
     · have hkeq : k = L + 1 := by omega
       subst hkeq
       rw [Polynomial.revAt_le le_rfl, Polynomial.revAt_eq_self_of_lt (by omega),
-        Nat.sub_self, coeff_X_mul', if_pos rfl,
+        Nat.sub_self, coeff_X_mul', ite_eq_left rfl,
         Polynomial.coeff_eq_zero_of_natDegree_lt (by omega)]
     · rw [Polynomial.revAt_eq_self_of_lt (by omega),
         Polynomial.revAt_eq_self_of_lt (by omega), coeff_X_mul',
-        if_neg (by omega), Polynomial.coeff_eq_zero_of_natDegree_lt (by omega),
+        ite_eq_right (by omega), Polynomial.coeff_eq_zero_of_natDegree_lt (by omega),
         Polynomial.coeff_eq_zero_of_natDegree_lt (by omega)]
 
 /-- Evaluation of a reflection: `(reflect L F)(z) = z^L · F(z⁻¹)`. -/

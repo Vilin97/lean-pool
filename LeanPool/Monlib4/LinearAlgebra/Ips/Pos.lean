@@ -233,7 +233,7 @@ theorem _root_.LinearMap.sqrt_sq_eq_self_of_isSymmetric_and_nonneg_spectrum
   simp_rw [pow_two, Module.End.mul_eq_comp, LinearMap.ext_iff, comp_apply, sqrt_apply, inner_sum,
     inner_smul_real_right, smul_smul, inner_smul_right, ← OrthonormalBasis.repr_apply_apply,
     OrthonormalBasis.repr_self, PiLp.single_apply, mul_boole, smul_ite, smul_zero,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, Algebra.mul_smul_comm,
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, Algebra.mul_smul_comm,
     sq_mul_sq_eq_self_of_isSymmetric_and_nonneg_spectrum T hT hT1,
     OrthonormalBasis.repr_apply_apply, ← smul_eq_mul, ← smul_assoc, forall_const]
 
@@ -440,7 +440,8 @@ noncomputable def _root_.LinearMap.IsPositive'.rePowIsInvertible (hT : T.IsPosit
   apply Invertible.mk (T.rePow hT.1 (-r)) <;> ext1 <;>
       simp_rw [Module.End.mul_apply, LinearMap.rePow_apply, inner_sum, inner_smul_right,
         orthonormal_iff_ite.mp (hT.1.eigenvectorBasis rfl).orthonormal, mul_boole, mul_ite,
-        MulZeroClass.mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, smul_smul, ← mul_assoc,
+        MulZeroClass.mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, smul_smul,
+        ← mul_assoc,
         ← RCLike.ofReal_mul, ←
         Real.rpow_add (LinearMap.isPositive'_and_invertible_pos_eigenvalues _ hT _),
         Module.End.one_apply] <;>

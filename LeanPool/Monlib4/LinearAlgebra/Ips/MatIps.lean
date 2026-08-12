@@ -106,7 +106,7 @@ theorem blockDiagonal'_includeBlock_trace' {R k : Type _} [CommSemiring R] [Fint
   calc
     (blockDiagonal' (includeBlock x)).trace
       = ∑ i, (includeBlock x i).trace :=
-      by simp_rw [Matrix.trace, Matrix.diag, blockDiagonal'_apply, dif_pos,
+      by simp_rw [Matrix.trace, Matrix.diag, blockDiagonal'_apply, dite_eq_left,
       Finset.sum_sigma']; rfl
     _ = ∑ i, ∑ a, includeBlock x i a a := rfl
     _ = ∑ i, ∑ a, dite (j = i) (fun h => by rw [← h]; exact x)
@@ -117,13 +117,13 @@ theorem blockDiagonal'_includeBlock_trace' {R k : Type _} [CommSemiring R] [Fint
       (fun _ => (0 : R)) := by congr; ext; congr; ext; aesop
     _ = x.trace := by
         simp_rw [Finset.sum_dite_irrel, Finset.sum_const_zero,
-          Finset.sum_dite_eq, Finset.mem_univ, if_true]
+          Finset.sum_dite_eq, Finset.mem_univ, ite_true]
         rfl
 
 theorem Module.Dual.pi.matrixBlock_apply {i : k} : Module.Dual.pi.matrixBlock ψ i = (ψ i).matrix :=
   by
   simp only [Module.Dual.pi.matrixBlock, Finset.sum_apply, includeBlock_apply, Finset.sum_dite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   rfl
 
 
@@ -455,7 +455,7 @@ protected noncomputable def basis (hφ : φ.IsFaithfulPosMap) : Basis (n × n) �
     simp_rw [Submodule.mem_top, iff_true, Submodule.mem_span_range_iff_exists_fun, ← smul_mul,
       ← Finset.sum_mul, ← Matrix.ext_iff, mul_apply, Matrix.sum_apply,
       Matrix.smul_apply, single, of_apply, smul_ite, smul_zero, ← Prod.mk_inj, Prod.mk.eta,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, smul_mul_assoc, one_mul]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, smul_mul_assoc, one_mul]
     exists fun ij : n × n => (x * hQ.rpow (1 / 2) : Matrix n n ℂ) ij.1 ij.2
     simp_rw [smul_eq_mul, ← mul_apply, Matrix.mul_assoc, Matrix.PosDef.rpow_mul_rpow,
       add_neg_cancel,
@@ -542,7 +542,7 @@ theorem inner_coord (hφ : φ.IsFaithfulPosMap) (ij : n × n) (y : Matrix n n �
       _ = hQ.rpow (1 / 2) := by ring_nf
   rw [this]
   simp_rw [trace_iff, mul_apply, single, of_apply, mul_boole, ite_and]
-  simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true, ite_mul, MulZeroClass.zero_mul]
+  simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true, ite_mul, MulZeroClass.zero_mul]
   simp_rw [mul_comm]
 
 theorem inner_coord' (hφ : φ.IsFaithfulPosMap) (ij : n × n) (y : Matrix n n ℂ) :
@@ -617,7 +617,7 @@ theorem LinearMap.sum_single_comp_proj {R : Type _} {ι : Type _} [Fintype ι] [
       φ i) := by
   simp_rw [LinearMap.ext_iff, LinearMap.sum_apply, LinearMap.id_apply, LinearMap.comp_apply,
     LinearMap.proj_apply, LinearMap.coe_single, Pi.single, funext_iff, Finset.sum_apply,
-    Function.update, Pi.zero_apply, Finset.sum_dite_eq, Finset.mem_univ, if_true]
+    Function.update, Pi.zero_apply, Finset.sum_dite_eq, Finset.mem_univ, ite_true]
   intro _ _; trivial
 
 omit [(i : k) → Fintype (s i)] [(i : k₂) → Fintype (s₂ i)]
@@ -755,7 +755,7 @@ theorem includeBlock_inner_same' [hψ : ∀ i, (ψ i).IsFaithfulPosMap] {i j : k
     withPiInner[ψ]
     (⟪includeBlock x, includeBlock y⟫_ℂ = ⟪x, by rw [h]; exact y⟫_ℂ) := by
     pi_inner_instances ψ
-    simp_rw [includeBlock_left_inner, includeBlock_apply, h, dif_pos]
+    simp_rw [includeBlock_left_inner, includeBlock_apply, h, dite_eq_left]
     rfl
 open scoped Classical in
 omit [(i : k) → DecidableEq (s i)] in
@@ -807,7 +807,7 @@ protected theorem basis_is_orthonormal [hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
   · rintro rfl
     simp_rw [includeBlock_inner_same, ← Module.Dual.IsFaithfulPosMap.basis_apply,
       orthonormal_iff_ite.mp ((hψ i.1).basis_is_orthonormal) i.snd,
-      if_true]
+      ite_true]
   · intro h
     simp_rw [← Module.Dual.IsFaithfulPosMap.basis_apply]
     by_cases h' : i.fst = j.fst
@@ -818,7 +818,7 @@ protected theorem basis_is_orthonormal [hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
       simp only [orthonormal_iff_ite.mp (hψ _).basis_is_orthonormal i.snd]
       simp only [eq_mpr_eq_cast]
       symm
-      apply if_neg
+      apply ite_eq_right
       intro hh
       apply h
       rw [hh]
@@ -988,7 +988,7 @@ theorem inner_single_single [hφ : φ.IsFaithfulPosMap] (i j k l : n) :
     (⟪single i j (1 : ℂ), single k l (1 : ℂ)⟫_ℂ = ite (i = k) (φ.matrix l j) 0) := by
   simp_rw [inner_single_left, mul_apply, single, of_apply, boole_mul, ite_and]
   simp only [Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, Finset.sum_ite_eq]
+    ite_true, Finset.sum_ite_eq]
   simp_rw [@eq_comm _ (k : n) (i : n)]
 
 /-- `m^*(x) = ∑_{i,j,k,l} x_{il} Q⁻¹_{kj} (e_{ij} ⊗ₜ e_{kl})`. -/
@@ -1117,7 +1117,7 @@ theorem Qam.Nontracial.mul_comp_mul_adjoint [hφ : φ.IsFaithfulPosMap] :
     boole_mul, Finset.mul_sum, mul_ite, MulZeroClass.mul_zero, mul_one, ite_and]
   intro i j
   simp only [Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   simp_rw [← Finset.mul_sum, ← trace_iff φ.matrix⁻¹, mul_comm]
 
 
@@ -1133,7 +1133,7 @@ theorem LinearMap.mulLeft_toMatrix (hφ : φ.IsFaithfulPosMap) (x : Matrix n n �
     PosDef.rpow_mul_rpow, neg_add_cancel, PosDef.rpow_zero, Matrix.mul_one, Matrix.mul_apply,
     Matrix.single_eq, kroneckerMap, of_apply, Matrix.one_apply, mul_boole, ite_and,
       Finset.sum_ite_eq,
-    Finset.mem_univ, if_true, eq_comm]
+    Finset.mem_univ, ite_true, eq_comm]
 
 theorem LinearMap.mulRight_toMatrix [hφ : φ.IsFaithfulPosMap] (x : Matrix n n ℂ) :
     hφ.toMatrix (LinearMap.mulRight ℂ x) = 1 ⊗ₖ (hφ.sig (1 / 2) x)ᵀ := by
@@ -1147,7 +1147,7 @@ theorem LinearMap.mulRight_toMatrix [hφ : φ.IsFaithfulPosMap] (x : Matrix n n 
   simp_rw [Matrix.mul_assoc]
   by_cases h : ij.1 = kl.1
   · rw [h]
-    simp only [if_true, one_mul]
+    simp only [ite_true, one_mul]
     exact
       (Matrix.single_mul_apply_same (1 : ℂ) kl.1 kl.2 ij.2
         (hφ.matrixIsPosDef.rpow (-(1 / 2)) *
@@ -1196,9 +1196,9 @@ theorem pi_inner_single_single [hψ : ∀ i, (ψ i).IsFaithfulPosMap] {i j : k}
   pi_inner_instances ψ
   simp only [← includeBlock_apply_single]
   by_cases h : i = j
-  · simp only [h, dif_pos, pi.IsFaithfulPosMap.includeBlock_inner_same' h,
+  · simp only [h, dite_eq_left, pi.IsFaithfulPosMap.includeBlock_inner_same' h,
       inner_single_single, eq_mpr_single h]
-  · simp only [h, dif_neg, not_false_iff, pi.IsFaithfulPosMap.includeBlock_inner_ne_same h]
+  · simp only [h, dite_eq_right, not_false_iff, pi.IsFaithfulPosMap.includeBlock_inner_ne_same h]
 
 theorem pi_inner_single_single_same [hψ : ∀ i, (ψ i).IsFaithfulPosMap] {i : k}
     (a b c d : s i) :
@@ -1306,7 +1306,7 @@ theorem LinearMap.pi_mul'_comp_mul'_adjoint_eq_smul_id_iff [hψ : ∀ i, (ψ i).
   pi_inner_instances ψ
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, LinearMap.pi_mul'_comp_mul'_adjoint,
     funext_iff, Finset.sum_apply, ← LinearMap.map_smul,
-    includeBlock_apply, Finset.sum_dite_eq', Finset.mem_univ, if_true,
+    includeBlock_apply, Finset.sum_dite_eq', Finset.mem_univ, ite_true,
     LinearMap.smul_apply, Module.End.one_apply, Pi.smul_apply]
   simp only [eq_mp_eq_cast, cast_eq, ← Pi.smul_apply]
   constructor

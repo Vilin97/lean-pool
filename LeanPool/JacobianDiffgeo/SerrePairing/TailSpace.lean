@@ -99,13 +99,13 @@ theorem Tail.single_boundedBy {p : X} {n : ℤ} {c : ℂ} {D : RS.Divisor X}
   rw [Finsupp.mem_support_iff, Tail.single_apply] at hx
   by_cases hxp : x = p
   · subst hxp
-    rw [Tail.single_apply, if_pos rfl] at hk
+    rw [Tail.single_apply, ite_eq_left rfl] at hk
     rw [Finsupp.mem_support_iff, Finsupp.single_apply] at hk
     by_cases hnk : n = k
-    · rw [if_pos hnk] at hk
+    · rw [ite_eq_left hnk] at hk
       rw [← hnk]
       exact h hk
-    · rw [if_neg hnk] at hk
+    · rw [ite_eq_right hnk] at hk
       exact absurd rfl hk
   · simp [hxp] at hx
 

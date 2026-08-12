@@ -737,13 +737,13 @@ theorem exists_flanking_pair {v : Fin 5 → EuclideanSpace ℝ (Fin 2)} (hne : �
       fun t => if 0 < det2 (v 0) (w t) then InnerProductGeometry.angle (v 0) (w t)
         else 2 * π - InnerProductGeometry.angle (v 0) (w t) with hθ
     have θpos : ∀ t, 0 < det2 (v 0) (w t) → θ t = InnerProductGeometry.angle (v 0) (w t) := by
-      intro t h; rw [hθ]; exact if_pos h
+      intro t h; rw [hθ]; exact ite_eq_left h
     have θneg : ∀ t, det2 (v 0) (w t) < 0 →
         θ t = 2 * π - InnerProductGeometry.angle (v 0) (w t) := by
-      intro t h; rw [hθ]; exact if_neg (not_lt.mpr h.le)
+      intro t h; rw [hθ]; exact ite_eq_right (not_lt.mpr h.le)
     have θzero : ∀ t, det2 (v 0) (w t) = 0 →
         θ t = 2 * π - InnerProductGeometry.angle (v 0) (w t) := by
-      intro t h; rw [hθ]; exact if_neg (by rw [h]; exact lt_irrefl 0)
+      intro t h; rw [hθ]; exact ite_eq_right (by rw [h]; exact lt_irrefl 0)
     refine not_four_in_interval θ (InnerProductGeometry.angle (v 0) (w js)) ?_ ?_
     · -- membership in the length-π interval
       intro t

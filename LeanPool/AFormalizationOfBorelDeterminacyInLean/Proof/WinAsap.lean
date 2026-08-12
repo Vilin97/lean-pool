@@ -44,11 +44,11 @@ lemma mem_defensiveQuasi (x : G.tree) (h : ¬ WinningPrefix G p.swap x.val) hpr 
   intro n hn hx hp _
   conv => simp [defensiveQuasi, extQuasi, tryAndElse, defensivePre, preserveProp, ExtensionsAt.val']
   split_ifs with hne
-  · refine Set.mem_of_subset_of_mem (if_pos hne).ge ?_
+  · refine Set.mem_of_subset_of_mem (ite_eq_left hne).ge ?_
     intro hW; apply h; use n + 1
     rwa [show Player.residual (List.take (n + 1) x.val) p.swap = Player.zero by synthIsPosition,
       ← List.take_concat_get' _ _ hn]
-  · exact Set.mem_of_subset_of_mem (if_neg hne).ge (Set.mem_univ _)
+  · exact Set.mem_of_subset_of_mem (ite_eq_right hne).ge (Set.mem_univ _)
 lemma winningPrefix_of_residual {x y : List A}
   (hW : WinningPrefix (G.residual x) p y) :
   WinningPrefix G (p.residual x) (x ++ y) := by
@@ -274,12 +274,10 @@ lemma winAsap_subtree {x} (h : WinningPrefix G p x) :
       rw [subtree_compatible_iff _ ⟨_, mem_of_append h'⟩
         (by as_aux_lemma => synthIsPosition)] at h'
       conv at h' => simp [winAsap, h.shrink.extend y]
-      conv => simp [winAsap, h.shrink.extend y]
       obtain ⟨_, h'⟩ := h'
       replace h' := congrArg Subtype.val (Set.eq_of_mem_singleton h')
       apply ExtensionsAt.ext (x := (PreStrategy.subtreeIncl _ ⟨_, _⟩)) --why necessary?
       rw [h']
-      conv => simp
       apply h.extend_strat_apply; apply h.hEq_drop_take
     · conv => simp [← List.append_assoc]
       rw [subtree_compatible_iff _ ⟨_, ih⟩ (by as_aux_lemma => synthIsPosition)]

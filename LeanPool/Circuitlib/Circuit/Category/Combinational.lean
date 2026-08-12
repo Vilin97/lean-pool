@@ -183,9 +183,9 @@ lemma tensorHom_get
     else (g.val (Vector.ofFn fun k => w.get (Fin.natAdd X₁.obj k))).get
       ⟨i.val - Y₁.obj, by omega⟩ := by
   refine Fin.addCases (fun j => ?_) (fun j => ?_) i
-  · simp only [tensorHom_eq_left, Fin.val_castAdd, dif_pos j.isLt]
+  · simp only [tensorHom_eq_left, Fin.val_castAdd, dite_eq_left j.isLt]
   · simp only [tensorHom_eq_right, Fin.val_natAdd,
-               dif_neg (show ¬(Y₁.obj + j.val < Y₁.obj) from by omega)]
+               dite_eq_right (show ¬(Y₁.obj + j.val < Y₁.obj) from by omega)]
     congr 1; exact Fin.ext (by simp)
 
 @[simp]
@@ -430,7 +430,7 @@ lemma leftUnitor_naturality
     exact congrArg v.get (Fin.ext (by simp))
   simp only [CategoryStruct.comp, Function.comp, leftUnitor, iso, isoHom, isoHomVal]
   rw [Wires.get_cast, tensorHom_get,
-    dif_neg (show ¬ (i.val < (tensorUnit (V := V) (G := G)).obj) from by simp), harg]
+    dite_eq_right (show ¬ (i.val < (tensorUnit (V := V) (G := G)).obj) from by simp), harg]
   exact congrArg _ (Fin.ext (by simp))
 
 lemma rightUnitor_naturality
@@ -445,7 +445,7 @@ lemma rightUnitor_naturality
     simp only [Wires.get_ofFn, Wires.get_cast]
     exact congrArg v.get (Fin.ext (by simp))
   simp only [CategoryStruct.comp, Function.comp, rightUnitor, iso, isoHom, isoHomVal]
-  rw [Wires.get_cast, tensorHom_get, dif_pos (show i.val < Y.obj from i.isLt), harg]
+  rw [Wires.get_cast, tensorHom_get, dite_eq_left (show i.val < Y.obj from i.isLt), harg]
 
 open MonoidalCategory
 
@@ -693,7 +693,7 @@ lemma braiding_get_castAdd
     (v : Wires V (X.obj + Y.obj)) (j : Fin Y.obj) :
     ((braiding X Y).hom.val v).get (Fin.castAdd X.obj j) =
     v.get (Fin.natAdd X.obj j) := by
-  simp only [braiding_get, Fin.val_castAdd, dif_pos j.isLt]
+  simp only [braiding_get, Fin.val_castAdd, dite_eq_left j.isLt]
   exact congrArg v.get (Fin.ext (by simp))
 
 lemma braiding_get_natAdd

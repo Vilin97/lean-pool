@@ -452,7 +452,7 @@ theorem tubular_neighborhood_projection {S U : Set E}
   · intro x
     by_cases hx : x ∈ U
     · exact (tubularProj_mem hTN hne x hx).1
-    · simp only [tubularProj, and_imp, dif_neg hx]; exact hne.some_mem
+    · simp only [tubularProj, and_imp, dite_eq_right hx]; exact hne.some_mem
   -- ── Property 4: Nearest-point property ──
   · intro p hp x hx
     calc ‖x - tubularProj hTN hne x‖

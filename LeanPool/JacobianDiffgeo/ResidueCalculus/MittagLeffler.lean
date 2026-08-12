@@ -135,8 +135,8 @@ noncomputable def mlCoeff (f : ℂ → ℂ) (U : Set ℂ) (p : ℂ) : ℤ →₀
       by_cases hp : p ∈ U
       · simp only [hp, true_and] at hk
         by_cases hk0 : k < 0
-        · simp only [hk0, if_true] at hk
-          simp only [hp, if_true, Finset.mem_Icc]
+        · simp only [hk0, ite_true] at hk
+          simp only [hp, ite_true, Finset.mem_Icc]
           refine ⟨?_, by omega⟩
           by_contra hlt
           rw [not_le] at hlt
@@ -184,7 +184,7 @@ theorem mlCoeff_finite_support {f : ℂ → ℂ} {U : Set ℂ}
   by_cases hpU : p ∈ U
   · have horder := hp' hpU
     by_cases hk0 : k < 0
-    · simp only [hpU, hk0, and_self, if_true, Finsupp.coe_zero, Pi.zero_apply]
+    · simp only [hpU, hk0, and_self, ite_true, Finsupp.coe_zero, Pi.zero_apply]
       apply laurentCoeffAt_eq_zero_of_lt_order
       calc (k : WithTop ℤ) < (0 : WithTop ℤ) := by exact_mod_cast hk0
         _ ≤ meromorphicOrderAt f p := horder
@@ -202,7 +202,7 @@ theorem realizes_ofMeromorphicOn {f : ℂ → ℂ} (hf : MeromorphicOn f U)
     Realizes f (ofMeromorphicOn hf hfin) := by
   refine ⟨hf, fun p hp k hk => ?_⟩
   change laurentCoeffAt f p k = mlCoeff f U p k
-  rw [mlCoeff_apply, if_pos ⟨hp, hk⟩]
+  rw [mlCoeff_apply, ite_eq_left ⟨hp, hk⟩]
 
 theorem Realizes.add {f g : ℂ → ℂ} {D E : PrincipalPartData U} (hf : Realizes f D)
     (hg : Realizes g E) : Realizes (f + g) (D + E) := by

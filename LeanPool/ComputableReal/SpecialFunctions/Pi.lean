@@ -70,7 +70,7 @@ theorem sqrtTwoAddSeriesN_lb_gt_one (n k : ℕ) (hk : 3 ≤ k) : 1 ≤ (sqrtTwoA
   := by
   have h₀ : (0 : ℝ) ≤ ((sqrtTwoAddSeriesN n).lub k).snd := sqrtTwoAddSeriesN_ub_pos n k
   rw [sqrtTwoAddSeriesN_succ_lb, Sqrt.sqrt_lb_def,
-    if_neg (by push Not; change 0 < 2 + _; rify; positivity)]
+    ite_eq_right (by push Not; change 0 < 2 + _; rify; positivity)]
   clear h₀
   have h₁ := sqrtTwoAddSeriesN_lb_nonneg n k
   rify at h₁ ⊢

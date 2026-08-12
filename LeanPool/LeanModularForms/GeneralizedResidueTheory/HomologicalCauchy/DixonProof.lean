@@ -624,7 +624,7 @@ theorem dixonFunction_differentiable (hU : IsOpen U) (hf : DifferentiableOn ℂ 
   by_cases hw : w ∈ U
   · have h_eq : ∀ᶠ w' in 𝓝 w, dixonFunction f U γ w' = dixonH1 f γ w' :=
       Filter.Eventually.mono (hU.mem_nhds hw)
-        (fun w' hw' => by simp only [dixonFunction]; exact if_pos hw')
+        (fun w' hw' => by simp only [dixonFunction]; exact ite_eq_left hw')
     exact ((dixonH1_differentiableOn hU hf γ h_null.image_subset).differentiableAt
       (hU.mem_nhds hw)).congr_of_eventuallyEq h_eq
   · have hab : γ.a ≤ γ.b := le_of_lt γ.hab
@@ -867,12 +867,12 @@ private lemma dixonFunction_norm_lt_of_large (hU : IsOpen U) (hf : Differentiabl
   have hoff : ∀ t ∈ Icc γ.a γ.b, γ.toFun t ≠ w := by
     intro t ht heq; linarith [hR (γ.toFun t) ⟨t, ht, rfl⟩, heq ▸ hR_lt]
   by_cases hwin : w ∈ U
-  · simp only [dixonFunction, dif_pos hwin]
+  · simp only [dixonFunction, dite_eq_left hwin]
     rw [dixonH1_eq hU hf γ h_null.image_subset w hoff, hwn_eq_zero]
     simp only [mul_zero, zero_mul, sub_zero]
     exact lt_of_le_of_lt
       (dixonH2_norm_bound γ hM_f_nn hR hM_f hM_d hR_lt) h_bound_lt_ε
-  · simp only [dixonFunction, dif_neg hwin]
+  · simp only [dixonFunction, dite_eq_right hwin]
     exact lt_of_le_of_lt
       (dixonH2_norm_bound γ hM_f_nn hR hM_f hM_d hR_lt) h_bound_lt_ε
 
@@ -910,7 +910,7 @@ theorem cauchyIntegralFormula_nullHomologous (hU : IsOpen U) (hf : Differentiabl
     dixonH2 f γ w =
       2 * ↑Real.pi * I * generalizedWindingNumber' γ.toFun γ.a γ.b w * f w := by
   have h_zero := dixonFunction_eq_zero hU hf γ h_null w
-  simp only [dixonFunction, dif_pos hw] at h_zero
+  simp only [dixonFunction, dite_eq_left hw] at h_zero
   have h_eq := dixonH1_eq hU hf γ h_null.image_subset w hoff
   rw [h_zero] at h_eq; linear_combination -h_eq
 

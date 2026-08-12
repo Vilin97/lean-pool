@@ -390,13 +390,13 @@ theorem exists_bitSelect_lt {L sub : List ℕ} (hsub : sub.Sublist L) :
     refine ⟨2 * b, ?_, ?_⟩
     · have hpow : 2 ^ (l₂.length + 1) = 2 ^ l₂.length * 2 := pow_succ 2 l₂.length
       rw [List.length_cons]; omega
-    · rw [bitSelect_cons, if_neg (by omega), show 2 * b / 2 = b by omega]; exact heq
+    · rw [bitSelect_cons, ite_eq_right (by omega), show 2 * b / 2 = b by omega]; exact heq
   | @cons_cons l₁ l₂ e _h ih =>
     obtain ⟨b, hb, heq⟩ := ih
     refine ⟨2 * b + 1, ?_, ?_⟩
     · have hpow : 2 ^ (l₂.length + 1) = 2 ^ l₂.length * 2 := pow_succ 2 l₂.length
       rw [List.length_cons]; omega
-    · rw [bitSelect_cons, if_pos (by omega), show (2 * b + 1) / 2 = b by omega]; rw [heq]
+    · rw [bitSelect_cons, ite_eq_left (by omega), show (2 * b + 1) / 2 = b by omega]; rw [heq]
 
 /-- A universal statement over all sublists of `decodeList c` is a *bounded*
 universal over bitmasks
@@ -489,7 +489,7 @@ theorem consUpd_foldl_spec (projFn fc : ℕ → ℕ)
   | cons e el ih =>
     rw [List.foldl_cons, consUpd_eval, bitSelect_cons]
     by_cases hb : b % 2 = 1
-    · rw [if_pos hb, List.map_cons, hb, selectFn_one, selectFn_one,
+    · rw [ite_eq_left hb, List.map_cons, hb, selectFn_one, selectFn_one,
         show interFrom P (P.X a) (projFn e :: List.map projFn (bitSelect el (b / 2)))
           = interFrom P (P.X a ∩ P.X (projFn e)) (List.map projFn (bitSelect el (b / 2))) from rfl]
       by_cases hfce : fc (Nat.pair a (projFn e)) = 1
@@ -866,8 +866,8 @@ deciders themselves. All choice-free. -/
 `ℕ`). -/
 theorem selectFn_isOne (v a b : ℕ) : selectFn (isOne v) a b = if v = 1 then a else b := by
   by_cases h : v = 1
-  · rw [if_pos h, h, (isOne_eq_one_iff 1).mpr rfl, selectFn_one]
-  · rw [if_neg h]
+  · rw [ite_eq_left h, h, (isOne_eq_one_iff 1).mpr rfl, selectFn_one]
+  · rw [ite_eq_right h]
     have h0 : isOne v = 0 := by
       rcases (show isOne v = 0 ∨ isOne v = 1 from by have := isOne_le_one v; omega) with h0 | h1
       · exact h0
@@ -977,7 +977,7 @@ theorem condFoldl_spec (incl0 : ℕ → ℕ)
   | e :: el, A, a, hXa, hA, hcons => by
     rw [List.foldl_cons]
     by_cases hpred : incl0 (Nat.pair k e.unpair.1) = 1
-    · rw [if_pos hpred]
+    · rw [ite_eq_left hpred]
       have hincl : P₀.X k ⊆ P₀.X e.unpair.1 := by
         simp_all
       rw [condSet_cons_pos P₀ P₁ hincl] at hcons ⊢
@@ -989,7 +989,7 @@ theorem condFoldl_spec (incl0 : ℕ → ℕ)
         rw [P₁.inter_spec hk, hXa]
       exact condFoldl_spec incl0 hincl0 k el (A ∩ P₁.X e.unpair.2) (P₁.inter a e.unpair.2)
         hXinter hwit hcons
-    · rw [if_neg hpred]
+    · rw [ite_eq_right hpred]
       have hincl : ¬ P₀.X k ⊆ P₀.X e.unpair.1 := fun hc =>
         hpred ((hincl0 (Nat.pair k e.unpair.1)).mpr (by rwa [unpair_pair_fst, unpair_pair_snd]))
       rw [condSet_cons_neg P₀ P₁ hincl] at hcons ⊢
@@ -1295,9 +1295,10 @@ def Xenum (gN : ℕ → ℕ) (c : ℕ) : Set (ApproximableMap V₀ V₁) :=
   if gN c = 1 then stepFun (funListOf P₀ P₁ (decodeList c)) else Set.univ
 
 theorem Xenum_pos {gN : ℕ → ℕ} {c : ℕ} (h : gN c = 1) :
-    Xenum P₀ P₁ gN c = stepFun (funListOf P₀ P₁ (decodeList c)) := if_pos h
+    Xenum P₀ P₁ gN c = stepFun (funListOf P₀ P₁ (decodeList c)) := ite_eq_left h
 
-theorem Xenum_neg {gN : ℕ → ℕ} {c : ℕ} (h : gN c ≠ 1) : Xenum P₀ P₁ gN c = Set.univ := if_neg h
+theorem Xenum_neg {gN : ℕ → ℕ} {c : ℕ} (h : gN c ≠ 1) :
+    Xenum P₀ P₁ gN c = Set.univ := ite_eq_right h
 
 theorem Xenum_mem (gN : ℕ → ℕ)
     (hgN : ∀ c, gN c = 1 ↔ (stepFun (funListOf P₀ P₁ (decodeList c))
@@ -1330,16 +1331,16 @@ theorem Xenum_inter_eq (gN : ℕ → ℕ)
   unfold interIdx
   rw [selectFn_isOne]
   by_cases hn : gN n = 1
-  · rw [if_pos hn, selectFn_isOne]
+  · rw [ite_eq_left hn, selectFn_isOne]
     by_cases hm : gN m = 1
-    · rw [if_pos hm, Xenum_pos P₀ P₁ hn, Xenum_pos P₀ P₁ hm,
+    · rw [ite_eq_left hm, Xenum_pos P₀ P₁ hn, Xenum_pos P₀ P₁ hm,
       ← stepFun_funListOf_appendCode P₀ P₁ n m]
       rw [Xenum_pos P₀ P₁ hn, Xenum_pos P₀ P₁ hm] at hne
       have hgne : gN (appendCode n m) = 1 :=
         (hgN _).mpr (by rw [stepFun_funListOf_appendCode P₀ P₁ n m]; exact hne)
       rw [Xenum_pos P₀ P₁ hgne]
-    · rw [if_neg hm, Xenum_neg P₀ P₁ hm, Set.inter_univ]
-  · rw [if_neg hn, Xenum_neg P₀ P₁ hn, Set.univ_inter]
+    · rw [ite_eq_right hm, Xenum_neg P₀ P₁ hm, Set.inter_univ]
+  · rw [ite_eq_right hn, Xenum_neg P₀ P₁ hn, Set.univ_inter]
 
 /-- The `{0,1}` characteristic function of Scott's consistency relation (ii) for
 the function space:
@@ -1361,13 +1362,13 @@ theorem consPairChar_spec (gN : ℕ → ℕ)
   rw [hcons_iff]
   unfold consPairChar
   by_cases hn : gN n = 1
-  · rw [selectFn_isOne, if_pos hn, selectFn_isOne]
+  · rw [selectFn_isOne, ite_eq_left hn, selectFn_isOne]
     by_cases hm : gN m = 1
-    · rw [if_pos hm, hgN (appendCode n m), Xenum_pos P₀ P₁ hn, Xenum_pos P₀ P₁ hm,
+    · rw [ite_eq_left hm, hgN (appendCode n m), Xenum_pos P₀ P₁ hn, Xenum_pos P₀ P₁ hm,
         ← stepFun_funListOf_appendCode P₀ P₁ n m]
-    · rw [if_neg hm, Xenum_pos P₀ P₁ hn, Xenum_neg P₀ P₁ hm, Set.inter_univ]
+    · rw [ite_eq_right hm, Xenum_pos P₀ P₁ hn, Xenum_neg P₀ P₁ hm, Set.inter_univ]
       exact iff_of_true rfl ((hgN n).mp hn)
-  · rw [selectFn_isOne, if_neg hn, Xenum_neg P₀ P₁ hn, Set.univ_inter]
+  · rw [selectFn_isOne, ite_eq_right hn, Xenum_neg P₀ P₁ hn, Set.univ_inter]
     exact iff_of_true rfl (Xenum_nonempty P₀ P₁ gN hgN m)
 
 theorem primrec_consPairChar (gN : ℕ → ℕ) (hgNp : Nat.Primrec gN) :
@@ -1413,19 +1414,21 @@ theorem eqEnumChar_spec (gN incl0 incl1 eq1 : ℕ → ℕ)
     eqEnumChar P₁ gN incl0 incl1 eq1 a b = 1 ↔ Xenum P₀ P₁ gN a = Xenum P₀ P₁ gN b := by
   unfold eqEnumChar
   by_cases ha : gN a = 1
-  · rw [selectFn_isOne, if_pos ha, selectFn_isOne]
+  · rw [selectFn_isOne, ite_eq_left ha, selectFn_isOne]
     have hanea := (hgN a).mp ha
     by_cases hb : gN b = 1
-    · rw [if_pos hb, Xenum_pos P₀ P₁ ha, Xenum_pos P₀ P₁ hb, selectFn_mul_iff,
+    · rw [ite_eq_left hb, Xenum_pos P₀ P₁ ha, Xenum_pos P₀ P₁ hb, selectFn_mul_iff,
         subChar_spec P₀ P₁ incl0 incl1 hincl0 hincl1 hanea b,
         subChar_spec P₀ P₁ incl0 incl1 hincl0 hincl1 ((hgN b).mp hb) a]
       exact ⟨fun ⟨h1, h2⟩ => Set.Subset.antisymm h1 h2, fun h => ⟨h.subset, h.superset⟩⟩
-    · rw [if_neg hb, Xenum_pos P₀ P₁ ha, Xenum_neg P₀ P₁ hb, trivialChar_spec P₀ P₁ eq1 heq1 a]
-  · rw [selectFn_isOne, if_neg ha, selectFn_isOne]
+    · rw [ite_eq_right hb, Xenum_pos P₀ P₁ ha, Xenum_neg P₀ P₁ hb,
+        trivialChar_spec P₀ P₁ eq1 heq1 a]
+  · rw [selectFn_isOne, ite_eq_right ha, selectFn_isOne]
     by_cases hb : gN b = 1
-    · rw [if_pos hb, Xenum_neg P₀ P₁ ha, Xenum_pos P₀ P₁ hb, trivialChar_spec P₀ P₁ eq1 heq1 b]
+    · rw [ite_eq_left hb, Xenum_neg P₀ P₁ ha, Xenum_pos P₀ P₁ hb,
+        trivialChar_spec P₀ P₁ eq1 heq1 b]
       exact eq_comm
-    · rw [if_neg hb, Xenum_neg P₀ P₁ ha, Xenum_neg P₀ P₁ hb]
+    · rw [ite_eq_right hb, Xenum_neg P₀ P₁ ha, Xenum_neg P₀ P₁ hb]
       exact iff_of_true rfl rfl
 
 theorem primrec_eqEnumChar (gN incl0 incl1 eq1 : ℕ → ℕ) (hgNp : Nat.Primrec gN)

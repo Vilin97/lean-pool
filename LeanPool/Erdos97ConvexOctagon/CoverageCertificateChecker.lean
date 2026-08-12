@@ -245,7 +245,7 @@ private theorem nodeRowValid_of_processRow_ok
     · cases horigins : cursor.patternOrigins with
       | nil => simp [processRow, hcursor, hpattern, horigins] at hok
       | cons patternIdentifier patternIdentifiers =>
-          simp only [NodeRowValid, hpattern, if_pos]
+          simp only [NodeRowValid, hpattern, ite_eq_left]
           refine ⟨patternIdentifier, ?_⟩
           simpa [processRow, hcursor, hpattern, horigins] using hok
     · have hpatternFalse := Bool.eq_false_of_not_eq_true hpattern
@@ -254,7 +254,7 @@ private theorem nodeRowValid_of_processRow_ok
         | nil =>
             simp [processRow, hcursor, hpatternFalse, hremaining, horigins] at hok
         | cons hardIdentifier hardIdentifiers =>
-            simp only [NodeRowValid, hpatternFalse, hremaining, if_pos]
+            simp only [NodeRowValid, hpatternFalse, hremaining, ite_eq_left]
             refine ⟨hardIdentifier, ?_⟩
             simpa [processRow, hcursor, hpatternFalse, hremaining,
               horigins] using hok

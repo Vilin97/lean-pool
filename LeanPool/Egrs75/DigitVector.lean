@@ -162,13 +162,13 @@ noncomputable def topBadIndex (q n : ℕ) : ℕ :=
 within the digit list. -/
 theorem topBadIndex_mem {q n : ℕ} (hq : 1 < q) (hbad : 0 < badCountQ q n) :
     topBadIndex q n ∈ badIndexSet q n := by
-  rw [topBadIndex, dif_pos (badIndexSet_nonempty hq hbad)]
+  rw [topBadIndex, dite_eq_left (badIndexSet_nonempty hq hbad)]
   exact (badIndexSet q n).max'_mem _
 
 /-- Maximality: every bad index is `≤ topBadIndex`. -/
 theorem le_topBadIndex {q n i : ℕ} (hq : 1 < q) (hbad : 0 < badCountQ q n)
     (hi : i ∈ badIndexSet q n) : i ≤ topBadIndex q n := by
-  rw [topBadIndex, dif_pos (badIndexSet_nonempty hq hbad)]
+  rw [topBadIndex, dite_eq_left (badIndexSet_nonempty hq hbad)]
   exact (badIndexSet q n).le_max' i hi
 
 /-! ## Digit-at-index helper and the "high block is all good" fact (KERNEL-CLEAN)

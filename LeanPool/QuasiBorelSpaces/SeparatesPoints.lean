@@ -73,7 +73,7 @@ instance [∀ i, SeparatesPoints (P i)] : SeparatesPoints ((i : I) × P i) where
     intro p hp hx₂
     classical
     specialize h (fun z ↦ if h : z.1 = x₁ then p (h ▸ z.2) else False)
-    simp only [dite_else_false, ↓reduceDIte] at h
+    simp only [dite_false_right, ↓reduceDIte] at h
     apply h ?_ hx₂
     apply Sigma.isHom_elim
     intro z₁
