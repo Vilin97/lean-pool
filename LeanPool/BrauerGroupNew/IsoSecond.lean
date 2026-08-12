@@ -542,7 +542,7 @@ def AoxKBToM : A ⊗[K] B →ₗ[F] M α β where
         RingHom.id_apply]
 
 /-- The balanced quotient is linearly equivalent to the tensor product over `K`. -/
-def AoxKBEquivM : M α β ≃ₗ[F] A ⊗[K] B := .ofLinear MtoAoxKB AoxKBToM
+def AoxKBEquivM : M α β ≃ₗ[F] A ⊗[K] B := .ofLinearMap MtoAoxKB AoxKBToM
   (by
     ext x
     induction x using TensorProduct.induction_on with
