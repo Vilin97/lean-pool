@@ -86,7 +86,7 @@ theorem reducible_vanishing
         (topologicalKrullDim_subspace_lt_of_lt (X := (↑X : Type u)) Z hn))
 
 private theorem irreducible_dim_zero_vanishing
-    {X : TopCat.{u}} [NoetherianSpace X] [IrreducibleSpace X]
+    {X : TopCat.{u}} [IrreducibleSpace X]
     (F : TopCat.Sheaf AddCommGrpCat.{u} X)
     (n : ℕ) (hn : n > topologicalKrullDim X)
     (hdim : topologicalKrullDim X ≤ 0) :

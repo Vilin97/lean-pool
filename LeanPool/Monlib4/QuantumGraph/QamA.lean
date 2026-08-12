@@ -928,7 +928,7 @@ theorem Qam.unique_one_edge_and_refl [hφ : φ.IsFaithfulPosMap] [Nontrivial n] 
   · rintro rfl
     exact ⟨Qam.trivialGraph_edges, Qam.Nontracial.trivialGraph⟩
 
-private theorem star_alg_equiv.is_isometry_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (f :
+private theorem star_alg_equiv.is_isometry_iff [hφ : φ.IsFaithfulPosMap] (f :
     ℍ ≃⋆ₐ[ℂ] ℍ) :
     withMatrixQuantum[φ] (StarAlgEquiv.IsIsometry f ↔ f φ.matrix = φ.matrix) := by
   withMatrixQuantumCtx[φ]
@@ -937,7 +937,7 @@ private theorem star_alg_equiv.is_isometry_iff [hφ : φ.IsFaithfulPosMap] [Nont
     (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 4 0
 
 -- The conjugation normal form produces large matrix expressions before simplification.
-theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap]
     (x : { x : ℍ // x ≠ 0 }) :
     withMatrixQuantum[φ]
       (∀ {f : ℍ ≃⋆ₐ[ℂ] ℍ}, StarAlgEquiv.IsIsometry f →
@@ -998,7 +998,7 @@ theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial
     unitaryGroup.star_coe_eq_coe_star]
   simp only [rpow]
 
-theorem qamA.iso_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem qamA.iso_iff [hφ : φ.IsFaithfulPosMap]
     {x y : { x : ℍ // x ≠ 0 }} :-- (hx : _root_.is_self_adjoint (qam_A hφ x))
         -- (hy : _root_.is_self_adjoint (qam_A hφ y))
         -- qam.iso (@qam_A.is_idempotent n _ _ φ hφ x) (qam_A.is_idempotent y)

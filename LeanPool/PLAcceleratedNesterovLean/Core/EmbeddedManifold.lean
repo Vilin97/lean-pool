@@ -44,7 +44,7 @@ variable {d : ℕ}
 private abbrev isCompact_range_of_smoothEmbedding {d n : ℕ}
     (M : Type*) [TopologicalSpace M]
     [ChartedSpace (ManifoldModel n) M]
-    [IsManifold (modelI n) 2 M] [CompactSpace M]
+     [CompactSpace M]
     (ι : M → E d)
     (hι : IsSmoothEmbedding (modelI n) (𝓘(ℝ, E d)) 2 ι) :
     IsCompact (Set.range ι) :=
@@ -78,8 +78,8 @@ private abbrev orthogonalProjection_perp_comp_range_eq_zero
 
 /-- If L : E₁ →L[ℝ] E₂ is injective and V = range(L), then π_V ∘ L is bijective. -/
 private abbrev orthogonalProjection_comp_injective_bijective
-    {E₁ : Type*} [NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁] [FiniteDimensional ℝ E₁]
-    {E₂ : Type*} [NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂] [FiniteDimensional ℝ E₂]
+    {E₁ : Type*} [NormedAddCommGroup E₁] [InnerProductSpace ℝ E₁]
+    {E₂ : Type*} [NormedAddCommGroup E₂] [InnerProductSpace ℝ E₂]
     (L : E₁ →L[ℝ] E₂) (hL : Function.Injective L)
     (V : Submodule ℝ E₂) (hV : V = LinearMap.range L.toLinearMap)
     [V.HasOrthogonalProjection] :
@@ -103,7 +103,7 @@ private abbrev orthogonalProjection_comp_injective_bijective
 private abbrev isInvertible_of_bijective_finiteDimensional
     {A B : Type*}
     [NormedAddCommGroup A] [NormedSpace ℝ A] [FiniteDimensional ℝ A]
-    [NormedAddCommGroup B] [NormedSpace ℝ B] [FiniteDimensional ℝ B]
+    [NormedAddCommGroup B] [NormedSpace ℝ B]
     (L : A →L[ℝ] B) (hL : Function.Bijective L) :
     L.IsInvertible := by
   refine ⟨(LinearEquiv.ofBijective L.toLinearMap ?_).toContinuousLinearEquiv, ?_⟩

@@ -262,6 +262,7 @@ theorem vlasov_frozenField_pushforward_isLinearVlasovSolutionOn
   rw [hLHS, h_map_eq]
   exact h_under_integral
 
+omit [NeZero d] in
 /-- **C1 #2 — characteristic flow for a frozen field from window data (L11 clamp).**
 
 Build the characteristic flow for the *given* external curve `ρ` on `Ioo 0 T` (with boundary
@@ -4691,6 +4692,7 @@ theorem weak_eq_frozenField_pushforward_On
   exact weak_eq_frozenField_pushforward_dualCore W gradW hgradW L hL f T hT hf_weak hf_mom hf_narrow
     hf_cont hf_cont_deriv M_ρ hM_ρ_nn hM_ρ charX charV hflow hinit hcontIcc t ht φ hφ hφc
 
+omit [NeZero d] in
 /-- **Weak ⟹ Lagrangian on `[0,T]`** (tex: thm:weak-lagrangian).
 
 Under `AssW2` (`W ∈ C²`) and a per-window smallness, every weak Vlasov solution on `[0,T]` with

@@ -491,7 +491,7 @@ end ClassicalInstances
 /-- T7: If ≥ 7 / 12 of the hypotheses have D-error ≤ ρ, majority vote has D-error ≤ 7ρ. -/
 private lemma majority_error_le_seven_rate_of_good_fraction
     {X : Type u} [MeasurableSpace X]
-    (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
+    (D : MeasureTheory.Measure X)
     {k : ℕ} (hk_pos : 0 < k)
     (c : Concept X Bool) (hc_meas : Measurable c)
     (hs : Fin k → Concept X Bool)
@@ -677,7 +677,7 @@ private lemma majority_error_le_seven_rate_of_good_fraction
 /-- T8: If ≥ 7 / 12 of blocks are good, the boosted hypothesis has D-error ≤ 7·max(rate(n),0). -/
 private lemma boosted_sample_error_le_of_good_blocks
     {X : Type u} [MeasurableSpace X]
-    (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
+    (D : MeasureTheory.Measure X)
     (c : Concept X Bool) (hc_meas : Measurable c)
     (L : BatchLearner X Bool) [MeasurableBatchLearner X L]
     (rate : ℕ → ℝ) (k n : ℕ)

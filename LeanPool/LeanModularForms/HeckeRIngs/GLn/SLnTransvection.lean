@@ -37,7 +37,7 @@ private lemma slTransvecG_zero {m : ℕ} (i j : Fin m) (hij : i ≠ j) :
     slTransvecG i j hij 0 = 1 :=
   Subtype.ext (by simp [slTransvecG, Matrix.transvection_zero])
 
-private lemma slTransvecG_mul_entry {m : ℕ} [NeZero m] (i j : Fin m) (hij : i ≠ j) (c : ℤ)
+private lemma slTransvecG_mul_entry {m : ℕ} (i j : Fin m) (hij : i ≠ j) (c : ℤ)
     (σ : Matrix.SpecialLinearGroup (Fin m) ℤ) (a b : Fin m) :
     (slTransvecG i j hij c * σ).1 a b =
     if a = i then σ.1 i b + c * σ.1 j b else σ.1 a b := by
@@ -49,7 +49,7 @@ private lemma slTransvecG_mul_entry {m : ℕ} [NeZero m] (i j : Fin m) (hij : i 
   · simp [Matrix.transvection, Matrix.add_mul, hai]
 
 private lemma slTransvecG_mul_right_entry {m : ℕ}
-    [NeZero m] (i j : Fin m) (hij : i ≠ j) (c : ℤ) (σ : Matrix.SpecialLinearGroup (Fin m) ℤ)
+     (i j : Fin m) (hij : i ≠ j) (c : ℤ) (σ : Matrix.SpecialLinearGroup (Fin m) ℤ)
     (a b : Fin m) : (σ * slTransvecG i j hij c).1 a b =
     if b = j then σ.1 a j + c * σ.1 a i else σ.1 a b := by
   have hcoe : (σ * slTransvecG i j hij c).1 = σ.1 * Matrix.transvection i j c := by

@@ -7916,7 +7916,7 @@ private lemma memLp_two_prod_right_ae
 private lemma ae_prod_of_ae_ae_of_aestronglyMeasurable
     {α β E : Type*} [MeasurableSpace α] [MeasurableSpace β]
     [NormedAddCommGroup E] [MeasurableSpace E] [BorelSpace E]
-    {μ : Measure α} {ν : Measure β} [SFinite μ] [SFinite ν] {F : α × β -> E}
+    {μ : Measure α} {ν : Measure β} [SFinite ν] {F : α × β -> E}
     (hF_meas : AEStronglyMeasurable F (μ.prod ν))
     (hsec : ∀ᵐ x ∂μ, (fun y : β => F (x, y)) =ᵐ[ν] fun _ => (0 : E)) :
     F =ᵐ[μ.prod ν] fun _ => (0 : E) := by

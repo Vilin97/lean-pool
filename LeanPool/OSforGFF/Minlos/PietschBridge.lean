@@ -568,7 +568,7 @@ we need `|fₖ| ≤ r` for the Hilbertian lift `r`. Applying Pietsch twice and s
 by `K = max(Σ cₖ, 1) · √(Σ dₖ)` achieves both `p ≤ r` and `|fₖ| ≤ r`.
 -/
 private lemma doublePietsch_step
-    [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
+    [IsTopologicalAddGroup E]
     (hPN : IsNuclear E) (p : Seminorm ℝ E) (hp : Continuous p) :
     ∃ (r : Seminorm ℝ E),
       Continuous r ∧ r.IsHilbertian ∧ (∀ x, p x ≤ r x) ∧
@@ -635,7 +635,7 @@ private lemma doublePietsch_step
       _ = K_val * R x := by ring
 
 /-- Helper: continuity of Seminorm.sup. -/
-private theorem seminorm_continuous_sup [IsTopologicalAddGroup E]
+private theorem seminorm_continuous_sup
     (p q : Seminorm ℝ E) (hp : Continuous p) (hq : Continuous q) :
     Continuous (p ⊔ q) := by
   change Continuous (fun x => (p ⊔ q) x)

@@ -56,7 +56,7 @@ measurability follows from `charFlow_measurable_via_gronwall` (genuine
 **In-project consumer**: `vlasovWellPosedness_local_picard_fixedPointFlow`'s
 AEMeasurable conjunct, applied at clamp times `clampToIcc T s ∈ Icc 0 T`. -/
 private lemma picardCharFlow_aemeasurable
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (ρ : ℝ → Measure (PhysSpace d)) [∀ t, IsProbabilityMeasure (ρ t)]
@@ -201,7 +201,7 @@ contraction factor) and `D₀` (the initial `W₁`-input bound) are threaded wit
 their defining equations so the parent's `let`-definitions supply `rfl`. -/
 private lemma vlasovWellPosedness_local_picard_sequence
     {d : ℕ} [NeZero d]
-    (W : PhysSpace d → ℝ) [AssW W]
+    (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
     (L : NNReal) (hL : LipschitzWith L gradW)
@@ -526,7 +526,7 @@ private lemma picardFlow_clamp_bundle
     {d : ℕ} [NeZero d]
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
-    (f₀ : Measure (PhaseSpace d)) [IsProbabilityMeasure f₀]
+    (f₀ : Measure (PhaseSpace d))
     {T : ℝ} (hT : 0 < T)
     (m : ℝ → ℝ) (hMbar_nn : 0 ≤ m T)
     (hMbar_mono : ∀ t ∈ Set.Icc (0 : ℝ) T, m t ≤ m T)
@@ -831,7 +831,7 @@ satisfiable for any `L > 0` by taking `T < 1/C₂(L)`.
 * Uniform moment bound `M_ρ` on the spatial marginal trajectory. -/
 theorem vlasovWellPosedness_local_picard_fixedPointFlow
     {d : ℕ} [NeZero d]
-    (W : PhysSpace d → ℝ) [AssW W]
+    (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
     (L : NNReal) (hL : LipschitzWith L gradW)
@@ -1348,7 +1348,7 @@ Picard fixed-point flow, then `vlasovWellPosedness_local_finalAssembly_*`
 for the moment and Lagrangian conjuncts, deriving `f 0 = f₀` inline. -/
 theorem vlasovWellPosedness_local
     {d : ℕ} [NeZero d]
-    (W : PhysSpace d → ℝ) [AssW W]
+    (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
     (L : NNReal) (hL : LipschitzWith L gradW)
@@ -1577,7 +1577,7 @@ end HasDerivAtPunctured
 flow at the junction agree (`g`'s flow starts at the identity on
 `f_prev T`'s data), so `HasDerivWithinAt.union` on `Iic T ∪ Ici T = univ`
 gives the two-sided derivative, restricted back to `Icc 0 (T + T_0)`. -/
-private lemma vlasovWellPosedness_glue_boundary_seam {d : ℕ} [NeZero d]
+private lemma vlasovWellPosedness_glue_boundary_seam {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     {T T_0 : ℝ} (hT_pos : 0 < T) (hT_0_pos : 0 < T_0)
     (f_prev g f_next : ℝ → Measure (PhaseSpace d))
@@ -1691,7 +1691,7 @@ private lemma vlasovWellPosedness_glue_boundary_seam {d : ℕ} [NeZero d]
   exact ⟨hX_union.hasDerivAt Filter.univ_mem |>.hasDerivWithinAt,
     hV_union.hasDerivAt Filter.univ_mem |>.hasDerivWithinAt⟩
 
-private lemma vlasovWellPosedness_glue_boundary {d : ℕ} [NeZero d]
+private lemma vlasovWellPosedness_glue_boundary {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     {T T_0 : ℝ} (hT_pos : 0 < T) (hT_0_pos : 0 < T_0)
     (f_prev g f_next : ℝ → Measure (PhaseSpace d))
@@ -2062,7 +2062,7 @@ lemma flowConv_continuousWithinAt_Ici_seam
 curve (window-generic over the curve `μ`).  The first-moment transfer to the
 marginal feeds `integrable_gradW_shift`. -/
 private lemma dobrushinFlow_marginal_gradW_integrable
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (T : ℝ) (μ : ℝ → Measure (PhaseSpace d))
@@ -2088,7 +2088,7 @@ private lemma dobrushinFlow_marginal_gradW_integrable
 /-- First-moment integrability transfers to the spatial marginal:
 `∫ ‖z‖ ∂μ < ∞` gives `∫ ‖y‖ ∂(spatialMarginal μ) < ∞`. -/
 private lemma vlasovGlue_marginal_norm_integrable
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (μ : Measure (PhaseSpace d)) (hμ : HasFiniteFirstMoment μ) :
     Integrable (fun y : PhysSpace d => ‖y‖) (spatialMarginal μ) := by
   have : IsProbabilityMeasure μ := hμ.1
@@ -2105,7 +2105,7 @@ private lemma vlasovGlue_marginal_norm_integrable
 /-- Continuity of the spatial-gradient component `gradXφ` of a smooth test
 function `φ` on phase space. -/
 private lemma vlasovGlue_gradXφ_continuous
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (φ : PhaseSpace d → ℝ) (hφ_smooth : ContDiff ℝ (⊤ : ℕ∞) φ)
     (gradXφ : PhaseSpace d → PhysSpace d)
     (hgradXφ : ∀ z : PhaseSpace d, gradXφ z = gradient (fun x => φ (x, z.2)) z.1) :
@@ -2132,7 +2132,7 @@ private lemma vlasovGlue_gradXφ_continuous
 /-- Continuity of the velocity-gradient component `gradVφ` of a smooth test
 function `φ` on phase space. -/
 private lemma vlasovGlue_gradVφ_continuous
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (φ : PhaseSpace d → ℝ) (hφ_smooth : ContDiff ℝ (⊤ : ℕ∞) φ)
     (gradVφ : PhaseSpace d → PhysSpace d)
     (hgradVφ : ∀ z : PhaseSpace d, gradVφ z = gradient (fun v => φ (z.1, v)) z.2) :
@@ -2159,7 +2159,7 @@ private lemma vlasovGlue_gradVφ_continuous
 /-- Uniform sup-bound on both gradient components of a compactly supported
 smooth test function: `‖∇_x φ‖, ‖∇_v φ‖ ≤ M_φ := sup ‖fderiv φ‖`. -/
 private lemma vlasovGlue_gradφ_bound
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (φ : PhaseSpace d → ℝ) (hφ_smooth : ContDiff ℝ (⊤ : ℕ∞) φ)
     (hφ_compact : HasCompactSupport φ)
     (gradXφ gradVφ : PhaseSpace d → PhysSpace d)
@@ -2210,7 +2210,7 @@ private lemma vlasovGlue_gradφ_bound
 `‖(gradW ⋆ ρ) x‖ ≤ ‖gradW 0‖ + L·‖x‖ + L·M` for a probability measure `ρ`
 with `∫ ‖y‖ ∂ρ ≤ M`. -/
 private lemma vlasovGlue_conv_force_bound
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (ρ : Measure (PhysSpace d)) [IsProbabilityMeasure ρ]
@@ -2265,7 +2265,7 @@ bundle, and applies `characteristicFlow_boundary_regularity` +
 `flow_distance_growth_bound_on`.  Returns the linear growth constant `C`
 together with per-`z` window continuity of the joint flow curve. -/
 private lemma vlasovGlue_flow_growthBound
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (μ : ℝ → Measure (PhaseSpace d))
@@ -2352,7 +2352,7 @@ bound `C` on the flow, a moment envelope `M` on the marginal curve `ρ`, and
 kernel integrability.  Instantiated on the LEFT by `f_prev`'s window flow and
 on the RIGHT by the composed flow off `g`. -/
 private lemma vlasovGlue_seam_forceIntegral_cont
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (f₀ : Measure (PhaseSpace d)) [IsProbabilityMeasure f₀]
@@ -2503,7 +2503,7 @@ the glued solution agrees with `f_prev` (via `hf_next_le`), whose window
 pushforward representation reduces the claim to the generic seam DCT lemma
 `vlasovGlue_seam_forceIntegral_cont` on `f_prev`'s window flow. -/
 private lemma vlasovGlue_seam_contLeft
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (f₀ : Measure (PhaseSpace d)) [IsProbabilityMeasure f₀]
@@ -2694,7 +2694,7 @@ private lemma vlasovGlue_seam_contLeft
 /-- A shifted flow curve `s ↦ Φ (s − T) w` is continuous within `Ici T` at `T`
 when the unshifted curve has a one-sided derivative at `0` on `[0, T_0]`. -/
 private lemma vlasovGlue_shifted_flow_contWithin
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (charW : ℝ → PhaseSpace d → PhysSpace d) (w : PhaseSpace d) {v₀ : PhysSpace d}
     (T : ℝ) {T_0 : ℝ} (hT_0_pos : 0 < T_0)
     (hb : HasDerivWithinAt (fun s => charW s w) v₀ (Set.Icc 0 T_0) 0) :
@@ -2715,7 +2715,7 @@ private lemma vlasovGlue_shifted_flow_contWithin
 marginal is the pushforward by the composed position map, and both composed
 maps are a.e.-measurable. -/
 private lemma vlasovGlue_composed_pushforward
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (f₀ : Measure (PhaseSpace d))
     (g : ℝ → Measure (PhaseSpace d))
     (f_prevT : Measure (PhaseSpace d))
@@ -2780,7 +2780,7 @@ window: for `s ∈ [T, T+T_0]` the integral of the force integrand against
 Serves both the eventually-equal rewrite and the value-at-`T` bridge of the
 RIGHT seam close. -/
 private lemma vlasovGlue_composed_integral_eq
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (f₀ : Measure (PhaseSpace d))
     {T T_0 : ℝ} (hT_pos : 0 < T)
@@ -2866,7 +2866,7 @@ the composed pushforward of `f₀` by `g`'s window flow after `f_prev`'s time-`T
 flow; the claim reduces to the generic seam DCT lemma
 `vlasovGlue_seam_forceIntegral_cont` on the composed flow. -/
 private lemma vlasovGlue_seam_contRight
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (f₀ : Measure (PhaseSpace d)) [IsProbabilityMeasure f₀]
@@ -3110,7 +3110,7 @@ window: piecewise from `f_prev`'s flow (`t < T`), the two-sided union of the
 boundary bundles (`t = T`), and `g`'s shifted flow (`t > T`).  Pure ODE gluing —
 takes only the position projections of the flow hypotheses. -/
 private lemma vlasovGlue_flowX_hasDerivAt
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (charX_prev charV_prev charX_g charV_g : ℝ → PhaseSpace d → PhysSpace d)
     {T T_0 : ℝ} (hT_pos : 0 < T) (hT_0_pos : 0 < T_0)
     (h_prev_flowX : ∀ t ∈ Set.Ioo (0 : ℝ) T, ∀ z : PhaseSpace d,
@@ -3209,7 +3209,7 @@ window, with the force term against the glued measure `f_next` (consumed only
 through its value hypotheses).  Mirrors `vlasovGlue_flowX_hasDerivAt` with the
 velocity projections and the marginal bridges. -/
 private lemma vlasovGlue_flowV_hasDerivAt
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (f_prev g : ℝ → Measure (PhaseSpace d))
     (charX_prev charV_prev charX_g charV_g : ℝ → PhaseSpace d → PhysSpace d)
@@ -3346,7 +3346,7 @@ private lemma vlasovGlue_flowV_hasDerivAt
 glued solution is `f_prev` (use its weak PDE), to the right it is `g (·−T)`
 (use `g`'s weak PDE with the shift chain rule). -/
 private lemma vlasovGlue_diff_ne
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (f_prev g : ℝ → Measure (PhaseSpace d))
     {T T_0 : ℝ}
@@ -3409,7 +3409,7 @@ private lemma vlasovGlue_diff_ne
 the glued solution agrees with `f_prev`; DCT with the constant dominator `Cφ`
 against the window pushforward. -/
 private lemma vlasovGlue_intCont_left
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (f₀ : Measure (PhaseSpace d)) [IsProbabilityMeasure f₀]
     {T : ℝ} (hT_pos : 0 < T)
@@ -3487,7 +3487,7 @@ private lemma vlasovGlue_intCont_left
 `Ici T` the glued solution is the composed pushforward off `g`; DCT with the
 constant dominator `Cφ`. -/
 private lemma vlasovGlue_intCont_right
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (f₀ : Measure (PhaseSpace d)) [IsProbabilityMeasure f₀]
     {T : ℝ} (hT_pos : 0 < T) {T_0 : ℝ} (hT_0_pos : 0 < T_0)
@@ -3644,7 +3644,7 @@ private lemma vlasovGlue_intCont_right
 flow, on the extended window.  Serves both `IsLagrangianVlasovSolutionOn`'s
 pushforward conjunct and the explicit conjunct (v). -/
 private lemma vlasovGlue_pushforward_eq
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (f_prev g : ℝ → Measure (PhaseSpace d))
     (charX_prev charV_prev charX_g charV_g : ℝ → PhaseSpace d → PhysSpace d)
     {T T_0 : ℝ} (hT_pos : 0 < T)
@@ -3688,7 +3688,7 @@ private lemma vlasovGlue_pushforward_eq
 extended window.  Serves both `IsLagrangianVlasovSolutionOn`'s conjunct and
 the explicit conjunct (vi). -/
 private lemma vlasovGlue_flow_aemeasurable
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (f_prev g : ℝ → Measure (PhaseSpace d))
     (charX_prev charV_prev charX_g charV_g : ℝ → PhaseSpace d → PhysSpace d)
     {T T_0 : ℝ} (hT_pos : 0 < T)
@@ -3723,7 +3723,7 @@ private lemma vlasovGlue_flow_aemeasurable
 /-- Finite first moment of the glued solution on the extended window,
 piecewise from the two window moment hypotheses. -/
 private lemma vlasovGlue_moment
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (f_prev g : ℝ → Measure (PhaseSpace d))
     {T T_0 : ℝ}
     (h_prev_mom : ∀ t ∈ Set.Icc (0 : ℝ) T, HasFiniteFirstMoment (f_prev t))
@@ -3743,7 +3743,7 @@ private lemma vlasovGlue_moment
 /-- FLAT uniform first-moment bound on the glued solution's spatial marginal:
 `max` of the two window envelopes, no cross-term. -/
 private lemma vlasovGlue_moment_flat
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (f_prev g : ℝ → Measure (PhaseSpace d))
     {T T_0 : ℝ}
     (hM_prev : ∃ M : ℝ, 0 ≤ M ∧
@@ -3800,7 +3800,7 @@ satisfying the smallness constraints `LocalSmallnessPLBuffer L T_0` +
      * AEMeasurable witness: composition of AEMeasurable maps. -/
 theorem vlasovWellPosedness_glue
     {d : ℕ} [NeZero d]
-    (W : PhysSpace d → ℝ) [AssW W]
+    (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
     (L : NNReal) (hL : LipschitzWith L gradW)
@@ -4228,7 +4228,7 @@ data at a fixed step `T_0` depending only on `L` (no `L < 1` hypothesis).
    `IsLagrangianVlasovSolutionOn`'s monotonicity in `T` (project down). -/
 theorem vlasovWellPosedness_forward
     {d : ℕ} [NeZero d]
-    (W : PhysSpace d → ℝ) [AssW W]
+    (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
     (L : NNReal) (hL : LipschitzWith L gradW)
@@ -4388,7 +4388,7 @@ theorem vlasovWellPosedness_forward
 /-- The origin trajectory `s ↦ (charX s 0, charV s 0)` of a flow continuous on
 `[0, T]` is norm-bounded by some `Kc ≥ 0` (compactness). -/
 private lemma dobrushinFlow_origin_trajectory_bound
-    {d : ℕ} [NeZero d] (T : ℝ)
+    {d : ℕ} (T : ℝ)
     (charX charV : ℝ → PhaseSpace d → PhysSpace d)
     (hcont : ContinuousOn (fun s => (charX s 0, charV s 0)) (Set.Icc (0 : ℝ) T)) :
     ∃ Kc : ℝ, 0 ≤ Kc ∧ ∀ s ∈ Set.Icc (0 : ℝ) T,
@@ -4402,7 +4402,7 @@ private lemma dobrushinFlow_origin_trajectory_bound
 /-- Linear-in-`‖ω‖` norm bound on a flow from its Lipschitz-in-`z` estimate and
 a bound on the origin trajectory: `‖Φ s ω‖ ≤ e^{KT} ‖ω‖ + Kc` on `[0, T]`. -/
 private lemma dobrushinFlow_flow_norm_bound
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (T : ℝ) (K : NNReal)
     (charX charV : ℝ → PhaseSpace d → PhysSpace d) (Kc : ℝ)
     (hlip : ∀ s ∈ Set.Icc (0 : ℝ) T, ∀ z₁ z₂ : PhaseSpace d,
@@ -4446,7 +4446,7 @@ private lemma dobrushinFlow_flow_norm_bound
 `μ s = (charX s, charV s)_# ν`, the convolution force against the spatial
 marginal of `μ s` is the `ν`-integral of the pushed-forward kernel. -/
 private lemma dobrushinFlow_conv_pushforward
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (T : ℝ)
@@ -4478,7 +4478,7 @@ private lemma dobrushinFlow_conv_pushforward
 /-- Companion integrability transfer for `dobrushinFlow_conv_pushforward`,
 generic in the base `ν`. -/
 private lemma dobrushinFlow_gradW_int_pushforward
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (T : ℝ)
@@ -4510,7 +4510,7 @@ private lemma dobrushinFlow_gradW_int_pushforward
 /-- Phase-space integrability of a pushforward flow over its base, from the
 first moments of the pushed-forward curve. -/
 private lemma dobrushinFlow_phase_int_pushforward
-    {d : ℕ} [NeZero d] (T : ℝ)
+    {d : ℕ} (T : ℝ)
     (charX charV : ℝ → PhaseSpace d → PhysSpace d)
     (μ : ℝ → Measure (PhaseSpace d)) (ν : Measure (PhaseSpace d))
     (hpush : ∀ t ∈ Set.Icc (0 : ℝ) T,
@@ -4533,7 +4533,7 @@ trajectory: velocity slot continuous from the flow; force slot a pushforward
 integral over the base `ν`, continuous by moment-free dominated convergence.
 Generic in the base `ν` and clamp `clampT`. -/
 private lemma dobrushinFlow_field_continuous
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (T : ℝ) (K : NNReal)
@@ -4641,7 +4641,7 @@ private lemma dobrushinFlow_field_continuous
 is the identity, so the witness `HasDerivAt` pair transfers to
 `HasDerivWithinAt` on `Ici s` against the clamped vector field. -/
 private lemma dobrushinFlow_deriv_Ioo
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (T : ℝ) (clampT : ℝ → ℝ)
     (hclampT_id : ∀ s ∈ Set.Icc (0 : ℝ) T, clampT s = s)
@@ -4678,7 +4678,7 @@ private lemma dobrushinFlow_deriv_Ioo
 /-- Per-`ω` continuity on `[0, T]` of a clamped trajectory family read through
 a projection: the clamp composes continuously and is the identity on-window. -/
 private lemma dobrushinFlow_clamped_cont
-    {d : ℕ} [NeZero d] {Ω : Type*}
+    {d : ℕ} {Ω : Type*}
     (T : ℝ) (clampT : ℝ → ℝ) (hclampT_cont : Continuous clampT)
     (hclampT_mem : ∀ s, clampT s ∈ Set.Icc (0 : ℝ) T)
     (hclampT_id : ∀ s ∈ Set.Icc (0 : ℝ) T, clampT s = s)
@@ -4700,7 +4700,7 @@ private lemma dobrushinFlow_clamped_cont
 clamped field (`HasDerivWithinAt` on `Ioi s`), via the witness `HasDerivAt`
 pair and on-window clamp-identity congruence. -/
 private lemma dobrushinFlow_clamped_deriv
-    {d : ℕ} [NeZero d] {Ω : Type*}
+    {d : ℕ} {Ω : Type*}
     (gradW : PhysSpace d → PhysSpace d)
     (T : ℝ) (clampT : ℝ → ℝ)
     (hclampT_id : ∀ s ∈ Set.Icc (0 : ℝ) T, clampT s = s)
@@ -4749,7 +4749,7 @@ private lemma dobrushinFlow_clamped_deriv
 /-- First-moment transfer to the base: `∫ ‖proj ω‖ dπ₀` is finite when the
 pushed-forward marginal has a finite first moment. -/
 private lemma dobrushinFlow_proj_moment
-    {d : ℕ} [NeZero d] {Ω : Type*} [MeasurableSpace Ω]
+    {d : ℕ} {Ω : Type*} [MeasurableSpace Ω]
     (π₀ : Measure Ω) (proj : Ω → PhaseSpace d) (hproj : Measurable proj)
     (μ0 : Measure (PhaseSpace d)) (hmarg : μ0 = Measure.map proj π₀)
     (hmom : Integrable (fun z : PhaseSpace d => ‖z‖) μ0) :
@@ -4761,7 +4761,7 @@ private lemma dobrushinFlow_proj_moment
 
 /-- On `[0, T]` the clamped Vlasov field coincides with the genuine field. -/
 private lemma dobrushinFlow_clamped_field_id
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (T : ℝ) (clampT : ℝ → ℝ)
     (hclampT_id : ∀ s ∈ Set.Icc (0 : ℝ) T, clampT s = s)
@@ -4778,7 +4778,7 @@ private lemma dobrushinFlow_clamped_field_id
 /-- Moment-free dominator bound: the coupled trajectory difference is bounded
 by `e^{KT}(‖proj_f ω‖ + ‖proj_g ω‖) + (K_f + K_g)` on `[0, T]`. -/
 private lemma dobrushinFlow_dominator_bound
-    {d : ℕ} [NeZero d] {Ω : Type*}
+    {d : ℕ} {Ω : Type*}
     (T : ℝ) (clampT : ℝ → ℝ)
     (hclampT_id : ∀ s ∈ Set.Icc (0 : ℝ) T, clampT s = s)
     (charX_f charV_f charX_g charV_g : ℝ → PhaseSpace d → PhysSpace d)
@@ -4814,7 +4814,7 @@ private lemma dobrushinFlow_dominator_bound
 `s ↦ ∫ ‖X_f s − X_g s‖ dπ₀`, by moment-free dominated convergence (the clamp
 makes the integrand globally continuous per `ω` and globally dominated). -/
 private lemma dobrushinFlow_Q_continuous
-    {d : ℕ} [NeZero d] {Ω : Type*} [MeasurableSpace Ω]
+    {d : ℕ} {Ω : Type*} [MeasurableSpace Ω]
     (T : ℝ) (clampT : ℝ → ℝ) (hclampT_cont : Continuous clampT)
     (hclampT_mem : ∀ s, clampT s ∈ Set.Icc (0 : ℝ) T)
     (hclampT_id : ∀ s ∈ Set.Icc (0 : ℝ) T, clampT s = s)
@@ -4858,7 +4858,7 @@ along the second trajectory is bounded by `(max 1 L)` times the integrated
 trajectory distance — established through the two marginal identities on the
 common base `π₀`, never forming `wasserstein1 (f s) (g s)`. -/
 private lemma dobrushinFlow_cross_field_bound
-    {d : ℕ} [NeZero d] {Ω : Type*} [MeasurableSpace Ω]
+    {d : ℕ} {Ω : Type*} [MeasurableSpace Ω]
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (T : ℝ) (clampT : ℝ → ℝ)
@@ -5032,7 +5032,7 @@ private lemma dobrushinFlow_cross_field_bound
 associated integrability from the clamped `X`-form into the conclusion's
 `proj`-form, using the initial-identity of the flows at `t = 0`. -/
 private lemma dobrushinFlow_conclusion_transfer
-    {d : ℕ} [NeZero d] {Ω : Type*} [MeasurableSpace Ω]
+    {d : ℕ} {Ω : Type*} [MeasurableSpace Ω]
     (T : ℝ) (hT : 0 < T) (clampT : ℝ → ℝ)
     (hclampT_id : ∀ s ∈ Set.Icc (0 : ℝ) T, clampT s = s)
     (π₀ : Measure Ω) (L : NNReal)
@@ -5118,7 +5118,7 @@ Base-generic: the only base-specific work is the two marginal identities
 `hmarg_f`/`hmarg_g`; the flow regularity, dominator, and cross-field force bound
 are established generically over `π₀`. -/
 private theorem dobrushin_integrated_flow_bound_On
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     {Ω : Type*} [MeasurableSpace Ω]
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
@@ -5408,7 +5408,7 @@ on `Ioo 0 T`:
   `s` of each clamped field (velocity slot continuous; force slot a
   pushforward integral, continuous via moment-free DCT). -/
 private theorem dobrushin_uniqueness_On
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (f g : ℝ → Measure (PhaseSpace d))
@@ -5483,7 +5483,7 @@ duality bridge — the project's lone Foundation-B use.
 Force-estimate-free: never forms a force estimate, never touches the
 `W₁`-continuity / right-derivative route. -/
 private theorem dobrushin_meanfield_On
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (f g : ℝ → Measure (PhaseSpace d))
@@ -5618,7 +5618,7 @@ Two `IsLagrangianVlasovSolutionOn`s with the same initial data agree on
 3. Apply `dobrushin_uniqueness_On` (localized Dobrushin uniqueness, the
    private helper above) to conclude `f t = g t`. -/
 theorem vlasovWellPosedness_uniqueness
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (_hgradW : ∀ x, gradW x = gradient W x)
@@ -5725,7 +5725,7 @@ The problem is a forward Cauchy problem; backward time is not on the
 critical path. -/
 theorem vlasovWellPosedness_universal_existence
     {d : ℕ} [NeZero d]
-    (W : PhysSpace d → ℝ) [AssW W]
+    (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
     (L : NNReal) (hL : LipschitzWith L gradW)
@@ -5970,7 +5970,7 @@ solution.  Every force-side obligation is trivial since `gradW ≡ 0`; the
 moment/continuity threads come from the affine growth `‖x + t·v‖ ≤ (1+|t|)‖z‖`.
 `f_sol` is threaded by its defining equation (let-bound caller supplies
 `rfl`). -/
-private lemma vlasovWellPosedness_zeroForce_solutionOn {d : ℕ} [NeZero d]
+private lemma vlasovWellPosedness_zeroForce_solutionOn {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW_zero : ∀ x, gradW x = 0)
     (f₀ : Measure (PhaseSpace d)) (hf₀ : HasFiniteFirstMoment f₀)
@@ -6283,7 +6283,7 @@ theorem vlasovWellPosedness
 ∃ C > 0, ∀ t ≥ 0, W₁(f_t, g_t) ≤ exp(C·t) · W₁(f_0, g_0).
 Depends on dobrushin_C_choice (in Basic.lean) and dobrushin_ennreal_bound. -/
 lemma dobrushin_package_exists
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (W : PhysSpace d → ℝ) [_hW : AssW W]
     (gradW : PhysSpace d → PhysSpace d)
     (_hgradW : ∀ x, gradW x = gradient W x)
@@ -6328,7 +6328,7 @@ gradient of an even C^{1,1} potential); the inequality itself consumes only
 the Lipschitz bound `hL` — see `dobrushin_on` below for the minimal-hypothesis
 window form with the explicit constant `C = 2 · max 1 L`. -/
 theorem dobrushin
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (W : PhysSpace d → ℝ) [hW : AssW W]
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
@@ -6372,7 +6372,7 @@ the force's Lipschitz bound, not on the solution pair.  That uniformity is
 what a mean-field argument quantifying over a family of solutions (e.g.
 empirical curves, once their flow witnesses are formalized) needs. -/
 theorem dobrushin_on
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (f g : ℝ → Measure (PhaseSpace d))
@@ -6406,7 +6406,7 @@ pair-independent constant `C = 2 · max 1 L`.  This is the arrow that lets the
 existence output feed a Dobrushin-type stability input; see
 `vlasovWellPosedness_stability` for the packaged composition. -/
 theorem dobrushin_forward
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (f g : ℝ → Measure (PhaseSpace d))

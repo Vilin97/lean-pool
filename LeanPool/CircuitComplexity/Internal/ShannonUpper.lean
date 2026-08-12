@@ -660,7 +660,7 @@ private theorem addrDataSum (N : Nat) (hN : 16 ≤ N) :
 
 /-! ### Shannon gate array -/
 
-private noncomputable def shannonGateArray (N : Nat) [NeZero N]
+private noncomputable def shannonGateArray (N : Nat)
     (f : BitString N → Bool) (hN : 16 ≤ N) :
     (i : Fin (szSections (addrBits N) (dataBits N))) →
     { g : Gate Basis.andOr2 (N + szSections (addrBits N) (dataBits N)) //
@@ -910,7 +910,7 @@ private def shiftedBits (N k q : Nat) (hkq : k + q = N) (x : BitString N) :
   fun j => x ⟨k + j.val, by have := j.isLt; omega⟩
 
 /-- colFun at the actual bit-vector address/data values equals f(x). -/
-private theorem colFun_at_actual_bits (N : Nat) [NeZero N]
+private theorem colFun_at_actual_bits (N : Nat)
     (f : BitString N → Bool) (x : BitString N)
     (k q : Nat) (hkq : k + q = N) :
     let addr : BitString k := fun j => x ⟨j.val, by have := j.isLt; omega⟩
@@ -996,7 +996,7 @@ private theorem dataSum_lt (N : Nat) (hN : 16 ≤ N) (x : BitString N) :
   sum_cond_pow_fin_lt (dataBits N) (shiftedBits N (addrBits N) (dataBits N) (addrDataSum N hN) x)
 
 /-- andLayerSem at y is false when y ≠ dataSum. -/
-private theorem andLayerSem_ne (N : Nat) [NeZero N]
+private theorem andLayerSem_ne (N : Nat)
     (f : BitString N → Bool) (hN : 16 ≤ N) (x : BitString N)
     (y : Nat) (hy : y < 2 ^ dataBits N) (hne : y ≠ dataSum N hN x) :
     andLayerSem N f hN x y hy = false := by
@@ -1004,14 +1004,14 @@ private theorem andLayerSem_ne (N : Nat) [NeZero N]
   simp only [beq_eq_false_iff_ne.mpr hne, Bool.false_and]
 
 /-- andLayerSem at dataSum gives colFun at actual bits. -/
-private theorem andLayerSem_eq (N : Nat) [NeZero N]
+private theorem andLayerSem_eq (N : Nat)
     (f : BitString N → Bool) (hN : 16 ≤ N) (x : BitString N) :
     andLayerSem N f hN x (dataSum N hN x) (dataSum_lt N hN x) = f x := by
   unfold andLayerSem dataSum
   simp only [beq_self_eq_true, Bool.true_and]
   exact colFun_at_actual_bits N f x (addrBits N) (dataBits N) (addrDataSum N hN)
 
-private theorem or_andLayerSem_eq_f (N : Nat) [NeZero N]
+private theorem or_andLayerSem_eq_f (N : Nat)
     (f : BitString N → Bool) (hN : 16 ≤ N) (x : BitString N) :
     (List.range (2 ^ dataBits N)).foldl
       (fun acc y => acc || if h : y < 2 ^ dataBits N
@@ -1821,5 +1821,3 @@ theorem shannon_construction (N : Nat) [NeZero N] (hN : 16 ≤ N)
 end ShannonUpper
 
 end CircuitComplexity
-
-

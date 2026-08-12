@@ -91,14 +91,16 @@ of five pointed sets, if `a` is surjective and `d` is injective, then `C = 0`.
 variable {A B C D E : Type*}
 variable [Inhabited A] [Inhabited B] [Inhabited C] [Inhabited D] [Inhabited E]
 
+omit [Inhabited A] in
 private lemma im_B_eq_zero (a : A → B) (b : B → C) (a_surj : Function.Surjective a)
-    [IsPointedMap a] [IsPointedMap b] (exb : IsExactAt a b) :
+    (exb : IsExactAt a b) :
     Set.range b = {default} := by
   rw [IsExactAt, Set.range_eq_univ.mpr a_surj] at exb
   simp_all
 
+omit [Inhabited C] in
 private lemma ker_c_eq_C (c : C → D) (d : D → E) (d_inj : Function.Injective d)
-    [IsPointedMap c] [IsPointedMap d] (exd : IsExactAt c d) :
+    [IsPointedMap d] (exd : IsExactAt c d) :
     c ⁻¹' {default} = Set.univ := by
   rw [IsExactAt] at exd
   have : d ⁻¹' {default} = {default} := by
@@ -111,10 +113,11 @@ private lemma ker_c_eq_C (c : C → D) (d : D → E) (d_inj : Function.Injective
     exact Eq.symm IsPointedMap.map_default
   simp_all
 
+omit [Inhabited A] in
 /-- `C = {0}` if there is an exact sequence `A --a-> B --b-> C --c-> D --d-> E`
 of five pointed sets such that `a` is surjective and `d` is injective. -/
 theorem unique_mid_of_five (a : A → B) (b : B → C) (c : C → D) (d : D → E)
-    [IsPointedMap a] [IsPointedMap b] [IsPointedMap c] [IsPointedMap d]
+    [IsPointedMap d]
     (a_surj : Function.Surjective a) (d_inj : Function.Injective d)
     (exb : IsExactAt a b) (exc : IsExactAt b c) (exd : IsExactAt c d) :
     Nonempty (Unique C) :=

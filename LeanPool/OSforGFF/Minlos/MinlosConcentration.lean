@@ -826,7 +826,6 @@ the conclusion is: for any `ε > 0`, there exist `m, C : ℕ` such that
 -/
 private lemma joint_kernel_bound_finite
     {E : Type*} [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
       ∫ ω : E → ℝ, exp (I * ↑(∑ i, s i * ω (x i))) ∂ν =
@@ -1015,7 +1014,6 @@ private lemma joint_kernel_bound_finite
 
 private lemma kernel_concentration_bound
     {E : Type*} [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
       ∫ ω : E → ℝ, exp (I * ↑(∑ i, s i * ω (x i))) ∂ν =
@@ -1269,7 +1267,6 @@ private lemma gaussian_charFun_quad_average_bound
 
 private lemma tail_bound_uniform_gaussian_average
     {E : Type*} [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
       ∫ ω : E → ℝ, exp (I * ↑(∑ i, s i * ω (x i))) ∂ν =
@@ -1428,7 +1425,6 @@ private lemma tail_bound_uniform_gaussian_average
 -/
 private lemma tail_bound_uniform
     {E : Type*} [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
       ∫ ω : E → ℝ, exp (I * ↑(∑ i, s i * ω (x i))) ∂ν =
@@ -1582,8 +1578,7 @@ private lemma tail_bound_uniform
 -/
 private lemma badSetN_bound_with_kernel
     {E : Type*} [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
-    (_Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
+    (_Φ : E → ℂ) (ν : Measure (E → ℝ))
     (d : ℕ → E) (p_m : Seminorm ℝ E)
     {k : ℕ} (e : Fin k → E)
     (α_map : (ℕ →₀ ℚ) → Fin k → ℝ)
@@ -1647,7 +1642,7 @@ private lemma badSetN_bound_with_kernel
 -/
 theorem nuclear_cylindrical_concentration
     {E : Type*} [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
+    [TopologicalSpace E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_cont : Continuous Φ)
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -1782,6 +1777,7 @@ theorem nuclear_cylindrical_concentration
 
 /-! ## Main theorem -/
 
+omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- **Minlos concentration bound** — wrapper around
 `nuclear_cylindrical_concentration`.
 -/

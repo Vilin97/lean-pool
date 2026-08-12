@@ -434,7 +434,7 @@ lemma pushConjFactorCoeff_spec' (x : A.conjFactor σ) (y : B.conjFactor σ) :
     B.ι (A.pushConjFactorCoeff B x y) =
     A.isoConjCoeff B *
     A.iso B (A.ι <| A.pushConjFactorCoeff B x y) *
-    (A.isoConjCoeff B)⁻¹:= by
+    (A.isoConjCoeff B)⁻¹ := by
   rw [isoConjCoeff_spec]
 
 /-- The transported-unit comparison scalar packaged as a unit. -/
@@ -709,7 +709,7 @@ open CrossProductAlgebra
 
 omit [FiniteDimensional F K] in
 private lemma crossProduct_F_smul_eq_K_smul (f : Gal(K, F) × Gal(K, F) → Kˣ)
-    [Fact (IsMulCocycle₂ f)] (c : F) (a : CrossProductAlgebra f) :
+     (c : F) (a : CrossProductAlgebra f) :
     c • a = algebraMap F K c • a := by
   simp_all
 

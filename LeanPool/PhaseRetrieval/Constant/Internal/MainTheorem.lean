@@ -190,7 +190,7 @@ private lemma polyEval_decompose {D : ℕ} (a : Fin D → ℂ) (M j : ℕ) (z : 
 
 /-! ## Continuity and integrability helpers -/
 
-private lemma cont_integrable_circle {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+private lemma cont_integrable_circle {E : Type*} [NormedAddCommGroup E]
     {f : AddCircle T → E} (hf : Continuous f) :
     Integrable f AddCircle.haarAddCircle :=
   hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)

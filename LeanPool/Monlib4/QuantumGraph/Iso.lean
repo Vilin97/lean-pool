@@ -60,7 +60,7 @@ local notation "τ⁻¹" =>
 
 local notation "id" => (1 : Matrix n n ℂ →ₗ[ℂ] Matrix n n ℂ)
 
-private theorem commutes_with_mul''_adjoint [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+private theorem commutes_with_mul''_adjoint [hφ : φ.IsFaithfulPosMap]
     {f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Matrix n n ℂ)} (hf : f φ.matrix = φ.matrix) :
     withMatrixQuantum[φ]
     (
@@ -104,7 +104,7 @@ theorem innerAut_adjoint_eq_iff [hφ : φ.IsFaithfulPosMap]
       unitaryGroup.star_coe_eq_coe_star, UnitaryGroup.star_mul_self, Matrix.mul_one]
     exact ⟨fun h => h.symm, fun h => h.symm⟩)
 
-theorem Qam.mul'_adjoint_commutes_with_innerAut_lm [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem Qam.mul'_adjoint_commutes_with_innerAut_lm [hφ : φ.IsFaithfulPosMap]
     {x : Matrix.unitaryGroup n ℂ} (hx : Commute φ.matrix x) :
     withMatrixQuantum[φ]
     (

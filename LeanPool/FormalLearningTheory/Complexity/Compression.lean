@@ -765,7 +765,7 @@ private theorem finalizeIncidenceScheme
 private lemma good_on_support_gives_row_response
     {X : Type u} {C : ConceptClass X Bool}
     (L : ProperFiniteSupportLearner X C)
-    (c : X → Bool) (hc : c ∈ C) (Y : Finset X) [Nonempty ↥Y]
+    (c : X → Bool) (hc : c ∈ C) (Y : Finset X)
     (HY : Finset (X → Bool))
     (hHY : HY = hypothesisEnvelope L c Y) :
     ∀ q : FinitePMF ↥Y, ∃ h : ↥HY,

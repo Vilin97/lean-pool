@@ -1244,7 +1244,7 @@ private lemma Fm_meromorphicOrderAt (m : ℕ) [NeZero m] (z : ℂ) :
     meromorphicOrderAt_div hm1 hm2, L.sigma_mulArg_meromorphicOrderAt m z, hpow]
 
 /-- `F_m` is elliptic. -/
-private lemma Fm_isElliptic (m : ℕ) [NeZero m] : L.IsEllipticWith (L.Fm m) := by
+private lemma Fm_isElliptic (m : ℕ) : L.IsEllipticWith (L.Fm m) := by
   have hσa : ∀ x : ℂ, AnalyticAt ℂ L.weierstrassSigma x := fun x =>
     L.differentiable_weierstrassSigma.analyticAt x
   constructor

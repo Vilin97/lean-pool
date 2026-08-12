@@ -237,7 +237,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L
     ∀ (f : E d → ℝ),
     ∀ (n : ℕ),
     ∀ (M : Type*) [TopologicalSpace M] [ChartedSpace (ManifoldModel n) M]
-      [IsManifold (modelI n) 2 M] [Nonempty M]
+       [Nonempty M]
       (ι : M → E d),
       IsSmoothEmbedding (modelI n) (modelWithCornersSelf ℝ (E d)) 2 ι →
       Set.range ι = argminSet f →
@@ -256,7 +256,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L
             (1 / ↑L) ∈ U ∧
           f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f ≤
             2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) := by
-  intro f n M _ _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
+  intro f n M _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
   refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
   intro x₀ hx₀
   have hη : (1 : ℝ) / (L : ℝ) = 0 := by
@@ -296,7 +296,7 @@ private theorem nesterov_pl_accelerated_rate_zero_dim
     ∀ (f : E 0 → ℝ),
     ∀ (n : ℕ),
     ∀ (M : Type*) [TopologicalSpace M] [ChartedSpace (ManifoldModel n) M]
-      [IsManifold (modelI n) 2 M] [Nonempty M]
+       [Nonempty M]
       (ι : M → E 0),
       IsSmoothEmbedding (modelI n) (modelWithCornersSelf ℝ (E 0)) 2 ι →
       Set.range ι = argminSet f →
@@ -315,7 +315,7 @@ private theorem nesterov_pl_accelerated_rate_zero_dim
             (1 / ↑L) ∈ U ∧
           f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f ≤
             2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) := by
-  intro f n M _ _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
+  intro f n M _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
   refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
   intro x₀ hx₀
   obtain ⟨m, hmS⟩ := Set.range_nonempty ι

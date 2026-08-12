@@ -606,7 +606,7 @@ lemma generic_minimality (α β : ℕ) (ω : ℝ) (seq : ℤ → ℤ) [NeZero (�
     ¬ (D ∣ N) → ∀ L > 0, IsPeriod seq L → N ≤ L := by
   intro N D hdvd L hL_pos hL_period
   have hD : NeZero D := inferInstance
-  have h_sigma := sigma_of_period (α:=α) (β:=β) (ω:=ω) (s:=seq) L hL_pos hL_period
+  have h_sigma := sigma_of_period (α :=α) (β :=β) (ω :=ω) (s :=seq) L hL_pos hL_period
   rcases h_sigma with ⟨σ, h_sigma_eq, r0, h_inv_count⟩
   let q := N / D
   let s := N % D
@@ -1157,7 +1157,7 @@ lemma sorted_residue_shift (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 /--
 For k < N, sortedMultiset at (↑k : ℤ) simplifies to ↑(V α β ω k).
 -/
-private lemma sorted_multiset_of_lt_N (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+private lemma sorted_multiset_of_lt_N (α β : ℕ) (ω : ℝ)
     (k : ℕ) (hk : k < (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
     sortedMultiset α β ω (↑k : ℤ) = ↑(V α β ω k) := by
   have hN_pos : (0 : ℤ) < ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by
@@ -1174,7 +1174,7 @@ private lemma sorted_multiset_of_lt_N (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 +
 /--
 cumulativeHits is monotone (non-decreasing).
 -/
-private lemma cumulative_hits_mono (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)] :
+private lemma cumulative_hits_mono (α β : ℕ) (ω : ℝ) :
     Monotone (cumulativeHits α β ω) := by
   intro a b hab
   dsimp [cumulativeHits]
@@ -1487,7 +1487,7 @@ lemma sorted_residue_shift_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 
 /-- For k < N, sortedMultisetUnit at (↑k : ℤ) simplifies to ↑(VUnit α β ω u k). -/
 private lemma sorted_multiset_unit_of_lt_N (α β : ℕ) (ω : ℝ)
-    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (k : ℕ) (hk : k < (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
     sortedMultisetUnit α β ω u (↑k : ℤ) = ↑(VUnit α β ω u k) := by
   have hN_pos : (0 : ℤ) < ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by
@@ -1499,7 +1499,7 @@ private lemma sorted_multiset_unit_of_lt_N (α β : ℕ) (ω : ℝ)
   simp only [sortedMultisetUnit, h_mod, h_div, Int.toNat_natCast, zero_mul,
              add_zero]
 
-private lemma cumulative_hits_unit_mono (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+private lemma cumulative_hits_unit_mono (α β : ℕ) (ω : ℝ)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
     Monotone (cumulativeHitsUnit α β ω u) := by
   intro a b hab

@@ -1021,7 +1021,6 @@ theorem pure_continuous_left (e₂ : E₂) :
 /-- A finset sup of seminorms with `WithSeminorms` has its ball in nhds 0. -/
 private theorem finsetSup_seminorm_ball_mem_nhds
     {F : Type*} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F]
-    [IsTopologicalAddGroup F] [ContinuousSMul ℝ F]
     {ι' : Type} {q : ι' → Seminorm ℝ F} (hq : WithSeminorms q)
     (t : Finset ι') {ε : ℝ} (hε : 0 < ε) :
     {x : F | (t.sup q) x < ε} ∈ nhds (0 : F) := by

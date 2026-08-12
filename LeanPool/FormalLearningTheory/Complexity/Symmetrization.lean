@@ -1446,7 +1446,7 @@ private lemma growth_function_le_two_pow {X : Type u}
         _ = 2 ^ n := by simp [Nat.card_eq_fintype_card, Fintype.card_coe, T, S.prop]
     simpa [T] using hBound'
 
-private lemma growth_exp_le_delta_large_v {X : Type u} [MeasurableSpace X]
+private lemma growth_exp_le_delta_large_v {X : Type u}
     (C : ConceptClass X Bool)
     (v : ℕ) (hv : 0 < v) (m : ℕ) (hm : 0 < m) (ε δ : ℝ)
     (hε : 0 < ε) (hδ : 0 < δ)
@@ -1546,7 +1546,7 @@ private lemma growth_exp_le_delta_large_v {X : Type u} [MeasurableSpace X]
       _ = δ * ↑m ^ (v + 1) * (ε ^ 2) ^ (v + 1) := by rw [← hpow_eq]
   linarith [hstep1, hstep2, hstep3]
 
-theorem growth_exp_le_delta {X : Type u} [MeasurableSpace X]
+theorem growth_exp_le_delta {X : Type u}
     (C : ConceptClass X Bool)
     (v : ℕ) (hv : 0 < v) (m : ℕ) (hm : 0 < m) (ε δ : ℝ)
     (hε : 0 < ε) (hδ : 0 < δ) (hδ1 : δ < 1)

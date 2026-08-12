@@ -57,7 +57,7 @@ private lemma restrictToN_eq_zero_iff (N : Submodule ℝ E) (L : E →L[ℝ] ℝ
 private lemma isInvertible_of_bijective_finiteDimensional
     {A B : Type*}
     [NormedAddCommGroup A] [NormedSpace ℝ A] [FiniteDimensional ℝ A]
-    [NormedAddCommGroup B] [NormedSpace ℝ B] [FiniteDimensional ℝ B]
+    [NormedAddCommGroup B] [NormedSpace ℝ B]
     (L : A →L[ℝ] B) (hL : Function.Bijective L) :
     L.IsInvertible := by
   refine ⟨(LinearEquiv.ofBijective L.toLinearMap ?_).toContinuousLinearEquiv, ?_⟩

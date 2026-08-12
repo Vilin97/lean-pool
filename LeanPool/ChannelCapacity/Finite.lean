@@ -597,9 +597,9 @@ section
 
 omit [Fintype β] in
 private lemma exists_unique_capacity_achieving_prior_of_finite_aux [Finite β]
-    [Nonempty α] [TopologicalSpace α] [TopologicalSpace β]
-    [DiscreteTopology α] [DiscreteTopology β] [T2Space α] [T2Space β]
-    [BorelSpace α] [BorelSpace β] [CompactSpace α] [CompactSpace β]
+    [Nonempty α] [TopologicalSpace α]
+    [DiscreteTopology α] [T2Space α]
+    [BorelSpace α] [CompactSpace α]
     (k : Kernel α β) [IsMarkovKernel k] (hRank : ChannelCapacity.Kernel.RowMatrixFullRank k) :
     ∃! p : ProbabilityMeasure α, mutualInformation p k = channelCapacity k := by
   have hcont : Continuous fun p : ProbabilityMeasure α => mutualInformation p k :=

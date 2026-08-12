@@ -306,8 +306,8 @@ private lemma integrable_evalPkappa_cross_wip
       (F alpha * (starRingEnd ℂ) (G beta))
 
 private theorem gaussianL2Norm_eq_lpNorm_wip
-    {d : Nat} {α : Type*} [NormedAddCommGroup α] [MeasurableSpace α] [NormedSpace ℝ α]
-    [BorelSpace α] (F : Cd d → α)
+    {d : Nat} {α : Type*} [NormedAddCommGroup α]
+     (F : Cd d → α)
     (hF : AEStronglyMeasurable F (gammaD d)) :
     Real.sqrt (∫ z : Cd d, ‖F z‖ ^ (2 : ℝ) ∂ gammaD d) =
       MeasureTheory.lpNorm F 2 (gammaD d) := by

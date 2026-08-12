@@ -799,8 +799,9 @@ theorem qLinearPaths_ae [SeparableSpace E] [Nonempty E]
   -- X(ω) = 0 means ω(y) = ∑ cᵢ * ω(dᵢ)
   linarith [show X ω = 0 from hω]
 
+omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- **Minlos concentration** — see `Minlos.MinlosConcentration`. -/
-private lemma boundedPaths_tail_bound [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
+private lemma boundedPaths_tail_bound [IsHilbertNuclear E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_cont : Continuous Φ)
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -844,6 +845,7 @@ private lemma boundedPaths_tail_bound [SeparableSpace E] [IsHilbertNuclear E] [N
         exact mul_le_mul_of_nonneg_left (Nat.le_ceil _) (Nat.cast_nonneg _)
     _ = (↑(C * ⌈C'⌉₊) : ℝ) * (s₀.sup p) x := by push_cast; ring
 
+omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- Boundedness holds ν-a.e.
 
     For each element x in the ℚ-span, the Markov/Chebyshev inequality gives:
@@ -887,6 +889,7 @@ theorem boundedPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
   have h_lt := lt_of_le_of_lt (measure_mono h_subset) hC
   simp_all
 
+omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- The good paths have full ν-measure. Combines ℚ-linearity and boundedness a.e. -/
 lemma goodPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]

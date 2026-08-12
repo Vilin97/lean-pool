@@ -79,7 +79,7 @@ private theorem SupportsValid.append {t : ℕ}
 private def EdgesNonempty {V : Type*} (edges : Hypergraph V) : Prop :=
   ∀ e ∈ edges, e.Nonempty
 
-private def mapHypergraph {α β : Type*} [DecidableEq α] [DecidableEq β]
+private def mapHypergraph {α β : Type*} [DecidableEq β]
     (f : α ↪ β) (edges : Finset (Finset α)) : Finset (Finset β) :=
   edges.image (fun e => e.image f)
 
@@ -98,9 +98,10 @@ private theorem edgeImage_injective {α β : Type*} [DecidableEq β]
     rcases Finset.mem_image.mp hx' with ⟨y, hy, hyx⟩
     simp_all
 
-private theorem mapHypergraph_card {α β : Type*} [DecidableEq α] [DecidableEq β]
+private theorem mapHypergraph_card {α β : Type*} [DecidableEq β]
     (f : α ↪ β) (edges : Finset (Finset α)) :
     (mapHypergraph f edges).card = edges.card := by
+  classical
   simpa [mapHypergraph] using Finset.card_image_of_injective edges (edgeImage_injective f)
 
 private theorem vertexSet_mapHypergraph {α β : Type*} [DecidableEq α] [DecidableEq β]
@@ -201,9 +202,10 @@ private theorem NoLargePartition.map {α β : Type*} [DecidableEq α] [Decidable
   rw [← hP_eq, uniqueCoverage_mapHypergraph]
   exact hQ
 
-private theorem EdgesNonempty.map {α β : Type*} [DecidableEq α] [DecidableEq β]
+private theorem EdgesNonempty.map {α β : Type*} [DecidableEq β]
     {edges : Finset (Finset α)} (h : ∀ e ∈ edges, e.Nonempty) (f : α ↪ β) :
     ∀ E ∈ mapHypergraph f edges, E.Nonempty := by
+  classical
   intro E hE
   rcases Finset.mem_image.mp hE with ⟨e, he, rfl⟩
   simp_all
