@@ -22,7 +22,6 @@ open Cardinal Ideal
 variable {T : Type*} [CommRing T] [IsLocalRing T] [IsNoetherianRing T] [IsDomain T]
 
 private def close_up_aux_factor_intersection_large_proof
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (n'' : ℕ)
     (ih : ∀ (R : NSubring T) (_ : Cardinal.mk R.carrier < Cardinal.mk T)
       (s : Finset R.carrier) (_ : s.card ≤ n'' + 1 + 1) (c : R.carrier)
@@ -237,7 +236,6 @@ private def close_up_aux_factor_intersection_large_proof
 ⟩
 
 theorem close_up_aux_factor_intersection_large
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (n'' : ℕ)
     (ih : ∀ (R : NSubring T) (_ : Cardinal.mk R.carrier < Cardinal.mk T)
       (s : Finset R.carrier) (_ : s.card ≤ n'' + 1 + 1) (c : R.carrier)

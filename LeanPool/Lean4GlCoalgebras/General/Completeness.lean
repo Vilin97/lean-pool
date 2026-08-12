@@ -982,6 +982,13 @@ def proverSequent (g : coalgebraGame.Pos) (h : coalgebraGame.turn g = Prover) :=
   | ⟨Sum.inr R, Γ :: Γs, Rs⟩ => False.elim (by
     simp_all)
 
+private lemma prover_sequent_eq_of_inl {g : coalgebraGame.Pos}
+    {h : coalgebraGame.turn g = Prover} {Γ Γs Rs}
+    (hg : (Sum.inl Γ, Γs, Rs) = g) :
+    proverSequent g h = Γ := by
+  cases hg
+  rfl
+
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 def firstSequent {Γ : Sequent} {strat : Strategy coalgebraGame Builder} :
   MaximalPath Γ strat → Sequent :=
@@ -1678,9 +1685,10 @@ lemma builder_win_strong {Δ : Sequent} (strat : Strategy coalgebraGame Builder)
       have eq : π.length - i - 1 = π.length - (i + 1 + 1) - 1 + 1 + 1 := by omega
       have P_turn : coalgebraGame.turn π[π.length - i - 1] = Prover := by
         simp_all
-      simp [←eq] at u₂_def
-      have eq_helper : proverSequent π[π.length - i - 1] P_turn = Γ' := by
-        grind [proverSequent]
+      have u₂_def' : (Sum.inl Γ', Γ :: Γs, R :: Rs) = π[π.length - i - 1] := by
+        simpa only [← eq] using u₂_def
+      have eq_helper : proverSequent π[π.length - i - 1] P_turn = Γ' :=
+        prover_sequent_eq_of_inl u₂_def'
       by_cases φ ∈ Γ'
       case pos φ_in =>
         exact builder_win_strong strat h ⟨π, ne, chain, max, head_cases, in_cone⟩

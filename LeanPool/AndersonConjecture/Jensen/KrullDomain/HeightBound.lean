@@ -281,7 +281,7 @@ contracts to an ideal of height ≤ 1 in S_sub. Uses the K[X] PID argument
 for the P∩R = ⊥ case and well-founded descent for P∩R ≠ ⊥. -/
 private def build_height_bound_proof
     (R : NSubring T) (x₁ x₂ : T) (y₁ y₂ : R.carrier)
-    (S_sub : Subring T) [UniqueFactorizationMonoid S_sub]
+    (S_sub : Subring T)
     (hR_le : R.carrier ≤ S_sub)
     (hcoprime : ∀ p : R.carrier, Prime p → ¬(p ∣ y₁ ∧ p ∣ y₂))
     (hy₁ : (↑y₁ : T) ≠ 0) (hy₂ : (↑y₂ : T) ≠ 0)
@@ -596,7 +596,7 @@ private def build_height_bound_proof
 omit [IsAdicComplete (IsLocalRing.maximalIdeal T) T] in
 include T in theorem build_height_bound
     (R : NSubring T) (x₁ x₂ : T) (y₁ y₂ : R.carrier)
-    (S_sub : Subring T) [UniqueFactorizationMonoid S_sub]
+    (S_sub : Subring T)
     (hR_le : R.carrier ≤ S_sub)
     (hcoprime : ∀ p : R.carrier, Prime p → ¬(p ∣ y₁ ∧ p ∣ y₂))
     (hy₁ : (↑y₁ : T) ≠ 0) (hy₂ : (↑y₂ : T) ≠ 0)

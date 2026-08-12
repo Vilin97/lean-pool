@@ -54,7 +54,7 @@ heartbeat budget. Given a family of NSubrings indexed by predecessors of `α`,
 builds the union as an NSubring with cardinal bounds and prime preservation. -/
 
 private noncomputable def mk_union_nsub_aux
-    {ι : Type u} [LinearOrder ι] [IsWellOrder ι (· < ·)]
+    {ι : Type u} [LinearOrder ι]
     (α : ι) (rings : ∀ β, β < α → NSubring T)
     (hne : ∃ β₀ : ι, β₀ < α)
     (hmono : ∀ ⦃β₁ β₂ : ι⦄ (hβ₁ : β₁ < α) (hβ₂ : β₂ < α),

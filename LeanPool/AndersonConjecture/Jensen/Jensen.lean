@@ -595,7 +595,6 @@ lemma jensen_comap_maxIdeal_le_of_local
 
 -- Under Prop 1 hypotheses, M = M_R · T (extra synthesis budget needed for T's instance diamond)
 lemma jensen_map_maxIdeal_eq_of_surj_closed
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (R : Subring T) [IsLocalRing ↥R]
     (h_surj : Function.Surjective (fun r : ↥R =>
       Ideal.Quotient.mk (IsLocalRing.maximalIdeal T ^ 2) (r : T)))
