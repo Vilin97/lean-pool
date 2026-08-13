@@ -1405,245 +1405,31 @@ theorem FrameSpec.isValid_iff_isFrame (spec : FrameSpec) :
     rw [← omegaCount_supportList_eq_countWitnesses spec T I]
     exact h T I hIT
 
-private def rawInterCount (Imask : Nat) (s : List ℕ) : ℕ :=
-  s.countP fun i => Imask.testBit i
-
-private def rawWitnessAux (Tmask Imask : Nat) : Nat → List ℕ → Bool
-  | acc, [] => decide (acc = 1)
-  | acc, i :: s =>
-      Tmask.testBit i &&
-        rawWitnessAux Tmask Imask (acc + if Imask.testBit i then 1 else 0) s
-
-private def rawWitness (Tmask Imask : Nat) (s : List ℕ) : Bool :=
-  rawWitnessAux Tmask Imask 0 s
-
-private def rawAttachedWitness (spec : FrameSpec) (Tmask Imask : Nat)
-    (x : { s // s ∈ spec.rawSupports }) : Bool :=
-  rawWitness Tmask Imask x.1
-
-private theorem rawAttachedCount_eq_count (spec : FrameSpec) (Tmask Imask : Nat) :
-    spec.rawSupports.attach.countP (rawAttachedWitness spec Tmask Imask) =
-      spec.rawSupports.countP (rawWitness Tmask Imask) := by
-  change spec.rawSupports.attach.countP
-      (fun x : { s // s ∈ spec.rawSupports } => rawWitness Tmask Imask x.1) =
-    spec.rawSupports.countP (rawWitness Tmask Imask)
-  exact List.countP_attach (l := spec.rawSupports) (p := rawWitness Tmask Imask)
-
-private def rawCapSum (spec : FrameSpec) (Tmask Imask : Nat) : ℕ :=
-  (Finset.univ : Finset (Fin spec.t)).sum fun i =>
-    if Tmask.testBit i.1 && !(Imask.testBit i.1) then spec.cap i else 0
-
-/-- Recursively check all masks contributing to the raw frame inequalities. -/
-def checkMasksDown (spec : FrameSpec) : Nat → Nat → Nat → Bool
-  | 0, Tmask, Imask =>
-      decide
-        (spec.rawSupports.countP (rawWitness Tmask Imask) ≤
-          rawCapSum spec Tmask Imask)
-  | n + 1, Tmask, Imask =>
-      let bit := (1 : Nat) <<< n
-      checkMasksDown spec n Tmask Imask &&
-      checkMasksDown spec n (Tmask ||| bit) Imask &&
-      checkMasksDown spec n (Tmask ||| bit) (Imask ||| bit)
-
-/-- A Boolean validator for the raw frame inequalities of a frame specification. -/
-def FrameSpec.rawCheckValid (spec : FrameSpec) : Bool :=
-  checkMasksDown spec spec.t 0 0
-
-private theorem mem_supportPatternOfList_iff {t : ℕ} {s : List ℕ}
-    {hIn : ∀ i ∈ s, i < t} {hNodup : s.Nodup} {hCard : 2 ≤ s.length} {i : Fin t} :
-    i ∈ (supportPatternOfList s hIn hNodup hCard).1 ↔ i.1 ∈ s := by
-  unfold supportPatternOfList
-  constructor
-  · intro hi
-    rw [List.mem_toFinset, List.mem_pmap] at hi
-    rcases hi with ⟨a, ha, hEq⟩
-    have : a = i.1 := by
-      simpa using congrArg Fin.val hEq
-    simpa [this] using ha
-  · intro hi
-    rw [List.mem_toFinset, List.mem_pmap]
-    refine ⟨i.1, hi, ?_⟩
-    simp_all
-
-private theorem rawCapSum_eq_sum (spec : FrameSpec)
-    (Tmask Imask : Nat) (T I : Finset (Fin spec.t))
-    (hT : ∀ i : Fin spec.t, Tmask.testBit i.1 = decide (i ∈ T))
-    (hI : ∀ i : Fin spec.t, Imask.testBit i.1 = decide (i ∈ I)) :
-    rawCapSum spec Tmask Imask = (T \ I).sum spec.cap := by
-  unfold rawCapSum
-  have hfilter :
-      ((Finset.univ : Finset (Fin spec.t)).filter fun i =>
-          Tmask.testBit i.1 && !(Imask.testBit i.1)) = T \ I := by
-    ext i
-    simp [hT i, hI i]
-  rw [← Finset.sum_filter]
-  rw [hfilter]
-
-private theorem rawInterCount_eq_interCard (spec : FrameSpec)
-    (Imask : Nat) (I : Finset (Fin spec.t))
-    (hI : ∀ i : Fin spec.t, Imask.testBit i.1 = decide (i ∈ I))
-    (x : { s // s ∈ spec.rawSupports }) :
-    rawInterCount Imask x.1 =
-      (((supportPatternOfList x.1
-          (fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi)
-          (spec.rawSupports_ok x.1 x.2).1
-          (spec.rawSupports_ok x.1 x.2).2.2).1 ∩ I).card) := by
-  let hIn : ∀ i ∈ x.1, i < spec.t := fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi
-  let hNodup : x.1.Nodup := (spec.rawSupports_ok x.1 x.2).1
-  let hCard : 2 ≤ x.1.length := (spec.rawSupports_ok x.1 x.2).2.2
-  let finList : List (Fin spec.t) :=
-    x.1.pmap (fun i hi => (⟨i, hi⟩ : Fin spec.t)) hIn
-  have hfinNodup : finList.Nodup := by
-    apply hNodup.pmap
-    simp_all
-  have hcount :
-      rawInterCount Imask x.1 = finList.countP (fun j => decide (j ∈ I)) := by
-    unfold rawInterCount finList
-    rw [← List.countP_attach (l := x.1) (p := fun i => Imask.testBit i)]
-    rw [List.countP_pmap]
-    apply List.countP_congr
-    intro y hy
-    rcases y with ⟨a, ha⟩
-    exact Bool.eq_iff_iff.mp (hI ⟨a, hIn a ha⟩)
+private theorem FrameSpec.isValid_of_complement_checks (spec : FrameSpec)
+    (h : ∀ U : Finset (Fin spec.t),
+      spec.countWitnesses Finset.univ Uᶜ ≤ U.sum spec.cap) :
+    spec.IsValid := by
+  intro T I _
+  let U := T \ I
+  -- Replacing `I` by `Uᶜ` preserves the capacity side and can only add witnesses.
   calc
-    rawInterCount Imask x.1 = finList.countP (fun j => decide (j ∈ I)) := hcount
-    _ = (finList.filter fun j => decide (j ∈ I)).length := by
-      rw [List.countP_eq_length_filter]
-    _ = ((finList.toFinset.filter fun j => decide (j ∈ I)).card) := by
-      let filtered := finList.filter fun j => decide (j ∈ I)
-      have hfilteredNodup : filtered.Nodup := hfinNodup.filter _
-      have hfilteredCard : filtered.toFinset.card = filtered.length :=
-        List.toFinset_card_of_nodup (l := filtered) hfilteredNodup
-      simpa [filtered] using hfilteredCard.symm
-    _ = (((supportPatternOfList x.1 hIn hNodup hCard).1 ∩ I).card) := by
-      congr 1
-      ext j
-      simp [supportPatternOfList, finList]
-
-private theorem rawAll_eq_decide_subset (spec : FrameSpec)
-    (Tmask : Nat) (T : Finset (Fin spec.t))
-    (hT : ∀ i : Fin spec.t, Tmask.testBit i.1 = decide (i ∈ T))
-    (x : { s // s ∈ spec.rawSupports }) :
-    x.1.all (fun i => Tmask.testBit i) =
-      decide ((supportPatternOfList (t := spec.t) x.1
-        (fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi)
-        (spec.rawSupports_ok x.1 x.2).1
-        (spec.rawSupports_ok x.1 x.2).2.2).1 ⊆ T) := by
-  let hIn : ∀ i ∈ x.1, i < spec.t := fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi
-  let hNodup : x.1.Nodup := (spec.rawSupports_ok x.1 x.2).1
-  let hCard : 2 ≤ x.1.length := (spec.rawSupports_ok x.1 x.2).2.2
-  rw [Bool.eq_iff_iff, decide_eq_true_iff]
-  constructor
-  · intro hAll i hi
-    have hiList : i.1 ∈ x.1 :=
-      (mem_supportPatternOfList_iff (hIn := hIn) (hNodup := hNodup) (hCard := hCard)).mp hi
-    have hbit : Tmask.testBit i.1 = true := List.all_eq_true.mp hAll i.1 hiList
-    let i' : Fin spec.t := ⟨i.1, i.2⟩
-    have hbit' : Tmask.testBit i'.1 = true := by
-      simpa [i'] using hbit
-    have hmem : i' ∈ T := of_decide_eq_true <| by
-      simp_all
-    change i' ∈ T
-    exact hmem
-  · intro hSub
-    refine List.all_eq_true.mpr ?_
-    intro a ha
-    let i : Fin spec.t := ⟨a, hIn a ha⟩
-    have hi : i ∈ (supportPatternOfList x.1 hIn hNodup hCard).1 :=
-      (mem_supportPatternOfList_iff (hIn := hIn) (hNodup := hNodup) (hCard := hCard)).mpr ha
-    have hmem : i ∈ T := hSub hi
-    have hmem' : decide (i ∈ T) = true := decide_eq_true hmem
-    rw [hT i]
-    exact hmem'
-
-private theorem rawWitnessAux_eq (Tmask Imask : Nat) :
-    ∀ acc s,
-      rawWitnessAux Tmask Imask acc s =
-        (s.all (fun i => Tmask.testBit i) &&
-          decide (acc + rawInterCount Imask s = 1))
-  | acc, [] => by
-      rfl
-  | acc, i :: s => by
-      by_cases hI : Imask.testBit i
-      · simp [rawWitnessAux, rawInterCount, rawWitnessAux_eq Tmask Imask (acc + 1) s, hI,
-          Bool.and_assoc, Nat.add_comm, Nat.add_left_comm]
-      · simp [rawWitnessAux, rawInterCount, rawWitnessAux_eq Tmask Imask acc s, hI,
-          Bool.and_assoc]
-        rfl
-
-private theorem rawWitness_eq_all_and (Tmask Imask : Nat) (s : List ℕ) :
-    rawWitness Tmask Imask s =
-      (s.all (fun i => Tmask.testBit i) && decide (rawInterCount Imask s = 1)) := by
-  simpa [rawWitness] using rawWitnessAux_eq Tmask Imask 0 s
-
-private theorem frameWitness_eq_rawAttachedWitness (spec : FrameSpec)
-    (Tmask Imask : Nat) (T I : Finset (Fin spec.t))
-    (hT : ∀ i : Fin spec.t, Tmask.testBit i.1 = decide (i ∈ T))
-    (hI : ∀ i : Fin spec.t, Imask.testBit i.1 = decide (i ∈ I))
-    (x : { s // s ∈ spec.rawSupports }) :
-    frameWitnesses T I
-      (supportPatternOfList x.1
-        (fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi)
-        (spec.rawSupports_ok x.1 x.2).1
-        (spec.rawSupports_ok x.1 x.2).2.2) =
-      rawAttachedWitness spec Tmask Imask x := by
-  let hIn : ∀ i ∈ x.1, i < spec.t := fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi
-  let hNodup : x.1.Nodup := (spec.rawSupports_ok x.1 x.2).1
-  let hCard : 2 ≤ x.1.length := (spec.rawSupports_ok x.1 x.2).2.2
-  have hsub :
-      x.1.all (fun i => Tmask.testBit i) =
-        decide ((supportPatternOfList x.1 hIn hNodup hCard).1 ⊆ T) :=
-    rawAll_eq_decide_subset spec Tmask T hT x
-  have hpattern :
-      supportPatternOfList x.1
-          (fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi)
-          (spec.rawSupports_ok x.1 x.2).1
-          (spec.rawSupports_ok x.1 x.2).2.2 =
-        supportPatternOfList x.1 hIn hNodup hCard := by
-    apply Subtype.ext
-    ext i
-    constructor
-    · intro hi
-      exact (mem_supportPatternOfList_iff (hIn := hIn) (hNodup := hNodup)
-        (hCard := hCard)).mpr
-        ((mem_supportPatternOfList_iff
-          (hIn := fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi)
-          (hNodup := (spec.rawSupports_ok x.1 x.2).1)
-          (hCard := (spec.rawSupports_ok x.1 x.2).2.2)).mp hi)
-    · intro hi
-      exact (mem_supportPatternOfList_iff
-        (hIn := fun i hi => (spec.rawSupports_ok x.1 x.2).2.1 i hi)
-        (hNodup := (spec.rawSupports_ok x.1 x.2).1)
-        (hCard := (spec.rawSupports_ok x.1 x.2).2.2)).mpr
-        ((mem_supportPatternOfList_iff (hIn := hIn) (hNodup := hNodup)
-          (hCard := hCard)).mp hi)
-  have hcard :
-      decide (rawInterCount Imask x.1 = 1) =
-        decide ((((supportPatternOfList x.1 hIn hNodup hCard).1 ∩ I).card) = 1) := by
-    rw [rawInterCount_eq_interCard spec Imask I hI x]
-    rw [hpattern]
-    rfl
-  unfold frameWitnesses rawAttachedWitness
-  simp [rawWitness_eq_all_and, hsub, hcard]
-
-private theorem countWitnesses_eq_rawAttachedCount (spec : FrameSpec)
-    (Tmask Imask : Nat) (T I : Finset (Fin spec.t))
-    (hT : ∀ i : Fin spec.t, Tmask.testBit i.1 = decide (i ∈ T))
-    (hI : ∀ i : Fin spec.t, Imask.testBit i.1 = decide (i ∈ I)) :
-    spec.countWitnesses T I =
-      spec.rawSupports.attach.countP (rawAttachedWitness spec Tmask Imask) := by
-  unfold FrameSpec.countWitnesses FrameSpec.supportList
-  rw [List.countP_pmap]
-  apply List.countP_congr
-  intro x hx
-  rcases x with ⟨a, m⟩
-  constructor <;> intro h
-  · have hEq :=
-      frameWitness_eq_rawAttachedWitness spec Tmask Imask T I hT hI ⟨a, m⟩
-    simpa [hEq] using h
-  · have hEq :=
-      frameWitness_eq_rawAttachedWitness spec Tmask Imask T I hT hI ⟨a, m⟩
-    simpa [← hEq] using h
+    spec.countWitnesses T I ≤ spec.countWitnesses Finset.univ Uᶜ := by
+      unfold FrameSpec.countWitnesses
+      apply List.countP_mono_left
+      intro S _ hS
+      have hWitness : S.1 ⊆ T ∧ (S.1 ∩ I).card = 1 := by
+        simpa [frameWitnesses] using of_decide_eq_true hS
+      apply decide_eq_true
+      constructor
+      · exact Finset.subset_univ S.1
+      · rw [show S.1 ∩ Uᶜ = S.1 ∩ I by
+          ext i
+          by_cases hi : i ∈ S.1
+          · simp [hi, U, hWitness.1 hi]
+          · simp [hi]]
+        exact hWitness.2
+    _ ≤ U.sum spec.cap := h U
+    _ = (T \ I).sum spec.cap := rfl
 
 private theorem bit_testBit_lt {n i : Nat} (hi : i < n) :
     (((1 : Nat) <<< n).testBit i) = false := by
@@ -1663,154 +1449,93 @@ private theorem bit_testBit_gt {n i : Nat} (hi : n < i) :
     · cases htest : Nat.testBit 1 (i - n) <;> simp_all
   simp_all
 
-private theorem checkMasksDown_sound (spec : FrameSpec) :
-    ∀ n Tmask Imask, n ≤ spec.t →
-      (∀ i < n, Tmask.testBit i = false ∧ Imask.testBit i = false) →
-      checkMasksDown spec n Tmask Imask = true →
-      ∀ T I : Finset (Fin spec.t), I ⊆ T →
-        (∀ i : Fin spec.t, n ≤ i.1 → Tmask.testBit i.1 = decide (i ∈ T)) →
-        (∀ i : Fin spec.t, n ≤ i.1 → Imask.testBit i.1 = decide (i ∈ I)) →
-        spec.countWitnesses T I ≤ (T \ I).sum spec.cap := by
+private def maskFinset (spec : FrameSpec) (mask : Nat) : Finset (Fin spec.t) :=
+  Finset.univ.filter fun i => mask.testBit i.1
+
+/-- Recursively check the maximal witness set for each right-hand side support mask. -/
+def checkComplementMasksDown (spec : FrameSpec) : Nat → Nat → Bool
+  | 0, mask =>
+      let U := maskFinset spec mask
+      decide (spec.countWitnesses Finset.univ Uᶜ ≤ U.sum spec.cap)
+  | n + 1, mask =>
+      checkComplementMasksDown spec n mask &&
+      checkComplementMasksDown spec n (mask ||| ((1 : Nat) <<< n))
+
+private theorem checkComplementMasksDown_sound (spec : FrameSpec) :
+    ∀ n mask, n ≤ spec.t →
+      (∀ i < n, mask.testBit i = false) →
+      checkComplementMasksDown spec n mask = true →
+      ∀ U : Finset (Fin spec.t),
+        (∀ i : Fin spec.t, n ≤ i.1 → mask.testBit i.1 = decide (i ∈ U)) →
+        spec.countWitnesses Finset.univ Uᶜ ≤ U.sum spec.cap := by
   intro n
   induction n with
   | zero =>
-      intro Tmask Imask hn hzero hcheck T I hIT hTrep hIrep
-      have hleaf :
-          spec.rawSupports.countP (rawWitness Tmask Imask) ≤
-            rawCapSum spec Tmask Imask := by
-        simpa [checkMasksDown] using hcheck
-      have hleaf' :
-          spec.rawSupports.attach.countP (rawAttachedWitness spec Tmask Imask) ≤
-            rawCapSum spec Tmask Imask := by
-        rw [rawAttachedCount_eq_count]
-        exact hleaf
-      have hTall : ∀ i : Fin spec.t, Tmask.testBit i.1 = decide (i ∈ T) := by
-        simp_all
-      have hIall : ∀ i : Fin spec.t, Imask.testBit i.1 = decide (i ∈ I) := by
-        simp_all
-      calc
-        spec.countWitnesses T I =
-            spec.rawSupports.attach.countP (rawAttachedWitness spec Tmask Imask) := by
-              symm
-              exact (countWitnesses_eq_rawAttachedCount spec Tmask Imask T I hTall hIall).symm
-        _ ≤ rawCapSum spec Tmask Imask := hleaf'
-        _ = (T \ I).sum spec.cap := rawCapSum_eq_sum spec Tmask Imask T I hTall hIall
+      intro mask hn hzero hcheck U hrep
+      have hmask : maskFinset spec mask = U := by
+        ext i
+        simp [maskFinset, hrep i]
+      simpa [checkComplementMasksDown, hmask] using of_decide_eq_true hcheck
   | succ n ih =>
-      intro Tmask Imask hn hzero hcheck T I hIT hTrep hIrep
+      intro mask hn hzero hcheck U hrep
       let bit := (1 : Nat) <<< n
       have hcases :
-          (checkMasksDown spec n Tmask Imask = true ∧
-            checkMasksDown spec n (Tmask ||| bit) Imask = true) ∧
-          checkMasksDown spec n (Tmask ||| bit) (Imask ||| bit) = true := by
-        simpa [checkMasksDown, bit] using hcheck
-      rcases hcases with ⟨⟨h0, h1⟩, h2⟩
+          checkComplementMasksDown spec n mask = true ∧
+            checkComplementMasksDown spec n (mask ||| bit) = true := by
+        simpa [checkComplementMasksDown, bit] using hcheck
       have hn' : n ≤ spec.t := Nat.le_of_succ_le hn
       let i0 : Fin spec.t := ⟨n, by omega⟩
-      by_cases hTn : i0 ∈ T
-      · by_cases hIn : i0 ∈ I
-        · apply ih (Tmask ||| bit) (Imask ||| bit) hn'
-          · intro i hi
-            constructor
-            · rw [Nat.testBit_lor,
-                (hzero i (Nat.lt_trans hi (Nat.lt_succ_self n))).1, bit_testBit_lt hi]
-              simp
-            · rw [Nat.testBit_lor,
-                (hzero i (Nat.lt_trans hi (Nat.lt_succ_self n))).2, bit_testBit_lt hi]
-              simp
-          · exact h2
-          · exact hIT
-          · intro j hj
-            by_cases hEq : j.1 = n
-            · have hj0 : j = i0 := by
-                apply Fin.ext
-                simpa using hEq
-              subst hj0
-              rw [Nat.testBit_lor, (hzero n (Nat.lt_succ_self n)).1, bit_testBit_self]
-              simp [hTn]
-            · have hgt : n < j.1 := by omega
-              rw [Nat.testBit_lor, hTrep j (by omega), bit_testBit_gt hgt]
-              simp
-          · intro j hj
-            by_cases hEq : j.1 = n
-            · have hj0 : j = i0 := by
-                apply Fin.ext
-                simpa using hEq
-              subst hj0
-              rw [Nat.testBit_lor, (hzero n (Nat.lt_succ_self n)).2, bit_testBit_self]
-              simp [hIn]
-            · have hgt : n < j.1 := by omega
-              rw [Nat.testBit_lor, hIrep j (by omega), bit_testBit_gt hgt]
-              simp
-        · apply ih (Tmask ||| bit) Imask hn'
-          · intro i hi
-            constructor
-            · rw [Nat.testBit_lor,
-                (hzero i (Nat.lt_trans hi (Nat.lt_succ_self n))).1, bit_testBit_lt hi]
-              simp
-            · exact (hzero i (Nat.lt_trans hi (Nat.lt_succ_self n))).2
-          · exact h1
-          · exact hIT
-          · intro j hj
-            by_cases hEq : j.1 = n
-            · have hj0 : j = i0 := by
-                apply Fin.ext
-                simpa using hEq
-              subst hj0
-              rw [Nat.testBit_lor, (hzero n (Nat.lt_succ_self n)).1, bit_testBit_self]
-              simp [hTn]
-            · have hgt : n < j.1 := by omega
-              rw [Nat.testBit_lor, hTrep j (by omega), bit_testBit_gt hgt]
-              simp
-          · intro j hj
-            by_cases hEq : j.1 = n
-            · have hj0 : j = i0 := by
-                apply Fin.ext
-                simpa using hEq
-              simp_all
-            · have hgt : n < j.1 := by omega
-              exact hIrep j (by omega)
-      · have hInot : i0 ∉ I := by
-          intro hi
-          exact hTn (hIT hi)
-        apply ih Tmask Imask hn'
-        · intro i hi
-          exact hzero i (Nat.lt_trans hi (Nat.lt_succ_self n))
-        · exact h0
-        · exact hIT
+      by_cases hi : i0 ∈ U
+      · apply ih (mask ||| bit) hn'
+        · intro i hil
+          rw [Nat.testBit_lor,
+            hzero i (Nat.lt_trans hil (Nat.lt_succ_self n)), bit_testBit_lt hil]
+          simp
+        · exact hcases.2
         · intro j hj
           by_cases hEq : j.1 = n
           · have hj0 : j = i0 := by
               apply Fin.ext
               simpa using hEq
-            simp_all
-          · exact hTrep j (by omega)
+            subst hj0
+            rw [Nat.testBit_lor, hzero n (Nat.lt_succ_self n), bit_testBit_self]
+            simp [hi]
+          · have hgt : n < j.1 := by omega
+            rw [Nat.testBit_lor, hrep j (by omega), bit_testBit_gt hgt]
+            simp
+      · apply ih mask hn'
+        · intro i hil
+          exact hzero i (Nat.lt_trans hil (Nat.lt_succ_self n))
+        · exact hcases.1
         · intro j hj
           by_cases hEq : j.1 = n
           · have hj0 : j = i0 := by
               apply Fin.ext
               simpa using hEq
+            subst hj0
             simp_all
-          · exact hIrep j (by omega)
+          · exact hrep j (by omega)
 
-theorem FrameSpec.rawCheckValid_sound (spec : FrameSpec)
-    (h : spec.rawCheckValid = true) : spec.IsValid := by
-  intro T I hIT
-  have hzero : ∀ i < spec.t, (0 : Nat).testBit i = false ∧ (0 : Nat).testBit i = false := by
-    simp_all
-  have hTrep : ∀ i : Fin spec.t, spec.t ≤ i.1 → (0 : Nat).testBit i.1 = decide (i ∈ T) := by
-    simp_all
-  have hIrep : ∀ i : Fin spec.t, spec.t ≤ i.1 → (0 : Nat).testBit i.1 = decide (i ∈ I) := by
-    simp_all
-  exact checkMasksDown_sound spec spec.t 0 0 le_rfl hzero
-    (by simpa [FrameSpec.rawCheckValid] using h) T I hIT hTrep hIrep
+/-- A Boolean validator using only maximal witness sets for each capacity support. -/
+def FrameSpec.checkComplementValid (spec : FrameSpec) : Bool :=
+  checkComplementMasksDown spec spec.t 0
 
-theorem checkMasksDown_step_true (spec : FrameSpec) (n Tmask Imask : Nat)
-    (h0 : checkMasksDown spec n Tmask Imask = true)
-    (h1 : checkMasksDown spec n (Tmask ||| ((1 : Nat) <<< n)) Imask = true)
-    (h2 : checkMasksDown spec n (Tmask ||| ((1 : Nat) <<< n))
-      (Imask ||| ((1 : Nat) <<< n)) = true) :
-    checkMasksDown spec (n + 1) Tmask Imask = true := by
-  simp [checkMasksDown, h0, h1, h2]
+/-- The complement-based checker implies all frame inequalities. -/
+theorem FrameSpec.checkComplementValid_sound (spec : FrameSpec)
+    (h : spec.checkComplementValid = true) : spec.IsValid := by
+  apply spec.isValid_of_complement_checks
+  intro U
+  refine checkComplementMasksDown_sound spec spec.t 0 le_rfl (by simp)
+    (by simpa [FrameSpec.checkComplementValid] using h) U ?_
+  intro i hi
+  omega
+
+/-- Combine the two child certificates for the next support-mask bit. -/
+theorem checkComplementMasksDown_step_true (spec : FrameSpec) (n mask : Nat)
+    (h0 : checkComplementMasksDown spec n mask = true)
+    (h1 : checkComplementMasksDown spec n (mask ||| ((1 : Nat) <<< n)) = true) :
+    checkComplementMasksDown spec (n + 1) mask = true := by
+  simp [checkComplementMasksDown, h0, h1]
 
 /-- A computable checker for the frame inequalities attached to a finite specification. -/
 def FrameSpec.checkValid (spec : FrameSpec) : Bool :=
