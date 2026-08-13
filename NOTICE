@@ -61,6 +61,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Erdos367                  https://github.com/scottdhughes/erdos367
   LeanPool/Erdos403                  https://github.com/gotrevor/erdos-403
   LeanPool/Erdos865                  https://github.com/mrricky22/erdos-865-lean
+  LeanPool/Erdos97ConvexOctagon      https://github.com/lyfar/erdos-97-octagon-lean
   LeanPool/ErdosMoser                https://github.com/lyfar/erdos-moser-distinct-subset-sums-lean
   LeanPool/ErdosTuzaValtr            https://github.com/jcpaik/erdos-tuza-valtr
   LeanPool/EventStructures           https://github.com/vikraman/event-structures
@@ -78,6 +79,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Incompleteness            https://github.com/FormalizedFormalLogic/Incompleteness
   LeanPool/IsTranscendentalPi        https://github.com/samuelborza/IsTranscendentalPi
   LeanPool/Isoperimetric             https://github.com/hojonathanho/isoperimetric
+  LeanPool/JacobianDiffgeo           https://github.com/rkirov/jacobian-fable
   LeanPool/JohnsonLindenstraussLean  https://github.com/claytomode/johnson-lindenstrauss-lean
   LeanPool/KrafftSieve               https://github.com/ElNando888/KrafftSieve
   LeanPool/Lean4GlCoalgebras         https://github.com/mgignoux/lean4-gl-coalgebras
