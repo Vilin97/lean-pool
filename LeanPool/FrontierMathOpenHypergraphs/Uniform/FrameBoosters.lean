@@ -13,7 +13,8 @@ import LeanPool.FrontierMathOpenHypergraphs.Uniform.FrameDefs
 namespace HypergraphLowerBound
 
 -- Stable names let the exposition replay reject these already-loaded certificates before
--- recomputing their expensive Boolean validations.
+-- recomputing their expensive Boolean validations. Lean and doc-gen treat the `proof_n`
+-- declarations as implementation details, so only the final certificates enter the public API.
 namespace BoosterValidation
 /-- Validation certificate booster_0_valid. -/
 theorem booster_0_valid :
@@ -23,31 +24,32 @@ theorem booster_0_valid :
 private def booster1Spec : FrameSpec :=
   boosters.get ⟨1, by decide⟩
 
-/-- Validation certificate booster_1_check_0. -/
-theorem booster_1_check_0 :
+/-- Validation certificate proof_1_0. -/
+theorem proof_1_0 :
     checkMasksDown booster1Spec 7 0 0 = true := rfl
 
-/-- Validation certificate booster_1_check_1. -/
-theorem booster_1_check_1 :
+/-- Validation certificate proof_1_1. -/
+theorem proof_1_1 :
     checkMasksDown booster1Spec 7 (((1 : Nat) <<< 7)) 0 = true := rfl
 
-/-- Validation certificate booster_1_check_2. -/
-theorem booster_1_check_2 :
+/-- Validation certificate proof_1_2. -/
+theorem proof_1_2 :
     checkMasksDown booster1Spec 7 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7)) = true := rfl
 
-/-- Validation certificate booster_1_rawCheckValid. -/
-theorem booster_1_rawCheckValid :
+/-- Validation certificate proof_1_9. -/
+theorem proof_1_9 :
     booster1Spec.rawCheckValid = true := by
   unfold FrameSpec.rawCheckValid
   change checkMasksDown booster1Spec 8 0 0 = true
   exact
     checkMasksDown_step_true booster1Spec 7 0 0
-      booster_1_check_0 booster_1_check_1 booster_1_check_2
+      proof_1_0 proof_1_1 proof_1_2
 
 /-- Validation certificate booster_1_valid. -/
 theorem booster_1_valid :
     (boosters.get ⟨1, by decide⟩).IsValid := by
-  simpa [booster1Spec] using booster1Spec.rawCheckValid_sound booster_1_rawCheckValid
+  simpa [booster1Spec] using
+    booster1Spec.rawCheckValid_sound proof_1_9
 
 /-- Validation certificate booster_2_valid. -/
 theorem booster_2_valid :
@@ -62,369 +64,372 @@ theorem booster_3_valid :
 private def booster4Spec : FrameSpec :=
   boosters.get ⟨4, by decide⟩
 
-/-- Validation certificate booster_4_check_00. -/
-theorem booster_4_check_00 :
+/-- Validation certificate proof_4_00. -/
+theorem proof_4_00 :
     checkMasksDown booster4Spec 6 0 0 = true := rfl
 
-/-- Validation certificate booster_4_check_01. -/
-theorem booster_4_check_01 :
+/-- Validation certificate proof_4_01. -/
+theorem proof_4_01 :
     checkMasksDown booster4Spec 6 (((1 : Nat) <<< 6)) 0 = true := rfl
 
-/-- Validation certificate booster_4_check_02. -/
-theorem booster_4_check_02 :
+/-- Validation certificate proof_4_02. -/
+theorem proof_4_02 :
     checkMasksDown booster4Spec 6 (((1 : Nat) <<< 6)) (((1 : Nat) <<< 6)) = true := rfl
 
-/-- Validation certificate booster_4_check_0. -/
-theorem booster_4_check_0 :
+/-- Validation certificate proof_4_0. -/
+theorem proof_4_0 :
     checkMasksDown booster4Spec 7 0 0 = true := by
   exact checkMasksDown_step_true booster4Spec 6 0 0
-    booster_4_check_00 booster_4_check_01 booster_4_check_02
+    proof_4_00 proof_4_01 proof_4_02
 
-/-- Validation certificate booster_4_check_10. -/
-theorem booster_4_check_10 :
+/-- Validation certificate proof_4_10. -/
+theorem proof_4_10 :
     checkMasksDown booster4Spec 6 (((1 : Nat) <<< 7)) 0 = true := rfl
 
-/-- Validation certificate booster_4_check_11. -/
-theorem booster_4_check_11 :
+/-- Validation certificate proof_4_11. -/
+theorem proof_4_11 :
     checkMasksDown booster4Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6))) 0 = true := rfl
 
-/-- Validation certificate booster_4_check_12. -/
-theorem booster_4_check_12 :
+/-- Validation certificate proof_4_12. -/
+theorem proof_4_12 :
     checkMasksDown booster4Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 6)) = true := rfl
 
-/-- Validation certificate booster_4_check_1. -/
-theorem booster_4_check_1 :
+/-- Validation certificate proof_4_1. -/
+theorem proof_4_1 :
     checkMasksDown booster4Spec 7 (((1 : Nat) <<< 7)) 0 = true := by
   exact checkMasksDown_step_true booster4Spec 6 (((1 : Nat) <<< 7)) 0
-    booster_4_check_10 booster_4_check_11 booster_4_check_12
+    proof_4_10 proof_4_11 proof_4_12
 
-/-- Validation certificate booster_4_check_20. -/
-theorem booster_4_check_20 :
+/-- Validation certificate proof_4_20. -/
+theorem proof_4_20 :
     checkMasksDown booster4Spec 6 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7)) = true := rfl
 
-/-- Validation certificate booster_4_check_21. -/
-theorem booster_4_check_21 :
+/-- Validation certificate proof_4_21. -/
+theorem proof_4_21 :
     checkMasksDown booster4Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 7)) = true := rfl
 
-/-- Validation certificate booster_4_check_22. -/
-theorem booster_4_check_22 :
+/-- Validation certificate proof_4_22. -/
+theorem proof_4_22 :
     checkMasksDown booster4Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6))) = true := rfl
 
-/-- Validation certificate booster_4_check_2. -/
-theorem booster_4_check_2 :
+/-- Validation certificate proof_4_2. -/
+theorem proof_4_2 :
     checkMasksDown booster4Spec 7 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7)) = true := by
   exact checkMasksDown_step_true booster4Spec 6 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7))
-    booster_4_check_20 booster_4_check_21 booster_4_check_22
+    proof_4_20 proof_4_21 proof_4_22
 
-/-- Validation certificate booster_4_rawCheckValid. -/
-theorem booster_4_rawCheckValid :
+/-- Validation certificate proof_4_9. -/
+theorem proof_4_9 :
     booster4Spec.rawCheckValid = true := by
   unfold FrameSpec.rawCheckValid
   change checkMasksDown booster4Spec 8 0 0 = true
   exact
     checkMasksDown_step_true booster4Spec 7 0 0
-      booster_4_check_0 booster_4_check_1 booster_4_check_2
+      proof_4_0 proof_4_1 proof_4_2
 
 /-- Validation certificate booster_4_valid. -/
 theorem booster_4_valid :
     (boosters.get ⟨4, by decide⟩).IsValid := by
-  simpa [booster4Spec] using booster4Spec.rawCheckValid_sound booster_4_rawCheckValid
+  simpa [booster4Spec] using
+    booster4Spec.rawCheckValid_sound proof_4_9
 
 private def booster5Spec : FrameSpec :=
   boosters.get ⟨5, by decide⟩
 
-/-- Validation certificate booster_5_check_00. -/
-theorem booster_5_check_00 :
+/-- Validation certificate proof_5_00. -/
+theorem proof_5_00 :
     checkMasksDown booster5Spec 6 0 0 = true := rfl
 
-/-- Validation certificate booster_5_check_01. -/
-theorem booster_5_check_01 :
+/-- Validation certificate proof_5_01. -/
+theorem proof_5_01 :
     checkMasksDown booster5Spec 6 (((1 : Nat) <<< 6)) 0 = true := rfl
 
-/-- Validation certificate booster_5_check_02. -/
-theorem booster_5_check_02 :
+/-- Validation certificate proof_5_02. -/
+theorem proof_5_02 :
     checkMasksDown booster5Spec 6 (((1 : Nat) <<< 6)) (((1 : Nat) <<< 6)) = true := rfl
 
-/-- Validation certificate booster_5_check_0. -/
-theorem booster_5_check_0 :
+/-- Validation certificate proof_5_0. -/
+theorem proof_5_0 :
     checkMasksDown booster5Spec 7 0 0 = true := by
   exact checkMasksDown_step_true booster5Spec 6 0 0
-    booster_5_check_00 booster_5_check_01 booster_5_check_02
+    proof_5_00 proof_5_01 proof_5_02
 
-/-- Validation certificate booster_5_check_10. -/
-theorem booster_5_check_10 :
+/-- Validation certificate proof_5_10. -/
+theorem proof_5_10 :
     checkMasksDown booster5Spec 6 (((1 : Nat) <<< 7)) 0 = true := rfl
 
-/-- Validation certificate booster_5_check_11. -/
-theorem booster_5_check_11 :
+/-- Validation certificate proof_5_11. -/
+theorem proof_5_11 :
     checkMasksDown booster5Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6))) 0 = true := rfl
 
-/-- Validation certificate booster_5_check_12. -/
-theorem booster_5_check_12 :
+/-- Validation certificate proof_5_12. -/
+theorem proof_5_12 :
     checkMasksDown booster5Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 6)) = true := rfl
 
-/-- Validation certificate booster_5_check_1. -/
-theorem booster_5_check_1 :
+/-- Validation certificate proof_5_1. -/
+theorem proof_5_1 :
     checkMasksDown booster5Spec 7 (((1 : Nat) <<< 7)) 0 = true := by
   exact checkMasksDown_step_true booster5Spec 6 (((1 : Nat) <<< 7)) 0
-    booster_5_check_10 booster_5_check_11 booster_5_check_12
+    proof_5_10 proof_5_11 proof_5_12
 
-/-- Validation certificate booster_5_check_20. -/
-theorem booster_5_check_20 :
+/-- Validation certificate proof_5_20. -/
+theorem proof_5_20 :
     checkMasksDown booster5Spec 6 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7)) = true := rfl
 
-/-- Validation certificate booster_5_check_21. -/
-theorem booster_5_check_21 :
+/-- Validation certificate proof_5_21. -/
+theorem proof_5_21 :
     checkMasksDown booster5Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 7)) = true := rfl
 
-/-- Validation certificate booster_5_check_22. -/
-theorem booster_5_check_22 :
+/-- Validation certificate proof_5_22. -/
+theorem proof_5_22 :
     checkMasksDown booster5Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6))) = true := rfl
 
-/-- Validation certificate booster_5_check_2. -/
-theorem booster_5_check_2 :
+/-- Validation certificate proof_5_2. -/
+theorem proof_5_2 :
     checkMasksDown booster5Spec 7 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7)) = true := by
   exact checkMasksDown_step_true booster5Spec 6 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7))
-    booster_5_check_20 booster_5_check_21 booster_5_check_22
+    proof_5_20 proof_5_21 proof_5_22
 
-/-- Validation certificate booster_5_rawCheckValid. -/
-theorem booster_5_rawCheckValid :
+/-- Validation certificate proof_5_9. -/
+theorem proof_5_9 :
     booster5Spec.rawCheckValid = true := by
   unfold FrameSpec.rawCheckValid
   change checkMasksDown booster5Spec 8 0 0 = true
   exact
     checkMasksDown_step_true booster5Spec 7 0 0
-      booster_5_check_0 booster_5_check_1 booster_5_check_2
+      proof_5_0 proof_5_1 proof_5_2
 
 /-- Validation certificate booster_5_valid. -/
 theorem booster_5_valid :
     (boosters.get ⟨5, by decide⟩).IsValid := by
-  simpa [booster5Spec] using booster5Spec.rawCheckValid_sound booster_5_rawCheckValid
+  simpa [booster5Spec] using
+    booster5Spec.rawCheckValid_sound proof_5_9
 
 private def booster6Spec : FrameSpec :=
   boosters.get ⟨6, by decide⟩
 
-/-- Validation certificate booster_6_check_000. -/
-theorem booster_6_check_000 :
+/-- Validation certificate proof_6_000. -/
+theorem proof_6_000 :
     checkMasksDown booster6Spec 6 0 0 = true := rfl
 
-/-- Validation certificate booster_6_check_001. -/
-theorem booster_6_check_001 :
+/-- Validation certificate proof_6_001. -/
+theorem proof_6_001 :
     checkMasksDown booster6Spec 6 (((1 : Nat) <<< 6)) 0 = true := rfl
 
-/-- Validation certificate booster_6_check_002. -/
-theorem booster_6_check_002 :
+/-- Validation certificate proof_6_002. -/
+theorem proof_6_002 :
     checkMasksDown booster6Spec 6 (((1 : Nat) <<< 6)) (((1 : Nat) <<< 6)) = true := rfl
 
-/-- Validation certificate booster_6_check_00. -/
-theorem booster_6_check_00 :
+/-- Validation certificate proof_6_00. -/
+theorem proof_6_00 :
     checkMasksDown booster6Spec 7 0 0 = true := by
   exact checkMasksDown_step_true booster6Spec 6 0 0
-    booster_6_check_000 booster_6_check_001 booster_6_check_002
+    proof_6_000 proof_6_001 proof_6_002
 
-/-- Validation certificate booster_6_check_010. -/
-theorem booster_6_check_010 :
+/-- Validation certificate proof_6_010. -/
+theorem proof_6_010 :
     checkMasksDown booster6Spec 6 (((1 : Nat) <<< 7)) 0 = true := rfl
 
-/-- Validation certificate booster_6_check_011. -/
-theorem booster_6_check_011 :
+/-- Validation certificate proof_6_011. -/
+theorem proof_6_011 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6))) 0 = true := rfl
 
-/-- Validation certificate booster_6_check_012. -/
-theorem booster_6_check_012 :
+/-- Validation certificate proof_6_012. -/
+theorem proof_6_012 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 6)) = true := rfl
 
-/-- Validation certificate booster_6_check_01. -/
-theorem booster_6_check_01 :
+/-- Validation certificate proof_6_01. -/
+theorem proof_6_01 :
     checkMasksDown booster6Spec 7 (((1 : Nat) <<< 7)) 0 = true := by
   exact checkMasksDown_step_true booster6Spec 6 (((1 : Nat) <<< 7)) 0
-    booster_6_check_010 booster_6_check_011 booster_6_check_012
+    proof_6_010 proof_6_011 proof_6_012
 
-/-- Validation certificate booster_6_check_020. -/
-theorem booster_6_check_020 :
+/-- Validation certificate proof_6_020. -/
+theorem proof_6_020 :
     checkMasksDown booster6Spec 6 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7)) = true := rfl
 
-/-- Validation certificate booster_6_check_021. -/
-theorem booster_6_check_021 :
+/-- Validation certificate proof_6_021. -/
+theorem proof_6_021 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 7)) = true := rfl
 
-/-- Validation certificate booster_6_check_022. -/
-theorem booster_6_check_022 :
+/-- Validation certificate proof_6_022. -/
+theorem proof_6_022 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6))) = true := rfl
 
-/-- Validation certificate booster_6_check_02. -/
-theorem booster_6_check_02 :
+/-- Validation certificate proof_6_02. -/
+theorem proof_6_02 :
     checkMasksDown booster6Spec 7 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7)) = true := by
   exact checkMasksDown_step_true booster6Spec 6 (((1 : Nat) <<< 7)) (((1 : Nat) <<< 7))
-    booster_6_check_020 booster_6_check_021 booster_6_check_022
+    proof_6_020 proof_6_021 proof_6_022
 
-/-- Validation certificate booster_6_check_100. -/
-theorem booster_6_check_100 :
+/-- Validation certificate proof_6_100. -/
+theorem proof_6_100 :
     checkMasksDown booster6Spec 6 (((1 : Nat) <<< 8)) 0 = true := rfl
 
-/-- Validation certificate booster_6_check_101. -/
-theorem booster_6_check_101 :
+/-- Validation certificate proof_6_101. -/
+theorem proof_6_101 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 6))) 0 = true := rfl
 
-/-- Validation certificate booster_6_check_102. -/
-theorem booster_6_check_102 :
+/-- Validation certificate proof_6_102. -/
+theorem proof_6_102 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 6)) = true := rfl
 
-/-- Validation certificate booster_6_check_10. -/
-theorem booster_6_check_10 :
+/-- Validation certificate proof_6_10. -/
+theorem proof_6_10 :
     checkMasksDown booster6Spec 7 (((1 : Nat) <<< 8)) 0 = true := by
   exact checkMasksDown_step_true booster6Spec 6 (((1 : Nat) <<< 8)) 0
-    booster_6_check_100 booster_6_check_101 booster_6_check_102
+    proof_6_100 proof_6_101 proof_6_102
 
-/-- Validation certificate booster_6_check_110. -/
-theorem booster_6_check_110 :
+/-- Validation certificate proof_6_110. -/
+theorem proof_6_110 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7))) 0 = true := rfl
 
-/-- Validation certificate booster_6_check_111. -/
-theorem booster_6_check_111 :
+/-- Validation certificate proof_6_111. -/
+theorem proof_6_111 :
     checkMasksDown booster6Spec 6
       ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6))) 0 =
         true := rfl
 
-/-- Validation certificate booster_6_check_112. -/
-theorem booster_6_check_112 :
+/-- Validation certificate proof_6_112. -/
+theorem proof_6_112 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 6)) = true := rfl
 
-/-- Validation certificate booster_6_check_11. -/
-theorem booster_6_check_11 :
+/-- Validation certificate proof_6_11. -/
+theorem proof_6_11 :
     checkMasksDown booster6Spec 7 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7))) 0 = true := by
   exact checkMasksDown_step_true booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7))) 0
-    booster_6_check_110 booster_6_check_111 booster_6_check_112
+    proof_6_110 proof_6_111 proof_6_112
 
-/-- Validation certificate booster_6_check_120. -/
-theorem booster_6_check_120 :
+/-- Validation certificate proof_6_120. -/
+theorem proof_6_120 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7)))
       (((1 : Nat) <<< 7)) = true := rfl
 
-/-- Validation certificate booster_6_check_121. -/
-theorem booster_6_check_121 :
+/-- Validation certificate proof_6_121. -/
+theorem proof_6_121 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 7)) = true := rfl
 
-/-- Validation certificate booster_6_check_122. -/
-theorem booster_6_check_122 :
+/-- Validation certificate proof_6_122. -/
+theorem proof_6_122 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       ((((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6))) = true := rfl
 
-/-- Validation certificate booster_6_check_12. -/
-theorem booster_6_check_12 :
+/-- Validation certificate proof_6_12. -/
+theorem proof_6_12 :
     checkMasksDown booster6Spec 7 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7)))
       (((1 : Nat) <<< 7)) = true := by
   exact checkMasksDown_step_true booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7)))
-    (((1 : Nat) <<< 7)) booster_6_check_120 booster_6_check_121 booster_6_check_122
+    (((1 : Nat) <<< 7)) proof_6_120 proof_6_121 proof_6_122
 
-/-- Validation certificate booster_6_check_200. -/
-theorem booster_6_check_200 :
+/-- Validation certificate proof_6_200. -/
+theorem proof_6_200 :
     checkMasksDown booster6Spec 6 (((1 : Nat) <<< 8)) (((1 : Nat) <<< 8)) = true := rfl
 
-/-- Validation certificate booster_6_check_201. -/
-theorem booster_6_check_201 :
+/-- Validation certificate proof_6_201. -/
+theorem proof_6_201 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 8)) = true := rfl
 
-/-- Validation certificate booster_6_check_202. -/
-theorem booster_6_check_202 :
+/-- Validation certificate proof_6_202. -/
+theorem proof_6_202 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 6)))
       ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 6))) = true := rfl
 
-/-- Validation certificate booster_6_check_20. -/
-theorem booster_6_check_20 :
+/-- Validation certificate proof_6_20. -/
+theorem proof_6_20 :
     checkMasksDown booster6Spec 7 (((1 : Nat) <<< 8)) (((1 : Nat) <<< 8)) = true := by
   exact checkMasksDown_step_true booster6Spec 6 (((1 : Nat) <<< 8)) (((1 : Nat) <<< 8))
-    booster_6_check_200 booster_6_check_201 booster_6_check_202
+    proof_6_200 proof_6_201 proof_6_202
 
-/-- Validation certificate booster_6_check_210. -/
-theorem booster_6_check_210 :
+/-- Validation certificate proof_6_210. -/
+theorem proof_6_210 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7)))
       (((1 : Nat) <<< 8)) = true := rfl
 
-/-- Validation certificate booster_6_check_211. -/
-theorem booster_6_check_211 :
+/-- Validation certificate proof_6_211. -/
+theorem proof_6_211 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       (((1 : Nat) <<< 8)) = true := rfl
 
-/-- Validation certificate booster_6_check_212. -/
-theorem booster_6_check_212 :
+/-- Validation certificate proof_6_212. -/
+theorem proof_6_212 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 6))) = true := rfl
 
-/-- Validation certificate booster_6_check_21. -/
-theorem booster_6_check_21 :
+/-- Validation certificate proof_6_21. -/
+theorem proof_6_21 :
     checkMasksDown booster6Spec 7 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7)))
       (((1 : Nat) <<< 8)) = true := by
   exact checkMasksDown_step_true booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7)))
-    (((1 : Nat) <<< 8)) booster_6_check_210 booster_6_check_211 booster_6_check_212
+    (((1 : Nat) <<< 8)) proof_6_210 proof_6_211 proof_6_212
 
-/-- Validation certificate booster_6_check_220. -/
-theorem booster_6_check_220 :
+/-- Validation certificate proof_6_220. -/
+theorem proof_6_220 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7)))
       ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7))) = true := rfl
 
-/-- Validation certificate booster_6_check_221. -/
-theorem booster_6_check_221 :
+/-- Validation certificate proof_6_221. -/
+theorem proof_6_221 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7))) = true := rfl
 
-/-- Validation certificate booster_6_check_222. -/
-theorem booster_6_check_222 :
+/-- Validation certificate proof_6_222. -/
+theorem proof_6_222 :
     checkMasksDown booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6)))
       ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7) ||| ((1 : Nat) <<< 6))) = true := rfl
 
-/-- Validation certificate booster_6_check_22. -/
-theorem booster_6_check_22 :
+/-- Validation certificate proof_6_22. -/
+theorem proof_6_22 :
     checkMasksDown booster6Spec 7 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7)))
       ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7))) = true := by
   exact checkMasksDown_step_true booster6Spec 6 ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7)))
-    ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7))) booster_6_check_220
-    booster_6_check_221 booster_6_check_222
+    ((((1 : Nat) <<< 8) ||| ((1 : Nat) <<< 7))) proof_6_220
+    proof_6_221 proof_6_222
 
-/-- Validation certificate booster_6_check_0. -/
-theorem booster_6_check_0 :
+/-- Validation certificate proof_6_0. -/
+theorem proof_6_0 :
     checkMasksDown booster6Spec 8 0 0 = true := by
   exact checkMasksDown_step_true booster6Spec 7 0 0
-    booster_6_check_00 booster_6_check_01 booster_6_check_02
+    proof_6_00 proof_6_01 proof_6_02
 
-/-- Validation certificate booster_6_check_1. -/
-theorem booster_6_check_1 :
+/-- Validation certificate proof_6_1. -/
+theorem proof_6_1 :
     checkMasksDown booster6Spec 8 (((1 : Nat) <<< 8)) 0 = true := by
   exact checkMasksDown_step_true booster6Spec 7 (((1 : Nat) <<< 8)) 0
-    booster_6_check_10 booster_6_check_11 booster_6_check_12
+    proof_6_10 proof_6_11 proof_6_12
 
-/-- Validation certificate booster_6_check_2. -/
-theorem booster_6_check_2 :
+/-- Validation certificate proof_6_2. -/
+theorem proof_6_2 :
     checkMasksDown booster6Spec 8 (((1 : Nat) <<< 8)) (((1 : Nat) <<< 8)) = true := by
   exact checkMasksDown_step_true booster6Spec 7 (((1 : Nat) <<< 8)) (((1 : Nat) <<< 8))
-    booster_6_check_20 booster_6_check_21 booster_6_check_22
+    proof_6_20 proof_6_21 proof_6_22
 
-/-- Validation certificate booster_6_rawCheckValid. -/
-theorem booster_6_rawCheckValid :
+/-- Validation certificate proof_6_9. -/
+theorem proof_6_9 :
     booster6Spec.rawCheckValid = true := by
   unfold FrameSpec.rawCheckValid
   change checkMasksDown booster6Spec 9 0 0 = true
   exact
     checkMasksDown_step_true booster6Spec 8 0 0
-      booster_6_check_0 booster_6_check_1 booster_6_check_2
+      proof_6_0 proof_6_1 proof_6_2
 
 /-- Validation certificate booster_6_valid. -/
 theorem booster_6_valid :
     (boosters.get ⟨6, by decide⟩).IsValid := by
-  simpa [booster6Spec] using booster6Spec.rawCheckValid_sound booster_6_rawCheckValid
+  simpa [booster6Spec] using
+    booster6Spec.rawCheckValid_sound proof_6_9
 
 
 end BoosterValidation
