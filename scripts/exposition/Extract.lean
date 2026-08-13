@@ -570,14 +570,15 @@ def syntacticDeps (env : Environment) (stx : Syntax) (self : Array Name)
         acc := acc.insert candidate
   return acc.toArray
 
-/-- True when `stx` contains the source range of an exposed declaration.
+/-- True when `stx` contains the source range of a compiled declaration.
 Declaration ranges come from the imported environment, so this recognizes
 wrapper commands (`open ... in`, `mutual`, attributes, and so on) without
-trying to duplicate Lean's declaration-command taxonomy. -/
-def containsDeclaration (declPos : Std.HashMap Nat (Array Name)) (stx : Syntax) : Bool :=
+trying to duplicate Lean's declaration-command taxonomy. The positions cover
+all constants from the module, not only declarations exposed on the site. -/
+def containsDeclaration (declarationPositions : Array Nat) (stx : Syntax) : Bool :=
   match stx.getPos?, stx.getTailPos? with
   | some start, some stop =>
-    declPos.any fun pos _ => start.byteIdx ≤ pos && pos < stop.byteIdx
+    declarationPositions.any fun pos => start.byteIdx ≤ pos && pos < stop.byteIdx
   | _, _ => false
 
 /-- Parse a module while elaborating only commands that can affect the parser
@@ -587,7 +588,7 @@ declarations merely fail as already declared, while `private` declarations get
 fresh internal names and may execute their proof terms again. Context commands
 must still be elaborated so later commands see local notation, namespaces,
 variables, options, and sections exactly as the original source did. -/
-partial def parseCommands (declPos : Std.HashMap Nat (Array Name)) :
+partial def parseCommands (declarationPositions : Array Nat) :
     Frontend.FrontendM Unit := do
   Frontend.updateCmdPos
   let cmdState ← Frontend.getCommandState
@@ -605,10 +606,10 @@ partial def parseCommands (declPos : Std.HashMap Nat (Array Name)) :
   modify fun state => { state with commands := state.commands.push stx }
   Frontend.setParserState nextParserState
   Frontend.setMessages messages
-  unless containsDeclaration declPos stx && !isNotationCmdKind stx.getKind do
+  unless containsDeclaration declarationPositions stx && !isNotationCmdKind stx.getKind do
     Frontend.elabCommandAtFrontend stx
   unless Parser.isTerminalCommand stx do
-    parseCommands declPos
+    parseCommands declarationPositions
 
 /-- Processes one module source: classifies each command and emits the JSON
 entry list. `declPos` maps range-start byte indices to exposed declaration
@@ -617,7 +618,8 @@ names (so a notation command learns which kinds it defines);
 `notationDeps` maps parser kinds to their expansion's exposed constants;
 `allNotationKinds` is the pool-wide kind set for `usedNotations`. -/
 def processFile (env : Environment) (source : String) (filePath : String)
-    (declPos : Std.HashMap Nat (Array Name)) (notationKindsAt : Std.HashMap Nat Name)
+    (declarationPositions : Array Nat) (declPos : Std.HashMap Nat (Array Name))
+    (notationKindsAt : Std.HashMap Nat Name)
     (notationDeps : Std.HashMap Name (Array Name)) (allNotationKinds : NameSet)
     (exposedByLast : Std.HashMap String (Array Name)) (visibleModules : NameSet) :
     IO (Array Json) := do
@@ -629,7 +631,7 @@ def processFile (env : Environment) (source : String) (filePath : String)
     parserState
     cmdPos := parserState.pos
   }
-  let (_, s) ← (parseCommands declPos).run { inputCtx } |>.run initialState
+  let (_, s) ← (parseCommands declarationPositions).run { inputCtx } |>.run initialState
   let mut entries : Array Json := #[]
   let mut nsPrefixStack : Array Name := #[Name.anonymous]
   for stx in s.commands do
@@ -751,6 +753,16 @@ def emitCommands (outPath : System.FilePath) (exposed : NameSet) (names : Array 
         try pure (some (← IO.FS.readFile path)) catch _ => pure none)
       | continue
     let fileMap := FileMap.ofString source
+    -- Detect every declaration command from the compiled module, including
+    -- private/generated declarations that are intentionally absent from the
+    -- exposition graph. Re-elaborating any of them is redundant and can
+    -- execute expensive private bodies under fresh internal names.
+    let mut declarationPositionSet : Std.HashSet Nat := {}
+    for name in env.header.moduleData[moduleIdx]!.constNames do
+      if let some ranges ← findDeclarationRanges? name then
+        declarationPositionSet := declarationPositionSet.insert
+          (fileMap.ofPosition ranges.range.pos).byteIdx
+    let declarationPositions := declarationPositionSet.toArray
     -- One range start can carry several declarations (`irreducible_def`,
     -- mutual blocks), so map each position to every name declared there.
     let mut declPos : Std.HashMap Nat (Array Name) := {}
@@ -762,8 +774,8 @@ def emitCommands (outPath : System.FilePath) (exposed : NameSet) (names : Array 
     for (kindName, pos) in moduleKinds do
       notationKindsAt := notationKindsAt.insert (fileMap.ofPosition pos).byteIdx kindName
     let visibleModules := moduleImportClosure env module
-    let entries ← processFile env source path.toString declPos notationKindsAt
-      notationDeps allNotationKinds exposedByLast visibleModules
+    let entries ← processFile env source path.toString declarationPositions declPos
+      notationKindsAt notationDeps allNotationKinds exposedByLast visibleModules
     handle.putStrLn (Json.mkObj [
       ("m", Json.str module.toString),
       ("c", Json.arr entries)
