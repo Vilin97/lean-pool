@@ -331,10 +331,11 @@ namespace Exposition.Commands
 /-!
 Per-module command classification for the minimal-file builder, ported from
 LMLExposition's `Extract.lean` (Rémy Degenne, after Matthew Ballard's
-`EmitStandalone.lean`). Each source file is re-elaborated against the loaded
-environment (`IO.processCommands`; declarations fail fast with "already
-declared", which is expected and ignored) to recover per-command `Syntax`
-and byte ranges. The output is one JSON line per module describing every
+`EmitStandalone.lean`). Each source file is parsed against the loaded
+environment to recover per-command `Syntax` and byte ranges. Context commands
+are re-elaborated because they can extend the parser or change its scope;
+declaration commands are not, because their compiled declarations are already
+in the environment. The output is one JSON line per module describing every
 declaration command (with byte-exact `sorry`-surgery edits) and every
 context command (`namespace`/`open`/`variable`/notation/...), which the
 client-side builder assembles into standalone files.
@@ -569,6 +570,46 @@ def syntacticDeps (env : Environment) (stx : Syntax) (self : Array Name)
         acc := acc.insert candidate
   return acc.toArray
 
+/-- True when `stx` contains the source range of an exposed declaration.
+Declaration ranges come from the imported environment, so this recognizes
+wrapper commands (`open ... in`, `mutual`, attributes, and so on) without
+trying to duplicate Lean's declaration-command taxonomy. -/
+def containsDeclaration (declPos : Std.HashMap Nat (Array Name)) (stx : Syntax) : Bool :=
+  match stx.getPos?, stx.getTailPos? with
+  | some start, some stop =>
+    declPos.any fun pos _ => start.byteIdx ≤ pos && pos < stop.byteIdx
+  | _, _ => false
+
+/-- Parse a module while elaborating only commands that can affect the parser
+or command scope. The module's compiled environment is already loaded, so
+elaborating declarations is both redundant and incorrect for this use: public
+declarations merely fail as already declared, while `private` declarations get
+fresh internal names and may execute their proof terms again. Context commands
+must still be elaborated so later commands see local notation, namespaces,
+variables, options, and sections exactly as the original source did. -/
+partial def parseCommands (declPos : Std.HashMap Nat (Array Name)) :
+    Frontend.FrontendM Unit := do
+  Frontend.updateCmdPos
+  let cmdState ← Frontend.getCommandState
+  let inputCtx ← Frontend.getInputContext
+  let parserState ← Frontend.getParserState
+  let scope := cmdState.scopes.head!
+  let parserContext := {
+    env := cmdState.env
+    options := scope.opts
+    currNamespace := scope.currNamespace
+    openDecls := scope.openDecls
+  }
+  let (stx, nextParserState, messages) :=
+    Parser.parseCommand inputCtx parserContext parserState cmdState.messages
+  modify fun state => { state with commands := state.commands.push stx }
+  Frontend.setParserState nextParserState
+  Frontend.setMessages messages
+  unless containsDeclaration declPos stx && !isNotationCmdKind stx.getKind do
+    Frontend.elabCommandAtFrontend stx
+  unless Parser.isTerminalCommand stx do
+    parseCommands declPos
+
 /-- Processes one module source: classifies each command and emits the JSON
 entry list. `declPos` maps range-start byte indices to exposed declaration
 names (several may share one range start); `notationKindsAt` maps range-start byte indices to pool parser-kind
@@ -583,7 +624,12 @@ def processFile (env : Environment) (source : String) (filePath : String)
   let inputCtx := Parser.mkInputContext source filePath
   let (_, parserState, messages) ← Parser.parseHeader inputCtx
   let cmdState := Command.mkState env messages {}
-  let s ← IO.processCommands inputCtx parserState cmdState
+  let initialState : Frontend.State := {
+    commandState := cmdState
+    parserState
+    cmdPos := parserState.pos
+  }
+  let (_, s) ← (parseCommands declPos).run { inputCtx } |>.run initialState
   let mut entries : Array Json := #[]
   let mut nsPrefixStack : Array Name := #[Name.anonymous]
   for stx in s.commands do
