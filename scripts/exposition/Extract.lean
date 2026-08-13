@@ -793,9 +793,9 @@ unsafe def main (args : List String) : IO UInt32 := do
   -- useful for testing against a partially built tree.
   let modules := if args.length > 2 then args.drop 2 |>.map (·.toName) else [Exposition.poolRoot]
   Lean.initSearchPath (← Lean.findSysroot)
-  -- Extension states must be loaded (and initializers executed) so that
-  -- `IO.processCommands` can parse Mathlib/pool notations (`Type*`, ...);
-  -- without them, parse-error recovery silently truncates commands.
+  -- Extension states must be loaded (and initializers executed) so that the
+  -- frontend parser recognizes Mathlib/pool notations (`Type*`, ...); without
+  -- them, parse-error recovery silently truncates commands.
   Lean.enableInitializersExecution
   let imports := modules.toArray.map fun module => ({ module } : Lean.Import)
   let env ← Lean.importModules imports {} (trustLevel := 1024) (loadExts := true)
