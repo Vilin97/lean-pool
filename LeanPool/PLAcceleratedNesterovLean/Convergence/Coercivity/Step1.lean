@@ -53,11 +53,8 @@ theorem gap_le_lyapunov_of_sqrt_le {d : ℕ} (P : E d →L[ℝ] E d) (μ' : ℝ)
     (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ)
     (ha_le1 : Real.sqrt (μ' * η) ≤ 1) :
     f (nesterovSeq f η ρ x₁ n).x - fStar f ≤ lyapunov P μ' π f η ρ x₁ n := by
-  simp only [lyapunov]
-  have hlam_nn : 0 ≤ (1 + Real.sqrt (μ' * η)) ^ 2 / (2 * (1 - Real.sqrt (μ' * η))) :=
-    div_nonneg (sq_nonneg _) (by nlinarith)
-  nlinarith [sq_nonneg ‖auxVar P μ' π f η ρ x₁ n‖,
-             mul_nonneg hlam_nn (sq_nonneg ‖P (nesterovSeq f η ρ x₁ n).v‖)]
+  rw [← lyapunovOfState_eq_lyapunov P μ' π f η ρ x₁ n]
+  exact gap_le_lyapunovOfState_of_sqrt_le P μ' π f η _ ha_le1
 
 /-- From the Lyapunov definition, ‖u‖² ≤ 2L. -/
 theorem lyapunov_u_bound (gap u_sq lam Pv_sq L : ℝ)
