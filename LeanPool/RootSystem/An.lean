@@ -327,8 +327,7 @@ private theorem signedInterval_sum_reflection {n : ℕ} {M : Type*} [AddCommGrou
       simp only [Fin.le_iff_val_le_val] at Jh Kh
       omega
     cases Jε <;> cases Kε <;>
-      simp [s, hJiKi, hJjKj, h₁, hnotAdjacent, SignedInterval.sign] <;>
-      rw [← hsum] <;> abel
+      simp [s, hJiKi, hJjKj, h₁, hnotAdjacent, SignedInterval.sign, ← hsum] <;> abel
   by_cases h₂ : (Ki : ℕ) = (Jj : ℕ) + 1
   · have hsum := sum_Icc_add_sum_Icc_of_adjacent f Jh Kh h₂.symm
     have hJiKi : Ji ≠ Ki := by
@@ -342,8 +341,7 @@ private theorem signedInterval_sum_reflection {n : ℕ} {M : Type*} [AddCommGrou
       have := congrArg Fin.val h
       omega
     cases Jε <;> cases Kε <;>
-      simp [s, hJiKi, hJjKj, h₁, h₂, SignedInterval.sign] <;>
-      rw [← hsum] <;> abel
+      simp [s, hJiKi, hJjKj, h₁, h₂, SignedInterval.sign, ← hsum] <;> abel
   by_cases h₃ : Ji = Ki ∧ (Jj : ℕ) > (Kj : ℕ)
   · rcases h₃ with ⟨rfl, hKjJj⟩
     let nextKj : Fin n := ⟨(Kj : ℕ) + 1, by have := Jj.isLt; omega⟩
@@ -356,8 +354,7 @@ private theorem signedInterval_sum_reflection {n : ℕ} {M : Type*} [AddCommGrou
       have := congrArg Fin.val h
       omega
     cases Jε <;> cases Kε <;>
-      simp [s, hJjKj, h₁, h₂, hKjJj, SignedInterval.sign] <;>
-      rw [← hsum] <;> abel
+      simp [s, hJjKj, h₁, h₂, hKjJj, SignedInterval.sign, ← hsum] <;> abel
   by_cases h₄ : Ji = Ki ∧ (Jj : ℕ) < (Kj : ℕ)
   · rcases h₄ with ⟨rfl, hJjKj⟩
     have hnotKjJj : ¬(Kj : ℕ) < (Jj : ℕ) := by omega
@@ -371,8 +368,7 @@ private theorem signedInterval_sum_reflection {n : ℕ} {M : Type*} [AddCommGrou
       have := congrArg Fin.val h
       omega
     cases Jε <;> cases Kε <;>
-      simp [s, hJjKj', h₁, h₂, hJjKj, hnotKjJj, SignedInterval.sign] <;>
-      rw [← hsum] <;> abel
+      simp [s, hJjKj', h₁, h₂, hJjKj, hnotKjJj, SignedInterval.sign, ← hsum] <;> abel
   by_cases h₅ : (Ji : ℕ) < (Ki : ℕ) ∧ Jj = Kj
   · rcases h₅ with ⟨hJiKi, rfl⟩
     let previousKi : Fin n := ⟨(Ki : ℕ) - 1, by have := Ki.isLt; omega⟩
@@ -388,8 +384,7 @@ private theorem signedInterval_sum_reflection {n : ℕ} {M : Type*} [AddCommGrou
       have := congrArg Fin.val h
       omega
     cases Jε <;> cases Kε <;>
-      simp [s, hJiKi', h₁, h₂, hJiKi, SignedInterval.sign] <;>
-      rw [← hsum] <;> abel
+      simp [s, hJiKi', h₁, h₂, hJiKi, SignedInterval.sign, ← hsum] <;> abel
   by_cases h₆ : (Ji : ℕ) > (Ki : ℕ) ∧ Jj = Kj
   · rcases h₆ with ⟨hKiJi, rfl⟩
     have hnotJiKi : ¬(Ji : ℕ) < (Ki : ℕ) := by omega
@@ -406,8 +401,7 @@ private theorem signedInterval_sum_reflection {n : ℕ} {M : Type*} [AddCommGrou
       have := congrArg Fin.val h
       omega
     cases Jε <;> cases Kε <;>
-      simp [s, hJiKi', h₁, h₂, hKiJi, hnotJiKi, SignedInterval.sign] <;>
-      rw [← hsum] <;> abel
+      simp [s, hJiKi', h₁, h₂, hKiJi, hnotJiKi, SignedInterval.sign, ← hsum] <;> abel
   · have hJiKi : Ji ≠ Ki := by
       intro hi
       by_cases hj : Jj = Kj
