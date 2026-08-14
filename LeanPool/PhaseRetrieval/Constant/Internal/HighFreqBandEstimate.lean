@@ -132,7 +132,7 @@ private lemma iLeft_N (N : ℕ) (hN : 1 ≤ N) : iLeft N N = T := by
   field_simp
 
 private lemma haar_eq_sum_intervals {E : Type*}
-    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
     {N : ℕ} (hN : 1 ≤ N) {f : AddCircle T → E}
     (hf : Continuous f) :
     ∫ t, f t ∂AddCircle.haarAddCircle =

@@ -307,7 +307,7 @@ lemma lifted_angle_at_zero (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1
       fdPolygonRadialCircleAngle p 0 := by
   have htL := tL_mem_Ioo p hp_norm hp_re hp_im_pos hp_im
   simp only [fdPolygonRadialCircleAngleLifted]
-  rw [if_pos (by linarith [htL.1] : (0 : ℝ) < tL p)]
+  rw [ite_eq_left (by linarith [htL.1] : (0 : ℝ) < tL p)]
   rw [← fdPolygonRadialCircle_angle_eq_arg p 0 (fdPolygon_zero_ne_interior p hp_im)]
 
 /-- At t=5, the lifted angle is raw angle minus 2π (5 > tL). -/
@@ -318,7 +318,7 @@ lemma lifted_angle_at_five (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1
       fdPolygonRadialCircleAngle p 5 - 2 * Real.pi := by
   have htL := tL_mem_Ioo p hp_norm hp_re hp_im_pos hp_im
   simp only [fdPolygonRadialCircleAngleLifted]
-  rw [if_neg (by linarith [htL.2] : ¬(5 : ℝ) < tL p)]
+  rw [ite_eq_right (by linarith [htL.2] : ¬(5 : ℝ) < tL p)]
   rw [← fdPolygonRadialCircle_angle_eq_arg p 5 (fdPolygon_five_ne_interior p hp_im)]
 
 /-- fdPolygon is periodic with period 5. -/

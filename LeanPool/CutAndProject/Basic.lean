@@ -606,7 +606,7 @@ lemma generic_minimality (α β : ℕ) (ω : ℝ) (seq : ℤ → ℤ) [NeZero (�
     ¬ (D ∣ N) → ∀ L > 0, IsPeriod seq L → N ≤ L := by
   intro N D hdvd L hL_pos hL_period
   have hD : NeZero D := inferInstance
-  have h_sigma := sigma_of_period (α:=α) (β:=β) (ω:=ω) (s:=seq) L hL_pos hL_period
+  have h_sigma := sigma_of_period (α :=α) (β :=β) (ω :=ω) (s :=seq) L hL_pos hL_period
   rcases h_sigma with ⟨σ, h_sigma_eq, r0, h_inv_count⟩
   let q := N / D
   let s := N % D
@@ -1157,7 +1157,7 @@ lemma sorted_residue_shift (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 /--
 For k < N, sortedMultiset at (↑k : ℤ) simplifies to ↑(V α β ω k).
 -/
-private lemma sorted_multiset_of_lt_N (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+private lemma sorted_multiset_of_lt_N (α β : ℕ) (ω : ℝ)
     (k : ℕ) (hk : k < (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
     sortedMultiset α β ω (↑k : ℤ) = ↑(V α β ω k) := by
   have hN_pos : (0 : ℤ) < ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by
@@ -1174,7 +1174,7 @@ private lemma sorted_multiset_of_lt_N (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 +
 /--
 cumulativeHits is monotone (non-decreasing).
 -/
-private lemma cumulative_hits_mono (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)] :
+private lemma cumulative_hits_mono (α β : ℕ) (ω : ℝ) :
     Monotone (cumulativeHits α β ω) := by
   intro a b hab
   dsimp [cumulativeHits]
@@ -1219,7 +1219,7 @@ private lemma V_lt_D (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
   set D := α ^ 2 + β ^ 2
   have h_exists : ∃ x, k < cumulativeHits α β ω x :=
     ⟨D - 1, (cumulative_hits_eq_N α β ω).symm ▸ hk⟩
-  simp only [V, dif_pos h_exists]
+  simp only [V, dite_eq_left h_exists]
   calc Nat.find h_exists
       ≤ D - 1 := Nat.find_min' h_exists ((cumulative_hits_eq_N α β ω).symm ▸ hk)
     _ < D := Nat.sub_lt (NeZero.pos D) Nat.one_pos
@@ -1235,7 +1235,7 @@ private lemma V_eq_iff (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
   set D := α ^ 2 + β ^ 2
   have h_exists : ∃ x, k < cumulativeHits α β ω x :=
     ⟨D - 1, (cumulative_hits_eq_N α β ω).symm ▸ hk⟩
-  simp only [V, dif_pos h_exists]
+  simp only [V, dite_eq_left h_exists]
   constructor
   · -- Forward: Nat.find = v → interval condition
     intro h_eq
@@ -1487,7 +1487,7 @@ lemma sorted_residue_shift_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 
 /-- For k < N, sortedMultisetUnit at (↑k : ℤ) simplifies to ↑(VUnit α β ω u k). -/
 private lemma sorted_multiset_unit_of_lt_N (α β : ℕ) (ω : ℝ)
-    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (k : ℕ) (hk : k < (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
     sortedMultisetUnit α β ω u (↑k : ℤ) = ↑(VUnit α β ω u k) := by
   have hN_pos : (0 : ℤ) < ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat := by
@@ -1499,7 +1499,7 @@ private lemma sorted_multiset_unit_of_lt_N (α β : ℕ) (ω : ℝ)
   simp only [sortedMultisetUnit, h_mod, h_div, Int.toNat_natCast, zero_mul,
              add_zero]
 
-private lemma cumulative_hits_unit_mono (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+private lemma cumulative_hits_unit_mono (α β : ℕ) (ω : ℝ)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
     Monotone (cumulativeHitsUnit α β ω u) := by
   intro a b hab
@@ -1562,7 +1562,7 @@ private lemma V_unit_lt_D (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
   have h_exists : ∃ x, k < cumulativeHitsUnit α β ω u x :=
     ⟨α ^ 2 + β ^ 2 - 1, (cumulative_hits_unit_eq_N α β ω u).symm ▸ hk⟩
   have h_eq : VUnit α β ω u k = Nat.find h_exists := by
-    unfold VUnit; exact dif_pos h_exists
+    unfold VUnit; exact dite_eq_left h_exists
   rw [h_eq]
   calc Nat.find h_exists
       ≤ α ^ 2 + β ^ 2 - 1 :=
@@ -1578,7 +1578,7 @@ private lemma V_unit_eq_iff (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
   have h_exists : ∃ x, k < cumulativeHitsUnit α β ω u x :=
     ⟨α ^ 2 + β ^ 2 - 1, (cumulative_hits_unit_eq_N α β ω u).symm ▸ hk⟩
   have h_V : VUnit α β ω u k = Nat.find h_exists := by
-    unfold VUnit; exact dif_pos h_exists
+    unfold VUnit; exact dite_eq_left h_exists
   rw [h_V]
   constructor
   · intro h_eq
@@ -1771,7 +1771,7 @@ private lemma V_uniform (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^
     have h_exists : ∃ x, k < cumulativeHits α β ω x := by
       use D - 1
       rw [cumulative_hits_eq_N α β ω]; exact hk
-    unfold V; rw [dif_pos h_exists]
+    unfold V; rw [dite_eq_left h_exists]
     apply le_antisymm
     · apply Nat.find_min'
       rw [cumulative_hits_uniform α β ω h_dvd v hv_lt_D]
@@ -2016,10 +2016,10 @@ theorem main_theorem (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (_
       omega
   have hD : NeZero D := ⟨_root_.ne_of_gt h_D_pos⟩
   by_cases h_dvd : D ∣ N
-  · have h_L : L = N / D := if_pos h_dvd
+  · have h_L : L = N / D := ite_eq_left h_dvd
     rw [h_L]
     exact GeometricProjection.period_degenerate h_dvd
-  · have h_L : L = N := if_neg h_dvd
+  · have h_L : L = N := ite_eq_right h_dvd
     rw [h_L]
     constructor
     · exact GeometricProjection.period_N
@@ -2091,7 +2091,7 @@ theorem set_main_theorem
        else 1) := by
   by_cases h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2
   · -- Case N < D: set_seq = differenceSequence, period N (since N > 0 and ¬ D ∣ N).
-    rw [if_pos h]
+    rw [ite_eq_left h]
     have h_eq : set_seq = differenceSequence α β ω := funext (h_lt h)
     rw [h_eq]
     have hN_pos : 0 < (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat := N_pos_concrete α β ω h_ω
@@ -2103,10 +2103,10 @@ theorem set_main_theorem
         (if (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
          then (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
          else (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) := main_theorem α β h_coprime ω h_ω
-    rw [if_neg hND] at h_main
+    rw [ite_eq_right hND] at h_main
     exact h_main
   · -- Case ¬ (N < D), i.e., N ≥ D: set_seq ≡ 1, period 1.
-    rw [if_neg h]
+    rw [ite_eq_right h]
     exact HasPeriodLength_const_one set_seq (h_ge (not_lt.mp h))
 
 /-! ## Set-valued period (Phase C: concrete construction)
@@ -2262,7 +2262,7 @@ lemma set_indicator_eq_one_of_ge
       (((-⌊ω * β⌋ : ℤ) : ZMod (α ^ 2 + β ^ 2)).val)
       (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat h (y : ZMod (α ^ 2 + β ^ 2))
   change (if 1 ≤ countHits _ _ _ _ then 1 else 0) = 1
-  rw [if_pos h_ge]
+  rw [ite_eq_left h_ge]
 
 /-- Under `D ≤ N`, the cumulative count is just `x + 1`. -/
 lemma set_cumulative_hits_eq_of_ge
@@ -2284,7 +2284,7 @@ lemma set_V_eq_id_of_ge
     set_cumulative_hits_eq_of_ge α β ω h
   have hex : ∃ x, k < setCumulativeHits α β ω x := ⟨k, by rw [h_cum]; omega⟩
   unfold setV
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   apply Nat.find_eq_iff _ |>.mpr
   refine ⟨?_, ?_⟩
   · rw [h_cum]; omega
@@ -2414,13 +2414,13 @@ private lemma V_unit_eq_V_of_dvd (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^
   by_cases h : ∃ x, k < cumulativeHits α β ω x
   · have h' : ∃ x, k < cumulativeHitsUnit α β ω u x := by
       rcases h with ⟨x, hx⟩; exact ⟨x, (h_eq x).mpr hx⟩
-    rw [dif_pos h, dif_pos h']
+    rw [dite_eq_left h, dite_eq_left h']
     apply le_antisymm
     · exact Nat.find_min' h' ((h_eq _).mpr (Nat.find_spec h))
     · exact Nat.find_min' h ((h_eq _).mp (Nat.find_spec h'))
   · have h' : ¬ ∃ x, k < cumulativeHitsUnit α β ω u x := by
       rintro ⟨x, hx⟩; exact h ⟨x, (h_eq x).mp hx⟩
-    rw [dif_neg h, dif_neg h']
+    rw [dite_eq_right h, dite_eq_right h']
 
 /-- In the degenerate case, sortedMultisetUnit agrees with sortedMultiset. -/
 private lemma sorted_multiset_unit_eq_sorted_multiset_of_dvd
@@ -2514,9 +2514,9 @@ theorem main_theorem_unit_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β)
         (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
        else (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) := by
   by_cases h_dvd : (α ^ 2 + β ^ 2) ∣ (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
-  · simp only [if_pos h_dvd]
+  · simp only [ite_eq_left h_dvd]
     exact period_degenerate_unit_concrete α β h_coprime ω h_ω u h_dvd
-  · simp only [if_neg h_dvd]
+  · simp only [ite_eq_right h_dvd]
     refine ⟨period_N_unit_concrete α β ω h_ω u, ?_⟩
     intro L hL_pos hL_period
     have h_sigma := sigma_of_period_unit_concrete α β h_coprime ω h_ω u L hL_pos hL_period
@@ -2829,7 +2829,7 @@ lemma set_indicator_unit_eq_one_of_ge
         ((y : ℕ) : ZMod (α ^ 2 + β ^ 2)))
   change (if 1 ≤ countHitsUnit _ _ _ _ _ then 1 else 0) = 1
   rw [count_hits_unit_eq_count_hits]
-  rw [if_pos h_ge]
+  rw [ite_eq_left h_ge]
 
 lemma set_cumulative_hits_unit_eq_of_ge
     (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
@@ -2851,7 +2851,7 @@ lemma set_V_unit_eq_id_of_ge
     set_cumulative_hits_unit_eq_of_ge α β ω u h
   have hex : ∃ x, k < setCumulativeHitsUnit α β ω u x := ⟨k, by rw [h_cum]; omega⟩
   unfold setVUnit
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   apply Nat.find_eq_iff _ |>.mpr
   refine ⟨?_, ?_⟩
   · rw [h_cum]; omega
@@ -2930,7 +2930,7 @@ theorem set_main_theorem_unit
         (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
        else 1) := by
   by_cases h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     have h_eq : set_seq = differenceSequenceUnit α β ω u := funext (h_lt h)
     rw [h_eq]
     have hN_pos : 0 < (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat := N_pos_concrete α β ω h_ω
@@ -2943,9 +2943,9 @@ theorem set_main_theorem_unit
          then (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat / (α ^ 2 + β ^ 2)
          else (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat) :=
       main_theorem_unit_concrete α β h_coprime ω h_ω u
-    rw [if_neg hND] at h_main
+    rw [ite_eq_right hND] at h_main
     exact h_main
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     exact HasPeriodLength_const_one set_seq (h_ge (not_lt.mp h))
 
 /-- Geometric concrete set-valued main theorem. Specialises

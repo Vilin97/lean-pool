@@ -270,7 +270,7 @@ lemma coeff_monicRescaleOf_scaleRoots
       congrArg (fun P : ℚ[X] => P.coeff k) hT
   rw [Polynomial.coeff_map, coeff_monicRescaleOf, Polynomial.coeff_scaleRoots, hd]
   rcases lt_trichotomy k d with hk | hk | hk
-  · rw [monicRescaleCoeff, if_pos hk]
+  · rw [monicRescaleCoeff, ite_eq_left hk]
     calc
       _ = (c : ℚ) ^ (d - 1 - k) * ((T.coeff k : ℤ) : ℚ) := by simp
       _ = (c : ℚ) ^ (d - 1 - k) * ((c : ℚ) * T'.coeff k) := by rw [hcoeffT]

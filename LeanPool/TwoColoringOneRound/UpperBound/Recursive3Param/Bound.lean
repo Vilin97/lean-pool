@@ -38,7 +38,7 @@ private lemma z0_eq_zBase {b c : Rand}
     z0 b c = zBase b c := by
   classical
   unfold z0
-  simp only [if_neg hsq]
+  simp only [ite_eq_right hsq]
 
 /-- `zBase b c = t` when `b ≤ t ≤ c` (the base surface on the upper-right wedge with `b ≤ c`). -/
 private lemma z0_eq_t_of_le_t_le {b c : Rand}

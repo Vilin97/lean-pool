@@ -422,7 +422,6 @@ theorem realize_notin {num str : Type u} [ZambellaModel num str] {a : Type}
     unfold Term.notin
     conv =>
       lhs;
-      unfold Formula.Realize
       rw [Formula.boundedFormula_realize_eq_realize]
       rw [realize_not]
     conv =>

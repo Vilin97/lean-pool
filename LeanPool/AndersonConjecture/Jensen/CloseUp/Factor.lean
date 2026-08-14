@@ -96,7 +96,8 @@ private def close_up_aux_factor_proof
       if h : q ∣ x then Classical.choose h else x
     have hdiv_spec : ∀ x ∈ s, x = q * div_q x := by
       intro x hx
-      simpa only [div_q, dif_pos (hq_dvd_all x hx)] using Classical.choose_spec (hq_dvd_all x hx)
+      simpa only [div_q, dite_eq_left (hq_dvd_all x hx)] using
+        Classical.choose_spec (hq_dvd_all x hx)
     let t_set := s.image div_q
     have h_ideal_eq : span (↑s : Set R.carrier) =
         span {q} * span (↑t_set : Set R.carrier) :=
@@ -213,7 +214,8 @@ private def close_up_aux_factor_proof
       fun x => if h : q ∣ x then Classical.choose h else x
     have hdiv_spec' : ∀ x ∈ s', x = q * div_q' x := by
       intro x hx
-      simpa only [div_q', dif_pos (hq_dvd_s' x hx)] using Classical.choose_spec (hq_dvd_s' x hx)
+      simpa only [div_q', dite_eq_left (hq_dvd_s' x hx)] using
+        Classical.choose_spec (hq_dvd_s' x hx)
     let t_set' := s'.image div_q'
     have h_ideal_eq_q : span (↑s' : Set R.carrier) =
         span {q} * span (↑t_set' : Set R.carrier) :=

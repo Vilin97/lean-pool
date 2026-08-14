@@ -259,7 +259,7 @@ lemma cpv_at_endpoint (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
       then (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t else 0) = C := by
     apply intervalIntegral.integral_congr
     intro t ht; rw [Set.uIcc_of_le (by norm_num : (1 : ℝ) ≤ 4)] at ht
-    dsimp only; rw [if_pos (lt_of_lt_of_le hη_δ (hδ_bound t ht))]
+    dsimp only; rw [ite_eq_left (lt_of_lt_of_le hη_δ (hδ_bound t ht))]
   have h_I01 : (∫ t in (0 : ℝ)..1, if η < ‖fdBoundaryH H t - s‖
       then (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t else 0) =
     ∫ t in (η / c)..1, (↑t : ℂ)⁻¹ := by
@@ -279,7 +279,7 @@ lemma cpv_at_endpoint (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
           ∫ _ in (0 : ℝ)..(η / c), (0 : ℂ) :=
         intervalIntegral.integral_congr (fun t ht => by
           rw [Set.uIcc_of_le (by linarith : (0 : ℝ) ≤ η / c)] at ht
-          rw [if_neg]; push Not
+          rw [ite_eq_right]; push Not
           rw [h_norm_seg1 t ht.1 (by linarith [ht.2])]
           calc t * c ≤ (η / c) * c := mul_le_mul_of_nonneg_right ht.2 hc.le
             _ = η := by field_simp)
@@ -296,7 +296,7 @@ lemma cpv_at_endpoint (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
     have ht_low : η / c < t := ht.1
     have ht_high : t < 1 := lt_of_le_of_ne ht.2 (fun h => ht_ne_high (Set.mem_singleton_iff.mpr h))
     have ht_pos : 0 < t := lt_of_lt_of_le hη_div_c_pos ht_low.le
-    rw [if_pos, h_integrand_seg1 t ht_pos ht_high]
+    rw [ite_eq_left, h_integrand_seg1 t ht_pos ht_high]
     rw [h_norm_seg1 t ht_pos.le ht_high.le]
     calc η = (η / c) * c := by field_simp
       _ < t * c := mul_lt_mul_of_pos_right ht_low hc
@@ -319,7 +319,7 @@ lemma cpv_at_endpoint (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
           ∫ _ in (5 - η)..5, (0 : ℂ) :=
         intervalIntegral.integral_congr (fun t ht => by
           rw [Set.uIcc_of_le (by linarith : 5 - η ≤ 5)] at ht
-          rw [if_neg]; push Not
+          rw [ite_eq_right]; push Not
           by_cases ht5 : t = 5
           · rw [ht5, fdBoundary_H_at_five, hs_def, sub_self, norm_zero]; exact hη.le
           · have ht5' : t < 5 := lt_of_le_of_ne ht.2 ht5
@@ -338,7 +338,7 @@ lemma cpv_at_endpoint (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
     have ht4 : 4 < t := ht.1
     have ht_strict : t < 5 - η := lt_of_le_of_ne ht.2
       (fun h => ht_ne_high (Set.mem_singleton_iff.mpr h))
-    rw [if_pos, h_integrand_seg5 t ht4]
+    rw [ite_eq_left, h_integrand_seg5 t ht4]
     rw [h_norm_seg5 t ht4 (by linarith)]; linarith
   have h_int1 : ∫ t in (η / c)..1, (↑t : ℂ)⁻¹ =
       Complex.log ↑(1 : ℝ) - Complex.log ↑(η / c) :=
@@ -512,7 +512,7 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
             ∫ _ in (4 - η / c)..4, (0 : ℂ) :=
           intervalIntegral.integral_congr (fun t ht => by
             rw [Set.uIcc_of_le h_4mc_le] at ht
-            rw [if_neg]; push Not
+            rw [ite_eq_right]; push Not
             rw [h_norm_seg4 t (by linarith [ht.1]) ht.2]
             have h1 : 4 - t ≤ η / c := by linarith [ht.1]
             calc (4 - t) * c ≤ (η / c) * c := by apply mul_le_mul_of_nonneg_right h1 hc.le
@@ -531,7 +531,7 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
       have ht_ne' : t ≠ 4 - η / c := fun h => ht_ne (Set.mem_singleton_iff.mpr h)
       have ht4_strict : t < 4 - η / c := lt_of_le_of_ne ht4_le ht_ne'
       have ht4 : t < 4 := by linarith [hη_div_c_pos]
-      rw [if_pos, h_integrand_seg4 t ht3 ht4]
+      rw [ite_eq_left, h_integrand_seg4 t ht3 ht4]
       rw [h_norm_seg4 t ht3 ht4.le]
       have : η / c < 4 - t := by linarith
       calc η = (η / c) * c := by field_simp
@@ -558,7 +558,7 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
             ∫ _ in (4 : ℝ)..(4 + η), (0 : ℂ) :=
           intervalIntegral.integral_congr (fun t ht => by
             rw [Set.uIcc_of_le (by linarith : (4 : ℝ) ≤ 4 + η)] at ht
-            rw [if_neg]; push Not
+            rw [ite_eq_right]; push Not
             by_cases ht4 : t = 4
             · subst ht4
               rw [fdBoundary_H_at_four H, hs_def]
@@ -572,7 +572,7 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
         filter_upwards with t ht; exfalso; linarith [ht.1, ht.2])
       filter_upwards with t ht
       have ht4 : 4 < t := by linarith [ht.1]
-      rw [if_pos, h_integrand_seg5 t ht4]
+      rw [ite_eq_left, h_integrand_seg5 t ht4]
       rw [h_norm_seg5 t ht4]; linarith [ht.1]
     have h_sub34 : (∫ t in (3 : ℝ)..(4 - η / c), (↑(t - 4) : ℂ)⁻¹) =
         ∫ u in (-1 : ℝ)..(-η / c), (↑u : ℂ)⁻¹ := by

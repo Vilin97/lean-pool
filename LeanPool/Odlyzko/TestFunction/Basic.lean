@@ -56,7 +56,7 @@ theorem tartarWeight_neg (x : ℝ) : Tartar.weight (-x) = Tartar.weight x := by
 theorem tartarAmplitude_neg (x : ℝ) : Tartar.amplitude (-x) = Tartar.amplitude x := by
   by_cases hx : x = 0
   · simp [hx]
-  · simp only [Tartar.amplitude, neg_eq_zero, hx, if_false, Real.sin_neg, Real.cos_neg]
+  · simp only [Tartar.amplitude, neg_eq_zero, hx, ite_false, Real.sin_neg, Real.cos_neg]
     ring
 
 theorem tartarTestFunction_neg (x : ℝ) :

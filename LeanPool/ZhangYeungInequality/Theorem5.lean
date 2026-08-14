@@ -73,12 +73,12 @@ variable.
 -/
 private lemma mutualInfo_comp_right_of_injective
     {α β γ : Type*}
-    [Finite α] [Finite β] [Finite γ]
+    [Finite α] [Finite β]
     [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
     [MeasurableSingletonClass α] [MeasurableSingletonClass β] [MeasurableSingletonClass γ]
     {X : Ω → α} {Y : Ω → β}
     (hX : Measurable X) (hY : Measurable Y)
-    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (μ : Measure Ω)
     {f : β → γ} (hf : Function.Injective f) :
     I[X : f ∘ Y; μ] = I[X : Y; μ] := by
   have h_joint : H[⟨X, f ∘ Y⟩; μ] = H[⟨X, Y⟩; μ] := by
@@ -104,7 +104,7 @@ private lemma mutualInfo_pair_swap_right
     [MeasurableSingletonClass α] [MeasurableSingletonClass β] [MeasurableSingletonClass γ]
     {X : Ω → α} {Y : Ω → β} {Z : Ω → γ}
     (hX : Measurable X) (hY : Measurable Y) (hZ : Measurable Z)
-    (μ : Measure Ω) [IsProbabilityMeasure μ] :
+    (μ : Measure Ω) :
     I[X : ⟨Y, Z⟩; μ] = I[X : ⟨Z, Y⟩; μ] := by
   change I[X : fun a => (Y a, Z a); μ] =
     I[X : Prod.swap ∘ (fun a => (Y a, Z a)); μ]

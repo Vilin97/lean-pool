@@ -542,9 +542,9 @@ lemma in_single_voc (m n : Nat) (φ ψ : Formula) :
       · by_cases hm : m = n
         · subst m
           exact (Ne.symm hk) (by
-            simpa only [hk, if_false, Formula.vocab, Finset.mem_singleton] using m_in)
+            simpa only [hk, ite_false, Formula.vocab, Finset.mem_singleton] using m_in)
         · exact hψ hm (by
-            simpa only [hk, if_false, Formula.vocab, Finset.mem_singleton] using m_in)
+            simpa only [hk, ite_false, Formula.vocab, Finset.mem_singleton] using m_in)
     case negAtom k =>
       intro hψ hn m_in
       by_cases hk : k = n
@@ -552,9 +552,9 @@ lemma in_single_voc (m n : Nat) (φ ψ : Formula) :
       · by_cases hm : m = n
         · subst m
           exact (Ne.symm hk) (by
-            simpa only [hk, if_false, Formula.vocab, Finset.mem_singleton] using m_in)
+            simpa only [hk, ite_false, Formula.vocab, Finset.mem_singleton] using m_in)
         · exact hψ hm (by
-            simpa only [hk, if_false, Formula.vocab, Finset.mem_singleton] using m_in)
+            simpa only [hk, ite_false, Formula.vocab, Finset.mem_singleton] using m_in)
     all_goals aesop
 
 lemma not_in_single_voc (n : Nat) (φ ψ : Formula) :

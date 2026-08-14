@@ -152,11 +152,11 @@ private lemma dig_pred_pow_lt {p : ℕ} (hp : 2 ≤ p) (f t : ℕ) (ht : t < f) 
 private lemma dig_block {p : ℕ} (hp : 2 ≤ p) (f c t : ℕ) :
     dig p ((p ^ f - 1) * p ^ c) t = if c ≤ t ∧ t < c + f then p - 1 else 0 := by
   rcases lt_or_ge t c with hlt | hge
-  · rw [dig_mul_pow_lt hp _ _ _ hlt, if_neg (by omega)]
+  · rw [dig_mul_pow_lt hp _ _ _ hlt, ite_eq_right (by omega)]
   · rw [dig_mul_pow_ge hp _ _ _ hge]
     rcases lt_or_ge (t - c) f with hin | hout
-    · rw [dig_pred_pow_lt hp _ _ hin, if_pos (by omega)]
-    · rw [dig_pred_pow_ge hp _ _ hout, if_neg (by omega)]
+    · rw [dig_pred_pow_lt hp _ _ hin, ite_eq_left (by omega)]
+    · rw [dig_pred_pow_ge hp _ _ hout, ite_eq_right (by omega)]
 
 /-- When `p ∤ k` and `k ≥ 1`, every base-`p` digit of `k - 1` is `≤` the
 corresponding digit of `k`. -/
@@ -177,7 +177,7 @@ private lemma dig_pred_le {p : ℕ} (hp : 2 ≤ p) {k : ℕ} (hk : 1 ≤ k)
       hpk (dvd_trans (dvd_pow_self p (by omega : t ≠ 0)) h)
     have heq : k / p ^ t = (k - 1) / p ^ t := by
       have hkk : k = (k - 1) + 1 := by omega
-      rw [hkk, Nat.succ_div, if_neg (by rw [← hkk]; exact hnd)]; simp
+      rw [hkk, Nat.succ_div, ite_eq_right (by rw [← hkk]; exact hnd)]; simp
     rw [heq]
 
 /-- Auxiliary: nonemptiness of `T_{d,j}`, used by both `main_theorem` and the
@@ -212,9 +212,9 @@ private lemma Tset_nonempty_aux (p q d j f : ℕ) (hp : p.Prime) (hf : 1 ≤ f)
       by_cases h : ∃ i : Fin d, f * (L + i.val) ≤ t ∧ t < f * (L + i.val) + f
       · obtain ⟨i0, hi0⟩ := h
         rw [Finset.sum_eq_single i0]
-        · rw [if_pos hi0]
+        · rw [ite_eq_left hi0]
         · intro b _ hb
-          rw [if_neg]
+          rw [ite_eq_right]
           rintro ⟨hb1, hb2⟩
           have hfpos : 0 < f := by omega
           have hle1 : L + b.val ≤ L + i0.val := by
@@ -244,7 +244,7 @@ private lemma Tset_nonempty_aux (p q d j f : ℕ) (hp : p.Prime) (hf : 1 ≤ f)
           (if f * (L + i.val) ≤ t ∧ t < f * (L + i.val) + f then p - 1 else 0) = 0 := by
         apply Finset.sum_eq_zero
         intro i _
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨h1, h2⟩
         -- c i = f*(L+i) ≥ f*L ≥ L > t
         have : L ≤ f * (L + i.val) := by

@@ -118,7 +118,7 @@ theorem colSupp_bandLowerTri_le (m c : ℕ) (j : Fin m) :
           then (1 : ZMod 2) else 0) ≠ 0 at hi'
         by_cases hg : (j : ℕ) ≤ (i : ℕ) ∧ (i : ℕ) < (j : ℕ) + c
         · simp only [Finset.coe_range, Set.mem_Iio]; omega
-        · rw [if_neg hg] at hi'
+        · rw [ite_eq_right hg] at hi'
           exact absurd rfl hi')
       (by
         intro a ha b hb hab
@@ -131,9 +131,9 @@ theorem colSupp_bandLowerTri_le (m c : ℕ) (j : Fin m) :
         by_cases hga : (j : ℕ) ≤ (a : ℕ) ∧ (a : ℕ) < (j : ℕ) + c
         · by_cases hgb : (j : ℕ) ≤ (b : ℕ) ∧ (b : ℕ) < (j : ℕ) + c
           · apply Fin.ext; simp only at hab; omega
-          · rw [if_neg hgb] at hb'
+          · rw [ite_eq_right hgb] at hb'
             exact absurd rfl hb'
-        · rw [if_neg hga] at ha'
+        · rw [ite_eq_right hga] at ha'
           exact absurd rfl ha')
   rwa [Finset.card_range] at hle
 
@@ -153,13 +153,13 @@ theorem colSupp_bandLowerTri_col0 (m c : ℕ) (hc : c ≤ m) (hc0 : 0 < c) :
       change (if 0 ≤ (i : ℕ) ∧ (i : ℕ) < 0 + c then (1 : ZMod 2) else 0) ≠ 0 at hne'
       by_cases hg : 0 ≤ (i : ℕ) ∧ (i : ℕ) < 0 + c
       · exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, by omega⟩
-      · rw [if_neg hg] at hne'
+      · rw [ite_eq_right hg] at hne'
         exact absurd rfl hne'
     · intro hlt
       have hlt' : (i : ℕ) < c := (Finset.mem_filter.mp hlt).2
       refine Finset.mem_filter.mpr ⟨Finset.mem_univ _, ?_⟩
       change (if 0 ≤ (i : ℕ) ∧ (i : ℕ) < 0 + c then (1 : ZMod 2) else 0) ≠ 0
-      rw [if_pos ⟨by omega, by omega⟩]
+      rw [ite_eq_left ⟨by omega, by omega⟩]
       exact one_ne_zero
   rw [hset]
   -- The filter `(i:ℕ) < c` over `Fin m` has card `min m c = c` (since `c ≤ m`).
@@ -200,13 +200,13 @@ theorem bandLowerTri_blockTriangular (m c : ℕ) :
   have hlt : i < j := OrderDual.toDual_lt_toDual.mp hij
   have hltn : (i : ℕ) < (j : ℕ) := hlt
   simp only [bandLowerTri, Matrix.of_apply]
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 /-- Every diagonal entry of `bandLowerTri m c` is `1` (for `c ≥ 1`): `(i,i) = [i ≤ i ∧ i < i+c]`. -/
 theorem bandLowerTri_diag (m c : ℕ) (hc0 : 0 < c) (i : Fin m) :
     bandLowerTri m c i i = 1 := by
   simp only [bandLowerTri, Matrix.of_apply]
-  rw [if_pos ⟨le_refl _, by omega⟩]
+  rw [ite_eq_left ⟨le_refl _, by omega⟩]
 
 /-- **det (bandLowerTri m c) = 1** for `c ≥ 1`: a unit lower-triangular matrix has unit
     determinant (product of the all-`1` diagonal). -/

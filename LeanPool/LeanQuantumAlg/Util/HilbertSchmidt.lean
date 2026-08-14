@@ -117,7 +117,7 @@ theorem hsInner_single [DecidableEq m] (i j k l : m) :
   rw [hsInner, Matrix.conjTranspose_single, star_one, Matrix.trace_single_mul, one_smul]
   by_cases h : i = k ∧ j = l
   · simp_all
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     apply Matrix.single_apply_of_ne
     rintro ⟨hki, hlj⟩
     exact h ⟨hki.symm, hlj.symm⟩

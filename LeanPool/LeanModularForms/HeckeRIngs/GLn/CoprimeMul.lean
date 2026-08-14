@@ -71,7 +71,7 @@ lemma T_diag_eq_T_mk_mul (a b : Fin n → ℕ) (ha : ∀ i, 0 < a i) (hb : ∀ i
       (diagMat_mul n a b ha hb).symm ▸ diagMat_mem_posDetInt n (a * b)
         (pi_mul_pos n a b ha hb)⟩⟧ : HeckeCoset (GLPair n)) := by
   simp only [TDiag]; rw [HeckeCoset.eq_iff]
-  simp only [diagMatDelta, dif_pos (pi_mul_pos n a b ha hb)]
+  simp only [diagMatDelta, dite_eq_left (pi_mul_pos n a b ha hb)]
   congr 1; exact (diagMat_mul n a b ha hb).symm
 
 end DiagMul

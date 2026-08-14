@@ -56,7 +56,7 @@ noncomputable def OrthonormalBasis.toMatrix {n E : Type _} [Fintype n] [Decidabl
     simp only [LinearMap.sum_apply, LinearMap.smul_apply, ContinuousLinearMap.coe_coe,
       InnerProductSpace.rankOne_apply, inner_sum, smul_smul, inner_smul_right]
     simp only [orthonormal_iff_ite.mp b.orthonormal, mul_boole, Finset.sum_ite_irrel,
-      Finset.sum_const_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_const_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   left_inv x := by
     ext
     simp only [LinearMap.sum_apply, LinearMap.smul_apply, ContinuousLinearMap.coe_coe,
@@ -283,7 +283,7 @@ theorem toLinOfAlgEquiv_eq (x : Matrix (I × J) (I × J) R) :
     LinearMap.sum_apply, Matrix.sum_apply, toLinAlgEquiv'_apply, mulVec, dotProduct,
     reshape_apply, LinearMap.smul_apply, Matrix.smul_apply, rankOneStdBasis_apply, single,
     of_apply, smul_ite, ← Prod.mk_inj, Prod.mk.eta, one_smul, smul_zero, smul_eq_mul,
-    Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+    Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
     forall₃_true_iff]
 
 theorem toLinOfAlgEquiv_toMatrixOfAlgEquiv (x : Matrix (I × J) (I × J) R) :
@@ -310,7 +310,7 @@ theorem innerAut_toMatrix (U : unitaryGroup n 𝕜) :
     Matrix.single, Matrix.of_apply, mul_ite, mul_one, MulZeroClass.mul_zero,
     Finset.sum_mul, ite_mul, MulZeroClass.zero_mul, ite_and,
     ← unitaryGroup.star_coe_eq_coe_star, star_apply, kroneckerMap_apply, conj_apply]
-  simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem innerAut_coord (U : unitaryGroup n 𝕜) (ij kl : n × n) :
     (LinearMap.toMatrixOfAlgEquiv (innerAut U)) ij kl =

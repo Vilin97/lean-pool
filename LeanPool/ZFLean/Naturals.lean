@@ -308,15 +308,15 @@ theorem induction {P : ZFNat → Prop} (n : ZFNat)
   (zero : P 0) (succ : ∀ n, P n → P (succ n)) : P n := by classical
   let ⟨n, hn⟩ := n
   let P' x := if hx : x ∈ Nat then P ⟨x, hx⟩ else unreachable!
-  have : P' n = P ⟨n, hn⟩ := dif_pos hn
+  have : P' n = P ⟨n, hn⟩ := dite_eq_left hn
   rw [← this]
   apply @ind P' n hn
   · unfold P'
     simpa [hn, zero_in_Nat, natZero_eq] using zero
   · intro m hm hm'
     unfold P' at *
-    rw [dif_pos hm] at hm'
-    rw [dif_pos <| succ_mem_Nat' hm]
+    rw [dite_eq_left hm] at hm'
+    rw [dite_eq_left <| succ_mem_Nat' hm]
     exact succ ⟨m, hm⟩ hm'
 
 @[cases_eliminator]
@@ -591,7 +591,7 @@ theorem rec'_zero {motive : ZFSet → Sort u}
   ZFNat.rec' ∅ zero_in_Nat zero succ = zero := by
     unfold ZFNat.rec' WellFounded.fix
     beta_reduce
-    rw [WellFounded.fixF_eq, dite_cond_eq_true]
+    rw [WellFounded.fixF_eq, dite_eq_left_of_eq_true]
     exact eq_self _
 
 
@@ -601,7 +601,7 @@ theorem rec'_succ {motive : ZFSet → Sort u} (n : ZFSet) (n_Nat : n ∈ Nat)
   rec' (insert n n) (succ_mem_Nat' n_Nat) zero succ = succ n n_Nat (rec' n n_Nat zero succ) := by
     unfold ZFNat.rec' WellFounded.fix
     beta_reduce
-    rw [WellFounded.fixF_eq, dite_cond_eq_false]
+    rw [WellFounded.fixF_eq, dite_eq_right_of_eq_false]
     · apply cast_eq_iff_heq.mpr
       · congr
         · conv => enter [1, 1]; rw [succ_eq _ n_Nat, pred_succ]
@@ -628,15 +628,15 @@ def rec {motive : ZFNat → Sort u} (n : ZFNat)
   (zero : motive 0) (succ : Π x, motive x → motive (succ x)) : motive n := by classical
   let ⟨n, hn⟩ := n
   let motive' (x : ZFSet) := if hx : x ∈ Nat then motive ⟨x, hx⟩ else unreachable!
-  have : motive' n = motive ⟨n, hn⟩ := dif_pos hn
+  have : motive' n = motive ⟨n, hn⟩ := dite_eq_left hn
   rw [← this]
   apply @ZFNat.rec' motive' n hn
   · unfold motive'
     simpa [hn, zero_in_Nat, natZero_eq] using zero
   · intro m hm hm'
     unfold motive' at *
-    rw [dif_pos hm] at hm'
-    rw [dif_pos <| succ_mem_Nat' hm]
+    rw [dite_eq_left hm] at hm'
+    rw [dite_eq_left <| succ_mem_Nat' hm]
     exact succ ⟨m, hm⟩ hm'
 
 /--

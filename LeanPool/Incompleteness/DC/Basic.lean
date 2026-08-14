@@ -201,7 +201,7 @@ variable [T₀ wkn T]
 
 private lemma goedel_specAux₁ : T ⊢!. γ <=> ∼𝔅 γ := WeakerThan.pbl (𝓢 := T₀.alt) goedel_spec
 
-private lemma goedel_specAux₂ [L.DecidableEq] :
+private lemma goedel_specAux₂ :
     T ⊢!. ∼γ ==> 𝔅 γ :=
   contra₂'! <| and₂'! goedel_specAux₁
 
@@ -232,6 +232,7 @@ theorem unprovable_goedel : T ⊬. γ := by
     inconsistent_iff_provable_bot.mpr (by simpa [provable₀_iff] using this)
   contradiction;
 
+omit [L.DecidableEq] in
 theorem unrefutable_goedel [𝔅.GoedelSound] :
     T ⊬. ∼γ := by
   classical

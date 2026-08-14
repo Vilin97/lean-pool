@@ -72,8 +72,8 @@ noncomputable def versionSpaceLearner
     change (if h : ∃ n, IsSampleConsistent (enum n) S then enum (Nat.find h)
           else fun _ => false) ∈ range enum ∪ {fun _ => false}
     by_cases h : ∃ n, IsSampleConsistent (enum n) S
-    · rw [dif_pos h]; exact Or.inl ⟨Nat.find h, rfl⟩
-    · rw [dif_neg h]; exact Or.inr rfl
+    · rw [dite_eq_left h]; exact Or.inl ⟨Nat.find h, rfl⟩
+    · rw [dite_eq_right h]; exact Or.inr rfl
 
 /-! ## Measurability Infrastructure -/
 
@@ -141,14 +141,14 @@ theorem measurableSet_versionSpace_true
       change (if h : ∃ n, IsSampleConsistent (enum n) S then enum (Nat.find h)
             else fun _ => false) x = true at hlearn
       by_cases hex : ∃ n, IsSampleConsistent (enum n) S
-      · simp only [dif_pos hex] at hlearn
+      · simp only [dite_eq_left hex] at hlearn
         exact ⟨Nat.find hex, (nat_find_eq_iff_isFirstConsistent enum S hex _).mp rfl, hlearn⟩
-      · rw [dif_neg hex] at hlearn; simp at hlearn
+      · rw [dite_eq_right hex] at hlearn; simp at hlearn
     · rintro ⟨n, hfirst, henum⟩
       change (if h : ∃ n, IsSampleConsistent (enum n) S then enum (Nat.find h)
             else fun _ => false) x = true
       have hex : ∃ k, IsSampleConsistent (enum k) S := ⟨n, hfirst.1⟩
-      simp only [dif_pos hex]
+      simp only [dite_eq_left hex]
       have heq : Nat.find hex = n :=
         (nat_find_eq_iff_isFirstConsistent enum S hex n).mpr hfirst
       rw [heq]; exact henum

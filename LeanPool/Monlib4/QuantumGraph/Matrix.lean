@@ -45,7 +45,7 @@ theorem lmul_toMatrix (x : Matrix n n ℂ) :
     hφ.orthonormalBasis_apply, mul_assoc, Matrix.PosDef.rpow_mul_rpow,
     neg_add_cancel, Matrix.PosDef.rpow_zero, mul_one, Matrix.mul_apply,
     Matrix.single_eq, Matrix.one_apply, mul_boole, ite_and, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true, eq_comm]
+    Finset.mem_univ, ite_true, eq_comm]
 
 theorem rmul_toMatrix (x : Matrix n n ℂ) :
   withMatrixQuantum[φ]
@@ -59,7 +59,7 @@ theorem rmul_toMatrix (x : Matrix n n ℂ) :
     modAut, ← mul_assoc (Matrix.PosDef.rpow _ _), ← sig_apply, Matrix.mul_apply,
     Matrix.single_eq, Matrix.one_apply, boole_mul, ite_and,
     Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true, eq_comm]
+    Finset.mem_univ, ite_true, eq_comm]
   rfl
 
 open Matrix
@@ -330,9 +330,9 @@ theorem QuantumSet.Psi_apply_matrix_one {n : Type*} [DecidableEq n] [Fintype n]
   simp only [mul_apply]
   simp only [single_eq, boole_mul]
   simp_rw [ite_and, Finset.sum_ite_irrel, Finset.sum_const_zero,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, ite_mul, zero_mul,
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, ite_mul, zero_mul,
     Prod.swap, mul_ite, mul_zero, Finset.sum_product_univ, Finset.sum_ite_irrel,
-    Finset.sum_const_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_const_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Module.Dual.IsFaithfulPosMap.inner_coord_onb,
     Module.Dual.IsFaithfulPosMap.inner_coord_onb (hφ := hφ),
     ← PosDef.rpow_neg_one_eq_inv_self hφ.matrixIsPosDef]

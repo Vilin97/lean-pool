@@ -343,12 +343,12 @@ lemma key_decomp' (f g : MvPowerSeries (Fin 3) ℂ)
     ext d
     rw [coeff_lhs', coeff_rhs']
     by_cases hd1 : d 1 = 0
-    · rw [if_pos hd1]
+    · rw [ite_eq_left hd1]
       by_cases hd0 : 2 ≤ d 0
-      · rw [if_pos ⟨hd0, hd1⟩]
-      · rw [if_neg (fun h => hd0 h.1)]
+      · rw [ite_eq_left ⟨hd0, hd1⟩]
+      · rw [ite_eq_right (fun h => hd0 h.1)]
         exact coeff_f_vanish' f g hmem d hd1 (by omega)
-    · rw [if_neg hd1, if_neg (fun h => hd1 h.2)]
+    · rw [ite_eq_right hd1, ite_eq_right (fun h => hd1 h.2)]
   -- Step 2: f - X₁ * (shiftX1' f + X₂ * divR' f) = (X₀² - X₁X₂) * divR' f
   have heq : f - X 1 * (shiftX1' f + X 2 * divR' f) =
     (X 0 ^ 2 - X 1 * X 2 : MvPowerSeries (Fin 3) ℂ) * divR' f := by
@@ -595,7 +595,6 @@ lemma jensen_comap_maxIdeal_le_of_local
 
 -- Under Prop 1 hypotheses, M = M_R · T (extra synthesis budget needed for T's instance diamond)
 lemma jensen_map_maxIdeal_eq_of_surj_closed
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (R : Subring T) [IsLocalRing ↥R]
     (h_surj : Function.Surjective (fun r : ↥R =>
       Ideal.Quotient.mk (IsLocalRing.maximalIdeal T ^ 2) (r : T)))

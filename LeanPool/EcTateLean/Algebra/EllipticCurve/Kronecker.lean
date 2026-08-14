@@ -59,7 +59,7 @@ decreasing_by
 lemma valBinNat_even {x : ℕ} (h : 0 < x ∧ x % 2 = 0) :
     valBinNat x = ((valBinNat (x / 2)).1 + 1, (valBinNat (x / 2)).2) := by
   conv_lhs => rw [valBinNat]
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 /-- The 2-adic valuation and signed odd part of an integer: `valBin x = (v, r)`
 where `x = 2 ^ v * r` with `|r|` odd. -/
@@ -90,8 +90,8 @@ lemma odd_part_le_self_nat (x : ℕ) : (valBinNat x).2 ≤ x := by
           exact le_trans h' (le_succ x)
         | inr odd =>
           have not_even : Nat.succ x % 2 ≠ 0 := by omega
-          rw [valBinNat, dif_neg (not_and_of_not_right (0 < Nat.succ x) not_even),
-            if_pos (zero_lt_succ x)]
+          rw [valBinNat, dite_eq_right (not_and_of_not_right (0 < Nat.succ x) not_even),
+            ite_eq_left (zero_lt_succ x)]
       | step y_le_x => exact le_trans (ih y y_le_x) (le_succ x);
   exact acc x (le_refl x)
 
@@ -115,8 +115,8 @@ lemma odd_part_succ_pos (x : ℕ) : 0 < (valBinNat (Nat.succ x)).2 := by
           exact ih (x / 2) (Nat.div_le_self x 2)
         | inr odd =>
           have not_even : Nat.succ (Nat.succ x) % 2 ≠ 0 := by omega
-          rw [valBinNat, dif_neg (not_and_of_not_right (0 < Nat.succ (Nat.succ x)) not_even),
-            if_pos (zero_lt_succ (Nat.succ x))]
+          rw [valBinNat, dite_eq_right (not_and_of_not_right (0 < Nat.succ (Nat.succ x)) not_even),
+            ite_eq_left (zero_lt_succ (Nat.succ x))]
           exact zero_lt_succ (Nat.succ x)
       | step y_le_x => exact ih y y_le_x;
   exact acc x (le_refl x)

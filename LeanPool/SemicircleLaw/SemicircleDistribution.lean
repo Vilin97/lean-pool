@@ -252,10 +252,10 @@ def semicircleReal (μ : ℝ) (v : ℝ≥0) : Measure ℝ :=
   if v = 0 then Measure.dirac μ else volume.withDensity (semicirclePDF μ v)
 
 lemma semicircleReal_of_var_ne_zero (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0) :
-    semicircleReal μ v = volume.withDensity (semicirclePDF μ v) := if_neg hv
+    semicircleReal μ v = volume.withDensity (semicirclePDF μ v) := ite_eq_right hv
 
 @[simp]
-lemma semicircleReal_zero_var (μ : ℝ) : semicircleReal μ 0 = Measure.dirac μ := if_pos rfl
+lemma semicircleReal_zero_var (μ : ℝ) : semicircleReal μ 0 = Measure.dirac μ := ite_eq_left rfl
 
 instance instIsProbabilityMeasureSemicircleReal (μ : ℝ) (v : ℝ≥0) :
     IsProbabilityMeasure (semicircleReal μ v) where

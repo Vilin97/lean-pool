@@ -745,9 +745,9 @@ theorem _root_.CK.filter_emptyR_tmul (A B : Tens) :
     obtain ⟨p, r⟩ := a
     rcases r with _ | ⟨c, cs⟩
     · simp only [tmul_cons, List.filter_append, ih, List.filter_cons, List.isEmpty_nil,
-        if_true, List.filter_map, Function.comp_def, List.nil_append]
+        ite_true, List.filter_map, Function.comp_def, List.nil_append]
     · simp only [tmul_cons, List.filter_append, ih, List.filter_cons, List.isEmpty_cons,
-        Bool.false_eq_true, if_false, List.filter_map, Function.comp_def]
+        Bool.false_eq_true, ite_false, List.filter_map, Function.comp_def]
       simp_all
 
 mutual
@@ -757,7 +757,7 @@ mutual
     cases t with
     | node F =>
       rw [coprodTree_node, List.filter_cons]
-      simp only [List.isEmpty_nil, if_true, List.filter_map, Function.comp_def]
+      simp only [List.isEmpty_nil, ite_true, List.filter_map, Function.comp_def]
       simp_all
   theorem _root_.CK.coprodForest_filter_emptyR (f : Forest) :
       (coprodForest f).filter (fun pr => pr.2.isEmpty) = [(f, [])] := by
@@ -781,9 +781,9 @@ theorem _root_.CK.filter_emptyL_tmul (A B : Tens) :
     obtain ⟨p, r⟩ := a
     rcases p with _ | ⟨c, cs⟩
     · simp only [tmul_cons, List.filter_append, ih, List.filter_cons, List.isEmpty_nil,
-        if_true, List.filter_map, Function.comp_def, List.nil_append]
+        ite_true, List.filter_map, Function.comp_def, List.nil_append]
     · simp only [tmul_cons, List.filter_append, ih, List.filter_cons, List.isEmpty_cons,
-        Bool.false_eq_true, if_false, List.filter_map, Function.comp_def]
+        Bool.false_eq_true, ite_false, List.filter_map, Function.comp_def]
       simp_all
 
 mutual
@@ -793,7 +793,7 @@ mutual
     cases t with
     | node F =>
       rw [coprodTree_node, List.filter_cons]
-      simp only [List.isEmpty_cons, Bool.false_eq_true, if_false, List.filter_map,
+      simp only [List.isEmpty_cons, Bool.false_eq_true, ite_false, List.filter_map,
         Function.comp_def]
       rw [coprodForest_filter_emptyL F]
       rfl
@@ -2329,8 +2329,8 @@ theorem _root_.CK.brickC (v : Hab k) (M : ℕ) (hM : 1 ≤ M)
         PowerSeries.coeff j (PowerSeries.log k) • ((JcAb k ^ j).ofConv v)
           = PowerSeries.coeff j (PowerSeries.log k) • ((if j = 1 then (1 : k) else 0) • v)),
       Finset.sum_eq_single 1]
-  · rw [if_pos rfl, one_smul, PowerSeries.coeff_one_log, one_smul]
-  · intro b _ hb; rw [if_neg hb, zero_smul, smul_zero]
+  · rw [ite_eq_left rfl, one_smul, PowerSeries.coeff_one_log, one_smul]
+  · intro b _ hb; rw [ite_eq_right hb, zero_smul, smul_zero]
   · intro h1; exact absurd (Finset.mem_range.2 (by omega : 1 < M + 1)) h1
 
 /-- **`e⁽¹⁾ ∘ e⁽¹⁾ = e⁽¹⁾` on the commutative `H_ab`** (the Eulerian idempotency, via

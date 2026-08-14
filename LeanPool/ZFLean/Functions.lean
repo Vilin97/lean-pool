@@ -865,12 +865,12 @@ theorem lambda_eta {A B : ZFSet} {f : ZFSet} (hf : A.IsFunc B f) :
   ext1 z
   constructor <;> intro hz
   · obtain ⟨x, hx, y, hy, rfl⟩ := hf.1 hz |> mem_prod.mp
-    rw [lambda_spec, dite_cond_eq_true (eq_true hx)]
+    rw [lambda_spec, dite_eq_left_of_eq_true (eq_true hx)]
     refine ⟨hx, hy, ?_⟩
     rw [fapply.of_pair (is_func_is_pfunc hf) hz]
   · rw [mem_lambda] at hz
     obtain ⟨x, y, rfl, xA, -, rfl⟩ := hz
-    rw [dite_cond_eq_true (eq_true xA)]
+    rw [dite_eq_left_of_eq_true (eq_true xA)]
     apply fapply.def
 
 theorem is_func_ext_iff {A B : ZFSet} {f g : ZFSet} (hf : IsFunc A B f) (hg : IsFunc A B g) :
@@ -887,9 +887,9 @@ where
       lambda_eta hf,
       lambda_eta hg,
       lambda_ext_iff
-        (fun h ↦ by rw [dite_cond_eq_true (eq_true h)]; apply Subtype.property)]
+        (fun h ↦ by rw [dite_eq_left_of_eq_true (eq_true h)]; apply Subtype.property)]
     intro z hz
-    simp_rw [dite_cond_eq_true (eq_true hz), ←Subtype.ext_iff]
+    simp_rw [dite_eq_left_of_eq_true (eq_true hz), ←Subtype.ext_iff]
     exact h _ hz
 
 theorem lambda_subset {A B : ZFSet} {exp : ZFSet → ZFSet} : lambda A B exp ⊆ A.prod B := by
@@ -2176,7 +2176,7 @@ theorem _root_.ZFSet.Card.empty_iff {S : ZFFinSet} : Card S = 0 ↔ S = ⟨∅, 
       obtain ⟨w, hw, w_unq⟩ := hf.2 s hs
       nomatch notMem_empty _ <| And.right <| pair_mem_prod.mp <| hf.1 hw
   · rintro ⟨⟩
-    rw [Card, eq_self, if_true]
+    rw [Card, eq_self, ite_true]
 
 @[simp]
 theorem _root_.ZFSet.Card.empty : Card ⟨∅, IsFinite.empty⟩ = 0 := Card.empty_iff.mpr rfl
@@ -2251,7 +2251,8 @@ theorem fprod_is_func {A B A' B' φ ψ : ZFSet} (hφ : A.IsFunc A' φ) (hψ : B.
   · intro z hz
     simp only [fprod, mem_prod, mem_lambda, existsAndEq, and_true] at hz
     obtain ⟨a', b', a, b, rfl, ⟨aA, bB⟩, ⟨a'A', b'B'⟩, eq⟩ := hz
-    rw [dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨aA, bB⟩)), pair_inj] at eq
+    rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨aA, bB⟩)),
+      pair_inj] at eq
     obtain ⟨rfl, rfl⟩ := eq
     let φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
     let ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
@@ -2269,7 +2270,7 @@ theorem fprod_is_func {A B A' B' φ ψ : ZFSet} (hφ : A.IsFunc A' φ) (hψ : B.
     use φa.pair ψb
     and_intros <;> beta_reduce
     · simp_rw [fprod, lambda_spec, pair_mem_prod]
-      rw [dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)), pair_inj]
+      rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)), pair_inj]
       and_intros
       · exact ha
       · exact hb
@@ -2281,7 +2282,7 @@ theorem fprod_is_func {A B A' B' φ ψ : ZFSet} (hφ : A.IsFunc A' φ) (hψ : B.
         rfl
     · intro y hy
       simp_rw [fprod, lambda_spec, pair_mem_prod, π₁_pair, π₂_pair] at hy
-      rw [dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩))] at hy
+      rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩))] at hy
       exact hy.2.2
 
 theorem fprod_bijective_of_bijective {A B A' B' φ ψ : ZFSet}
@@ -2294,8 +2295,9 @@ theorem fprod_bijective_of_bijective {A B A' B' φ ψ : ZFSet}
       exists_eq_left'] at xy yz
     obtain ⟨⟨a, ha, b, hb, rfl⟩, -, rfl⟩ := xy
     obtain ⟨⟨c, hc, d, hd, rfl⟩, -, eq⟩ := yz
-    rw [dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)),
-        dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨hc, hd⟩)), pair_inj] at eq
+    rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)),
+        dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨hc, hd⟩)),
+        pair_inj] at eq
     simp only [π₁_pair, SetLike.coe_eq_coe, π₂_pair] at eq
     obtain ⟨φa_eq_φc, ψb_eq_ψd⟩ := eq
     rw [pair_inj]
@@ -2323,7 +2325,7 @@ theorem fprod_bijective_of_bijective {A B A' B' φ ψ : ZFSet}
       · apply fapply_mem_range
       · exact ha'
       · exact hb'
-      · rw [dite_cond_eq_true
+      · rw [dite_eq_left_of_eq_true
           (eq_true (by rw [pair_mem_prod]; and_intros <;> apply fapply_mem_range)),
           pair_inj]
         and_intros
@@ -2353,13 +2355,13 @@ theorem mem_fprod {A B C D f g x : ZFSet} {hf : A.IsFunc C f} {hg : B.IsFunc D g
     intro hx
     rw [fprod, mem_lambda] at hx
     obtain ⟨ab, cd, rfl, hab, hcd, rfl⟩ := hx
-    rw [dite_cond_eq_true (eq_true hab)] at hcd
+    rw [dite_eq_left_of_eq_true (eq_true hab)] at hcd
     rw [mem_prod] at hab
     obtain ⟨a, ha, b, hb, rfl⟩ := hab
     rw [pair_mem_prod] at hab
     simp only [mem_prod, pair_inj, exists_eq_right_right', π₁_pair, π₂_pair,
       exists_and_left, existsAndEq, and_true, exists_eq_left']
-    rw [dite_cond_eq_true (eq_true ‹_›)]
+    rw [dite_eq_left_of_eq_true (eq_true ‹_›)]
     simp only [exists_prop, and_true, ha, hb]
   mpr := by
     rintro ⟨a, b, ha, hb, rfl⟩
@@ -2396,14 +2398,14 @@ theorem fapply_fprod {A B C D f g a b : ZFSet} (hf : A.IsFunc C f) (hg : B.IsFun
       ←fapply_eq_Image_singleton
         (lambda_isFunc
           (fun h ↦ by
-            rw [dite_cond_eq_true (eq_true h), pair_mem_prod]
+            rw [dite_eq_left_of_eq_true (eq_true h), pair_mem_prod]
             and_intros <;> apply fapply_mem_range))
         (by rw [pair_mem_prod]; exact ⟨ha, hb⟩),
       fapply_lambda (fun h ↦ by
-        rw [dite_cond_eq_true (eq_true h), pair_mem_prod]
+        rw [dite_eq_left_of_eq_true (eq_true h), pair_mem_prod]
         and_intros <;> apply fapply_mem_range)
         (by rw [pair_mem_prod]; exact ⟨ha, hb⟩),
-      dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩))]
+      dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩))]
     simp only [π₁_pair, π₂_pair]
 
 open ZFSet Classical in
@@ -2491,8 +2493,8 @@ theorem fprod_injective_of_injective {A B A' B' φ ψ : ZFSet}
     exists_eq_left'] at xy yz
   obtain ⟨⟨a, ha, b, hb, rfl⟩, -, rfl⟩ := xy
   obtain ⟨⟨c, hc, d, hd, rfl⟩, -, eq⟩ := yz
-  rw [dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)),
-      dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨hc, hd⟩)), pair_inj] at eq
+  rw [dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩)),
+      dite_eq_left_of_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨hc, hd⟩)), pair_inj] at eq
   simp only [π₁_pair, SetLike.coe_eq_coe, π₂_pair] at eq
   obtain ⟨φa_eq_φc, ψb_eq_ψd⟩ := eq
   rw [pair_inj]

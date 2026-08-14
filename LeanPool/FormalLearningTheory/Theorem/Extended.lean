@@ -309,7 +309,7 @@ private lemma pi_cylinder_set_eq {ι : Type*} [Fintype ι]
       MeasureTheory.IsProbabilityMeasure.measure_univ, mul_one]
 
 /-- Extract the first m₁ + m₂ coordinates from a sample of size Nat.pair m₁ m₂. -/
-private def usedPrefix {X : Type u} [MeasurableSpace X]
+private def usedPrefix {X : Type u}
     (m₁ m₂ : ℕ) (xs : Fin (Nat.pair m₁ m₂) → X) : Fin (m₁ + m₂) → X :=
   fun i => xs (Fin.castLE (Nat.add_le_pair m₁ m₂) i)
 
@@ -564,7 +564,7 @@ private lemma adviceValidationUniformBound {X : Type u} [MeasurableSpace X]
     {A : Type*} [Fintype A] [Nonempty A]
     (LA : LearnerWithAdvice X Bool A) (h_eval : AdviceEvalMeasurable LA)
     (c : Concept X Bool) (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
-    [MeasureTheory.SigmaFinite D] {m₁ m₂ : ℕ} (hcm : Measurable c)
+     {m₁ m₂ : ℕ} (hcm : Measurable c)
     (hm₂_pos : 0 < m₂) (ε δ : ℝ) (hε : 0 < ε) (hδ : 0 < δ)
     (hm₂_ge : Real.log (4 * ↑(Fintype.card A) / δ) /
       (2 * (min (ε / 4) 1) ^ 2) ≤ ↑m₂) :

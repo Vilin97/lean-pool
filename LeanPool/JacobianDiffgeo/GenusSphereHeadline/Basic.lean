@@ -74,13 +74,13 @@ theorem exists_simple_pole_of_genus_eq_zero (hg : genus X = 0) :
     intro x hx
     have h := RS.mem_linSys_iff.mp hφD x
     have hDx : D x = 0 := by
-      rw [hD_def, Function.locallyFinsuppWithin.single_apply, if_neg hx]
+      rw [hD_def, Function.locallyFinsuppWithin.single_apply, ite_eq_right hx]
     rw [hDx] at h
     simpa using h
   have hPbound : ((-1 : ℤ) : WithTop ℤ) ≤ φ.ord P := by
     have h := RS.mem_linSys_iff.mp hφD P
     have hDP : D P = 1 := by
-      rw [hD_def, Function.locallyFinsuppWithin.single_apply, if_pos rfl]
+      rw [hD_def, Function.locallyFinsuppWithin.single_apply, ite_eq_left rfl]
     rwa [hDP] at h
   have hPneg : φ.ord P < 0 := by
     by_contra hcon

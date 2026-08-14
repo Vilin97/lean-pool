@@ -275,7 +275,7 @@ lemma concat_mem_tree {y a} (hp : IsPosition y Player.zero)
             ¬ H.game.WinningPosition
               (H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [b.val]))}
       else Set.univ)
-    rw [if_pos ⟨⟨a, hx⟩, by
+    rw [ite_eq_left ⟨⟨a, hx⟩, by
       change ¬ H.game.WinningPosition
         (H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [a]))
       exact hw⟩]
@@ -480,7 +480,7 @@ def a : ExtensionsAt h.x' := h.strat h.x' (by have := H.hlvl; synthIsPosition)
 def extension : ExtensionsAt H.x where
   val := (h.a hp).val
   property := by
-    have h' := (h.a hp).prop; conv at h' => simp [game]; conv => simp [game]
+    have h' := (h.a hp).prop; conv at h' => simp [game]
     simp_rw [← List.drop_drop (j := 2 * k + 1), ← List.append_assoc _ _ [_],
       List.take_append_drop] at h'; exact h'
 end Winnable
@@ -497,18 +497,18 @@ def extension (H : PreLift hyp) (hp : IsPosition H.x.val Player.one)
 lemma extension_won {H : PreLift hyp} (h : H.Won) hp R :
     H.extension hp R = h.lift'.extensionMap hp R := by
   unfold extension
-  exact dif_pos h
+  exact dite_eq_left h
 lemma extension_winnable {H : PreLift hyp} (hnWon : ¬ H.Won) (h : H.Winnable) hp R :
     H.extension hp R = h.extension hp := by
   unfold extension
-  exact (dif_neg hnWon).trans (dif_pos h)
+  exact (dite_eq_right hnWon).trans (dite_eq_left h)
 lemma extension_losable {H : PreLift hyp} (h : H.Losable) hp R :
   H.extension hp R = h.lift'.extensionMap hp R := by
   have hnWon : ¬ H.Won := fun hW ↦ h.1 (WLift.mk _ hW).winnable
   have hnWinnable : ¬ H.Winnable := fun hW ↦ h.1 hW
   classical
   unfold extension
-  exact (dif_neg hnWon).trans ((dif_neg hnWinnable).trans (dif_pos h))
+  exact (dite_eq_right hnWon).trans ((dite_eq_right hnWinnable).trans (dite_eq_left h))
 end PreLift
 
 end «Section1»

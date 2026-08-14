@@ -78,7 +78,7 @@ private theorem resAt_smul_d (h φ : ℳ X) (x : X) :
   filter_upwards [htarget] with z hz
   change h.holoRepr ((chartAt ℂ x).symm z) *
       (if z ∈ (chartAt ℂ x).target then deriv (φ.holoRepr ∘ ⇑(chartAt ℂ x).symm) z else 0) = _
-  rw [if_pos hz]
+  rw [ite_eq_left hz]
 
 /-! ### Honesty of `toP1 ∘ holoRepr` at nonnegative-order points -/
 

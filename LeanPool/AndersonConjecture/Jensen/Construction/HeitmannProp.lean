@@ -35,7 +35,6 @@ omit [IsNoetherianRing T] [IsDomain T] in
 /-- The maximal ideal of a local subring R maps into the maximal ideal of T
 under the subtype inclusion, given the closedness condition IT ∩ R = I. -/
 private lemma map_maxIdeal_le_of_closed
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (R : Subring T) [IsLocalRing ↥R]
     (h_closed : ∀ (I : Ideal ↥R), I.FG →
       ∀ (c : ↥R), (c : T) ∈ Ideal.map R.subtype I → c ∈ I) :
@@ -75,7 +74,6 @@ omit [IsDomain T] in
 This is a Nakayama argument: R + M² = T implies M ≤ Ideal.map R.subtype M_R + M²,
 and since M is f.g. and M ≤ jacobson ⊥, Nakayama gives M ≤ Ideal.map R.subtype M_R. -/
 lemma map_maxIdeal_eq_of_surj_closed
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (R : Subring T) [IsLocalRing ↥R]
     (h_surj : Function.Surjective (fun r : ↥R =>
       Ideal.Quotient.mk (IsLocalRing.maximalIdeal T ^ 2) (r : T)))
@@ -170,7 +168,6 @@ omit [IsDomain T] in
 by induction on `n` using surjectivity onto `T/M²` and a Nakayama-style argument
 that lifts elements of `Mⁿ` modulo `Mⁿ⁺¹` to `R`. -/
 private lemma heitmann_prop1_surj_pow
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (R : Subring T) [IsLocalRing R]
     (h_surj : Function.Surjective (fun r : R =>
       Ideal.Quotient.mk (IsLocalRing.maximalIdeal T ^ 2) (r : T)))

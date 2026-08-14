@@ -211,7 +211,7 @@ noncomputable def chain [∀ i, Preorder (P i)] (φ : Chain (Var I P)) : Var I f
                (if h : (i : I) = (φ i₂).embed ((φ i₂).index r) then _ else _)
         by_cases h₁ : (i : I) = (φ i₁).embed ((φ i₁).index r)
         · by_cases h₂ : (i : I) = (φ i₂).embed ((φ i₂).index r)
-          · rw [dif_pos h₁, dif_pos h₂]
+          · rw [dite_eq_left h₁, dite_eq_left h₂]
             rw [eqRec_eq_cast, eqRec_eq_cast]
             have hkey := cast_mono h₂.symm h₀snd
             convert hkey using 2
@@ -295,7 +295,7 @@ lemma chain_apply [∀ i, Preorder (P i)] (φ : Chain (Var I P)) (r)
     simp only [Sigma.le_def, apply_fst, apply_snd] at this
     exact this.fst
   change (if h : (φ 0).embed ((φ 0).index r) = (φ n).embed ((φ n).index r) then _ else _) = _
-  rw [dif_pos hfst]
+  rw [dite_eq_left hfst]
   rfl
 
 end Var

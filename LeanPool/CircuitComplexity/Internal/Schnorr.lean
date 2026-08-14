@@ -212,7 +212,7 @@ private theorem wireValD_restrictD {N s : Nat} (d : CircDesc (N + 1) s)
     simp only [restrictD, hgi]
     -- Both sides branch on isAnd; congr reduces to per-wire-input goals
     split <;> rename_i hd <;>
-      simp only [hd, Bool.false_eq_true, if_false, if_true] <;> congr 1 <;>
+      simp only [hd, Bool.false_eq_true, ite_false, ite_true] <;> congr 1 <;>
       exact remapWireR_effective d a b x w hw _ _
         (fun w' hw' => wireValD_restrictD d a b x w')
 termination_by w.val
@@ -914,8 +914,8 @@ private theorem gateElimRedirect {n t : Nat} (d : CircDesc (n + 1) (t + 3))
       · -- Both wires read input 0: v2 constant
         obtain ⟨_, _, _, hwv1, hwv2⟩ := restrictD_false_components d g
         exact ⟨.const (if isAnd then n1 && n2 else n1 || n2), ⟨fun x =>
-          gateElimRedirect_const d g x (by rw [hwv1, if_pos h1]; omega)
-            (by rw [hwv2, if_pos hw2_zero]; omega), fun _ _ h => by cases h⟩⟩
+          gateElimRedirect_const d g x (by rw [hwv1, ite_eq_left h1]; omega)
+            (by rw [hwv2, ite_eq_left hw2_zero]; omega), fun _ _ h => by cases h⟩⟩
       · by_cases hw2_back : w2.val - 1 < n + g.val
         · -- Second wire back-ref after restriction
           exact ⟨.wire ⟨w2.val - 1, by omega⟩ n2,
@@ -948,8 +948,8 @@ private theorem gateElimRedirect {n t : Nat} (d : CircDesc (n + 1) (t + 3))
         · -- Second wire forward-ref after restriction (proof 3)
           obtain ⟨_, _, _, hwv1, hwv2⟩ := restrictD_false_components d g
           exact ⟨.const (if isAnd then n1 && n2 else n1 || n2), ⟨fun x =>
-            gateElimRedirect_const d g x (by rw [hwv1, if_pos h1]; omega)
-              (by rw [hwv2, if_neg hw2_zero]; omega), fun _ _ h => by cases h⟩⟩
+            gateElimRedirect_const d g x (by rw [hwv1, ite_eq_left h1]; omega)
+              (by rw [hwv2, ite_eq_right hw2_zero]; omega), fun _ _ h => by cases h⟩⟩
   · -- Second wire reads input 0 (symmetric)
     by_cases hkill : n2 = !isAnd
     · exact ⟨.const (!isAnd), ⟨fun x =>
@@ -959,8 +959,8 @@ private theorem gateElimRedirect {n t : Nat} (d : CircDesc (n + 1) (t + 3))
       · -- proof 4: both w1=0, w2=0
         obtain ⟨_, _, _, hwv1, hwv2⟩ := restrictD_false_components d g
         exact ⟨.const (if isAnd then n1 && n2 else n1 || n2), ⟨fun x =>
-          gateElimRedirect_const d g x (by rw [hwv1, if_pos hw1_zero]; omega)
-            (by rw [hwv2, if_pos h2]; omega), fun _ _ h => by cases h⟩⟩
+          gateElimRedirect_const d g x (by rw [hwv1, ite_eq_left hw1_zero]; omega)
+            (by rw [hwv2, ite_eq_left h2]; omega), fun _ _ h => by cases h⟩⟩
       · by_cases hw1_back : w1.val - 1 < n + g.val
         · -- proof 5: w1≠0 back-ref, w2=0 (.wire case)
           exact ⟨.wire ⟨w1.val - 1, by omega⟩ n1,
@@ -993,8 +993,8 @@ private theorem gateElimRedirect {n t : Nat} (d : CircDesc (n + 1) (t + 3))
         · -- proof 6: w1≠0 forward-ref, w2=0 (const case)
           obtain ⟨_, _, _, hwv1, hwv2⟩ := restrictD_false_components d g
           exact ⟨.const (if isAnd then n1 && n2 else n1 || n2), ⟨fun x =>
-            gateElimRedirect_const d g x (by rw [hwv1, if_neg hw1_zero]; omega)
-              (by rw [hwv2, if_pos h2]; omega), fun _ _ h => by cases h⟩⟩
+            gateElimRedirect_const d g x (by rw [hwv1, ite_eq_right hw1_zero]; omega)
+              (by rw [hwv2, ite_eq_left h2]; omega), fun _ _ h => by cases h⟩⟩
 
 /-- Generic two-gate elimination: in a once-restricted circuit `d_r` whose gate `ga`
     (higher index) reduces to `rda` and gate `gb` (lower index) reduces to `rdb`,

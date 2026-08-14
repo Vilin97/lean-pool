@@ -151,7 +151,7 @@ lemma size_bound_key (σ : Finset (TT n l)) (C : Finset (Fin n)) (h : TT.ILO.isD
         rw [← Finset.sum_insert (Finset.notMem_erase 0 Finset.univ)]
         rw [Finset.insert_erase (Finset.mem_univ 0)]
       rw [this]
-      simp only [M_coords, if_true]
+      simp only [M_coords, ite_true]
       have sum_eq : ∑ x ∈ Finset.univ.erase 0, (if x = 0 then M' 0 + R else M' x)
           = ∑ x ∈ Finset.univ.erase 0, M' x := by
         apply Finset.sum_congr rfl

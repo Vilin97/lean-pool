@@ -891,11 +891,11 @@ theorem mk_with_stride (p : Player) (n : ℕ) :
         finite_support := ⟨n + 1, by
           intro m hm
           show (if m = n then Piece.ofPlayer p else Piece.none) = Piece.none
-          rw [if_neg (show m ≠ n by omega)]⟩ }
+          rw [ite_eq_right (show m ≠ n by omega)]⟩ }
       with hb_def
     have hbn : b.board n = .ofPlayer p := by rw [hb_def]; simp only [↓reduceIte]
     have hb_other : ∀ m, m ≠ n → b.board m = .none := by
-      intro m hm; rw [hb_def]; simp only [if_neg hm]
+      intro m hm; rw [hb_def]; simp only [ite_eq_right hm]
     have h_rm : b.rightmostPos = n := by
       rw [Board.rightmostPos, Nat.findGreatest_eq_iff]
       refine ⟨?_, ?_, ?_⟩
@@ -908,7 +908,7 @@ theorem mk_with_stride (p : Player) (n : ℕ) :
       rw [stride_def, toBoard_ofBoard, Board.stride, h_rm, hbn]
       simp only [↓reduceIte]
     have h_stride_np : stride (ofBoard (R := R) b) (-p) = 0 := by
-      rw [stride_def, toBoard_ofBoard, Board.stride, h_rm, hbn, if_neg]
+      rw [stride_def, toBoard_ofBoard, Board.stride, h_rm, hbn, ite_eq_right]
       intro hcontra
       exact absurd (Piece.ofPlayer_injective hcontra) (by simp only [Player.ne_iff_eq_neg, neg_neg])
     refine ⟨ofBoard b, ?_, ?_⟩

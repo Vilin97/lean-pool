@@ -244,7 +244,7 @@ def unitBadCarryWordsEquiv (length : ℕ) :
     apply Subtype.ext
     apply Subtype.ext
     by_cases hone : word.val.val.head.val = 1
-    · simp only [unitBadCarryWordsToSum, hone, dif_pos]
+    · simp only [unitBadCarryWordsToSum, hone, dite_eq_left]
       have hhead : (1 : Fin 3) = word.val.val.head := by
         apply Fin.ext
         exact hone.symm

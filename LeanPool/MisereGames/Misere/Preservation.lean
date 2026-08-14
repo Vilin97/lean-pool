@@ -232,7 +232,7 @@ private theorem closedUnderDicoticClosure_le_ambient {IsAmbient A : G → Prop}
 -- End-like positions in the dicotic closure of a hereditary set already lie in
 -- the generating set.
 private theorem mem_of_mem_closedUnderDicoticClosure_of_isEndLike {IsAmbient A : G → Prop}
-    [Hereditary A] {g : G} {p : Player}
+     {g : G} {p : Player}
     (hg : ClosedUnderDicotic.closure IsAmbient A g) (hEnd : IsEndLike p g) : A g := by
   let B' : G → Prop := fun g =>
     ClosedUnderDicotic.closure IsAmbient A g ∧ (IsEndLike p g → A g)
@@ -262,7 +262,7 @@ private theorem moves_nonempty_of_not_isEndLike {g : G} {p : Player}
 -- An element of the dicotic closure outside the generating set is not end-like
 -- for either player.
 private theorem not_isEndLike_of_mem_closedUnderDicoticClosure_of_not_mem
-    {IsAmbient A : G → Prop} [Hereditary A] {g : G}
+    {IsAmbient A : G → Prop} {g : G}
     (hg : ClosedUnderDicotic.closure IsAmbient A g) (hnot : ¬ A g) :
     ∀ p, ¬ IsEndLike p g := by
   intro p hEnd

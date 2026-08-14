@@ -357,7 +357,7 @@ private lemma overlapRatio_tendsto_one (v : V) :
           ne_of_lt measure_closedBall_lt_top
         have hvol_toReal_pos : 0 < (volume (Metric.closedBall (0 : V) (↑n))).toReal :=
           ENNReal.toReal_pos (ne_of_gt hvol_pos) hvol_ne_top
-        unfold overlapRatio; rw [if_neg (ne_of_gt hvol_toReal_pos)]
+        unfold overlapRatio; rw [ite_eq_right (ne_of_gt hvol_toReal_pos)]
         have hball_pos : 0 < (volume (Metric.ball (0 : V) 1)).toReal :=
           ENNReal.toReal_pos (ne_of_gt (Metric.measure_ball_pos volume 0 one_pos))
             (ne_of_lt measure_ball_lt_top)
@@ -505,7 +505,7 @@ private lemma fejer_avg_eq_integral (ψ : V → ℂ) (hcont : Continuous ψ)
           congr 1; funext v
           rw [smul_comm, ← smul_assoc, Complex.real_smul]
           congr 1; rw [Complex.ofReal_inj]
-          simp only [B]; rw [overlapRatio, if_neg hvol_ne, div_eq_mul_inv,
+          simp only [B]; rw [overlapRatio, ite_eq_right hvol_ne, div_eq_mul_inv,
             smul_eq_mul]
   -- Prove h_fubini: Fubini via indicators
   rw [h_to_ind]
@@ -549,7 +549,7 @@ private lemma pd_integral_re_nonneg (ψ : V → ℂ) (hpd : IsPositiveDefinite �
         Filter.atTop (nhds (∫ x, ψ x)) by
       apply h.congr'
       filter_upwards [Filter.eventually_ne_atTop 0] with n hn
-      simp only [J, if_neg hn]
+      simp only [J, ite_eq_right hn]
       exact (fejer_avg_eq_integral ψ hcont hint n (Nat.cast_pos.mpr (Nat.pos_of_ne_zero hn))).symm
     -- Now apply DCT: h_n(v) * ψ(v) → 1 * ψ(v) = ψ(v), with bound |ψ|
     rw [show (∫ x, ψ x) = ∫ x, (1 : ℂ) * ψ x by simp]

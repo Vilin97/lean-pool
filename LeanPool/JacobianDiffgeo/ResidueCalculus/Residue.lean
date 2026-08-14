@@ -140,7 +140,7 @@ theorem MeromorphicAt.resAt_deriv (hf : MeromorphicAt f z₀) : resAt (deriv f) 
   apply Finset.sum_eq_zero
   intro k hk
   simp only [Finset.mem_Icc] at hk
-  rw [resAt_const_mul, resAt_const_mul, resAt_zpow_monomial, if_neg (by omega : k - 1 ≠ -1)]
+  rw [resAt_const_mul, resAt_const_mul, resAt_zpow_monomial, ite_eq_right (by omega : k - 1 ≠ -1)]
   ring
 
 /-- Log-derivative residue = order (THE argument-principle atom; meromorphic-trace input).
@@ -255,7 +255,8 @@ theorem resAt_analyticAt_mul (hh : AnalyticAt ℂ h z₀) (hf : MeromorphicAt f 
         = taylorCoeffAt h z₀ (-1 - k).toNat * laurentCoeffAt f z₀ k := by
     intro k hk
     simp only [Finset.mem_Icc] at hk
-    rw [resAt_const_mul, resAt_analyticAt_mul_zpow hh k, if_pos (by omega : (0:ℤ) ≤ -1 - k)]
+    rw [resAt_const_mul, resAt_analyticAt_mul_zpow hh k,
+      ite_eq_left (by omega : (0 : ℤ) ≤ -1 - k)]
     ring
   rw [Finset.sum_congr rfl hterm]
   by_cases h₂ : meromorphicOrderAt f z₀ = ⊤

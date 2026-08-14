@@ -59,7 +59,7 @@ lemma Wires.get_append {n m : ℕ} (a : Wires V n) (b : Wires V m) (i : Fin (n +
       if h : i.val < n then a.get ⟨i.val, h⟩ else b.get ⟨i.val - n, by omega⟩ := by
   refine Fin.addCases (fun j => ?_) (fun j => ?_) i
   · simp [Wires.get_append_left, Fin.val_castAdd, j.isLt]
-  · rw [Wires.get_append_right, dif_neg (by simp : ¬ (Fin.natAdd n j).val < n)]
+  · rw [Wires.get_append_right, dite_eq_right (by simp : ¬ (Fin.natAdd n j).val < n)]
     exact congrArg b.get (Fin.ext (by simp))
 
 lemma Wires.get_take {n k : ℕ} (a : Wires V n) (i : Fin (min k n)) :

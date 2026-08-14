@@ -353,13 +353,13 @@ private theorem tsum_pow_shift (g : ℕ → ℂ) (k : ℕ) {z : ℂ}
   set G : ℕ → ℂ := fun m => (if k ≤ m then g (m - k) else 0) * z ^ m with hGdef
   have hGk : ∀ n, G (n + k) = g n * z ^ (n + k) := by
     intro n
-    simp only [hGdef, Nat.le_add_left, if_true, Nat.add_sub_cancel]
+    simp only [hGdef, Nat.le_add_left, ite_true, Nat.add_sub_cancel]
   have hGsum : Summable G := (summable_nat_add_iff k).1 (hg.congr (fun n => (hGk n).symm))
   have hzero : ∑ i ∈ Finset.range k, G i = 0 := by
     refine Finset.sum_eq_zero (fun i hi => ?_)
     rw [Finset.mem_range] at hi
     simp only [hGdef]
-    rw [if_neg (by omega), zero_mul]
+    rw [ite_eq_right (by omega), zero_mul]
   have hsplit := hGsum.sum_add_tsum_nat_add k
   rw [hzero, zero_add] at hsplit
   rw [← hsplit]
@@ -476,7 +476,7 @@ theorem ordinaryHypergeometric_ode (a b c : ℂ) (hc : ∀ k : ℕ, (k : ℂ) �
     intro g k hgs
     apply (summable_nat_add_iff k).1
     refine (sShift g hgs k).congr (fun n => ?_)
-    simp only [Nat.le_add_left, if_true, Nat.add_sub_cancel]
+    simp only [Nat.le_add_left, ite_true, Nat.add_sub_cancel]
   have iA : (∑' n : ℕ, C2 n * z ^ (n + 2)) = z ^ 2 * ∑' n : ℕ, C2 n * z ^ n := by
     rw [← tsum_mul_left]; exact tsum_congr fun n => by rw [pow_add]; ring
   have iB : (∑' n : ℕ, C2 n * z ^ (n + 1)) = z * ∑' n : ℕ, C2 n * z ^ n := by
@@ -495,12 +495,13 @@ theorem ordinaryHypergeometric_ode (a b c : ℂ) (hc : ∀ k : ℕ, (k : ℂ) �
         + (a + b + 1) * (if 1 ≤ m then C1 (m - 1) else 0) - c * C1 m + a * b * C m = 0 := by
     intro m
     rcases m with _ | _ | k
-    · simp only [show ¬ (2 ≤ 0) by omega, show ¬ (1 ≤ 0) by omega, if_false, mul_zero, hC1def]
+    · simp only [show ¬ (2 ≤ 0) by omega, show ¬ (1 ≤ 0) by omega, ite_false,
+        mul_zero, hC1def]
       have r := hrec 0; push_cast at r ⊢; linear_combination r
-    · simp only [show ¬ (2 ≤ 1) by omega, show (1 ≤ 1) by omega, if_true, if_false,
+    · simp only [show ¬ (2 ≤ 1) by omega, show (1 ≤ 1) by omega, ite_true, ite_false,
         Nat.sub_self, hC2def, hC1def]
       have r := hrec 1; push_cast at r ⊢; linear_combination r
-    · simp only [show 2 ≤ k + 1 + 1 by omega, show 1 ≤ k + 1 + 1 by omega, if_true,
+    · simp only [show 2 ≤ k + 1 + 1 by omega, show 1 ≤ k + 1 + 1 by omega, ite_true,
         show k + 1 + 1 - 2 = k by omega, show k + 1 + 1 - 1 = k + 1 by omega, hC2def, hC1def]
       have r := hrec (k + 2); push_cast at r ⊢; linear_combination r
   -- Collect the differential-equation coefficients into a single (vanishing) series.
@@ -665,7 +666,7 @@ theorem generalizedHypergeometric_ode (α β γ δ ε : ℂ)
     intro g k hgs
     apply (summable_nat_add_iff k).1
     refine (sShift g hgs k).congr (fun n => ?_)
-    simp only [Nat.le_add_left, if_true, Nat.add_sub_cancel]
+    simp only [Nat.le_add_left, ite_true, Nat.add_sub_cancel]
   have iSh : ∀ (g : ℕ → ℂ) (k : ℕ), (∑' n : ℕ, g n * z ^ (n + k)) = z ^ k * ∑' n : ℕ, g n * z ^ n :=
     fun g k => by rw [← tsum_mul_left]; exact tsum_congr fun n => by rw [pow_add]; ring
   have shift3A := tsum_pow_shift D3 3 (sShift D3 sD3 3)
@@ -690,16 +691,16 @@ theorem generalizedHypergeometric_ode (α β γ δ ε : ℂ)
     intro m
     rcases m with _ | _ | _ | k
     · simp only [show ¬ (3 ≤ 0) by omega, show ¬ (2 ≤ 0) by omega, show ¬ (1 ≤ 0) by omega,
-        if_false, mul_zero, hD1def]
+        ite_false, mul_zero, hD1def]
       have r := hrec3 0; push_cast at r ⊢; linear_combination r
     · simp only [show ¬ (3 ≤ 1) by omega, show ¬ (2 ≤ 1) by omega, show (1 ≤ 1) by omega,
-        if_true, if_false, mul_zero, Nat.sub_self, hD2def, hD1def]
+        ite_true, ite_false, mul_zero, Nat.sub_self, hD2def, hD1def]
       have r := hrec3 1; push_cast at r ⊢; linear_combination r
     · simp only [show ¬ (3 ≤ 2) by omega, show (2 ≤ 2) by omega, show (1 ≤ 2) by omega,
-        if_true, if_false, Nat.sub_self, show (2 : ℕ) - 1 = 1 by omega, hD3def, hD2def, hD1def]
+        ite_true, ite_false, Nat.sub_self, show (2 : ℕ) - 1 = 1 by omega, hD3def, hD2def, hD1def]
       have r := hrec3 2; push_cast at r ⊢; linear_combination r
     · simp only [show 3 ≤ k + 1 + 1 + 1 by omega, show 2 ≤ k + 1 + 1 + 1 by omega,
-        show 1 ≤ k + 1 + 1 + 1 by omega, if_true,
+        show 1 ≤ k + 1 + 1 + 1 by omega, ite_true,
         show k + 1 + 1 + 1 - 3 = k by omega, show k + 1 + 1 + 1 - 2 = k + 1 by omega,
         show k + 1 + 1 + 1 - 1 = k + 1 + 1 by omega, hD3def, hD2def, hD1def]
       have r := hrec3 (k + 3); push_cast at r ⊢; linear_combination r

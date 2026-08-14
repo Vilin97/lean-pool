@@ -221,7 +221,7 @@ lemma z0_mem_Icc (x y : Rand) : z0 x y ∈ Set.Icc (0 : ℝ) 1 := by
       · simp [z0, hsq, hy_lt, hx_lt, ht]
       · simp [z0, hsq, hy_lt, hx_lt, ht2]
   · unfold z0
-    rw [if_neg hsq]
+    rw [ite_eq_right hsq]
     exact zBase_mem_Icc x y
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/

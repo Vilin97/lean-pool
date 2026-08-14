@@ -370,7 +370,7 @@ theorem sqrt_le_sqrtq_add (r : ℝ) (x : ℚInterval) (n : ℕ) (hq : x.fst ≤ 
   suffices (√r - √x.fst) * (1 - 2 / 2^n) ≤ (x.snd - x.fst) / (2 * √x.fst) by
     have h₁ := sqrt_le_mkRat_add x.fst n
     have h₂ := sqrt_lb_def x n
-    rw [if_neg (Rat.not_le.mpr hx₂)] at h₂
+    rw [ite_eq_right (Rat.not_le.mpr hx₂)] at h₂
     rw [← h₂] at h₁
     ring_nf at *
     linarith
@@ -413,7 +413,7 @@ theorem sqrt_le_sqrtq_add' (r : ℝ) (x : ℚInterval) (n : ℕ) (hq : x.fst ≤
   suffices (√r - √x.fst) * (1 - 2 / 2^n) ≤ (x.snd - x.fst) / √r by
     have h₁ := sqrt_le_mkRat_add x.fst n
     have h₂ := sqrt_lb_def x n
-    rw [if_neg (Rat.not_le.mpr hx₂)] at h₂
+    rw [ite_eq_right (Rat.not_le.mpr hx₂)] at h₂
     rw [← h₂] at h₁
     ring_nf at *
     linarith
@@ -464,7 +464,7 @@ theorem sqrtq_sub_le_sqrt (r : ℝ) (x : ℚInterval) (n : ℕ) (hq : x.fst ≤ 
   suffices (√x.snd - √r) * (1 + 7 / 2^n) ≤ (x.snd - x.fst) / √x.fst by
     have h₁ := mkRat_sub_le_sqrt x.snd n
     have h₂ := sqrt_ub_def x n
-    rw [if_neg (Rat.not_le.mpr hx₂)] at h₂ h₁
+    rw [ite_eq_right (Rat.not_le.mpr hx₂)] at h₂ h₁
     rw [← h₂] at h₁
     ring_nf at *
     linarith
@@ -503,7 +503,7 @@ theorem sqrtq_sub_le_sqrt' (r : ℝ) (x : ℚInterval) (n : ℕ) (hq : x.fst ≤
   suffices (√x.snd - √r) * (1 + 7 / 2^n) ≤ (x.snd - x.fst) / √r by
     have h₁ := mkRat_sub_le_sqrt x.snd n
     have h₂ := sqrt_ub_def x n
-    rw [if_neg (Rat.not_le.mpr hx₂)] at h₂ h₁
+    rw [ite_eq_right (Rat.not_le.mpr hx₂)] at h₂ h₁
     rw [← h₂] at h₁
     ring_nf at *
     linarith
@@ -612,7 +612,7 @@ theorem TLUW_upper : TendstoLocallyUniformlyWithout
         int_sqrt_mul_eq_zero (Rat.num_nonpos.mpr hq₃) (by positivity)
       simp [Real.sqrt_eq_zero'.mpr (Rat.cast_nonpos.mpr hq₃), hε, hq₃]
     have hb₂ := mkRat_sub_le_sqrt q b
-    rw [if_neg hq₃] at hb₂ ⊢
+    rw [ite_eq_right hq₃] at hb₂ ⊢
     push Not at hq₃
     suffices 7 * √↑q / 2 ^ b < ε by
       have hb₁ := rsqrt_le_boundedSqrt q b 4 (by norm_num)
@@ -670,7 +670,7 @@ noncomputable def sqrt : ComputableℝSeq → ComputableℝSeq :=
       rw [Real.sqrt_eq_zero']
       exact le_trans hx₂ (Rat.cast_nonpos.mpr h)
     · have := sqrt_ub_le_ub ⟨⟨q₁, q₂⟩, hq⟩ n
-      rw [sqrtq, boundedSqrt, if_neg h] at this
+      rw [sqrtq, boundedSqrt, ite_eq_right h] at this
       exact le_trans (Real.sqrt_le_sqrt hx₂) this
   )
 

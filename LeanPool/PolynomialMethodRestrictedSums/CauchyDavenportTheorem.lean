@@ -111,7 +111,7 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
           omega
       · simp only [X, monomial_pow, monomial_mul]
         rw [coeff_monomial]
-        rw [if_pos]
+        rw [ite_eq_left]
         · rw [one_pow, one_pow, one_mul]; exact one_ne_zero
         · --
           ext i; fin_cases i
@@ -123,7 +123,7 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
       rw [mul_comm, coeff_C_mul]
       simp only [X, monomial_pow, monomial_mul]
       rw [coeff_monomial]
-      rw [if_neg]
+      rw [ite_eq_right]
       · simp -- 0 *  = 0
       · --  b = cs 0
         intro h_eq

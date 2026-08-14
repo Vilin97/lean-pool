@@ -1893,7 +1893,7 @@ private lemma hermiteFunctionNd_orthonormal (d : ℕ) (α β : MultiIndex d) :
   · subst h; simp
   · simp only [h, ite_false]
     obtain ⟨i, hi⟩ := Function.ne_iff.mp h
-    exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+    exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
 /-- Kronecker property for multi-d Hermite coefficients:
   `hermiteCoeffNd d α (schwartzHermiteBasisNd d β) = δ_{α,β}`.
 Follows directly from orthonormality of `hermiteFunctionNd`.

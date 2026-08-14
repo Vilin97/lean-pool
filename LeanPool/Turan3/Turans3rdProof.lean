@@ -359,13 +359,13 @@ lemma Improve_gain_contribution_increase (W : FunToMax G) (loose gain : α)
       rw [mem_incidenceFinset, mk'_mem_incidenceSet_iff] at Pyz
       rcases help with help | help
       · simp_rw [← help.1]
-        rw [if_neg h_neq]
-        rw [if_pos True.intro]
-        rw [if_neg]
+        rw [ite_eq_right h_neq]
+        rw [ite_eq_left True.intro]
+        rw [ite_eq_right]
         swap
         · intro con
           simp_all
-        · rw [if_neg]
+        · rw [ite_eq_right]
           swap
           · intro con
             simp_all
@@ -373,20 +373,20 @@ lemma Improve_gain_contribution_increase (W : FunToMax G) (loose gain : α)
             congr
             convert help.2.symm
             exact help.1
-      · rw [if_neg]
+      · rw [ite_eq_right]
         swap
         · intro con
           apply h_adj
           rw [help.1, ← con]
           exact Pyz.1.symm
-        · rw [if_neg]
+        · rw [ite_eq_right]
           swap
           · apply G.ne_of_adj
             simp_all
-          · rw [if_neg]
+          · rw [ite_eq_right]
             swap
             · simp_all
-            · rw [if_pos help.1.symm]
+            · rw [ite_eq_left help.1.symm]
               rw [mul_add]
               congr 1
               · rw [help.1]
@@ -449,7 +449,8 @@ lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
     have h_x_gain : x ≠ gain := fun h => h_not_in.1 (key gain (h ▸ Sym2.mem_mk_left x y))
     have h_y_loose : y ≠ loose := fun h => h_not_in.2 (key loose (h ▸ Sym2.mem_mk_right x y))
     have h_y_gain : y ≠ gain := fun h => h_not_in.1 (key gain (h ▸ Sym2.mem_mk_right x y))
-    simp only [if_neg h_y_loose, if_neg h_y_gain, if_neg h_x_loose, if_neg h_x_gain]
+    simp only [ite_eq_right h_y_loose, ite_eq_right h_y_gain, ite_eq_right h_x_loose,
+      ite_eq_right h_x_gain]
   · exact he
 
 /-- Assumption h mirrors the assumption s_1 ≤ s_2 in the informal proof.
@@ -624,13 +625,13 @@ def Enhance
     have h_ne : gain ≠ loose := by
       intro h_neq
       simp_all
-    simp only [if_true] at *
+    simp only [ite_true] at *
     have h_simpl : ∀ x ∈ univ \ ({loose} ∪ {gain}),
   (if x = loose then W.w loose - ε else if x = gain then W.w gain + ε else W.w x) = W.w x :=
       by
         simp_all
     rw [Finset.sum_congr rfl h_simpl]
-    simp only [if_neg h_ne] at *
+    simp only [ite_eq_right h_ne] at *
     calc
       (W.w loose - ε + (W.w gain + ε)) + (univ \ ({loose} ∪ {gain})).sum W.w
           = (W.w loose + W.w gain) + (univ \ ({loose} ∪ {gain})).sum W.w :=
@@ -1004,11 +1005,14 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
   rcases Q with Q | Q
   · dsimp [Enhance]
     dsimp only [Quot.liftOn]
-    rw [if_neg (show ¬ a = loose by intro con; rw [Q,← con] at h_lt; apply lt_irrefl _ h_lt)]
-    rw [if_pos Q.symm]
-    rw [if_neg (show ¬ b = loose by
+    rw [ite_eq_right (show ¬ a = loose by
+      intro con
+      rw [Q, ← con] at h_lt
+      exact lt_irrefl _ h_lt)]
+    rw [ite_eq_left Q.symm]
+    rw [ite_eq_right (show ¬ b = loose by
       intro con; rw [Q,← con] at abnot; apply abnot; apply Sym2.eq_swap)]
-    rw [if_neg (show ¬ b = gain by
+    rw [ite_eq_right (show ¬ b = gain by
       intro con; rw [← Q,← con] at abAdj; apply G.ne_of_adj abAdj; rfl)]
     rw [add_mul]
     have tec : Sym2.Mem.other (helper_gain_mem G s(a, b) (small_helpI G (in_sdiff_left hab))) = b :=
@@ -1021,10 +1025,13 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
     simp_all
   · dsimp [Enhance]
     dsimp only [Quot.liftOn]
-    rw [if_neg (show ¬ b = loose by intro con; rw [Q,← con] at h_lt; apply lt_irrefl _ h_lt)]
-    rw [if_pos Q.symm]
-    rw [if_neg (show ¬ a = loose by intro con;rw [Q,← con] at abnot; apply abnot; rfl)]
-    rw [if_neg (show ¬ a = gain by
+    rw [ite_eq_right (show ¬ b = loose by
+      intro con
+      rw [Q, ← con] at h_lt
+      exact lt_irrefl _ h_lt)]
+    rw [ite_eq_left Q.symm]
+    rw [ite_eq_right (show ¬ a = loose by intro con;rw [Q,← con] at abnot; apply abnot; rfl)]
+    rw [ite_eq_right (show ¬ a = gain by
       intro con; rw [← Q,← con] at abAdj; apply G.ne_of_adj abAdj; rfl)]
     rw [mul_add]
     have tec : Sym2.Mem.other (helper_gain_mem G s(a, b) (small_helpI G (in_sdiff_left hab))) = a :=
@@ -1469,7 +1476,7 @@ lemma Enhance_edge_gainloose_increase (W : FunToMax G) (loose gain : α)
   vp (Enhance G W loose gain h_lt ε epos elt).w s(loose,gain) > vp W.w s(loose,gain)  := by
   simp only [vp, Quot.liftOn, gt_iff_lt]
   simp only [Enhance, ↓reduceIte, mul_ite]
-  rw [if_neg h_neq]
+  rw [ite_eq_right h_neq]
   ring_nf
   rw [mul_tsub]
   rw [lt_tsub_comm] at elt
@@ -2052,7 +2059,7 @@ lemma Enhanced_effect_argmax (W : FunToMax G) (h_con : W.w (W.argmin G) < W.w (W
   (Enhanced G W h_con).w (W.argmax G) = 1 /
       ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card := by
   dsimp [Enhanced,Enhance]
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
   dsimp [theEps]
   rw [FunToMax.argmax_weight]
   rw [tsub_tsub_assoc]

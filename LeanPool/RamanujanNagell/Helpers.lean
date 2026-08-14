@@ -232,7 +232,7 @@ private lemma sixteen_norm_rem_le (a b : R) (hb : b ≠ 0) :
   set m : ℤ := round ((2 * (s.re : ℚ) + s.im - N * n) / (2 * N)) with hm_def
   have hquot : quot a b = (⟨m, n⟩ : R) := by
     change (if QuadraticAlgebra.norm b = 0 then (0 : R) else _) = _
-    rw [if_neg hN_ne]
+    rw [ite_eq_right hN_ne]
   set u : ℤ := s.re - N * m with hu_def
   set v : ℤ := s.im - N * n with hv_def
   have hNq_pos : (0 : ℚ) < N := by exact_mod_cast hN_pos

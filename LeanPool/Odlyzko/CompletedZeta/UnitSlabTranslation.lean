@@ -94,7 +94,7 @@ theorem existsUnique_vadd_mem_unitFundamentalParamSet
         Int.fract (x w) = (z ⟨w, hw⟩ : ℝ) + x w := by
       have h := Int.fract_add_floor (x w)
       dsimp [z]
-      simp only [unitFloor, if_neg hw]
+      simp only [unitFloor, ite_eq_right hw]
       grind
     change unitCoordinateShift z w + x w ∈ Ico (0 : ℝ) 1
     rw [show unitCoordinateShift z w = (z ⟨w, hw⟩ : ℝ) by

@@ -40,7 +40,7 @@ the unitary query form `O_x : |i, b⟩ ↦ |i, b ⊕ xᵢ⟩` of
   `xorOracle_mem_unitaryGroup` gives unitarity.
 
 Pinned Mathlib API: `Equiv.permCongr` (`permCongr_apply`), `Fin.rev`
-(`Fin.rev_rev`), `Equiv.apply_eq_iff_eq`, `Equiv.apply_eq_iff_eq_symm_apply`,
+(`Fin.rev_rev`), `Equiv.apply_eq_iff_eq`, `Equiv.eq_symm_apply`,
 `Equiv.symm_apply_eq`.
 -/
 

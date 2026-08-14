@@ -510,7 +510,7 @@ lemma AspValley_step_a (α β : AspPerm) (a b : ℤ) :
     omega
   have low : (∀ n : ℤ, n ≤ α⁻¹ a → w.f n = v.f n + 1) := by
     intro n hn
-    rw [this n, if_pos hn]
+    rw [this n, ite_eq_left hn]
   have high : (∀ n : ℤ, n > α⁻¹ a → w.f n = v.f n) := by
     intro n hn
     rw [this n]
@@ -557,10 +557,10 @@ lemma AspValley_step_b (α β : AspPerm) (a b : ℤ) :
       omega
   have low : (∀ n : ℤ, n ≤ β b → w.f n = v.f n + 1) := by
     intro n hn
-    rw [this n, if_pos hn]
+    rw [this n, ite_eq_left hn]
   have high : (∀ n : ℤ, n > β b → w.f n = v.f n) := by
     intro n hn
-    rw [this n, if_neg (not_le.mpr hn), add_zero]
+    rw [this n, ite_eq_right (not_le.mpr hn), add_zero]
   have sed := sediment v w low high
   by_cases h : v.M ≤ β b
   · simp only [h, ↓reduceIte]
@@ -704,7 +704,7 @@ private lemma lres_a_step_eq_iff_exists_witness (α β : AspPerm) (a b : ℤ) :
       have hge : α⁻¹ a ≥ l := by omega
       have hstep : α.s (a + 1) l = α.s a l + 1 := by
         rw [α.a_step a l]
-        simp only [if_pos hge]
+        simp only [ite_eq_left hge]
       have hmax := lres_candidate_le α β (a + 1) b l
       dsimp [lres_witness_set] at hl
       omega
@@ -766,7 +766,7 @@ private lemma lres_b_step_eq_iff_exists_witness (α β : AspPerm) (a b : ℤ) :
       have hge : β b ≥ l := by omega
       have hstep : (β⁻¹).s (b + 1) l = (β⁻¹).s b l + 1 := by
         rw [(β⁻¹).a_step b l]
-        simp only [inv_inv, if_pos hge]
+        simp only [inv_inv, ite_eq_left hge]
       have hmax := lres_candidate_le α β a b l
       dsimp [lres_witness_set] at hl
       omega
@@ -844,7 +844,7 @@ private lemma lres_witness_move_a_down (α β : AspPerm) (a b l : ℤ)
       omega
     have hstep : α.s (a + 1) l = α.s a l + 1 := by
       rw [α.a_step a l]
-      simp only [if_pos hle]
+      simp only [ite_eq_left hle]
     refine ⟨l, ?_, le_refl l⟩
     dsimp [lres_witness_set] at hl ⊢
     rw [hstep] at hl
@@ -883,7 +883,7 @@ private lemma lres_witness_move_b_up (α β : AspPerm) (a b l : ℤ)
       omega
     have hstep : (β⁻¹).s (b + 1) l = (β⁻¹).s b l + 1 := by
       rw [(β⁻¹).a_step b l]
-      simp only [inv_inv, if_pos hle]
+      simp only [inv_inv, ite_eq_left hle]
     refine ⟨l, ?_, le_refl l⟩
     dsimp [lres_witness_set] at hl ⊢
     rw [hstep]

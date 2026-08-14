@@ -158,7 +158,7 @@ private lemma hermiteNormSq_blockPart_remainderPart
     hermiteNormSq κ (blockPart ℓ (remainderPart j M G)) =
       if M < blockDistance j ℓ then hermiteNormSq κ (blockPart ℓ G) else 0 := by
   by_cases hfar : M < blockDistance j ℓ
-  · rw [finiteParseval, finiteParseval, if_pos hfar]
+  · rw [finiteParseval, finiteParseval, ite_eq_left hfar]
     have hsupport :
         (blockPart ℓ (remainderPart j M G)).support = (blockPart ℓ G).support := by
       ext α
@@ -167,7 +167,7 @@ private lemma hermiteNormSq_blockPart_remainderPart
     refine Finset.sum_congr rfl ?_
     intro α hα
     simp [blockPart_remainderPart_coeff, hfar]
-  · rw [finiteParseval, if_neg hfar]
+  · rw [finiteParseval, ite_eq_right hfar]
     refine Finset.sum_eq_zero ?_
     intro α hα
     simp [blockPart_remainderPart_coeff, hfar]
@@ -193,10 +193,10 @@ private lemma remainderPart_annulus_blockwise_bound
     have hbase := hloc j ℓ (remainderPart j M G)
     by_cases hfar : M < blockDistance j ℓ
     · rw [hermiteNormSq_blockPart_remainderPart (κ := κ) (j := j) (ℓ := ℓ) (M := M)
-        (G := G), if_pos hfar] at hbase
+        (G := G), ite_eq_left hfar] at hbase
       simpa [hfar] using hbase
     · rw [hermiteNormSq_blockPart_remainderPart (κ := κ) (j := j) (ℓ := ℓ) (M := M)
-        (G := G), if_neg hfar] at hbase
+        (G := G), ite_eq_right hfar] at hbase
       have hle0 :
           annulusMass j (evalHermiteSum κ (blockPart ℓ (remainderPart j M G))) ≤ 0 := by
         simpa using hbase
@@ -902,20 +902,20 @@ private lemma tailIndicator_tendsto_zero
       (∑' r : ℕ, p r) = ∑ r ∈ Finset.range (M + 1), p r := tsum_eq_sum (by
         intro b hb
         simp only [p]
-        rw [if_neg]
+        rw [ite_eq_right]
         simpa [Finset.mem_range] using hb)
       _ = ∑ r ∈ Finset.range (M + 1), u r := by
         apply Finset.sum_congr rfl
         intro r hr
-        simp only [p, if_pos (Finset.mem_range.mp hr)]
+        simp only [p, ite_eq_left (Finset.mem_range.mp hr)]
   have hpv : ∀ r : ℕ, p r + v r = u r := by
     intro r
     dsimp [p, v]
     by_cases h : r < M + 1
-    · rw [if_pos h, if_neg]
+    · rw [ite_eq_left h, ite_eq_right]
       · exact add_zero _
       · omega
-    · rw [if_neg h, if_pos]
+    · rw [ite_eq_right h, ite_eq_left]
       · exact zero_add _
       · omega
   have h1 :
@@ -1089,7 +1089,7 @@ private lemma shell_sum_localizationLeakageCoefficient_bound
           refine Finset.sum_congr rfl fun r _ => ?_
           by_cases hMr : M < r
           · have hMr' : M + 1 ≤ r := by omega
-            simp only [u, hMr, if_true, hMr']
+            simp only [u, hMr, ite_true, hMr']
             ring
           · simp [u, hMr]
     _ ≤ ∑' r : ℕ, u r := by
@@ -1105,8 +1105,8 @@ private lemma shell_sum_localizationLeakageCoefficient_bound
           rw [← tsum_mul_left]
           refine tsum_congr fun r => ?_
           by_cases hMr : M + 1 ≤ r
-          · simp only [u, hMr, if_true]
-          · simp only [u, hMr, if_false, mul_zero]
+          · simp only [u, hMr, ite_true]
+          · simp only [u, hMr, ite_false, mul_zero]
 
 private lemma finitePartialLeakage_bound_of_shell_sum_bound
     {d : ℕ} (κ : MultiIndex d) {C c B : ℝ}
@@ -1299,7 +1299,7 @@ private lemma shell_sum_bound_of_shell_cardinality_bound
           by_cases hMr : M < r
           · have hr1 : 1 ≤ r := by omega
             have hker_nonneg : 0 ≤ C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) := by positivity
-            simp only [hMr, if_true]
+            simp only [hMr, ite_true]
             exact mul_le_mul_of_nonneg_right (hcard ℓ r s hr1) hker_nonneg
           · simp [hMr]
     _ ≤ localizationLeakageCoefficient C c B d M :=

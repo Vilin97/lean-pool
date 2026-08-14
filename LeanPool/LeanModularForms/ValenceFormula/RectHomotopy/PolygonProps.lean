@@ -273,7 +273,7 @@ lemma fdPolygon_differentiableAt_off_partition (t : ℝ) (ht : t ∈ Ioo 0 5)
       filter_upwards [eventually_lt_nhds h1,
         eventually_gt_nhds ht.1] with s hs1 hs2
       simp only [fdPolygon,
-        show s ≤ 1 from le_of_lt hs1, if_true,
+        show s ≤ 1 from le_of_lt hs1, ite_true,
         fdPolygonSeg1]
     exact fdPolygon_seg1_differentiable.differentiableAt.congr_of_eventuallyEq heq
   · push Not at h1
@@ -286,7 +286,7 @@ lemma fdPolygon_differentiableAt_off_partition (t : ℝ) (ht : t ∈ Ioo 0 5)
         simp only [fdPolygon,
           show ¬s ≤ 1 from not_le.mpr hs1,
           show s ≤ 2 from le_of_lt hs2,
-          if_true, if_false, fdPolygonSeg2]
+          ite_true, ite_false, fdPolygonSeg2]
       exact fdPolygon_seg2_differentiable.differentiableAt.congr_of_eventuallyEq heq
     · push Not at h2
       by_cases h3 : t < 3
@@ -300,7 +300,7 @@ lemma fdPolygon_differentiableAt_off_partition (t : ℝ) (ht : t ∈ Ioo 0 5)
                 (le_of_lt hs1)),
             show ¬s ≤ 2 from not_le.mpr hs1,
             show s ≤ 3 from le_of_lt hs2,
-            if_true, if_false, fdPolygonSeg3]
+            ite_true, ite_false, fdPolygonSeg3]
         exact fdPolygon_seg3_differentiable.differentiableAt.congr_of_eventuallyEq heq
       · push Not at h3
         by_cases h4 : t < 4
@@ -314,7 +314,7 @@ lemma fdPolygon_differentiableAt_off_partition (t : ℝ) (ht : t ∈ Ioo 0 5)
               show ¬s ≤ 2 from not_le.mpr (lt_trans (by norm_num : (2 : ℝ) < 3) hs1),
               show ¬s ≤ 3 from not_le.mpr hs1,
               show s ≤ 4 from le_of_lt hs2,
-              if_true, if_false, fdPolygonSeg4]
+              ite_true, ite_false, fdPolygonSeg4]
           exact fdPolygon_seg4_differentiable.differentiableAt.congr_of_eventuallyEq heq
         · push Not at h4
           have h4' : t > 4 :=
@@ -327,7 +327,7 @@ lemma fdPolygon_differentiableAt_off_partition (t : ℝ) (ht : t ∈ Ioo 0 5)
               show ¬s ≤ 2 from not_le.mpr (lt_trans (by norm_num : (2 : ℝ) < 4) hs1),
               show ¬s ≤ 3 from not_le.mpr (lt_trans (by norm_num : (3 : ℝ) < 4) hs1),
               show ¬s ≤ 4 from not_le.mpr hs1,
-              if_false, fdPolygonSeg5]
+              ite_false, fdPolygonSeg5]
           exact fdPolygon_seg5_differentiable.differentiableAt.congr_of_eventuallyEq heq
 
 lemma fdPolygon_seg1_deriv_val :

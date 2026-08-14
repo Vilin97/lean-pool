@@ -36,7 +36,7 @@ def primeInterSieve (x y z : ℝ) (hz : 1 ≤ z) : SelbergSieve := {
   nu := (ζ : ArithmeticFunction ℝ).pdiv .id
   nu_mult := by arith_mult
   nu_pos_of_prime := fun p hp _ => by
-    simp[if_neg hp.ne_zero, Nat.pos_of_ne_zero hp.ne_zero]
+    simp[ite_eq_right hp.ne_zero, Nat.pos_of_ne_zero hp.ne_zero]
   nu_lt_one_of_prime := fun p hp _ => by
     simpa [hp.ne_zero] using
       (inv_lt_one_of_one_lt₀ (by norm_cast; exact hp.one_lt) : (p : ℝ)⁻¹ < 1)
@@ -149,7 +149,7 @@ theorem rem_eq (hx : 0 < x) (d : ℕ) (hd : d ≠ 0) :
       ↑(⌊x + y⌋₊ / d - (⌈x⌉₊ - 1) / d) - (↑d)⁻¹ * y := by
   unfold Sieve.rem
   rw[multSum_eq x y z hz hx d hd]
-  simp [primeInterSieve, if_neg hd]
+  simp [primeInterSieve, ite_eq_right hd]
 
 theorem natCeil_le_self_add_one (x : ℝ) (hx : 0 ≤ x) : Nat.ceil x ≤ x + 1 := by
   calc (Nat.ceil x : ℝ) ≤ Nat.floor x + 1 := by exact_mod_cast Nat.ceil_le_floor_add_one x

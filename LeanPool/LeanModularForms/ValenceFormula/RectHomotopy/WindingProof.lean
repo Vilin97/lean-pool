@@ -70,7 +70,7 @@ lemma angle_lifted_ref_p₀_continuousOn :
       have h := ha.2; change a ∈ frontier (Iio T) at h
       rw [frontier_Iio, Set.mem_singleton_iff] at h; exact h
     subst ha_eq
-    rw [if_neg (lt_irrefl T), hval_at_T]
+    rw [ite_eq_right (lt_irrefl T), hval_at_T]
     apply Filter.Tendsto.mono_left _ (nhdsWithin_mono _ Set.inter_subset_right)
     exact Complex.continuous_ofReal.continuousAt.tendsto.comp tendsto_arg_w_left
   · intro a ha
@@ -78,7 +78,7 @@ lemma angle_lifted_ref_p₀_continuousOn :
       have h := ha.2; change a ∈ frontier (Iio T) at h
       rw [frontier_Iio, Set.mem_singleton_iff] at h; exact h
     subst ha_eq
-    rw [if_neg (lt_irrefl T), hval_at_T]
+    rw [ite_eq_right (lt_irrefl T), hval_at_T]
     apply Filter.Tendsto.mono_left _ (nhdsWithin_mono _ Set.inter_subset_right)
     rw [show {t : ℝ | ¬t < T} = Ici T from by ext; simp [not_lt]]
     exact lifted_angle_right_tendsto_neg_pi

@@ -432,11 +432,11 @@ elab "ptop" : tactic =>
 
 section TacticTests
 
-private def tacticTestPredicate (x : Unit) : Prop :=
-  tacticTestPredicate x
+private def tacticTestPredicate : Prop :=
+  tacticTestPredicate
   coinductive_fixpoint monotonicity fun _ _ hsim => hsim
 
-example (x : Unit) : tacticTestPredicate x := by
+example (x : Unit) : tacticTestPredicate := by
   revert x
   pcofix coinductionHypothesis
   intro x

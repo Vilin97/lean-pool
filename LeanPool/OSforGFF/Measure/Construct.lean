@@ -197,7 +197,7 @@ private lemma charFun_implies_gaussian
 -/
 private lemma charFun_eq_GJGeneratingFunctional
   (μ : ProbabilityMeasure FieldConfiguration) (φ : TestFunction) (t : ℝ)
-  [IsProbabilityMeasure (μ.toMeasure.map (distributionPairingCLM φ))] :
+   :
   charFun (μ.toMeasure.map (distributionPairingCLM φ)) t =
     GJGeneratingFunctional μ (t • φ) := by
   rw [charFun]

@@ -67,18 +67,18 @@ lemma factorization_roughPartAbove (k m p : ℕ) :
     simp_all)]
   rw [Finset.sum_apply']
   by_cases hp : p ∈ m.primeFactors.filter (fun q => ¬ q < k)
-  · rw [if_pos hp]
+  · rw [ite_eq_left hp]
     have hpprime : p.Prime := Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hp)
     rw [Finset.sum_eq_single p]
-    · rw [Nat.Prime.factorization_pow hpprime, Finsupp.single_apply, if_pos rfl]
+    · rw [Nat.Prime.factorization_pow hpprime, Finsupp.single_apply, ite_eq_left rfl]
     · simp_all
     · intro h; exact absurd hp h
-  · rw [if_neg hp]
+  · rw [ite_eq_right hp]
     apply Finset.sum_eq_zero
     intro q hq
     have hqprime : q.Prime := Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hq)
     have hqp : q ≠ p := by rintro rfl; exact hp hq
-    rw [Nat.Prime.factorization_pow hqprime, Finsupp.single_apply, if_neg hqp]
+    rw [Nat.Prime.factorization_pow hqprime, Finsupp.single_apply, ite_eq_right hqp]
 
 /-- If a prime divides the rough part, it is a prime factor of `m` and is `≥ k`. -/
 lemma prime_dvd_roughPartAbove_imp {k m p : ℕ} (hp : p.Prime) (hpdvd : p ∣ RoughPartAbove k m) :
@@ -92,7 +92,7 @@ lemma prime_dvd_roughPartAbove_imp {k m p : ℕ} (hp : p.Prime) (hpdvd : p ∣ R
   have hnot : p ∉ m.primeFactors.filter (fun q => ¬ q < k) := by
     simp_all
   have hfac := factorization_roughPartAbove k m p
-  rw [if_neg hnot] at hfac
+  rw [ite_eq_right hnot] at hfac
   omega
 
 /-- **Rough part of each term is powerful in a very bad interval.** -/
@@ -113,7 +113,7 @@ theorem roughPartAbove_powerful_of_block_powerful {k n i : ℕ}
   have hrough_mem : p ∈ (n + i).primeFactors.filter (fun q => ¬ q < k) := by
     rw [Finset.mem_filter]; exact ⟨hpmem, by omega⟩
   have hval_rough : 2 ≤ (RoughPartAbove k (n + i)).factorization p := by
-    rw [factorization_roughPartAbove k (n + i) p, if_pos hrough_mem]; exact hval_term
+    rw [factorization_roughPartAbove k (n + i) p, ite_eq_left hrough_mem]; exact hval_term
   have hRne : RoughPartAbove k (n + i) ≠ 0 := roughPartAbove_ne_zero k (n + i)
   exact (Nat.Prime.pow_dvd_iff_le_factorization hp hRne).mpr hval_rough
 

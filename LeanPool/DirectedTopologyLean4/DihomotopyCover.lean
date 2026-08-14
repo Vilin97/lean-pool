@@ -134,9 +134,9 @@ lemma coveredPartwise_exists (F : Dihomotopy f g) (hX : X₀ ∪ X₁ = univ) (X
     intro i
     rw [c_def]
     by_cases h : i = 0
-    · simp only [h, if_pos]
+    · simp only [h, ite_eq_left]
       exact F.continuous_toFun.isOpen_preimage X₀ X₀_open
-    · simp only [if_neg h]
+    · simp only [ite_eq_right h]
       exact F.continuous_toFun.isOpen_preimage X₁ X₁_open
   have h₂ : UnitSquare ⊆ (⋃ (i : ℕ), c i) := by
     intros x _

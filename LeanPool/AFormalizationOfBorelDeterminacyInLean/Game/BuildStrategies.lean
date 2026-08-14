@@ -50,10 +50,10 @@ lemma eq_planA (hQ : ∀ (x : planA.subtree) (hp : IsPosition x.val p),
   (tryAndElse planA planB).residual x = tryAndElse (planA.residual x) (planB.residual x) := by
   ext1 y hp; dsimp [tryAndElse, PreStrategy.residual]
   split_ifs with h h' h'
-  · exact (if_pos h').symm
+  · exact (ite_eq_left h').symm
   · obtain ⟨a, h⟩ := h; cases h' ⟨⟨a.1, by simpa using a.2⟩, h⟩
   · obtain ⟨a, h'⟩ := h'; cases h ⟨⟨a.1, by simpa using a.2⟩, h'⟩
-  · exact (if_neg h').symm
+  · exact (ite_eq_right h').symm
 end «tryAndElse»
 
 section «void»
@@ -350,7 +350,7 @@ lemma followUntilWon_body : body S.followUntilWon.subtree ≤ body S.subtree ∪
     have hc : ¬ G.WonPosition (S.followUntilWon.subtreeIncl (body.take n ⟨x, hx⟩)).val
         (p.residual (S.followUntilWon.subtreeIncl (body.take n ⟨x, hx⟩)).val) :=
       fun hw ↦ h' ⟨n, hw⟩
-    rwa [if_neg hc] at hmem
+    rwa [ite_eq_right hc] at hmem
 @[simp] lemma followUntilWon_isWinning : S.followUntilWon.IsWinning ↔ S.IsWinning :=
   ⟨sub_winning S.le_followUntilWon, fun h ↦ subset_trans S.followUntilWon_body (by simpa)⟩
 end «followUntilWon»

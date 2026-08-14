@@ -270,11 +270,11 @@ lemma rewind_turn {g n} :
     simp only [Fin.val_succ, Fin.val_castSucc] at ih ⊢
     by_cases hk : Even k_val
     · have h : ¬ Even (k_val + 1) := by grind
-      simp only [h, hk, if_false, if_true] at ih ⊢
+      simp only [h, hk, ite_false, ite_true] at ih ⊢
       simp only [← ih]
       exact rewind_turn_one_step
     · have h : Even (k_val + 1) := by grind
-      simp only [h, hk, if_true, if_false] at ih ⊢
+      simp only [h, hk, ite_true, ite_false] at ih ⊢
       have ih := congrArg other ih
       simp at ih
       simp only [← ih]
@@ -436,7 +436,7 @@ lemma rewind_history_correspondence_aux (Γ) (info : Sequent ⊕ RuleApp)
         (n + 1) h2 (by simpa using rec_h3) (by simpa using rec_h4) h6 rec_cone).1 rfl
     · have h : 2 * (n + 1) = 2 * n + 1 + 1 := by omega
       simp only [h]
-      simp only [reduceCtorEq, if_false, IsEmpty.forall_iff, and_true] at h3 h4 ⊢
+      simp only [reduceCtorEq, ite_false, IsEmpty.forall_iff, and_true] at h3 h4 ⊢
       unfold rewindHistory
       have for_termination_2 : Γs.tail.length + Rs.length < Γs.length + Rs.length := by
         cases Γs_def : Γs
@@ -502,10 +502,10 @@ def repNext (Γ : Sequent) {Δ : Sequent} {strat : Strategy coalgebraGame Prover
         have length := history_length_in_cone strat g.1 g.2.1
         have hlen := length.2 g.2.2
         have hfind := (Fin.find _ (List.mem_iff_get.1 rep)).2
-        simp only [g.2.2, reduceCtorEq, if_false]
+        simp only [g.2.2, reduceCtorEq, ite_false]
         omega
       have turn := @rewind_turn g.1 ⟨(2 * (Fin.find _ (List.mem_iff_get.1 rep)).1), hbound⟩
-      simp only [g.2.2, Nat.even_mul, even_two, true_or, if_true] at turn
+      simp only [g.2.2, Nat.even_mul, even_two, true_or, ite_true] at turn
       have hpos : repPos g rep = rewindHistory g.1
           ⟨2 * (Fin.find _ (List.mem_iff_get.1 rep)).1, hbound⟩ := rfl
       simp_all⟩
@@ -527,11 +527,11 @@ lemma rep_next_cor (Γ : Sequent) {Δ : Sequent} {strat : Strategy coalgebraGame
     try simp_all <;>
     try grind
   · have length := history_length_in_cone strat g.1 g.2.1
-    simp only [g.2.2, reduceCtorEq, if_false] at *
+    simp only [g.2.2, reduceCtorEq, ite_false] at *
     have := Fin.find_spec (List.mem_iff_get.1 rep)
     grind
   · have length := history_length_in_cone strat g.1 g.2.1
-    simp only [g.2.2, reduceCtorEq, if_false, gt_iff_lt] at *
+    simp only [g.2.2, reduceCtorEq, ite_false, gt_iff_lt] at *
     have := Fin.find_spec (List.mem_iff_get.1 rep)
     grind
 
@@ -981,6 +981,13 @@ def proverSequent (g : coalgebraGame.Pos) (h : coalgebraGame.turn g = Prover) :=
   | ⟨Sum.inl Γ, Γs, Rs⟩ => Γ
   | ⟨Sum.inr R, Γ :: Γs, Rs⟩ => False.elim (by
     simp_all)
+
+private lemma prover_sequent_eq_of_inl {g : coalgebraGame.Pos}
+    {h : coalgebraGame.turn g = Prover} {Γ Γs Rs}
+    (hg : (Sum.inl Γ, Γs, Rs) = g) :
+    proverSequent g h = Γ := by
+  cases hg
+  rfl
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 def firstSequent {Γ : Sequent} {strat : Strategy coalgebraGame Builder} :
@@ -1678,9 +1685,10 @@ lemma builder_win_strong {Δ : Sequent} (strat : Strategy coalgebraGame Builder)
       have eq : π.length - i - 1 = π.length - (i + 1 + 1) - 1 + 1 + 1 := by omega
       have P_turn : coalgebraGame.turn π[π.length - i - 1] = Prover := by
         simp_all
-      simp [←eq] at u₂_def
-      have eq_helper : proverSequent π[π.length - i - 1] P_turn = Γ' := by
-        grind [proverSequent]
+      have u₂_def' : (Sum.inl Γ', Γ :: Γs, R :: Rs) = π[π.length - i - 1] := by
+        simpa only [← eq] using u₂_def
+      have eq_helper : proverSequent π[π.length - i - 1] P_turn = Γ' :=
+        prover_sequent_eq_of_inl u₂_def'
       by_cases φ ∈ Γ'
       case pos φ_in =>
         exact builder_win_strong strat h ⟨π, ne, chain, max, head_cases, in_cone⟩

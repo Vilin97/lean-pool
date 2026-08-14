@@ -194,11 +194,11 @@ private lemma first_invariant_dvd_p_of_product (S : Matrix.SpecialLinearGroup (F
   have h_M00 : M 0 0 = S_ℤ 0 0 := by
     simp only [M, S_ℤ, dp, dpk, Matrix.mul_apply, Fin.sum_univ_two, Matrix.diagonal_apply,
       Matrix.cons_val_zero, Matrix.cons_val_one, show (1 : Fin 2) ≠ 0 from by decide,
-      if_false, if_true, mul_zero, add_zero, Matrix.cons_val_fin_one]; norm_num
+      ite_false, ite_true, mul_zero, add_zero, Matrix.cons_val_fin_one]; norm_num
   have h_M10 : M 1 0 = (p : ℤ) * S_ℤ 1 0 := by
     simp only [M, S_ℤ, dp, dpk, Matrix.mul_apply, Fin.sum_univ_two, Matrix.diagonal_apply,
       Matrix.cons_val_zero, Matrix.cons_val_one, show (1 : Fin 2) ≠ 0 from by decide,
-      if_false, if_true, mul_zero, zero_mul, add_zero, Matrix.cons_val_fin_one]; norm_num
+      ite_false, ite_true, mul_zero, zero_mul, add_zero, Matrix.cons_val_fin_one]; norm_num
   have h_cop : IsCoprime (S_ℤ 0 0) (S_ℤ 1 0) :=
     ⟨S.val 1 1, -(S.val 0 1), by
       have := S.prop; rw [Matrix.det_fin_two] at this; linarith⟩
@@ -577,7 +577,7 @@ lemma T_sum_one : TSum 1 = (1 : HeckeAlgebra 2) := by
   change ∑ a ∈ Nat.divisors 1, TAd a (1 / a) = 1
   simp only [Nat.divisors_one, Finset.sum_singleton, Nat.div_self one_pos]
   unfold TAd
-  rw [dif_pos ⟨one_pos, one_pos, dvd_refl 1⟩]
+  rw [dite_eq_left ⟨one_pos, one_pos, dvd_refl 1⟩]
   exact T_ad_one_one
 
 include hp in
@@ -919,11 +919,11 @@ lemma T_ad_mul_of_coprime (a b da db : ℕ)
 
 /-- When `TAd` conditions fail, the product is zero and so is the RHS. -/
 private lemma T_ad_mul_zero_of_not_dvd (a da : ℕ) (h : ¬(0 < a ∧ 0 < da ∧ a ∣ da))
-    (x : HeckeAlgebra 2) : TAd a da * x = 0 := by rw [show TAd a da = 0 from dif_neg h,
+    (x : HeckeAlgebra 2) : TAd a da * x = 0 := by rw [show TAd a da = 0 from dite_eq_right h,
       HA_zero_mul]
 
 private lemma T_ad_mul_zero_of_not_dvd' (b db : ℕ) (h : ¬(0 < b ∧ 0 < db ∧ b ∣ db))
-    (x : HeckeAlgebra 2) : x * TAd b db = 0 := by rw [show TAd b db = 0 from dif_neg h,
+    (x : HeckeAlgebra 2) : x * TAd b db = 0 := by rw [show TAd b db = 0 from dite_eq_right h,
       HA_mul_zero]
 
 /-- The multiplication map on `m.divisors ×ˢ n.divisors` is injective when `m` and `n`
@@ -970,14 +970,14 @@ theorem T_sum_mul_coprime (m n : ℕ+) (hcop : Nat.Coprime m n) :
       rwa [hM, hN, Nat.mul_div_cancel' hab.1.1, Nat.mul_div_cancel' hab.2.1]
     · rw [T_ad_mul_zero_of_not_dvd' b (N / b)
         (by push Not; intro _ _; exact hcb) (TAd a (M / a))]
-      symm; unfold TAd; rw [dif_neg]; push Not
+      symm; unfold TAd; rw [dite_eq_right]; push Not
       intro _ _ hdvd; apply hcb
       exact ((hcop.symm.coprime_dvd_left hab.2.1).coprime_dvd_right
         (Nat.div_dvd_of_dvd hab.1.1)).dvd_of_dvd_mul_left
         (dvd_trans (dvd_mul_left b a) hdvd)
   · rw [T_ad_mul_zero_of_not_dvd a (M / a)
       (by push Not; intro _ _; exact hca)]
-    symm; unfold TAd; rw [dif_neg]; push Not
+    symm; unfold TAd; rw [dite_eq_right]; push Not
     intro _ _ hdvd; apply hca
     exact ((hcop.coprime_dvd_left hab.1.1).coprime_dvd_right
       (Nat.div_dvd_of_dvd hab.2.1)).dvd_of_dvd_mul_right
@@ -1038,7 +1038,7 @@ lemma gcd_factor_prime_pow (q : ℕ) (hq : q.Prime) (a b : ℕ) (m' n' : ℕ+)
       Nat.factorization_eq_zero_of_not_dvd hqn, add_zero, min_zero]; rfl
   · rw [Nat.Prime.factorization_pow hq, Nat.Prime.factorization_pow hq,
       Nat.Prime.factorization_pow hq]; simp only [Finsupp.single_apply,
-      show q ≠ p' from Ne.symm hpq, if_false, zero_add]
+      show q ≠ p' from Ne.symm hpq, ite_false, zero_add]
 
 /-- RHS computation for the inner summand: TSumNat product equals the combined quotient. -/
 private lemma T_sum_mul_peel_prime_summand_rhs (q : ℕ) (hq : q.Prime) (a b : ℕ) (m' n' : ℕ+)

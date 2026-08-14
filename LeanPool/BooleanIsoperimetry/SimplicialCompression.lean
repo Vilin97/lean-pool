@@ -484,15 +484,15 @@ lemma downMap_injOn {N : ℕ} (i : Fin N) (A : Finset (Cube N)) :
   unfold downMap at h
   by_cases hcx : i ∈ x ∧ x.erase i ∉ A
   · by_cases hcy : i ∈ y ∧ y.erase i ∉ A
-    · rw [if_pos hcx, if_pos hcy] at h
+    · rw [ite_eq_left hcx, ite_eq_left hcy] at h
       have := congrArg (insert i) h
       rwa [Finset.insert_erase hcx.1, Finset.insert_erase hcy.1] at this
-    · rw [if_pos hcx, if_neg hcy] at h
+    · rw [ite_eq_left hcx, ite_eq_right hcy] at h
       rw [← h] at hy; exact (hcx.2 hy).elim
   · by_cases hcy : i ∈ y ∧ y.erase i ∉ A
-    · rw [if_neg hcx, if_pos hcy] at h
+    · rw [ite_eq_right hcx, ite_eq_left hcy] at h
       rw [h] at hx; exact (hcy.2 hx).elim
-    · rw [if_neg hcx, if_neg hcy] at h
+    · rw [ite_eq_right hcx, ite_eq_right hcy] at h
       exact h
 
 /-- `coordinateDown` is the image of the family under `downMap`. -/
@@ -504,19 +504,19 @@ lemma coordinateDown_eq_image {N : ℕ} (i : Fin N) (A : Finset (Cube N)) :
   constructor
   · rintro (⟨hyA, hcond⟩ | ⟨z, hz, rfl⟩)
     · refine ⟨y, hyA, ?_⟩
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨hiy, hey⟩
       rcases hcond with h | h
       · exact h hiy
       · exact hey h
-    · exact ⟨z, hz.1, by rw [if_pos hz.2]⟩
+    · exact ⟨z, hz.1, by rw [ite_eq_left hz.2]⟩
   · rintro ⟨z, hz, rfl⟩
     by_cases hcond : i ∈ z ∧ z.erase i ∉ A
     · right
-      rw [if_pos hcond]
+      rw [ite_eq_left hcond]
       exact ⟨z, ⟨hz, hcond⟩, rfl⟩
     · left
-      rw [if_neg hcond]
+      rw [ite_eq_right hcond]
       refine ⟨hz, ?_⟩
       rw [not_and_or, not_not] at hcond
       exact hcond
@@ -551,7 +551,7 @@ lemma coordinateDown_potential_lt_of_ne {N : ℕ} (i : Fin N) (A : Finset (Cube 
   refine Finset.sum_lt_sum (fun x _ => downMap_rank_le i A x) ⟨x, hx, ?_⟩
   unfold downMap at hxne ⊢
   split at hxne
-  · next hc => rw [if_pos hc]; exact rank_strictMono (simplicialLt_erase_self hc.1)
+  · next hc => rw [ite_eq_left hc]; exact rank_strictMono (simplicialLt_erase_self hc.1)
   · next => exact absurd rfl hxne
 
 /-- Within-layer colexicographic shift. It moves an element to a strictly earlier

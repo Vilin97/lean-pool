@@ -190,7 +190,7 @@ lemma _eq_noise_operator : T = @noiseOperator n (-1/3) := by
     intro i
     by_cases h : x i = y i
     · simp only [h, not_and, forall_const, Classical.ite_not, Fin.sum_univ_two, Fin.isValue, ne_eq,
-        not_true_eq_false, if_false, add_zero]
+        not_true_eq_false, ite_false, add_zero]
       induction y i using Fin.cases with
       | zero => simp
       | succ k => simp [Fin.fin_one_eq_zero]

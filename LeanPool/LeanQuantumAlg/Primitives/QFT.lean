@@ -195,7 +195,7 @@ theorem QFT_mem_unitaryGroup (n : ℕ) :
   rw [← Finset.mul_sum]
   by_cases hjk : j = k
   · simp_all
-  · rw [if_neg hjk]
+  · rw [ite_eq_right hjk]
     have hd : ¬ ((2 ^ n : ℕ) : ℤ) ∣ ((k.val : ℤ) - (j.val : ℤ)) := by
       intro hdvd
       have h0 : (k.val : ℤ) - (j.val : ℤ) = 0 :=

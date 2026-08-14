@@ -503,7 +503,7 @@ lemma cauchyPrincipalValueIntegrandOn_eq_of_far
     cauchyPrincipalValueIntegrandOn S0 f γ ε t =
       f (γ t) * deriv γ t := by
   unfold cauchyPrincipalValueIntegrandOn
-  rw [if_neg]; push Not; intro s hs; linarith [h_far s hs]
+  rw [ite_eq_right]; push Not; intro s hs; linarith [h_far s hs]
 
 lemma cauchyPrincipalValueIntegrandOn_empty
     (f : ℂ → ℂ) (γ : ℝ → ℂ) (ε : ℝ) (t : ℝ) :

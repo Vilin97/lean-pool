@@ -2139,7 +2139,7 @@ private lemma hasDerivWithinAt_Icc_self {E : Type*}
 invariant `‖p - z₀.1‖ ≤ a/2 + V_max·c`, the global `hbound` (radius `R` from
 the tight `hR`) restricts to the moving ball `closedBall p (3a/2)`. -/
 private lemma charFlowTight_window_forceBound
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (ρ : ℝ → Measure (PhysSpace d))
     (z₀ : PhaseSpace d) (a M V_max R : NNReal) (T : ℝ) (hT : 0 ≤ T)
@@ -2184,7 +2184,7 @@ on `[c, b]` with force bounded by `Mr`, then `‖(β s).2‖` grows at most line
 from its entry value.  Shared by the velocity- and position-invariant steps of
 `charFlowTight_window_step`. -/
 private lemma charFlowTight_window_velocity_carry
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (ρ : ℝ → Measure (PhysSpace d))
     (β : ℝ → PhaseSpace d) (c b : ℝ) (hcb : c ≤ b) (Mr : ℝ)
@@ -2216,7 +2216,7 @@ a left solution on `[0, c]` and a right solution on `[c, b]` (agreeing at the
 join) solves the characteristic ODE system on all of `[0, b]`, via
 `HasDerivWithinAt.union` on `Icc 0 c ∪ Icc c b = Icc 0 b`. -/
 private lemma charFlowTight_piecewise_ode
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (ρ : ℝ → Measure (PhysSpace d))
     (γL β : ℝ → PhaseSpace d)
@@ -2332,7 +2332,7 @@ tight invariants on `[0, c]` to `[0, c + δ']` via
 position-drift invariants (`charFlowTight_window_velocity_carry` +
 `vlasov_window_position_bound`). -/
 private lemma charFlowTight_window_step
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (ρ : ℝ → Measure (PhysSpace d))
@@ -2443,7 +2443,7 @@ private lemma charFlowTight_window_step
 `charFlowTight_window_step`, carrying the tight velocity/position invariants
 through the induction and discarding them at the end. -/
 private lemma charFlowTight_perZ_trajectory
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (gradW : PhysSpace d → PhysSpace d)
     (L : NNReal) (hL : LipschitzWith L gradW)
     (ρ : ℝ → Measure (PhysSpace d))
@@ -2547,7 +2547,7 @@ position drift is `M·T²` (not `M·(T+1)²`).  Consumers' R-selection then need
 `L·T² < 1`, satisfiable for any `L` (threshold `T < 1/√L`), dissolving the `L<1`
 restriction. -/
 theorem exists_vlasov_characteristicFlow_tight
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (_hgradW : ∀ x, gradW x = gradient W x)
@@ -2652,7 +2652,7 @@ theorem exists_vlasov_characteristicFlow_tight
               (Set.Icc (0 : ℝ) ((N : ℝ) * δ')) t := by
       intro z hz t ht
       have h_func_eq : γ_func z = Classical.choose (h_perZ z hz) := by
-        simp only [γ_func, dif_pos hz]
+        simp only [γ_func, dite_eq_left hz]
       have h_ode := (Classical.choose_spec (h_perZ z hz)).2
       have h_pos_dw := (h_ode t ht).1
       have h_vel_dw := (h_ode t ht).2
@@ -2675,7 +2675,7 @@ theorem exists_vlasov_characteristicFlow_tight
       have h_init : Classical.choose (h_perZ z hz) 0 = z :=
         (Classical.choose_spec (h_perZ z hz)).1
       have h_func_eq : γ_func z = Classical.choose (h_perZ z hz) := by
-        simp only [γ_func, dif_pos hz]
+        simp only [γ_func, dite_eq_left hz]
       refine ⟨?_, ?_⟩
       · change (γ_func z 0).1 = z.1
         rw [h_func_eq, h_init]
@@ -4441,7 +4441,7 @@ existence-bound on `T` driven by `L·T² < 1`.
 The forward-iteration continuation extends to arbitrary T via shifted
 initial data; the small-T regime here is where the contraction operates. -/
 theorem exists_vlasov_trajectory
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
@@ -4659,7 +4659,7 @@ doesn't propagate continuity-in-z.  A measurable variant
 the analogous question for the ball-localized flow; a parallel
 `_global_smallT_measurable` companion can be added when needed. -/
 theorem exists_vlasov_characteristicFlow_global_smallT
-    {d : ℕ} [NeZero d]
+    {d : ℕ}
     (W : PhysSpace d → ℝ)
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
@@ -6697,7 +6697,7 @@ theorem picard_iterate_exists_limit {d : ℕ} [NeZero d]
   have hρ_spec : ∀ t (ht : t ∈ Set.Icc (0 : ℝ) T),
       ρ_lim t = Classical.choose (h_per_t t ht) := by
     intro t ht
-    simp only [ρ_lim, dif_pos ht]
+    simp only [ρ_lim, dite_eq_left ht]
   -- Step 5: verify the four VlasovMeasureCurve fields.
   -- isProb: universal in t.
   have h_isProb : ∀ t, IsProbabilityMeasure (ρ_lim t) := by
@@ -6705,7 +6705,7 @@ theorem picard_iterate_exists_limit {d : ℕ} [NeZero d]
     by_cases ht : t ∈ Set.Icc (0 : ℝ) T
     · rw [hρ_spec t ht]
       exact (Classical.choose_spec (h_per_t t ht)).1
-    · simp only [ρ_lim, dif_neg ht]
+    · simp only [ρ_lim, dite_eq_right ht]
       exact (x 0).isProb t
   -- hasMoment: from the placeholder's strengthened conclusion.
   have h_hasMoment : ∀ t ∈ Set.Icc (0 : ℝ) T, ∫ y, ‖y‖ ∂(ρ_lim t) ≤ M t := by

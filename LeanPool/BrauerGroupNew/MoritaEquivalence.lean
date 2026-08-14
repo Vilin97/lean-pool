@@ -205,7 +205,7 @@ def matrix.unitIsoInv :
         · simp_all
         · apply Finset.sum_eq_zero
           intro j _
-          rw [if_neg]
+          rw [ite_eq_right]
           tauto
       map_add' := by
         rintro (x : X) (y : X)
@@ -258,7 +258,7 @@ def matrix.unitIso :
       simp only [single, of_apply, ite_smul, one_smul, zero_smul, true_and]
       split_ifs with h
       · simpa only [h, true_and] using (Fintype.sum_ite_eq i fun j ↦ x j)
-      · simp only [h, false_and, if_false, Finset.sum_const_zero]
+      · simp only [h, false_and, ite_false, Finset.sum_const_zero]
     · symm
       apply Finset.sum_eq_zero
       intro j _

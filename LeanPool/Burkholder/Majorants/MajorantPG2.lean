@@ -650,7 +650,7 @@ private lemma uA1_eq_smooth_of_nonneg (p : ℝ) (hp : 2 ≤ p) (x y : ℝ) (hx :
   have hexp_ne : p - 1 ≠ 0 := by linarith
   unfold uA1
   rcases hx.lt_or_eq with hxpos | hxeq
-  · exact if_pos hxpos
+  · exact ite_eq_left hxpos
   · have hx0 : x = 0 := hxeq.symm
     subst hx0
     simp [Real.zero_rpow hexp_ne]
@@ -678,7 +678,7 @@ private lemma uA1_eq_zero_on_boundary (p x : ℝ) (hp : 2 ≤ p) (hx : 0 < x) :
   have hpStar : pStar p = p := pStar_eq_self_of_two_le p hp
   have hp_pos : 0 < p := by linarith
   unfold uA1
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
   have hfactor : x - pStar p * (x - a p * x) / 2 = 0 := by
     simp only [a, hpStar]
     field_simp [hp_pos.ne']
@@ -2251,7 +2251,7 @@ private lemma concaveOn_uA1_in_y (p : ℝ) (hp : 2 ≤ p) (x : ℝ) :
     let a := alpha p * x ^ (p - 1) * x - b * x
     have hcoeff : ∀ y, uA1 p x y = a + b * y := by
       intro y
-      simp only [uA1, if_pos hx, hpStar, a, b]
+      simp only [uA1, ite_eq_left hx, hpStar, a, b]
       change alpha p * x ^ (p - 1) * (x - p * (x - y) / 2) =
            alpha p * x ^ (p - 1) * x - alpha p * x ^ (p - 1) * p / 2 * x +
            alpha p * x ^ (p - 1) * p / 2 * y
@@ -7705,7 +7705,7 @@ private lemma abs_uA1_le_growth
       |uA1 p x y|
           = |alpha p| * Real.rpow x (p - 1) *
               |x - pStar p * (x - y) / 2| := by
-            simp only [uA1, hxpos, if_true]
+            simp only [uA1, hxpos, ite_true]
             calc
               |alpha p * Real.rpow x (p - 1) *
                   (x - pStar p * (x - y) / 2)|
@@ -8015,7 +8015,7 @@ private lemma abs_DyuA1_le_growth
     calc
       |DyuA1 p x y|
           = |alpha p| * Real.rpow x (p - 1) * (|pStar p| / 2) := by
-            simp only [DyuA1, hxpos, if_true]
+            simp only [DyuA1, hxpos, ite_true]
             calc
               |alpha p * Real.rpow x (p - 1) * (pStar p / 2)|
                   = |alpha p| * |Real.rpow x (p - 1)| * |pStar p / 2| := by
@@ -8055,7 +8055,7 @@ private lemma abs_DxvGeTwo_le_growth_on_closureA2
               |Real.rpow (p - 1) p| * (|p| / 2) *
                 Real.rpow |(x - y) / 2| (p - 1) := by
             unfold DxvGeTwo
-            simp only [hxpos, if_true]
+            simp only [hxpos, ite_true]
             calc
               |Real.rpow |(x + y) / 2| (p - 1) * (p / 2) -
                   Real.rpow (p - 1) p * Real.rpow |(x - y) / 2| (p - 1) *
@@ -8142,7 +8142,7 @@ private lemma abs_DyvGeTwo_le_growth_on_closureA2
               |Real.rpow (p - 1) p| * (|p| / 2) *
                 Real.rpow |(x - y) / 2| (p - 1) := by
             unfold DyvGeTwo
-            simp only [hxpos, if_true]
+            simp only [hxpos, ite_true]
             calc
               |Real.rpow |(x + y) / 2| (p - 1) * (p / 2) +
                   Real.rpow (p - 1) p * Real.rpow |(x - y) / 2| (p - 1) *

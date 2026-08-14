@@ -92,7 +92,7 @@ theorem compBasisSymm_var_matches_Si :
       have hGoal' := hGoal
       dsimp [SiIntGoal] at hGoal'
       have hSel := hGoal'
-      rw [if_pos hFix] at hSel
+      rw [ite_eq_left hFix] at hSel
       simpa [s, g, s', D'] using hSel
     have hEqFrac :
         ((compBasisIntEntry (r := r) (d := varOrbit i) p q : Int) : Q) /
@@ -126,7 +126,7 @@ theorem compBasisSymm_var_matches_Si :
       compBasisSymm r (varOrbit i) p q
           = (compBasis r (varOrbit i)) p q := by
                 dsimp [compBasisSymm]
-                rw [if_pos hFix]
+                rw [ite_eq_left hFix]
       _ = ((compBasisIntEntry (r := r) (d := varOrbit i) p q : Int) : Q) /
             ((basisDen r : Q) * (basisDen r : Q)) := by
             simpa using (compBasis_entry_eq_div (r := r) (d := varOrbit i) (p := p) (q := q))
@@ -142,7 +142,7 @@ theorem compBasisSymm_var_matches_Si :
       have hGoal' := hGoal
       dsimp [SiIntGoal] at hGoal'
       have hSel := hGoal'
-      rw [if_neg hFix] at hSel
+      rw [ite_eq_right hFix] at hSel
       simpa [s, g, s', D'] using hSel
     have hEqFrac :
         (((compBasisIntEntry (r := r) (d := varOrbit i) p q +

@@ -76,11 +76,11 @@ lemma semigroupGapDecomposition_aux (S : NumericalSemigroup) (n : ℕ) :
   simp only [Pi.one_apply]
   by_cases h : n ∈ S.carrier
   · simp only [decide_eq_true_eq, h, ↓reduceIte]
-    rw [if_neg]
+    rw [ite_eq_right]
     · ring
     · rw [mem_gaps_iff_not_mem_carrier]; exact not_not.mpr h
   · simp only [decide_eq_true_eq, h, ↓reduceIte]
-    rw [if_pos (by rw [mem_gaps_iff_not_mem_carrier]; exact h)]
+    rw [ite_eq_left (by rw [mem_gaps_iff_not_mem_carrier]; exact h)]
     ring
 
 theorem semigroupGapDecomposition (S : NumericalSemigroup) :
@@ -392,12 +392,12 @@ lemma numeratorIdentity_coeff {S : NumericalSemigroup} (G : NumericalSemigroupGe
     (PowerSeries.coeff n) (G.hilbertNumerator.map (Int.castRingHom ℚ) : PowerSeries ℚ) := by
   by_cases h : n < G.hilbertNumeratorDegBound
   · -- Case n < bound: use the formula
-    rw [coeff_mul_hilbert_product, coeff_hilbertNumerator_formula, if_pos h]
+    rw [coeff_mul_hilbert_product, coeff_hilbertNumerator_formula, ite_eq_left h]
     simpa only [NumericalSemigroup.hilbertSeries_coeff] using sum_over_semigroup_eq_diff G n
   · -- Case n >= bound: both sides are 0
     push Not at h
     rw [coeff_eq_zero_of_large G n h]
-    rw [coeff_hilbertNumerator_formula, if_neg (by omega)]
+    rw [coeff_hilbertNumerator_formula, ite_eq_right (by omega)]
 
 theorem numeratorIdentity {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) :
     S.hilbertSeries * (G.productPolynomial.map (Int.castRingHom ℚ) : PowerSeries ℚ) =
@@ -1185,7 +1185,7 @@ lemma one_sub_X_pow_term_eq_zero (k n j : ℕ) (_hk : 0 < k) (hn : 1 ≤ n)
     simp [zero_pow (by omega : n ≠ 0)]
   · have h₈ : (1 - Polynomial.X ^ k : Polynomial ℤ).coeff j = 0 := by
       simp only [Polynomial.coeff_sub, Polynomial.coeff_one, Polynomial.coeff_X_pow,
-        if_neg h, if_neg hj_ne, sub_self]
+        ite_eq_right h, ite_eq_right hj_ne, sub_self]
     simp_all
 
 lemma one_sub_X_pow_term_at_k (k n : ℕ) (hk : 0 < k) :
@@ -1517,7 +1517,7 @@ lemma binomial_sum_minus_j_pow (j n : ℕ) :
   simp only [↓reduceIte, zero_add]
   have hne : ∀ x ∈ (Finset.range n.succ \ {0}), x ≠ 0 := by
     simp [Finset.mem_sdiff, Finset.mem_singleton]
-  rw [Finset.sum_congr rfl (fun x hx => if_neg (hne x hx))]
+  rw [Finset.sum_congr rfl (fun x hx => ite_eq_right (hne x hx))]
   rw [Finset.sum_eq_add_sum_sdiff_singleton 0 _
       (fun hnot => absurd (Finset.mem_range.mpr (Nat.zero_lt_succ n)) hnot)] at h
   simp only [Nat.choose_zero_right, Nat.cast_one, one_mul, Nat.sub_zero] at h
@@ -1624,7 +1624,7 @@ lemma factor_neg_choose_div_factorial (D n : ℕ) (coeff : ℕ → ℚ) :
   intro k _
   by_cases hk0 : k = 0
   · simp [hk0]
-  · rw [if_neg hk0, if_neg hk0]
+  · rw [ite_eq_right hk0, ite_eq_right hk0]
     have hfac : (n.factorial : ℚ) ≠ 0 := by positivity
     field_simp
 

@@ -121,12 +121,12 @@ theorem bijective_of_injective_on_subset {A B : ZFSet}
       use x, C_sub x_mem_Cn
       rw [lambda_spec]
       refine ⟨C_sub x_mem_Cn, yB, ?_⟩
-      rw [dite_cond_eq_true <| eq_true ⟨n, x_mem_Cn⟩,
+      rw [dite_eq_left_of_eq_true <| eq_true ⟨n, x_mem_Cn⟩,
         fapply.of_pair (is_func_is_pfunc hu) x_y_u]
     · use y, B_sub yB
       rw [lambda_spec]
       refine ⟨B_sub yB, yB, ?_⟩
-      rw [dite_cond_eq_false <| eq_false y_mem_C]
+      rw [dite_eq_right_of_eq_false <| eq_false y_mem_C]
   use v, hv, v_inj, v_surj
 /--
 Cantor–Bernstein theorem: if there are injective functions
@@ -373,7 +373,7 @@ theorem isIso_of_funs {A B C D : ZFSet} (h : A ≅ᶻ C) (h' : B ≅ᶻ D) : A.f
     have hg : A.IsFunc B g := by
       apply lambda_isFunc
       intro a ha
-      rw [dite_cond_eq_true (eq_true ha),
+      rw [dite_eq_left_of_eq_true (eq_true ha),
         Image_singleton_eq_fapply hF ha,
         Image_singleton_eq_fapply hf (by apply fapply_mem_range),
         Image_singleton_eq_fapply Ginv_isfunc (by apply fapply_mem_range),
@@ -384,9 +384,9 @@ theorem isIso_of_funs {A B C D : ZFSet} (h : A ≅ᶻ C) (h' : B ≅ᶻ D) : A.f
     · simp_all
     · rw [lambda_spec]
       refine ⟨mem_funs.mpr hg, mem_funs.mpr hf, ?_⟩
-      · rw [dite_cond_eq_true (eq_true hg.1), lambda_eta hf, lambda_ext_iff]
+      · rw [dite_eq_left_of_eq_true (eq_true hg.1), lambda_eta hf, lambda_ext_iff]
         · intro c hc
-          rw [dite_cond_eq_true (eq_true hc)]
+          rw [dite_eq_left_of_eq_true (eq_true hc)]
           rw [Image_singleton_eq_fapply (inv_is_func_of_bijective Fbij) hc,
             Image_singleton_eq_fapply hg (by apply fapply_mem_range),
             Image_singleton_eq_fapply hG (by apply fapply_mem_range),
@@ -407,7 +407,7 @@ theorem isIso_of_funs {A B C D : ZFSet} (h : A ≅ᶻ C) (h' : B ≅ᶻ D) : A.f
             rw [mem_inv] at ac_F
             rw [lambda_spec] at ab_g
             obtain ⟨-, -, b_eq⟩ := ab_g
-            rw [dite_cond_eq_true (eq_true aA)] at b_eq
+            rw [dite_eq_left_of_eq_true (eq_true aA)] at b_eq
             have Fa := fapply.of_pair (is_func_is_pfunc hF) ac_F
             have Fc := fapply.of_pair (is_func_is_pfunc hf) h
             conv at b_eq =>
@@ -423,7 +423,7 @@ theorem isIso_of_funs {A B C D : ZFSet} (h : A ≅ᶻ C) (h' : B ≅ᶻ D) : A.f
             set a := Classical.choose ac_Finv
             rw [lambda_spec] at ab_g
             obtain ⟨-, -, b_eq⟩ := ab_g
-            rw [dite_cond_eq_true (eq_true aA)] at b_eq
+            rw [dite_eq_left_of_eq_true (eq_true aA)] at b_eq
             rw [mem_inv] at ac_F
             have Fa := fapply.of_pair (is_func_is_pfunc hF) ac_F
             have Gb := fapply.of_pair (is_func_is_pfunc hG) h
@@ -449,11 +449,11 @@ theorem isIso_of_funs {A B C D : ZFSet} (h : A ≅ᶻ C) (h' : B ≅ᶻ D) : A.f
     · rintro g' ⟨hg', g'f_ξ⟩
       rw [lambda_spec] at g'f_ξ
       obtain ⟨-,-,f_eq⟩ := g'f_ξ
-      rw [dite_cond_eq_true (eq_true (by rw [mem_funs] at hg'; exact hg'.1))] at f_eq
+      rw [dite_eq_left_of_eq_true (eq_true (by rw [mem_funs] at hg'; exact hg'.1))] at f_eq
       subst f_eq
       rw [lambda_eta (mem_funs.mp hg'), lambda_ext_iff]
       · intro a ha
-        simp only [dite_cond_eq_true (eq_true ha)]
+        simp only [dite_eq_left_of_eq_true (eq_true ha)]
         rw [Image_singleton_eq_fapply hF ha,
           Image_singleton_eq_fapply hf (by apply fapply_mem_range),
           Image_singleton_eq_fapply Ginv_isfunc (by apply fapply_mem_range),
@@ -471,11 +471,8 @@ theorem isIso_of_funs {A B C D : ZFSet} (h : A ≅ᶻ C) (h' : B ≅ᶻ D) : A.f
         rw [lambda_spec] at dc_eq
         obtain ⟨-, -, d_eq⟩ := dc_eq
         conv_lhs at d_eq => rw [←d_def]
-        rw [←mem_inv] at ac_F
+        rw [←mem_inv (is_func_is_pfunc hF).1] at ac_F
         conv at ac_F =>
-          conv =>
-            lhs
-            change inv F
           rw [←c_def]
         conv at d_eq =>
           conv =>
@@ -533,9 +530,9 @@ theorem isIso_of_funs {A B C D : ZFSet} (h : A ≅ᶻ C) (h' : B ≅ᶻ D) : A.f
             · exact hG.1 hd |> pair_mem_prod.mp |>.2
             · rwa [←Image_of_singleton_pair_mem_iff hG]
           rwa [a_def, b_def, d_def, sInter_singleton]
-        · rw [dite_cond_eq_true (eq_true hf.1)]
+        · rw [dite_eq_left_of_eq_true (eq_true hf.1)]
       · intro g hg
-        rw [lambda_spec, dite_cond_eq_true (eq_true hf.1)] at hg
+        rw [lambda_spec, dite_eq_left_of_eq_true (eq_true hf.1)] at hg
         exact hg.2.2
 theorem isIso_powerset_char_pred {A : ZFSet} : A.powerset ≅ᶻ A.funs 𝔹 := by
   apply isIso_symm
@@ -658,7 +655,7 @@ theorem currify_is_func {A B C : ZFSet} (f : ZFSet)
   (hf : (A.prod B).IsFunc C f := by zfun) : A.IsFunc (B.funs C) (currify f hf) := by
   apply lambda_isFunc
   intro x hx
-  rw [dite_cond_eq_true (eq_true hx), mem_funs]
+  rw [dite_eq_left_of_eq_true (eq_true hx), mem_funs]
   and_intros
   · exact lambda_subset
   · intro y hy
@@ -667,9 +664,9 @@ theorem currify_is_func {A B C : ZFSet} (f : ZFSet)
     and_intros <;> beta_reduce
     · rw [lambda_spec]
       refine ⟨hy, hf.1 hz |> pair_mem_prod.mp |>.2, ?_⟩
-      rw [dite_cond_eq_true (eq_true hy), fapply.of_pair (is_func_is_pfunc hf) hz]
+      rw [dite_eq_left_of_eq_true (eq_true hy), fapply.of_pair (is_func_is_pfunc hf) hz]
     · intro w hw
-      rw [lambda_spec, dite_cond_eq_true (eq_true hy)] at hw
+      rw [lambda_spec, dite_eq_left_of_eq_true (eq_true hy)] at hw
       rw [hw.2.2]
       apply z_unq
       apply fapply.def
@@ -702,20 +699,19 @@ theorem currify_of_uncurrify {A B C : ZFSet} (f : ZFSet)
     simp only [currify, uncurrify, lambda_eta hf]
     rw [lambda_ext_iff]
     · intro x hx
-      simp_rw [dite_cond_eq_true (eq_true hx)]
-      conv =>
-        enter [2,1]
-        change ?f_x
-      rw [lambda_eta (mem_funs.mp ?f_x.2), lambda_ext_iff]
+      simp_rw [dite_eq_left_of_eq_true (eq_true hx)]
+      rw [lambda_eta (mem_funs.mp (@ᶻf ⟨x, by rwa [is_func_dom_eq hf]⟩).2),
+        lambda_ext_iff]
       · intro y hy
-        simp_rw [dite_cond_eq_true (eq_true hy)]
+        simp_rw [dite_eq_left_of_eq_true (eq_true hy)]
         conv_lhs =>
           rw [
             fapply_lambda
               (by
                 simp_all)
               (by rw [pair_mem_prod]; exact ⟨hx, hy⟩),
-            dite_cond_eq_true (eq_true (by simp only [π₁_pair, π₂_pair, hx, hy, and_self]))]
+            dite_eq_left_of_eq_true
+              (eq_true (by simp only [π₁_pair, π₂_pair, hx, hy, and_self]))]
           simp only [π₁_pair, π₂_pair]
         congr 2
         · simp only [π₁_pair]
@@ -725,7 +721,7 @@ theorem currify_of_uncurrify {A B C : ZFSet} (f : ZFSet)
           · apply proof_irrel_heq
       · simp_all
     · intro _ hx
-      rw [dite_cond_eq_true (eq_true hx)]
+      rw [dite_eq_left_of_eq_true (eq_true hx)]
       apply mem_funs_of_lambda
       simp_all
 theorem uncurrify_of_currify {A B C : ZFSet} (g : ZFSet)
@@ -735,9 +731,10 @@ theorem uncurrify_of_currify {A B C : ZFSet} (g : ZFSet)
     rw [lambda_ext_iff]
     · intro ab hab
       obtain ⟨a, ha, b, hb, rfl⟩ := mem_prod.mp hab
-      simp_rw [dite_cond_eq_true (eq_true hab), π₂_pair]
+      simp_rw [dite_eq_left_of_eq_true (eq_true hab), π₂_pair]
       conv_lhs =>
-        rw [dite_cond_eq_true (eq_true (by simp only [π₁_pair, ha, π₂_pair, hb, and_self]))]
+        rw [dite_eq_left_of_eq_true
+          (eq_true (by simp only [π₁_pair, ha, π₂_pair, hb, and_self]))]
         rw [fapply_eq_Image_singleton (by rw [←mem_funs]; apply fapply_mem_range) hb]
         conv =>
           enter [1,1]
@@ -745,15 +742,16 @@ theorem uncurrify_of_currify {A B C : ZFSet} (g : ZFSet)
           rw [
             fapply_lambda (by
                 intro _ h
-                rw [dite_cond_eq_true (eq_true h)]
+                rw [dite_eq_left_of_eq_true (eq_true h)]
                 apply mem_funs_of_lambda
                 simp_all
               ) ha,
-            dite_cond_eq_true (eq_true ha)]
+            dite_eq_left_of_eq_true (eq_true ha)]
         rw [←fapply_eq_Image_singleton (lambda_isFunc (fun h ↦ by
               simp_all)) hb,
-          fapply_lambda (fun h ↦ by rw [dite_cond_eq_true (eq_true h)]; apply fapply_mem_range) hb,
-          dite_cond_eq_true (eq_true hb)]
+          fapply_lambda
+            (fun h ↦ by rw [dite_eq_left_of_eq_true (eq_true h)]; apply fapply_mem_range) hb,
+          dite_eq_left_of_eq_true (eq_true hb)]
     · simp_all
 open Classical in
 theorem isIso_curry {A B C : ZFSet} :
@@ -769,12 +767,12 @@ theorem isIso_curry {A B C : ZFSet} :
   have hcurry : IsFunc ((A.prod B).funs C) (A.funs (B.funs C)) curry := by
     apply lambda_isFunc
     intro f hf
-    rw [dite_cond_eq_true (eq_true hf), mem_funs]
+    rw [dite_eq_left_of_eq_true (eq_true hf), mem_funs]
     apply currify_is_func
   have huncurry : IsFunc (A.funs (B.funs C)) ((A.prod B).funs C) uncurry := by
     apply lambda_isFunc
     intro g hg
-    rw [dite_cond_eq_true (eq_true hg), mem_funs]
+    rw [dite_eq_left_of_eq_true (eq_true hg), mem_funs]
     apply uncurrify_is_func
   have l_inv : (uncurry ∘ᶻ curry) = 𝟙((A.prod B).funs C) := by
     rw [is_func_ext_iff (IsFunc_of_composition_IsFunc huncurry hcurry) Id.IsFunc]
@@ -786,20 +784,20 @@ theorem isIso_curry {A B C : ZFSet} :
       rw [
         fapply_lambda (by
             intro _ h
-            rw [dite_cond_eq_true (eq_true h), mem_funs]
+            rw [dite_eq_left_of_eq_true (eq_true h), mem_funs]
             apply uncurrify_is_func
           ) (fapply_mem_range _ _),
-        dite_cond_eq_true (eq_true (fapply_mem_range _ _))]
+        dite_eq_left_of_eq_true (eq_true (fapply_mem_range _ _))]
       conv =>
         enter [1]
         unfold curry
         rw [
           fapply_lambda (by
               intro _ h
-              rw [dite_cond_eq_true (eq_true h), mem_funs]
+              rw [dite_eq_left_of_eq_true (eq_true h), mem_funs]
               apply currify_is_func
             ) hf,
-          dite_cond_eq_true (eq_true hf)]
+          dite_eq_left_of_eq_true (eq_true hf)]
       rw [uncurrify_of_currify f (mem_funs.mp hf)]
   have r_inv : (curry ∘ᶻ uncurry) = 𝟙(A.funs (B.funs C)) := by
     rw [is_func_ext_iff (IsFunc_of_composition_IsFunc hcurry huncurry) Id.IsFunc]
@@ -811,20 +809,20 @@ theorem isIso_curry {A B C : ZFSet} :
       rw [
         fapply_lambda (by
             intro _ h
-            rw [dite_cond_eq_true (eq_true h), mem_funs]
+            rw [dite_eq_left_of_eq_true (eq_true h), mem_funs]
             apply currify_is_func
           ) (fapply_mem_range _ _),
-        dite_cond_eq_true (eq_true (fapply_mem_range _ _))]
+        dite_eq_left_of_eq_true (eq_true (fapply_mem_range _ _))]
       conv =>
         enter [1]
         unfold uncurry
         rw [
           fapply_lambda (by
               intro _ h
-              rw [dite_cond_eq_true (eq_true h), mem_funs]
+              rw [dite_eq_left_of_eq_true (eq_true h), mem_funs]
               apply uncurrify_is_func
             ) hg,
-          dite_cond_eq_true (eq_true hg)]
+          dite_eq_left_of_eq_true (eq_true hg)]
       rw [currify_of_uncurrify g (mem_funs.mp hg)]
   exact isIso_of_two_sided_inverse l_inv r_inv
 end ZFSet

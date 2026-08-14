@@ -329,8 +329,8 @@ lemma iteratedDeriv_sq_mul (f : ℂ → ℂ) (hf : AnalyticAt ℂ f 0) (m : ℕ)
       Finset.sum_ite_eq' (Finset.range (m + 1)) 2
         (fun _ => (↑(m.choose 2) : ℂ) * 2 * iteratedDeriv (m - 2) f 0)]
   by_cases hm2 : 2 ∈ Finset.range (m + 1)
-  · rw [if_pos hm2, Nat.cast_choose_two]; ring
-  · rw [if_neg hm2]
+  · rw [ite_eq_left hm2, Nat.cast_choose_two]; ring
+  · rw [ite_eq_right hm2]
     have hlt : m < 2 := by simpa [Finset.mem_range] using hm2
     interval_cases m <;> simp
 

@@ -98,7 +98,7 @@ lemma chainLen_pos (k : Nat) : 0 < chainLen k := by
   unfold chainLen; split <;> omega
 
 lemma chainLen_of_ge_two {k : Nat} (hk : 2 ≤ k) : chainLen k = k - 1 := by
-  rw [chainLen, if_neg (by omega)]
+  rw [chainLen, ite_eq_right (by omega)]
 
 /-- Prefix sum: `prefixSum f n = f 0 + f 1 + ⋯ + f (n-1)`. -/
 def prefixSum (f : Nat → Nat) : Nat → Nat
@@ -589,7 +589,7 @@ private lemma compileGate_eval_at_iOffset (c : Circuit Basis.unboundedAON N M G)
   have hSeg2 : (segLookup G (iChainF c) (iOffset c i + j) hInternal).2 = j := by rw [hSeg]
   unfold compileGates
   simp only [compileGateOp, compileGateInputs, compileGateNeg, Fin.val_mk,
-             dif_pos hInternal, mkChainGate]
+             dite_eq_left hInternal, mkChainGate]
   refine congrArg (fun g => Gate.eval g wv) ?_
   exact mkChainGate_gate_congr c
     (g := c.gates ⟨(segLookup G (iChainF c) (iOffset c i + j) hInternal).1,
@@ -771,7 +771,7 @@ private lemma compileGate_eval_at_oOffset (c : Circuit Basis.unboundedAON N M G)
       (iTotal c + prefixSum (oChainF c) j' + p - iTotal c) hlt).2 = p := by rw [hSegAt hlt]
   unfold compileGates
   simp only [compileGateOp, compileGateInputs, compileGateNeg, Fin.val_mk,
-             dif_neg hNotInternal, mkChainGate]
+             dite_eq_right hNotInternal, mkChainGate]
   refine congrArg (fun g => Gate.eval g wv) ?_
   exact mkChainGate_gate_congr c
     (g := c.outputs ⟨(segLookup M (oChainF c)

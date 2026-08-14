@@ -83,14 +83,14 @@ private theorem pair_lt_succ_sq (x y : ℕ) : Nat.pair x y < (max x y + 1) * (ma
     rw [Nat.succ_mul, Nat.mul_succ]; omega
   unfold Nat.pair
   rcases lt_or_ge x y with h | h
-  · rw [if_pos h, show max x y = y by omega, hm]; omega
-  · rw [if_neg (by omega), show max x y = x by omega, hm]; omega
+  · rw [ite_eq_left h, show max x y = y by omega, hm]; omega
+  · rw [ite_eq_right (by omega), show max x y = x by omega, hm]; omega
 
 private theorem max_sq_le_pair (i j : ℕ) : max i j * max i j ≤ Nat.pair i j := by
   unfold Nat.pair
   rcases lt_or_ge i j with h | h
-  · rw [if_pos h, show max i j = j by omega]; omega
-  · rw [if_neg (by omega), show max i j = i by omega]; omega
+  · rw [ite_eq_left h, show max i j = j by omega]; omega
+  · rw [ite_eq_right (by omega), show max i j = i by omega]; omega
 
 theorem pair_lt_pair_of_lt {x y i j : ℕ} (hx : x < i) (hy : y < j) :
     Nat.pair x y < Nat.pair i j := by
@@ -133,11 +133,11 @@ theorem Vsharp_succ (k : ℕ) :
   rw [Vsharp]
 
 theorem Vsharp_odd (n : ℕ) : Vsharp D P (2 * n + 1) = embZero (P.X n) := by
-  rw [Vsharp_succ, if_pos (by omega), show 2 * n / 2 = n from by omega]
+  rw [Vsharp_succ, ite_eq_left (by omega), show 2 * n / 2 = n from by omega]
 
 theorem Vsharp_even (n : ℕ) :
     Vsharp D P (2 * n + 2) = embPair (Vsharp D P n.unpair.1) (Vsharp D P n.unpair.2) := by
-  rw [show 2 * n + 2 = (2 * n + 1) + 1 from rfl, Vsharp_succ, if_neg (by omega),
+  rw [show 2 * n + 2 = (2 * n + 1) + 1 from rfl, Vsharp_succ, ite_eq_right (by omega),
     show (2 * n + 1 - 1) / 2 = n from by omega]
 
 /-! ### `mem_X`, `surj`, nonemptiness. -/

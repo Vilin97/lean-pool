@@ -201,7 +201,7 @@ private lemma heckeSlash_fiber_sum [DecidableEq (HeckeCoset (GLPair 2))] (k : �
   have h_slash_eq : ∀ p,
       mulMap (GLPair 2) (HeckeCoset.rep D₁) (HeckeCoset.rep D₂) (p.1, p.2) = D →
       f ∣[k] (tRep D₂ p.2 * tRep D₁ p.1) = f ∣[k] tRep D (q_of p) := by
-    intro p hp; simp only [q_of, hp, dif_pos]; exact (h_main p hp).choose_spec.1
+    intro p hp; simp only [q_of, hp, dite_eq_left]; exact (h_main p hp).choose_spec.1
   have h_coset_eq : ∀ p,
       mulMap (GLPair 2) (HeckeCoset.rep D₁) (HeckeCoset.rep D₂) (p.1, p.2) = D →
       ({(p.1.out : GL _ ℚ) * (HeckeCoset.rep D₁ : GL _ ℚ)} : Set _) *
@@ -209,7 +209,7 @@ private lemma heckeSlash_fiber_sum [DecidableEq (HeckeCoset (GLPair 2))] (k : �
       ((GLPair 2).H : Set (GL (Fin 2) ℚ)) =
       {((q_of p).out : GL _ ℚ) * (HeckeCoset.rep D : GL _ ℚ)} *
       ((GLPair 2).H : Set (GL (Fin 2) ℚ)) := by
-    intro p hp; simp only [q_of, hp, dif_pos]; exact (h_main p hp).choose_spec.2
+    intro p hp; simp only [q_of, hp, dite_eq_left]; exact (h_main p hp).choose_spec.2
   set S := Finset.univ.filter (fun p : decompQuot (GLPair 2) (HeckeCoset.rep D₁) ×
       decompQuot (GLPair 2) (HeckeCoset.rep D₂) =>
       mulMap (GLPair 2) (HeckeCoset.rep D₁) (HeckeCoset.rep D₂) (p.1, p.2) = D)
@@ -238,7 +238,7 @@ private lemma heckeSlash_fiber_sum [DecidableEq (HeckeCoset (GLPair 2))] (k : �
       invFun := fun ⟨p, hp_rc⟩ => ⟨p, by
         simp only [S, Finset.mem_filter, Finset.mem_univ, true_and]
         have hmap := mulMap_eq_of_rightCoset D₁ D₂ D p q hp_rc
-        refine ⟨hmap, ?_⟩; simp only [q_of, hmap, dif_pos]
+        refine ⟨hmap, ?_⟩; simp only [q_of, hmap, dite_eq_left]
         set q' := (h_main p hmap).choose; by_contra hne
         exact decompQuot_coset_diff (GLPair 2) (HeckeCoset.rep D) q' q hne
           ((h_main p hmap).choose_spec.2.symm.trans hp_rc)⟩

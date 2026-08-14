@@ -445,15 +445,15 @@ theorem hasSum_basisVec (a : RapidDecaySeq) :
         (fun n => by split <;> simp [hg_nn])
         hg_sum
     have h_fin_summable : Summable (fun n => if (n ∈ s) then g n else (0 : ℝ)) :=
-      summable_of_ne_finset_zero (s := s) (fun n hn => if_neg hn)
+      summable_of_ne_finset_zero (s := s) (fun n hn => ite_eq_right hn)
     have h_split : ∑' n, g n =
         ∑' n, (if (n ∈ s) then g n else (0 : ℝ)) +
         ∑' n, (if (n ∈ s) then (0 : ℝ) else g n) := by
       rw [← h_fin_summable.tsum_add h_compl_summable]
       congr 1; ext n; split <;> simp
     have h_fin_eq : ∑' n, (if (n ∈ s) then g n else (0 : ℝ)) = ∑ n ∈ s, g n := by
-      rw [tsum_eq_sum (fun n hn => if_neg hn)]
-      exact Finset.sum_congr rfl (fun n hn => if_pos hn)
+      rw [tsum_eq_sum (fun n hn => ite_eq_right hn)]
+      exact Finset.sum_congr rfl (fun n hn => ite_eq_left hn)
     linarith⟩
 
 theorem rapidDecay_expansion (φ : RapidDecaySeq →L[ℝ] ℝ) (a : RapidDecaySeq) :
@@ -1021,7 +1021,6 @@ theorem pure_continuous_left (e₂ : E₂) :
 /-- A finset sup of seminorms with `WithSeminorms` has its ball in nhds 0. -/
 private theorem finsetSup_seminorm_ball_mem_nhds
     {F : Type*} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F]
-    [IsTopologicalAddGroup F] [ContinuousSMul ℝ F]
     {ι' : Type} {q : ι' → Seminorm ℝ F} (hq : WithSeminorms q)
     (t : Finset ι') {ε : ℝ} (hε : 0 < ε) :
     {x : F | (t.sup q) x < ε} ∈ nhds (0 : F) := by
@@ -1499,13 +1498,13 @@ theorem _root_.GaussianField.NuclearTensorProduct.basisVec_eq_pure
   simp only [RapidDecaySeq.basisVec, pure_val, hbasis₁, hbasis₂]
   by_cases h : n = m
   · subst h; simp
-  · simp only [h, if_false, mul_ite, mul_one, mul_zero]
+  · simp only [h, ite_false, mul_ite, mul_one, mul_zero]
     by_cases h₁ : (Nat.unpair n).1 = (Nat.unpair m).1
     · by_cases h₂ : (Nat.unpair n).2 = (Nat.unpair m).2
       · exfalso
         apply h
         rw [← Nat.pair_unpair n, ← Nat.pair_unpair m, h₁, h₂]
-      · simp only [h₂, if_false]
+      · simp only [h₂, ite_false]
     · simp_all
 
 end NuclearTensorProduct

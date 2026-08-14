@@ -280,7 +280,7 @@ lemma lastJumpContribution_eq_of_formula {x Y : ℕ} (hx : 2 ≤ x) {n q : ℕ}
     rw [← hcast_div]
     have hnq2 : 2 ≤ n / q := le_trans hx hxq
     exact (Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hnq2))).ne'
-  rw [hvisit, transitionWeight, if_pos hYq, hcast_div]
+  rw [hvisit, transitionWeight, ite_eq_left hYq, hcast_div]
   calc
     (1 / (normalizationConstant x Y * ((n : ℝ) / q) * Real.log ((n : ℝ) / q))) *
         ((Real.log ((n : ℝ) / q) / (Real.log (((n / q) * q : ℕ) : ℝ)) ^ 2) *

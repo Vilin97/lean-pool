@@ -339,7 +339,7 @@ section contraction
 private def broadcast (ν : S → ℝ) : Matrix S S ℝ :=
   Matrix.of (fun _ s' => ν s')
 
-private lemma vecMul_broadcast (v : S → ℝ) (ν : S → ℝ) [StochasticVec ν] :
+private lemma vecMul_broadcast (v : S → ℝ) (ν : S → ℝ) :
     v ᵥ* broadcast ν = fun j => (∑ i, v i) * ν j := by
   classical
   funext j

@@ -195,12 +195,12 @@ private def contractFwd (f : Equiv.Perm (Fin (n + 1))) (i : Fin n) : Fin n :=
 private lemma contractFwd_pos (f : Equiv.Perm (Fin (n + 1))) (i : Fin n)
     (h : (f (liftFin i)).1 = n) :
     contractFwd f i = ⟨(f (f (liftFin i))).1, perm_perm_val_lt_of_perm_val_eq h⟩ :=
-  dif_pos h
+  dite_eq_left h
 
 private lemma contractFwd_neg (f : Equiv.Perm (Fin (n + 1))) (i : Fin n)
     (h : (f (liftFin i)).1 ≠ n) :
     contractFwd f i = ⟨(f (liftFin i)).1, lt_of_lt_succ_of_neq (f (liftFin i)).2 h⟩ :=
-  dif_neg h
+  dite_eq_right h
 
 private lemma f_inv_apply_self (f : Equiv.Perm (Fin (n + 1))) (y : Fin (n + 1)) :
     f⁻¹ (f y) = y := by simp
@@ -268,11 +268,11 @@ private def expandFwd (f : Equiv.Perm (Fin n)) (i : Fin (n + 1)) : Fin (n + 1) :
 
 private lemma expandFwd_pos (f : Equiv.Perm (Fin n)) (i : Fin (n + 1)) (h : i.1 = n) :
     expandFwd f i = ⟨n, Nat.lt_succ_self n⟩ :=
-  dif_pos h
+  dite_eq_left h
 
 private lemma expandFwd_neg (f : Equiv.Perm (Fin n)) (i : Fin (n + 1)) (h : i.1 ≠ n) :
     expandFwd f i = liftFin (f ⟨i.1, lt_of_lt_succ_of_neq i.2 h⟩) :=
-  dif_neg h
+  dite_eq_right h
 
 private lemma f_inv_apply_self' (f : Equiv.Perm (Fin n)) (y : Fin n) : f⁻¹ (f y) = y := by simp
 

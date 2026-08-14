@@ -114,13 +114,13 @@ private theorem circleIntegral_laurent_term
   rw [circleIntegral.integral_congr hr_pos.le h_eq,
     circleIntegral.integral_const_mul]
   by_cases hk : k = 0
-  · simp only [hk, zero_add, Nat.cast_one, if_true]
+  · simp only [hk, zero_add, Nat.cast_one, ite_true]
     congr 1
     have h_eq' : Set.EqOn (fun z => (z - s) ^ (-(1 : ℤ)))
         (fun z => (z - s)⁻¹) (Metric.sphere s r) := by intro z _; simp only [zpow_neg_one]
     rw [circleIntegral.integral_congr hr_pos.le h_eq',
       circleIntegral.integral_sub_center_inv s hr_ne]
-  · simp only [hk, if_false]
+  · simp only [hk, ite_false]
     rw [circleIntegral.integral_sub_zpow_of_ne, mul_zero]
     intro h_neg_eq
     apply hk
@@ -255,8 +255,8 @@ private lemma ae_eq_indicator_diff_cpv_zpow
           {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}) ∩
           Icc γ.a γ.b) :=
       fun ⟨⟨_, h_nG⟩, _⟩ => h_nG h2
-    simp only [h_not_mem, ite_false, if_pos h1,
-      if_neg (show ¬∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε from by push Not; exact h2)]
+    simp only [h_not_mem, ite_false, ite_eq_left h1,
+      ite_eq_right (show ¬∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε from by push Not; exact h2)]
     ring
   · push Not at h2
     obtain ⟨s', hs', hs'_le⟩ := h2
@@ -265,8 +265,8 @@ private lemma ae_eq_indicator_diff_cpv_zpow
         Icc γ.a γ.b :=
       ⟨⟨h1, fun h_all =>
         absurd (h_all s' hs') (not_lt.mpr hs'_le)⟩, ht_Icc⟩
-    simp only [h_mem, ite_true, if_pos h1,
-      if_pos (show ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε from ⟨s', hs', hs'_le⟩)]
+    simp only [h_mem, ite_true, ite_eq_left h1,
+      ite_eq_left (show ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε from ⟨s', hs', hs'_le⟩)]
     ring
   · push Not at h1
     have h_not_mem :
@@ -275,8 +275,8 @@ private lemma ae_eq_indicator_diff_cpv_zpow
           Icc γ.a γ.b) :=
       fun ⟨⟨h_far, _⟩, _⟩ => absurd h_far (not_lt.mpr h1)
     simp only [h_not_mem, ite_false,
-      if_neg (show ¬‖γ.toFun t - s‖ > ε from not_lt.mpr h1),
-      if_pos (show ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε
+      ite_eq_right (show ¬‖γ.toFun t - s‖ > ε from not_lt.mpr h1),
+      ite_eq_left (show ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε
         from ⟨s, hs, h1⟩)]
     ring
   · push Not at h1 h2
@@ -287,8 +287,8 @@ private lemma ae_eq_indicator_diff_cpv_zpow
       fun ⟨⟨h_far, _⟩, _⟩ => absurd h_far (not_lt.mpr h1)
     obtain ⟨s', hs', hs'_le⟩ := h2
     simp only [h_not_mem, ite_false,
-      if_neg (show ¬‖γ.toFun t - s‖ > ε from not_lt.mpr h1),
-      if_pos (show ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε
+      ite_eq_right (show ¬‖γ.toFun t - s‖ > ε from not_lt.mpr h1),
+      ite_eq_left (show ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε
         from ⟨s', hs', hs'_le⟩)]
     ring
 
@@ -525,11 +525,11 @@ private lemma multi_cutoff_zpow_intervalIntegrable
       by_cases ht_good : t ∈ GoodSet ∩ Icc γ.a γ.b
       · rw [Set.piecewise_eq_of_mem _ _ _ ht_good]
         have : ¬∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε := by push Not; exact ht_good.1
-        rw [if_neg this]
+        rw [ite_eq_right this]
       · rw [Set.piecewise_eq_of_notMem _ _ _ ht_good]
         have : ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε := by
           by_contra h; push Not at h; exact ht_good ⟨h, ht⟩
-        rw [if_pos this])
+        rw [ite_eq_left this])
   · intro t ht
     simp only [cauchyPrincipalValueIntegrandOn]
     split_ifs with h
@@ -557,9 +557,9 @@ private lemma dct_bound_diff_cpv_zpow
   apply ae_of_all; intro t ht
   simp only [cauchyPrincipalValueIntegrandOn]
   by_cases h_multi_cut : ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε
-  · rw [if_pos h_multi_cut]
+  · rw [ite_eq_left h_multi_cut]
     by_cases h_single_cut : ‖γ.toFun t - s‖ > ε
-    · rw [if_pos h_single_cut]; simp only [sub_zero]
+    · rw [ite_eq_left h_single_cut]; simp only [sub_zero]
       obtain ⟨s', hs', hs'_close⟩ := h_multi_cut
       have hs'_ne : s' ≠ s := by intro heq; rw [heq] at hs'_close; linarith
       have h_sep_s' : δ_sep ≤ ‖s - s'‖ :=
@@ -573,11 +573,11 @@ private lemma dct_bound_diff_cpv_zpow
         Ioc_subset_Icc_self (Set.uIoc_of_le γ.hab.le ▸ ht)
       exact zpow_deriv_norm_bound_of_dist_ge γ s m Mγ' hMγ' (δ_sep / 2)
         (by linarith) t ht_Icc h_far
-    · push Not at h_single_cut; rw [if_neg (not_lt.mpr h_single_cut)]
+    · push Not at h_single_cut; rw [ite_eq_right (not_lt.mpr h_single_cut)]
       norm_num; positivity
-  · rw [if_neg h_multi_cut]
+  · rw [ite_eq_right h_multi_cut]
     by_cases h_single_cut : ‖γ.toFun t - s‖ > ε
-    · rw [if_pos h_single_cut]; norm_num; positivity
+    · rw [ite_eq_left h_single_cut]; norm_num; positivity
     · push Not at h_single_cut h_multi_cut
       exact absurd (h_multi_cut s hs) (not_lt.mpr h_single_cut)
 
@@ -604,10 +604,10 @@ private lemma ae_limit_diff_cpv_zpow
   have h_no_near : ¬∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε := by
     push Not; intro s' hs'
     exact lt_of_lt_of_le hε.2 (Finset.inf'_le _ hs')
-  rw [if_neg h_no_near]
+  rw [ite_eq_right h_no_near]
   have h_far_s : ‖γ.toFun t - s‖ > ε :=
     lt_of_lt_of_le hε.2 (Finset.inf'_le _ hs)
-  rw [if_pos h_far_s]; ring
+  rw [ite_eq_left h_far_s]; ring
 
 /-- Reduce the multi-point CPV goal to showing the single-multi difference
 tends to 0, using `Tendsto.sub` and `integral_sub`. -/

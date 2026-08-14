@@ -235,7 +235,7 @@ lemma ψHom_coeff_sum
       mkFin3 (m₀ + 2 * k) (m₁ - k) (m₂ - k) 2) := by
     simp only [mkFin3_zero, mkFin3_one, mkFin3_two, he_def, mkFin2_inj]
     constructor <;> omega
-  rw [if_pos hcond]
+  rw [ite_eq_left hcond]
   rfl
 
 /-- Key lemma: ψbar is injective. This is equivalent to ker ψHom = conjI.
@@ -290,7 +290,7 @@ lemma ψBar_injective : Function.Injective ψBar := by
   -- Case on m 0 ≥ 2
   by_cases hm0 : 2 ≤ m 0
   · -- m 0 ≥ 2: telescoping
-    rw [if_pos (hd₀_iff.mpr hm0)]
+    rw [ite_eq_left (hd₀_iff.mpr hm0)]
     have sub0 : (m - d₀) 0 = m 0 - 2 := by simp [Finsupp.tsub_apply, d₀]
     have sub1 : (m - d₀) 1 = m 1 := by simp [Finsupp.tsub_apply, d₀]
     have sub2 : (m - d₀) 2 = m 2 := by simp [Finsupp.tsub_apply, d₀]
@@ -301,7 +301,7 @@ lemma ψBar_injective : Function.Injective ψBar := by
       simp only [divQ, sub0, sub1, sub2, show m 0 - 2 + 2 = m 0 from by omega]
     rw [hdivQ0]
     by_cases hm12 : 1 ≤ m 1 ∧ 1 ≤ m 2
-    · rw [if_pos (hd₁₂_iff.mpr hm12)]
+    · rw [ite_eq_left (hd₁₂_iff.mpr hm12)]
       have s0' : (m - d₁₂) 0 = m 0 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
       have s1' : (m - d₁₂) 1 = m 1 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
       have s2' : (m - d₁₂) 2 = m 2 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
@@ -329,7 +329,7 @@ lemma ψBar_injective : Function.Injective ψBar := by
       rw [Finset.sum_congr rfl hterms]
       ring
     · push Not at hm12
-      rw [if_neg (fun h => by
+      rw [ite_eq_right (fun h => by
                     simp_all)]
       simp only [sub_zero]
       have hmin0 : min (m 1) (m 2) = 0 := by
@@ -342,14 +342,14 @@ lemma ψBar_injective : Function.Injective ψBar := by
       rw [← mkFin3_ext]
   · -- m 0 < 2 (m 0 ≤ 1)
     have hm0' : m 0 ≤ 1 := by omega
-    rw [if_neg (fun h => by
+    rw [ite_eq_right (fun h => by
                   simp_all)]
     simp only [zero_sub]
     have hψ_sum : ∑ k ∈ Finset.range (min (m 1) (m 2) + 1),
         f (mkFin3 (m 0 + 2 * k) (m 1 - k) (m 2 - k)) = 0 := by
       rw [ψHom_coeff_sum f (m 0) (m 1) (m 2) hm0', hψ0, map_zero]
     by_cases hm12 : 1 ≤ m 1 ∧ 1 ≤ m 2
-    · rw [if_pos (hd₁₂_iff.mpr hm12)]
+    · rw [ite_eq_left (hd₁₂_iff.mpr hm12)]
       change f m = -(divQ f (m - d₁₂))
       simp only [divQ]
       have s0 : (m - d₁₂) 0 = m 0 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
@@ -370,7 +370,7 @@ lemma ψBar_injective : Function.Injective ψBar := by
       rw [mkFin3_inj]
       refine ⟨by ring, ?_, ?_⟩ <;> omega
     · push Not at hm12
-      rw [if_neg (fun h => by
+      rw [ite_eq_right (fun h => by
                     simp_all)]
       simp only [neg_zero]
       have : min (m 1) (m 2) = 0 := by

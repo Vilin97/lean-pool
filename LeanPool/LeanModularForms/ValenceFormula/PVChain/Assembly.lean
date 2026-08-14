@@ -204,8 +204,8 @@ private lemma pvIntegrand_seg4_eq_neg_seg1 (_S : Finset UpperHalfPlane) (Sx : Fi
   have h_trunc := h_trunc_iff u hu
   simp only [pvIntegrand, cauchyPrincipalValueIntegrandOn]
   by_cases h_trunc_u : ∃ s ∈ Sx, ‖fdBoundaryH H u - s‖ ≤ ε
-  · rw [if_pos h_trunc_u, if_pos (h_trunc.mpr h_trunc_u)]; simp only [neg_zero]
-  · rw [if_neg h_trunc_u, if_neg (mt h_trunc.mp h_trunc_u)]
+  · rw [ite_eq_left h_trunc_u, ite_eq_left (h_trunc.mpr h_trunc_u)]; simp only [neg_zero]
+  · rw [ite_eq_right h_trunc_u, ite_eq_right (mt h_trunc.mp h_trunc_u)]
     have h_shift : fdBoundaryH H (4 - u) = fdBoundaryH H u - 1 := by
       rw [fdBoundary_H_eq_seg4_H h4u_gt3 (by linarith [hu.1]),
         seg4_eq_seg1_minus_one_H H u ⟨le_of_lt hu.1, hu_le1⟩,
@@ -349,7 +349,7 @@ private theorem tendsto_pvIntegral_seg5
           · exact Filter.Eventually.of_forall fun t ht => by
               rw [Set.mem_Ioc] at ht
               simp only [pvIntegrand, cauchyPrincipalValueIntegrandOn,
-                if_neg (hε t ht.1 ht.2)]
+                ite_eq_right (hε t ht.1 ht.2)]
           · exact Filter.Eventually.of_forall fun t ht => by
               rw [Set.mem_Ioc] at ht; exact absurd ht.1 (by linarith [ht.2])
       _ = L := seg5_logDeriv_integral_value f hf hH hcusp_nonvan
@@ -496,7 +496,7 @@ private lemma pvIntegrand_intervalIntegrable
     change cauchyPrincipalValueIntegrandOn S₀ (logDeriv g) γ ε t = _
     simp only [cauchyPrincipalValueIntegrandOn]
     simp only [Finset.mem_coe] at h_not_near
-    exact if_neg h_not_near
+    exact ite_eq_right h_not_near
   have h_compl_zero : EqOn F 0 (uIoc a b \ K) := by
     intro t ⟨ht_uioc, h_not_K⟩
     change cauchyPrincipalValueIntegrandOn S₀ (logDeriv g) γ ε t = 0
@@ -504,7 +504,7 @@ private lemma pvIntegrand_intervalIntegrable
     have h_near : ∃ s ∈ (S₀ : Set ℂ), ‖γ t - s‖ ≤ ε := by
       by_contra h_far; exact h_not_K ⟨ht_uioc, h_far⟩
     simp only [Finset.mem_coe] at h_near
-    exact if_pos h_near
+    exact ite_eq_left h_near
   have h_int_K' := integrableOn_logDeriv_mul_deriv_farSet f S hH h_capture hε
   have hK_meas : MeasurableSet K := by
     apply measurableSet_uIoc.inter

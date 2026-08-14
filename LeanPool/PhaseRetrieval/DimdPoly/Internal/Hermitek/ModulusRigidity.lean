@@ -272,7 +272,7 @@ private lemma sum_ite_index_eq {d J : ℕ} (hJ : J < d + 1) (f : Fin (d + 1) →
   rw [Finset.sum_eq_single ⟨J, hJ⟩]
   · simp
   · intro i _ hi
-    rw [if_neg fun h => hi (Fin.ext h)]
+    rw [ite_eq_right fun h => hi (Fin.ext h)]
   · simp_all
 
 private theorem pair_coeff_normalized_tendsto
@@ -1437,7 +1437,7 @@ private theorem finite_positive_mode_main_tendsto
           ((qkn_ratio_prod_tendsto_zero (k := k) hi_lt hless2).const_mul
             (star (a i) * b ⟨d - n.1 + i.1, by omega⟩))
       · have hnot : ¬ d - n.1 + i.1 < d + 1 := by omega
-        simp only [hi_eq, dif_neg hnot, mul_zero, zero_mul]
+        simp only [hi_eq, dite_eq_right hnot, mul_zero, zero_mul]
         exact tendsto_const_nhds
   have htop :
       (∑ i : Fin (d + 1), if i.1 = n.1 then star (a i) * b ⟨d, Nat.lt_succ_self d⟩ else 0) =

@@ -625,7 +625,7 @@ private lemma tendsto_E₄sq_atImInfty : Tendsto (⇑E₄sq) atImInfty (𝓝 1) 
 
 private lemma rank_eight : Module.rank ℂ (ModularForm 𝒮ℒ (8 : ℤ)) = 1 := by
   have h := ModularForm.dimension_level_one 8 (by decide)
-  rw [if_neg (by decide)] at h
+  rw [ite_eq_right (by decide)] at h
   simpa using h
 
 /-- Extract the scalar from a rank-one comparison by taking limits at `i∞`. -/

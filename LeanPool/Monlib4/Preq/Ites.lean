@@ -34,8 +34,8 @@ theorem ite_apply_lm {R A B : Type _} [Semiring R] [AddCommMonoid A] [AddCommMon
     [Module R B] (f g : A →ₗ[R] B) (x : A) (P : Prop) [Decidable P] :
     (if P then f else g : A →ₗ[R] B) x = if P then f x else g x := by
   by_cases h : P
-  · simp only [h, if_true]
-  · simp only [h, if_false]
+  · simp only [h, ite_true]
+  · simp only [h, ite_false]
 
 local notation f " ⊗ₘ " g => TensorProduct.map f g
 

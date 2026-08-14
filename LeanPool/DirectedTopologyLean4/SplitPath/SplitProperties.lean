@@ -487,7 +487,7 @@ lemma trans_first_part (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) (n 
     rw [← mul_one (2⁻¹ : ℝ)]
     apply mul_le_mul h₁ t.2.2 t.2.1
     norm_num
-  rw [dif_pos this]
+  rw [dite_eq_left this]
   apply congr_arg
   ext
   change 2 * (((n : ℝ) + n + 1 + 1)⁻¹ * ↑t) = ((n : ℝ) + 1)⁻¹ * ↑t
@@ -681,7 +681,7 @@ lemma second_part_trans_eval_at_end (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x
     = γ₂ (Fraction (Nat.succ_pos (n.succ)) (le_of_lt (Nat.lt_succ_self _))) := by
   rw [second_part_apply, Dipath.trans_apply]
   have : (n : ℝ) + ↑n + 2 = ↑n + ↑n + 1 + 1 := by ring
-  rw [dif_neg]
+  rw [dite_eq_right]
   · apply congr_arg
     rw [← Subtype.coe_inj]
     simp only [Nat.succ_eq_add_one, unitInterval.coe_symm_eq, zero_add, Nat.cast_one, Nat.cast_add,

@@ -175,7 +175,7 @@ lemma demazure_denominator_not_null (i : Fin n) :
     apply Finsupp.ne_iff.mpr
     use Fin.succ i
     simp [fin_succ_ne_fin_castSucc]
-  rw [if_neg h]
+  rw [ite_eq_right h]
   simp
 
 /- Now we can use these to define the demazure numerator. We distinguish the variable x_i

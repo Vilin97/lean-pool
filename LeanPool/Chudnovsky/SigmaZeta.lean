@@ -454,8 +454,8 @@ private lemma deriv_weierstrassSigma_ne_zero_at (i₀ : {l : L.lattice // l ≠ 
     intro n
     simp only [hg]
     by_cases h : n = i₀
-    · simp only [if_pos h]; exact differentiable_const 1
-    · simp only [if_neg h]; exact differentiable_weierstrassSigmaTerm (n.1 : ℂ)
+    · simp only [ite_eq_left h]; exact differentiable_const 1
+    · simp only [ite_eq_right h]; exact differentiable_weierstrassSigmaTerm (n.1 : ℂ)
   have hQdiff : Differentiable ℂ Q := by
     rw [hQ]
     refine differentiable_tprod_family g hgdiff (fun r hr ↦ ?_)
@@ -464,9 +464,9 @@ private lemma deriv_weierstrassSigma_ne_zero_at (i₀ : {l : L.lattice // l ≠ 
     filter_upwards [L.cofinite_norm_ge (2 * r)] with n hn x hx
     simp only [hg]
     by_cases h : n = i₀
-    · simp only [if_pos h, sub_self, norm_zero]
+    · simp only [ite_eq_left h, sub_self, norm_zero]
       positivity
-    · simp only [if_neg h]
+    · simp only [ite_eq_right h]
       have hwn : (n.1 : ℂ) ≠ 0 := by simpa using n.2
       have h2 : 2 * ‖x‖ ≤ ‖(n.1 : ℂ)‖ := le_trans (by linarith) hn
       calc ‖weierstrassSigmaTerm x (n.1 : ℂ) - 1‖
@@ -500,8 +500,8 @@ private lemma deriv_weierstrassSigma_ne_zero_at (i₀ : {l : L.lattice // l ≠ 
       rw [show (1 : ℂ) + (g n w - 1) = g n w by ring]
       simp only [hg]
       by_cases h : n = i₀
-      · simp only [if_pos h]; exact one_ne_zero
-      · simp only [if_neg h]
+      · simp only [ite_eq_left h]; exact one_ne_zero
+      · simp only [ite_eq_right h]
         refine weierstrassSigmaTerm_ne_zero (by simpa using n.2) (fun hcontra ↦ ?_)
         exact h (Subtype.ext (Subtype.ext hcontra.symm))
     have hsummable : Summable (fun n ↦ ‖g n w - 1‖) :=
@@ -708,7 +708,7 @@ private lemma hasSum_val_zetaTerm {z : ℂ} (hz : z ∉ L.lattice) :
   have hfun : (fun l : {l : L.lattice // l ≠ 0} ↦
         if (l.1 : L.lattice) = 0 then (0 : ℂ) else 1 / (l.1 : ℂ) ^ 2 - 1 / (z - l.1) ^ 2)
       = fun l : {l : L.lattice // l ≠ 0} ↦ 1 / (l.1 : ℂ) ^ 2 - 1 / (z - l.1) ^ 2 := by
-    ext l; rw [if_neg l.2]
+    ext l; rw [ite_eq_right l.2]
   rw [← hval, ← hfun]
   exact (Subtype.val_injective.hasSum_iff hrange).mpr hmod
 

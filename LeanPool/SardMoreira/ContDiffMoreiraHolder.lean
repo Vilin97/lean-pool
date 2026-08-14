@@ -247,6 +247,7 @@ theorem congr_eventuallyEq {f g : E → F} {a : E} {k : ℕ} {α : I}
 
 end ContDiffMoreiraHolderAt
 
+open ContinuousMultilinearMap in
 theorem OpenPartialHomeomorph.contDiffMoreiraHolderAt_symm [CompleteSpace E] {k : ℕ} {α : I}
     (f : OpenPartialHomeomorph E F) {a : F} (ha : a ∈ f.target)
     (hf' : (fderiv ℝ f (f.symm a)).IsInvertible)
@@ -334,36 +335,58 @@ theorem OpenPartialHomeomorph.contDiffMoreiraHolderAt_symm [CompleteSpace E] {k 
             simp only [hk₁, FormalMultilinearSeries.id_apply_of_one_lt, zero_sub, neg_sub_neg,
               Finset.sum_sub_distrib, ContinuousMultilinearMap.compContinuousLinearMap_neg_left,
               ContinuousMultilinearMap.compContinuousLinearMap_sum_left, neg_sub]
-          _ =O[𝓝 a] fun x ↦ ‖x - a‖ ^ (α : ℝ) := .neg_left <| .sum fun c hc ↦ ?_
-        simp only [OrderedFinpartition.compContinuousLinearMap_compAlongOrderedFinpartition_left]
-        simp only [Finset.mem_erase, Finset.mem_univ, and_true, ← c.length_lt_iff] at hc
-        apply c.compAlongOrderedFinpartition_sub_compAlongOrderedFinpartition_isBigO
-        · exact f.contDiffAt_symm' ha hf' hf.contDiffAt
-            |>.continuousAt_iteratedFDeriv (mod_cast hc.le) |>.norm |>.isBoundedUnder_le
-        · refine .trans (.norm_right ?_) hrpow
-          exact f.contDiffAt_symm' ha hf' hf.contDiffAt
-            |>.differentiableAt_iteratedFDeriv (mod_cast hc) |>.isBigO_sub
-        · intro m
-          refine (ContinuousAt.tendsto <| .norm ?_).isBoundedUnder_le
-          simp only [← ContinuousMultilinearMap.compContinuousLinearMapL_apply]
-          refine .clm_apply ?_ ?_
-          · refine map_continuous
-              (ContinuousMultilinearMap.compContinuousLinearMapContinuousMultilinear ℝ _ _ _)
-              |>.continuousAt.comp ?_
-            refine continuousAt_pi.2 fun _ ↦ ?_
-            exact f.contDiffAt_symm' ha hf' hf.contDiffAt |>.continuousAt_fderiv (mod_cast hk₀)
-          · refine hf.contDiffAt.continuousAt_iteratedFDeriv (mod_cast c.partSize_le _) |>.comp ?_
-            exact f.continuousAt_symm ha
-        · exact fun _ ↦ isBoundedUnder_const
-        · intro m
-          apply ContinuousMultilinearMap.compContinuousLinearMap_sub_compContinuousLinearMap_isBigO
-          · apply isBoundedUnder_const
-          · exact (hf.of_le (c.partSize_le m) |>.isBigO |>.comp_tendsto <| f.continuousAt_symm ha)
-              |>.trans hsymm_rpow_isBigO
-          · intro i
-            exact f.contDiffAt_symm' ha hf' hf.contDiffAt |>.continuousAt_fderiv (mod_cast hk₀)
-              |>.norm |>.isBoundedUnder_le
-          · exact fun _ ↦ isBoundedUnder_const
-          · refine fun i ↦ hfderiv_isBigO.trans (.trans (.trans ?_ hsymm_isBigO.norm_right) hrpow)
-            exact hf.contDiffAt.fderiv_right (mod_cast hk₁) |>.differentiableAt one_ne_zero
-              |>.isBigO_sub |>.comp_tendsto <| f.continuousAt_symm ha
+          _ =O[𝓝 a] fun x ↦ ‖x - a‖ ^ (α : ℝ) := by
+            apply IsBigO.neg_left (E' := F[×k]→L[ℝ] E)
+            let summand : OrderedFinpartition k → F → (F[×k]→L[ℝ] E) := fun c x ↦
+              ((c.compAlongOrderedFinpartition (iteratedFDeriv ℝ c.length f.symm x)
+                (fun m ↦ iteratedFDeriv ℝ (c.partSize m) f (f.symm x))).compContinuousLinearMap
+                  (fun _ ↦ fderiv ℝ f.symm x) -
+                (c.compAlongOrderedFinpartition (iteratedFDeriv ℝ c.length f.symm a)
+                  (fun m ↦ iteratedFDeriv ℝ (c.partSize m) f (f.symm a))).compContinuousLinearMap
+                    (fun _ ↦ fderiv ℝ f.symm a))
+            change (fun x ↦ ∑ c ∈ Finset.univ.erase (OrderedFinpartition.atomic k),
+              summand c x) =O[𝓝 a] fun x ↦ ‖x - a‖ ^ (α : ℝ)
+            refine (IsBigO.sum (α := F) (F := ℝ) (E' := F[×k]→L[ℝ] E)
+              (l := 𝓝 a) (g := fun x : F ↦ ‖x - a‖ ^ (α : ℝ))
+              (A := summand) (s := Finset.univ.erase (OrderedFinpartition.atomic k))
+              (fun c hc ↦ ?_)).congr_left ?_
+            · dsimp only [summand]
+              simp only [
+                OrderedFinpartition.compContinuousLinearMap_compAlongOrderedFinpartition_left]
+              simp only [Finset.mem_erase, Finset.mem_univ, and_true, ← c.length_lt_iff] at hc
+              apply c.compAlongOrderedFinpartition_sub_compAlongOrderedFinpartition_isBigO
+              · exact f.contDiffAt_symm' ha hf' hf.contDiffAt
+                  |>.continuousAt_iteratedFDeriv (mod_cast hc.le) |>.norm |>.isBoundedUnder_le
+              · refine .trans (.norm_right ?_) hrpow
+                exact f.contDiffAt_symm' ha hf' hf.contDiffAt
+                  |>.differentiableAt_iteratedFDeriv (mod_cast hc) |>.isBigO_sub
+              · intro m
+                refine (ContinuousAt.tendsto <| .norm ?_).isBoundedUnder_le
+                simp only [← ContinuousMultilinearMap.compContinuousLinearMapL_apply]
+                refine .clm_apply ?_ ?_
+                · refine map_continuous
+                    (ContinuousMultilinearMap.compContinuousLinearMapContinuousMultilinear ℝ _ _ _)
+                    |>.continuousAt.comp ?_
+                  refine continuousAt_pi.2 fun _ ↦ ?_
+                  exact f.contDiffAt_symm' ha hf' hf.contDiffAt
+                    |>.continuousAt_fderiv (mod_cast hk₀)
+                · refine hf.contDiffAt.continuousAt_iteratedFDeriv
+                    (mod_cast c.partSize_le _) |>.comp ?_
+                  exact f.continuousAt_symm ha
+              · exact fun _ ↦ isBoundedUnder_const
+              · intro m
+                apply compContinuousLinearMap_sub_compContinuousLinearMap_isBigO
+                · apply isBoundedUnder_const
+                · exact (hf.of_le (c.partSize_le m) |>.isBigO |>.comp_tendsto <|
+                    f.continuousAt_symm ha) |>.trans hsymm_rpow_isBigO
+                · intro i
+                  exact f.contDiffAt_symm' ha hf' hf.contDiffAt
+                    |>.continuousAt_fderiv (mod_cast hk₀) |>.norm |>.isBoundedUnder_le
+                · exact fun _ ↦ isBoundedUnder_const
+                · refine fun i ↦ hfderiv_isBigO.trans
+                    (.trans (.trans ?_ hsymm_isBigO.norm_right) hrpow)
+                  exact hf.contDiffAt.fderiv_right (mod_cast hk₁)
+                    |>.differentiableAt one_ne_zero |>.isBigO_sub |>.comp_tendsto <|
+                      f.continuousAt_symm ha
+            · intro x
+              exact Finset.sum_apply x _ _

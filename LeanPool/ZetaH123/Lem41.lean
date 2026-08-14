@@ -173,8 +173,8 @@ theorem finField_pow_sum (Fq : Type) [Field Fq] [Fintype Fq] (m : ℕ) :
   rw [hsplit, ← hunits, FiniteField.sum_pow_units Fq m]
   rcases Nat.eq_zero_or_pos m with hm | hm
   · subst hm
-    simp only [pow_zero, lt_irrefl, false_and, if_false]
-    rw [if_pos (dvd_zero _)]
+    simp only [pow_zero, lt_irrefl, false_and, ite_false]
+    rw [ite_eq_left (dvd_zero _)]
     ring
   · rw [zero_pow hm.ne', zero_add]
     simp only [hm, true_and]
@@ -1111,15 +1111,19 @@ theorem Sdk_coeff_eq_finsum (Fq : Type) [Field Fq] [Fintype Fq]
       if (∀ i, 0 < m i ∧ (Fintype.card Fq - 1) ∣ m i) then (-1:Fq) ^ d else 0 by
     rw [Finset.prod_congr rfl (fun i _ => finField_pow_sum Fq (m i))]
     by_cases h : ∀ i, 0 < m i ∧ (Fintype.card Fq - 1) ∣ m i
-    · rw [if_pos h, Finset.prod_congr rfl (fun i _ => if_pos (h i))]; simp [Finset.prod_const]
-    · rw [if_neg h]; push Not at h; obtain ⟨i, hi⟩ := h
-      apply Finset.prod_eq_zero (Finset.mem_univ i); rw [if_neg]; intro hc; exact hi hc.1 hc.2]
+    · rw [ite_eq_left h, Finset.prod_congr rfl (fun i _ => ite_eq_left (h i))]
+      simp [Finset.prod_const]
+    · rw [ite_eq_right h]; push Not at h; obtain ⟨i, hi⟩ := h
+      apply Finset.prod_eq_zero (Finset.mem_univ i)
+      rw [ite_eq_right]
+      intro hc
+      exact hi hc.1 hc.2]
   set y := ∑ i, m i with hy
   by_cases hcond : ∀ i, 0 < m i ∧ (Fintype.card Fq - 1) ∣ m i
-  · rw [if_pos hcond]
+  · rw [ite_eq_left hcond]
     by_cases hT : Tindex p (Fintype.card Fq) d (k - 1) m
-    · rw [if_pos hT]; unfold cwit; simp only; push_cast; ring
-    · rw [if_neg hT]
+    · rw [ite_eq_left hT]; unfold cwit; simp only; push_cast; ring
+    · rw [ite_eq_right hT]
       have h1 : ∀ i, 0 < m i := fun i => (hcond i).1
       have h2 : ∀ i, (Fintype.card Fq - 1) ∣ m i := fun i => (hcond i).2
       have hcf : ¬ CarryFree p ((k - 1) :: List.ofFn m) := fun hc => hT ⟨h1, h2, hc⟩
@@ -1137,10 +1141,10 @@ theorem Sdk_coeff_eq_finsum (Fq : Type) [Field Fq] [Fintype Fq]
             rw [multinomial_cast_ne_zero_iff Fq p d hp hchar m]; exact hmm
           push Not at hz; push_cast at hz; rw [hz, mul_zero]
       rw [hBzero, zero_mul]
-  · rw [if_neg hcond]
+  · rw [ite_eq_right hcond]
     have hT : ¬ Tindex p (Fintype.card Fq) d (k - 1) m :=
       fun hT => hcond (fun i => ⟨hT.1 i, hT.2.1 i⟩)
-    rw [if_neg hT, mul_zero]
+    rw [ite_eq_right hT, mul_zero]
 
 /-- **Theorem.**
 There exists a family of scalars `c_m ∈ F_q` indexed by `d`-tuples `m`, all
@@ -1210,12 +1214,12 @@ theorem monicOf_coeff (Fq : Type) [Field Fq] (d : ℕ) (θ : Fin d → Fq)
     (i : Fin d) : (monicOf Fq d θ).coeff (i : ℕ) = θ i := by
   unfold monicOf
   rw [coeff_add, coeff_X_pow]
-  rw [if_neg (by exact Nat.ne_of_lt i.isLt)]
+  rw [ite_eq_right (by exact Nat.ne_of_lt i.isLt)]
   rw [zero_add, finsetSum_coeff]
   rw [Finset.sum_eq_single i]
-  · rw [coeff_C_mul, coeff_X_pow, if_pos rfl, mul_one]
+  · rw [coeff_C_mul, coeff_X_pow, ite_eq_left rfl, mul_one]
   · intro j _ hj
-    rw [coeff_C_mul, coeff_X_pow, if_neg, mul_zero]
+    rw [coeff_C_mul, coeff_X_pow, ite_eq_right, mul_zero]
     exact fun h => hj (Fin.ext h.symm)
   · intro h; exact absurd (Finset.mem_univ i) h
 

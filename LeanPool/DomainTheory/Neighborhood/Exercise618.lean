@@ -434,8 +434,8 @@ theorem iSupRho_eq_id : descMap (imap V) = idMap (iterSys V) := by
     refine ⟨hY, fun i => ?_⟩
     show (if i < N then component z i else V.bot).mem (fiber Y i)
     by_cases h : i < N
-    · rw [if_pos h]; exact hcomp i
-    · rw [if_neg h, hN i (not_lt.mp h)]; exact V.bot.master_mem
+    · rw [ite_eq_left h]; exact hcomp i
+    · rw [ite_eq_right h, hN i (not_lt.mp h)]; exact V.bot.master_mem
 
 /-! ## Uniqueness of strict homomorphisms -/
 

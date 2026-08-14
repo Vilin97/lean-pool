@@ -87,7 +87,7 @@ def alphaCup {a : α} (ha : a ∈ S) :
   by
   have some := l.alphaCup'_isSome ha
   set c := Option.get _ some with def_c
-  rw [alpha, dif_pos ha, ← def_c]
+  rw [alpha, dite_eq_left ha, ← def_c]
   have h_argmax := Option.get_mem some
   rw [← def_c, alphaCup'] at h_argmax
   have c_alpha_cup := List.argmax_mem h_argmax
@@ -103,7 +103,7 @@ theorem cup_length_le_alpha {a : α} {c : List α} (c_in_S : c.In S) (c_sorted :
   have ha : a ∈ S := c_in_S _ (List.mem_of_mem_getLast? c_last)
   have some := l.alphaCup'_isSome ha
   set d := Option.get _ some with def_d
-  rw [alpha, dif_pos ha, ← def_d]
+  rw [alpha, dite_eq_left ha, ← def_d]
   have h_argmax := Option.get_mem some
   rw [← def_d, alphaCup'] at h_argmax
   rcases List.takeLast' c_last with ⟨c', eq_c⟩
@@ -209,7 +209,7 @@ def betaCup {a : α} (ha : a ∈ S) :
   by
   have some := C.betaCup'_isSome S ha
   set c := Option.get _ some with def_c
-  rw [beta, dif_pos ha, ← def_c]
+  rw [beta, dite_eq_left ha, ← def_c]
   have h_argmax := Option.get_mem some
   rw [← def_c, betaCup'] at h_argmax
   have c_beta_cup := List.argmax_mem h_argmax
@@ -232,7 +232,7 @@ theorem cup_length_le_beta {a : α} {c : List α} (c_in_S : c.In S) (c_cup : C.C
   have ha : a ∈ S := c_in_S _ (List.mem_of_mem_getLast? c_last)
   have some := C.betaCup'_isSome S ha
   set d := Option.get _ some with def_d
-  rw [beta, dif_pos ha, ← def_d]
+  rw [beta, dite_eq_left ha, ← def_d]
   have h_argmax := Option.get_mem some
   rw [← def_d, betaCup'] at h_argmax
   rcases List.takeLast' c_last with ⟨c', eq_c⟩

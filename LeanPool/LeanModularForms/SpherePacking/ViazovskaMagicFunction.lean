@@ -202,10 +202,10 @@ theorem φ₀''_differentiableOn : DifferentiableOn ℂ φ₀'' {z : ℂ | 0 < z
   apply hdiff.differentiableWithinAt.congr_of_eventuallyEq
   · rw [nhdsWithin_eq_nhds.mpr (Filter.mem_of_superset hopen (fun _ h => h))]
     filter_upwards [hopen] with w hw
-    simp only [φ₀'', hw, dif_pos, φ₀, Function.comp,
+    simp only [φ₀'', hw, dite_eq_left, φ₀, Function.comp,
       UpperHalfPlane.ofComplex_apply_of_im_pos hw, Pi.mul_apply, Pi.sub_apply,
       Pi.pow_apply, Pi.div_apply]; rfl
-  · simp only [φ₀'', hz', dif_pos, φ₀, Function.comp,
+  · simp only [φ₀'', hz', dite_eq_left, φ₀, Function.comp,
       UpperHalfPlane.ofComplex_apply_of_im_pos hz', Pi.mul_apply, Pi.sub_apply,
       Pi.pow_apply, Pi.div_apply]; rfl
 
@@ -536,7 +536,7 @@ private theorem phi0_bound_of_small_diag {t A : ℝ} (ht : 0 < t) (ht_lt : t < 1
     ‖φ₀'' (-1 / (contourNeg1ToI t + 1))‖ ≤ M := by
   have him_w : 0 < (-1 / (contourNeg1ToI t + 1)).im :=
     neg_inv_add_one_im_pos (contour_neg1_to_i_im_pos ht)
-  simp only [φ₀'', him_w, dif_pos]
+  simp only [φ₀'', him_w, dite_eq_left]
   refine hMA ⟨_, him_w⟩ ?_
   simp only [UpperHalfPlane.mk_im]; rw [im_neg_inv_diag ht]
   have : max A 1 ≤ 1 / (2 * t) := by
@@ -551,7 +551,7 @@ private theorem phi0_bound_of_small_vert {t A : ℝ} (ht : 0 < t) (ht_lt : t < 1
     ‖φ₀'' (-1 / ((-1 : ℂ) + I * ↑t + 1))‖ ≤ M := by
   have him_w : 0 < (-1 / ((-1 : ℂ) + I * ↑t + 1)).im :=
     neg_inv_add_one_im_pos (vertical_contour_im_pos ht)
-  simp only [φ₀'', him_w, dif_pos]
+  simp only [φ₀'', him_w, dite_eq_left]
   refine hMA ⟨_, him_w⟩ ?_
   change A ≤ (-1 / ((-1 : ℂ) + I * ↑t + 1)).im
   rw [im_neg_inv_vert ht]
@@ -949,7 +949,7 @@ private theorem segment_integrand_norm_bound (r : ℝ) {δ : ℝ} (hδ_pos : 0 <
     linarith [le_max_left A 1]
   -- Bound phi0, (z+1)^2, exp
   have hφ : ‖φ₀'' (-1 / (z₀ + 1))‖ ≤ M := by
-    simp only [φ₀'', him_w, dif_pos]
+    simp only [φ₀'', him_w, dite_eq_left]
     exact hMA ⟨_, him_w⟩ (by simp [UpperHalfPlane.im]; linarith)
   have hsq : ‖(z₀ + 1) ^ 2‖ ≤ 2 * δ ^ 2 := by
     rw [norm_pow, ← Complex.normSq_eq_norm_sq, hnsq]

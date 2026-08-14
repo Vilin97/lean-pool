@@ -127,9 +127,9 @@ lemma unitArc_min_dist_from_non_arc (H : ℝ) (hH : 1 < H) (s : ℂ)
   rcases eq_or_lt_of_le ht_arc_right with h3_eq | h3_lt
   · subst h3_eq
     unfold fdBoundaryH
-    rw [if_neg (show ¬((3 : ℝ) ≤ 1) from by norm_num),
-        if_neg (show ¬((3 : ℝ) ≤ 2) from by norm_num),
-        if_pos (show (3 : ℝ) ≤ 3 from le_refl _)]
+    rw [ite_eq_right (show ¬((3 : ℝ) ≤ 1) from by norm_num),
+        ite_eq_right (show ¬((3 : ℝ) ≤ 2) from by norm_num),
+        ite_eq_left (show (3 : ℝ) ≤ 3 from le_refl _)]
     have hre : (exp ((↑Real.pi / 2 + (↑(3 : ℝ) - 2) * (2 * ↑Real.pi / 3 - ↑Real.pi / 2)) * I)).re =
         -1/2 := by
       rw [show (↑Real.pi / 2 + (↑(3 : ℝ) - 2) * (2 * ↑Real.pi / 3 - ↑Real.pi / 2) : ℂ) * I =

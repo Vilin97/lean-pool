@@ -100,13 +100,16 @@ theorem lowerTriOnes_mul_Linv (m : ℕ) : lowerTriOnes m * Linv m = 1 := by
         + (if (k:ℕ) = (j:ℕ)+1 ∧ (k:ℕ) ≤ (i:ℕ) then (1:ZMod 2) else 0) := by
     intro k
     by_cases hki : (k:ℕ) ≤ (i:ℕ)
-    · rw [if_pos hki]
+    · rw [ite_eq_left hki]
       by_cases h1 : (k:ℕ) = (j:ℕ)
-      · rw [if_pos (Or.inl h1), if_pos ⟨h1, hki⟩, if_neg (by omega), one_mul, add_zero]
+      · rw [ite_eq_left (Or.inl h1), ite_eq_left ⟨h1, hki⟩, ite_eq_right (by omega),
+          one_mul, add_zero]
       · by_cases h2 : (k:ℕ) = (j:ℕ)+1
-        · rw [if_pos (Or.inr h2), if_neg (by tauto), if_pos ⟨h2, hki⟩, one_mul, zero_add]
-        · rw [if_neg (by tauto), if_neg (by tauto), if_neg (by tauto), mul_zero, add_zero]
-    · rw [if_neg hki, zero_mul, if_neg (by tauto), if_neg (by tauto), add_zero]
+        · rw [ite_eq_left (Or.inr h2), ite_eq_right (by tauto),
+            ite_eq_left ⟨h2, hki⟩, one_mul, zero_add]
+        · rw [ite_eq_right (by tauto), ite_eq_right (by tauto), ite_eq_right (by tauto),
+            mul_zero, add_zero]
+    · rw [ite_eq_right hki, zero_mul, ite_eq_right (by tauto), ite_eq_right (by tauto), add_zero]
   rw [Finset.sum_congr rfl (fun k _ => key k), Finset.sum_add_distrib]
   -- Sum A = [j ≤ i] (single term k = j).
   have hA : (∑ k : Fin m, if (k:ℕ) = (j:ℕ) ∧ (k:ℕ) ≤ (i:ℕ) then (1:ZMod 2) else 0)
@@ -114,34 +117,34 @@ theorem lowerTriOnes_mul_Linv (m : ℕ) : lowerTriOnes m * Linv m = 1 := by
     rw [Finset.sum_eq_single j]
     · simp
     · intro k _ hk
-      apply if_neg
+      apply ite_eq_right
       rintro ⟨hkj, _⟩
       exact hk (Fin.ext hkj)
     · intro h; exact absurd (Finset.mem_univ j) h
   rw [hA]
   by_cases hij : i = j
   · subst hij
-    rw [if_pos (le_refl _)]
+    rw [ite_eq_left (le_refl _)]
     -- Sum B = 0 : (k:ℕ)=i+1 ∧ k ≤ i is impossible.
     have hB : (∑ k : Fin m, if (k:ℕ) = (i:ℕ)+1 ∧ (k:ℕ) ≤ (i:ℕ) then (1:ZMod 2) else 0)
         = 0 := by
       apply Finset.sum_eq_zero
       intro k _
-      apply if_neg
+      apply ite_eq_right
       rintro ⟨h1, h2⟩; omega
-    rw [hB, add_zero, if_pos rfl]
-  · rw [if_neg hij]
+    rw [hB, add_zero, ite_eq_left rfl]
+  · rw [ite_eq_right hij]
     by_cases hlt : (j:ℕ) < (i:ℕ)
     · -- j < i : [j ≤ i] = 1, and B = 1 (k = j+1 exists, ≤ i), sum 1 + 1 = 0.
-      rw [if_pos (le_of_lt hlt)]
+      rw [ite_eq_left (le_of_lt hlt)]
       have hj1 : (j:ℕ)+1 < m := by have := i.isLt; omega
       have hB : (∑ k : Fin m, if (k:ℕ) = (j:ℕ)+1 ∧ (k:ℕ) ≤ (i:ℕ) then (1:ZMod 2) else 0)
           = 1 := by
         rw [Finset.sum_eq_single (⟨(j:ℕ)+1, hj1⟩ : Fin m)]
         · have hval : ((⟨(j:ℕ)+1, hj1⟩ : Fin m) : ℕ) = (j:ℕ)+1 := rfl
-          rw [if_pos ⟨hval, by omega⟩]
+          rw [ite_eq_left ⟨hval, by omega⟩]
         · intro k _ hk
-          apply if_neg
+          apply ite_eq_right
           rintro ⟨h1, _⟩
           exact hk (Fin.ext (by simpa using h1))
         · intro h; exact absurd (Finset.mem_univ _) h
@@ -152,12 +155,12 @@ theorem lowerTriOnes_mul_Linv (m : ℕ) : lowerTriOnes m * Linv m = 1 := by
         · exact h
         · exact absurd (Fin.ext h) hij
         · omega
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
       have hB : (∑ k : Fin m, if (k:ℕ) = (j:ℕ)+1 ∧ (k:ℕ) ≤ (i:ℕ) then (1:ZMod 2) else 0)
           = 0 := by
         apply Finset.sum_eq_zero
         intro k _
-        apply if_neg
+        apply ite_eq_right
         rintro ⟨h1, h2⟩; omega
       rw [hB, add_zero]
 
@@ -232,12 +235,12 @@ theorem denseH_col0 (m : ℕ) (hm : 0 < m) (i : Fin m) :
   rw [Finset.sum_eq_single (⟨0, hm⟩ : Fin m)]
   · -- k = 0 : [0 ≤ i] = 1, and the projH guard `(0 : ℕ) = (0 : ℕ)` holds.
     have hcol : ((⟨0, by omega⟩ : Fin (2 * m)) : ℕ) = ((⟨0, hm⟩ : Fin m) : ℕ) := rfl
-    rw [if_pos (Nat.zero_le _), if_pos hcol, one_mul]
+    rw [ite_eq_left (Nat.zero_le _), ite_eq_left hcol, one_mul]
   · intro k _ hk
     -- k ≠ 0 ⟹ the projH guard `(0 : ℕ) = (k : ℕ)` fails ⟹ second factor 0.
     have hk0 : ((⟨0, by omega⟩ : Fin (2 * m)) : ℕ) ≠ (k : ℕ) :=
       fun h => hk (Fin.ext h.symm)
-    rw [if_neg hk0, mul_zero]
+    rw [ite_eq_right hk0, mul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 /-- Each column of `denseH m` has support cardinality `≤ m` (trivially: at most all `m` rows). -/
@@ -382,10 +385,10 @@ theorem witnessDense_sound (m : ℕ) :
   intro y e' h
   unfold witnessDenseOpt at h
   by_cases hwt : wt y ≤ (denseScheme m).τ
-  · simp only [hwt, if_true, Option.some.injEq] at h
+  · simp only [hwt, ite_true, Option.some.injEq] at h
     subst h
     exact ⟨rfl, hwt⟩
-  · simp only [hwt, if_false] at h
+  · simp only [hwt, ite_false] at h
     exact absurd h (by simp)
 
 /-- The DENSE column-weight verifier — same code, same body, but built on `denseH`. -/

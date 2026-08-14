@@ -28,7 +28,7 @@ theorem one_add_X_mul_deriv_log : (1 + X : A⟦X⟧) * d⁄dX A (log A) = 1 := b
   rcases Nat.eq_zero_or_pos n with hn | hn
   · simp_all
   · obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : n ≠ 0)
-    rw [coeff_succ_X_mul, coeff_mk, coeff_mk, if_neg (Nat.succ_ne_zero m), ← map_add]
+    rw [coeff_succ_X_mul, coeff_mk, coeff_mk, ite_eq_right (Nat.succ_ne_zero m), ← map_add]
     simp only [Nat.succ_eq_add_one]
     rw [show ((-1 : ℚ) ^ (m + 1) + (-1) ^ m) = 0 by ring, map_zero]
 

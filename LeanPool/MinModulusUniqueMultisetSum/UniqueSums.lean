@@ -179,7 +179,7 @@ lemma shift_supp {w c : ℕ} {k : ℕ → ℕ} (h : Supp w k) :
     Supp (w + 1) (shift c k) := by
   intro i hi
   unfold shift
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
   exact h (i - 1) (by omega)
 
 lemma shift_val (w c : ℕ) (k : ℕ → ℕ) :
@@ -190,7 +190,7 @@ lemma shift_val (w c : ℕ) (k : ℕ → ℕ) :
   have hstep : ∀ i ∈ range w, shift c k (i + 1) * 2 ^ (i + 1) = 2 * (k i * 2 ^ i) := by
     intro i _
     unfold shift
-    rw [if_neg (Nat.succ_ne_zero i), Nat.add_sub_cancel, pow_succ]
+    rw [ite_eq_right (Nat.succ_ne_zero i), Nat.add_sub_cancel, pow_succ]
     ring
   rw [Finset.sum_congr rfl hstep, h0, ← Finset.mul_sum]
 
@@ -202,7 +202,7 @@ lemma shift_dsum (w c : ℕ) (k : ℕ → ℕ) :
   have hstep : ∀ i ∈ range w, shift c k (i + 1) = k i := by
     intro i _
     unfold shift
-    rw [if_neg (Nat.succ_ne_zero i), Nat.add_sub_cancel]
+    rw [ite_eq_right (Nat.succ_ne_zero i), Nat.add_sub_cancel]
   rw [Finset.sum_congr rfl hstep, h0]
 
 /-! ### Explicit representations (bases of the four witness families, paper §6) -/
@@ -210,18 +210,18 @@ lemma shift_dsum (w c : ℕ) (k : ℕ → ℕ) :
 /-- The all-ones representation of `2^w − 1`. -/
 lemma ones_rep (w : ℕ) :
     ∃ k, Supp w k ∧ val w k = 2 ^ w - 1 ∧ dsum w k = w := by
-  refine ⟨fun i => if i < w then 1 else 0, fun i hi => if_neg (by omega), ?_, ?_⟩
+  refine ⟨fun i => if i < w then 1 else 0, fun i hi => ite_eq_right (by omega), ?_, ?_⟩
   · unfold val
     calc (∑ i ∈ range w, (if i < w then 1 else 0) * 2 ^ i)
         = ∑ i ∈ range w, 2 ^ i := by
           refine Finset.sum_congr rfl fun i hi => ?_
-          rw [if_pos (Finset.mem_range.mp hi), one_mul]
+          rw [ite_eq_left (Finset.mem_range.mp hi), one_mul]
       _ = 2 ^ w - 1 := sum_two_pow w
   · unfold dsum
     calc (∑ i ∈ range w, (if i < w then 1 else 0))
         = ∑ i ∈ range w, 1 := by
           refine Finset.sum_congr rfl fun i hi => ?_
-          rw [if_pos (Finset.mem_range.mp hi)]
+          rw [ite_eq_left (Finset.mem_range.mp hi)]
       _ = w := by rw [Finset.sum_const, smul_eq_mul, mul_one, card_range]
 
 /-- All-ones minus bit `e`: represents `2^w − 1 − 2^e` with `w − 1` coins. -/
@@ -245,7 +245,7 @@ lemma ones_erase_rep {w e : ℕ} (he : e < w) :
       · subst hie; simp
       · simp [hie, Finset.mem_range.mp hi]
     have hone : (∑ i ∈ range w, if i = e then 2 ^ e else 0) = 2 ^ e := by
-      rw [Finset.sum_ite_eq' (range w) e (fun _ => 2 ^ e), if_pos hmem]
+      rw [Finset.sum_ite_eq' (range w) e (fun _ => 2 ^ e), ite_eq_left hmem]
     rw [sum_two_pow] at hsplit
     omega
   · simp only [dsum]
@@ -258,7 +258,7 @@ lemma ones_erase_rep {w e : ℕ} (he : e < w) :
       · subst hie; simp
       · simp [hie, Finset.mem_range.mp hi]
     have hone : (∑ i ∈ range w, if i = e then 1 else 0) = 1 := by
-      rw [Finset.sum_ite_eq' (range w) e (fun _ => 1), if_pos hmem]
+      rw [Finset.sum_ite_eq' (range w) e (fun _ => 1), ite_eq_left hmem]
     have hcard : (∑ i ∈ range w, (1 : ℕ)) = w := by
       rw [Finset.sum_const, smul_eq_mul, mul_one, card_range]
     omega
@@ -430,8 +430,8 @@ lemma dsum_succ_of_lt {n M s : ℕ}
       refine Finset.sum_congr rfl fun j hj => ?_
       obtain ⟨hj1, hj2⟩ := Finset.mem_erase.mp hj
       obtain ⟨hj3, _⟩ := Finset.mem_erase.mp hj2
-      rw [if_neg hj3, if_neg hj1]
-    rw [if_pos rfl, if_neg hii, if_pos rfl, hrest]
+      rw [ite_eq_right hj3, ite_eq_right hj1]
+    rw [ite_eq_left rfl, ite_eq_right hii, ite_eq_left rfl, hrest]
     rw [hA] at hv
     have hpi : 2 ^ i = 2 ^ (i - 1) * 2 := by
       rw [← pow_succ]
@@ -453,8 +453,8 @@ lemma dsum_succ_of_lt {n M s : ℕ}
       refine Finset.sum_congr rfl fun j hj => ?_
       obtain ⟨hj1, hj2⟩ := Finset.mem_erase.mp hj
       obtain ⟨hj3, _⟩ := Finset.mem_erase.mp hj2
-      rw [if_neg hj3, if_neg hj1]
-    rw [if_pos rfl, if_neg hii, if_pos rfl, hrest]
+      rw [ite_eq_right hj3, ite_eq_right hj1]
+    rw [ite_eq_left rfl, ite_eq_right hii, ite_eq_left rfl, hrest]
     omega
 
 /-- From digit sum `≤ t` to digit sum exactly `t`, provided `t ≤ M`
@@ -741,7 +741,7 @@ lemma unshift_val (w : ℕ) (k : ℕ → ℕ) :
     · simp [shift]
     · have hne : i ≠ 0 := by omega
       have hi1 : i - 1 + 1 = i := by omega
-      simp only [shift, if_neg hne, hi1]
+      simp only [shift, ite_eq_right hne, hi1]
   rw [hk] at h
   omega
 
@@ -756,7 +756,7 @@ lemma unshift_dsum (w : ℕ) (k : ℕ → ℕ) :
     · simp [shift]
     · have hne : i ≠ 0 := by omega
       have hi1 : i - 1 + 1 = i := by omega
-      simp only [shift, if_neg hne, hi1]
+      simp only [shift, ite_eq_right hne, hi1]
   rw [hk] at h
   omega
 

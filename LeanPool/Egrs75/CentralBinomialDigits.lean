@@ -93,11 +93,11 @@ lemma doubleCarryStep_eq_div {b carry d : ℕ} (_hb : 2 ≤ b)
   -- `2d + carry < 2b`, so the quotient by `b` is `0` or `1`, matching the test.
   have hlt : 2 * d + carry < 2 * b := by omega
   by_cases h : b ≤ 2 * d + carry
-  · simp only [h, if_true]
+  · simp only [h, ite_true]
     have h1 : (2 * d + carry) / b = 1 := by
       rw [Nat.div_eq_of_lt_le] <;> omega
     omega
-  · simp only [h, if_false]
+  · simp only [h, ite_false]
     have : (2 * d + carry) / b = 0 := Nat.div_eq_of_lt (by omega)
     omega
 
@@ -245,7 +245,7 @@ theorem carryCount_eq_zero_iff {b : ℕ} (_hb : 2 ≤ b) (ds : List ℕ) :
         have hhead : 2 * d < b := by
           by_contra hc
           have : doubleCarryStep b 0 d = 1 := by
-            unfold doubleCarryStep; simp only [Nat.add_zero]; rw [if_pos (by omega)]
+            unfold doubleCarryStep; simp only [Nat.add_zero]; rw [ite_eq_left (by omega)]
           omega
         -- carry-out is 0, so the tail count (with carry-in 0) is 0 too
         have htail0 : doubleCarryCountAux b ds 0 = 0 := by
@@ -260,7 +260,7 @@ theorem carryCount_eq_zero_iff {b : ℕ} (_hb : 2 ≤ b) (ds : List ℕ) :
         have hhead : 2 * d < b := h d List.mem_cons_self
         have htail : ∀ e ∈ ds, 2 * e < b := fun e he => h e (List.mem_cons_of_mem d he)
         have hstep : doubleCarryStep b 0 d = 0 := by
-          unfold doubleCarryStep; simp only [Nat.add_zero]; rw [if_neg (by omega)]
+          unfold doubleCarryStep; simp only [Nat.add_zero]; rw [ite_eq_right (by omega)]
         simpa only [doubleCarryCountAux, hstep, Nat.zero_add] using ih.mpr htail
 
 /-! ## Per-prime Kummer coprimality characterisation -/

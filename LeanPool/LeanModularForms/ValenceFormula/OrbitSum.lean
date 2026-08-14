@@ -93,7 +93,7 @@ private theorem G_analyticAt (p : ℍ) :
   have h_eq : ∀ᶠ u in 𝓝 w, (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0) u =
         (f ∘ UpperHalfPlane.ofComplex) u := by
     filter_upwards [UpperHalfPlane.isOpen_upperHalfPlaneSet.mem_nhds hw] with u hu
-    simp only [Function.comp_apply, dif_pos hu, UpperHalfPlane.ofComplex_apply_of_im_pos hu]
+    simp only [Function.comp_apply, dite_eq_left hu, UpperHalfPlane.ofComplex_apply_of_im_pos hu]
   exact ((h_diffOn w hw).differentiableAt
     (UpperHalfPlane.isOpen_upperHalfPlaneSet.mem_nhds hw)).congr_of_eventuallyEq h_eq
 

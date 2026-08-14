@@ -345,7 +345,7 @@ def gext (f : G.P) (i : Fin G.n) : ℂ → ℂ :=
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem gext_apply (f : G.P) {i : Fin G.n} {z : ℂ} (hz : z ∈ G.K i) :
-    G.gext f i z = f i ⟨z, hz⟩ := dif_pos hz
+    G.gext f i z = f i ⟨z, hz⟩ := dite_eq_left hz
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem continuousOn_gext (f : G.P) (i : Fin G.n) :

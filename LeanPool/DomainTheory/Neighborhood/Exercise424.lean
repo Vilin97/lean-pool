@@ -83,11 +83,11 @@ the fixed set
 noncomputable def sbFun (f : A → B) (g : B → A) (a : A) : B :=
   if ha : a ∈ sbSet f g then f a else Classical.choose (mem_range_of_not_mem ha)
 
-theorem sbFun_mem {a : A} (ha : a ∈ sbSet f g) : sbFun f g a = f a := dif_pos ha
+theorem sbFun_mem {a : A} (ha : a ∈ sbSet f g) : sbFun f g a = f a := dite_eq_left ha
 
 /-- Off the fixed set, `h(a)` is a genuine `g`-preimage of `a`: `g(h(a)) = a`. -/
 theorem g_sbFun_not_mem {a : A} (ha : a ∉ sbSet f g) : g (sbFun f g a) = a := by
-  rw [sbFun, dif_neg ha]
+  rw [sbFun, dite_eq_right ha]
   exact Classical.choose_spec (mem_range_of_not_mem ha)
 
 /-- `g(f(a)) ∈ X` whenever `a ∈ X` (the `g(f(X)) ⊆ T(X) = X` half). -/

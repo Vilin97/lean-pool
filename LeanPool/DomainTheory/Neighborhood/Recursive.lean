@@ -74,10 +74,10 @@ of
 theorem iter_sq_le (n guess : ℕ) : Nat.sqrt.iter n guess * Nat.sqrt.iter n guess ≤ n := by
   unfold Nat.sqrt.iter
   if h : (guess + n / guess) / 2 < guess then
-    rw [dif_pos h]
+    rw [dite_eq_left h]
     exact iter_sq_le n ((guess + n / guess) / 2)
   else
-    rw [dif_neg h]
+    rw [dite_eq_right h]
     apply Nat.mul_le_of_le_div
     omega
   termination_by guess
@@ -99,7 +99,7 @@ theorem lt_iter_succ_sq (n guess : ℕ) (hn : n < (guess + 1) * (guess + 1)) :
     n < (Nat.sqrt.iter n guess + 1) * (Nat.sqrt.iter n guess + 1) := by
   unfold Nat.sqrt.iter
   if h : (guess + n / guess) / 2 < guess then
-    rw [dif_pos h]
+    rw [dite_eq_left h]
     suffices hsuff : n < ((guess + n / guess) / 2 + 1) * ((guess + n / guess) / 2 + 1) from
       lt_iter_succ_sq n ((guess + n / guess) / 2) hsuff
     refine lt_of_mul_lt_mul_left' (a := 4 * (guess * guess)) ?_
@@ -115,7 +115,7 @@ theorem lt_iter_succ_sq (n guess : ℕ) (hn : n < (guess + 1) * (guess + 1)) :
     exact Nat.add_lt_add_left
       (Nat.lt_mul_div_succ _ (lt_of_le_of_lt (Nat.zero_le _) h)) _
   else
-    rw [dif_neg h]
+    rw [dite_eq_right h]
     exact hn
   termination_by guess
   decreasing_by exact h
@@ -123,9 +123,9 @@ theorem lt_iter_succ_sq (n guess : ℕ) (hn : n < (guess + 1) * (guess + 1)) :
 /-- `sqrt n` squared is `≤ n` (choice-free; mathlib's `Nat.sqrt_le` is classical). -/
 theorem sqrt_le (n : ℕ) : Nat.sqrt n * Nat.sqrt n ≤ n := by
   rcases Nat.lt_or_ge 1 n with h | h
-  · rw [Nat.sqrt, if_neg (Nat.not_le.mpr h)]
+  · rw [Nat.sqrt, ite_eq_right (Nat.not_le.mpr h)]
     exact iter_sq_le _ _
-  · rw [Nat.sqrt, if_pos h]
+  · rw [Nat.sqrt, ite_eq_left h]
     calc n * n ≤ 1 * n := Nat.mul_le_mul_right n h
       _ = n := Nat.one_mul n
 
@@ -134,7 +134,7 @@ The initial guess
 `2 ^ (log₂ n / 2 + 1)` over-shoots `√n`, which feeds `lt_iter_succ_sq`. -/
 theorem lt_succ_sqrt (n : ℕ) : n < (Nat.sqrt n + 1) * (Nat.sqrt n + 1) := by
   rcases Nat.lt_or_ge 1 n with h | h
-  · rw [Nat.sqrt, if_neg (Nat.not_le.mpr h)]
+  · rw [Nat.sqrt, ite_eq_right (Nat.not_le.mpr h)]
     refine lt_iter_succ_sq _ _ ?_
     set g := 1 <<< (n.log2 / 2 + 1) with hg
     have hshift : g = 2 ^ (n.log2 / 2 + 1) := by rw [hg, Nat.shiftLeft_eq, Nat.one_mul]
@@ -144,7 +144,7 @@ theorem lt_succ_sqrt (n : ℕ) : n < (Nat.sqrt n + 1) * (Nat.sqrt n + 1) := by
       _ ≤ 2 ^ (2 * (n.log2 / 2 + 1)) := Nat.pow_le_pow_right (by decide) (by omega)
       _ = g * g := hgg.symm
       _ ≤ (g + 1) * (g + 1) := Nat.mul_le_mul (Nat.le_succ g) (Nat.le_succ g)
-  · rw [Nat.sqrt, if_pos h]
+  · rw [Nat.sqrt, ite_eq_left h]
     exact Nat.lt_of_lt_of_le (Nat.lt_succ_self n)
       (Nat.le_mul_of_pos_right (n + 1) (Nat.succ_pos n))
 

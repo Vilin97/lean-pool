@@ -357,10 +357,10 @@ private def close_up_all_one_pass_aux_proof
     -- Unfold the well-founded recursion at p and discharge the guard conditions
     change (∃ (hle : R'.carrier ≤ (f p).carrier), _) ∧ _
     rw [show f p = _ from WellFounded.fix_eq _ _ p,
-      dif_pos hcheck1, dif_pos hcheck2, dif_pos hcheck3]
+      dite_eq_left hcheck1, dite_eq_left hcheck2, dite_eq_left hcheck3]
     by_cases hne : ∃ q, q < p
     · -- p has predecessors: build the union of all f(q) for q < p, then extend
-      rw [dif_pos hne]
+      rw [dite_eq_left hne]
       have hne_inst : Nonempty {q // q < p} := ⟨⟨hne.choose, hne.choose_spec⟩⟩
       let ichain : NSubringChain T {q // q < p} :=
         { ring := fun x => f x.1
@@ -413,7 +413,7 @@ private def close_up_all_one_pass_aux_proof
         exact hAext.primes_preserved ⟨(r : T), hbu_le q hq r.2⟩
           (primes_to_bu ⟨q, hq⟩ r hr)
     · -- p is minimal: close directly over R'
-      rw [dif_neg hne]
+      rw [dite_eq_right hne]
       let mk_res := mk_next R' hR' (le_refl _) p.1 p.2
       have hAext : IsAExtension R' mk_res.choose := mk_res.choose_spec.1
       refine ⟨⟨mk_res.choose_spec.2.2.1, fun r hr => hAext.primes_preserved r hr⟩,
@@ -745,7 +745,7 @@ include T in theorem close_up_all_omega
           have heq : Subring.inclusion (hS_le N) (toPassN g) = g := by
             apply Subtype.ext
             change (toPassN g : T) = (g : T)
-            exact congrArg Subtype.val (dif_pos (hN_idx g hg))
+            exact congrArg Subtype.val (dite_eq_left (hN_idx g hg))
           rw [heq]
           exact Ideal.subset_span (Finset.mem_coe.mpr hg)
         · rw [Ideal.span_le]
@@ -756,7 +756,7 @@ include T in theorem close_up_all_omega
           have heq : Subring.inclusion (hS_le N) (toPassN g) = g := by
             apply Subtype.ext
             change (toPassN g : T) = (g : T)
-            exact congrArg Subtype.val (dif_pos (hN_idx g hg))
+            exact congrArg Subtype.val (dite_eq_left (hN_idx g hg))
           rw [SetLike.mem_coe]
           exact heq ▸ Ideal.mem_map_of_mem _ h_in_J
       have hc_J : (c_N : T) ∈ Ideal.map (pass N).carrier.subtype J := by

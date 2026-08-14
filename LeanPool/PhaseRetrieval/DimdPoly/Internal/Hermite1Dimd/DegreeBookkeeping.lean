@@ -289,10 +289,10 @@ theorem highAnnulusDegreeBounds
     by_cases hqq : q = q0
     · subst hqq
       dsimp [gap', gap]
-      rw [if_pos rfl, hq0, max_eq_left (by omega : M ≤ R)]
+      rw [ite_eq_left rfl, hq0, max_eq_left (by omega : M ≤ R)]
       exact coordGapMainLe R M R (by omega) le_rfl
     · dsimp [gap', gap]
-      rw [if_neg hqq]
+      rw [ite_eq_right hqq]
       exact coordGapLe (j q) M R (hR q) hMR
   have hwidth : degreeWidth j M ≤ d * C := by
     rw [degreeWidth_eq_gap_sum, ← hgap'_eq]

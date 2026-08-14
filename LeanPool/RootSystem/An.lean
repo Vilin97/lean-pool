@@ -128,8 +128,8 @@ theorem SignedInterval.ext' {n : ℕ} {J K : SignedInterval n}
 
 theorem s_involutive {n : ℕ} (J K : SignedInterval n) :
     s J (s J K) = K := by
-  cases J; cases K; simp +decide only [s, Bool.not_false, Bool.if_true_right, Bool.decide_eq_true,
-    Bool.or_false, Bool.not_true, Bool.if_false_right, Bool.and_true, gt_iff_lt, Fin.val_fin_lt,
+  cases J; cases K; simp +decide only [s, Bool.not_false, Bool.ite_true_right, Bool.decide_eq_true,
+    Bool.or_false, Bool.not_true, Bool.ite_false_right, Bool.and_true, gt_iff_lt, Fin.val_fin_lt,
     dite_eq_ite];
   rename_i k l hk hl;
   rename_i i j hij ε;

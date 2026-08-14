@@ -118,7 +118,7 @@ lemma EF.one_smul (r : F∞) : (1 : F≥0) • r = r := by
   | ⊤ =>
     change EF.smulNN 1 ⊤ = ⊤
     change (if (1 : F≥0) = 0 then (0 : F∞) else ⊤) = ⊤
-    exact if_neg (by norm_num)
+    exact ite_eq_right (by norm_num)
   | (q : F) => exact congr_arg toE (one_mul q)
 
 lemma EF.sub_nonpos_iff (r s : F∞) : r + (-s) ≤ 0 ↔ r ≤ s := by
@@ -1054,7 +1054,7 @@ lemma ExtendedLP.optimum_eq_of_reaches_bounded [Fintype J] {P : ExtendedLP I J F
   have hPb : ¬P.IsUnbounded := (· ⟨r, bounded⟩)
   have hopt : P.optimum = some (toE hPP.choose) := by
     unfold ExtendedLP.optimum
-    rw [if_neg (not_not.mpr hP), if_neg hPb, dif_pos hPP]
+    rw [ite_eq_right (not_not.mpr hP), ite_eq_right hPb, dite_eq_left hPP]
   rw [hopt]
   exact congr_arg (some <| toE ·) (ExtendedLP.optimum_unique hPP.choose_spec ⟨reaches, bounded⟩)
 

@@ -79,7 +79,7 @@ theorem pv_split_at_crossing {γ : ℝ → ℂ} {a b : ℝ} {s : ℂ} {ε δ : �
     intro t ht
     rw [uIoc_of_le (by linarith)] at ht
     simp only [hF_def]
-    rw [if_neg (not_lt.mpr _)]
+    rw [ite_eq_right (not_lt.mpr _)]
     apply h_near
     rw [abs_le]
     constructor <;> [linarith [ht.1]; linarith [ht.2]]
@@ -93,7 +93,7 @@ theorem pv_split_at_crossing {γ : ℝ → ℂ} {a b : ℝ} {s : ℂ} {ε δ : �
     filter_upwards [h_ne] with t ht_ne ht
     rw [uIoc_of_le (le_of_lt h_left_lt)] at ht
     simp only [hF_def]
-    rw [if_pos]
+    rw [ite_eq_left]
     -- ht : t ∈ Ioc a (t₀ - δ), t ≠ t₀ - δ, so t < t₀ - δ, giving |t - t₀| > δ
     apply h_far t ⟨le_of_lt ht.1, le_trans ht.2 (by linarith)⟩
     rw [abs_of_nonpos (by linarith [ht.2])]
@@ -107,7 +107,7 @@ theorem pv_split_at_crossing {γ : ℝ → ℂ} {a b : ℝ} {s : ℂ} {ε δ : �
     filter_upwards [h_ne] with t ht_ne ht
     rw [uIoc_of_le (le_of_lt h_right_lt)] at ht
     simp only [hF_def]
-    rw [if_pos]
+    rw [ite_eq_left]
     -- ht : t ∈ Ioc (t₀ + δ) b, so t₀ + δ < t, giving |t - t₀| = t - t₀ > δ
     apply h_far t ⟨le_trans (by linarith) (le_of_lt ht.1), ht.2⟩
     rw [abs_of_nonneg (by linarith [ht.1])]

@@ -98,7 +98,7 @@ private lemma transitionWeight_nonneg (Y m q : ℕ) : 0 ≤ transitionWeight Y m
   by_cases hYq : Y ≤ q
   · by_cases hm : m = 0
     · simp [transitionWeight, hYq, hm]
-    · rw [transitionWeight, if_pos hYq]
+    · rw [transitionWeight, ite_eq_left hYq]
       exact mul_nonneg (div_nonneg (by positivity) (sq_nonneg _))
         (div_nonneg ArithmeticFunction.vonMangoldt_nonneg (by positivity))
   · simp [transitionWeight, hYq]

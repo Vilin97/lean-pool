@@ -286,11 +286,11 @@ def iComp (n : ℕ) (x : D n) (m : ℕ) : D m :=
   if h : n ≤ m then embLE D P h x else projLE D P (le_of_lt (not_le.mp h)) x
 
 theorem iComp_of_le {n m : ℕ} (h : n ≤ m) (x : D n) : iComp D P n x m = embLE D P h x :=
-  dif_pos h
+  dite_eq_left h
 
 theorem iComp_of_ge {n m : ℕ} (h : ¬ n ≤ m) (x : D n) :
     iComp D P n x m = projLE D P (le_of_lt (not_le.mp h)) x :=
-  dif_neg h
+  dite_eq_right h
 
 theorem iComp_self (n : ℕ) (x : D n) : iComp D P n x n = x := by
   rw [iComp_of_le D P (le_refl n), embLE_self]

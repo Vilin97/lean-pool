@@ -64,7 +64,7 @@ theorem metzler_decomp {n : Type*} [Finite n] [DecidableEq n]
         have h1 : |L i i| ≤ c := Finset.le_sup' (fun k => |L k k|) (Finset.mem_univ i)
         linarith [neg_abs_le (L i i)]
       · -- Off-diagonal: L_{ij} ≥ 0 by Metzler condition
-        simp only [if_neg hij, mul_zero, add_zero]
+        simp only [ite_eq_right hij, mul_zero, add_zero]
         exact hL i j hij
     · -- L = -c • 1 + N: trivial algebra
       ext i j; simp [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]

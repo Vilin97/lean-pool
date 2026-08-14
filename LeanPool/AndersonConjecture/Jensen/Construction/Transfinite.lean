@@ -54,7 +54,7 @@ heartbeat budget. Given a family of NSubrings indexed by predecessors of `α`,
 builds the union as an NSubring with cardinal bounds and prime preservation. -/
 
 private noncomputable def mk_union_nsub_aux
-    {ι : Type u} [LinearOrder ι] [IsWellOrder ι (· < ·)]
+    {ι : Type u} [LinearOrder ι]
     (α : ι) (rings : ∀ β, β < α → NSubring T)
     (hne : ∃ β₀ : ι, β₀ < α)
     (hmono : ∀ ⦃β₁ β₂ : ι⦄ (hβ₁ : β₁ < α) (hβ₂ : β₂ < α),
@@ -552,12 +552,12 @@ private def transfinite_construction_proof
       rw [hprevF_eq α]
       by_cases hmin : IsMin α
       · exact absurd (hmin (le_of_lt hβ)) (not_le.mpr hβ)
-      · simp only [prevF, dif_neg hmin]
+      · simp only [prevF, dite_eq_right hmin]
         by_cases hlim : Order.IsSuccLimit α
-        · simp only [dif_pos hlim, dif_pos hgood_α]
+        · simp only [dite_eq_left hlim, dite_eq_left hgood_α]
           exact (mk_union_nsub α (fun γ hγ => data γ) (not_isMin_iff.mp hmin) hgood_α
             (fun β hβ => (data β).2.2.2.2.2.2.2)).2.2.2.1 β hβ
-        · simp only [dif_neg hlim]
+        · simp only [dite_eq_right hlim]
           let hprelim := (Order.not_isSuccLimit_iff.mp hlim).resolve_left hmin
           let hγ_ex := Order.not_isSuccPrelimit_iff_succ_eq.mp hprelim
           let hγ_lt := lt_of_lt_of_eq
@@ -598,7 +598,7 @@ private def transfinite_construction_proof
             · have h_prevF_eq : prevF α (fun γ hγ => data γ) =
                   (mk_union_nsub α (fun γ hγ => data γ) (not_isMin_iff.mp hmin) hgood_α
                     (fun β hβ => (data β).2.2.2.2.2.2.2)).1 := by
-                simp only [prevF, dif_neg hmin, dif_pos hlim, dif_pos hgood_α]
+                simp only [prevF, dite_eq_right hmin, dite_eq_left hlim, dite_eq_left hgood_α]
               have hmem_u : (r : T) ∈
                   (mk_union_nsub α (fun γ hγ => data γ) (not_isMin_iff.mp hmin) hgood_α
                     (fun β hβ => (data β).2.2.2.2.2.2.2)).1.carrier := by
@@ -610,7 +610,7 @@ private def transfinite_construction_proof
             · have h_prevF_eq : prevF α (fun γ hγ => data γ) = ring
                   ((Order.not_isSuccPrelimit_iff_succ_eq.mp
                     ((Order.not_isSuccLimit_iff.mp hlim).resolve_left hmin)).choose) := by
-                simp only [prevF, dif_neg hmin, dif_neg hlim]
+                simp only [prevF, dite_eq_right hmin, dite_eq_right hlim]
                 rfl
               let hprelim := (Order.not_isSuccLimit_iff.mp hlim).resolve_left hmin
               let hγ_ex := Order.not_isSuccPrelimit_iff_succ_eq.mp hprelim

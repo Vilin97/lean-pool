@@ -53,7 +53,7 @@ lemma isHom_fold
       = fold mk (Encoding.mk (k []) (List.ofFn fun i ↦ ⟨children[i], fun is ↦ k (i :: is)⟩)) := by
     simp only [
       Encoding.mk, Fin.getElem_fin, List.map_ofFn, List.getElem?_ofFn,
-      Option.map_dif, dite_eq_ite, fold, List.length_ofFn, Fin.val_cast,
+      Option.map_dite, dite_eq_ite, fold, List.length_ofFn, Fin.val_cast,
       List.getElem_ofFn, Fin.eta, Function.comp_apply, Fin.is_lt, ↓reduceIte,
       Option.getD_some]
     nth_rw 1 [fold]

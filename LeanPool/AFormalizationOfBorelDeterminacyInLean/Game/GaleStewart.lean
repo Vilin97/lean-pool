@@ -72,8 +72,7 @@ lemma defensive_winning_isClosed (hC : IsClosed G.payoff) (hP : IsPruned G.tree)
     (by synthIsPosition) ha
   apply AllWinning.existsWinning _ (hP.sub _); apply wonPosition_iff_disjoint.mpr
   rw [← Set.subset_empty_iff]; intro a' ⟨h1, h2⟩; apply hfa a'
-  · conv at h1 => simp [ExtensionsAt.val']
-    apply principalOpen_mono _ h1
+  · apply principalOpen_mono _ h1
     nth_rw 1 [(principalOpen_iff_restrict _ _).mp h]
     change Stream'.take x.length a <+:
       Stream'.take (2 * (x.length / 2)) a ++ [a.get (2 * (x.length / 2))]

@@ -150,7 +150,7 @@ theorem ket_injective : Function.Injective (ket (n := n)) := by
   intro x y hxy
   by_contra hne
   have h : ket x x = ket y x := by rw [hxy]
-  rw [ket_apply, ket_apply, if_pos rfl, if_neg hne] at h
+  rw [ket_apply, ket_apply, ite_eq_left rfl, ite_eq_right hne] at h
   exact one_ne_zero h
 
 theorem norm_ket (x : Fin (2 ^ n)) : ‖(ket x : StateVector n)‖ = 1 := by

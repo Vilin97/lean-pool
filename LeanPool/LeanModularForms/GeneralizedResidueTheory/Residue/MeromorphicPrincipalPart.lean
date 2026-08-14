@@ -98,7 +98,7 @@ theorem meromorphicPrincipalPart_eq_zero_of_analyticAt (f : ℂ → ℂ) (s : �
     meromorphicPrincipalPart f s = fun _ => 0 := by
   unfold meromorphicPrincipalPart
   have h_ord : 0 ≤ meromorphicOrderAt f s := hf.meromorphicOrderAt_nonneg
-  exact dif_neg (fun h => absurd h.2 (not_lt.mpr h_ord))
+  exact dite_eq_right (fun h => absurd h.2 (not_lt.mpr h_ord))
 
 /-! ### Differentiability of the principal part -/
 
@@ -117,11 +117,11 @@ theorem meromorphicPrincipalPart_differentiableOn (f : ℂ → ℂ) (s : ℂ)
     DifferentiableOn ℂ (meromorphicPrincipalPart f s) {s}ᶜ := by
   unfold meromorphicPrincipalPart
   by_cases h_neg : meromorphicOrderAt f s < 0
-  · rw [dif_pos ⟨hf, h_neg⟩]
+  · rw [dite_eq_left ⟨hf, h_neg⟩]
     apply DifferentiableOn.fun_sum
     intro k _
     exact differentiableOn_zpow_sub_compl s _ _
-  · rw [dif_neg (not_and_of_not_right _ h_neg)]
+  · rw [dite_eq_right (not_and_of_not_right _ h_neg)]
     exact differentiableOn_const 0
 
 /-- When the meromorphic order is negative, `poleOrderNat` is positive. -/
@@ -208,7 +208,7 @@ theorem meromorphicAt_sub_principalPart_eventually (f : ℂ → ℂ) (s : ℂ)
       filter_upwards [self_mem_nhdsWithin] with z hz
       have hne : z - s ≠ 0 := sub_ne_zero.mpr (Set.mem_compl_singleton_iff.mp hz)
       change meromorphicPrincipalPart f s z = _
-      unfold meromorphicPrincipalPart; rw [dif_pos ⟨hf, h_neg⟩]
+      unfold meromorphicPrincipalPart; rw [dite_eq_left ⟨hf, h_neg⟩]
       simp only [P, N, G]; rw [Finset.mul_sum]
       apply Finset.sum_congr rfl; intro k _
       rw [show (z - s) ^ ((k : ℤ) - (poleOrderNat f s : ℤ)) =
@@ -229,7 +229,7 @@ theorem meromorphicAt_sub_principalPart_eventually (f : ℂ → ℂ) (s : ℂ)
     simp_all
   · have h_pp : meromorphicPrincipalPart f s = fun _ => 0 := by
       unfold meromorphicPrincipalPart
-      rw [dif_neg (not_and_of_not_right _ h_neg)]
+      rw [dite_eq_right (not_and_of_not_right _ h_neg)]
     push Not at h_neg
     refine ⟨toMeromorphicNFAt f s, ?_, ?_⟩
     · exact (meromorphicNFAt_toMeromorphicNFAt.meromorphicOrderAt_nonneg_iff_analyticAt).mp
@@ -489,7 +489,7 @@ theorem contourIntegral_principalPart_eq_zero_of_residue_zero
         (Finset.range N).sum fun k =>
           (iteratedDeriv k g s / ↑(Nat.factorial k)) * (z - s) ^ ((k : ℤ) - (N : ℤ)) := by
       unfold meromorphicPrincipalPart
-      rw [dif_pos ⟨hf, h_neg⟩]
+      rw [dite_eq_left ⟨hf, h_neg⟩]
     rw [h_pp_eq]
     simp_rw [Finset.sum_mul]
     have h_coeff_zero : iteratedDeriv (N - 1) g s / ↑((N - 1).factorial) = 0 := by
@@ -527,7 +527,7 @@ theorem contourIntegral_principalPart_eq_zero_of_residue_zero
       exact contourIntegral_const_mul_zpow_eq_zero s _ h_exp _ γ hγ_closed hγ_avoids
   · have h_pp : meromorphicPrincipalPart f s = fun _ => 0 := by
       unfold meromorphicPrincipalPart
-      rw [dif_neg (not_and_of_not_right _ h_neg)]
+      rw [dite_eq_right (not_and_of_not_right _ h_neg)]
     simp only [h_pp, zero_mul, intervalIntegral.integral_zero]
 
 end GeneralizedResidueTheory

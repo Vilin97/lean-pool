@@ -202,7 +202,7 @@ theorem vcdim_finite_imp_proper_finite_support_learner
     · exact hc₀
   have learn_consistent : ∀ {m : ℕ} (S : Fin m → X × Bool),
       (∃ c ∈ C, ∀ i, c (S i).1 = (S i).2) → ∀ i, learn S (S i).1 = (S i).2 := by
-    intro m S hreal i; simp only [learn, dif_pos hreal]; exact hreal.choose_spec.2 i
+    intro m S hreal i; simp only [learn, dite_eq_left hreal]; exact hreal.choose_spec.2 i
   -- Get the sample size from finite_support_vc_approx
   obtain ⟨T, hTpos, hApprox⟩ := finite_support_vc_approx d (1 / 3) (by norm_num)
   exact ⟨⟨T, learn, @learn_mem, fun c hc Y q => by
@@ -395,8 +395,8 @@ lemma decodeWitnessXCoords_encode_eq
     by_cases hmk : ((x0 : X), c x0) ∈ kernel
     · by_cases hlt : (kernel.equivFin ⟨(x0, c x0), hmk⟩).val < K
       · simp_all
-      · simp [dif_pos hmk, dif_neg hlt] at hidx_mem2
-    · simp [dif_neg hmk] at hidx_mem2
+      · simp [dite_eq_left hmk, dite_eq_right hlt] at hidx_mem2
+    · simp [dite_eq_right hmk] at hidx_mem2
   · intro hxW
     have hmk : (x, c x) ∈ kernel := hWker x hxW
     have hltK : (kernel.equivFin ⟨(x, c x), hmk⟩).val < K :=
@@ -765,7 +765,7 @@ private theorem finalizeIncidenceScheme
 private lemma good_on_support_gives_row_response
     {X : Type u} {C : ConceptClass X Bool}
     (L : ProperFiniteSupportLearner X C)
-    (c : X → Bool) (hc : c ∈ C) (Y : Finset X) [Nonempty ↥Y]
+    (c : X → Bool) (hc : c ∈ C) (Y : Finset X)
     (HY : Finset (X → Bool))
     (hHY : HY = hypothesisEnvelope L c Y) :
     ∀ q : FinitePMF ↥Y, ∃ h : ↥HY,
@@ -962,7 +962,7 @@ private theorem moran_yehudayoff_forward_construction
       have hWker : ∀ x ∈ W, (x, c x) ∈ (compressCore S).1 := by
         intro x hx
         dsimp only [compressCore]
-        simpa only [dif_pos hreal, dif_pos hm] using witness_mem_moranKernel c _ t hx
+        simpa only [dite_eq_left hreal, dite_eq_left hm] using witness_mem_moranKernel c _ t hx
       have hrep : L.learn (labeledSampleOfFinset c W) = (reps t).val := hWspec.2
       have hlabels : ∀ p ∈ (compressCore S).1, p.2 = c p.1 := h_kernel_labels
       -- The roundtrip: use roundtrip_blockHyp_eq_rep
@@ -977,7 +977,7 @@ private theorem moran_yehudayoff_forward_construction
       dsimp only [blockHyp, moranBlockHyp]
       have hinfo_eq : (compressCore S).2 t = encodeWitnessInfo (compressCore S).1 c Kreal W := by
         dsimp only [compressCore, c, reps, W]
-        simp only [dif_pos hreal, dif_pos hm]
+        simp only [dite_eq_left hreal, dite_eq_left hm]
       rw [hinfo_eq]
       exact hrt
     -- Phase 2: Rewrite sum via if_congr (handles Decidable instance mismatch)

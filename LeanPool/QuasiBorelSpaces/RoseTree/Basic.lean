@@ -209,7 +209,7 @@ instance : LawfulMonad Rose where
 
 @[simp]
 private lemma traverse_map
-    {F : Type _ → Type _} [Applicative F] [LawfulApplicative F]
+    {F : Type _ → Type _} [Applicative F]
     (f : B → F C)
     (g : A → B) (xs : List A)
     : List.traverse f (List.map g xs) = List.traverse (fun x ↦ f (g x)) xs := by

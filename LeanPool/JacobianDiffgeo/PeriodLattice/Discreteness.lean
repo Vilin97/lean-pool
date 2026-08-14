@@ -127,7 +127,7 @@ private theorem resAt_twisted_eq {a x : Fin (genus X) → X}
     filter_upwards [(e j).open_target.mem_nhds (mem_chart_target ℂ (a j))] with z hz
     change F.holoRepr ((e j).symm z) *
       (if z ∈ (e j).target then coeffIn (e j) (basis X k) z else 0) = _
-    rw [if_pos hz]
+    rw [ite_eq_left hz]
   have hresrw : RS.resAt ((MFormData.smul F (MFormData.ofForm1 (basis X k))).coeffAt (a j))
       (c₀ j) = RS.resAt (fun z => F.holoRepr ((e j).symm z) * coeffIn (e j) (basis X k) z)
         (c₀ j) := resAt_congr (hcoeffAt.filter_mono nhdsWithin_le_nhds)
@@ -403,7 +403,7 @@ theorem exists_isolating_nhds_periodSubgroup (hg : 1 ≤ genus X) (hupgrade : Di
   have hFordAll : ∀ j, F.ord (a j) = if x j = a j then 0 else -1 := by
     intro j
     by_cases hj : x j = a j
-    · rw [if_pos hj]
+    · rw [ite_eq_left hj]
       have hjnS : j ∉ S := fun hjS => (hSmem.mp hjS) hj
       have hij_ne : ∀ i : (↥S : Type), (i : Fin (genus X)) ≠ j := by
         intro i hij
@@ -417,7 +417,7 @@ theorem exists_isolating_nhds_periodSubgroup (hg : 1 ≤ genus X) (hupgrade : Di
         have heq' : a j = x (i : Fin (genus X)) := heq
         have hmem2 : a j ∈ V (i : Fin (genus X)) := by rw [heq']; exact hVj i.1
         exact Set.disjoint_left.mp (hVdisj (hij_ne i).symm) (haV j) hmem2
-    · rw [if_neg hj]
+    · rw [ite_eq_right hj]
       exact hForda ⟨j, hSmem.mpr hj⟩
   have hΘres : ∀ k j, (Θ k).resAt (a j) = A k j * c j :=
     resAt_twisted_eq he he_def hc₀_def hAij hFordAll

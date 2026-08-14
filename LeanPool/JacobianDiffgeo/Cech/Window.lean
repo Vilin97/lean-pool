@@ -40,7 +40,8 @@ noncomputable def ordGe (p : X) (m : ℤ) : Submodule ℂ (RS.MeroGermOn X ((cha
   carrier := {ψ | (m : WithTop ℤ) ≤ ψ.ord p}
   zero_mem' := by
     change (m : WithTop ℤ) ≤ (0 : RS.MeroGermOn X _).ord p
-    rw [RS.MeroGermOn.ord_zero, if_pos ⟨(chartAt ℂ p).open_source, mem_chart_source ℂ p⟩]
+    rw [RS.MeroGermOn.ord_zero,
+      ite_eq_left ⟨(chartAt ℂ p).open_source, mem_chart_source ℂ p⟩]
     exact le_top
   add_mem' := by
     intro ψ φ hψ hφ
@@ -51,8 +52,8 @@ noncomputable def ordGe (p : X) (m : ℤ) : Submodule ℂ (RS.MeroGermOn X ((cha
     intro a ψ hψ
     change (m : WithTop ℤ) ≤ (a • ψ).ord p
     rcases eq_or_ne a 0 with rfl | ha
-    · rw [zero_smul, RS.MeroGermOn.ord_zero, if_pos ⟨(chartAt ℂ p).open_source, mem_chart_source ℂ
-        p⟩]
+    · rw [zero_smul, RS.MeroGermOn.ord_zero,
+        ite_eq_left ⟨(chartAt ℂ p).open_source, mem_chart_source ℂ p⟩]
       exact le_top
     · rw [RS.MeroGermOn.ord_smul (chartAt ℂ p).open_source (mem_chart_source ℂ p) ha]
       exact hψ

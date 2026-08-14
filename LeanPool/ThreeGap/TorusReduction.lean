@@ -83,7 +83,7 @@ theorem gapVal_eq_nnDist (α : Fin d → ℝ) {N : ℕ} (hN : 2 ≤ N) {q : ℕ}
     rw [← Finset.card_pos, Finset.card_erase_of_mem (Finset.mem_range.mpr (by omega)),
       Finset.card_range]
     omega
-  rw [gapVal, dif_pos hIcc, nnDist, dif_pos hEr]
+  rw [gapVal, dite_eq_left hIcc, nnDist, dite_eq_left hEr]
   apply le_antisymm
   · -- `inf'_Icc (deltaCost) ≤ inf'_erase (delta (q−j))`
     refine Finset.le_inf' _ _ (fun j hj => ?_)

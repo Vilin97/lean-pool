@@ -56,8 +56,8 @@ def zeroOutside : Presheaf C X where
   obj W := if (unop W) ≤ U then F.obj W else 0
   map {W Y} i :=
     if h : (unop W) ≤ U then
-      eqToHom (by grind) ≫ F.map i ≫ eqToHom (by rw [if_pos (le_trans (leOfHom i.unop) h)])
-    else ((if_neg h).symm.ndrec (isZero_zero C)).to_ _
+      eqToHom (by grind) ≫ F.map i ≫ eqToHom (by rw [ite_eq_left (le_trans (leOfHom i.unop) h)])
+    else ((ite_eq_right h).symm.ndrec (isZero_zero C)).to_ _
   map_id W := by
     split_ifs with h
     · simp
@@ -85,7 +85,7 @@ lemma zeroOutside_le {W : Opens X} (h : W ≤ U) :
 lemma zeroOutside_map_of_le {W Y : (Opens X)ᵒᵖ} (i : W ⟶ Y) (h : unop W ≤ U) :
     (zeroOutside U F).map i = eqToHom (zeroOutside_le h) ≫ F.map i ≫
       eqToHom (zeroOutside_le (le_trans (leOfHom i.unop) h)).symm :=
-  dif_pos h
+  dite_eq_left h
 
 /-- `zeroOutside ⊤ F ≅ F`: zero-outside on the whole space is the identity. -/
 def zeroOutsideTopIso : zeroOutside (⊤ : Opens X) F ≅ F :=
@@ -108,7 +108,7 @@ def zeroOutsideOpenHom : zeroOutside V F ⟶ zeroOutside U F where
     · have hYV : unop Y ≤ V := le_trans (leOfHom i.unop) hWV
       have hYU : unop Y ≤ U := le_trans hYV h
       have hWU : unop W ≤ U := le_trans hWV h
-      simp only [dif_pos hWV, dif_pos hYV, zeroOutside_map_of_le i hWV,
+      simp only [dite_eq_left hWV, dite_eq_left hYV, zeroOutside_map_of_le i hWV,
         zeroOutside_map_of_le i hWU]
       simp
     · apply (zeroOutside_isZero (F := F) hWV).eq_of_src
@@ -221,7 +221,7 @@ def sHom {F : Presheaf AddCommGrpCat.{u} X} (s : F.obj (op U)) :
         simpa [Functor.map_comp_apply] using
           (congrArg (fun j ↦ F.map j s) (Subsingleton.elim ((homOfLE hWU).op ≫ i)
             (homOfLE hYU).op)).symm
-      simp only [dif_pos hWU, dif_pos hYU, zeroOutside_map_of_le i hWU,
+      simp only [dite_eq_left hWU, dite_eq_left hYU, zeroOutside_map_of_le i hWU,
         AddCommGrpCat.hom_comp, AddMonoidHom.coe_comp, Function.comp_apply,
         AddCommGrpCat.hom_ofHom, uliftZMultiplesHom_apply_apply, hmap]
       rw [map_zsmul]
@@ -248,7 +248,7 @@ theorem sHom_app_generator {F : Presheaf AddCommGrpCat.{u} X} (s : F.obj (op U))
         AddCommGrpCat.ofHom
           (uliftZMultiplesHom (F.obj (op U)) (F.map (homOfLE h).op s))
     else 0 from rfl]
-  rw [dif_pos le_rfl]
+  rw [dite_eq_left le_rfl]
   simp only [AddCommGrpCat.hom_comp, AddMonoidHom.coe_comp, Function.comp_apply]
   change (((AddCommGrpCat.Hom.hom (eqToHom hObjU))
       ((AddCommGrpCat.Hom.hom (eqToHom hObjU.symm)) (1 : ULift ℤ))).down : ℤ) •
@@ -267,7 +267,7 @@ theorem resGen_eqToHom_eq_one
   have hmap : (constZ.zeroOutside V).map (homOfLE hWV).op =
       eqToHom (by simp [TopCat.Presheaf.zeroOutside, constZ, hWV]) := by
     dsimp [TopCat.Presheaf.zeroOutside, constZ]
-    rw [dif_pos (le_rfl : V ≤ V)]
+    rw [dite_eq_left (le_rfl : V ≤ V)]
     change eqToHom _ ≫ eqToHom
       (rfl : AddCommGrpCat.of (ULift ℤ) = AddCommGrpCat.of (ULift ℤ)) ≫
       eqToHom _ = eqToHom _

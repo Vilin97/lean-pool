@@ -262,6 +262,7 @@ theorem vlasov_frozenField_pushforward_isLinearVlasovSolutionOn
   rw [hLHS, h_map_eq]
   exact h_under_integral
 
+omit [NeZero d] in
 /-- **C1 #2 — characteristic flow for a frozen field from window data (L11 clamp).**
 
 Build the characteristic flow for the *given* external curve `ρ` on `Ioo 0 T` (with boundary
@@ -4077,7 +4078,7 @@ theorem transportedIntegral_continuousOn
         have hmem : {p : ℝ × PhaseSpace d | p.1 < 0} ∈ 𝓝 (s₀, z₀) :=
           (isOpen_lt continuous_fst continuous_const).mem_nhds hs₀
         filter_upwards [hmem] with p hp
-        simp only [hG'_def, if_pos hp.le]
+        simp only [hG'_def, ite_eq_left hp.le]
       exact (hg_cont.comp continuous_snd).continuousAt.congr heq.symm
     · -- s₀ = 0: the confinement seam
       subst hs₀
@@ -4118,14 +4119,14 @@ theorem transportedIntegral_continuousOn
       filter_upwards [hfact1, hfact2] with p hp1 hp2
       by_cases hps : p.1 ≤ 0
       · -- branch g p.2
-        simp only [hG'_def, if_pos hps]
+        simp only [hG'_def, ite_eq_left hps]
         exact hδg (lt_of_lt_of_le hp1 (by linarith))
       · -- branch g (Ψ (min p.1 t) p.2)
         rw [not_le] at hps
         have humin : u p.1 = min p.1 t := hu_pos_of_pos p.1 hps
         have hminIoo : min p.1 t ∈ Set.Ioo (0 : ℝ) T :=
           ⟨lt_min hps ht.1, lt_of_le_of_lt (min_le_right _ _) ht.2⟩
-        simp only [hG'_def, if_neg (not_le.mpr hps)]
+        simp only [hG'_def, ite_eq_right (not_le.mpr hps)]
         apply hδg
         -- dist (Ψ (min p.1 t) p.2) z₀ < δ
         have hright : (charX (min p.1 t) (Ψ (min p.1 t) p.2),
@@ -4152,7 +4153,7 @@ theorem transportedIntegral_continuousOn
         have hmem : {p : ℝ × PhaseSpace d | 0 < p.1} ∈ 𝓝 (s₀, z₀) :=
           (isOpen_lt continuous_const continuous_fst).mem_nhds hs₀
         filter_upwards [hmem] with p hp
-        simp only [hG'_def, if_neg (not_le.mpr hp)]
+        simp only [hG'_def, ite_eq_right (not_le.mpr hp)]
       refine ContinuousAt.congr ?_ heq.symm
       -- continuity of g (Ψ (min p.1 t) p.2) at (s₀, z₀), s₀ > 0
       have hmin_s₀ : min s₀ t ∈ Set.Ioo (0 : ℝ) T :=
@@ -4205,13 +4206,13 @@ theorem transportedIntegral_continuousOn
   rcases eq_or_lt_of_le hs.1 with h0 | h0
   · -- s = 0
     subst h0
-    simp only [if_true]
+    simp only [ite_true]
     refine integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)
-    simp only [hG'_def, if_pos (le_refl (0 : ℝ)), hg_def]
+    simp only [hG'_def, ite_eq_left (le_refl (0 : ℝ)), hg_def]
   · -- s > 0
     have hsne : s ≠ 0 := ne_of_gt h0
     have hsle : s ≤ t := hs.2
-    simp only [if_neg hsne, hG'_def, if_neg (not_le.mpr h0), min_eq_left hsle, hg_def]
+    simp only [ite_eq_right hsne, hG'_def, ite_eq_right (not_le.mpr h0), min_eq_left hsle, hg_def]
 
 -- dualCore_main: the dual core for 0 < t ≤ T (subsumes the t = T terminal via the same
 -- if-patched constancy argument).  Obtains Ψ from item (iv), assembles #6a + #6b +
@@ -4253,7 +4254,7 @@ theorem dualCore_main
   have hI0 : I 0 = ∫ z, φ (charX t z, charV t z) ∂(f 0) := by simp [hI_def]
   have htne : t ≠ 0 := ne_of_gt ht.1
   have hIt : I t = ∫ z, φ z ∂(f t) := by
-    simp only [hI_def, if_neg htne]
+    simp only [hI_def, ite_eq_right htne]
     refine integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)
     change φ (charX t (Ψ t z), charV t (Ψ t z)) = φ z
     have hri : (charX t (Ψ t z), charV t (Ψ t z)) = z := hΨ_right t ht z
@@ -4266,7 +4267,7 @@ theorem dualCore_main
       hflow t ht φ hφ hφc Ψ hΨ_left hΨ_right hΨ_C1 hΦt_C1 hflowjoint s hs
     refine hbase.congr_of_eventuallyEq ?_
     filter_upwards [isOpen_Ioo.mem_nhds hs] with s' hs' using by
-      simp only [hI_def, if_neg (ne_of_gt hs'.1)]
+      simp only [hI_def, ite_eq_right (ne_of_gt hs'.1)]
   -- continuity on Icc 0 t
   have hcont : ContinuousOn I (Set.Icc (0 : ℝ) t) :=
     transportedIntegral_continuousOn gradW f T hf_mom hf_narrow charX charV hflow t ht
@@ -4691,6 +4692,7 @@ theorem weak_eq_frozenField_pushforward_On
   exact weak_eq_frozenField_pushforward_dualCore W gradW hgradW L hL f T hT hf_weak hf_mom hf_narrow
     hf_cont hf_cont_deriv M_ρ hM_ρ_nn hM_ρ charX charV hflow hinit hcontIcc t ht φ hφ hφc
 
+omit [NeZero d] in
 /-- **Weak ⟹ Lagrangian on `[0,T]`** (tex: thm:weak-lagrangian).
 
 Under `AssW2` (`W ∈ C²`) and a per-window smallness, every weak Vlasov solution on `[0,T]` with

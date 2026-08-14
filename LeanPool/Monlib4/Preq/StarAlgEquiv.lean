@@ -150,7 +150,7 @@ theorem StarAlgEquiv.eq_apply_iff_symm_eq {R A B : Type _}
     a = f b ↔ f.symm a = b := by
   rw [eq_comm]
   nth_rw 2 [eq_comm]
-  exact Equiv.apply_eq_iff_eq_symm_apply f.toRingEquiv.toEquiv
+  exact (Equiv.eq_symm_apply f.toRingEquiv.toEquiv).symm
 
 lemma AlgEquiv.apply_eq_iff_eq {R A B : Type*} [CommSemiring R] [Semiring A] [Algebra R A]
   [Semiring B] [Algebra R B]

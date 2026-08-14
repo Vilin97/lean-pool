@@ -267,7 +267,7 @@ lemma primeIdealAtCode_eq_some_iff {p : ℕ} {P : HeightOneSpectrum (𝓞 K)} :
     · simp at h
   · intro h
     unfold primeIdealAtCode
-    rw [dif_pos ⟨P, h⟩]
+    rw [dite_eq_left ⟨P, h⟩]
     congr
     exact primeIdealCode_injective K
       ((Classical.choose_spec (show ∃ Q, primeIdealCode K Q = p from ⟨P, h⟩)).trans h.symm)

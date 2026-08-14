@@ -415,7 +415,7 @@ lemma gameTree_isPruned : IsPruned <| gameTree hyp := by
       exact ⟨⟨⊤, PreStrategy.top_isQuasi (hPr.sub _)⟩, PreStrategy.top_subtree.symm⟩
     · refine (gameTree_concat x ⟨a, subAt (getTree' hyp x) [a]⟩).mpr ⟨hx, ?_⟩
       unfold ValidExt
-      rw [if_neg hlen', dif_neg hlen]
+      rw [ite_eq_right hlen', dite_eq_right hlen]
       exact ⟨ha, rfl⟩
 
 variable (hyp) in

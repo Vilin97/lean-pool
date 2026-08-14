@@ -197,16 +197,16 @@ lemma cross_edge_off_diagonal
   rw [hDS]; simp only [Matrix.sum_apply, Matrix.sub_apply, il_off _ i j hij]
   by_cases hadj : G.Adj i j
   · -- G.Adj i j
-    rw [if_pos hadj]
+    rw [ite_eq_left hadj]
     by_cases hcross : ¬(i ∈ pc.colored ↔ j ∈ pc.colored)
     · -- Cross-edge: G_same has no edge, double sum = -1
-      rw [if_neg (show ¬G_same.Adj i j from fun h => hcross ((hG_same i j).mp h).2)]
+      rw [ite_eq_right (show ¬G_same.Adj i j from fun h => hcross ((hG_same i j).mp h).2)]
       -- Base sets don't contain both endpoints (cross-edge)
       have h_base : ∀ (γ : Fin r), ¬(G.Adj i j ∧ i ∈ S γ ∧ j ∈ S γ) := by
         intro γ ⟨_, hi, hj⟩
         rw [hS] at hi hj; simp only [Finset.mem_filter] at hi hj
         exact hcross ⟨fun _ => hj.1, fun _ => hi.1⟩
-      simp_rw [if_neg (h_base _), sub_zero]
+      simp_rw [ite_eq_right (h_base _), sub_zero]
       have h_cases : (i ∈ pc.colored ∧ j ∉ pc.colored) ∨
           (i ∉ pc.colored ∧ j ∈ pc.colored) := by
         by_cases hi : i ∈ pc.colored
@@ -227,39 +227,39 @@ lemma cross_edge_off_diagonal
         rw [Finset.sum_eq_single_of_mem j
           (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hnjc⟩)]
         · rw [Finset.sum_eq_single_of_mem (pc.color i) (Finset.mem_univ _)]
-          · rw [if_pos]
+          · rw [ite_eq_left]
             refine ⟨hadj,
               Finset.mem_union_left _ ?_,
               Finset.mem_union_right _
                 (Finset.mem_singleton_self _)⟩
             rw [hS]; exact Finset.mem_filter.mpr ⟨hic, rfl⟩
-          · intro γ _ hne; rw [if_neg]; intro ⟨_, hi_mem, _⟩
+          · intro γ _ hne; rw [ite_eq_right]; intro ⟨_, hi_mem, _⟩
             simp only [hS, Finset.mem_union, Finset.mem_filter, Finset.mem_singleton] at hi_mem
             exact hi_mem.elim (fun ⟨_, h⟩ => hne h.symm) (fun h => hnjc (h ▸ hic))
         · intro v _ hne
-          apply Finset.sum_eq_zero; intro γ _; rw [if_neg]; intro ⟨_, _, hj_mem⟩
+          apply Finset.sum_eq_zero; intro γ _; rw [ite_eq_right]; intro ⟨_, _, hj_mem⟩
           simp only [hS, Finset.mem_union, Finset.mem_filter, Finset.mem_singleton] at hj_mem
           exact hj_mem.elim (fun ⟨h, _⟩ => hnjc h) (fun h => hne h.symm)
       · -- i ∉ colored, j ∈ colored: only (v=i, γ=color j) contributes
         rw [Finset.sum_eq_single_of_mem i
           (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hnic⟩)]
         · rw [Finset.sum_eq_single_of_mem (pc.color j) (Finset.mem_univ _)]
-          · rw [if_pos]
+          · rw [ite_eq_left]
             refine ⟨hadj,
               Finset.mem_union_right _
                 (Finset.mem_singleton_self _),
               Finset.mem_union_left _ ?_⟩
             rw [hS]; exact Finset.mem_filter.mpr ⟨hjc, rfl⟩
-          · intro γ _ hne; rw [if_neg]; intro ⟨_, _, hj_mem⟩
+          · intro γ _ hne; rw [ite_eq_right]; intro ⟨_, _, hj_mem⟩
             simp only [hS, Finset.mem_union, Finset.mem_filter, Finset.mem_singleton] at hj_mem
             exact hj_mem.elim (fun ⟨_, h⟩ => hne h.symm) (fun h => hnic (h ▸ hjc))
         · intro v _ hne
-          apply Finset.sum_eq_zero; intro γ _; rw [if_neg]; intro ⟨_, hi_mem, _⟩
+          apply Finset.sum_eq_zero; intro γ _; rw [ite_eq_right]; intro ⟨_, hi_mem, _⟩
           simp only [hS, Finset.mem_union, Finset.mem_filter, Finset.mem_singleton] at hi_mem
           exact hi_mem.elim (fun ⟨h, _⟩ => hnic h) (fun h => hne h.symm)
     · -- Same-status edge: G_same has edge, double sum = 0
       have hcross' : i ∈ pc.colored ↔ j ∈ pc.colored := not_not.mp hcross
-      rw [if_pos ((hG_same i j).mpr ⟨hadj, hcross'⟩)]
+      rw [ite_eq_left ((hG_same i j).mpr ⟨hadj, hcross'⟩)]
       -- Goal: -1 - ∑ ... = -1, need ∑ ... = 0
       suffices h_sum :
           ∑ v ∈ Finset.univ.filter (· ∉ pc.colored),
@@ -292,7 +292,7 @@ lemma cross_edge_off_diagonal
           exact ⟨h1, Finset.mem_union_left _ h2, Finset.mem_union_left _ h3⟩
       simp only [h_iff, sub_self]
   · -- not G.Adj i j: L = 0, all terms vanish
-    rw [if_neg hadj, if_neg (show ¬G_same.Adj i j from
+    rw [ite_eq_right hadj, ite_eq_right (show ¬G_same.Adj i j from
       fun h => hadj ((hG_same i j).mp h).1)]
     -- Goal: 0 - ∑ ... = 0, need ∑ ... = 0
     suffices h_sum : ∑ v ∈ Finset.univ.filter (· ∉ pc.colored), ∑ γ : Fin r,
@@ -302,7 +302,7 @@ lemma cross_edge_off_diagonal
     apply Finset.sum_eq_zero; intro v _
     apply Finset.sum_eq_zero; intro γ _
     have h_neg : ∀ P, ¬(G.Adj i j ∧ P) := fun _ h => hadj h.1
-    simp only [if_neg (h_neg _), sub_self]
+    simp only [ite_eq_right (h_neg _), sub_self]
 
 omit [DecidableEq V] in
 /-- Diagonal entry derivation for the cross-edge decomposition:
@@ -947,11 +947,11 @@ lemma total_barrier_bound_step [Nonempty V]
             (pc_t.colored.filter (fun v => pc_t.color v = γ)) *
             Lhalf_pinv := by
         intro γ hγ
-        rw [if_neg (Finset.ne_of_mem_erase hγ)]
+        rw [ite_eq_right (Finset.ne_of_mem_erase hγ)]
       rw [Finset.sum_congr rfl h_rest]
       -- Now LHS = L_new_γ₀ + ∑_{γ≠γ₀} old = M_t + B
       -- Reduce the if True
-      simp only [if_true]
+      simp only [ite_true]
       rw [hB_def, hΔL_def, hM_t_def,
         ← Finset.add_sum_erase _ _ (Finset.mem_univ γ₀)]
       -- Goal: L_new + rest = (L_old + rest) + Lp * ΔL * Lp
@@ -1016,7 +1016,7 @@ lemma total_barrier_bound
       have him : i = m := (Finset.card_le_one.mp hT) i hiT m hmT
       subst him; exact absurd hadj (G.loopless.irrefl i)
     · simp only [hij, ↓reduceIte]
-      rw [if_neg]; push Not
+      rw [ite_eq_right]; push Not
       intro _ hiT hjT; exact hij ((Finset.card_le_one.mp hT) i hiT j hjT)
   -- Step 1: Get a subset S ⊆ V with |S| = k
   have hk_le_n : k ≤ Fintype.card V := Nat.div_le_self _ 4
@@ -1046,8 +1046,8 @@ lemma total_barrier_bound
       rw [Finset.card_le_one]
       intro a ha b hb
       simp only [Finset.mem_filter] at ha hb
-      have ha_eq := ha.2; rw [dif_pos ha.1] at ha_eq
-      have hb_eq := hb.2; rw [dif_pos hb.1] at hb_eq
+      have ha_eq := ha.2; rw [dite_eq_left ha.1] at ha_eq
+      have hb_eq := hb.2; rw [dite_eq_left hb.1] at hb_eq
       exact congrArg Subtype.val (emb.injective (ha_eq.trans hb_eq.symm))
     rw [h_lap_le1 _ h_class_le1, Matrix.mul_zero, Matrix.zero_mul]
   · -- === Case k > r: BSS dynamic barrier construction ===

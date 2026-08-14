@@ -666,7 +666,7 @@ lemma _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.ae_eq_mk
     simp [Set.eq_empty_of_isEmpty s]
   filter_upwards [hκ] with t ht
   classical
-  rw [AEFiniteKernelSupport.mk_eq, Kernel.piecewise_apply, if_pos (by exact ht)]
+  rw [AEFiniteKernelSupport.mk_eq, Kernel.piecewise_apply, ite_eq_left (by exact ht)]
 
 instance _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.isMarkovKernel_mk
     {κ : Kernel T S} [IsMarkovKernel κ] (hκ : AEFiniteKernelSupport κ μ) :

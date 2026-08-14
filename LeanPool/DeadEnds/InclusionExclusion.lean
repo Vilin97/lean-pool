@@ -85,7 +85,7 @@ lemma indicator_conjunction_eq_prod (b N : ℕ) (T : Finset ℕ) :
         intro d hd
         simp [shiftSqfreeIndicator, hall d hd]
       have hcond : Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d) := ⟨hsq, hall⟩
-      rw [if_pos hcond, hprod]
+      rw [ite_eq_left hcond, hprod]
       simp [sqfreeIndicator, hsq]
     · push Not at hall
       obtain ⟨d, hd, hd_not_sqfree⟩ := hall

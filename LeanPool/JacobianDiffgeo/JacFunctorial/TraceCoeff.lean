@@ -98,7 +98,7 @@ theorem meromorphicOrderAt_traceZkForm_nonneg (hh : AnalyticAt ℂ h 0) (hk : k 
   rw [← forall_neg_laurentCoeffAt_eq_zero_iff (meromorphicAt_traceZkForm_of_analyticAt hh hk)]
   intro j hj
   rw [laurentCoeffAt_traceZkForm hh.meromorphicAt hk j, laurentCoeffAt_of_analyticAt hh,
-    if_neg]
+    ite_eq_right]
   have hk1 : (1 : ℤ) ≤ (k : ℤ) := by exact_mod_cast Nat.one_le_iff_ne_zero.2 hk
   have hj1 : j ≤ -1 := by omega
   have hmul : (k : ℤ) * j ≤ (k : ℤ) * (-1) :=

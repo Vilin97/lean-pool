@@ -348,9 +348,9 @@ theorem ofPerm_apply_ket (σ : Equiv.Perm (Fin (2 ^ n))) (x : Fin (2 ^ n)) :
   ext i
   rw [ofPerm_apply, PureState.ket_apply, PureState.ket_apply]
   by_cases h : σ i = x
-  · rw [if_pos h, if_pos (by rw [← h]; exact (Equiv.symm_apply_apply σ i).symm)]
-  · rw [if_neg h,
-      if_neg (fun hi => h (by rw [hi]; exact Equiv.apply_symm_apply σ x))]
+  · rw [ite_eq_left h, ite_eq_left (by rw [← h]; exact (Equiv.symm_apply_apply σ i).symm)]
+  · rw [ite_eq_right h,
+      ite_eq_right (fun hi => h (by rw [hi]; exact Equiv.apply_symm_apply σ x))]
 
 theorem ofPerm_mem_unitaryGroup (σ : Equiv.Perm (Fin (2 ^ n))) :
     (ofPerm σ : HilbertOperator n) ∈ Matrix.unitaryGroup (Fin (2 ^ n)) ℂ :=

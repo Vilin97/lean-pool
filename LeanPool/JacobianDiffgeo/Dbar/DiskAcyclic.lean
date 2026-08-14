@@ -335,9 +335,9 @@ theorem subsingleton_h1Cover_of_isChartDisk {V : Opens X} (hV : IsChartDisk V) (
     intro x hx a ha
     by_cases hax : a = x
     · subst hax
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact meromorphicOrderAt_zpow_id_sub_const
-    · rw [if_neg hax]
+    · rw [ite_eq_right hax]
       have hane : e a ≠ e x := fun heq => hax (e.injOn (hVs (hSsubV a ha)) (hVs hx) heq)
       have hval : (e x - e a) ≠ 0 := sub_ne_zero.mpr (Ne.symm hane)
       have hanalytic : AnalyticAt ℂ (fun w => w - e a) (e x) := analyticAt_id.sub analyticAt_const
@@ -356,8 +356,8 @@ theorem subsingleton_h1Cover_of_isChartDisk {V : Opens X} (hV : IsChartDisk V) (
     rw [meromorphicOrderAt_prod hmerAtoms, Finset.sum_congr rfl fun a ha => hatom hx ha,
       Finset.sum_ite_eq' S x (fun _ : X => (D x : WithTop ℤ))]
     by_cases hxS : x ∈ S
-    · rw [if_pos hxS]
-    · rw [if_neg hxS]
+    · rw [ite_eq_left hxS]
+    · rw [ite_eq_right hxS]
       have hDx0 : D x = 0 := by
         by_contra hDx
         exact hxS (hSmem.2 ⟨hDx, hx⟩)

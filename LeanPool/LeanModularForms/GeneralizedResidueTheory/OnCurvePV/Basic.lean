@@ -302,7 +302,7 @@ lemma cpv_avoidance (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ
   simp only [Set.mem_Ioo] at hε
   exact intervalIntegral.integral_congr (fun t ht => by
     rw [Set.uIcc_of_le hab] at ht
-    exact (if_pos (lt_of_lt_of_le hε.2 (ht₀_min ht))).symm)
+    exact (ite_eq_left (lt_of_lt_of_le hε.2 (ht₀_min ht))).symm)
 
 /-- CPV on adjacent intervals can be concatenated (when `a ≤ b ≤ c`). -/
 lemma cpv_concat (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b c : ℝ) (z₀ : ℂ)

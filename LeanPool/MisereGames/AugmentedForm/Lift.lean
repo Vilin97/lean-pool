@@ -120,8 +120,8 @@ theorem liftSucc_adjoint (g : AugmentedForm.{u}) : liftSucc (g°) = (liftSucc g)
   · intro p
     rw [moves_liftSucc, Adjoint.moves p g, Adjoint.moves, isEnd_liftSucc, moves_liftSucc]
     by_cases h : IsEnd (-p) g
-    · simp only [h, if_true, Set.image_singleton, liftSucc_zero]
-    · rw [if_neg h, if_neg h, ← Set.image_comp, ← Set.image_comp]
+    · simp only [h, ite_true, Set.image_singleton, liftSucc_zero]
+    · rw [ite_eq_right h, ite_eq_right h, ← Set.image_comp, ← Set.image_comp]
       apply Set.image_congr
       intro y hy
       simpa only [Function.comp_apply] using ih (-p) y hy

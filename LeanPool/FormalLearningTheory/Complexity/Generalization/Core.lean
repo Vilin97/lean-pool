@@ -256,9 +256,9 @@ theorem empiricalMeasureError_eq_empiricalError (X : Type u) [MeasurableSpace X]
       EmpiricalError X Bool h (fun i => (xs i, c (xs i))) (zeroOneLoss Bool) := by
   have hm' : m ≠ 0 := by omega
   unfold EmpiricalMeasureError TrueError EmpiricalMeasure
-  rw [dif_neg hm']
+  rw [dite_eq_right hm']
   unfold EmpiricalError
-  rw [if_neg hm', MeasureTheory.Measure.smul_apply,
+  rw [ite_eq_right hm', MeasureTheory.Measure.smul_apply,
       MeasureTheory.Measure.finsetSum_apply]
   simp only [MeasureTheory.Measure.dirac_apply, Set.indicator, Set.mem_ofPred_eq, Pi.one_apply]
   rw [smul_eq_mul]
@@ -302,7 +302,7 @@ theorem consistent_imp_zero_empiricalError (X : Type u)
     EmpiricalError X Bool h (fun i => (xs i, c (xs i))) (zeroOneLoss Bool) = 0 := by
   have hm' : m ≠ 0 := by omega
   unfold EmpiricalError
-  rw [if_neg hm']
+  rw [ite_eq_right hm']
   have hsum : (Finset.univ.sum fun i : Fin m =>
       zeroOneLoss Bool (h ((fun i => (xs i, c (xs i))) i).1)
         ((fun i => (xs i, c (xs i))) i).2) = 0 := by
@@ -310,7 +310,7 @@ theorem consistent_imp_zero_empiricalError (X : Type u)
     intro i _
     simp only
     unfold zeroOneLoss
-    rw [if_pos (hcons i)]
+    rw [ite_eq_left (hcons i)]
   rw [hsum, zero_div]
 
 /-- A loss function is faithful if: loss(y,y) = 0 and loss(y₁,y₂) = 0 → y₁ = y₂.
@@ -335,7 +335,7 @@ theorem empError_zero_iff_consistent {X : Type u} {Y : Type v} [DecidableEq Y]
     (hloss_nonneg : ∀ y₁ y₂, 0 ≤ loss y₁ y₂) :
     EmpiricalError X Y h S loss = 0 ↔ IsConsistentWith X Y h S := by
   unfold EmpiricalError IsConsistentWith
-  rw [if_neg (by omega : m ≠ 0)]
+  rw [ite_eq_right (by omega : m ≠ 0)]
   constructor
   · -- EmpError = 0 → consistent
     intro hzero
@@ -370,15 +370,15 @@ theorem erm_consistent_realizable (X : Type u) [DecidableEq Bool]
       (fun i => (S i, c (S i))) := by
   -- Proof: c ∈ C ⊆ H has EmpError = 0 (by faithful loss, each loss(c(xᵢ), c(xᵢ)) = 0).
   -- Since loss is nonneg, EmpError ≥ 0 for all h. So c is a minimizer of EmpError over H.
-  -- Therefore the ∃-condition in ermLearn fires (dif_pos), and the ERM output h₀ satisfies
+  -- Therefore the ∃-condition in ermLearn fires (dite_eq_left), and the ERM output h₀ satisfies
   -- EmpError(h₀) ≤ EmpError(c) = 0, hence EmpError(h₀) = 0, hence h₀ is consistent.
   set S' := (fun i => (S i, c (S i))) with hS'_def
   -- Step 1: EmpiricalError of c on S' is 0 (faithful loss: loss(y,y) = 0)
   have hc_emp_zero : EmpiricalError X Bool c S' loss = 0 := by
     unfold EmpiricalError
     by_cases hm : m = 0
-    · rw [if_pos hm]
-    · rw [if_neg hm]
+    · rw [ite_eq_left hm]
+    · rw [ite_eq_right hm]
       have hsum : (Finset.univ.sum fun i : Fin m =>
           loss (c (S' i).1) (S' i).2) = 0 := by
         apply Finset.sum_eq_zero
@@ -391,8 +391,8 @@ theorem erm_consistent_realizable (X : Type u) [DecidableEq Bool]
     intro h'
     unfold EmpiricalError
     by_cases hm : m = 0
-    · rw [if_pos hm]
-    · rw [if_neg hm]
+    · rw [ite_eq_left hm]
+    · rw [ite_eq_right hm]
       apply div_nonneg
       · exact Finset.sum_nonneg (fun i _ => hloss_nonneg _ _)
       · exact Nat.cast_nonneg (α := ℝ) m
@@ -403,7 +403,7 @@ theorem erm_consistent_realizable (X : Type u) [DecidableEq Bool]
     simp_all
   -- Step 4: Unfold ermLearn, the if branch fires
   unfold ermLearn
-  rw [dif_pos hexists]
+  rw [dite_eq_left hexists]
   -- Step 5: The chosen minimizer h₀ has EmpError(h₀) ≤ EmpError(c) = 0
   obtain ⟨hch_mem, hch_min⟩ := hexists.choose_spec
   have hch_le : EmpiricalError X Bool hexists.choose S' loss ≤ 0 := by
@@ -820,7 +820,7 @@ theorem uc_imp_pac (X : Type u) [MeasurableSpace X]
   intro ε δ hε hδ D hD c hcC
   -- Unfold mf to get the UC m₀
   have hmf : mf ε δ = (hUC ε δ hε hδ).choose := by
-    simp only [mf, dif_pos hε, dif_pos hδ]
+    simp only [mf, dite_eq_left hε, dite_eq_left hδ]
   -- Get the UC guarantee at m = mf ε δ
   set m := mf ε δ with hm_def
   have hUC_spec := (hUC ε δ hε hδ).choose_spec
@@ -843,13 +843,13 @@ theorem uc_imp_pac (X : Type u) [MeasurableSpace X]
   have hh₀C : h₀ ∈ C := L.output_in_H S
   -- h₀ is consistent with the sample (since c ∈ C, the ∃ branch fires)
   have hcons : IsConsistentWith X Bool h₀ S := by
-    -- learnFn S takes the dif_pos branch because c witnesses the existential
+    -- learnFn S takes the dite_eq_left branch because c witnesses the existential
     have hexists : ∃ h₁ ∈ C, ∀ i : Fin m, h₁ ((fun i => (xs i, c (xs i))) i).1 =
         ((fun i => (xs i, c (xs i))) i).2 := ⟨c, hcC, fun i => rfl⟩
     unfold IsConsistentWith
     intro i
     change learnFn S (S i).1 = (S i).2
-    simp only [learnFn, hS_def, dif_pos hexists]
+    simp only [learnFn, hS_def, dite_eq_left hexists]
     exact (hexists.choose_spec).2 i
   -- Bridge from consistency to TrueError ≤ ENNReal.ofReal ε
   -- First get UC bound for h₀
@@ -859,13 +859,13 @@ theorem uc_imp_pac (X : Type u) [MeasurableSpace X]
     unfold EmpiricalError
     by_cases hm0 : m = 0
     · simp [hm0]
-    · rw [if_neg hm0]
+    · rw [ite_eq_right hm0]
       have : (Finset.univ.sum fun i : Fin m =>
           zeroOneLoss Bool (h₀ (S i).1) (S i).2) = 0 := by
         apply Finset.sum_eq_zero
         intro i _
         unfold zeroOneLoss
-        rw [if_pos (hcons i)]
+        rw [ite_eq_left (hcons i)]
       rw [this, zero_div]
   rw [hempzero, sub_zero] at hxs_h₀
   -- |TrueErrorReal| < ε, and TrueErrorReal ≥ 0
@@ -1440,7 +1440,7 @@ theorem nfl_core (X : Type u) [MeasurableSpace X] [Fintype X]
     -- Error set ⊇ unseen. For unseen x: c1(x) = !h0(x) ≠ h0(x).
     have herr_sup : (Set.range xs)ᶜ ⊆ {x : X | h0 x ≠ c1 x} := by
       intro x hx; simp only [Set.mem_compl_iff] at hx
-      simp only [Set.mem_ofPred_eq, c1, if_neg hx]; cases h0 x <;> simp
+      simp only [Set.mem_ofPred_eq, c1, ite_eq_right hx]; cases h0 x <;> simp
     -- D(error) >= D(unseen) by monotonicity
     apply lt_of_lt_of_le _ (MeasureTheory.measure_mono herr_sup)
     -- D(unseen) = 1 - D(seen). D(seen) <= m/n <= 1 / 2. So D(unseen) >= 1 / 2 > 1 / 8.

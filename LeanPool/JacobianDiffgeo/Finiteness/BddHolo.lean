@@ -122,7 +122,7 @@ theorem isClosed_bddHoloOn (S : Opens X) :
     have hey : e.symm (e y) = y := e.left_inv hyV.2
     change dist (gLim (e.symm (e y))) ((g n) (e.symm (e y))) < ε
     rw [hey]
-    have h1 : gLim y = f ⟨y, hys⟩ := by rw [hgLim_def]; exact dif_pos hys
+    have h1 : gLim y = f ⟨y, hys⟩ := by rw [hgLim_def]; exact dite_eq_left hys
     have h2 : g n y = Fb n ⟨y, hys⟩ := (hgeq n ⟨y, hys⟩).symm
     rw [h1, h2]
     exact hn ⟨y, hys⟩

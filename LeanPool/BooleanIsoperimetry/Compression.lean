@@ -367,16 +367,16 @@ lemma familyUpMap_injOn {N : ℕ} (U V : Cube N) (𝒜 : Finset (Cube N)) :
   unfold familyUpMap at hST
   by_cases hSm : U ⊆ S ∧ Disjoint V S ∧ blockReplace U V S ∉ 𝒜
   · by_cases hTm : U ⊆ T ∧ Disjoint V T ∧ blockReplace U V T ∉ 𝒜
-    · rw [if_pos hSm, if_pos hTm] at hST
+    · rw [ite_eq_left hSm, ite_eq_left hTm] at hST
       have hrec := congrArg (fun s => (s \ V) ∪ U) hST
       simpa only [blockReplace_recover hSm.1 hSm.2.1,
         blockReplace_recover hTm.1 hTm.2.1] using hrec
-    · rw [if_pos hSm, if_neg hTm] at hST
+    · rw [ite_eq_left hSm, ite_eq_right hTm] at hST
       exact absurd (show blockReplace U V S ∈ 𝒜 by rw [hST]; exact hT') hSm.2.2
   · by_cases hTm : U ⊆ T ∧ Disjoint V T ∧ blockReplace U V T ∉ 𝒜
-    · rw [if_neg hSm, if_pos hTm] at hST
+    · rw [ite_eq_right hSm, ite_eq_left hTm] at hST
       exact absurd (show blockReplace U V T ∈ 𝒜 by rw [← hST]; exact hS') hTm.2.2
-    · rw [if_neg hSm, if_neg hTm] at hST
+    · rw [ite_eq_right hSm, ite_eq_right hTm] at hST
       exact hST
 
 /-- The paper's `𝒟` is one-to-one on its family. -/
@@ -388,16 +388,16 @@ lemma familyDownMap_injOn {N : ℕ} (U V : Cube N) (ℬ : Finset (Cube N)) :
   unfold familyDownMap at hST
   by_cases hSm : V ⊆ S ∧ Disjoint U S ∧ blockReplace V U S ∉ ℬ
   · by_cases hTm : V ⊆ T ∧ Disjoint U T ∧ blockReplace V U T ∉ ℬ
-    · rw [if_pos hSm, if_pos hTm] at hST
+    · rw [ite_eq_left hSm, ite_eq_left hTm] at hST
       have hrec := congrArg (fun s => (s \ U) ∪ V) hST
       simpa only [blockReplace_recover hSm.1 hSm.2.1,
         blockReplace_recover hTm.1 hTm.2.1] using hrec
-    · rw [if_pos hSm, if_neg hTm] at hST
+    · rw [ite_eq_left hSm, ite_eq_right hTm] at hST
       exact absurd (show blockReplace V U S ∈ ℬ by rw [hST]; exact hT') hSm.2.2
   · by_cases hTm : V ⊆ T ∧ Disjoint U T ∧ blockReplace V U T ∉ ℬ
-    · rw [if_neg hSm, if_pos hTm] at hST
+    · rw [ite_eq_right hSm, ite_eq_left hTm] at hST
       exact absurd (show blockReplace V U T ∈ ℬ by rw [← hST]; exact hS') hTm.2.2
-    · rw [if_neg hSm, if_neg hTm] at hST
+    · rw [ite_eq_right hSm, ite_eq_right hTm] at hST
       exact hST
 
 /-- **Cardinality preservation for `𝒰`** (`|𝒰(𝒜)| = |𝒜|`). -/
@@ -443,7 +443,7 @@ lemma distanceToCanonical_zero_canonical {N : ℕ} (A B : Finset (Cube N))
       omega
     obtain ⟨p, q, _, _, _, hcs⟩ := exists_cascade_split N (A.card + B.card) htot
     exact ⟨p, q, hcs⟩
-  -- unfold the canonical pair on the `dif_pos` branch
+  -- unfold the canonical pair on the `dite_eq_left` branch
   set p := Classical.choose hex with hp
   set q := Classical.choose (Classical.choose_spec hex) with hq
   have hcs : CascadeSplit N (A.card + B.card) p q :=
@@ -451,7 +451,7 @@ lemma distanceToCanonical_zero_canonical {N : ℕ} (A B : Finset (Cube N))
   have hcanpair : canonicalPairOfTotal N (A.card + B.card)
       = (simplicialInitSeg N p, simplicialInitSeg N q) := by
     unfold canonicalPairOfTotal
-    rw [dif_pos hex]
+    rw [dite_eq_left hex]
   have hsplit : distanceToCanonical A B
       = (A \ simplicialInitSeg N p).card + (simplicialInitSeg N p \ A).card
         + (B \ simplicialInitSeg N q).card + (simplicialInitSeg N q \ B).card := by
@@ -722,7 +722,7 @@ lemma familyUp_potential_lt_of_blockLt {N : ℕ} {U V : Cube N} {A : Finset (Cub
     unfold familyUpMap at hSne ⊢
     split at hSne
     · next hc =>
-      rw [if_pos hc]
+      rw [ite_eq_left hc]
       exact rank_strictMono (hlt S hc.1 hc.2.1)
     · exact absurd rfl hSne
 
@@ -747,10 +747,10 @@ lemma compress_VU_eq_blockReplace {N : ℕ} {U V : Cube N} (hd : Disjoint U V) (
     UV.compress V U S = (if U ⊆ S ∧ Disjoint V S then blockReplace U V S else S) := by
   unfold UV.compress blockReplace
   by_cases h : U ⊆ S ∧ Disjoint V S
-  · rw [if_pos h, if_pos ⟨h.2, h.1⟩, Finset.sup_eq_union, Finset.union_sdiff_distrib]
+  · rw [ite_eq_left h, ite_eq_left ⟨h.2, h.1⟩, Finset.sup_eq_union, Finset.union_sdiff_distrib]
     have hVU : V \ U = V := (Finset.sdiff_eq_self_iff_disjoint).2 hd.symm
     rw [hVU]
-  · rw [if_neg h, if_neg (by tauto)]
+  · rw [ite_eq_right h, ite_eq_right (by tauto)]
 
 /-- **Block-move ↔ mathlib `UV`-compression dictionary.**  For disjoint blocks the
 project's family `𝒰`-move is literally mathlib's `UV`-compression with the slots
@@ -767,33 +767,33 @@ lemma familyUp_eq_UV_compression {N : ℕ} (A : Finset (Cube N)) {U V : Cube N}
   · rintro ⟨S, hS, rfl⟩
     unfold familyUpMap
     by_cases hc : U ⊆ S ∧ Disjoint V S ∧ blockReplace U V S ∉ A
-    · rw [if_pos hc]
+    · rw [ite_eq_left hc]
       exact Or.inr ⟨hc.2.2, S, hS, by
-        rw [compress_VU_eq_blockReplace hd, if_pos ⟨hc.1, hc.2.1⟩]⟩
-    · rw [if_neg hc]
+        rw [compress_VU_eq_blockReplace hd, ite_eq_left ⟨hc.1, hc.2.1⟩]⟩
+    · rw [ite_eq_right hc]
       refine Or.inl ⟨hS, ?_⟩
       rw [compress_VU_eq_blockReplace hd]
       by_cases hsub : U ⊆ S ∧ Disjoint V S
-      · rw [if_pos hsub]
+      · rw [ite_eq_left hsub]
         by_contra hni
         exact hc ⟨hsub.1, hsub.2, hni⟩
-      · rw [if_neg hsub]; exact hS
+      · rw [ite_eq_right hsub]; exact hS
   · rintro (⟨haA, hca⟩ | ⟨haA, b, hb, hcb⟩)
     · refine ⟨a, haA, ?_⟩
       unfold familyUpMap
       by_cases hc : U ⊆ a ∧ Disjoint V a ∧ blockReplace U V a ∉ A
       · exfalso
-        rw [compress_VU_eq_blockReplace hd, if_pos ⟨hc.1, hc.2.1⟩] at hca
+        rw [compress_VU_eq_blockReplace hd, ite_eq_left ⟨hc.1, hc.2.1⟩] at hca
         exact hc.2.2 hca
-      · rw [if_neg hc]
+      · rw [ite_eq_right hc]
     · refine ⟨b, hb, ?_⟩
       unfold familyUpMap
       rw [compress_VU_eq_blockReplace hd] at hcb
       by_cases hsub : U ⊆ b ∧ Disjoint V b
-      · rw [if_pos hsub] at hcb
+      · rw [ite_eq_left hsub] at hcb
         subst hcb
-        rw [if_pos ⟨hsub.1, hsub.2, haA⟩]
-      · rw [if_neg hsub] at hcb
+        rw [ite_eq_left ⟨hsub.1, hsub.2, haA⟩]
+      · rw [ite_eq_right hsub] at hcb
         subst hcb
         exact absurd hb haA
 
@@ -849,14 +849,14 @@ lemma familyUpMap_compl {N : ℕ} {U V : Cube N} (hd : Disjoint U V)
   have hbr := blockReplace_compl hd S
   by_cases hc : U ⊆ S ∧ Disjoint V S ∧ blockReplace U V S ∉ A
   · obtain ⟨hUS, hVS, hnA⟩ := hc
-    rw [if_pos ⟨hUS, hVS, hnA⟩]
+    rw [ite_eq_left ⟨hUS, hVS, hnA⟩]
     have hUSc : Disjoint U Sᶜ := by
       rw [← subset_compl_iff_disjoint_right, compl_compl]; exact hUS
     have hc2 : V ⊆ Sᶜ ∧ Disjoint U Sᶜ ∧ blockReplace V U Sᶜ ∉ Aᶜˢ := by
       refine ⟨subset_compl_iff_disjoint_right.mpr hVS, hUSc, ?_⟩
       rw [Finset.mem_compls, ← hbr, compl_compl]; exact hnA
-    rw [if_pos hc2, hbr]
-  · rw [if_neg hc]
+    rw [ite_eq_left hc2, hbr]
+  · rw [ite_eq_right hc]
     have hc2 : ¬ (V ⊆ Sᶜ ∧ Disjoint U Sᶜ ∧ blockReplace V U Sᶜ ∉ Aᶜˢ) := by
       rintro ⟨hVSc, hUSc, hnAc⟩
       apply hc
@@ -864,7 +864,7 @@ lemma familyUpMap_compl {N : ℕ} {U V : Cube N} (hd : Disjoint U V)
       · have : U ⊆ Sᶜᶜ := subset_compl_iff_disjoint_right.mpr hUSc
         rwa [compl_compl] at this
       · rw [Finset.mem_compls, ← hbr, compl_compl] at hnAc; exact hnAc
-    rw [if_neg hc2]
+    rw [ite_eq_right hc2]
 
 /-- **The `𝒰`-move commutes with vertex complementation at family level.**  For
 disjoint blocks, `(familyUp U V A)ᶜˢ = familyUp V U (Aᶜˢ)`.  This is what reduces
@@ -1338,7 +1338,7 @@ lemma downFixed_familyUp_erase_eq {N : ℕ} {A : Finset (Cube N)}
         unfold blockReplace; simp
       rw [hbr] at hc
       exact hc.2.2 (downFixed_sdiff_mem hdown hS hc.1)
-    · rw [if_neg hc]
+    · rw [ite_eq_right hc]
   unfold familyUp
   rw [Finset.image_congr (g := id) (fun S hS => hmap S hS), Finset.image_id]
 
@@ -1524,7 +1524,7 @@ lemma familyUp_eq_self_iff {N : ℕ} (W₁ W₂ : Cube N) (A : Finset (Cube N)) 
     by_contra hnot
     have hguard : W₁ ⊆ R ∧ Disjoint W₂ R ∧ blockReplace W₁ W₂ R ∉ A := ⟨hsub, hdisj, hnot⟩
     have hmap : familyUpMap W₁ W₂ A R = blockReplace W₁ W₂ R := by
-      unfold familyUpMap; rw [if_pos hguard]
+      unfold familyUpMap; rw [ite_eq_left hguard]
     have hmem : blockReplace W₁ W₂ R ∈ familyUp W₁ W₂ A := by
       rw [familyUp, Finset.mem_image]; exact ⟨R, hR, hmap⟩
     rw [hEq] at hmem; exact hnot hmem
@@ -1534,7 +1534,7 @@ lemma familyUp_eq_self_iff {N : ℕ} (W₁ W₂ : Cube N) (A : Finset (Cube N)) 
       unfold familyUpMap
       by_cases hguard : W₁ ⊆ R ∧ Disjoint W₂ R ∧ blockReplace W₁ W₂ R ∉ A
       · exact absurd (hClosed R hR hguard.1 hguard.2.1) hguard.2.2
-      · rw [if_neg hguard]
+      · rw [ite_eq_right hguard]
     unfold familyUp
     rw [Finset.image_congr (g := id) (fun R hR => hmap R hR), Finset.image_id]
 

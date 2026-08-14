@@ -160,7 +160,7 @@ theorem supportLb_sound (y e' : Fin S.n → F) (he : S.H *ᵥ e' = S.H *ᵥ y) :
   unfold supportLb
   by_cases hz : S.H *ᵥ y = 0
   · simp [hz]
-  · simp only [hz, if_false]
+  · simp only [hz, ite_false]
     have hne : e' ≠ 0 := fun h0 => hz (by rw [← he, h0, Matrix.mulVec_zero])
     have hnz : hammingNorm e' ≠ 0 := fun h => hne (hammingNorm_eq_zero.mp h)
     rw [wt]; omega

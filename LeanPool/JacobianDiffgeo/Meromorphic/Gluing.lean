@@ -44,7 +44,7 @@ theorem exists_glue {ι : Type*} {W : ι → Set X} (hW : ∀ i, IsOpen (W i))
     intro i x hx
     have hex : ∃ k, x ∈ W k := ⟨i, hx⟩
     change (if h : ∃ k, x ∈ W k then (φ h.choose).holoRepr x else 0) = (φ i).holoRepr x
-    rw [dif_pos hex]
+    rw [dite_eq_left hex]
     exact hagree hex.choose i x ⟨hex.choose_spec, hx⟩
   have hmerF : MeromorphicOnX F (⋃ i, W i) := by
     intro x hx

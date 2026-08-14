@@ -187,7 +187,7 @@ lemma continuous_landau_quadratic
                 exact h_rpow.congr (Filter.eventuallyEq_iff_exists_mem.mpr
                   ⟨Set.Ioi 0, lt_mem_nhds h_pos, fun z hz => by
                     simp only [Set.mem_Ioi] at hz
-                    simp only [coulombKernel, if_neg (not_le.mpr hz)]⟩)
+                    simp only [coulombKernel, ite_eq_right (not_le.mpr hz)]⟩)
               exact h_cont_coulomb.comp h_cont_eucNorm
             · exact (Continuous.smul
                 (show Continuous fun z : Fin 3 → ℝ => normSq z from

@@ -71,7 +71,7 @@ private theorem contDiffAt_planar_model {P Q : X} {e : OpenPartialHomeomorph X �
       filter_upwards [hopen.mem_nhds hzρ] with w hw
       change (if ‖w - c‖ ≤ ρ then (w - e P) / (w - e Q) else
         Complex.exp ((ψ (w - c) : ℝ) * L (w - c))) = Complex.exp ((ψ (w - c) : ℝ) * L (w - c))
-      exact if_neg (not_le.mpr hw)
+      exact ite_eq_right (not_le.mpr hw)
     have hL_diffOn : DifferentiableOn ℂ L {w : ℂ | ρ < ‖w‖} :=
       fun w hw => (hLderiv w hw).differentiableAt.differentiableWithinAt
     have hL_contDiffAt : ContDiffAt ℝ ∞ (fun w : ℂ => L (w - c)) z := by
@@ -126,7 +126,7 @@ theorem exists_weakSolutionOfPair_chart {P Q : X} (hPQ : P ≠ Q)
     have hzne : ¬ ‖z - c‖ ≤ ρ := not_le.mpr hz1
     change (if ‖z - c‖ ≤ ρ then (z - e P) / (z - e Q) else
       Complex.exp ((ψ (z - c) : ℝ) * L (z - c))) = (z - e P) / (z - e Q)
-    rw [if_neg hzne, hψ1]
+    rw [ite_eq_right hzne, hψ1]
     have := hLexp (z - c) hz1
     change Complex.exp ((1 : ℝ) * L (z - c)) = (z - e P) / (z - e Q)
     rw [show ((1 : ℝ) : ℂ) * L (z - c) = L (z - c) by push_cast; ring, this]
@@ -140,7 +140,7 @@ theorem exists_weakSolutionOfPair_chart {P Q : X} (hPQ : P ≠ Q)
     have hψ0 : ψ (z - c) = 0 := ψ.zero_of_le_dist (by rw [dist_zero_right]; exact hz)
     change (if ‖z - c‖ ≤ ρ then (z - e P) / (z - e Q) else
       Complex.exp ((ψ (z - c) : ℝ) * L (z - c))) = 1
-    rw [if_neg (not_le.mpr hzρ), hψ0]
+    rw [ite_eq_right (not_le.mpr hzρ), hψ0]
     simp
   -- Step 3: `g` agrees with the rational function on the whole ball `ball c ψ.rIn`.
   have heq_inner : Set.EqOn g (fun z => (z - e P) / (z - e Q)) (Metric.ball c ψ.rIn) := by
@@ -149,7 +149,7 @@ theorem exists_weakSolutionOfPair_chart {P Q : X} (hPQ : P ≠ Q)
     by_cases h : ‖z - c‖ ≤ ρ
     · change (if ‖z - c‖ ≤ ρ then (z - e P) / (z - e Q) else
         Complex.exp ((ψ (z - c) : ℝ) * L (z - c))) = (z - e P) / (z - e Q)
-      rw [if_pos h]
+      rw [ite_eq_left h]
     · exact hg_consistent z (not_le.mp h) hz.le
   -- Step 4: `ContDiffAt ℝ ∞ g z` for every `z ≠ e Q`.
   have hg_contDiffAt := contDiffAt_planar_model ψ hρψ L heq_inner hLderiv
@@ -246,11 +246,11 @@ theorem exists_weakSolutionOfPair_chart {P Q : X} (hPQ : P ≠ Q)
       by_cases hcase : ‖e x - c‖ ≤ ρ
       · change (if ‖e x - c‖ ≤ ρ then (e x - e P) / (e x - e Q) else
           Complex.exp ((ψ (e x - c) : ℝ) * L (e x - c))) ≠ 0
-        rw [if_pos hcase]
+        rw [ite_eq_left hcase]
         exact div_ne_zero (sub_ne_zero.mpr hexP) (sub_ne_zero.mpr hexQ)
       · change (if ‖e x - c‖ ≤ ρ then (e x - e P) / (e x - e Q) else
           Complex.exp ((ψ (e x - c) : ℝ) * L (e x - c))) ≠ 0
-        rw [if_neg hcase]
+        rw [ite_eq_right hcase]
         exact Complex.exp_ne_zero _
     · rw [hf_not_source x hxe]; exact one_ne_zero
   have hf_weakAt_P : IsWeakSolutionAt f P 1 := by
@@ -277,7 +277,7 @@ theorem exists_weakSolutionOfPair_chart {P Q : X} (hPQ : P ≠ Q)
       rw [hf_source x hxe]
       change (if ‖e x - c‖ ≤ ρ then (e x - e P) / (e x - e Q) else
         Complex.exp ((ψ (e x - c) : ℝ) * L (e x - c))) = 1 / (e x - e Q) * (e x - e P) ^ (1 : ℤ)
-      rw [if_pos hxρ, zpow_one]
+      rw [ite_eq_left hxρ, zpow_one]
       ring
   have hf_weakAt_Q : IsWeakSolutionAt f Q (-1) := by
     refine ⟨e, he, hQs, fun z => z - e P, ?_, ?_, ?_⟩
@@ -302,7 +302,7 @@ theorem exists_weakSolutionOfPair_chart {P Q : X} (hPQ : P ≠ Q)
       rw [hf_source x hxe]
       change (if ‖e x - c‖ ≤ ρ then (e x - e P) / (e x - e Q) else
         Complex.exp ((ψ (e x - c) : ℝ) * L (e x - c))) = (e x - e P) * (e x - e Q) ^ (-1 : ℤ)
-      rw [if_pos hxρ, zpow_neg_one]
+      rw [ite_eq_left hxρ, zpow_neg_one]
       ring
   exact ⟨f, ⟨hf_contMDiffOn, hf_ne_zero_off, hf_weakAt_P, hf_weakAt_Q⟩,
     hU_open, hclosureU_compact, hPU, hQU, hf_one_off_U⟩

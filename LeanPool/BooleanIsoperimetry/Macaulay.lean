@@ -95,10 +95,10 @@ lemma gShift_preimage_eq_insert_below_min {n : ℕ} (w : Cube n) (h : w.Nonempty
     have hv : v.Nonempty := by
       by_contra hcon
       rw [Finset.not_nonempty_iff_eq_empty] at hcon
-      rw [gShift, dif_neg (by rw [hcon]; exact Finset.not_nonempty_empty)] at hgv
+      rw [gShift, dite_eq_right (by rw [hcon]; exact Finset.not_nonempty_empty)] at hgv
       rw [hcon] at hgv
       exact (h.ne_empty hgv.symm)
-    have hg : gShift v = v.erase (v.min' hv) := by unfold gShift; rw [dif_pos hv]
+    have hg : gShift v = v.erase (v.min' hv) := by unfold gShift; rw [dite_eq_left hv]
     rw [hg] at hgv
     set m := v.min' hv with hm
     refine ⟨m, ?_, ?_⟩
@@ -130,7 +130,7 @@ lemma gShift_preimage_eq_insert_below_min {n : ℕ} (w : Cube n) (h : w.Nonempty
         · rw [h1]
         · have := Finset.min'_le w y h1
           omega
-    rw [gShift, dif_pos hne, hmin, Finset.erase_insert hjw]
+    rw [gShift, dite_eq_left hne, hmin, Finset.erase_insert hjw]
 
 /--
 **Exact Macaulay increment profile (minimum-coordinate form).**
@@ -203,7 +203,7 @@ lemma HIncrement_eq_macaulayShadowWeight {n : ℕ} (p : ℕ) (w : Cube n)
   unfold macaulayShadowWeight
   by_cases h : w.Nonempty
   · simp [h, HIncrement_eq_min' p w hw h]
-  · rw [dif_neg h]
+  · rw [dite_eq_right h]
     have hp0 : p = 0 := rank_eq_zero_of_not_nonempty w hw h
     rw [hp0]
     exact HIncrement_zero n

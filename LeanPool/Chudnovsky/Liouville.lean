@@ -1161,8 +1161,8 @@ private lemma exists_principalPart (N : ℕ) (g : ℂ → ℂ) (c : ℂ) (hg : A
       congr 1
       · apply Finset.sum_congr rfl
         intro k hk
-        rw [if_neg (Finset.mem_range.mp hk).ne]
-      · rw [if_pos rfl]
+        rw [ite_eq_right (Finset.mem_range.mp hk).ne]
+      · rw [ite_eq_left rfl]
         norm_cast
     calc (z - c) ^ (-(N + 1 : ℕ) : ℤ) * g z
         = g c * (z - c) ^ (-(N + 1 : ℕ) : ℤ)
@@ -1416,7 +1416,7 @@ private lemma sum_residue_eq_zero_of_boundaryIntegral_eq_zero {L : PeriodPair} {
     have hev : ∀ᶠ w in nhds z, w ∉ S' :=
       (S'.finite_toSet.isClosed.isOpen_compl).mem_nhds (by simpa using hzS)
     filter_upwards [hev] with w hw
-    simp only [hG', if_neg hw, Pi.sub_apply]
+    simp only [hG', ite_eq_right hw, Pi.sub_apply]
   -- analyticity of `G'` at the points of `S'`
   have hG'an₂ : ∀ z ∈ S', AnalyticAt ℂ G' z := by
     intro z hzS
@@ -1443,7 +1443,7 @@ private lemma sum_residue_eq_zero_of_boundaryIntegral_eq_zero {L : PeriodPair} {
         simp only [Finset.coe_erase, Set.mem_sdiff, Finset.mem_coe, Set.mem_singleton_iff]
         exact ⟨hwS, hw2⟩
       filter_upwards [heq z, hev2] with w hw1 hw2
-      simp only [hG', if_neg hw2]
+      simp only [hG', ite_eq_right hw2]
       have hsum : ∑ c ∈ S', P c w = P z w + ∑ c ∈ S'.erase z, P c w :=
         (Finset.add_sum_erase S' (fun c => P c w) hzS).symm
       have hfw : f w = P z w + h z w := by
@@ -1454,7 +1454,7 @@ private lemma sum_residue_eq_zero_of_boundaryIntegral_eq_zero {L : PeriodPair} {
     rw [Filter.EventuallyEq, ← nhdsNE_sup_pure z, Filter.eventually_sup]
     refine ⟨key, ?_⟩
     rw [Filter.eventually_pure]
-    simp only [hG', if_pos hzS]
+    simp only [hG', ite_eq_left hzS]
   -- Cauchy for the corrected remainder
   have hEzero : L.boundaryIntegral G' v = 0 := by
     apply boundaryIntegral_eq_zero_of_differentiableOn (U := {z | AnalyticAt ℂ G' z})
@@ -1499,7 +1499,7 @@ private lemma sum_residue_eq_zero_of_boundaryIntegral_eq_zero {L : PeriodPair} {
         = L.boundaryIntegral (fun z ↦ (∑ c ∈ S', P c z) + G' z) v := by
       apply boundaryIntegral_congr
       intro z hz
-      simp only [hG', if_neg (hbnotS z hz)]
+      simp only [hG', ite_eq_right (hbnotS z hz)]
       ring
     rw [hcongr, boundaryIntegral_add hSumCont hG'cont, boundaryIntegral_finsetSum hPcont]
   -- each principal part integrates to `a c` times the winding factor
@@ -1561,7 +1561,7 @@ private lemma int_offset_forced {x ε : ℝ} {k : ℤ} (hx : x ∈ Set.Ico (0 : 
     have : (-2 : ℤ) < k := by exact_mod_cast hklb
     omega
   by_cases hcase : x + ε < 1
-  · rw [if_pos hcase]
+  · rw [ite_eq_left hcase]
     have hk0' : k = 0 := by
       rcases (by omega : k = -1 ∨ k = 0) with rfl | rfl
       · exfalso
@@ -1571,7 +1571,7 @@ private lemma int_offset_forced {x ε : ℝ} {k : ℤ} (hx : x ∈ Set.Ico (0 : 
     subst hk0'
     push_cast
     exact ⟨trivial, by linarith, by linarith⟩
-  · rw [if_neg hcase]
+  · rw [ite_eq_right hcase]
     rw [not_lt] at hcase
     have hgt : 1 < x + ε := lt_of_le_of_ne hcase (Ne.symm hne1)
     have hkm1 : k = -1 := by
@@ -1590,14 +1590,14 @@ private lemma shifted_coord_mem_Ioo {x ε : ℝ} (hx : x ∈ Set.Ico (0 : ℝ) 1
     (hε : ε ∈ Set.Ioo (0 : ℝ) 1) (hbad : 1 - x ≠ ε) :
     x + ε + ((if x + ε < 1 then (0 : ℤ) else -1 : ℤ) : ℝ) ∈ Set.Ioo (0 : ℝ) 1 := by
   by_cases hcase : x + ε < 1
-  · simp only [if_pos hcase]
+  · simp only [ite_eq_left hcase]
     push_cast
     constructor
     · have h1 := hx.1
       have h2 := hε.1
       linarith
     · linarith
-  · simp only [if_neg hcase]
+  · simp only [ite_eq_right hcase]
     rw [not_lt] at hcase
     have hne1 : x + ε ≠ 1 := fun hcon => hbad (by linarith)
     have hgt : 1 < x + ε := lt_of_le_of_ne hcase (Ne.symm hne1)

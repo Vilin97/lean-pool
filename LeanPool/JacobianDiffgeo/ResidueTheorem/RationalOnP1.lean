@@ -329,9 +329,9 @@ theorem resAt_neg_sq_inv_mul_sub_inv_zpow (a : ℂ) {k : ℤ} (hk : k < 0) :
   rw [RS.laurentCoeffAt_of_analyticAt hganalytic]
   by_cases hkm1 : k = -1
   · subst hkm1
-    rw [show ((-1:ℤ)-(-(-1:ℤ)-2)) = (0:ℤ) by ring, if_pos (le_refl (0:ℤ))]
+    rw [show ((-1:ℤ)-(-(-1:ℤ)-2)) = (0:ℤ) by ring, ite_eq_left (le_refl (0:ℤ))]
     simp [RS.taylorCoeffAt_zero_apply]
   · have hneg : ¬ (0 : ℤ) ≤ -1 - (-k - 2) := by omega
-    rw [if_neg hneg, if_neg hkm1, neg_zero]
+    rw [ite_eq_right hneg, ite_eq_right hkm1, neg_zero]
 
 end RS.P1

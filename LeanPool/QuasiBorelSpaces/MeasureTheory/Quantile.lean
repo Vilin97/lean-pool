@@ -40,7 +40,7 @@ private lemma exists_unitIntervalRat_btwn
   obtain ⟨k, hk₁, hk₂⟩ := exists_rat_btwn h
   exact ⟨⟨⟨k, by grind⟩, by use k⟩, hk₁, hk₂⟩
 
-private noncomputable def cdf (μ : Measure I) [IsProbabilityMeasure μ] (i : I) : I where
+private noncomputable def cdf (μ : Measure I) (i : I) : I where
   val := ProbabilityTheory.cdf (μ.map Subtype.val) i
   property := by
     simp only [
@@ -86,13 +86,13 @@ private lemma cdf_top (μ : Measure I) [IsProbabilityMeasure μ] : cdf μ ⊤ = 
   ext
   simp only [cdf_apply_val, Set.Iic_top, measure_univ, ENNReal.toReal_one, Set.Icc.coe_top]
 
-private lemma monotone_cdf (μ : Measure I) [IsProbabilityMeasure μ] : Monotone (cdf μ) := by
+private lemma monotone_cdf (μ : Measure I) : Monotone (cdf μ) := by
   intro r₁ r₂ hr
   apply ProbabilityTheory.monotone_cdf
   apply hr
 
 private lemma cdf_continuous
-    (μ : Measure I) [IsProbabilityMeasure μ] (i)
+    (μ : Measure I) (i)
     : ContinuousWithinAt (cdf μ) (Set.Ici i) i := by
   unfold cdf
   have := (ProbabilityTheory.cdf (μ.map Subtype.val)).right_continuous i
@@ -103,7 +103,7 @@ private lemma cdf_continuous
   exact fun j hj hj' ↦ hδ₂ hj hj'
 
 /-- The quantile distribution function (i.e., the inverse of `cdf`). -/
-noncomputable def quantile (μ : Measure I) [IsProbabilityMeasure μ] (i : I) : I :=
+noncomputable def quantile (μ : Measure I) (i : I) : I :=
   sInf {r : I | i ≤ cdf μ r}
 
 @[fun_prop]

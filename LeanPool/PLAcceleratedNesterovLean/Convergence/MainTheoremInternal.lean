@@ -41,21 +41,21 @@ private theorem exists_total_nearest_projection
     ?_, ?_, ?_⟩
   · intro x hx
     dsimp only
-    rw [dif_pos hx]
+    rw [dite_eq_left hx]
     exact (hTub.uniqueProj x hx).choose_spec.1
   · intro x hxS
     dsimp only
     have hxU : x ∈ U := hTub.subset hxS
-    rw [dif_pos hxU]
+    rw [dite_eq_left hxU]
     have hself : x ∈ S ∧ dist x x = Metric.infDist x S :=
       ⟨hxS, by rw [dist_self]; exact (Metric.infDist_zero_of_mem hxS).symm⟩
     exact ((hTub.uniqueProj x hxU).choose_spec.2 x hself).symm
   · intro x
     dsimp only
     by_cases hx : x ∈ U
-    · rw [dif_pos hx]
+    · rw [dite_eq_left hx]
       exact (hTub.uniqueProj x hx).choose_spec.1.1
-    · rw [dif_neg hx]
+    · rw [dite_eq_right hx]
       exact hS_ne.some_mem
 
 /-- At every global minimizer, the gradient vanishes. -/
@@ -215,7 +215,7 @@ private theorem open_neighborhood_from_local_balls
   let α' : E d → ℝ := fun m => if hm : m ∈ S then α m hm else 1
   have hα'_spec : ∀ m (hm : m ∈ S), α' m = α m hm := by
     intro m hm
-    simp only [α', dif_pos hm]
+    simp only [α', dite_eq_left hm]
   refine ⟨⋃ m ∈ S, Metric.ball m (α' m), ?_, ?_, ?_, ?_⟩
   · exact isOpen_biUnion (fun m _ => Metric.isOpen_ball)
   · intro m hm
@@ -237,7 +237,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L
     ∀ (f : E d → ℝ),
     ∀ (n : ℕ),
     ∀ (M : Type*) [TopologicalSpace M] [ChartedSpace (ManifoldModel n) M]
-      [IsManifold (modelI n) 2 M] [Nonempty M]
+       [Nonempty M]
       (ι : M → E d),
       IsSmoothEmbedding (modelI n) (modelWithCornersSelf ℝ (E d)) 2 ι →
       Set.range ι = argminSet f →
@@ -256,7 +256,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L
             (1 / ↑L) ∈ U ∧
           f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f ≤
             2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) := by
-  intro f n M _ _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
+  intro f n M _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
   refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
   intro x₀ hx₀
   have hη : (1 : ℝ) / (L : ℝ) = 0 := by
@@ -296,7 +296,7 @@ private theorem nesterov_pl_accelerated_rate_zero_dim
     ∀ (f : E 0 → ℝ),
     ∀ (n : ℕ),
     ∀ (M : Type*) [TopologicalSpace M] [ChartedSpace (ManifoldModel n) M]
-      [IsManifold (modelI n) 2 M] [Nonempty M]
+       [Nonempty M]
       (ι : M → E 0),
       IsSmoothEmbedding (modelI n) (modelWithCornersSelf ℝ (E 0)) 2 ι →
       Set.range ι = argminSet f →
@@ -315,7 +315,7 @@ private theorem nesterov_pl_accelerated_rate_zero_dim
             (1 / ↑L) ∈ U ∧
           f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f ≤
             2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) := by
-  intro f n M _ _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
+  intro f n M _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
   refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
   intro x₀ hx₀
   obtain ⟨m, hmS⟩ := Set.range_nonempty ι

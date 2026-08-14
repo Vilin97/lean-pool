@@ -46,7 +46,7 @@ noncomputable def linSysMulEquiv [ConnectedSpace X] {φ : ℳ X} (hφ : φ ≠ 0
     intro h
     apply (zero_ne_one (α := ℳ X))
     rw [← hφφinv, h, mul_zero]
-  refine LinearEquiv.ofLinear
+  refine LinearEquiv.ofLinearMap
     { toFun := fun ψ => ⟨φ * ψ.1, mul_mem_linSys_sub_divisor hφ ψ.2⟩
       map_add' := fun ψ1 ψ2 => Subtype.ext (mul_add φ ψ1.1 ψ2.1)
       map_smul' := fun c ψ => Subtype.ext (mul_smul_comm c φ ψ.1) }

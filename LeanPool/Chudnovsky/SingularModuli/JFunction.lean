@@ -146,9 +146,9 @@ lemma E₄_qExpansion_coeff_int (n : ℕ) :
   have hb : bernoulli 4 = -1 / 30 := by rw [bernoulli, bernoulli'_four]; norm_num
   rw [hb, show (4 : ℕ) - 1 = 3 from rfl] at h
   by_cases hn : n = 0
-  · exact ⟨1, by rw [h, if_pos hn]; norm_num⟩
+  · exact ⟨1, by rw [h, ite_eq_left hn]; norm_num⟩
   · refine ⟨240 * ArithmeticFunction.sigma 3 n, ?_⟩
-    rw [h, if_neg hn]
+    rw [h, ite_eq_right hn]
     push_cast
     norm_num
 

@@ -99,12 +99,12 @@ private theorem taylor_eq_of_two_presentations {m : ℤ} {u : ℂ → ℂ}
     intro j
     rw [taylorCoeffAt_congr h5 j, taylorCoeffAt_sub_pow_mul hu]
   rcases lt_or_ge k m with hkm | hmk
-  · rw [if_neg (not_le.2 hkm)]
+  · rw [ite_eq_right (not_le.2 hkm)]
     split_ifs with hnk
-    · rw [h6 (k - n).toNat, if_pos (by omega)]
+    · rw [h6 (k - n).toNat, ite_eq_left (by omega)]
     · rfl
-  · rw [if_pos hmk, if_pos (hnm.trans hmk), h6 (k - n).toNat,
-      if_neg (by omega : ¬ (k - n).toNat < (m - n).toNat)]
+  · rw [ite_eq_left hmk, ite_eq_left (hnm.trans hmk), h6 (k - n).toNat,
+      ite_eq_right (by omega : ¬ (k - n).toNat < (m - n).toNat)]
     congr 1
     omega
 
@@ -149,7 +149,7 @@ theorem laurentCoeffAt_eq_zero_of_lt_order (h : (k : WithTop ℤ) < meromorphicO
     · exact laurentCoeffAt_of_order_eq_top h₂ k
     · obtain ⟨u, h₁u, h₂u, h₃u⟩ := (meromorphicOrderAt_ne_top_iff hf).1 h₂
       simp only [smul_eq_mul] at h₃u
-      rw [laurentCoeffAt_of_eventuallyEq h₁u h₃u k, if_neg]
+      rw [laurentCoeffAt_of_eventuallyEq h₁u h₃u k, ite_eq_right]
       intro hle
       rw [← WithTop.coe_untop₀_of_ne_top h₂] at h
       exact absurd (WithTop.coe_le_coe.2 hle) (not_le.2 h)
@@ -175,7 +175,7 @@ theorem laurentCoeffAt_order (hf : MeromorphicAt f z₀) (h : meromorphicOrderAt
   obtain ⟨u, h₁u, h₂u, h₃u⟩ := (meromorphicOrderAt_ne_top_iff hf).1 h
   have h₃u' := h₃u
   simp only [smul_eq_mul] at h₃u'
-  rw [laurentCoeffAt_of_eventuallyEq h₁u h₃u' _, if_pos le_rfl, sub_self,
+  rw [laurentCoeffAt_of_eventuallyEq h₁u h₃u' _, ite_eq_left le_rfl, sub_self,
     AnalyticAt.meromorphicTrailingCoeffAt_of_ne_zero_of_eq_nhdsNE h₁u h₂u h₃u]
   rfl
 

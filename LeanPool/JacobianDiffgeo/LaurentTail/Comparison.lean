@@ -632,7 +632,7 @@ theorem mlClassAt_eq_zero_of_mem_ordGe (D : RS.Divisor X) (p : X)
   fin_cases i <;> dsimp only
   · erw [gOf_apply_zero, map_zero, sub_zero]
     exact (RS.mem_linSysOn_iff_of_isOpen (cleanNbhd D p ψ).2).1 hmem x hx
-  · erw [gOf_apply_one, map_zero, sub_zero, RS.MeroGermOn.ord_zero, if_pos
+  · erw [gOf_apply_one, map_zero, sub_zero, RS.MeroGermOn.ord_zero, ite_eq_left
       ⟨isOpen_compl_singleton, hx⟩]
     exact le_top
 
@@ -736,7 +736,7 @@ theorem mlClassAt_smul (D : RS.Divisor X) (p : X) (c : ℂ)
       (fun x hx hxp => by
         rcases eq_or_ne c 0 with rfl | hc
         · rw [zero_smul, RS.MeroGermOn.ord_zero,
-            if_pos ⟨(chartAt ℂ p).open_source, cleanNbhd_sub_source D p ψ hx⟩]
+            ite_eq_left ⟨(chartAt ℂ p).open_source, cleanNbhd_sub_source D p ψ hx⟩]
           exact le_top
         · rw [RS.MeroGermOn.ord_smul (chartAt ℂ p).open_source (cleanNbhd_sub_source D p ψ hx) hc]
           exact cleanNbhd_ord_nonneg D p ψ x hx hxp)
@@ -896,7 +896,7 @@ theorem mlSumCochain_apply_of_mem {𝒱 : RS.Cech.FinCover (⊤ : Opens X)} (D' 
       ⟨RS.MeroGermOn.restrict (Set.subset_univ _) f,
         restrict_mem_linSysOn_of_mem_linSys hf _ (𝒱.U k).isOpen⟩ := by
   unfold mlSumCochain
-  rw [dif_pos ⟨p, hpT, hpk⟩]
+  rw [dite_eq_left ⟨p, hpT, hpk⟩]
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] [CompactSpace X] [ConnectedSpace X] [T1Space X]
     [DecidableEq X] in
@@ -904,7 +904,7 @@ theorem mlSumCochain_apply_of_not_mem {𝒱 : RS.Cech.FinCover (⊤ : Opens X)} 
     (f : RS.Mero X) (hf : f ∈ RS.LinSys D') (T : Finset X) (k : Fin 𝒱.n)
     (hnot : ∀ p ∈ T, p ∉ 𝒱.U k) : mlSumCochain (𝒱 := 𝒱) D' f hf T k = 0 := by
   unfold mlSumCochain
-  rw [dif_neg (fun ⟨p, hpT, hpk⟩ => hnot p hpT hpk)]
+  rw [dite_eq_right (fun ⟨p, hpT, hpk⟩ => hnot p hpT hpk)]
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] [CompactSpace X] [ConnectedSpace X] [T1Space X]
     [DecidableEq X] in
@@ -961,7 +961,7 @@ private theorem alpha_hmember_ord :
     · rw [mlSumCochain_apply_of_not_mem (alphaAuxD D f) f hfD' T k (fun q hqT hqk => hex ⟨q, hqT,
         hqk⟩)]
       change ((-(D x) : ℤ) : WithTop ℤ) ≤ (0 : RS.MeroGermOn X (𝒱.U k : Set X)).ord x
-      rw [RS.MeroGermOn.ord_zero, if_pos ⟨(𝒱.U k).isOpen, hx⟩]
+      rw [RS.MeroGermOn.ord_zero, ite_eq_left ⟨(𝒱.U k).isOpen, hx⟩]
       exact le_top
 
 /-- The multi-point cochain has `D`-bounded coboundary, at any finite `T`. -/
@@ -1186,7 +1186,7 @@ theorem tailToH1_alpha (D : RS.Divisor X) (f : RS.Mero X) : tailToH1 D (alphaL D
       change ((-(D x) : ℤ) : WithTop ℤ) ≤
         ((RS.MeroGermOn.restrict (Set.subset_univ _) f : RS.MeroGermOn X (𝒱.U k : Set X)) -
           RS.MeroGermOn.restrict (𝒱.le_base k) f).ord x
-      rw [sub_self, RS.MeroGermOn.ord_zero, if_pos ⟨(𝒱.U k).isOpen, hx⟩]
+      rw [sub_self, RS.MeroGermOn.ord_zero, ite_eq_left ⟨(𝒱.U k).isOpen, hx⟩]
       exact le_top
     · rw [mlSumCochain_apply_of_not_mem D' f hfD' S k (fun q hqS hqk => hex ⟨q, hqS, hqk⟩)]
       have hxS : x ∉ S := fun hxS => hex ⟨x, hxS, hx⟩
@@ -1343,7 +1343,7 @@ theorem injG_apply_of_mem (T : Finset X) (k : Fin 𝒱.n) (p : X) (hpT : p ∈ T
     rintro q hqTS hqk rfl
     rfl
   change (if h : ∃ p ∈ T ∩ S, p ∈ 𝒱.U k then _ else _) = _
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   exact gen hex.choose hex.choose_spec.1 hex.choose_spec.2
     (inj_hunique_S ψ S D hOclause hex.choose
       (Finset.mem_of_mem_inter_right hex.choose_spec.1) p hpS k hex.choose_spec.2 hpk)
@@ -1354,7 +1354,7 @@ omit [ConnectedSpace X] in
 theorem injG_apply_of_not_mem (T : Finset X) (k : Fin 𝒱.n) (hnot : ∀ p ∈ T, p ∈ S → p ∉ 𝒱.U k) :
     injG ψ S D D' hD'mem hOclause T k = 0 := by
   change (if h : ∃ p ∈ T ∩ S, p ∈ 𝒱.U k then _ else _) = _
-  rw [dif_neg]
+  rw [dite_eq_right]
   rintro ⟨q, hqTS, hqk⟩
   exact hnot q (Finset.mem_of_mem_inter_left hqTS) (Finset.mem_of_mem_inter_right hqTS) hqk
 
@@ -1382,7 +1382,7 @@ theorem inj_hmember_ord (T : Finset X) (k : Fin 𝒱.n) (x : X) (hx : x ∈ (�
   · rw [injG_apply_of_not_mem ψ S D D' hD'mem hOclause T k
       (fun p hpT hpS hpk => hex ⟨p, Finset.mem_inter.mpr ⟨hpT, hpS⟩, hpk⟩)]
     change ((-(D x) : ℤ) : WithTop ℤ) ≤ (0 : RS.MeroGermOn X (𝒱.U k : Set X)).ord x
-    rw [RS.MeroGermOn.ord_zero, if_pos ⟨(𝒱.U k).isOpen, hx⟩]
+    rw [RS.MeroGermOn.ord_zero, ite_eq_left ⟨(𝒱.U k).isOpen, hx⟩]
     exact le_top
 
 include ψ S D D' hD'mem h𝒱Adapted hOclause in

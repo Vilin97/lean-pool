@@ -114,7 +114,7 @@ private lemma continuousOn_cutoff_integral
             filter_upwards [(continuous_norm.continuousAt.comp
               (γ.continuous_toFun.continuousAt (Icc_mem_nhds ht_Ioo.1 ht_Ioo.2) |>.sub
                 continuousAt_const)).eventually (isOpen_Ioi.mem_nhds h_gt)]
-              with s hs; exact (if_pos hs).symm) |>.continuousWithinAt
+              with s hs; exact (ite_eq_left hs).symm) |>.continuousWithinAt
       · by_cases h₂ : σ₂ < t
         · have h_gt : ε < ‖γ.toFun t - z₀‖ := h_right t ⟨h₂, ht_Icc.2⟩
           have hne : γ.toFun t - z₀ ≠ 0 := by intro h; rw [h, norm_zero] at h_gt; linarith
@@ -126,13 +126,13 @@ private lemma continuousOn_cutoff_integral
               filter_upwards [(continuous_norm.continuousAt.comp
                 (γ.continuous_toFun.continuousAt (Icc_mem_nhds ht_Ioo.1 ht_Ioo.2) |>.sub
                   continuousAt_const)).eventually (isOpen_Ioi.mem_nhds h_gt)]
-                with s hs; exact (if_pos hs).symm) |>.continuousWithinAt
+                with s hs; exact (ite_eq_left hs).symm) |>.continuousWithinAt
         · have ht_mid : t ∈ Ioo σ₁ σ₂ :=
             ⟨lt_of_le_of_ne (not_lt.mp h₁) (Ne.symm ht_ne_σ₁),
              lt_of_le_of_ne (not_lt.mp h₂) ht_ne_σ₂⟩
           exact continuousAt_const.congr (by
             filter_upwards [Ioo_mem_nhds ht_mid.1 ht_mid.2] with s hs
-            exact (if_neg (not_lt.mpr (h_mid s ⟨hs.1.le, hs.2.le⟩))).symm
+            exact (ite_eq_right (not_lt.mpr (h_mid s ⟨hs.1.le, hs.2.le⟩))).symm
             ) |>.continuousWithinAt
     exact (intervalIntegrable_of_piecewise_continuousOn_bounded
       ((ε₀ / 2)⁻¹ * M) γ.hab.le h_cont_off
@@ -166,13 +166,13 @@ private lemma continuousOn_cutoff_integral
           (fun ε => if ‖γ.toFun t - z₀‖ > ε then
             (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t else 0) := by
         filter_upwards [Ioi_mem_nhds h_lt] with ε hε
-        exact (if_neg (not_lt.mpr (mem_Ioi.mp hε).le)).symm
+        exact (ite_eq_right (not_lt.mpr (mem_Ioi.mp hε).le)).symm
       exact continuousAt_const.congr h_ev
     · have h_ev : (fun _ : ℝ => (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t) =ᶠ[𝓝 ε₀]
           (fun ε => if ‖γ.toFun t - z₀‖ > ε then
             (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t else 0) := by
         filter_upwards [Iio_mem_nhds h_gt] with ε hε
-        exact (if_pos (mem_Iio.mp hε)).symm
+        exact (ite_eq_left (mem_Iio.mp hε)).symm
       exact continuousAt_const.congr h_ev
 
 /-- PV of `(z-z₀)⁻¹` exists along a closed PiecewiseC1Immersion with unique crossing.

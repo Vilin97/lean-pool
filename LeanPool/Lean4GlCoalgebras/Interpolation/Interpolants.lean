@@ -164,10 +164,10 @@ lemma partial_const {p : Nat → Prop} [DecidablePred p] (σ : Subtype p → For
   | top => rfl
   | atom n =>
       rw [partial_]
-      rw [dif_neg (h n (by simp only [Formula.vocab, Finset.mem_singleton]))]
+      rw [dite_eq_right (h n (by simp only [Formula.vocab, Finset.mem_singleton]))]
   | negAtom n =>
       rw [partial_]
-      rw [dif_neg (h n (by simp only [Formula.vocab, Finset.mem_singleton]))]
+      rw [dite_eq_right (h n (by simp only [Formula.vocab, Finset.mem_singleton]))]
   | and A B ihA ihB =>
       rw [partial_]
       have hA : A = partial_ σ A := ihA (by
@@ -224,14 +224,14 @@ lemma extend_in {𝕏 : Proof} [fin_X : Fintype 𝕏.X] {Y : Finset 𝕏.X}
       · have ⟨y, hy, hy_eq⟩ := Finset.mem_image.mp hn
         exact False.elim (h y hy (by
           simpa only [Formula.vocab, Finset.mem_singleton] using hy_eq))
-      · rw [dif_neg hn]
+      · rw [dite_eq_right hn]
   | negAtom n =>
       rw [extend]
       by_cases hn : n ∈ Y.image encodeVar
       · have ⟨y, hy, hy_eq⟩ := Finset.mem_image.mp hn
         exact False.elim (h y hy (by
           simpa only [Formula.vocab, Finset.mem_singleton] using hy_eq))
-      · rw [dif_neg hn]
+      · rw [dite_eq_right hn]
   | and A B ihA ihB =>
       rw [extend]
       have hA : A = extend Y_sub σ A := ihA (by

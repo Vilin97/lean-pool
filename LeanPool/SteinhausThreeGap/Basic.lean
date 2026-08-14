@@ -143,14 +143,14 @@ theorem sortedVal_strictMono (a : ℝ) (N : ℕ) {i j : ℕ}
     (hij : i < j) (hj : j < orbitCard a N) :
     sortedVal a N i < sortedVal a N j := by
   have hi : i < orbitCard a N := lt_trans hij hj
-  simp only [sortedVal, dif_pos hi, dif_pos hj]
+  simp only [sortedVal, dite_eq_left hi, dite_eq_left hj]
   exact (orbitEmb a N).strictMono (by simpa using hij)
 
 /-- **The first sorted value is the minimum.** -/
 theorem sortedVal_zero (a : ℝ) {N : ℕ} (hN : 0 < N) :
     sortedVal a N 0 = (orbit a N).min' (orbit_nonempty a hN) := by
   have hpos : 0 < orbitCard a N := Finset.card_pos.mpr (orbit_nonempty a hN)
-  simp only [sortedVal, dif_pos hpos]
+  simp only [sortedVal, dite_eq_left hpos]
   exact Finset.orderEmbOfFin_zero rfl hpos
 
 /-- **The last sorted value is the maximum.** -/
@@ -158,13 +158,13 @@ theorem sortedVal_last (a : ℝ) {N : ℕ} (hN : 0 < N) :
     sortedVal a N (orbitCard a N - 1) = (orbit a N).max' (orbit_nonempty a hN) := by
   have hpos : 0 < orbitCard a N := Finset.card_pos.mpr (orbit_nonempty a hN)
   have hlast : orbitCard a N - 1 < orbitCard a N := Nat.sub_lt hpos Nat.one_pos
-  simp only [sortedVal, dif_pos hlast]
+  simp only [sortedVal, dite_eq_left hlast]
   exact Finset.orderEmbOfFin_last rfl hpos
 
 /-- **Every sorted value (below the count) is an orbit point.** -/
 theorem sortedVal_mem (a : ℝ) {N : ℕ} {i : ℕ} (h : i < orbitCard a N) :
     sortedVal a N i ∈ orbit a N := by
-  simp only [sortedVal, dif_pos h]
+  simp only [sortedVal, dite_eq_left h]
   exact Finset.orderEmbOfFin_mem (orbit a N) rfl ⟨i, h⟩
 
 /-! ## Phase 2 — gap infrastructure and the distinct-gap-count reduction -/
@@ -271,7 +271,7 @@ noncomputable def etaNeg (a : ℝ) (N : ℕ) : ℝ :=
 theorem etaPos_mem (a : ℝ) {N : ℕ} (h2 : 2 ≤ orbitCard a N) :
     etaPos a N ∈ posOrbit a N := by
   have h := posOrbit_nonempty a h2
-  simp only [etaPos, dif_pos h]
+  simp only [etaPos, dite_eq_left h]
   exact (posOrbit a N).min'_mem h
 
 /-- `η⁺ > 0`. -/
@@ -282,7 +282,7 @@ theorem etaPos_pos (a : ℝ) {N : ℕ} (h2 : 2 ≤ orbitCard a N) : 0 < etaPos a
 theorem etaPos_le (a : ℝ) {N : ℕ} (h2 : 2 ≤ orbitCard a N)
     {x : ℝ} (hx : x ∈ posOrbit a N) : etaPos a N ≤ x := by
   have h := posOrbit_nonempty a h2
-  simp only [etaPos, dif_pos h]
+  simp only [etaPos, dite_eq_left h]
   exact (posOrbit a N).min'_le x hx
 
 /-- `η⁺` is the smallest *positive* orbit point. -/
@@ -294,7 +294,7 @@ theorem no_orbit_below_etaPos (a : ℝ) {N : ℕ} (h2 : 2 ≤ orbitCard a N)
 theorem max_posOrbit_mem (a : ℝ) {N : ℕ} (h2 : 2 ≤ orbitCard a N) :
     (1 : ℝ) - etaNeg a N ∈ posOrbit a N := by
   have h := posOrbit_nonempty a h2
-  simp only [etaNeg, dif_pos h, sub_sub_self]
+  simp only [etaNeg, dite_eq_left h, sub_sub_self]
   exact (posOrbit a N).max'_mem h
 
 /-- `η⁻ > 0`. -/
@@ -307,7 +307,7 @@ theorem etaNeg_pos (a : ℝ) {N : ℕ} (h2 : 2 ≤ orbitCard a N) : 0 < etaNeg a
 theorem le_one_sub_etaNeg (a : ℝ) {N : ℕ} (h2 : 2 ≤ orbitCard a N)
     {x : ℝ} (hx : x ∈ posOrbit a N) : x ≤ 1 - etaNeg a N := by
   have h := posOrbit_nonempty a h2
-  simp only [etaNeg, dif_pos h, sub_sub_self]
+  simp only [etaNeg, dite_eq_left h, sub_sub_self]
   exact (posOrbit a N).le_max' x hx
 
 /-- With at least one orbit point, the smallest sorted value is `0`. -/
@@ -362,7 +362,7 @@ theorem exists_index_of_mem_orbit (a : ℝ) (N : ℕ) {y : ℝ} (hy : y ∈ orbi
     rw [hrange]; exact Finset.mem_coe.mpr hy
   obtain ⟨j, hj⟩ := hyr
   refine ⟨j.1, j.2, ?_⟩
-  simp only [sortedVal, dif_pos j.2, Fin.eta]
+  simp only [sortedVal, dite_eq_left j.2, Fin.eta]
   exact hj
 
 /-- No orbit point lies strictly between two consecutive sorted points. -/

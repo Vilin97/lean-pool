@@ -197,7 +197,7 @@ theorem QuantumPhaseEstimation.main_exact_dyadic (t : Nat) (j : Fin (2 ^ t))
 theorem QuantumPhaseEstimation.main_exact_probability_one (t : Nat) (j : Fin (2 ^ t))
     (phi : Real) (_hphi : phi = (j.val : Real) / (2 : Real) ^ t) :
     PureState.probOutcome (ket j : PureState t) j = 1 := by
-  rw [PureState.probOutcome_ket, if_pos rfl]
+  rw [PureState.probOutcome_ket, ite_eq_left rfl]
 
 /-- Trusted decoupled phase-register resource profile for exact dyadic QPE. -/
 def qpeExactResourceProfile (t : Nat) : ResourceProfile where

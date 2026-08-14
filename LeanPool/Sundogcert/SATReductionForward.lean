@@ -250,28 +250,28 @@ theorem xnode_cover (φ : Formula n m) (a : Assignment n)
             simp only [posT, Sum.inl.injEq, Prod.mk.injEq] at h
             obtain ⟨hi, hj⟩ := h; subst hi; subst hj
             simp only [Bool.not_eq_true] at hai
-            rw [if_neg (by simp [hai])]
+            rw [ite_eq_right (by simp [hai])]
         · rw [hwheelDef] at h
           split at h
           · rename_i hai
             simp only [negT, Sum.inr.injEq, Sum.inl.injEq, Prod.mk.injEq] at h
             obtain ⟨hi, hj⟩ := h; subst hi; subst hj
-            rw [if_pos hai]
+            rw [ite_eq_left hai]
           · simp [posT, negT] at h
       · intro h
         by_cases hai : a i0 = true
-        · rw [if_pos hai] at h
+        · rw [ite_eq_left hai] at h
           simp only [Prod.mk.injEq] at h
           obtain ⟨hi, hj⟩ := h; subst hi; subst hj
           right
           rw [hwheelDef]
-          rw [if_pos hai]
-        · rw [if_neg hai] at h
+          rw [ite_eq_left hai]
+        · rw [ite_eq_right hai] at h
           simp only [Prod.mk.injEq] at h
           obtain ⟨hi, hj⟩ := h; subst hi; subst hj
           left
           rw [hwheelDef]
-          rw [if_neg hai]
+          rw [ite_eq_right hai]
     rw [hc0, hg0, hw1]
   | Sum.inr (Sum.inl k0) =>
     have hw0 : (Finset.univ.filter (fun ij =>
@@ -490,10 +490,10 @@ theorem forward (φ : Formula n m) (h : Satisfiable φ) :
     unfold evalLiteral at he
     cases hsgn : (φ k (slotStar k)).2 with
     | true =>
-      rw [hsgn] at he; simp only [if_true] at he; exact he.symm
+      rw [hsgn] at he; simp only [ite_true] at he; exact he.symm
     | false =>
       rw [hsgn] at he
-      simp only [Bool.false_eq_true, if_false, Bool.not_eq_true'] at he
+      simp only [Bool.false_eq_true, ite_false, Bool.not_eq_true'] at he
       exact he.symm
   have hsub : claimedTips ⊆ freeTips := by
     intro tau htau

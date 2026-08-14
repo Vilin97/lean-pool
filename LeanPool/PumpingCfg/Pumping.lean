@@ -35,7 +35,7 @@ theorem pidgeonhole {α β : Type*} {A : Finset α} {B : Finset β} {f : A → B
     apply Finset.card_le_card_of_injOn f'
     · intro a ha
       rw [Finset.mem_coe] at ha
-      simp only [f', dif_pos ha]
+      simp only [f', dite_eq_left ha]
       exact (f ⟨a, ha⟩).2
     · intro a₁ ha₁ a₂ ha₂ haa
       have haa' : f ⟨a₁, ha₁⟩ = f ⟨a₂, ha₂⟩ := by

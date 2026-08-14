@@ -48,9 +48,9 @@ theorem not_mem_alphaFinset (D : RS.Divisor X) (f : RS.Mero X) {p : X} (hp : p �
   have hDp : D p = 0 := Function.notMem_support.mp hD
   by_cases hf : f = 0
   · subst hf
-    rw [RS.MeroGermOn.ord_zero, if_pos ⟨isOpen_univ, Set.mem_univ p⟩]
+    rw [RS.MeroGermOn.ord_zero, ite_eq_left ⟨isOpen_univ, Set.mem_univ p⟩]
     exact le_top
-  · rw [dif_neg hf] at hf2
+  · rw [dite_eq_right hf] at hf2
     rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_lt] at hf2
     rw [hDp]
     simpa using hf2

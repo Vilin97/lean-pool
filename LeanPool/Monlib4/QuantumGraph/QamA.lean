@@ -217,9 +217,9 @@ theorem Psi.one [hφ : φ.IsFaithfulPosMap] :
   simp only [mul_apply]
   simp only [single_eq, boole_mul]
   simp_rw [ite_and, Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true, ite_mul, zero_mul, Prod.swap, mul_ite, mul_zero,
+    Finset.mem_univ, ite_true, ite_mul, zero_mul, Prod.swap, mul_ite, mul_zero,
     Finset.sum_product_univ, Finset.sum_ite_irrel, Finset.sum_const_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   simp_rw [← mul_apply]
   rw [PosDef.rpow_mul_rpow]
   ring_nf
@@ -928,7 +928,7 @@ theorem Qam.unique_one_edge_and_refl [hφ : φ.IsFaithfulPosMap] [Nontrivial n] 
   · rintro rfl
     exact ⟨Qam.trivialGraph_edges, Qam.Nontracial.trivialGraph⟩
 
-private theorem star_alg_equiv.is_isometry_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (f :
+private theorem star_alg_equiv.is_isometry_iff [hφ : φ.IsFaithfulPosMap] (f :
     ℍ ≃⋆ₐ[ℂ] ℍ) :
     withMatrixQuantum[φ] (StarAlgEquiv.IsIsometry f ↔ f φ.matrix = φ.matrix) := by
   withMatrixQuantumCtx[φ]
@@ -937,7 +937,7 @@ private theorem star_alg_equiv.is_isometry_iff [hφ : φ.IsFaithfulPosMap] [Nont
     (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 4 0
 
 -- The conjugation normal form produces large matrix expressions before simplification.
-theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap]
     (x : { x : ℍ // x ≠ 0 }) :
     withMatrixQuantum[φ]
       (∀ {f : ℍ ≃⋆ₐ[ℂ] ℍ}, StarAlgEquiv.IsIsometry f →
@@ -998,7 +998,7 @@ theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial
     unitaryGroup.star_coe_eq_coe_star]
   simp only [rpow]
 
-theorem qamA.iso_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem qamA.iso_iff [hφ : φ.IsFaithfulPosMap]
     {x y : { x : ℍ // x ≠ 0 }} :-- (hx : _root_.is_self_adjoint (qam_A hφ x))
         -- (hy : _root_.is_self_adjoint (qam_A hφ y))
         -- qam.iso (@qam_A.is_idempotent n _ _ φ hφ x) (qam_A.is_idempotent y)

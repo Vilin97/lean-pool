@@ -529,8 +529,8 @@ theorem repr_preserved (q d m : ℕ) (_hq : 1 ≤ q) (kk : Fin (d + 1) → ℕ)
       (∑ i : Fin (d + 1), (if i = jj then q ^ (m - j) else 0) * q ^ (i : ℕ))
         = q ^ (m + 1) := by
     rw [Finset.sum_eq_single jj]
-    · rw [if_pos rfl, hjj, ← pow_add]; congr 1; omega
-    · intro b _ hb; rw [if_neg hb]; ring
+    · rw [ite_eq_left rfl, hjj, ← pow_add]; congr 1; omega
+    · intro b _ hb; rw [ite_eq_right hb]; ring
     · intro h; exact absurd (Finset.mem_univ _) h
   rw [hsum1, hsum2] at hkey
   omega
@@ -639,7 +639,7 @@ lemma exchange_carryfree (q d m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → ℕ
     -- digit q (x jj) (m-jv) ≤ digit q (kk jj) (m-jv), and the latter +1 < q
     -- jj's digit: digit q (kk' jj)(m-jv) = digit q (x jj)(m-jv) + 1
     have hjj_val : digit q (kk' jj) (m - jv) = digit q (x jj) (m - jv) + 1 := by
-      rw [hkk' jj, if_pos rfl]
+      rw [hkk' jj, ite_eq_left rfl]
       exact digit_add_self q (x jj) (m - jv) hq1 hadd_pre
     -- jrow's digit: digit q (kk' jrow)(m-jv) = digit q (x jrow)(m-jv)
     have hjrow_val_eq : digit q (x jrow) (m - jv) = digit q (kk jrow) (m - jv) - r jrow := by
@@ -647,7 +647,7 @@ lemma exchange_carryfree (q d m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → ℕ
       exact digit_sub_self q (kk jrow) (m - (jrow : ℕ)) (r jrow) hq1
         (by rw [hjrow_pos_pos]; exact hjrow_dig)
     have hjrow_val : digit q (kk' jrow) (m - jv) = digit q (kk jrow) (m - jv) - r jrow := by
-      rw [hkk' jrow, if_neg (Ne.symm hjj_ne_jrow), add_zero, ← hjrow_val_eq]
+      rw [hkk' jrow, ite_eq_right (Ne.symm hjj_ne_jrow), add_zero, ← hjrow_val_eq]
     -- It suffices to show ∑ i, digit q (kk' i)(m-jv) ≤ ∑ i, digit q (kk i)(m-jv) ≤ q-1
     refine le_trans ?_ (hcf (m - jv))
     -- split off {jj, jrow}
@@ -663,7 +663,7 @@ lemma exchange_carryfree (q d m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → ℕ
         simp only [Finset.mem_sdiff, Finset.mem_univ, true_and, Finset.mem_insert,
           Finset.mem_singleton, not_or] at hi
         exact hi
-      rw [if_neg hi'.1, add_zero]
+      rw [ite_eq_right hi'.1, add_zero]
       exact hsub_le i (m - jv)
     · -- the pair {jj, jrow}
       rw [Finset.sum_pair hjj_ne_jrow, Finset.sum_pair hjj_ne_jrow]
@@ -677,11 +677,11 @@ lemma exchange_carryfree (q d m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → ℕ
       by_cases hij : i = jj
       · subst hij
         -- kk' i = x i + q ^ (m-jv); digit at n ≠ m-jv unaffected by add
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         -- need precondition digit q (x i) (m-jv) + 1 < q
         rw [digit_add_other q (x i) (m - jv) n hq1 hadd_pre hn]
         exact hsub_le i n
-      · rw [if_neg hij, add_zero]
+      · rw [ite_eq_right hij, add_zero]
         exact hsub_le i n
     calc ∑ i, digit q (kk' i) n ≤ ∑ i : Fin (d + 1), digit q (kk i) n :=
           Finset.sum_le_sum (fun i _ => hle i)
@@ -767,7 +767,7 @@ lemma exchange_phi_gain (q d k m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → �
   have hwjj : (∑ i : Fin (d + 1), w i * (if i = jj then q ^ (m - jv) else 0))
       = q ^ m * (q * gWeight q d (jv + 1)) := by
     rw [Finset.sum_eq_single jj]
-    · rw [if_pos rfl]
+    · rw [ite_eq_left rfl]
       simp only [hw, gWeight]
       have hjjexp : (jj : ℕ) = jv + 1 := hjjval
       rw [hjjexp]
@@ -784,7 +784,7 @@ lemma exchange_phi_gain (q d k m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → �
         _ = q ^ m * (q * q ^ (d + 1 - (jv + 1)) + q * ((q - 1) * (jv + 1))) := by
               rw [hpd]; ring
         _ = q ^ m * (q * (q ^ (d + 1 - (jv + 1)) + (q - 1) * (jv + 1))) := by ring
-    · intro b _ hb; rw [if_neg hb]; ring
+    · intro b _ hb; rw [ite_eq_right hb]; ring
     · intro h; exact absurd (Finset.mem_univ _) h
   -- g_d is the minimum weight
   have hgmin : ∀ i : Fin (d + 1), gWeight q d d ≤ gWeight q d (i : ℕ) := by
@@ -919,12 +919,12 @@ lemma carry_exchange_improves (q d k : ℕ) (hq : q.Prime) (kk : Fin (d + 1) →
     rw [ha] at this
     by_cases hi : (i : ℕ) ≤ m
     · simpa [hi] using this
-    · simp only [hi, if_false] at this; omega
+    · simp only [hi, ite_false] at this; omega
   have hr0 : ∀ i : Fin (d + 1), m < (i : ℕ) → r i = 0 := by
     intro i hi
     have := hrle i
     rw [ha] at this
-    simp only [Nat.not_le.mpr hi, if_false] at this; omega
+    simp only [Nat.not_le.mpr hi, ite_false] at this; omega
   -- top row r ≤ q-1
   have hrlast : r (Fin.last d) ≤ q - 1 := by
     have := hrdig (Fin.last d)
@@ -1117,12 +1117,12 @@ lemma move_down (q d k m i j : ℕ) (hq : 2 ≤ q) (kk : Fin (d + 1) → ℕ)
     with hkk'def
   -- pointwise characterization
   have hkkI : kk' I = kk I - q ^ (m - i) := by
-    simp only [hkk'def, if_neg hIJ, add_zero, if_true]
+    simp only [hkk'def, ite_eq_right hIJ, add_zero, ite_true]
   have hkkJ : kk' J = kk J + q ^ (m - j) := by
-    simp only [hkk'def, if_neg (Ne.symm hIJ), tsub_zero, if_true]
+    simp only [hkk'def, ite_eq_right (Ne.symm hIJ), tsub_zero, ite_true]
   have hkkO : ∀ r : Fin (d + 1), r ≠ I → r ≠ J → kk' r = kk r := by
     intro r hrI hrJ
-    simp only [hkk'def, if_neg hrI, if_neg hrJ, tsub_zero, add_zero]
+    simp only [hkk'def, ite_eq_right hrI, ite_eq_right hrJ, tsub_zero, add_zero]
   -- m - i ≠ m - j
   have hmimj : m - i ≠ m - j := by omega
   -- precondition for the addition at J
@@ -1294,10 +1294,10 @@ lemma move_parallelogram_representation (q d k m i j t : ℕ)
         kk r := by
     intro r
     by_cases hrI : r = I
-    · subst hrI; rw [if_pos rfl, if_neg hIJT, add_zero]; exact hborrowP
+    · subst hrI; rw [ite_eq_left rfl, ite_eq_right hIJT, add_zero]; exact hborrowP
     · by_cases hrJT : r = JT
-      · subst hrJT; rw [if_neg hIJT.symm, if_pos rfl, zero_add]; exact hborrowS
-      · rw [if_neg hrI, if_neg hrJT]; exact Nat.zero_le _
+      · subst hrJT; rw [ite_eq_right hIJT.symm, ite_eq_left rfl, zero_add]; exact hborrowS
+      · rw [ite_eq_right hrI, ite_eq_right hrJT]; exact Nat.zero_le _
   have hbal : (∑ r : Fin (d + 1), kk' r * q ^ (r : ℕ))
         + ∑ r : Fin (d + 1), ((if r = I then q ^ (m - i) else 0)
             + (if r = JT then q ^ (m - j) else 0)) * q ^ (r : ℕ)
@@ -1329,29 +1329,29 @@ lemma move_parallelogram_representation (q d k m i j t : ℕ)
       (∑ r : Fin (d + 1), (if r = I then q ^ (m - i) else 0) * q ^ (r : ℕ)) =
         q ^ m := by
     rw [Finset.sum_eq_single I]
-    · rw [if_pos rfl, hIval, ← pow_add]; congr 1; omega
-    · intro b _ hb; rw [if_neg hb]; ring
+    · rw [ite_eq_left rfl, hIval, ← pow_add]; congr 1; omega
+    · intro b _ hb; rw [ite_eq_right hb]; ring
     · intro h; exact absurd (Finset.mem_univ _) h
   have hsumJT :
       (∑ r : Fin (d + 1), (if r = JT then q ^ (m - j) else 0) * q ^ (r : ℕ)) =
         q ^ (m + t) := by
     rw [Finset.sum_eq_single JT]
-    · rw [if_pos rfl, hJTval, ← pow_add]; congr 1; omega
-    · intro b _ hb; rw [if_neg hb]; ring
+    · rw [ite_eq_left rfl, hJTval, ← pow_add]; congr 1; omega
+    · intro b _ hb; rw [ite_eq_right hb]; ring
     · intro h; exact absurd (Finset.mem_univ _) h
   have hsumIT :
       (∑ r : Fin (d + 1), (if r = IT then q ^ (m - i) else 0) * q ^ (r : ℕ)) =
         q ^ (m + t) := by
     rw [Finset.sum_eq_single IT]
-    · rw [if_pos rfl, hITval, ← pow_add]; congr 1; omega
-    · intro b _ hb; rw [if_neg hb]; ring
+    · rw [ite_eq_left rfl, hITval, ← pow_add]; congr 1; omega
+    · intro b _ hb; rw [ite_eq_right hb]; ring
     · intro h; exact absurd (Finset.mem_univ _) h
   have hsumJ :
       (∑ r : Fin (d + 1), (if r = J then q ^ (m - j) else 0) * q ^ (r : ℕ)) =
         q ^ m := by
     rw [Finset.sum_eq_single J]
-    · rw [if_pos rfl, hJval, ← pow_add]; congr 1; omega
-    · intro b _ hb; rw [if_neg hb]; ring
+    · rw [ite_eq_left rfl, hJval, ← pow_add]; congr 1; omega
+    · intro b _ hb; rw [ite_eq_right hb]; ring
     · intro h; exact absurd (Finset.mem_univ _) h
   have hL : (∑ r : Fin (d + 1), ((if r = I then q ^ (m - i) else 0)
             + (if r = JT then q ^ (m - j) else 0)) * q ^ (r : ℕ)) =
@@ -1421,8 +1421,8 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
     have h1 : kk I - q ^ (m - i) = kk I - 1 * q ^ (m - i) := by rw [one_mul]
     rw [h1]
     by_cases hn : n = m - i
-    · subst hn; rw [if_pos rfl, digit_sub_self q (kk I) (m - i) 1 hq1 (by omega)]
-    · rw [if_neg hn, digit_sub_other q (kk I) (m - i) 1 n hq1 (by omega) hn]
+    · subst hn; rw [ite_eq_left rfl, digit_sub_self q (kk I) (m - i) 1 hq1 (by omega)]
+    · rw [ite_eq_right hn, digit_sub_other q (kk I) (m - i) 1 n hq1 (by omega) hn]
   have hdigJT : ∀ n : ℕ, digit q (kk' JT) n =
       if n = m - j then digit q (kk JT) n - 1 else digit q (kk JT) n := by
     intro n
@@ -1430,8 +1430,8 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
     have h1 : kk JT - q ^ (m - j) = kk JT - 1 * q ^ (m - j) := by rw [one_mul]
     rw [h1]
     by_cases hn : n = m - j
-    · subst hn; rw [if_pos rfl, digit_sub_self q (kk JT) (m - j) 1 hq1 (by omega)]
-    · rw [if_neg hn, digit_sub_other q (kk JT) (m - j) 1 n hq1 (by omega) hn]
+    · subst hn; rw [ite_eq_left rfl, digit_sub_self q (kk JT) (m - j) 1 hq1 (by omega)]
+    · rw [ite_eq_right hn, digit_sub_other q (kk JT) (m - j) 1 n hq1 (by omega) hn]
   by_cases hcol : i + t = j
   · have hITJ : IT = J := by apply Fin.ext; rw [hITval, hJval]; omega
     have hkkJcol : kk' J = kk J + q ^ (m - i) + q ^ (m - j) := by
@@ -1439,7 +1439,7 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
             - (if J = JT then q ^ (m - j) else 0)
             + (if J = IT then q ^ (m - i) else 0) + (if J = J then q ^ (m - j) else 0) :=
         by rw [hkk'def]
-      rw [e, if_neg hIJ.symm, if_neg hJJT, if_pos hITJ.symm, if_pos rfl,
+      rw [e, ite_eq_right hIJ.symm, ite_eq_right hJJT, ite_eq_left hITJ.symm, ite_eq_left rfl,
         Nat.sub_zero, Nat.sub_zero]
     have hdigJ : ∀ n : ℕ, digit q (kk' J) n =
         if n = m - i then digit q (kk J) n + 1
@@ -1454,19 +1454,19 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
         exact hpre_j
       by_cases hni : n = m - i
       · subst hni
-        rw [if_pos rfl, digit_add_other q (kk J + q ^ (m - i)) (m - j) (m - i)
+        rw [ite_eq_left rfl, digit_add_other q (kk J + q ^ (m - i)) (m - j) (m - i)
           hq1 hmid_j hmimj, digit_add_self q (kk J) (m - i) hq1 hpre_i]
       · by_cases hnj : n = m - j
         · subst hnj
-          rw [if_neg hni, if_pos rfl, digit_add_self q (kk J + q ^ (m - i)) (m - j)
+          rw [ite_eq_right hni, ite_eq_left rfl, digit_add_self q (kk J + q ^ (m - i)) (m - j)
             hq1 hmid_j, digit_add_other q (kk J) (m - i) (m - j) hq1 hpre_i hni]
-        · rw [if_neg hni, if_neg hnj,
+        · rw [ite_eq_right hni, ite_eq_right hnj,
             digit_add_other q (kk J + q ^ (m - i)) (m - j) n hq1 hmid_j hnj,
             digit_add_other q (kk J) (m - i) n hq1 hpre_i hni]
     have hkkO : ∀ r : Fin (d + 1), r ≠ I → r ≠ J → r ≠ JT → kk' r = kk r := by
       intro r hrI hrJ hrJT
       have hrIT : r ≠ IT := by rw [hITJ]; exact hrJ
-      simp only [hkk'def, if_neg hrI, if_neg hrJ, if_neg hrJT, if_neg hrIT,
+      simp only [hkk'def, ite_eq_right hrI, ite_eq_right hrJ, ite_eq_right hrJT, ite_eq_right hrIT,
         Nat.sub_zero, add_zero]
     intro n
     have h3sub : ({I, J, JT} : Finset (Fin (d + 1))) ⊆ Finset.univ := Finset.subset_univ _
@@ -1490,15 +1490,15 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
       rw [hdigI n, hdigJ n, hdigJT n]
       by_cases hni : n = m - i
       · subst hni
-        rw [if_pos rfl, if_pos rfl, if_neg hmimj]
+        rw [ite_eq_left rfl, ite_eq_left rfl, ite_eq_right hmimj]
         have hI1 : 1 ≤ digit q (kk I) (m - i) := hsrcP
         omega
       · by_cases hnj : n = m - j
         · subst hnj
-          rw [if_neg hni, if_neg hni, if_pos rfl, if_pos rfl]
+          rw [ite_eq_right hni, ite_eq_right hni, ite_eq_left rfl, ite_eq_left rfl]
           have hJT1 : 1 ≤ digit q (kk JT) (m - j) := hsrcS
           omega
-        · rw [if_neg hni, if_neg hni, if_neg hnj, if_neg hnj]
+        · rw [ite_eq_right hni, ite_eq_right hni, ite_eq_right hnj, ite_eq_right hnj]
     rw [heq]; exact hcf n
   · have hITJ : IT ≠ J := by
       intro h
@@ -1510,14 +1510,14 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
             - (if IT = JT then q ^ (m - j) else 0)
             + (if IT = IT then q ^ (m - i) else 0) + (if IT = J then q ^ (m - j) else 0) :=
         by rw [hkk'def]
-      rw [e, if_neg hIIT.symm, if_neg hITJT, if_pos rfl, if_neg hITJ,
+      rw [e, ite_eq_right hIIT.symm, ite_eq_right hITJT, ite_eq_left rfl, ite_eq_right hITJ,
         Nat.sub_zero, Nat.sub_zero, add_zero]
     have hkkJ : kk' J = kk J + q ^ (m - j) := by
       have e : kk' J = kk J - (if J = I then q ^ (m - i) else 0)
             - (if J = JT then q ^ (m - j) else 0)
             + (if J = IT then q ^ (m - i) else 0) + (if J = J then q ^ (m - j) else 0) :=
         by rw [hkk'def]
-      rw [e, if_neg hIJ.symm, if_neg hJJT, if_neg (Ne.symm hITJ), if_pos rfl,
+      rw [e, ite_eq_right hIJ.symm, ite_eq_right hJJT, ite_eq_right (Ne.symm hITJ), ite_eq_left rfl,
         Nat.sub_zero, Nat.sub_zero, add_zero]
     have hdigIT : ∀ n : ℕ, digit q (kk' IT) n =
         if n = m - i then digit q (kk IT) n + 1 else digit q (kk IT) n := by
@@ -1525,19 +1525,19 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
       rw [hkkIT]
       have hpre : digit q (kk IT) (m - i) + 1 < q := hcfI IT hIIT.symm
       by_cases hn : n = m - i
-      · subst hn; rw [if_pos rfl, digit_add_self q (kk IT) (m - i) hq1 hpre]
-      · rw [if_neg hn, digit_add_other q (kk IT) (m - i) n hq1 hpre hn]
+      · subst hn; rw [ite_eq_left rfl, digit_add_self q (kk IT) (m - i) hq1 hpre]
+      · rw [ite_eq_right hn, digit_add_other q (kk IT) (m - i) n hq1 hpre hn]
     have hdigJ : ∀ n : ℕ, digit q (kk' J) n =
         if n = m - j then digit q (kk J) n + 1 else digit q (kk J) n := by
       intro n
       rw [hkkJ]
       have hpre : digit q (kk J) (m - j) + 1 < q := hcfJ J hJJT
       by_cases hn : n = m - j
-      · subst hn; rw [if_pos rfl, digit_add_self q (kk J) (m - j) hq1 hpre]
-      · rw [if_neg hn, digit_add_other q (kk J) (m - j) n hq1 hpre hn]
+      · subst hn; rw [ite_eq_left rfl, digit_add_self q (kk J) (m - j) hq1 hpre]
+      · rw [ite_eq_right hn, digit_add_other q (kk J) (m - j) n hq1 hpre hn]
     have hkkO : ∀ r : Fin (d + 1), r ≠ I → r ≠ J → r ≠ IT → r ≠ JT → kk' r = kk r := by
       intro r hrI hrJ hrIT hrJT
-      simp only [hkk'def, if_neg hrI, if_neg hrJ, if_neg hrJT, if_neg hrIT,
+      simp only [hkk'def, ite_eq_right hrI, ite_eq_right hrJ, ite_eq_right hrJT, ite_eq_right hrIT,
         Nat.sub_zero, add_zero]
     intro n
     have h4sub : ({I, J, IT, JT} : Finset (Fin (d + 1))) ⊆ Finset.univ := Finset.subset_univ _
@@ -1563,15 +1563,15 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
       rw [hdigI n, hdigJ n, hdigIT n, hdigJT n]
       by_cases hni : n = m - i
       · subst hni
-        rw [if_pos rfl, if_neg hmimj, if_pos rfl, if_neg hmimj]
+        rw [ite_eq_left rfl, ite_eq_right hmimj, ite_eq_left rfl, ite_eq_right hmimj]
         have hI1 : 1 ≤ digit q (kk I) (m - i) := hsrcP
         omega
       · by_cases hnj : n = m - j
         · subst hnj
-          rw [if_neg hni, if_pos rfl, if_neg hni, if_pos rfl]
+          rw [ite_eq_right hni, ite_eq_left rfl, ite_eq_right hni, ite_eq_left rfl]
           have hJT1 : 1 ≤ digit q (kk JT) (m - j) := hsrcS
           omega
-        · rw [if_neg hni, if_neg hnj, if_neg hni, if_neg hnj]
+        · rw [ite_eq_right hni, ite_eq_right hnj, ite_eq_right hni, ite_eq_right hnj]
     rw [heq]; exact hcf n
 
 lemma move_parallelogram_phi_lt (q d m i j t : ℕ) (hq : 2 ≤ q)
@@ -1600,10 +1600,10 @@ lemma move_parallelogram_phi_lt (q d m i j t : ℕ) (hq : 2 ≤ q)
         kk r := by
     intro r
     by_cases hrI : r = I
-    · subst hrI; rw [if_pos rfl, if_neg hIJT, add_zero]; exact hborrowP
+    · subst hrI; rw [ite_eq_left rfl, ite_eq_right hIJT, add_zero]; exact hborrowP
     · by_cases hrJT : r = JT
-      · subst hrJT; rw [if_neg hIJT.symm, if_pos rfl, zero_add]; exact hborrowS
-      · rw [if_neg hrI, if_neg hrJT]; exact Nat.zero_le _
+      · subst hrJT; rw [ite_eq_right hIJT.symm, ite_eq_left rfl, zero_add]; exact hborrowS
+      · rw [ite_eq_right hrI, ite_eq_right hrJT]; exact Nat.zero_le _
   have hbal : (∑ r : Fin (d + 1), w r * kk' r)
         + ∑ r : Fin (d + 1), w r * ((if r = I then q ^ (m - i) else 0)
             + (if r = JT then q ^ (m - j) else 0))
@@ -1632,26 +1632,26 @@ lemma move_parallelogram_phi_lt (q d m i j t : ℕ) (hq : 2 ≤ q)
   have hswI : (∑ r : Fin (d + 1), w r * (if r = I then q ^ (m - i) else 0)) =
       w I * q ^ (m - i) := by
     rw [Finset.sum_eq_single I]
-    · rw [if_pos rfl]
-    · intro b _ hb; rw [if_neg hb, Nat.mul_zero]
+    · rw [ite_eq_left rfl]
+    · intro b _ hb; rw [ite_eq_right hb, Nat.mul_zero]
     · intro h; exact absurd (Finset.mem_univ _) h
   have hswJT : (∑ r : Fin (d + 1), w r * (if r = JT then q ^ (m - j) else 0)) =
       w JT * q ^ (m - j) := by
     rw [Finset.sum_eq_single JT]
-    · rw [if_pos rfl]
-    · intro b _ hb; rw [if_neg hb, Nat.mul_zero]
+    · rw [ite_eq_left rfl]
+    · intro b _ hb; rw [ite_eq_right hb, Nat.mul_zero]
     · intro h; exact absurd (Finset.mem_univ _) h
   have hswIT : (∑ r : Fin (d + 1), w r * (if r = IT then q ^ (m - i) else 0)) =
       w IT * q ^ (m - i) := by
     rw [Finset.sum_eq_single IT]
-    · rw [if_pos rfl]
-    · intro b _ hb; rw [if_neg hb, Nat.mul_zero]
+    · rw [ite_eq_left rfl]
+    · intro b _ hb; rw [ite_eq_right hb, Nat.mul_zero]
     · intro h; exact absurd (Finset.mem_univ _) h
   have hswJ : (∑ r : Fin (d + 1), w r * (if r = J then q ^ (m - j) else 0)) =
       w J * q ^ (m - j) := by
     rw [Finset.sum_eq_single J]
-    · rw [if_pos rfl]
-    · intro b _ hb; rw [if_neg hb, Nat.mul_zero]
+    · rw [ite_eq_left rfl]
+    · intro b _ hb; rw [ite_eq_right hb, Nat.mul_zero]
     · intro h; exact absurd (Finset.mem_univ _) h
   have hLb : (∑ r : Fin (d + 1), w r * ((if r = I then q ^ (m - i) else 0)
             + (if r = JT then q ^ (m - j) else 0))) =
@@ -1821,10 +1821,11 @@ lemma move_parallelogram (q d k m i j t : ℕ) (hq : 2 ≤ q) (kk : Fin (d + 1) 
     with hkk'def
   -- pointwise characterization on the always-distinct rows I and JT
   have hkkI : kk' I = kk I - q ^ (m - i) := by
-    simp only [hkk'def, if_neg hIJT, if_neg hIIT, if_neg hIJ, if_true, add_zero,
+    simp only [hkk'def, ite_eq_right hIJT, ite_eq_right hIIT, ite_eq_right hIJ, ite_true, add_zero,
       Nat.sub_zero]
   have hkkJT : kk' JT = kk JT - q ^ (m - j) := by
-    simp only [hkk'def, if_neg hIJT.symm, if_neg hITJT.symm, if_neg hJJT.symm, if_true,
+    simp only [hkk'def, ite_eq_right hIJT.symm, ite_eq_right hITJT.symm,
+      ite_eq_right hJJT.symm, ite_true,
       add_zero, Nat.sub_zero]
   refine ⟨kk', ⟨?_, ?_⟩, ?_⟩
   · exact
@@ -1991,7 +1992,7 @@ lemma column_sum_eq (q d k : ℕ) (hq : q.Prime) (kk : Fin (d + 1) → ℕ)
     apply Finset.sum_eq_zero
     intro i _
     by_cases hi : (i : ℕ) ≤ mm
-    · rw [if_pos hi]
+    · rw [ite_eq_left hi]
       have hbig : kk i < q ^ (mm - (i : ℕ)) := by
         have hile : (i : ℕ) ≤ d := by have := i.2; omega
         calc kk i ≤ k := hkkle i
@@ -1999,7 +2000,7 @@ lemma column_sum_eq (q d k : ℕ) (hq : q.Prime) (kk : Fin (d + 1) → ℕ)
           _ ≤ q ^ (mm - (i : ℕ)) := Nat.pow_le_pow_right (by omega) (by omega)
       simp only [digit]
       rw [Nat.div_eq_of_lt hbig]; simp
-    · rw [if_neg hi]
+    · rw [ite_eq_right hi]
   -- the finite base-q expansion: k = ∑_{mm<M} colSum mm * q ^ mm
   have hcolrep : k = ∑ mm ∈ Finset.range M, colSum mm * q ^ mm := by
     have step1 : (∑ mm ∈ Finset.range M, colSum mm * q ^ mm)
@@ -2171,9 +2172,9 @@ lemma differing_cell_select (q d k : ℕ) (hq : q.Prime)
   -- value of fa, fb at p₀.1 : position m₀ - i₀ = n₀
   have hpos₀ : m₀ - i₀ = n₀ := by omega
   have hfaI : fa p₀.1 = digit q (a p₀.1) n₀ := by
-    simp only [hfadef, ← hi₀def]; rw [if_pos hi₀m₀, hpos₀]
+    simp only [hfadef, ← hi₀def]; rw [ite_eq_left hi₀m₀, hpos₀]
   have hfbI : fb p₀.1 = digit q (b p₀.1) n₀ := by
-    simp only [hfbdef, ← hi₀def]; rw [if_pos hi₀m₀, hpos₀]
+    simp only [hfbdef, ← hi₀def]; rw [ite_eq_left hi₀m₀, hpos₀]
   have hfdiffI : fa p₀.1 ≠ fb p₀.1 := by rw [hfaI, hfbI]; exact hdiff₀
   -- helper: given a strict surplus f₁ I < f₂ I within equal-sum columns, find J with f₂ J < f₁ J
   have findJ : ∀ (f₁ f₂ : Fin (d + 1) → ℕ),
@@ -2193,17 +2194,17 @@ lemma differing_cell_select (q d k : ℕ) (hq : q.Prime)
     intro J hJlt
     by_cases hJm : (J : ℕ) ≤ m₀
     · refine ⟨hJm, ?_⟩
-      simp only [hfadef, hfbdef, if_pos hJm] at hJlt
+      simp only [hfadef, hfbdef, ite_eq_left hJm] at hJlt
       exact hJlt
-    · exfalso; simp only [hfadef, hfbdef, if_neg hJm] at hJlt; omega
+    · exfalso; simp only [hfadef, hfbdef, ite_eq_right hJm] at hJlt; omega
   have JfromFb : ∀ (J : Fin (d + 1)), fb J < fa J →
       ((J : ℕ) ≤ m₀ ∧ digit q (b J) (m₀ - (J:ℕ)) < digit q (a J) (m₀ - (J:ℕ))) := by
     intro J hJlt
     by_cases hJm : (J : ℕ) ≤ m₀
     · refine ⟨hJm, ?_⟩
-      simp only [hfadef, hfbdef, if_pos hJm] at hJlt
+      simp only [hfadef, hfbdef, ite_eq_left hJm] at hJlt
       exact hJlt
-    · exfalso; simp only [hfadef, hfbdef, if_neg hJm] at hJlt; omega
+    · exfalso; simp only [hfadef, hfbdef, ite_eq_right hJm] at hJlt; omega
   -- the Fin ⟨i₀, _⟩ equals p₀.1
   have hI₀eq : (⟨i₀, by omega⟩ : Fin (d + 1)) = p₀.1 := by
     apply Fin.ext; simp [hi₀def]

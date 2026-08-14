@@ -84,8 +84,8 @@ theorem projH_mul_projG_transpose (m : ℕ) :
     have hik : (i : ℕ) ≠ (k : ℕ) + m := by
       have : (i : ℕ) < m := i.isLt
       omega
-    rw [if_pos hji, if_neg (hji ▸ hik), one_mul]
-  · rw [if_neg hji, zero_mul]
+    rw [ite_eq_left hji, ite_eq_right (hji ▸ hik), one_mul]
+  · rw [ite_eq_right hji, zero_mul]
 
 /-- The dual-pair law for the family, via the structural core. SCALABLE: kernel cost is
     polynomial in `m` (no `2^m` secret enumeration). -/
@@ -123,10 +123,10 @@ theorem witness_sound (m : ℕ) :
   intro y e' h
   unfold witnessOpt at h
   by_cases hwt : wt y ≤ (projScheme m).τ
-  · simp only [hwt, if_true, Option.some.injEq] at h
+  · simp only [hwt, ite_true, Option.some.injEq] at h
     subst h
     exact ⟨rfl, hwt⟩
-  · simp only [hwt, if_false] at h
+  · simp only [hwt, ite_false] at h
     exact absurd h (by simp)
 
 /-- Verifier with the degenerate support bound. -/
@@ -174,7 +174,7 @@ theorem projH_mulVec_allOnes (m : ℕ) :
   rw [Finset.sum_eq_single (⟨(i : ℕ), by have := i.isLt; omega⟩ : Fin (2 * m))]
   · have hii : ((⟨(i : ℕ), by have := i.isLt; omega⟩ : Fin (2 * m)) : ℕ) = (i : ℕ) := rfl
     have hilt : ((⟨(i : ℕ), by have := i.isLt; omega⟩ : Fin (2 * m)) : ℕ) < m := i.isLt
-    rw [if_pos hii, if_pos hilt, one_mul]
+    rw [ite_eq_left hii, ite_eq_left hilt, one_mul]
   · intro j _ hj
     -- j ≠ i (as Fin (2*m) with value i), so the first guard fails
     by_cases hjm : (j : ℕ) < m
@@ -183,8 +183,8 @@ theorem projH_mulVec_allOnes (m : ℕ) :
         apply hj
         apply Fin.ext
         simp only [h]
-      rw [if_neg hji, zero_mul]
-    · rw [if_neg hjm, mul_zero]
+      rw [ite_eq_right hji, zero_mul]
+    · rw [ite_eq_right hjm, mul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 /-- `hammingNorm (projH m *ᵥ allOnesSynBody m) = m`: the all-ones vector over `Fin m`. -/
@@ -211,11 +211,11 @@ theorem colSupp_projH_le_one (m : ℕ) (j : Fin (2 * m)) :
   -- projH a j ≠ 0 ⟹ (j = a); likewise (j = b); hence a = b
   have hja : (j : ℕ) = (a : ℕ) := by
     by_contra h
-    rw [if_neg h] at ha'
+    rw [ite_eq_right h] at ha'
     exact ha' rfl
   have hjb : (j : ℕ) = (b : ℕ) := by
     by_contra h
-    rw [if_neg h] at hb'
+    rw [ite_eq_right h] at hb'
     exact hb' rfl
   exact Fin.ext (hja ▸ hjb)
 
@@ -238,7 +238,7 @@ theorem colBound_projH (m : ℕ) (hm : 0 < m) : colBound (projH m) = 1 := by
     -- projH ⟨0,hm⟩ ⟨0,_⟩ = if (0 = 0) then 1 else 0 = 1 ≠ 0
     change (if ((⟨0, by omega⟩ : Fin (2 * m)) : ℕ) = ((⟨0, hm⟩ : Fin m) : ℕ)
             then (1 : ZMod 2) else 0) ≠ 0
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact one_ne_zero
 
 /-- **THE SCALING LAW.**  For every `m > 0`, the all-ones-syndrome body is UNSAFE at the

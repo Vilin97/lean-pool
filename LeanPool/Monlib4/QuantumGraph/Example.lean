@@ -234,8 +234,8 @@ theorem Qam.Nontracial.Complement'.ir_reflexive
   simp_rw [Qam.complement', _root_.map_sub, LinearMap.sub_apply,
     Qam.refl_idempotent_completeGraph_left]
   by_cases h : α <;> simp_rw [h]
-  · simp_rw [if_true, sub_eq_zero, eq_comm]
-  · simp_rw [if_false, sub_eq_self]
+  · simp_rw [ite_true, sub_eq_zero, eq_comm]
+  · simp_rw [ite_false, sub_eq_self]
 
 /-- A quantum adjacency map that is idempotent and reflexive. -/
 class QamReflexive (x : l(A)) : Prop where
@@ -262,14 +262,14 @@ lemma QamIrreflexive_iff (x : l(A)) :
 theorem Qam.complement'_is_irreflexive_iff
     (x : l(A)) : QamIrreflexive (Qam.complement' x) ↔ QamReflexive x := by
   have := Qam.Nontracial.Complement'.ir_reflexive x True
-  simp_rw [if_true] at this
+  simp_rw [ite_true] at this
   rw [QamReflexive_iff, QamIrreflexive_iff, ← Qam.Nontracial.Complement'.qam]
   simp_rw [this]
 
 theorem Qam.complement'_is_reflexive_iff
     (x : l(A)) : QamReflexive (Qam.complement' x) ↔ QamIrreflexive x := by
   have := Qam.Nontracial.Complement'.ir_reflexive x False
-  simp_rw [if_false] at this
+  simp_rw [ite_false] at this
   rw [QamReflexive_iff, QamIrreflexive_iff, ← Qam.Nontracial.Complement'.qam, this]
 
 /-- Complement relative to the trivial graph. -/

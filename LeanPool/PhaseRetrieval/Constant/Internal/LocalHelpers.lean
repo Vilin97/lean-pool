@@ -37,13 +37,13 @@ private def phaseAnchor (w : ℂ) : ℂ :=
 private lemma norm_phaseAnchor (w : ℂ) : ‖phaseAnchor w‖ = 1 := by
   by_cases hw : w = 0
   · simp [phaseAnchor, hw]
-  · rw [phaseAnchor, dif_neg hw, norm_div]
+  · rw [phaseAnchor, dite_eq_right hw, norm_div]
     simp [Complex.norm_real, hw]
 
 private lemma phaseAnchor_mul_norm (w : ℂ) : phaseAnchor w * ‖w‖ = w := by
   by_cases hw : w = 0
   · simp [phaseAnchor, hw]
-  · rw [phaseAnchor, dif_neg hw]
+  · rw [phaseAnchor, dite_eq_right hw]
     field_simp [norm_ne_zero_iff.mpr hw]
 
 private lemma conj_phaseAnchor_mul (w : ℂ) : conj (phaseAnchor w) * w = ‖w‖ := by

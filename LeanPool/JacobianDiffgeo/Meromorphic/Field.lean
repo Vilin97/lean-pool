@@ -67,7 +67,7 @@ theorem Mero.ord_eq_top_iff [T1Space X] [ConnectedSpace X] {φ : ℳ X} (x : X) 
   · by_contra hne
     exact (Mero.ord_ne_top hne x) hc
   · rw [hc, MeroGermOn.ord_zero]
-    exact if_pos ⟨isOpen_univ, mem_univ x⟩
+    exact ite_eq_left ⟨isOpen_univ, mem_univ x⟩
 
 /-! ### `Field (ℳ X)` -/
 

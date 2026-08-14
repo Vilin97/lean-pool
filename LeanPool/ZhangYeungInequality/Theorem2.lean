@@ -536,8 +536,8 @@ distributes the
 step.
 -/
 private lemma indepFun_map_pair_real_singleton
-    {α β : Type*} [MeasurableSpace α] [MeasurableSingletonClass α]
-    [MeasurableSpace β] [MeasurableSingletonClass β]
+    {α β : Type*} [MeasurableSpace α]
+    [MeasurableSpace β]
     {Ω' : Type*} [MeasurableSpace Ω'] {f : Ω' → α} {g : Ω' → β}
     (hf : Measurable f) (hg : Measurable g)
     {μ : Measure Ω'} [IsFiniteMeasure μ]

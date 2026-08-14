@@ -609,13 +609,13 @@ def Form1.trace (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) : Form1 X →ₗ[ℂ] 
 theorem Form1.trace_apply (η : Form1 X) :
     Form1.trace f hf η = traceForm hf hne η := by
   unfold Form1.trace
-  rw [dif_neg hne]
+  rw [dite_eq_right hne]
   rfl
 
 theorem Form1.trace_of_forall_eq (hc : ∃ c, ∀ x, f x = c) :
     Form1.trace f hf = 0 := by
   unfold Form1.trace
-  rw [dif_pos hc]
+  rw [dite_eq_left hc]
 
 /-! ### The regular-value formula -/
 

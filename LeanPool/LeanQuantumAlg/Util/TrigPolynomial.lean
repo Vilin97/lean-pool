@@ -131,8 +131,8 @@ theorem TrigPolynomial.eval_sum {ι : Type*} (s : Finset ι) (F : ι → TrigPol
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl (fun i hi => ?_)
   rw [← Finset.sum_subset (Finset.subset_biUnion_of_mem (fun j => (F j).freqs) hi)
-        (fun ω _ hω => by rw [if_neg hω, zero_mul])]
-  exact Finset.sum_congr rfl (fun ω hω => by rw [if_pos hω])
+        (fun ω _ hω => by rw [ite_eq_right hω, zero_mul])]
+  exact Finset.sum_congr rfl (fun ω hω => by rw [ite_eq_left hω])
 
 /-- Product of two trigonometric polynomials: realised as the sum, over `f`'s frequencies, of `g`
 shifted by that frequency and scaled by `f`'s coefficient. -/
@@ -256,22 +256,22 @@ theorem TrigPolynomial.coeffAt_eq_of_eval_eq {f g : TrigPolynomial k}
         = ∑ ν ∈ f.freqs ∪ g.freqs,
             f.coeffAt ν * Complex.exp (Complex.I * (freqDot ν x : ℂ)) := by
       rw [TrigPolynomial.eval, ← Finset.sum_subset Finset.subset_union_left
-            (fun ν _ hν => by rw [TrigPolynomial.coeffAt, if_neg hν, zero_mul])]
-      exact Finset.sum_congr rfl (fun ν hν => by rw [TrigPolynomial.coeffAt, if_pos hν])
+            (fun ν _ hν => by rw [TrigPolynomial.coeffAt, ite_eq_right hν, zero_mul])]
+      exact Finset.sum_congr rfl (fun ν hν => by rw [TrigPolynomial.coeffAt, ite_eq_left hν])
     have hg : g.eval x
         = ∑ ν ∈ f.freqs ∪ g.freqs,
             g.coeffAt ν * Complex.exp (Complex.I * (freqDot ν x : ℂ)) := by
       rw [TrigPolynomial.eval, ← Finset.sum_subset Finset.subset_union_right
-            (fun ν _ hν => by rw [TrigPolynomial.coeffAt, if_neg hν, zero_mul])]
-      exact Finset.sum_congr rfl (fun ν hν => by rw [TrigPolynomial.coeffAt, if_pos hν])
+            (fun ν _ hν => by rw [TrigPolynomial.coeffAt, ite_eq_right hν, zero_mul])]
+      exact Finset.sum_congr rfl (fun ν hν => by rw [TrigPolynomial.coeffAt, ite_eq_left hν])
     simp only [sub_mul]
     rw [Finset.sum_sub_distrib, ← hf, ← hg, h x, sub_self]
   by_cases hω : ω ∈ f.freqs ∪ g.freqs
   · exact sub_eq_zero.mp
       (expSum_coeff_zero_of_eval_zero (c := fun ν => f.coeffAt ν - g.coeffAt ν) hzero ω hω)
   · rw [TrigPolynomial.coeffAt, TrigPolynomial.coeffAt,
-        if_neg (fun hf => hω (Finset.mem_union_left _ hf)),
-        if_neg (fun hg => hω (Finset.mem_union_right _ hg))]
+        ite_eq_right (fun hf => hω (Finset.mem_union_left _ hf)),
+        ite_eq_right (fun hg => hω (Finset.mem_union_right _ hg))]
 
 /-- The canonical coefficient of a conjugated trigonometric polynomial negates the frequency and
 conjugates. -/
@@ -284,8 +284,8 @@ theorem TrigPolynomial.coeffAt_conj (f : TrigPolynomial k) (ω : Fin k → ℝ) 
     · intro h; exact ⟨-ω, h, neg_neg ω⟩
   unfold TrigPolynomial.coeffAt
   by_cases h : -ω ∈ f.freqs
-  · rw [if_pos (hmem.mpr h), if_pos h]; rfl
-  · rw [if_neg (fun hc => h (hmem.mp hc)), if_neg h, map_zero]
+  · rw [ite_eq_left (hmem.mpr h), ite_eq_left h]; rfl
+  · rw [ite_eq_right (fun hc => h (hmem.mp hc)), ite_eq_right h, map_zero]
 
 /-! ### Frequency-set characterizations (for tracking which frequencies appear) -/
 

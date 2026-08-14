@@ -953,7 +953,7 @@ private theorem radical_le_X_pow_mul_prod : (radical n : ℕ) ≤ (X : ℝ)^ε *
 theorem x_K_le_X_pow : x KIndex ≤ (X : ℝ) ^ ε := by
   have h1n := h1n
   have hnX := hnX
-  rw [x, if_pos ?side]
+  rw [x, ite_eq_left ?side]
   case side =>
     simp
   have := hKd
@@ -1494,7 +1494,7 @@ noncomputable def const (ε : ℝ) : ℝ :=
 theorem const_spec {ε : ℝ} (hε_pos : 0 < ε) (hε : ε < 1 / 2) :
     let d := ⌊10 * ε⁻¹ ^ 4⌋₊
     ∀ x : ℕ, 2 ≤ x → (Nat.log 2 x + 1) ^ (3 * d) ≤ const ε * (x : ℝ)^(ε/4) := by
-  rw [const, dif_pos hε_pos, dif_pos hε]
+  rw [const, dite_eq_left hε_pos, dite_eq_left hε]
   extract_lets d _ _ _ hd
   apply Classical.choose_spec (tmp hε_pos d hd)
 
@@ -1510,8 +1510,8 @@ theorem const_nonneg {ε : ℝ} : 0 ≤ const ε := by
       apply nonneg_of_mul_nonneg_left this
       apply Real.rpow_pos_of_pos
       norm_num
-    · rw [const, dif_pos hε_pos, dif_neg hε]
-  · rw [const, dif_neg hε_pos]
+    · rw [const, dite_eq_left hε_pos, dite_eq_right hε]
+  · rw [const, dite_eq_right hε_pos]
 
 end Asymptotics
 

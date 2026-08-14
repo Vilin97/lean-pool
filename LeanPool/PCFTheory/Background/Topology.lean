@@ -143,7 +143,7 @@ theorem mk_derivedSet_le (S : Set Ordinal) : #(derivedSet S) ≤ #S := by
   by_cases ha : (S ∩ Ioi a.1).Nonempty
   · by_cases hb : (S ∩ Ioi b.1).Nonempty
     · unfold f at hab
-      rw [dif_pos ha, dif_pos hb, Option.some_inj] at hab
+      rw [dite_eq_left ha, dite_eq_left hb, Option.some_inj] at hab
       have heq : sInf (S ∩ Ioi a.1) = sInf (S ∩ Ioi b.1) := congrArg Subtype.val hab
       have blt : b.1 ≤ sInf (S ∩ Ioi b.1) := le_csInf hb fun _ ⟨_, h⟩ ↦ h.le
       obtain ⟨x, hx⟩ := IsAccPt.forall_lt b.2 a.1 altb

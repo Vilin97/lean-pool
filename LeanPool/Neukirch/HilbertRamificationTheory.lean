@@ -1164,7 +1164,7 @@ theorem finrank_bot_InertiaField_eq_inertiaDeg_of_unique :
   let := InertiaField_isGalois_of_unique p P
   rw [← inertiaDeg_eq_inertiaDegOfIsGalois p P, inertiaDeg', ← card_aut_eq_finrank,
     Nat.card_congr (InertiaFieldAutEquivResidueFieldAut p P).toEquiv,
-    card_aut_eq_finrank, dif_pos hp.liesOver_eq.symm]
+    card_aut_eq_finrank, dite_eq_left hp.liesOver_eq.symm]
 
 /-- The extension degree `[L : InertiaField' p P]` is equal to the
 ramification index of `p` in `L`. -/
@@ -1195,7 +1195,7 @@ theorem inertiaDeg_over_InertiaIdeal_eq_one_of_unique (p : Ideal (𝓞 K)) (P : 
     inertiaDegOfIsGalois (InertiaIdeal' K P) L = 1 := by
   let := ideal_unique_lies_over_tower_top p (InertiaIdeal' K P) P
   let := InertiaGroup_Normal (InertiaIdeal' K P) P
-  rw [← inertiaDeg_eq_inertiaDegOfIsGalois (InertiaIdeal' K P) P, inertiaDeg', dif_pos rfl,
+  rw [← inertiaDeg_eq_inertiaDegOfIsGalois (InertiaIdeal' K P) P, inertiaDeg', dite_eq_left rfl,
     ← card_aut_eq_finrank, ← Nat.card_congr <| MulEquiv.toEquiv <|
     autQuoutientInertiaGroupEquivResidueFieldAut (InertiaIdeal' K P) P,
     Nat.card_eq_fintype_card]

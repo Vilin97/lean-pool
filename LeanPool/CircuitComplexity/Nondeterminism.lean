@@ -103,7 +103,7 @@ theorem or_size_complexity_le [CompleteBasis Basis.andOr2] [NeZero N]
 
 /-- Circuit complexity is invariant under propositional equality of input
     dimension. -/
-private theorem size_complexity_cast [CompleteBasis B] [NeZero n] [NeZero n']
+private theorem size_complexity_cast [NeZero n] [NeZero n']
     (h : n = n') (f : BitString n → Bool) :
     Circuit.sizeComplexity B (h ▸ f : BitString n' → Bool) =
       Circuit.sizeComplexity B f := by

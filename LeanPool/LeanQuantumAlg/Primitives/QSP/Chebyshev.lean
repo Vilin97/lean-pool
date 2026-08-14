@@ -294,11 +294,11 @@ private theorem IsQSPPair.leading_coeff_rel {d : ℕ} {P Q : ℂ[X]}
         = Q * conjP Q - X ^ 2 * (Q * conjP Q) by ring,
       Polynomial.coeff_sub, coeff_X_sq_mul,
       coeff_mul_eq_zero_of_bound_add (a := d) (b := d) (by omega) hQb hQb',
-      if_neg (by omega : ¬ (2 * d + 2 < 2)),
+      ite_eq_right (by omega : ¬ (2 * d + 2 < 2)),
       coeff_mul_at_bound_add (a := d) (b := d) (by omega) hQb hQb',
       conjP_coeff]
     ring
-  rw [e1, e2, if_neg (by omega : ¬ (2 * d + 2 = 0))] at hkey
+  rw [e1, e2, ite_eq_right (by omega : ¬ (2 * d + 2 = 0))] at hkey
   linear_combination hkey
 
 /-- First inverse-recurrence polynomial `e^{-iφ}·X·P + e^{iφ}·(1-X²)·Q`
@@ -364,8 +364,8 @@ private theorem isQSPPair_unstep {d : ℕ} {P Q : ℂ[X]} (h : IsQSPPair (d + 1)
       · have hmeq : m = d + 2 := by omega
         subst hmeq
         have h2 : Q.coeff (d + 2) = 0 := h.coeff_Q_eq_zero (by omega)
-        rw [if_neg (by omega : ¬ (d + 2 = 0)),
-          if_neg (by omega : ¬ (d + 2 < 2)), h2,
+        rw [ite_eq_right (by omega : ¬ (d + 2 = 0)),
+          ite_eq_right (by omega : ¬ (d + 2 < 2)), h2,
           show d + 2 - 1 = d + 1 by omega, show d + 2 - 2 = d by omega,
           ← hpq]
         linear_combination (v * Q.coeff d) * hvw
@@ -387,7 +387,7 @@ private theorem isQSPPair_unstep {d : ℕ} {P Q : ℂ[X]} (h : IsQSPPair (d + 1)
     · rcases Nat.lt_or_ge m (d + 2) with hm2 | hm2
       · have hmeq : m = d + 1 := by omega
         subst hmeq
-        rw [if_neg (by omega : ¬ (d + 1 = 0)),
+        rw [ite_eq_right (by omega : ¬ (d + 1 = 0)),
           show d + 1 - 1 = d by omega, ← hpq]
         linear_combination (-(v * Q.coeff d)) * hvw
       · have h1 : P.coeff m = 0 := h.coeff_P_eq_zero (by omega)

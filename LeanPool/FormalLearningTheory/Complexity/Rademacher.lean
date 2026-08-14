@@ -108,7 +108,7 @@ theorem rademacherCorrelation_abs_le_one {X : Type u} {m : ℕ} (hm : 0 < m)
     (h : Concept X Bool) (σ : SignVector m) (xs : Fin m → X) :
     |rademacherCorrelation h σ xs| ≤ 1 := by
   unfold rademacherCorrelation
-  rw [dif_neg (by omega)]
+  rw [dite_eq_right (by omega)]
   have hm_pos : (0 : ℝ) < m := Nat.cast_pos.mpr hm
   rw [abs_mul, abs_div, abs_one, abs_of_pos hm_pos]
   have hsum_le : |∑ i : Fin m, boolToSign (σ i) * boolToSign (h (xs i))| ≤ m := by
@@ -139,7 +139,7 @@ theorem empiricalRademacherComplexity_le_one (X : Type u)
     (C : ConceptClass X Bool) {m : ℕ} (hm : 0 < m) (xs : Fin m → X) :
     EmpiricalRademacherComplexity X C xs ≤ 1 := by
   unfold EmpiricalRademacherComplexity
-  rw [dif_neg (by omega)]
+  rw [dite_eq_right (by omega)]
   have hnum_pos : (0 : ℝ) < (Fintype.card (SignVector m) : ℝ) := by
     exact_mod_cast Fintype.card_pos
   have h_each_le_one : ∀ σ : SignVector m,
@@ -177,7 +177,7 @@ private theorem empRad_nonneg {X : Type u} (C : ConceptClass X Bool) {m : ℕ}
     (hm : m ≠ 0) (xs : Fin m → X) :
     0 ≤ EmpiricalRademacherComplexity X C xs := by
   unfold EmpiricalRademacherComplexity
-  rw [dif_neg hm]
+  rw [dite_eq_right hm]
   apply mul_nonneg
   · apply div_nonneg one_pos.le; exact Nat.cast_nonneg _
   · by_cases hC : C.Nonempty
@@ -192,7 +192,7 @@ private theorem empRad_nonneg {X : Type u} (C : ConceptClass X Bool) {m : ℕ}
             sSup { r : ℝ | ∃ h ∈ C, r = rademacherCorrelation h σ xs } :=
         fun σ => le_csSup_of_le (hbdd σ) ⟨h₀, hh₀, rfl⟩ le_rfl
       have h_sum_corr : ∑ σ : SignVector m, rademacherCorrelation h₀ σ xs = 0 := by
-        simp only [rademacherCorrelation, dif_neg hm]
+        simp only [rademacherCorrelation, dite_eq_right hm]
         rw [← Finset.mul_sum, Finset.sum_comm]
         have : ∀ i : Fin m, ∑ σ : SignVector m,
             boolToSign (σ i) * boolToSign (h₀ (xs i)) = 0 :=
@@ -243,7 +243,7 @@ private theorem corr_eq_one_of_agree {X : Type u} {m : ℕ} (hm : 0 < m)
     (hagree : ∀ i : Fin m, h (xs i) = σ i) :
     rademacherCorrelation h σ xs = 1 := by
   unfold rademacherCorrelation
-  rw [dif_neg (by omega)]
+  rw [dite_eq_right (by omega)]
   have hm_pos : (0 : ℝ) < m := Nat.cast_pos.mpr hm
   -- Each term boolToSign(σ i) * boolToSign(h(xs i)) = boolToSign(σ i)² = 1
   have h_terms : ∀ i : Fin m,
@@ -268,7 +268,7 @@ private theorem shatters_subset {X : Type u} (C : ConceptClass X Bool)
   have h := hcT ⟨x, hxT⟩
   change c x = f ⟨x, hxS⟩
   rw [h]; show g ⟨x, hxT⟩ = f ⟨x, hxS⟩
-  simp only [g, dif_pos hxS]
+  simp only [g, dite_eq_left hxS]
 
 /-- On samples where every labeling is realizable, EmpRad = 1.
 
@@ -305,7 +305,7 @@ private theorem empRad_eq_one_of_all_labelings {X : Type u}
       exact le_csSup_of_le hbdd ⟨c, hcC, rfl⟩ (by rw [hcorr])
   -- EmpRad = (1/N) * Σ_σ 1 = 1
   unfold EmpiricalRademacherComplexity
-  rw [dif_neg (by omega)]
+  rw [dite_eq_right (by omega)]
   simp_all
 
 /-! ## Helpers for VCDim → Rademacher bound (Massart + Sauer-Shelah) -/
@@ -676,7 +676,7 @@ private theorem ncard_restrictions_le_sum_choose_set {X : Type u}
       simp_all
     -- g' ⟨y', hy'S⟩ = g ⟨y', hyTval⟩ since y' ∈ Tval
     have h_g'_eq : g' ⟨y', hy'S⟩ = g ⟨y', hyTval⟩ := by
-      simp only [g', dif_pos hyTval]
+      simp only [g', dite_eq_left hyTval]
     -- Combine: c y' = f ⟨y',hy'S⟩ and f = true ↔ g = true
     simp_all
   -- Step 5: Fintype.card ↥S = S.card
@@ -886,7 +886,7 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
     have h_corr_eq : ∀ (h : Concept X Bool) (σ : SignVector m),
         rademacherCorrelation h σ xs = cf σ (fun i => h (xs i)) := by
       intro h σ; unfold rademacherCorrelation
-      rw [dif_neg (Nat.pos_iff_ne_zero.mp hm)]
+      rw [dite_eq_right (Nat.pos_iff_ne_zero.mp hm)]
     have h_mem_dpats : ∀ h ∈ C, (fun i => h (xs i)) ∈ dpats := by
       intro h hh
       simp only [dpats, Finset.mem_filter, Finset.mem_univ, true_and]
@@ -905,7 +905,7 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
         (1 / (Fintype.card (SignVector m) : ℝ)) *
           ∑ σ : SignVector m, dpats.sup' hdpats_ne (cf σ) := by
       unfold EmpiricalRademacherComplexity
-      rw [dif_neg (Nat.pos_iff_ne_zero.mp hm)]
+      rw [dite_eq_right (Nat.pos_iff_ne_zero.mp hm)]
       apply mul_le_mul_of_nonneg_left _ (le_of_lt h1card_pos)
       exact Finset.sum_le_sum (fun σ _ => h_ssup_le_sup' σ)
     -- === STEP 2: Index dpats by Fin N and apply Massart ===
@@ -1511,10 +1511,10 @@ private theorem vcdim_zero_rademacher_le_inv_sqrt (X : Type u) [MeasurableSpace 
     -- EmpRad = (1/N) Σ_σ corr(h₀,σ,xs) = 0 by Rademacher symmetry. 0 ≤ 1/√m.
     have h_emprad_zero : EmpiricalRademacherComplexity X C xs = 0 := by
       unfold EmpiricalRademacherComplexity
-      rw [dif_neg (by omega)]
+      rw [dite_eq_right (by omega)]
       simp_rw [h_ssup_eq]
       have : ∑ σ : SignVector m, rademacherCorrelation h₀ σ xs = 0 := by
-        simp only [rademacherCorrelation, dif_neg (by omega : ¬m = 0)]
+        simp only [rademacherCorrelation, dite_eq_right (by omega : ¬m = 0)]
         rw [← Finset.mul_sum, Finset.sum_comm]
         have : ∀ i : Fin m, ∑ σ : SignVector m,
             boolToSign (σ i) * boolToSign (h₀ (xs i)) = 0 :=

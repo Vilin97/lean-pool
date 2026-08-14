@@ -110,10 +110,10 @@ theorem powModDigits_eq_pow_mod
         congr 1
         rw [show base * base = base ^ 2 by ring, ← pow_mul]
       rcases (show digit = 0 ∨ digit = 1 by omega) with rfl | rfl
-      · simp only [powModDigits, if_pos, Nat.ofDigits_cons, zero_add]
+      · simp only [powModDigits, ite_eq_left, Nat.ofDigits_cons, zero_add]
         rw [hrec, hsquare]
       · simp only [powModDigits,
-          if_neg (show (1 : ℕ) ≠ 0 by decide), Nat.ofDigits_cons]
+          ite_eq_right (show (1 : ℕ) ≠ 0 by decide), Nat.ofDigits_cons]
         rw [hrec, hsquare, pow_add]
         norm_num [Nat.mul_mod]
 

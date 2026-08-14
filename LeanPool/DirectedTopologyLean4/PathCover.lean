@@ -403,18 +403,18 @@ lemma has_interval_division {X₁ X₂ : Set X} (hX : X₁ ∪ X₂ = Set.univ) 
     rw [c_def]
     by_cases i = 0
     case pos h =>
-      simpa only [h, if_pos]
+      simpa only [h, ite_eq_left]
         using (Path.continuous_extend γ.toPath).isOpen_preimage X₁ X₁_open
     case neg h =>
-      simpa only [if_neg h]
+      simpa only [ite_eq_right h]
         using (Path.continuous_extend γ.toPath).isOpen_preimage X₂ X₂_open
   have h₂ : I ⊆ ⋃ (i : ℕ), c i := by
     intros x _
     simp only [mem_iUnion]
     have hin : γ.extend x ∈ X₁ ∪ X₂ := hX.symm ▸ (Set.mem_univ <| γ.extend x)
     rcases hin with h | h
-    · exact ⟨0, by simp only [c_def, if_pos rfl, Set.mem_preimage]; exact h⟩
-    · exact ⟨1, by simp only [c_def, if_neg one_ne_zero, Set.mem_preimage]; exact h⟩
+    · exact ⟨0, by simp only [c_def, ite_eq_left rfl, Set.mem_preimage]; exact h⟩
+    · exact ⟨1, by simp only [c_def, ite_eq_right one_ne_zero, Set.mem_preimage]; exact h⟩
   rcases (lebesgue_number_lemma_unit_interval h₁ h₂) with ⟨n, n_pos, hn⟩
   refine ⟨n, n_pos, ?_⟩
   intros i hi
@@ -422,8 +422,8 @@ lemma has_interval_division {X₁ X₂ : Set X} (hX : X₁ ∪ X₂ = Set.univ) 
   rw [c_def] at hj
   change Icc _ _ ⊆ (if j = 0 then γ.extend ⁻¹' X₁ else γ.extend ⁻¹' X₂) at hj
   by_cases h : j = 0
-  · exact Or.inl (by convert hj; simp only [h, if_pos])
-  · exact Or.inr (by convert hj; simp only [if_neg h])
+  · exact Or.inl (by convert hj; simp only [h, ite_eq_left])
+  · exact Or.inr (by convert hj; simp only [ite_eq_right h])
 
 /-- If `γ` is a dipath and a directed space `X` is covered by two opens `X₁` and `X₂`, then `γ` is
 n-covered for some `n`.

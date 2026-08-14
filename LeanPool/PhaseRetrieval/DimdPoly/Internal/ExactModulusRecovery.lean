@@ -2111,7 +2111,7 @@ theorem complex_monomial_gaussian_finite_bilinear_integral_eq_zero_of_odd
             complexMonomialGaussian l x)) = 0 := by
   rw [complex_monomial_gaussian_finite_bilinear_integral_eq_ite]
   refine Finset.sum_eq_zero fun k hk => Finset.sum_eq_zero fun l hl => ?_
-  rw [if_neg (Nat.not_even_iff_odd.mpr (hodd k hk l hl)), mul_zero]
+  rw [ite_eq_right (Nat.not_even_iff_odd.mpr (hodd k hk l hl)), mul_zero]
 
 theorem complex_monomial_gaussian_finite_bilinear_integral_eq_even_moments
     (s t : Finset ℕ) (a b : ℕ → ℂ)
@@ -2340,7 +2340,8 @@ private lemma standardGaussianMoment_add_two (r : ℕ) :
       refine ⟨s + 1, ?_⟩
       rw [hs]
       ring
-    rw [if_pos h2, if_pos ⟨s, hs⟩, show r + 2 - 1 = r + 1 by omega, Nat.doubleFactorial_add_one]
+    rw [ite_eq_left h2, ite_eq_left ⟨s, hs⟩, show r + 2 - 1 = r + 1 by omega,
+      Nat.doubleFactorial_add_one]
     norm_num
   · have hodd : Odd r := Nat.not_even_iff_odd.mp hr
     rcases hodd with ⟨s, hs⟩
@@ -2385,7 +2386,7 @@ private lemma scaled_gamma_moment_eq_standard (r : ℕ) :
   unfold standardGaussianMoment
   by_cases hr : Even r
   · rcases hr with ⟨s, hs⟩
-    rw [if_pos ⟨s, hs⟩, if_pos ⟨s, hs⟩, hs, show s + s = 2 * s by ring]
+    rw [ite_eq_left ⟨s, hs⟩, ite_eq_left ⟨s, hs⟩, hs, show s + s = 2 * s by ring]
     rw [show ((((2 * s : ℕ) : ℝ) + 1) / 2) = (s : ℝ) + 1 / 2 by
       norm_num
       ring]
@@ -2415,7 +2416,7 @@ private lemma scaled_gamma_moment_eq_standard (r : ℕ) :
       _ = (((2 * s - 1 : ℕ)‼ : ℕ) : ℂ) := by
             rw [realHermiteCoeffScale_sq_mul_sqrt_pi]
             ring
-  · rw [if_neg hr, if_neg hr]
+  · rw [ite_eq_right hr, ite_eq_right hr]
     ring
 
 private noncomputable def gaussianMomentFunctional (p : Polynomial ℤ) : ℂ :=
@@ -3629,7 +3630,7 @@ theorem realHermiteTensorRep_inner_of_realHermite1D_inner
       simp_rw [hinner1]
       by_cases h : alpha = beta
       · simp_all
-      · rw [if_neg h]
+      · rw [ite_eq_right h]
         have hq : ∃ q, alpha q ≠ beta q := by
           by_contra hnone
           apply h
@@ -7915,7 +7916,7 @@ private lemma memLp_two_prod_right_ae
 private lemma ae_prod_of_ae_ae_of_aestronglyMeasurable
     {α β E : Type*} [MeasurableSpace α] [MeasurableSpace β]
     [NormedAddCommGroup E] [MeasurableSpace E] [BorelSpace E]
-    {μ : Measure α} {ν : Measure β} [SFinite μ] [SFinite ν] {F : α × β -> E}
+    {μ : Measure α} {ν : Measure β} [SFinite ν] {F : α × β -> E}
     (hF_meas : AEStronglyMeasurable F (μ.prod ν))
     (hsec : ∀ᵐ x ∂μ, (fun y : β => F (x, y)) =ᵐ[ν] fun _ => (0 : E)) :
     F =ᵐ[μ.prod ν] fun _ => (0 : E) := by

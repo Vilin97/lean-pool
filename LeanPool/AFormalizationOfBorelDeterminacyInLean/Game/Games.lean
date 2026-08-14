@@ -57,7 +57,7 @@ namespace Game
         simp [residual, hy, hx, hxy]
     · by_cases hx : x.length % 2 = 0
       · have hxy : (x.length + y.length) % 2 = 1 := by omega
-        simp only [residual, List.length_append, hxy, hy, hx, if_false, if_true, one_ne_zero]
+        simp only [residual, List.length_append, hxy, hy, hx, ite_false, ite_true, one_ne_zero]
         ext a
         simp only [Set.preimage_compl, Set.image_val_compl, subAt_append, subAt_body,
           Stream'.append_append_stream, subAt_body_image, subAtInf_append, Set.mem_sdiff,
@@ -66,7 +66,7 @@ namespace Game
       · have hx1 : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp hx
         have hy1 : y.length % 2 = 1 := Nat.mod_two_ne_zero.mp hy
         have hxy : (x.length + y.length) % 2 = 0 := by omega
-        simp only [residual, List.length_append, hxy, hy, hx, if_false, if_true]
+        simp only [residual, List.length_append, hxy, hy, hx, ite_false, ite_true]
         ext a
         simp only [Set.preimage_compl, compl_compl, subAt_body_image, subAtInf_append,
           Stream'.append_append_stream, Set.mem_preimage, Set.mem_image, Subtype.exists,
@@ -101,7 +101,7 @@ def payoff (p : Player) (G : Game A) : Set (body G.tree) := match p with
     · simp_all
       rfl
     · unfold Player.payoff Player.residual
-      rw [if_pos h, Game.residual_payoff_even G x h]
+      rw [ite_eq_left h, Game.residual_payoff_even G x h]
       ext y
       rfl
   · have hodd : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp h
@@ -109,7 +109,7 @@ def payoff (p : Player) (G : Game A) : Set (body G.tree) := match p with
     · simp_all
       rfl
     · unfold Player.payoff Player.residual
-      rw [if_neg h, Game.residual_payoff_odd G x hodd]
+      rw [ite_eq_right h, Game.residual_payoff_odd G x hodd]
       exact compl_compl (body.append x ⁻¹' G.payoff)
 end Player
 @[congr] lemma subtype_val_player_payoff {G' p'} (h : G = G') (hp : p = p') :

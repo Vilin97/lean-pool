@@ -225,7 +225,7 @@ theorem innerAut_apply_innerAut [DecidableEq n] (U₁ U₂ : unitaryGroup n 𝕜
 theorem innerAut_eq_iff [DecidableEq n] (U : unitaryGroup n 𝕜) (x y : Matrix n n 𝕜) :
     innerAut U x = y ↔ x = innerAut U⁻¹ y := by
   rw [innerAut_coe, innerAut_inv_coe]
-  exact (innerAutStarAlg U).toEquiv.apply_eq_iff_eq_symm_apply
+  exact (innerAutStarAlg U).toEquiv.eq_symm_apply.symm
 
 theorem _root_.Matrix.unitaryGroup.toLinearEquiv_apply [DecidableEq n] (U : unitaryGroup n 𝕜)
     (x : n → 𝕜) :

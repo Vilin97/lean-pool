@@ -477,8 +477,8 @@ private theorem algHom_fieldRange_isSeparable {L Kbar : Type u} [Field L] [Field
 
 omit [DivisionRing D] [Algebra K D] [Algebra.IsCentral K D] [FiniteDimensional K D] in
 private theorem normalClosure_isSeparable {Kbar : Type u} [Field Kbar]
-    [Algebra K Kbar] [IsAlgClosed Kbar] (L : Type u) [Field L] [Algebra K L]
-    [Algebra.IsSeparable K L] [Algebra.IsAlgebraic K L] :
+    [Algebra K Kbar] (L : Type u) [Field L] [Algebra K L]
+    [Algebra.IsSeparable K L] :
     Algebra.IsSeparable K (IntermediateField.normalClosure K L Kbar) := by
   have : ∀ f : L →ₐ[K] Kbar, Algebra.IsSeparable K f.fieldRange := fun f ↦
     algHom_fieldRange_isSeparable (K := K) (L := L) (Kbar := Kbar) f

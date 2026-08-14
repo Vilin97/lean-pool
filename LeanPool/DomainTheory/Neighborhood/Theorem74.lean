@@ -261,15 +261,17 @@ def sumEnum (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation 
 variable {P₀ : ComputablePresentation V₀} {P₁ : ComputablePresentation V₁}
 
 @[simp] theorem sumEnum_zero {t : ℕ} (h : t.unpair.1 = 0) :
-    sumEnum P₀ P₁ t = inj₀ (P₀.X t.unpair.2) := by unfold sumEnum; rw [if_pos h]
+    sumEnum P₀ P₁ t = inj₀ (P₀.X t.unpair.2) := by unfold sumEnum; rw [ite_eq_left h]
 
 @[simp] theorem sumEnum_one {t : ℕ} (h : t.unpair.1 = 1) :
     sumEnum P₀ P₁ t = inj₁ (P₁.X t.unpair.2) := by
   have h0 : t.unpair.1 ≠ 0 := by omega
-  unfold sumEnum; rw [if_neg h0, if_pos h]
+  unfold sumEnum; rw [ite_eq_right h0, ite_eq_left h]
 
 theorem sumEnum_master {t : ℕ} (h0 : t.unpair.1 ≠ 0) (h1 : t.unpair.1 ≠ 1) :
-    sumEnum P₀ P₁ t = sumMaster V₀ V₁ := by unfold sumEnum; rw [if_neg h0, if_neg h1]
+    sumEnum P₀ P₁ t = sumMaster V₀ V₁ := by
+  unfold sumEnum
+  rw [ite_eq_right h0, ite_eq_right h1]
 
 theorem sumEnum_mem (t : ℕ) : (sum V₀ V₁ h₀ h₁).mem (sumEnum P₀ P₁ t) := by
   unfold sumEnum

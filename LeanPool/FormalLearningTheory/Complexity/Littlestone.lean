@@ -78,7 +78,7 @@ theorem Shatters.subset {X : Type u} {C : ConceptClass X Bool}
   obtain ⟨c, hcC, hc⟩ := hS g
   refine ⟨c, hcC, fun ⟨x, hx⟩ => ?_⟩
   have := hc ⟨x, hTS hx⟩
-  simpa only [g, dif_pos hx] using this
+  simpa only [g, dite_eq_left hx] using this
 
 /-- A shattered tree can be built from any list of elements from a shattered Finset. -/
 theorem MistakeTree.fromList_shattered {X : Type u} [DecidableEq X] {C : ConceptClass X Bool}

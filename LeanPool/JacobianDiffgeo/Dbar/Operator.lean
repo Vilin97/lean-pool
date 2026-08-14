@@ -435,7 +435,7 @@ theorem exists_dbar_solution_chart_ball {x₀ : X} {r : ℝ} (hr : 0 < r) {V : S
       filter_upwards [hWopen.mem_nhds hzW] with w hw
       obtain ⟨q, ⟨hqV, hqx⟩, rfl⟩ := hw
       simp only [hu_def, Function.comp_apply, (chartAt ℂ x).left_inv hqx, hτ_def]
-      rw [dif_pos hqV]
+      rw [dite_eq_left hqV]
     rw [wirtingerDbar_congr_nhds _ _ (chartAt ℂ x x) heq,
       wirtingerDbar_comp_differentiableAt U (chartAt ℂ x x) hU_diff hτ_diff, hτ_pt]
     have hUdbar_pt : wirtingerDbar U (chartAt ℂ x₀ x) = η.coeffAt x₀ (chartAt ℂ x₀ x) :=

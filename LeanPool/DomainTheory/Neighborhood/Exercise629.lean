@@ -291,12 +291,14 @@ theorem iprodNbhd_restrictTo_cons {X : ∀ i, Set (α i)} (hXsub : ∀ i, X i �
   · subst hja
     rw [updTuple_apply_self]
     by_cases hjl : j ∈ l
-    · rw [if_pos List.mem_cons_self, if_pos hjl, Set.inter_self]
-    · rw [if_pos List.mem_cons_self, if_neg hjl, Set.inter_eq_left.mpr (hXsub j)]
+    · rw [ite_eq_left List.mem_cons_self, ite_eq_left hjl, Set.inter_self]
+    · rw [ite_eq_left List.mem_cons_self, ite_eq_right hjl, Set.inter_eq_left.mpr (hXsub j)]
   · rw [updTuple_apply_ne (X a) hja]
     by_cases hjl : j ∈ l
-    · rw [if_pos (List.mem_cons_of_mem a hjl), if_pos hjl, Set.inter_eq_right.mpr (hXsub j)]
-    · rw [if_neg fun h => (List.mem_cons.mp h).elim hja hjl, if_neg hjl, Set.inter_self]
+    · rw [ite_eq_left (List.mem_cons_of_mem a hjl), ite_eq_left hjl,
+        Set.inter_eq_right.mpr (hXsub j)]
+    · rw [ite_eq_right fun h => (List.mem_cons.mp h).elim hja hjl, ite_eq_right hjl,
+        Set.inter_self]
 
 /-- An element contains the restricted cylinder once it contains each listed
 slice. -/
@@ -306,7 +308,7 @@ theorem z_mem_iprodNbhd_restrictTo (z : (iprod D).Element) {X : ∀ i, Set (α i
   induction l with
   | nil =>
     have : restrictTo D [] X = fun j => (D j).master := by
-      funext j; rw [restrictTo]; exact if_neg List.not_mem_nil
+      funext j; rw [restrictTo]; exact ite_eq_right List.not_mem_nil
     rw [this]; exact z.master_mem
   | cons a l ih =>
     rw [iprodNbhd_restrictTo_cons hXsub a l]

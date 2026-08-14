@@ -408,7 +408,7 @@ lemma recombination_source_target_ineq
       · congr! 2;
         ext; simp [targetSet];
         exact ⟨ fun ⟨ a, b, h ⟩ => ⟨ a, b, by split_ifs at h <;> tauto ⟩, fun ⟨ a, b, h₁, h₂ ⟩ => ⟨
-          a, b, by rw [ if_pos h₁ ]; exact h₂ ⟩ ⟩;
+          a, b, by rw [ ite_eq_left h₁ ]; exact h₂ ⟩ ⟩;
       · obtain ⟨ v, e, rfl ⟩ := hcov w; exact ⟨ ⟨ v, e ⟩, Finset.mem_filter.mpr ⟨
         Finset.mem_product.mpr ⟨ Finset.mem_univ _, Finset.mem_univ _ ⟩, rfl ⟩ ⟩;
       · rintro ⟨v₁, e₁⟩ ⟨v₂, e₂⟩ h₁ h₂ hne

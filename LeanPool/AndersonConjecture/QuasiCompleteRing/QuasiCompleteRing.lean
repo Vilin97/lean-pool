@@ -311,10 +311,10 @@ theorem isWeaklyQuasiComplete_iff_primes_meet
           rw [Ideal.sup_mul, Ideal.mul_sup, Ideal.mul_sup]
           apply sup_le
           · apply sup_le
-            · exact Ideal.mul_le_right
-            · exact Ideal.mul_le_right
+            · exact (Ideal.mul_le_left : A * A ≤ A)
+            · exact (Ideal.mul_le_left : A * Ideal.span {y} ≤ A)
           · apply sup_le
-            · exact Ideal.mul_le_left
+            · exact (Ideal.mul_le_right : Ideal.span {x} * A ≤ A)
             · rw [Ideal.span_singleton_mul_span_singleton]
               exact hxy_span
         have hfr : f r ∈ A ⊔ Ideal.span {x} := Ideal.mem_comap.mp hr

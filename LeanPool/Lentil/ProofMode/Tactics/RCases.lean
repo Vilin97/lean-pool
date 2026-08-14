@@ -97,7 +97,7 @@ private def rcasesTacDSimps : Array Name :=
   #[``List.findIdx, ``List.findIdx.go, ``List.get?Internal,
   ``List.eraseIdx, ``List.cons_append, ``List.nil_append,
   ``String.reduceBEq, ``String.reduceBNe,
-  ``or, ``and, ``not, ``cond_true, ``cond_false]
+  ``or, ``and, ``not, ``Bool.cond_true, ``Bool.cond_false]
 
 -- FIXME: The naming issue might be partially resolved by using indices?
 /-- Generate a name for the hyp slot consumed by this pattern: idents land their

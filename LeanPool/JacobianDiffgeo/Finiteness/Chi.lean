@@ -90,7 +90,7 @@ private theorem sixterm_rank1 [ConnectedSpace X] {D D' : RS.Divisor X} (h : D �
   omega
 
 omit [T1Space X] in
-private theorem sixterm_rank2 [ConnectedSpace X] {D D' : RS.Divisor X} (h : D ≤ D') :
+private theorem sixterm_rank2 {D D' : RS.Divisor X} (h : D ≤ D') :
     Module.finrank ℂ (Window D D') = Module.finrank ℂ (LinearMap.range (windowMap h)) +
       Module.finrank ℂ (LinearMap.range (windowConnect h)) := by
   have hWfin : FiniteDimensional ℂ (Window D D') := finiteDimensional_window D D' h
@@ -174,7 +174,7 @@ theorem degree_single (P : X) :
       simp only [Function.mem_support, ne_eq] at hx
       by_contra hxP
       simp only [Finset.coe_singleton, Set.mem_singleton_iff] at hxP
-      exact hx (by rw [Function.locallyFinsuppWithin.single_apply, if_neg hxP]))]
+      exact hx (by rw [Function.locallyFinsuppWithin.single_apply, ite_eq_right hxP]))]
   simp
 
 open scoped Classical in

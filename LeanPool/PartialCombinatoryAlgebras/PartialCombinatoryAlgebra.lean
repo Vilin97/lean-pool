@@ -159,11 +159,11 @@ lemma df_abstr (x : Γ) (e : Expr Γ A) : defined (abstr x e) := by
   case var y =>
     by_cases h : y = x
     · subst h
-      simp only [abstr, if_true]
+      simp only [abstr, ite_true]
       dsimp [eval, HasDot.dot]
       exact PCA.df_S₂ (A := A) (u := (PCA.K : Part A)) (v := (PCA.K : Part A))
         PCA.df_K₀ PCA.df_K₀
-    · simp only [abstr, h, if_false, eval, HasDot.dot]
+    · simp only [abstr, h, ite_false, eval, HasDot.dot]
       exact PCA.df_K₁ (A := A) (u := Part.some (η y)) (Part.some_dom _)
   case app e₁ e₂ ih₁ ih₂ =>
     dsimp [abstr, eval, HasDot.dot]
@@ -186,15 +186,15 @@ lemma eval_abstr (x : Γ) (e : Expr Γ A) (a : A) (η : Γ → A) :
   case var y =>
     by_cases h : y = x
     · subst h
-      simp only [abstr, if_true]
+      simp only [abstr, ite_true]
       dsimp [eval, override, HasDot.dot]
-      simp only [if_true]
+      simp only [ite_true]
       change PCA.S ⬝ PCA.K ⬝ PCA.K ⬝ Part.some a = Part.some a
       rw [PCA.eq_S (PCA.K : Part A) (PCA.K : Part A) (Part.some a)
         PCA.df_K₀ PCA.df_K₀ (Part.some_dom _)]
       exact PCA.eq_K (Part.some a) (PCA.K ⬝ Part.some a) (by simp)
         (PCA.df_K₁ (A := A) (u := Part.some a) (Part.some_dom _))
-    · simp only [abstr, h, if_false, eval, override, HasDot.dot]
+    · simp only [abstr, h, ite_false, eval, override, HasDot.dot]
       exact PCA.eq_K (Part.some (η y)) (Part.some a) (Part.some_dom _) (Part.some_dom _)
   case app e₁ e₂ ih₁ ih₂ =>
     dsimp [abstr, eval, HasDot.dot]

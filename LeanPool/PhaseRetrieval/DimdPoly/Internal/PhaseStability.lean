@@ -102,8 +102,8 @@ private theorem lpNorm_congr_ae {α E : Type*} [MeasurableSpace α] [NormedAddCo
   · simp_all
 
 private theorem gaussianL2Norm_eq_lpNorm
-    {d : Nat} {α : Type*} [NormedAddCommGroup α] [MeasurableSpace α] [NormedSpace ℝ α]
-    [BorelSpace α] (F : Cd d → α)
+    {d : Nat} {α : Type*} [NormedAddCommGroup α]
+     (F : Cd d → α)
     (hF : AEStronglyMeasurable F (gammaD d)) :
     Real.sqrt (∫ z : Cd d, ‖F z‖ ^ (2 : ℝ) ∂ gammaD d) =
       lpNorm F 2 (gammaD d) := by

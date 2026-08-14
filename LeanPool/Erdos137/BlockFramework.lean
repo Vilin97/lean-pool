@@ -224,12 +224,12 @@ lemma factorization_Wg {g k n : ℕ} (_hn : 1 ≤ n) (p : ℕ) :
     intro q hq
     exact pow_ne_zero _ (Nat.prime_of_mem_primeFactors hq).ne_zero)]
   by_cases hp : p ∈ (Bg g k n).primeFactors
-  · simp only [hp, if_true]
+  · simp only [hp, ite_true]
     rw [Finset.sum_eq_single p]
     · simp_all
     · simp_all
     · intro h; exact absurd hp h
-  · simp only [hp, if_false]
+  · simp only [hp, ite_false]
     apply Finset.sum_eq_zero
     intro q hq
     have hqprime : q.Prime := (Nat.mem_primeFactors.mp hq).1
@@ -255,10 +255,10 @@ theorem rad_blocksg_decomp (hg : 1 ≤ g) {k n : ℕ} (hn : 1 ≤ n) :
   simp only [Finsupp.add_apply]
   rw [factorization_rad_Bg hg hn p, factorization_Wg hn p]
   by_cases hp : p ∈ (Bg g k n).primeFactors
-  · simp only [hp, if_true]
+  · simp only [hp, ite_true]
     have h1 : 1 ≤ overlapg g k n p := overlapg_pos_of_mem_primeFactors hn hp
     omega
-  · simp only [hp, if_false, add_zero]
+  · simp only [hp, ite_false, add_zero]
     by_contra hcon
     have : 1 ≤ overlapg g k n p := by omega
     exact hp (mem_primeFactors_of_overlapg_pos hn this)
@@ -385,12 +385,12 @@ theorem Wg_dvd_factorial (hg : 1 ≤ g) {k n : ℕ} (hn : 1 ≤ n) : Wg g k n �
   intro p
   rw [factorization_Wg hn p]
   by_cases hp : p ∈ (Bg g k n).primeFactors
-  · simp only [hp, if_true]
+  · simp only [hp, ite_true]
     have hpp : p.Prime := (Nat.mem_primeFactors.mp hp).1
     have h1 : overlapg g k n p ≤ k / p + 1 := overlapg_le hg hn
     have h2 : k / p ≤ (Nat.factorial k).factorization p := div_le_factorization_factorial hpp
     omega
-  · simp only [hp, if_false]; exact Nat.zero_le _
+  · simp only [hp, ite_false]; exact Nat.zero_le _
 
 /-- **Overlap bound (generic `g`): `Wg g k n ≤ k^k`.** Since `Wg ∣ k!` (Legendre) and `k! ≤ k^k`.
 Generic form of `W_le_pow`/`W5_le_pow`. -/

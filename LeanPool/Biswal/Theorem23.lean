@@ -952,7 +952,7 @@ private lemma sum_superdiag (m : ℕ) (v : Fin m → PowerSeries ℚ) (i : Fin m
       simp [Fin.ext_iff]
     simp_all
   · simp only [hm, dite_false]
-    exact Finset.sum_eq_zero fun j _ => if_neg (by omega)
+    exact Finset.sum_eq_zero fun j _ => ite_eq_right (by omega)
 
 private lemma sum_subdiag (m : ℕ) (v : Fin m → PowerSeries ℚ) (i : Fin m)
     (pf : 0 < i.val → i.val - 1 < m) :

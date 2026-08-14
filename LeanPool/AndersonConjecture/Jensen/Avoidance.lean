@@ -332,7 +332,7 @@ theorem countable_avoidance
     | succ k ih => have := hq_inc k
                    omega
   have hu_diff : ∀ n, u_seq (n + 1) - u_seq n ∈ 𝔪 ^ q_seq n :=
-    fun n => Ideal.mul_le_left
+    fun n => Ideal.mul_le_right
       (buildSeqDiff I hC_prime hC_ne_max exists_avoid P_of r_of hP_mem n)
   have hu_mem : ∀ n, u_seq n ∈ I := by
     intro n
@@ -341,10 +341,8 @@ theorem countable_avoidance
     | succ k ih =>
       have : u_seq (k + 1) = u_seq k + (u_seq (k + 1) - u_seq k) := by ring
       rw [this]
-      exact I.add_mem ih (Ideal.mul_le_right
+      exact I.add_mem ih (Ideal.mul_le_left
         (buildSeqDiff I hC_prime hC_ne_max exists_avoid P_of r_of hP_mem k))
-  have hu_avoids : ∀ n, u_seq (n + 1) ∉ (P_of n : Set T) + ({r_of n} : Set T) :=
-    fun n => buildSeqAvoids I hC_prime hC_ne_max exists_avoid P_of r_of hP_mem n
   have hu_sep : ∀ n, ∀ m ∈ 𝔪 ^ q_seq (n + 1),
       u_seq (n + 1) + m ∉ (P_of n : Set T) + ({r_of n} : Set T) :=
     fun n => buildSeqSep I hC_prime hC_ne_max exists_avoid P_of r_of hP_mem n
@@ -521,7 +519,7 @@ lemma ideal_avoidance_of_card_lt_aux :
     apply ha₀
     refine ⟨⟨P, hP⟩, ?_⟩
     simp only [forbidden]
-    rw [dif_pos ⟨a₀, hmem⟩]
+    rw [dite_eq_left ⟨a₀, hmem⟩]
     have hex := (⟨a₀, hmem⟩ : ∃ a : T, g + a * s_elem ∈ (P : Ideal T))
     have hdiff : (hex.choose - a₀) * s_elem ∈ (P : Ideal T) := by
       have := P.sub_mem hex.choose_spec hmem
@@ -629,7 +627,7 @@ theorem uncountable_avoidance [IsNoetherianRing T]
             refine ⟨⟨P, hP⟩, ?_⟩
             change g ⟨P, hP⟩ = π a₀
             simp only [g]
-            rw [dif_pos ⟨a₀, hmem⟩]
+            rw [dite_eq_left ⟨a₀, hmem⟩]
             have hex : ∃ a : T, v + a * w' ∈ (P : Ideal T) := ⟨a₀, hmem⟩
             have hdiff : (hex.choose - a₀) * w' ∈ (P : Ideal T) := by
               have := P.sub_mem hex.choose_spec hmem
@@ -660,7 +658,7 @@ theorem uncountable_avoidance [IsNoetherianRing T]
   apply hy_bar
   refine ⟨⟨⟨P, hP⟩, ⟨r, hr⟩⟩, ?_⟩
   change (if h : ∃ x, t * x - r ∈ (P : Ideal T) then π (Classical.choose h) else 0) = π y
-  rw [dif_pos ⟨y, hmem'⟩]
+  rw [dite_eq_left ⟨y, hmem'⟩]
   -- Uniqueness: t(x₀ - y) ∈ P with t ∉ P gives x₀ - y ∈ P ⊆ M
   let hex : ∃ x : T, t * x - r ∈ (P : Ideal T) := ⟨y, hmem'⟩
   have hx₀ : t * Classical.choose hex - r ∈ P := Classical.choose_spec hex
