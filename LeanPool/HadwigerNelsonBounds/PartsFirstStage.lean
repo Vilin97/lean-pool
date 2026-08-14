@@ -652,8 +652,9 @@ private theorem partsCertificateVariant_verifies_core
     (partsBaseCertificate_verifies base)
 
 instance (base : Fin 36) (symmetry : Fin 6) (swap : Bool) :
-    Decidable (PartsCertificateVariantVerifies base symmetry swap) :=
-  isTrue (partsCertificateVariant_verifies_core base symmetry swap)
+    Decidable (PartsCertificateVariantVerifies base symmetry swap) := by
+  unfold PartsCertificateVariantVerifies
+  infer_instance
 
 lemma partsVerifiesVariantNodeB_unsat {symmetry : Fin 6} {swap : Bool}
     {nodes : Array (Array PartsTreeNode)} {coloring : Fin 481 → Fin 4}

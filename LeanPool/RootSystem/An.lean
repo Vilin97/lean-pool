@@ -294,7 +294,7 @@ private theorem sum_Icc_add_sum_Icc_of_adjacent {n : ℕ} {M : Type*} [AddCommMo
   rw [← Finset.sum_union hdisjoint, hunion]
 
 private theorem signedInterval_sum_reflection {n : ℕ} {M : Type*} [AddCommGroup M]
-    [Module ℤ M] (f : Fin n → M) (J K : SignedInterval n) :
+    (f : Fin n → M) (J K : SignedInterval n) :
     K.sign • (∑ x ∈ Finset.Icc K.i K.j, f x) -
         (J.sign * K.sign *
           ((if J.i = K.i then 1 else 0) + (if J.j = K.j then 1 else 0) -

@@ -794,10 +794,11 @@ lemma PiMatFinTwoSameSwapStarAlgEquiv_isometry :
   nth_rw 1 [Pi.eq_sum_single_proj ℂ x]
   nth_rw 3 [Pi.eq_sum_single_proj ℂ y]
   simp only [Fin.isValue, Fin.sum_univ_two]
-  rw [inner_pi_eq_sum (ψ := ψ)]
   simp only [inner, Fin.isValue, Pi.add_apply, Fin.sum_univ_two,
     Pi.single_eq_same, ne_eq, zero_ne_one, not_false_eq_true,
     Pi.single_eq_of_ne, add_comm, zero_add, one_ne_zero]
+  rw [inner_pi_eq_sum (ψ := ψ)]
+  simp [PiFinTwoSameFunctional, Module.Dual.IsFaithfulPosMap.inner_eq, Fin.sum_univ_two]
   simp [ψ, PiFinTwoSameFunctional]
 
 theorem PiMatFinTwoSameSwapStarAlgEquiv_comp_linearMapSingle_zero
