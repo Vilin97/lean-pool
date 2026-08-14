@@ -706,496 +706,347 @@ theorem partsCertificateVariant_not_colorable {base : Fin 36}
 theorem partsCertificateVariants0_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 0 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 0
 
 theorem partsCertificateVariant1_0_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 1 0 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 1 0
 
 theorem partsCertificateVariant1_1_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 1 1 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 1 1
 
 theorem partsCertificateVariant1_2_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 1 2 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 1 2
 
 theorem partsCertificateVariant1_3_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 1 3 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 1 3
 
 theorem partsCertificateVariant1_4_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 1 4 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 1 4
 
 theorem partsCertificateVariant1_5_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 1 5 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 1 5
 
 theorem partsCertificateVariants1_verify (symmetry : Fin 6) (swap : Bool) :
     PartsCertificateVariantVerifies 1 symmetry swap := by
-  fin_cases symmetry
-  · exact partsCertificateVariant1_0_verify swap
-  · exact partsCertificateVariant1_1_verify swap
-  · exact partsCertificateVariant1_2_verify swap
-  · exact partsCertificateVariant1_3_verify swap
-  · exact partsCertificateVariant1_4_verify swap
-  · exact partsCertificateVariant1_5_verify swap
+  exact partsCertificateVariant_verifies_core 1 symmetry swap
 
 theorem partsCertificateVariants2_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 2 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 2
 
 theorem partsCertificateVariants3_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 3 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 3
 
 theorem partsCertificateVariants4_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 4 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 4
 
 theorem partsCertificateVariants5_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 5 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 5
 
 theorem partsCertificateVariants6_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 6 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 6
 
 theorem partsCertificateVariants7_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 7 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 7
 
 theorem partsCertificateVariant8_0_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 8 0 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 8 0
 
 theorem partsCertificateVariant8_1_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 8 1 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 8 1
 
 theorem partsCertificateVariant8_2_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 8 2 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 8 2
 
 theorem partsCertificateVariant8_3_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 8 3 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 8 3
 
 theorem partsCertificateVariant8_4_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 8 4 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 8 4
 
 theorem partsCertificateVariant8_5_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 8 5 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 8 5
 
 theorem partsCertificateVariants8_verify (symmetry : Fin 6) (swap : Bool) :
     PartsCertificateVariantVerifies 8 symmetry swap := by
-  fin_cases symmetry
-  · exact partsCertificateVariant8_0_verify swap
-  · exact partsCertificateVariant8_1_verify swap
-  · exact partsCertificateVariant8_2_verify swap
-  · exact partsCertificateVariant8_3_verify swap
-  · exact partsCertificateVariant8_4_verify swap
-  · exact partsCertificateVariant8_5_verify swap
+  exact partsCertificateVariant_verifies_core 8 symmetry swap
 
 theorem partsCertificateVariants9_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 9 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 9
 
 theorem partsCertificateVariants10_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 10 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 10
 
 theorem partsCertificateVariants11_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 11 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 11
 
 theorem partsCertificateVariants12_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 12 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 12
 
 theorem partsCertificateVariants13_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 13 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 13
 
 theorem partsCertificateVariants14_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 14 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 14
 
 theorem partsCertificateVariants15_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 15 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 15
 
 theorem partsCertificateVariant16_0_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 16 0 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 16 0
 
 theorem partsCertificateVariant16_1_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 16 1 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 16 1
 
 theorem partsCertificateVariant16_2_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 16 2 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 16 2
 
 theorem partsCertificateVariant16_3_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 16 3 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 16 3
 
 theorem partsCertificateVariant16_4_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 16 4 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 16 4
 
 theorem partsCertificateVariant16_5_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 16 5 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 16 5
 
 theorem partsCertificateVariants16_verify (symmetry : Fin 6) (swap : Bool) :
     PartsCertificateVariantVerifies 16 symmetry swap := by
-  fin_cases symmetry
-  · exact partsCertificateVariant16_0_verify swap
-  · exact partsCertificateVariant16_1_verify swap
-  · exact partsCertificateVariant16_2_verify swap
-  · exact partsCertificateVariant16_3_verify swap
-  · exact partsCertificateVariant16_4_verify swap
-  · exact partsCertificateVariant16_5_verify swap
+  exact partsCertificateVariant_verifies_core 16 symmetry swap
 
 theorem partsCertificateVariant17_0_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 17 0 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 17 0
 
 theorem partsCertificateVariant17_1_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 17 1 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 17 1
 
 theorem partsCertificateVariant17_2_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 17 2 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 17 2
 
 theorem partsCertificateVariant17_3_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 17 3 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 17 3
 
 theorem partsCertificateVariant17_4_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 17 4 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 17 4
 
 theorem partsCertificateVariant17_5_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 17 5 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 17 5
 
 theorem partsCertificateVariants17_verify (symmetry : Fin 6) (swap : Bool) :
     PartsCertificateVariantVerifies 17 symmetry swap := by
-  fin_cases symmetry
-  · exact partsCertificateVariant17_0_verify swap
-  · exact partsCertificateVariant17_1_verify swap
-  · exact partsCertificateVariant17_2_verify swap
-  · exact partsCertificateVariant17_3_verify swap
-  · exact partsCertificateVariant17_4_verify swap
-  · exact partsCertificateVariant17_5_verify swap
+  exact partsCertificateVariant_verifies_core 17 symmetry swap
 
 theorem partsCertificateVariants18_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 18 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 18
 
 theorem partsCertificateVariants19_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 19 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 19
 
 theorem partsCertificateVariants20_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 20 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 20
 
 theorem partsCertificateVariants21_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 21 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 21
 
 theorem partsCertificateVariants22_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 22 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 22
 
 theorem partsCertificateVariants23_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 23 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 23
 
 theorem partsCertificateVariant24_0_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 24 0 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 24 0
 
 theorem partsCertificateVariant24_1_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 24 1 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 24 1
 
 theorem partsCertificateVariant24_2_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 24 2 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 24 2
 
 theorem partsCertificateVariant24_3_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 24 3 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 24 3
 
 theorem partsCertificateVariant24_4_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 24 4 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 24 4
 
 theorem partsCertificateVariant24_5_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 24 5 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 24 5
 
 theorem partsCertificateVariants24_verify (symmetry : Fin 6) (swap : Bool) :
     PartsCertificateVariantVerifies 24 symmetry swap := by
-  fin_cases symmetry
-  · exact partsCertificateVariant24_0_verify swap
-  · exact partsCertificateVariant24_1_verify swap
-  · exact partsCertificateVariant24_2_verify swap
-  · exact partsCertificateVariant24_3_verify swap
-  · exact partsCertificateVariant24_4_verify swap
-  · exact partsCertificateVariant24_5_verify swap
+  exact partsCertificateVariant_verifies_core 24 symmetry swap
 
 theorem partsCertificateVariant25_0_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 25 0 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 25 0
 
 theorem partsCertificateVariant25_1_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 25 1 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 25 1
 
 theorem partsCertificateVariant25_2_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 25 2 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 25 2
 
 theorem partsCertificateVariant25_3_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 25 3 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 25 3
 
 theorem partsCertificateVariant25_4_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 25 4 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 25 4
 
 theorem partsCertificateVariant25_5_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 25 5 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 25 5
 
 theorem partsCertificateVariants25_verify (symmetry : Fin 6) (swap : Bool) :
     PartsCertificateVariantVerifies 25 symmetry swap := by
-  fin_cases symmetry
-  · exact partsCertificateVariant25_0_verify swap
-  · exact partsCertificateVariant25_1_verify swap
-  · exact partsCertificateVariant25_2_verify swap
-  · exact partsCertificateVariant25_3_verify swap
-  · exact partsCertificateVariant25_4_verify swap
-  · exact partsCertificateVariant25_5_verify swap
+  exact partsCertificateVariant_verifies_core 25 symmetry swap
 
 theorem partsCertificateVariants26_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 26 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 26
 
 theorem partsCertificateVariants27_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 27 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 27
 
 theorem partsCertificateVariants28_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 28 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 28
 
 theorem partsCertificateVariants29_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 29 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 29
 
 theorem partsCertificateVariants30_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 30 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 30
 
 theorem partsCertificateVariants31_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 31 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 31
 
 theorem partsCertificateVariants32_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 32 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 32
 
 theorem partsCertificateVariants33_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 33 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 33
 
 theorem partsCertificateVariant34_0_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 34 0 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 34 0
 
 theorem partsCertificateVariant34_1_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 34 1 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 34 1
 
 theorem partsCertificateVariant34_2_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 34 2 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 34 2
 
 theorem partsCertificateVariant34_3_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 34 3 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 34 3
 
 theorem partsCertificateVariant34_4_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 34 4 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 34 4
 
 theorem partsCertificateVariant34_5_verify :
     ∀ swap : Bool, PartsCertificateVariantVerifies 34 5 swap := by
-  intro swap
-  cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 34 5
 
 theorem partsCertificateVariants34_verify (symmetry : Fin 6) (swap : Bool) :
     PartsCertificateVariantVerifies 34 symmetry swap := by
-  fin_cases symmetry
-  · exact partsCertificateVariant34_0_verify swap
-  · exact partsCertificateVariant34_1_verify swap
-  · exact partsCertificateVariant34_2_verify swap
-  · exact partsCertificateVariant34_3_verify swap
-  · exact partsCertificateVariant34_4_verify swap
-  · exact partsCertificateVariant34_5_verify swap
+  exact partsCertificateVariant_verifies_core 34 symmetry swap
 
 theorem partsCertificateVariants35_verify :
     ∀ symmetry : Fin 6, ∀ swap : Bool,
       PartsCertificateVariantVerifies 35 symmetry swap := by
-  intro symmetry swap
-  fin_cases symmetry <;> cases swap <;> decide
+  exact partsCertificateVariant_verifies_core 35
 
 theorem partsCertificateVariant_verifies (base : Fin 36)
     (symmetry : Fin 6) (swap : Bool) :
     PartsCertificateVariantVerifies base symmetry swap := by
-  fin_cases base
-  · exact partsCertificateVariants0_verify symmetry swap
-  · exact partsCertificateVariants1_verify symmetry swap
-  · exact partsCertificateVariants2_verify symmetry swap
-  · exact partsCertificateVariants3_verify symmetry swap
-  · exact partsCertificateVariants4_verify symmetry swap
-  · exact partsCertificateVariants5_verify symmetry swap
-  · exact partsCertificateVariants6_verify symmetry swap
-  · exact partsCertificateVariants7_verify symmetry swap
-  · exact partsCertificateVariants8_verify symmetry swap
-  · exact partsCertificateVariants9_verify symmetry swap
-  · exact partsCertificateVariants10_verify symmetry swap
-  · exact partsCertificateVariants11_verify symmetry swap
-  · exact partsCertificateVariants12_verify symmetry swap
-  · exact partsCertificateVariants13_verify symmetry swap
-  · exact partsCertificateVariants14_verify symmetry swap
-  · exact partsCertificateVariants15_verify symmetry swap
-  · exact partsCertificateVariants16_verify symmetry swap
-  · exact partsCertificateVariants17_verify symmetry swap
-  · exact partsCertificateVariants18_verify symmetry swap
-  · exact partsCertificateVariants19_verify symmetry swap
-  · exact partsCertificateVariants20_verify symmetry swap
-  · exact partsCertificateVariants21_verify symmetry swap
-  · exact partsCertificateVariants22_verify symmetry swap
-  · exact partsCertificateVariants23_verify symmetry swap
-  · exact partsCertificateVariants24_verify symmetry swap
-  · exact partsCertificateVariants25_verify symmetry swap
-  · exact partsCertificateVariants26_verify symmetry swap
-  · exact partsCertificateVariants27_verify symmetry swap
-  · exact partsCertificateVariants28_verify symmetry swap
-  · exact partsCertificateVariants29_verify symmetry swap
-  · exact partsCertificateVariants30_verify symmetry swap
-  · exact partsCertificateVariants31_verify symmetry swap
-  · exact partsCertificateVariants32_verify symmetry swap
-  · exact partsCertificateVariants33_verify symmetry swap
-  · exact partsCertificateVariants34_verify symmetry swap
-  · exact partsCertificateVariants35_verify symmetry swap
+  exact partsCertificateVariant_verifies_core base symmetry swap
 
 end HadwigerNelsonBounds
