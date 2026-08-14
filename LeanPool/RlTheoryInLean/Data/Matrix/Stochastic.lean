@@ -22,6 +22,7 @@ import Mathlib.Topology.Bornology.Basic
 import Mathlib.Topology.Sequences
 import Mathlib.Analysis.Normed.Lp.WithLp
 import Mathlib.Analysis.Normed.Lp.PiLp
+import Mathlib.Analysis.Convex.StdSimplex
 
 import Mathlib.NumberTheory.FrobeniusNumber
 import LeanPool.RlTheoryInLean.Data.Matrix.Mul
@@ -66,31 +67,13 @@ abbrev Simplex (S : Type u) [Fintype S] := {x : l1Space S | StochasticVec x.ofLp
 instance (x : ↑(Simplex S)) : @StochasticVec S _ x.val.ofLp := x.property
 
 instance : IsClosed (Simplex S) := by
-  let l1Space := l1Space S
-  have h1 : IsClosed {f : l1Space | ∀ s, 0 ≤ f.ofLp s} := by
-    have hcl (s : S) : IsClosed {f : l1Space | 0 ≤ f.ofLp s} := by
-      have hev : Continuous (fun f : l1Space => f.ofLp s) := by
-        exact (continuous_apply s).comp (PiLp.continuous_ofLp 1 _)
-      have half : IsClosed {x : ℝ | 0 ≤ x} :=
-        isClosed_le continuous_const continuous_id
-      simpa [Set.preimage] using half.preimage hev
-    simpa [Set.ofPred_forall] using isClosed_iInter hcl
-  have h2 : IsClosed {f : l1Space | (∑ s, f.ofLp s) = 1} := by
-    have hsum : Continuous (fun f : l1Space => ∑ s, f.ofLp s) := by
-      apply continuous_finsetSum
-      intro s _
-      exact (continuous_apply s).comp (PiLp.continuous_ofLp 1 _)
-    have htarget : IsClosed ({x : ℝ | x = 1} : Set ℝ) := by simp
-    simpa [Set.preimage] using htarget.preimage hsum
-  have h := IsClosed.inter h1 h2
-  rw [← Set.ofPred_and] at h
-  have : {x : l1Space | StochasticVec x.ofLp} =
-    {x | (∀ s, 0 ≤ x.ofLp s) ∧ (∑ s, x.ofLp s = 1)} := by
-    ext1
+  have hsimplex : {x : l1Space S | StochasticVec x.ofLp} =
+      {x : l1Space S | x.ofLp ∈ stdSimplex ℝ S} := by
+    ext x
     exact ⟨fun h => ⟨h.nonneg, h.rowsum⟩, fun h => ⟨h.1, h.2⟩⟩
-  unfold Simplex
-  rw [this]
-  exact h
+  change IsClosed {x : l1Space S | StochasticVec x.ofLp}
+  rw [hsimplex]
+  exact (isClosed_stdSimplex ℝ S).preimage (PiLp.continuous_ofLp 1 _)
 
 instance : CompleteSpace (Simplex S) := IsClosed.completeSpace_coe
 
