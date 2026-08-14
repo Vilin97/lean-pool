@@ -480,20 +480,11 @@ end GoodCover
 finite-dimensional by Riesz, and `J` is injective. This is what makes `genus` honest. -/
 instance [T2Space X] [CompactSpace X] : FiniteDimensional ℂ (Form1 X) := by
   obtain ⟨G⟩ := GoodCover.nonempty (X := X)
-  have himg : (Subtype.val '' Metric.closedBall (0 : LinearMap.range G.J) 1) =
-      Metric.closedBall (0 : G.P) 1 ∩ Set.range G.J := by
-    ext p
-    constructor
-    · rintro ⟨q, hq, rfl⟩
-      rw [Metric.mem_closedBall, dist_zero_right] at hq
-      exact ⟨by rwa [Metric.mem_closedBall, dist_zero_right], q.2⟩
-    · rintro ⟨h1, hp⟩
-      rw [Metric.mem_closedBall, dist_zero_right] at h1
-      exact ⟨⟨p, hp⟩, by rwa [Metric.mem_closedBall, dist_zero_right], rfl⟩
   have hcomp : IsCompact (Metric.closedBall (0 : LinearMap.range G.J) 1) := by
-    rw [Topology.IsEmbedding.subtypeVal.isCompact_iff, himg]
+    rw [Topology.IsEmbedding.subtypeVal.isCompact_iff, Subtype.image_closedBall]
+    change IsCompact (Metric.closedBall (0 : G.P) 1 ∩ Set.range G.J)
     exact G.isCompact_ball_inter_range
-  have hfd : FiniteDimensional ℂ (LinearMap.range G.J) :=
+  let hfd : FiniteDimensional ℂ (LinearMap.range G.J) :=
     FiniteDimensional.of_isCompact_closedBall₀ ℂ one_pos hcomp
   exact (LinearEquiv.ofInjective G.J G.J_injective).symm.finiteDimensional
 
