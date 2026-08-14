@@ -117,11 +117,14 @@ Link recipes: `doi` → `https://doi.org/<doi>`, `arxiv` →
 ### Minimal-Lean-file fields (schema 1.3)
 
 The minimal-file pipeline follows LMLExposition's methodology (Rémy
-Degenne, github.com/LeanMachineLearning/exposition): the extractor
-re-elaborates every module against the loaded environment and classifies
-each top-level command from its real `Syntax`, so the builder replays
-byte-exact source with pre-computed surgery edits instead of textual
-heuristics.
+Degenne, github.com/LeanMachineLearning/exposition): the extractor parses
+every module against its loaded environment and classifies each top-level
+command from its real `Syntax`, so the builder replays byte-exact source
+with pre-computed surgery edits instead of textual heuristics. It elaborates
+context commands that can change parser or command scope, but not declaration
+commands: those declarations are already present in the imported environment,
+and elaborating a `private` declaration would create a fresh internal name and
+execute its body a second time.
 
 The shard carries `commit` (raw-source fetches pin to it) and a
 `moduleData` array parallel to `modules`:

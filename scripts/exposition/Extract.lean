@@ -331,10 +331,11 @@ namespace Exposition.Commands
 /-!
 Per-module command classification for the minimal-file builder, ported from
 LMLExposition's `Extract.lean` (Rémy Degenne, after Matthew Ballard's
-`EmitStandalone.lean`). Each source file is re-elaborated against the loaded
-environment (`IO.processCommands`; declarations fail fast with "already
-declared", which is expected and ignored) to recover per-command `Syntax`
-and byte ranges. The output is one JSON line per module describing every
+`EmitStandalone.lean`). Each source file is parsed against the loaded
+environment to recover per-command `Syntax` and byte ranges. Context commands
+are re-elaborated because they can extend the parser or change its scope;
+declaration commands are not, because their compiled declarations are already
+in the environment. The output is one JSON line per module describing every
 declaration command (with byte-exact `sorry`-surgery edits) and every
 context command (`namespace`/`open`/`variable`/notation/...), which the
 client-side builder assembles into standalone files.
@@ -569,6 +570,47 @@ def syntacticDeps (env : Environment) (stx : Syntax) (self : Array Name)
         acc := acc.insert candidate
   return acc.toArray
 
+/-- True when `stx` contains the source range of a compiled declaration.
+Declaration ranges come from the imported environment, so this recognizes
+wrapper commands (`open ... in`, `mutual`, attributes, and so on) without
+trying to duplicate Lean's declaration-command taxonomy. The positions cover
+all constants from the module, not only declarations exposed on the site. -/
+def containsDeclaration (declarationPositions : Array Nat) (stx : Syntax) : Bool :=
+  match stx.getPos?, stx.getTailPos? with
+  | some start, some stop =>
+    declarationPositions.any fun pos => start.byteIdx ≤ pos && pos < stop.byteIdx
+  | _, _ => false
+
+/-- Parse a module while elaborating only commands that can affect the parser
+or command scope. The module's compiled environment is already loaded, so
+elaborating declarations is both redundant and incorrect for this use: public
+declarations merely fail as already declared, while `private` declarations get
+fresh internal names and may execute their proof terms again. Context commands
+must still be elaborated so later commands see local notation, namespaces,
+variables, options, and sections exactly as the original source did. -/
+partial def parseCommands (declarationPositions : Array Nat) :
+    Frontend.FrontendM Unit := do
+  Frontend.updateCmdPos
+  let cmdState ← Frontend.getCommandState
+  let inputCtx ← Frontend.getInputContext
+  let parserState ← Frontend.getParserState
+  let scope := cmdState.scopes.head!
+  let parserContext := {
+    env := cmdState.env
+    options := scope.opts
+    currNamespace := scope.currNamespace
+    openDecls := scope.openDecls
+  }
+  let (stx, nextParserState, messages) :=
+    Parser.parseCommand inputCtx parserContext parserState cmdState.messages
+  modify fun state => { state with commands := state.commands.push stx }
+  Frontend.setParserState nextParserState
+  Frontend.setMessages messages
+  unless containsDeclaration declarationPositions stx && !isNotationCmdKind stx.getKind do
+    Frontend.elabCommandAtFrontend stx
+  unless Parser.isTerminalCommand stx do
+    parseCommands declarationPositions
+
 /-- Processes one module source: classifies each command and emits the JSON
 entry list. `declPos` maps range-start byte indices to exposed declaration
 names (several may share one range start); `notationKindsAt` maps range-start byte indices to pool parser-kind
@@ -576,14 +618,20 @@ names (so a notation command learns which kinds it defines);
 `notationDeps` maps parser kinds to their expansion's exposed constants;
 `allNotationKinds` is the pool-wide kind set for `usedNotations`. -/
 def processFile (env : Environment) (source : String) (filePath : String)
-    (declPos : Std.HashMap Nat (Array Name)) (notationKindsAt : Std.HashMap Nat Name)
+    (declarationPositions : Array Nat) (declPos : Std.HashMap Nat (Array Name))
+    (notationKindsAt : Std.HashMap Nat Name)
     (notationDeps : Std.HashMap Name (Array Name)) (allNotationKinds : NameSet)
     (exposedByLast : Std.HashMap String (Array Name)) (visibleModules : NameSet) :
     IO (Array Json) := do
   let inputCtx := Parser.mkInputContext source filePath
   let (_, parserState, messages) ← Parser.parseHeader inputCtx
   let cmdState := Command.mkState env messages {}
-  let s ← IO.processCommands inputCtx parserState cmdState
+  let initialState : Frontend.State := {
+    commandState := cmdState
+    parserState
+    cmdPos := parserState.pos
+  }
+  let (_, s) ← (parseCommands declarationPositions).run { inputCtx } |>.run initialState
   let mut entries : Array Json := #[]
   let mut nsPrefixStack : Array Name := #[Name.anonymous]
   for stx in s.commands do
@@ -705,6 +753,16 @@ def emitCommands (outPath : System.FilePath) (exposed : NameSet) (names : Array 
         try pure (some (← IO.FS.readFile path)) catch _ => pure none)
       | continue
     let fileMap := FileMap.ofString source
+    -- Detect every declaration command from the compiled module, including
+    -- private/generated declarations that are intentionally absent from the
+    -- exposition graph. Re-elaborating any of them is redundant and can
+    -- execute expensive private bodies under fresh internal names.
+    let mut declarationPositionSet : Std.HashSet Nat := {}
+    for name in env.header.moduleData[moduleIdx]!.constNames do
+      if let some ranges ← findDeclarationRanges? name then
+        declarationPositionSet := declarationPositionSet.insert
+          (fileMap.ofPosition ranges.range.pos).byteIdx
+    let declarationPositions := declarationPositionSet.toArray
     -- One range start can carry several declarations (`irreducible_def`,
     -- mutual blocks), so map each position to every name declared there.
     let mut declPos : Std.HashMap Nat (Array Name) := {}
@@ -716,8 +774,8 @@ def emitCommands (outPath : System.FilePath) (exposed : NameSet) (names : Array 
     for (kindName, pos) in moduleKinds do
       notationKindsAt := notationKindsAt.insert (fileMap.ofPosition pos).byteIdx kindName
     let visibleModules := moduleImportClosure env module
-    let entries ← processFile env source path.toString declPos notationKindsAt
-      notationDeps allNotationKinds exposedByLast visibleModules
+    let entries ← processFile env source path.toString declarationPositions declPos
+      notationKindsAt notationDeps allNotationKinds exposedByLast visibleModules
     handle.putStrLn (Json.mkObj [
       ("m", Json.str module.toString),
       ("c", Json.arr entries)
@@ -735,9 +793,9 @@ unsafe def main (args : List String) : IO UInt32 := do
   -- useful for testing against a partially built tree.
   let modules := if args.length > 2 then args.drop 2 |>.map (·.toName) else [Exposition.poolRoot]
   Lean.initSearchPath (← Lean.findSysroot)
-  -- Extension states must be loaded (and initializers executed) so that
-  -- `IO.processCommands` can parse Mathlib/pool notations (`Type*`, ...);
-  -- without them, parse-error recovery silently truncates commands.
+  -- Extension states must be loaded (and initializers executed) so that the
+  -- frontend parser recognizes Mathlib/pool notations (`Type*`, ...); without
+  -- them, parse-error recovery silently truncates commands.
   Lean.enableInitializersExecution
   let imports := modules.toArray.map fun module => ({ module } : Lean.Import)
   let env ← Lean.importModules imports {} (trustLevel := 1024) (loadExts := true)
