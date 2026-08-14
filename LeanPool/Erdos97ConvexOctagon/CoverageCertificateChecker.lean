@@ -70,16 +70,16 @@ inductive BranchClaim where
 private def defaultNodeClaim : NodeClaim :=
   ⟨0, 0, 0, 0, 0, 0, 0, 0, #[]⟩
 
-private def defaultNodeWordClaim : NodeWordClaim :=
-  ⟨0, [], [], [], []⟩
+private def emptyNodeWordClaim (wordIndex : Nat) : NodeWordClaim :=
+  ⟨wordIndex, [], [], [], []⟩
 
 private def nodeWordClaimAtAux
-    (wordClaims : Array NodeWordClaim) (wordIndex position : Nat) :
+  (wordClaims : Array NodeWordClaim) (wordIndex position : Nat) :
     Nat → NodeWordClaim
-  | 0 => defaultNodeWordClaim
+  | 0 => emptyNodeWordClaim wordIndex
   | fuel + 1 =>
       match wordClaims[position]? with
-      | none => defaultNodeWordClaim
+      | none => emptyNodeWordClaim wordIndex
       | some wordClaim =>
           if wordClaim.wordIndex = wordIndex then wordClaim
           else nodeWordClaimAtAux wordClaims wordIndex (position + 1) fuel
