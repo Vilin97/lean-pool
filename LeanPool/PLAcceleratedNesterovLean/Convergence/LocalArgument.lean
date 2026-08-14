@@ -23,6 +23,60 @@ namespace PLAcceleratedNesterovLean
 open scoped Topology NNReal
 open Manifold
 
+private lemma localGeometricRateBounds
+    (L μMinus θ η : ℝ)
+    (hL : 0 < L) (hμMinus : 0 < μMinus)
+    (hθ : 0 < θ) (hθ_lt_one : θ < 1)
+    (hη_pos : 0 < η) (hη : η = 1 / L) (hμη_lt_one : μMinus * η < 1) :
+    let r := 1 - (1 - θ) * Real.sqrt (μMinus * η)
+    0 < r ∧ r < 1 ∧
+      r ≤ Real.exp (-(1 / Real.sqrt (L / ((1 - θ) ^ 2 * μMinus)))) := by
+  let r := 1 - (1 - θ) * Real.sqrt (μMinus * η)
+  have hsqrt_pos : 0 < Real.sqrt (μMinus * η) :=
+    Real.sqrt_pos_of_pos (mul_pos hμMinus hη_pos)
+  have hsqrt_lt_one : Real.sqrt (μMinus * η) < 1 := by
+    rw [← Real.sqrt_one]
+    exact Real.sqrt_lt_sqrt (mul_pos hμMinus hη_pos).le hμη_lt_one
+  have hr_pos : 0 < r := by
+    have : (1 - θ) * Real.sqrt (μMinus * η) < 1 := by
+      calc
+        (1 - θ) * Real.sqrt (μMinus * η) < 1 * Real.sqrt (μMinus * η) := by
+          exact mul_lt_mul_of_pos_right (by linarith) hsqrt_pos
+        _ < 1 := by simpa using hsqrt_lt_one
+    simp only [r]
+    linarith
+  have hr_lt_one : r < 1 := by
+    have : 0 < (1 - θ) * Real.sqrt (μMinus * η) :=
+      mul_pos (by linarith) hsqrt_pos
+    simp only [r]
+    linarith
+  have htarget_pos : 0 < (1 - θ) ^ 2 * μMinus := by positivity
+  have hsqrt_target_pos : 0 < Real.sqrt (L / ((1 - θ) ^ 2 * μMinus)) :=
+    Real.sqrt_pos_of_pos (div_pos hL htarget_pos)
+  have hrate : r ≤ Real.exp
+      (-(1 / Real.sqrt (L / ((1 - θ) ^ 2 * μMinus)))) := by
+    let b := (1 - θ) * Real.sqrt (μMinus * η)
+    have hb_nonneg : 0 ≤ b := by positivity
+    have hproduct : b * Real.sqrt (L / ((1 - θ) ^ 2 * μMinus)) = 1 := by
+      have hsqrt_mul := Real.sqrt_mul (sq_nonneg b) (L / ((1 - θ) ^ 2 * μMinus))
+      rw [Real.sqrt_sq hb_nonneg] at hsqrt_mul
+      rw [hsqrt_mul.symm]
+      have hb_sq : b ^ 2 = (1 - θ) ^ 2 * (μMinus * η) := by
+        simp only [b, mul_pow, Real.sq_sqrt (mul_pos hμMinus hη_pos).le]
+      rw [hb_sq]
+      have : (1 - θ) ^ 2 * (μMinus * η) *
+          (L / ((1 - θ) ^ 2 * μMinus)) = 1 := by
+        rw [hη]
+        field_simp [ne_of_gt hL, ne_of_gt hμMinus,
+          ne_of_gt (sub_pos.mpr hθ_lt_one)]
+      rw [this, Real.sqrt_one]
+    have hb_eq : b = 1 / Real.sqrt (L / ((1 - θ) ^ 2 * μMinus)) := by
+      rw [eq_div_iff (ne_of_gt hsqrt_target_pos)]
+      exact hproduct
+    simpa only [r, b, hb_eq] using
+      Real.one_sub_le_exp_neg (1 / Real.sqrt (L / ((1 - θ) ^ 2 * μMinus)))
+  exact ⟨hr_pos, hr_lt_one, hrate⟩
+
 /-- Local convergence at a single base point m⋆ ∈ M. -/
 theorem local_convergence_at_base_point
     {d : ℕ} (hd : 0 < d)
@@ -136,22 +190,12 @@ theorem local_convergence_at_base_point
       simpa only [s₀, nesterovSeqGen_zero_vel] using hΩ_sub_U (hstay_Ω k).2
     · set r := 1 - (1 - θ) * Real.sqrt (μ_minus * η)
       set initialEnergy := lyapunovOfState P μ_minus π f η s₀
-      have hsqrt_pos : 0 < Real.sqrt (μ_minus * η) :=
-        Real.sqrt_pos_of_pos (mul_pos hμ_minus hη_pos)
-      have hsqrt_lt_one : Real.sqrt (μ_minus * η) < 1 := by
-        rw [← Real.sqrt_one]
-        exact Real.sqrt_lt_sqrt (mul_pos hμ_minus hη_pos).le hμη_lt1
-      have hr_pos : 0 < r := by
-        have : (1 - θ) * Real.sqrt (μ_minus * η) < 1 := by
-          calc
-            (1 - θ) * Real.sqrt (μ_minus * η) < 1 * Real.sqrt (μ_minus * η) := by
-              exact mul_lt_mul_of_pos_right (by linarith) hsqrt_pos
-            _ < 1 := by simpa using hsqrt_lt_one
-        simp only [r]; linarith
-      have hr_lt_one : r < 1 := by
-        have : 0 < (1 - θ) * Real.sqrt (μ_minus * η) :=
-          mul_pos (by linarith) hsqrt_pos
-        simp only [r]; linarith
+      have hrate_data : 0 < r ∧ r < 1 ∧
+          r ≤ Real.exp (-(1 /
+            Real.sqrt ((L : ℝ) / ((1 - θ) ^ 2 * μ_minus)))) := by
+        simpa only [r] using localGeometricRateBounds (L : ℝ) μ_minus θ η
+          hL hμ_minus hθ hθ_lt1 hη_pos rfl hμη_lt1
+      rcases hrate_data with ⟨hr_pos, hr_lt_one, hrate⟩
       have hinitial_nonneg : 0 ≤ initialEnergy :=
         lyapunovOfState_nonneg P μ_minus π f η s₀ hμ_minus hη_pos hμη_lt1 hbdd
       have hdecay_all : ∀ k : ℕ,
@@ -211,34 +255,6 @@ theorem local_convergence_at_base_point
         rw [div_mul_eq_mul_div]
         apply (le_div_iff₀ (by positivity : (0 : ℝ) < 2 * μ_minus)).mpr
         nlinarith
-      have htarget_pos : 0 < (1 - θ) ^ 2 * μ_minus := by positivity
-      have hsqrt_target_pos : 0 < Real.sqrt ((L : ℝ) / ((1 - θ) ^ 2 * μ_minus)) :=
-        Real.sqrt_pos_of_pos (div_pos hL htarget_pos)
-      have hrate : r ≤ Real.exp
-          (-(1 / Real.sqrt ((L : ℝ) / ((1 - θ) ^ 2 * μ_minus)))) := by
-        let b := (1 - θ) * Real.sqrt (μ_minus * η)
-        have hb_nonneg : 0 ≤ b := by positivity
-        have hratio_nonneg : 0 ≤ (L : ℝ) / ((1 - θ) ^ 2 * μ_minus) := by positivity
-        have hproduct :
-            b * Real.sqrt ((L : ℝ) / ((1 - θ) ^ 2 * μ_minus)) = 1 := by
-          have hsqrt_mul := Real.sqrt_mul (sq_nonneg b)
-            ((L : ℝ) / ((1 - θ) ^ 2 * μ_minus))
-          rw [Real.sqrt_sq hb_nonneg] at hsqrt_mul
-          rw [hsqrt_mul.symm]
-          have hb_sq : b ^ 2 = (1 - θ) ^ 2 * (μ_minus * η) := by
-            simp only [b, mul_pow, Real.sq_sqrt (mul_pos hμ_minus hη_pos).le]
-          rw [hb_sq]
-          have : (1 - θ) ^ 2 * (μ_minus * η) *
-              ((L : ℝ) / ((1 - θ) ^ 2 * μ_minus)) = 1 := by
-            simp only [η]
-            field_simp [ne_of_gt hL, ne_of_gt hμ_minus,
-              ne_of_gt (sub_pos.mpr hθ_lt1)]
-          rw [this, Real.sqrt_one]
-        have hb_eq : b = 1 / Real.sqrt ((L : ℝ) / ((1 - θ) ^ 2 * μ_minus)) := by
-          rw [eq_div_iff (ne_of_gt hsqrt_target_pos)]
-          exact hproduct
-        simpa only [r, b, hb_eq] using
-          Real.one_sub_le_exp_neg (1 / Real.sqrt ((L : ℝ) / ((1 - θ) ^ 2 * μ_minus)))
       have hbound : ∀ k : ℕ,
           f ((nesterovSeqGen f η ρ s₀ k).lookahead η) - fStar f ≤
             (C_gap * initialEnergy + 1) * r ^ k := by
