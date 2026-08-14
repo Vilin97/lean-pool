@@ -23,18 +23,48 @@ variable {ι : Type*} {p : ι → Type*} [Fintype ι] [DecidableEq ι]
 
 open scoped Functional MatrixOrder ComplexOrder TensorProduct Matrix
 
+universe uι up
+
+/-- The mutually compatible instances induced by faithful positive functionals on matrix blocks. -/
+class PiQuantumContext (ι : Type uι) (p : ι → Type up) [Fintype ι] [DecidableEq ι]
+    [∀ i, Fintype (p i)] [∀ i, DecidableEq (p i)] where
+  starAlgebra : _root_.starAlgebra (PiMat ℂ ι p)
+  quantumSet : @QuantumSet.{max uι up} (PiMat ℂ ι p) starAlgebra
+  normedAddCommGroup : _root_.NormedAddCommGroup (PiMat ℂ ι p)
+  topologicalSpace : _root_.TopologicalSpace (PiMat ℂ ι p)
+  seminormedAddCommGroup : _root_.SeminormedAddCommGroup (PiMat ℂ ι p)
+  innerProductSpace :
+    @_root_.InnerProductSpace ℂ (PiMat ℂ ι p) _ seminormedAddCommGroup
+
+/-- Bundle the product quantum-set instances induced by faithful positive functionals. -/
+@[instance_reducible]
+noncomputable def PiQuantumContext.of
+    (ψ : ∀ i, Module.Dual ℂ (Matrix (p i) (p i) ℂ))
+    [∀ i, (ψ i).IsFaithfulPosMap] : PiQuantumContext ι p where
+  starAlgebra := PiMat.isStarAlgebra (ψ := ψ)
+  quantumSet := Module.Dual.pi.IsFaithfulPosMap.quantumSet (ψ := ψ)
+  normedAddCommGroup := Module.Dual.PiNormedAddCommGroup (φ := ψ)
+  topologicalSpace :=
+    (Module.Dual.PiNormedAddCommGroup (φ :=
+      ψ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
+  seminormedAddCommGroup :=
+    (Module.Dual.PiNormedAddCommGroup (φ := ψ)).toSeminormedAddCommGroup
+  innerProductSpace := Module.Dual.pi.InnerProductSpace (φ := ψ)
+
+attribute [instance_reducible, instance]
+  PiQuantumContext.starAlgebra PiQuantumContext.quantumSet
+  PiQuantumContext.normedAddCommGroup PiQuantumContext.topologicalSpace
+  PiQuantumContext.seminormedAddCommGroup PiQuantumContext.innerProductSpace
+
+local macro_rules
+  | `(withPiQuantum[$ψ] $body) =>
+      `(letI := PiQuantumContext.of $ψ; $body)
+
 /-- Introduce the quantum-set instances for a product of matrix blocks in a proof. -/
 syntax "withPiQuantumCtx" "[" term "]" : tactic
 macro_rules
- | `(tactic| withPiQuantumCtx[$ψ]) =>
-      `(tactic|
-        let := PiMat.isStarAlgebra (ψ := $ψ);
-        let := Module.Dual.pi.IsFaithfulPosMap.quantumSet (ψ := $ψ);
-        let := Module.Dual.PiNormedAddCommGroup (φ := $ψ);
-        let := (Module.Dual.PiNormedAddCommGroup (φ :=
-          $ψ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace;
-        let := (Module.Dual.PiNormedAddCommGroup (φ := $ψ)).toSeminormedAddCommGroup;
-        let := Module.Dual.pi.InnerProductSpace (φ := $ψ))
+  | `(tactic| withPiQuantumCtx[$ψ]) =>
+      `(tactic| let := PiQuantumContext.of $ψ)
 
 /-- Introduce the quantum-set instances for a single matrix algebra in a proof. -/
 syntax "withMatrixQuantumCtx" "[" term "]" : tactic
