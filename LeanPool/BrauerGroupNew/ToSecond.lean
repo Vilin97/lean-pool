@@ -64,14 +64,7 @@ lemma centralizerιRange : Subalgebra.centralizer F A.ι.range = A.ι.range := b
   change Module.finrank F A = Module.finrank F A.ι.range * Module.finrank F A.ι.range
   rw [A.dim_eq_sq, pow_two, LinearEquiv.finrank_eq (f := A.ιRange.toLinearEquiv.symm)]
 
-instance : Module K A where
-  smul c a := A.ι c * a
-  one_smul a := show A.ι 1 * a = a by simp
-  mul_smul c c' x := show A.ι (c * c') * x = _ * (_ * _) by simp [_root_.mul_assoc]
-  smul_zero c := show A.ι c * 0 = 0 by simp
-  smul_add c x y := show A.ι c * (x + y) = _ * _ + _ * _ by simp [_root_.mul_add]
-  add_smul c c' x := show A.ι (c + c') * x = _ * _ + _ * _ by simp [_root_.add_mul]
-  zero_smul x := show A.ι 0 * x = 0 by simp
+instance : Module K A := RingHom.toModule A.ι.toRingHom
 
 @[simp]
 lemma smul_def (c : K) (a : A) : c • a = A.ι c * a := rfl
