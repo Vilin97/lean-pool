@@ -1019,17 +1019,14 @@ private def combinedInterpolationAlpha {𝕏 : Proof} {x : 𝕏.X} {τ}
   | Sum.inr (Sum.inr z₂) =>
       ⟨splitToExt (r 𝕐₂.α z₂), List.map (Sum.inr ∘ Sum.inr) (p 𝕐₂.α z₂)⟩
 
-private theorem combinedInterpolationPath {𝕏 : Proof} {x : 𝕏.X} {τ}
+private theorem combinedInterpolationPath_inl {𝕏 : Proof} {x : 𝕏.X} {τ}
     (rootRule : Ext.RuleApp x τ) (𝕐₁ : Ext.PreProof x τ)
-    (𝕐₂ : Split.Proof) (y₂ : 𝕐₂.X) :
-    ∀ node, ∀ f : {f : ℕ → (Unit ⊕ 𝕐₁.X ⊕ 𝕐₂.X) //
-        f 0 = node ∧ ∀ n, Ext.edge (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
-          (f n) (f (n + 1))},
-      ∀ n, ∃ m, (Ext.r (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
-        (f.1 (n + m))).isBox := by
-  intro node f
-  match node with
-  | Sum.inl u =>
+    (𝕐₂ : Split.Proof) (y₂ : 𝕐₂.X) (u : Unit)
+    (f : {f : ℕ → (Unit ⊕ 𝕐₁.X ⊕ 𝕐₂.X) //
+      f 0 = Sum.inl u ∧ ∀ n, Ext.edge (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
+        (f n) (f (n + 1))}) :
+    ∀ n, ∃ m, (Ext.r (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
+      (f.1 (n + m))).isBox := by
     have split_to_ext_isBox {𝕐 : Split.Proof} {x : 𝕐.X} {τ} (r : Split.RuleApp) :
         r.isBox → (@splitToExt _ x τ r).isBox := by
       unfold splitToExt
@@ -1151,7 +1148,16 @@ private theorem combinedInterpolationPath {𝕏 : Proof} {x : 𝕏.X} {τ}
         convert m_prop
         unfold g
         simp [fn_def]
-  | Sum.inr (Sum.inl z) =>
+
+private theorem combinedInterpolationPath_inlz {𝕏 : Proof} {x : 𝕏.X} {τ}
+    (rootRule : Ext.RuleApp x τ) (𝕐₁ : Ext.PreProof x τ)
+    (𝕐₂ : Split.Proof) (y₂ : 𝕐₂.X) (z : 𝕐₁.X)
+    (f : {f : ℕ → (Unit ⊕ 𝕐₁.X ⊕ 𝕐₂.X) //
+      f 0 = Sum.inr (Sum.inl z) ∧
+        ∀ n, Ext.edge (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
+          (f n) (f (n + 1))}) :
+    ∀ n, ∃ m, (Ext.r (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
+      (f.1 (n + m))).isBox := by
     have isRight : ∀ n, (f.1 n).isRight := by
       intro n
       induction n
@@ -1206,7 +1212,16 @@ private theorem combinedInterpolationPath {𝕏 : Proof} {x : 𝕏.X} {τ}
     · simpa [g, combinedInterpolationAlpha, Ext.r, fn_def] using m_prop
     · have := isLeft (n + m)
       simp [fn_def] at this
-  | Sum.inr (Sum.inr z) =>
+
+private theorem combinedInterpolationPath_inrz {𝕏 : Proof} {x : 𝕏.X} {τ}
+    (rootRule : Ext.RuleApp x τ) (𝕐₁ : Ext.PreProof x τ)
+    (𝕐₂ : Split.Proof) (y₂ : 𝕐₂.X) (z : 𝕐₂.X)
+    (f : {f : ℕ → (Unit ⊕ 𝕐₁.X ⊕ 𝕐₂.X) //
+      f 0 = Sum.inr (Sum.inr z) ∧
+        ∀ n, Ext.edge (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
+          (f n) (f (n + 1))}) :
+    ∀ n, ∃ m, (Ext.r (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
+      (f.1 (n + m))).isBox := by
     have split_to_ext_isBox {𝕐 : Split.Proof} {x : 𝕐.X} {τ} (r : Split.RuleApp) :
         r.isBox → (@splitToExt _ x τ r).isBox := by
       unfold splitToExt
@@ -1269,6 +1284,20 @@ private theorem combinedInterpolationPath {𝕏 : Proof} {x : 𝕏.X} {τ}
       convert m_prop
       unfold g
       simp [fn_def]
+
+private theorem combinedInterpolationPath {𝕏 : Proof} {x : 𝕏.X} {τ}
+    (rootRule : Ext.RuleApp x τ) (𝕐₁ : Ext.PreProof x τ)
+    (𝕐₂ : Split.Proof) (y₂ : 𝕐₂.X) :
+    ∀ node, ∀ f : {f : ℕ → (Unit ⊕ 𝕐₁.X ⊕ 𝕐₂.X) //
+        f 0 = node ∧ ∀ n, Ext.edge (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
+          (f n) (f (n + 1))},
+      ∀ n, ∃ m, (Ext.r (combinedInterpolationAlpha rootRule 𝕐₁ 𝕐₂ y₂)
+        (f.1 (n + m))).isBox := by
+  intro node f
+  match node with
+  | Sum.inl u => exact combinedInterpolationPath_inl rootRule 𝕐₁ 𝕐₂ y₂ u f
+  | Sum.inr (Sum.inl z) => exact combinedInterpolationPath_inlz rootRule 𝕐₁ 𝕐₂ y₂ z f
+  | Sum.inr (Sum.inr z) => exact combinedInterpolationPath_inrz rootRule 𝕐₁ 𝕐₂ y₂ z f
 
 /-- Carrier coalgebra of the cut-based left interpolation proof, abstracted over the right
 interpolant proof `𝕐₂` and its root `y₂`. -/
