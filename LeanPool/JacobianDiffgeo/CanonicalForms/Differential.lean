@@ -367,58 +367,46 @@ noncomputable instance : SMul (ℳ X) (MForm X) :=
 @[simp] theorem mero_smul_mk (h : ℳ X) (θ : MFormData X) :
     h • mk θ = mk (MFormData.smul h θ) := rfl
 
-noncomputable instance : Module (ℳ X) (MForm X) where
-  one_smul Θ := by
-    obtain ⟨θ, rfl⟩ := exists_rep Θ
-    refine sound fun x => ?_
-    have h1 := eventuallyEq_nhdsNE_comp_chart_iff.mp (Mero.holoRepr_one (X := X) x)
-    filter_upwards [h1] with z hz
-    simp only [Function.comp_apply] at hz
-    change (1 : ℳ X).holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z = θ.coeffAt x z
-    rw [hz, one_mul]
-  mul_smul h h' Θ := by
-    obtain ⟨θ, rfl⟩ := exists_rep Θ
-    refine sound fun x => ?_
-    have h1 := eventuallyEq_nhdsNE_comp_chart_iff.mp (Mero.holoRepr_mul h h' x)
-    filter_upwards [h1] with z hz
-    simp only [Function.comp_apply, Pi.mul_apply] at hz
-    change (h * h').holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z =
-      h.holoRepr ((chartAt ℂ x).symm z) * (h'.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z)
-    rw [hz]
-    ring
-  smul_zero h := sound fun x => Filter.Eventually.of_forall fun z => by
-    change h.holoRepr ((chartAt ℂ x).symm z) * (0 : MFormData X).coeffAt x z =
-      (0 : MFormData X).coeffAt x z
-    simp
-  smul_add h Θ₁ Θ₂ := by
-    refine Quotient.inductionOn₂ Θ₁ Θ₂ fun θ η => ?_
-    refine sound fun x => Filter.Eventually.of_forall fun z => ?_
-    change h.holoRepr ((chartAt ℂ x).symm z) * (θ + η).coeffAt x z =
-      h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z +
-        h.holoRepr ((chartAt ℂ x).symm z) * η.coeffAt x z
-    simp only [MFormData.coeffAt_add]
-    ring
-  add_smul h h' Θ := by
-    obtain ⟨θ, rfl⟩ := exists_rep Θ
-    refine sound fun x => ?_
-    have h1 := eventuallyEq_nhdsNE_comp_chart_iff.mp (Mero.holoRepr_add h h' x)
-    filter_upwards [h1] with z hz
-    simp only [Function.comp_apply, Pi.add_apply] at hz
-    change (h + h').holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z =
-      h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z +
-        h'.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z
-    rw [hz]
-    ring
-  zero_smul Θ := by
-    obtain ⟨θ, rfl⟩ := exists_rep Θ
-    refine sound fun x => ?_
-    have h1 := eventuallyEq_nhdsNE_comp_chart_iff.mp (Mero.holoRepr_zero (X := X) x)
-    filter_upwards [h1] with z hz
-    simp only [Function.comp_apply] at hz
-    change (0 : ℳ X).holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z =
-      (0 : MFormData X).coeffAt x z
-    rw [hz, zero_mul]
-    rfl
+noncomputable instance : Module (ℳ X) (MForm X) :=
+  Module.ofMinimalAxioms
+    (fun h Θ₁ Θ₂ => by
+      refine Quotient.inductionOn₂ Θ₁ Θ₂ fun θ η => ?_
+      refine sound fun x => Filter.Eventually.of_forall fun z => ?_
+      change h.holoRepr ((chartAt ℂ x).symm z) * (θ + η).coeffAt x z =
+        h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z +
+          h.holoRepr ((chartAt ℂ x).symm z) * η.coeffAt x z
+      simp only [MFormData.coeffAt_add]
+      ring)
+    (fun h h' Θ => by
+      obtain ⟨θ, rfl⟩ := exists_rep Θ
+      refine sound fun x => ?_
+      have h1 := eventuallyEq_nhdsNE_comp_chart_iff.mp (Mero.holoRepr_add h h' x)
+      filter_upwards [h1] with z hz
+      simp only [Function.comp_apply, Pi.add_apply] at hz
+      change (h + h').holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z =
+        h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z +
+          h'.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z
+      rw [hz]
+      ring)
+    (fun h h' Θ => by
+      obtain ⟨θ, rfl⟩ := exists_rep Θ
+      refine sound fun x => ?_
+      have h1 := eventuallyEq_nhdsNE_comp_chart_iff.mp (Mero.holoRepr_mul h h' x)
+      filter_upwards [h1] with z hz
+      simp only [Function.comp_apply, Pi.mul_apply] at hz
+      change (h * h').holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z =
+        h.holoRepr ((chartAt ℂ x).symm z) *
+          (h'.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z)
+      rw [hz]
+      ring)
+    (fun Θ => by
+      obtain ⟨θ, rfl⟩ := exists_rep Θ
+      refine sound fun x => ?_
+      have h1 := eventuallyEq_nhdsNE_comp_chart_iff.mp (Mero.holoRepr_one (X := X) x)
+      filter_upwards [h1] with z hz
+      simp only [Function.comp_apply] at hz
+      change (1 : ℳ X).holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z = θ.coeffAt x z
+      rw [hz, one_mul])
 
 instance : IsScalarTower ℂ (ℳ X) (MForm X) where
   smul_assoc c h Θ := by
@@ -430,14 +418,6 @@ instance : IsScalarTower ℂ (ℳ X) (MForm X) where
     change (c • h).holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z =
       c * (h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z)
     rw [hz]
-    ring
-
-instance : SMulCommClass ℂ (ℳ X) (MForm X) where
-  smul_comm c h Θ := by
-    obtain ⟨θ, rfl⟩ := exists_rep Θ
-    refine sound fun x => Filter.Eventually.of_forall fun z => ?_
-    change c * (h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z) =
-      h.holoRepr ((chartAt ℂ x).symm z) * (c * θ.coeffAt x z)
     ring
 
 /-- The order dictionary for the `ℳ(X)`-action: orders add (the D10/D11 engine). Junk-robust —

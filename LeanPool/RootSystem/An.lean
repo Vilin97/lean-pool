@@ -279,14 +279,148 @@ theorem root_coroot_two' {n : ℕ} [NeZero n] (J : SignedInterval n) :
     (ZnPairing n) (α J) (αDual J) = 2 :=
   pairing_self J
 
+private theorem sum_Icc_add_sum_Icc_of_adjacent {n : ℕ} {M : Type*} [AddCommMonoid M]
+    (f : Fin n → M) {a b c d : Fin n} (hab : a ≤ b) (hcd : c ≤ d)
+    (hbc : (b : ℕ) + 1 = (c : ℕ)) :
+    (∑ x ∈ Finset.Icc a b, f x) + (∑ x ∈ Finset.Icc c d, f x) =
+      ∑ x ∈ Finset.Icc a d, f x := by
+  have hdisjoint : Disjoint (Finset.Icc a b) (Finset.Icc c d) := by
+    simp only [Finset.disjoint_left, Finset.mem_Icc, Fin.le_iff_val_le_val]
+    omega
+  have hunion : Finset.Icc a b ∪ Finset.Icc c d = Finset.Icc a d := by
+    ext x
+    simp only [Finset.mem_union, Finset.mem_Icc, Fin.le_iff_val_le_val]
+    omega
+  rw [← Finset.sum_union hdisjoint, hunion]
+
+private theorem signedInterval_sum_reflection {n : ℕ} {M : Type*} [AddCommGroup M]
+    (f : Fin n → M) (J K : SignedInterval n) :
+    K.sign • (∑ x ∈ Finset.Icc K.i K.j, f x) -
+        (J.sign * K.sign *
+          ((if J.i = K.i then 1 else 0) + (if J.j = K.j then 1 else 0) -
+            (if (J.i : ℕ) = (K.j : ℕ) + 1 then 1 else 0) -
+            (if (K.i : ℕ) = (J.j : ℕ) + 1 then 1 else 0))) •
+          (J.sign • (∑ x ∈ Finset.Icc J.i J.j, f x)) =
+      (s J K).sign • (∑ x ∈ Finset.Icc (s J K).i (s J K).j, f x) := by
+  obtain ⟨Ji, Jj, Jh, Jε⟩ := J
+  obtain ⟨Ki, Kj, Kh, Kε⟩ := K
+  by_cases h₀ : Ji = Ki ∧ Jj = Kj
+  · rcases h₀ with ⟨rfl, rfl⟩
+    have hnotAdjacent : (Ji : ℕ) ≠ (Jj : ℕ) + 1 := by
+      simp only [Fin.le_iff_val_le_val] at Jh
+      omega
+    cases Jε <;> cases Kε <;>
+      simp [s, hnotAdjacent, SignedInterval.sign] <;> abel
+  by_cases h₁ : (Ji : ℕ) = (Kj : ℕ) + 1
+  · have hsum := sum_Icc_add_sum_Icc_of_adjacent f Kh Jh h₁.symm
+    have hJiKi : Ji ≠ Ki := by
+      intro h
+      simp only [Fin.le_iff_val_le_val] at Kh
+      have := congrArg Fin.val h
+      omega
+    have hJjKj : Jj ≠ Kj := by
+      intro h
+      simp only [Fin.le_iff_val_le_val] at Jh
+      have := congrArg Fin.val h
+      omega
+    have hnotAdjacent : (Ki : ℕ) ≠ (Jj : ℕ) + 1 := by
+      simp only [Fin.le_iff_val_le_val] at Jh Kh
+      omega
+    cases Jε <;> cases Kε <;>
+      simp [s, hJiKi, hJjKj, h₁, hnotAdjacent, SignedInterval.sign, ← hsum] <;> abel
+  by_cases h₂ : (Ki : ℕ) = (Jj : ℕ) + 1
+  · have hsum := sum_Icc_add_sum_Icc_of_adjacent f Jh Kh h₂.symm
+    have hJiKi : Ji ≠ Ki := by
+      intro h
+      simp only [Fin.le_iff_val_le_val] at Jh
+      have := congrArg Fin.val h
+      omega
+    have hJjKj : Jj ≠ Kj := by
+      intro h
+      simp only [Fin.le_iff_val_le_val] at Kh
+      have := congrArg Fin.val h
+      omega
+    cases Jε <;> cases Kε <;>
+      simp [s, hJiKi, hJjKj, h₁, h₂, SignedInterval.sign, ← hsum] <;> abel
+  by_cases h₃ : Ji = Ki ∧ (Jj : ℕ) > (Kj : ℕ)
+  · rcases h₃ with ⟨rfl, hKjJj⟩
+    let nextKj : Fin n := ⟨(Kj : ℕ) + 1, by have := Jj.isLt; omega⟩
+    have hnextKj : nextKj ≤ Jj := by
+      simp only [nextKj, Fin.le_iff_val_le_val]
+      omega
+    have hsum := sum_Icc_add_sum_Icc_of_adjacent f Kh hnextKj (by rfl)
+    have hJjKj : Jj ≠ Kj := by
+      intro h
+      have := congrArg Fin.val h
+      omega
+    cases Jε <;> cases Kε <;>
+      simp [s, hJjKj, h₁, h₂, hKjJj, SignedInterval.sign, ← hsum] <;> abel
+  by_cases h₄ : Ji = Ki ∧ (Jj : ℕ) < (Kj : ℕ)
+  · rcases h₄ with ⟨rfl, hJjKj⟩
+    have hnotKjJj : ¬(Kj : ℕ) < (Jj : ℕ) := by omega
+    let nextJj : Fin n := ⟨(Jj : ℕ) + 1, by have := Kj.isLt; omega⟩
+    have hnextJj : nextJj ≤ Kj := by
+      simp only [nextJj, Fin.le_iff_val_le_val]
+      omega
+    have hsum := sum_Icc_add_sum_Icc_of_adjacent f Jh hnextJj (by rfl)
+    have hJjKj' : Jj ≠ Kj := by
+      intro h
+      have := congrArg Fin.val h
+      omega
+    cases Jε <;> cases Kε <;>
+      simp [s, hJjKj', h₁, h₂, hJjKj, hnotKjJj, SignedInterval.sign, ← hsum] <;> abel
+  by_cases h₅ : (Ji : ℕ) < (Ki : ℕ) ∧ Jj = Kj
+  · rcases h₅ with ⟨hJiKi, rfl⟩
+    let previousKi : Fin n := ⟨(Ki : ℕ) - 1, by have := Ki.isLt; omega⟩
+    have hpreviousKi : Ji ≤ previousKi := by
+      simp only [previousKi, Fin.le_iff_val_le_val]
+      omega
+    have hadjacent : (previousKi : ℕ) + 1 = (Ki : ℕ) := by
+      simp only [previousKi]
+      omega
+    have hsum := sum_Icc_add_sum_Icc_of_adjacent f hpreviousKi Kh hadjacent
+    have hJiKi' : Ji ≠ Ki := by
+      intro h
+      have := congrArg Fin.val h
+      omega
+    cases Jε <;> cases Kε <;>
+      simp [s, hJiKi', h₁, h₂, hJiKi, SignedInterval.sign, ← hsum] <;> abel
+  by_cases h₆ : (Ji : ℕ) > (Ki : ℕ) ∧ Jj = Kj
+  · rcases h₆ with ⟨hKiJi, rfl⟩
+    have hnotJiKi : ¬(Ji : ℕ) < (Ki : ℕ) := by omega
+    let previousJi : Fin n := ⟨(Ji : ℕ) - 1, by have := Ji.isLt; omega⟩
+    have hpreviousJi : Ki ≤ previousJi := by
+      simp only [previousJi, Fin.le_iff_val_le_val]
+      omega
+    have hadjacent : (previousJi : ℕ) + 1 = (Ji : ℕ) := by
+      simp only [previousJi]
+      omega
+    have hsum := sum_Icc_add_sum_Icc_of_adjacent f hpreviousJi Jh hadjacent
+    have hJiKi' : Ji ≠ Ki := by
+      intro h
+      have := congrArg Fin.val h
+      omega
+    cases Jε <;> cases Kε <;>
+      simp [s, hJiKi', h₁, h₂, hKiJi, hnotJiKi, SignedInterval.sign, ← hsum] <;> abel
+  · have hJiKi : Ji ≠ Ki := by
+      intro hi
+      by_cases hj : Jj = Kj
+      · exact h₀ ⟨hi, hj⟩
+      rcases lt_or_gt_of_ne hj with hj | hj
+      · exact h₄ ⟨hi, hj⟩
+      · exact h₃ ⟨hi, hj⟩
+    have hJjKj : Jj ≠ Kj := by
+      intro hj
+      rcases lt_or_gt_of_ne hJiKi with hi | hi
+      · exact h₅ ⟨hi, hj⟩
+      · exact h₆ ⟨hi, hj⟩
+    cases Jε <;> cases Kε <;>
+      simp [s, hJiKi, hJjKj, h₁, h₂, SignedInterval.sign]
+
 theorem reflectionPerm_root_eval {n : ℕ} [NeZero n] (J K : SignedInterval n) (t : Fin n) :
     (α K - (ZnPairing n (α K)) (αDual J) • α J) t = α (s J K) t := by
-  change (α K) t - ((ZnPairing n (α K)) (αDual J)) * (α J) t = α (s J K) t
   rw [pairing_formula J K]
-  cases J
-  cases K
-  simp +decide [s, α_eval, SignedInterval.sign, Fin.ext_iff]
-  grind (splits := 80)
+  exact congrFun (signedInterval_sum_reflection Ae J K) t
 
 theorem reflectionPerm_root' {n : ℕ} [NeZero n] (J K : SignedInterval n) :
     α K - (ZnPairing n (α K)) (αDual J) • α J = α (s J K) := by
@@ -309,11 +443,9 @@ theorem reflectionPerm_coroot_single {n : ℕ} [NeZero n] (J K : SignedInterval 
       ((ZnPairing n (α J)) (αDual K)) *
       αDual J (LinearMap.single ℤ (fun _ : Fin n => ℤ) t 1) =
       αDual (s J K) (LinearMap.single ℤ (fun _ : Fin n => ℤ) t 1)
-  rw [pairing_formula K J]
-  cases J
-  cases K
-  simp +decide [s, α_dual_eval, SignedInterval.sign, Fin.ext_iff]
-  grind (splits := 80)
+  rw [pairing_symm J K, pairing_formula J K]
+  exact LinearMap.congr_fun (signedInterval_sum_reflection eTranspose J K)
+    (LinearMap.single ℤ (fun _ : Fin n => ℤ) t 1)
 
 theorem reflectionPerm_coroot' {n : ℕ} [NeZero n] (J K : SignedInterval n) :
     αDual K - (ZnPairing n (α J)) (αDual K) • αDual J = αDual (s J K) := by

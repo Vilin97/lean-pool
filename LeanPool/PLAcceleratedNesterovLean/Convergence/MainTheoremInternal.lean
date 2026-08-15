@@ -118,12 +118,7 @@ private lemma nesterovSeqGen_zero_dim
     {f : E 0 → ℝ} {η ρ : ℝ} {x : E 0} :
     ∀ k, nesterovSeqGen f η ρ ⟨x, 0⟩ k = ⟨x, 0⟩ := by
   intro k
-  induction k with
-  | zero => rfl
-  | succ n ih =>
-      simp only [nesterovSeqGen, ih, nesterovStep, NesterovState.lookahead]
-      have hg : gradient f x = 0 := Subsingleton.elim _ _
-      simp [hg]
+  exact nesterovSeqGen_at_zero_grad (Subsingleton.elim (gradient f x) 0) k
 
 /-- A local non-minimizer near a minimizer forces the PL and Lipschitz constants
 to satisfy the compatibility bound `μ ≤ L`. -/
@@ -228,6 +223,64 @@ private theorem open_neighborhood_from_local_balls
     rw [hα'_spec m hmS] at hxm
     exact (hα m hmS).2.2 x hxm
 
+/-- The pointwise convergence conclusion in the zero-smoothness branch. -/
+private theorem nesterov_pl_accelerated_rate_zero_L_at
+    {d : ℕ} (L : ℝ≥0) (hL_zero : (L : ℝ) = 0) (μ ρ : ℝ)
+    (f : E d → ℝ) (hmin : (argminSet f).Nonempty)
+    {U : Set (E d)} {x₀ : E d} (hx₀ : x₀ ∈ U) :
+    ∀ k,
+      (nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x ∈ U ∧
+      (nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).lookahead (1 / ↑L) ∈ U ∧
+      f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f ≤
+        2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) := by
+  have hη : (1 : ℝ) / (L : ℝ) = 0 := by simp [hL_zero]
+  have hseq : ∀ k, nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k = ⟨x₀, 0⟩ := by
+    intro k
+    rw [hη]
+    exact nesterovSeqGen_zero_eta k
+  obtain ⟨m, hm_argmin⟩ := hmin
+  have hbdd : BddBelow (Set.range f) :=
+    ⟨f m, by rintro _ ⟨z, rfl⟩; exact hm_argmin z⟩
+  intro k
+  refine ⟨?_, ?_, ?_⟩
+  · simpa only [hseq k] using hx₀
+  · rw [hseq k]
+    simpa [NesterovState.lookahead] using hx₀
+  · have hgap_nn : 0 ≤ f x₀ - fStar f :=
+      sub_nonneg.mpr (ciInf_le hbdd x₀)
+    have hrate :
+        2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) =
+          2 * (f x₀ - fStar f) := by
+      simp [hL_zero]
+    calc f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f
+        = f x₀ - fStar f := by simp only [hseq k]
+      _ ≤ 2 * (f x₀ - fStar f) := by nlinarith
+      _ = 2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) :=
+        hrate.symm
+
+/-- The pointwise convergence conclusion in zero ambient dimension. -/
+private theorem nesterov_pl_accelerated_rate_zero_dim_at
+    (L : ℝ≥0) (μ ρ : ℝ) (f : E 0 → ℝ)
+    {U : Set (E 0)} {x₀ : E 0} (hx₀ : x₀ ∈ U) :
+    ∀ k,
+      (nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x ∈ U ∧
+      (nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).lookahead (1 / ↑L) ∈ U ∧
+      f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f ≤
+        2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) := by
+  have hx₀_argmin : x₀ ∈ argminSet f := by
+    intro z
+    simp [Subsingleton.elim x₀ z]
+  have hbdd : BddBelow (Set.range f) :=
+    ⟨f x₀, by rintro _ ⟨z, rfl⟩; exact hx₀_argmin z⟩
+  have hfx₀ : f x₀ = fStar f :=
+    le_antisymm (le_ciInf hx₀_argmin) (ciInf_le hbdd x₀)
+  intro k
+  refine ⟨?_, ?_, ?_⟩
+  · simpa only [nesterovSeqGen_zero_dim k] using hx₀
+  · simpa [nesterovSeqGen_zero_dim k, NesterovState.lookahead] using hx₀
+  · simpa only [nesterovSeqGen_zero_dim k, hfx₀, sub_self, mul_zero]
+      using (le_refl (0 : ℝ))
+
 /-- Degenerate zero-smoothness branch for the public theorem.  Since
 `1 / L = 0`, the chosen Nesterov dynamics is stationary. -/
 private theorem nesterov_pl_accelerated_rate_zero_L
@@ -258,37 +311,11 @@ private theorem nesterov_pl_accelerated_rate_zero_L
             2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) := by
   intro f n M _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
   refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
+  have hmin : (argminSet f).Nonempty := by
+    rw [← hrange]
+    exact Set.range_nonempty ι
   intro x₀ hx₀
-  have hη : (1 : ℝ) / (L : ℝ) = 0 := by
-    simp_all
-  have hseq : ∀ k, nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k = ⟨x₀, 0⟩ := by
-    intro k
-    rw [hη]
-    exact nesterovSeqGen_zero_eta k
-  have hS_ne : (Set.range ι).Nonempty := Set.range_nonempty ι
-  obtain ⟨m, hmS⟩ := hS_ne
-  have hm_argmin : m ∈ argminSet f := by
-    simp_all
-  have hbdd : BddBelow (Set.range f) :=
-    ⟨f m, by rintro _ ⟨z, rfl⟩; exact hm_argmin z⟩
-  intro k
-  refine ⟨?_, ?_, ?_⟩
-  · simpa only [hseq k] using hx₀
-  · have hseq0 : nesterovSeqGen f 0 ρ ⟨x₀, 0⟩ k = ⟨x₀, 0⟩ :=
-      nesterovSeqGen_zero_eta k
-    rw [hη]
-    simpa [hseq0, NesterovState.lookahead] using hx₀
-  · have hgap_nn : 0 ≤ f x₀ - fStar f :=
-      sub_nonneg.mpr (ciInf_le hbdd x₀)
-    have hrate :
-        2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) =
-          2 * (f x₀ - fStar f) := by
-      simp_all
-    calc f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f
-        = f x₀ - fStar f := by simp only [hseq k]
-      _ ≤ 2 * (f x₀ - fStar f) := by nlinarith
-      _ = 2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) :=
-        hrate.symm
+  exact nesterov_pl_accelerated_rate_zero_L_at L hL_zero μ ρ f hmin hx₀
 
 /-- Degenerate zero-dimensional branch for the public theorem. -/
 private theorem nesterov_pl_accelerated_rate_zero_dim
@@ -296,7 +323,6 @@ private theorem nesterov_pl_accelerated_rate_zero_dim
     ∀ (f : E 0 → ℝ),
     ∀ (n : ℕ),
     ∀ (M : Type*) [TopologicalSpace M] [ChartedSpace (ManifoldModel n) M]
-       [Nonempty M]
       (ι : M → E 0),
       IsSmoothEmbedding (modelI n) (modelWithCornersSelf ℝ (E 0)) 2 ι →
       Set.range ι = argminSet f →
@@ -315,23 +341,10 @@ private theorem nesterov_pl_accelerated_rate_zero_dim
             (1 / ↑L) ∈ U ∧
           f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f ≤
             2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) := by
-  intro f n M _ _ _ ι _hι hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
+  intro f n M _ _ ι _hι _hrange U hU_open hS_sub _hf_C2 _hPL _hf_lip
   refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
   intro x₀ hx₀
-  obtain ⟨m, hmS⟩ := Set.range_nonempty ι
-  have hx₀_argmin : x₀ ∈ argminSet f := by
-    have hx₀_eq_m : x₀ = m := Subsingleton.elim x₀ m
-    simp_all
-  have hbdd : BddBelow (Set.range f) :=
-    ⟨f x₀, by rintro _ ⟨z, rfl⟩; exact hx₀_argmin z⟩
-  have hfx₀ : f x₀ = fStar f :=
-    le_antisymm (le_ciInf hx₀_argmin) (ciInf_le hbdd x₀)
-  intro k
-  refine ⟨?_, ?_, ?_⟩
-  · simpa only [nesterovSeqGen_zero_dim k] using hx₀
-  · simpa [nesterovSeqGen_zero_dim k, NesterovState.lookahead] using hx₀
-  · simpa only [nesterovSeqGen_zero_dim k, hfx₀, sub_self, mul_zero]
-      using (le_refl (0 : ℝ))
+  exact nesterov_pl_accelerated_rate_zero_dim_at L μ ρ f hx₀
 
 /-- Degenerate zero-smoothness branch for the C³-only theorem.  If the minimizer
 set is empty, the empty neighborhood discharges the local statement. -/
@@ -359,33 +372,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L_argmin
   by_cases hS_ne : (argminSet f).Nonempty
   · refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
     intro x₀ hx₀
-    have hη : (1 : ℝ) / (L : ℝ) = 0 := by
-      simp_all
-    have hseq : ∀ k, nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k = ⟨x₀, 0⟩ := by
-      intro k
-      rw [hη]
-      exact nesterovSeqGen_zero_eta k
-    obtain ⟨m, hm_argmin⟩ := hS_ne
-    have hbdd : BddBelow (Set.range f) :=
-      ⟨f m, by rintro _ ⟨z, rfl⟩; exact hm_argmin z⟩
-    intro k
-    refine ⟨?_, ?_, ?_⟩
-    · simpa only [hseq k] using hx₀
-    · have hseq0 : nesterovSeqGen f 0 ρ ⟨x₀, 0⟩ k = ⟨x₀, 0⟩ :=
-        nesterovSeqGen_zero_eta k
-      rw [hη]
-      simpa [hseq0, NesterovState.lookahead] using hx₀
-    · have hgap_nn : 0 ≤ f x₀ - fStar f :=
-        sub_nonneg.mpr (ciInf_le hbdd x₀)
-      have hrate :
-          2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) =
-            2 * (f x₀ - fStar f) := by
-        simp_all
-      calc f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f
-          = f x₀ - fStar f := by simp only [hseq k]
-        _ ≤ 2 * (f x₀ - fStar f) := by nlinarith
-        _ = 2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) :=
-          hrate.symm
+    exact nesterov_pl_accelerated_rate_zero_L_at L hL_zero μ ρ f hS_ne hx₀
   · refine ⟨∅, isOpen_empty, ?_, Set.empty_subset U, ?_⟩
     · intro x hx
       exact False.elim (hS_ne ⟨x, hx⟩)
@@ -413,19 +400,7 @@ private theorem nesterov_pl_accelerated_rate_zero_dim_argmin
   intro f U hU_open hS_sub _hf_C3 _hPL _hf_lip
   refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
   intro x₀ hx₀
-  have hx₀_argmin : x₀ ∈ argminSet f := by
-    intro z
-    simp [Subsingleton.elim x₀ z]
-  have hbdd : BddBelow (Set.range f) :=
-    ⟨f x₀, by rintro _ ⟨z, rfl⟩; exact hx₀_argmin z⟩
-  have hfx₀ : f x₀ = fStar f :=
-    le_antisymm (le_ciInf hx₀_argmin) (ciInf_le hbdd x₀)
-  intro k
-  refine ⟨?_, ?_, ?_⟩
-  · simpa only [nesterovSeqGen_zero_dim k] using hx₀
-  · simpa [nesterovSeqGen_zero_dim k, NesterovState.lookahead] using hx₀
-  · simpa only [nesterovSeqGen_zero_dim k, hfx₀, sub_self, mul_zero]
-      using (le_refl (0 : ℝ))
+  exact nesterov_pl_accelerated_rate_zero_dim_at L μ ρ f hx₀
 
 /-! ## Main theorem: state positions, prefactor `2` -/
 

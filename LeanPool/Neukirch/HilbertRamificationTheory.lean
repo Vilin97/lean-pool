@@ -931,9 +931,6 @@ theorem inertiaDeg_of_DecompositionIdeal_over_bot_eq_one [IsGalois K L] :
 
 -- Proposition 9.4
 
-instance : Module.Finite (ℤ ⧸ comap (algebraMap ℤ (𝓞 K)) p) ((𝓞 K) ⧸ p) :=
-  quotient_finite_quotient_comap p
-
 /-- The residue class field of a number field is a finite field. -/
 noncomputable instance residueFieldInstFintype : Fintype ((𝓞 K) ⧸ p) :=
   letI : Finite (ℤ ⧸ (comap (algebraMap ℤ (𝓞 K)) p)) := Finite.of_fintype _

@@ -78,7 +78,7 @@ private theorem nodePruningFacts_of_valid
         rejectedWordValidB claim (searchCentres.getD claim.depth 0)
           (searchCentres.drop (claim.depth + 1))
           (rowIndexWord claim.rejectedRows (5 * wordIndex))
-          (claim.rejectionTargetGroups.getD wordIndex []) = true := by
+          (claim.wordAt wordIndex).rejectionTargets = true := by
   unfold nodePruningValidB at hvalid
   rw [ite_eq_left hidentifier] at hvalid
   let claim := claims.nodeAt identifier
@@ -103,7 +103,7 @@ private theorem nodePruningFacts_of_valid
             ∀ wordIndex, wordIndex < 7 →
               rejectedWordValidB claim centre remaining
                 (rowIndexWord claim.rejectedRows (5 * wordIndex))
-                (claim.rejectionTargetGroups.getD wordIndex []) = true := by
+                (claim.wordAt wordIndex).rejectionTargets = true := by
           simpa [claim, centre, remaining] using hvalid
         rcases hclean with
           ⟨⟨⟨⟨⟨⟨hcentre, hrequired⟩, _hpattern⟩, _hrejected⟩,
@@ -328,7 +328,7 @@ theorem BranchClaims.node_impossible
           hrejected
         have hrejectedOutcome := rejectedRowValid_of_word claim centre remaining
           (rowIndexWord claim.rejectedRows (5 * (rowIndex.val / 5)))
-          (claim.rejectionTargetGroups.getD (rowIndex.val / 5) []) rowIndex.val
+          (claim.wordAt (rowIndex.val / 5)).rejectionTargets rowIndex.val
           hword hrowMember
         exact impossible_of_rejectedRow hBalanced hdepth hcentres hassignments
           hcode rfl hrow hrejectedOutcome rfl

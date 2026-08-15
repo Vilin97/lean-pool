@@ -22,6 +22,7 @@ import Mathlib.Topology.Bornology.Basic
 import Mathlib.Topology.Sequences
 import Mathlib.Analysis.Normed.Lp.WithLp
 import Mathlib.Analysis.Normed.Lp.PiLp
+import Mathlib.Analysis.Convex.StdSimplex
 
 import Mathlib.NumberTheory.FrobeniusNumber
 import LeanPool.RlTheoryInLean.Data.Matrix.Mul
@@ -66,31 +67,13 @@ abbrev Simplex (S : Type u) [Fintype S] := {x : l1Space S | StochasticVec x.ofLp
 instance (x : ↑(Simplex S)) : @StochasticVec S _ x.val.ofLp := x.property
 
 instance : IsClosed (Simplex S) := by
-  let l1Space := l1Space S
-  have h1 : IsClosed {f : l1Space | ∀ s, 0 ≤ f.ofLp s} := by
-    have hcl (s : S) : IsClosed {f : l1Space | 0 ≤ f.ofLp s} := by
-      have hev : Continuous (fun f : l1Space => f.ofLp s) := by
-        exact (continuous_apply s).comp (PiLp.continuous_ofLp 1 _)
-      have half : IsClosed {x : ℝ | 0 ≤ x} :=
-        isClosed_le continuous_const continuous_id
-      simpa [Set.preimage] using half.preimage hev
-    simpa [Set.ofPred_forall] using isClosed_iInter hcl
-  have h2 : IsClosed {f : l1Space | (∑ s, f.ofLp s) = 1} := by
-    have hsum : Continuous (fun f : l1Space => ∑ s, f.ofLp s) := by
-      apply continuous_finsetSum
-      intro s _
-      exact (continuous_apply s).comp (PiLp.continuous_ofLp 1 _)
-    have htarget : IsClosed ({x : ℝ | x = 1} : Set ℝ) := by simp
-    simpa [Set.preimage] using htarget.preimage hsum
-  have h := IsClosed.inter h1 h2
-  rw [← Set.ofPred_and] at h
-  have : {x : l1Space | StochasticVec x.ofLp} =
-    {x | (∀ s, 0 ≤ x.ofLp s) ∧ (∑ s, x.ofLp s = 1)} := by
-    ext1
+  have hsimplex : {x : l1Space S | StochasticVec x.ofLp} =
+      {x : l1Space S | x.ofLp ∈ stdSimplex ℝ S} := by
+    ext x
     exact ⟨fun h => ⟨h.nonneg, h.rowsum⟩, fun h => ⟨h.1, h.2⟩⟩
-  unfold Simplex
-  rw [this]
-  exact h
+  change IsClosed {x : l1Space S | StochasticVec x.ofLp}
+  rw [hsimplex]
+  exact (isClosed_stdSimplex ℝ S).preimage (PiLp.continuous_ofLp 1 _)
 
 instance : CompleteSpace (Simplex S) := IsClosed.completeSpace_coe
 
@@ -106,6 +89,17 @@ lemma l1_norm_eq_one (x : l1Space S) [StochasticVec x.ofLp]
   apply sum_congr rfl
   intro s _
   rw [abs_of_nonneg (hx.nonneg s)]
+
+/-- The `L¹` distance between two stochastic vectors is at most two. -/
+private lemma stochasticVec_l1_distance_le_two
+    (x y : S → ℝ) [StochasticVec x] [StochasticVec y] :
+    ‖WithLp.toLp 1 (x - y)‖₊ ≤ 2 := by
+  rw [WithLp.toLp_sub]
+  calc
+    ‖WithLp.toLp 1 x - WithLp.toLp 1 y‖₊
+      ≤ ‖WithLp.toLp 1 x‖₊ + ‖WithLp.toLp 1 y‖₊ := nnnorm_sub_le _ _
+    _ = 1 + 1 := by rw [l1_norm_eq_one, l1_norm_eq_one]
+    _ = 2 := by norm_num
 
 lemma simplex_subset_closedBall :
   (Simplex S) ⊆ closedBall (0 : l1Space S) 1 := by
@@ -538,6 +532,17 @@ lemma multi_step_stationary
   | succ n ih =>
     rw [pow_succ, ←vecMul_vecMul, ih, (inferInstance : Stationary μ P).stationary]
 
+/-- A stationary stochastic vector is a fixed point of every power action. -/
+private lemma stationary_fixedPoint_pow
+    (μ : S → ℝ) (hμ : StochasticVec μ)
+    (P : Matrix S S ℝ) [RowStochastic P]
+    (n : ℕ) (hstationary : Stationary μ P) :
+    IsFixedPt (smatAsOperator (P ^ n)) ⟨WithLp.toLp 1 μ, hμ⟩ := by
+  let : StochasticVec μ := hμ
+  let : Stationary μ P := hstationary
+  simp only [IsFixedPt, smatAsOperator, Subtype.mk.injEq]
+  exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary μ P n).stationary
+
 theorem pos_of_stationary
   (μ : S → ℝ) [StochasticVec μ]
   (P : Matrix S S ℝ) [RowStochastic P] [Irreducible P]
@@ -646,19 +651,9 @@ lemma cesaro_average_almost_invariant
         rw [abs_of_pos (inv_pos.mpr hn)]
       _ ≤ (n + 1 : ℝ)⁻¹ * 2 := by
         gcongr
-        have : ‖WithLp.toLp 1 (x₀ ᵥ* P ^ (n + 1) - x₀)‖₊ ≤ 2 := by calc
-            ‖WithLp.toLp 1 (x₀ ᵥ* P ^ (n + 1) - x₀)‖₊
-          _ = ‖WithLp.toLp 1 (x₀ ᵥ* P ^ (n + 1)) - WithLp.toLp 1 x₀‖₊ := by
-            rw [← WithLp.toLp_sub]
-          _ ≤ ‖WithLp.toLp 1 (x₀ ᵥ* P ^ (n + 1))‖₊ + ‖WithLp.toLp 1 x₀‖₊ := by
-            exact nnnorm_sub_le _ _
-          _ = 1 + 1 := by
-            have h1 : ‖WithLp.toLp 1 (x₀ ᵥ* P ^ (n + 1))‖₊ = 1 :=
-              l1_norm_eq_one (WithLp.toLp 1 (x₀ ᵥ* P ^ (n + 1)))
-            have h2 : ‖WithLp.toLp 1 x₀‖₊ = 1 := l1_norm_eq_one (WithLp.toLp 1 x₀)
-            simp only [h1, h2]
-          _ = 2 := by ring
-        exact_mod_cast this
+        let : StochasticVec (x₀ ᵥ* P ^ (n + 1)) :=
+          svec_mul_smat_is_svec x₀ (P ^ (n + 1))
+        exact_mod_cast stochasticVec_l1_distance_le_two (x₀ ᵥ* P ^ (n + 1)) x₀
       _ = 2 / (n + 1) := by ring
 
 variable [Nonempty S]
@@ -759,10 +754,8 @@ theorem stationary_distribution_uniquely_exists
   let f := smatAsOperator (P ^ N)
   obtain ⟨K, _, hf⟩ := smat_contraction_in_simplex (P ^ N)
   have fixed : ∀ (σ : S → ℝ) (hσ : StochasticVec σ), Stationary σ P →
-      IsFixedPt f ⟨WithLp.toLp 1 σ, hσ⟩ := fun σ hσ hσst => by
-    have := hσst
-    simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
-    exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary σ P N).stationary
+      IsFixedPt f ⟨WithLp.toLp 1 σ, hσ⟩ := fun σ hσ hσst =>
+    stationary_fixedPoint_pow σ hσ P N hσst
   have hμfixed := fixedPoint_unique hf (fixed μ hμ hμstationary)
   have hνfixed := fixedPoint_unique hf (fixed ν hν hνstationary)
   have := hνfixed.trans hμfixed.symm
@@ -785,10 +778,8 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
   have hNpos : 0 < N := by linarith
   let f := smatAsOperator (P ^ N)
   obtain ⟨K, hKpos, hf⟩ := smat_contraction_in_simplex (P ^ N)
-  have : IsFixedPt f ⟨WithLp.toLp 1 μ, hμ⟩ := by
-    simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
-    exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary μ P N).stationary
-  have hμfixed := fixedPoint_unique hf this
+  have hμfixed :=
+    fixedPoint_unique hf (stationary_fixedPoint_pow μ hμ P N hμstationary)
   have hKle1 := NNReal.coe_le_coe.mpr hf.1.le
   conv_rhs at hKle1 => simp
   constructor
@@ -823,21 +814,12 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
       _ ≤ toReal ‖WithLp.toLp 1 (x₀ - x₀ ᵥ* P ^ N)‖₁ * K ^ (n / N) / (1 - K) := by
         exact hrate
       _ ≤ 2 * K ^ (n / N) / (1 - K) := by
-        have : ‖WithLp.toLp 1 (x₀ - x₀ ᵥ* P ^ N)‖₁ ≤ 2 := by calc
-            ‖WithLp.toLp 1 (x₀ - x₀ ᵥ* P ^ N)‖₁
-          _ = ‖WithLp.toLp 1 x₀ - WithLp.toLp 1 (x₀ ᵥ* P ^ N)‖₁ := by
-            rw [← WithLp.toLp_sub]
-          _ ≤ ‖WithLp.toLp 1 x₀‖₁ + ‖WithLp.toLp 1 (x₀ ᵥ* P ^ N)‖₁ := by
-            exact norm_sub_le _ _
-          _ = 1 + 1 := by
-            have h1 := l1_norm_eq_one (WithLp.toLp 1 x₀)
-            have h2 := l1_norm_eq_one (WithLp.toLp 1 (x₀ ᵥ* P ^ N))
-            simp only [h1, h2]
-          _ = 2 := by ring
+        let : StochasticVec (x₀ ᵥ* P ^ N) := svec_mul_smat_is_svec x₀ (P ^ N)
+        have hdist := stochasticVec_l1_distance_le_two x₀ (x₀ ᵥ* P ^ N)
         gcongr
         case hbc =>
           have hthis : (↑‖toLp 1 (x₀ - x₀ ᵥ* P ^ N)‖₊ : ℝ) ≤ 2 := by
-            exact_mod_cast this
+            exact_mod_cast hdist
           linarith
       _ ≤ 2 * K ^ (((n : ℝ) / N) - 1) / (1 - K) := by
         set z : ℕ := n / N

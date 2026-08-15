@@ -25,11 +25,12 @@ open scoped unitInterval
 private def unitIntervalRat : Set I := { r : I | ∃q : ℚ, r.val = q }
 
 private instance : Countable unitIntervalRat := by
-  constructor
-  use fun x ↦ Encodable.encode x.property.choose
-  apply Function.Injective.comp
-  · apply Encodable.encode_injective
-  · grind [Function.Injective]
+  refine Function.Injective.countable
+    (f := fun x : unitIntervalRat ↦ x.property.choose) ?_
+  intro x y h
+  exact Subtype.ext <| Subtype.ext <|
+    x.property.choose_spec.trans
+      ((congrArg ((↑) : ℚ → ℝ) h).trans y.property.choose_spec.symm)
 
 private lemma exists_unitIntervalRat_btwn
     {i j : I} (h : i < j)

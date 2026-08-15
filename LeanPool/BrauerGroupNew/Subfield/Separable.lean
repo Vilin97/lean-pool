@@ -122,12 +122,6 @@ abbrev AllSepSubfield : Set (SubField K D) :=
 instance : Nonempty (AllSepSubfield K D) :=
   ⟨⊥, by simpa using Algebra.IsSeparable.of_algHom K K <| Algebra.botEquiv K D⟩
 
-instance : PartialOrder (AllSepSubfield K D) where
-  le L1 L2 := L1.1 ≤ L2.1
-  le_refl _ := by simp
-  le_trans _ _ _ _ _ _ _ := by aesop
-  le_antisymm _ _ _ _ := by aesop
-
 /-- The supremum of a nonempty chain of separable subfields, as a separable subfield. -/
 noncomputable abbrev iSupChainSepsubfield (c : Set (AllSepSubfield K D)) [Nonempty c]
     (hc1 : IsChain (· ≤ ·) c) : AllSepSubfield K D where

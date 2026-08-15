@@ -15,6 +15,19 @@ import LeanPool.Erdos97ConvexOctagon.RowMasks
 
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
+/-- Witness streams for one nonempty five-row word of a node claim. -/
+structure NodeWordClaim where
+  /-- Index of the consecutive five-row word. -/
+  wordIndex : Nat
+  /-- One semantic column-conflict target for every rejected row. -/
+  rejectionTargets : List Nat
+  /-- Pattern origins for active rows covered by patterns. -/
+  patternOrigins : List Nat
+  /-- Recursive child identifiers for active rows that continue the search. -/
+  childIds : List Nat
+  /-- Exact hard origins for active rows at the final depth. -/
+  hardOrigins : List Nat
+
 /-- One postorder DFS node; child identifiers must point to earlier nodes. -/
 structure NodeClaim where
   /-- Number of noncanonical search rows already assigned. -/
@@ -33,14 +46,8 @@ structure NodeClaim where
   rejectedRows : UInt64
   /-- Legal-row indices stopped by pattern origins. -/
   patternRows : UInt64
-  /-- One semantic column-conflict target for every rejected row. -/
-  rejectionTargetGroups : Array (List Nat)
-  /-- Pattern origins grouped by consecutive five-row words. -/
-  patternOriginGroups : Array (List Nat)
-  /-- Recursive child identifiers grouped by consecutive five-row words. -/
-  childIdGroups : Array (List Nat)
-  /-- Exact hard origins grouped by consecutive five-row words. -/
-  hardOriginGroups : Array (List Nat)
+  /-- Nonempty witness streams, grouped by consecutive five-row words. -/
+  wordClaims : Array NodeWordClaim
 
 /-- Flat postorder claims for one fixed branch. -/
 structure BranchClaims where
@@ -61,7 +68,25 @@ inductive BranchClaim where
   | search (claims : BranchClaims)
 
 private def defaultNodeClaim : NodeClaim :=
-  ⟨0, 0, 0, 0, 0, 0, 0, 0, #[], #[], #[], #[]⟩
+  ⟨0, 0, 0, 0, 0, 0, 0, 0, #[]⟩
+
+private def emptyNodeWordClaim (wordIndex : Nat) : NodeWordClaim :=
+  ⟨wordIndex, [], [], [], []⟩
+
+private def nodeWordClaimAtAux
+  (wordClaims : Array NodeWordClaim) (wordIndex position : Nat) :
+    Nat → NodeWordClaim
+  | 0 => emptyNodeWordClaim wordIndex
+  | fuel + 1 =>
+      match wordClaims[position]? with
+      | none => emptyNodeWordClaim wordIndex
+      | some wordClaim =>
+          if wordClaim.wordIndex = wordIndex then wordClaim
+          else nodeWordClaimAtAux wordClaims wordIndex (position + 1) fuel
+
+/-- Retrieve one of at most seven sparse word claims, defaulting to empty streams. -/
+def NodeClaim.wordAt (claim : NodeClaim) (wordIndex : Nat) : NodeWordClaim :=
+  nodeWordClaimAtAux claim.wordClaims wordIndex 0 7
 
 /-- Retrieve one node without unfolding an entire large flat array literal. -/
 def BranchClaims.nodeAt (claims : BranchClaims) (identifier : Nat) : NodeClaim :=
@@ -276,10 +301,10 @@ def nodeWordValidB
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
     (wordIndex : Nat) : Bool :=
+  let wordClaim := claim.wordAt wordIndex
   let initial : LocalCursor :=
-    ⟨true, claim.patternOriginGroups.getD wordIndex [],
-      claim.childIdGroups.getD wordIndex [],
-      claim.hardOriginGroups.getD wordIndex []⟩
+    ⟨true, wordClaim.patternOrigins, wordClaim.childIds,
+      wordClaim.hardOrigins⟩
   let result := processFiveRows claims identifier claim centre remaining pairState
     (rowIndexWord claim.activeRows (5 * wordIndex)) initial
   result.ok && result.patternOrigins.isEmpty && result.childIds.isEmpty &&
@@ -395,9 +420,10 @@ def nodePruningValidB (claims : BranchClaims) (identifier : Nat) : Bool :=
               (claim.activeRows ||| inactive) != legalRows then false
           else
             (List.range 7).all fun wordIndex =>
+              let wordClaim := claim.wordAt wordIndex
               rejectedWordValidB claim centre remaining
                   (rowIndexWord claim.rejectedRows (5 * wordIndex))
-                  (claim.rejectionTargetGroups.getD wordIndex [])
+                  wordClaim.rejectionTargets
     else false
   else false
 

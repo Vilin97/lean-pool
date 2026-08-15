@@ -4608,51 +4608,10 @@ theorem weak_eq_frozenField_pushforward_On
     exact ⟨le_max_left _ _, max_le hT.le (min_le_right _ _)⟩
   have hclampT_id : ∀ t ∈ Set.Icc (0 : ℝ) T, clampT t = t := by
     intro t ht; simp only [hclampT_def, min_eq_left ht.2, max_eq_right ht.1]
-  -- Windowed first-moment integrability for `ρ^f`.
-  have h_y_int : ∀ t ∈ Set.Icc (0 : ℝ) T,
-      Integrable (fun y : PhysSpace d => ‖y‖) (spatialMarginal (f t)) := by
-    intro t ht
-    have : IsProbabilityMeasure (f t) := (hf_mom t ht).1
-    unfold spatialMarginal
-    rw [integrable_map_measure
-        (by exact (continuous_norm.measurable).aestronglyMeasurable)
-        measurable_fst.aemeasurable]
-    refine Integrable.mono' (hf_mom t ht).2
-      ((continuous_norm.comp continuous_fst).aestronglyMeasurable)
-      (Filter.Eventually.of_forall fun z => ?_)
-    change |‖z.1‖| ≤ ‖z‖
-    rw [abs_of_nonneg (norm_nonneg _)]; exact norm_fst_le z
-  -- Windowed force integrability for `ρ^f`.
   have h_int_window : ∀ t ∈ Set.Icc (0 : ℝ) T, ∀ (x_pt : PhysSpace d),
-      Integrable (fun y => gradW (x_pt - y)) (spatialMarginal (f t)) := by
-    intro t ht x_pt
-    have : IsProbabilityMeasure (f t) := (hf_mom t ht).1
-    have : IsProbabilityMeasure (spatialMarginal (f t)) :=
-      Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
-    have h_aesm : AEStronglyMeasurable (fun y : PhysSpace d => gradW (x_pt - y))
-        (spatialMarginal (f t)) :=
-      (hL.continuous.comp (continuous_const.sub continuous_id)).aestronglyMeasurable
-    have h_dom : ∀ y : PhysSpace d, ‖gradW (x_pt - y)‖ ≤
-        ‖gradW 0‖ + (L : ℝ) * ‖x_pt‖ + (L : ℝ) * ‖y‖ := by
-      intro y
-      have hd := hL.dist_le_mul (x_pt - y) 0
-      simp only [dist_eq_norm, sub_zero] at hd
-      have h_tri : ‖gradW (x_pt - y)‖ ≤ ‖gradW 0‖ + ‖gradW (x_pt - y) - gradW 0‖ := by
-        have := norm_add_le (gradW (x_pt - y) - gradW 0) (gradW 0)
-        simp only [sub_add_cancel] at this; linarith
-      have h_sub_le : ‖x_pt - y‖ ≤ ‖x_pt‖ + ‖y‖ := norm_sub_le x_pt y
-      have h_mul := mul_le_mul_of_nonneg_left h_sub_le L.coe_nonneg
-      linarith
-    have h_dom_int : Integrable
-        (fun y : PhysSpace d => ‖gradW 0‖ + (L : ℝ) * ‖x_pt‖ + (L : ℝ) * ‖y‖)
-        (spatialMarginal (f t)) := by
-      have h_norm : Integrable (fun y : PhysSpace d => (L : ℝ) * ‖y‖)
-          (spatialMarginal (f t)) := (h_y_int t ht).const_mul (L : ℝ)
-      have h_eq : (fun y : PhysSpace d => ‖gradW 0‖ + (L : ℝ) * ‖x_pt‖ + (L : ℝ) * ‖y‖) =
-                  fun y => (‖gradW 0‖ + (L : ℝ) * ‖x_pt‖) + (L : ℝ) * ‖y‖ := by
-        funext y; ring
-      rw [h_eq]; exact (integrable_const _).add h_norm
-    exact h_dom_int.mono' h_aesm (Filter.Eventually.of_forall fun y => h_dom y)
+      Integrable (fun y => gradW (x_pt - y)) (spatialMarginal (f t)) :=
+    fun t ht => (convolveField_window_setup gradW L hL f T hf_mom M_ρ hM_ρ
+      (‖gradW 0‖ + (L : ℝ) * M_ρ) rfl t ht).2.1
   -- Clamped curve `ρ'` with the universal probability instance + force integrability.
   set ρ' : ℝ → Measure (PhysSpace d) := fun t => spatialMarginal (f (clampT t)) with hρ'_def
   have hρ'_prob : ∀ t, IsProbabilityMeasure (ρ' t) := by
@@ -4738,49 +4697,14 @@ theorem weak_isLagrangianVlasovSolutionOn
     intro t ht
     have : IsProbabilityMeasure (f t) := (hf_mom t ht).1
     exact Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
+  have hsetup := convolveField_window_setup gradW L hL f T hf_mom M_ρ hM_ρ
+    (‖gradW 0‖ + (L : ℝ) * M_ρ) rfl
   have h_y_int : ∀ t ∈ Set.Icc (0 : ℝ) T,
-      Integrable (fun y : PhysSpace d => ‖y‖) (spatialMarginal (f t)) := by
-    intro t ht
-    have : IsProbabilityMeasure (f t) := (hf_mom t ht).1
-    unfold spatialMarginal
-    rw [integrable_map_measure
-        (by exact (continuous_norm.measurable).aestronglyMeasurable)
-        measurable_fst.aemeasurable]
-    refine Integrable.mono' (hf_mom t ht).2
-      ((continuous_norm.comp continuous_fst).aestronglyMeasurable)
-      (Filter.Eventually.of_forall fun z => ?_)
-    change |‖z.1‖| ≤ ‖z‖
-    rw [abs_of_nonneg (norm_nonneg _)]; exact norm_fst_le z
+      Integrable (fun y : PhysSpace d => ‖y‖) (spatialMarginal (f t)) :=
+    fun t ht => (hsetup t ht).1
   have h_int : ∀ t ∈ Set.Icc (0 : ℝ) T, ∀ (x_pt : PhysSpace d),
-      Integrable (fun y => gradW (x_pt - y)) (spatialMarginal (f t)) := by
-    intro t ht x_pt
-    have : IsProbabilityMeasure (f t) := (hf_mom t ht).1
-    have : IsProbabilityMeasure (spatialMarginal (f t)) :=
-      Measure.isProbabilityMeasure_map measurable_fst.aemeasurable
-    have h_aesm : AEStronglyMeasurable (fun y : PhysSpace d => gradW (x_pt - y))
-        (spatialMarginal (f t)) :=
-      (hL.continuous.comp (continuous_const.sub continuous_id)).aestronglyMeasurable
-    have h_dom : ∀ y : PhysSpace d, ‖gradW (x_pt - y)‖ ≤
-        ‖gradW 0‖ + (L : ℝ) * ‖x_pt‖ + (L : ℝ) * ‖y‖ := by
-      intro y
-      have hd := hL.dist_le_mul (x_pt - y) 0
-      simp only [dist_eq_norm, sub_zero] at hd
-      have h_tri : ‖gradW (x_pt - y)‖ ≤ ‖gradW 0‖ + ‖gradW (x_pt - y) - gradW 0‖ := by
-        have := norm_add_le (gradW (x_pt - y) - gradW 0) (gradW 0)
-        simp only [sub_add_cancel] at this; linarith
-      have h_sub_le : ‖x_pt - y‖ ≤ ‖x_pt‖ + ‖y‖ := norm_sub_le x_pt y
-      have h_mul := mul_le_mul_of_nonneg_left h_sub_le L.coe_nonneg
-      linarith
-    have h_dom_int : Integrable
-        (fun y : PhysSpace d => ‖gradW 0‖ + (L : ℝ) * ‖x_pt‖ + (L : ℝ) * ‖y‖)
-        (spatialMarginal (f t)) := by
-      have h_norm : Integrable (fun y : PhysSpace d => (L : ℝ) * ‖y‖)
-          (spatialMarginal (f t)) := (h_y_int t ht).const_mul (L : ℝ)
-      have h_eq : (fun y : PhysSpace d => ‖gradW 0‖ + (L : ℝ) * ‖x_pt‖ + (L : ℝ) * ‖y‖) =
-                  fun y => (‖gradW 0‖ + (L : ℝ) * ‖x_pt‖) + (L : ℝ) * ‖y‖ := by
-        funext y; ring
-      rw [h_eq]; exact (integrable_const _).add h_norm
-    exact h_dom_int.mono' h_aesm (Filter.Eventually.of_forall fun y => h_dom y)
+      Integrable (fun y => gradW (x_pt - y)) (spatialMarginal (f t)) :=
+    fun t ht => (hsetup t ht).2.1
   have hρ_cont : ∀ x : PhysSpace d,
       ContinuousOn (fun t => convolveFunctionMeasure gradW (spatialMarginal (f t)) x)
         (Set.Icc (0 : ℝ) T) :=
