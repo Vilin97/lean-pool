@@ -29,11 +29,6 @@ open scoped Pointwise ModularForm MatrixGroups UpperHalfPlane Manifold
 
 namespace HeckeRing.GL2
 
-/-- `𝒮ℒ` has determinant 1: all elements come from SL₂(ℤ). -/
-instance : Subgroup.HasDetOne 𝒮ℒ where
-  det_eq {γ} hγ := by
-    obtain ⟨s, rfl⟩ := MonoidHom.mem_range.mp hγ; exact det_mapGL s
-
 section Holomorphicity
 
 /-- The Hecke slash action preserves holomorphicity. -/
