@@ -5154,6 +5154,85 @@ projects:
     msc:
       - "51K05"
       - "52A10"
+  - slug: erdos132-convex-k3
+    title: A Conditional Convex Three-Distance Case of Erdős Problem 132
+    summary: >-
+      Formalizes the convex k=3 majorant-and-cover argument and proves that the
+      graph of the three largest distances has a vertex of degree at most six,
+      conditional on exactly one named interface,
+      ConvexTopThreeDraftReductionComplete. That interface packages the
+      complete maximal-gap and thirteen-word reduction with its route
+      closures; its remaining source-facing boundary is the coordinated-
+      majorant selection step used but not stated as a theorem in the ErLV89
+      proof sketch. Internally the development proves the geometric, metric,
+      cage, anti-saturation, route-assembly, and exceptional-branch rigidity
+      kernels, and records exact counterexamples and regression witnesses.
+      The interface is not a published theorem, and the general Erdős problem
+      remains open.
+    branch: discrete geometry
+    entry_module: LeanPool.Erdos132ConvexK3
+    authors:
+      - Egor Lyfar
+    source:
+      title: On the Graph of Large Distances
+      authors:
+        - Paul Erdős
+        - László Lovász
+        - Katalin Vesztergombi
+      doi: "10.1007/BF02187746"
+      url: https://www.erdosproblems.com/132
+      github_repo: lyfar/erdos-132-convex-k3-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.Erdos132ConvexK3.convex_k3_degree_six_of_reduction
+    main_results:
+      - declaration: LeanPool.Erdos132ConvexK3.convex_k3_degree_six_of_reduction
+        informal: >-
+          If the single named interface ConvexTopThreeDraftReductionComplete
+          supplies the proof-producing thirteen-word reduction and all route
+          closures for every strictly convex configuration with three named
+          largest distance classes, then its top-three graph has a vertex of
+          degree at most six.
+        source_ref: >-
+          Erdős--Lovász--Vesztergombi, Theorem 2.7 and its Figure 4 proof
+          sketch; the coordinated-majorant selection interface used here is
+          isolated explicitly and is not stated as a published theorem.
+      - declaration: LeanPool.Erdos132ConvexK3.heptagon_nondiameter_edge_is_majorant
+        informal: >-
+          In an explicit rational convex heptagon, a second-largest-distance
+          edge is already terminal under both permitted cover moves, refuting
+          the stronger claim that every non-diameter top-three edge admits a
+          longer cover.
+      - declaration: LeanPool.Erdos132ConvexK3.coordinated_exceptional_count_rigidity
+        informal: >-
+          Every exceptional jointly minimal pair of majorant paths lies in
+          exactly one of the inner-move cases (1,2), (2,1), or (2,2), and
+          minimality forces the stated move counts for every substitute path.
+      - declaration: LeanPool.Erdos132ConvexK3.coordinated_exceptional_rank_and_exchange_obstruction
+        informal: >-
+          In each exceptional inner-move case, every forced two-move chain has
+          the rank ladder from the third-largest through the second-largest to
+          the largest distance, while the proposed intermediate exchange edge
+          remains nonterminal.
+      - declaration: LeanPool.Erdos132ConvexK3.Witnesses.ninePoint_top_three
+        informal: >-
+          An explicit rational nine-point regression configuration realizes
+          squared-distance classes 855625, 838525, and 811165 as its three
+          largest classes.
+      - declaration: LeanPool.Erdos132ConvexK3.Witnesses.review2Hexagon_top_three
+        informal: >-
+          An explicit rational six-point regression configuration realizes the
+          three stated rational squared-distance values as its largest classes.
+    tags:
+      - discrete-geometry
+      - distance-graphs
+      - erdos-problems
+      - convexity
+    msc:
+      - "52C10"
+      - "05C12"
   - slug: erdos132-n14
     title: A Conditional Fourteen-Point Case of Erdős Problem 132
     summary: >-
