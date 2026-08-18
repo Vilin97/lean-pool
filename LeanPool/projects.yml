@@ -5155,20 +5155,19 @@ projects:
       - "51K05"
       - "52A10"
   - slug: erdos132-convex-k3
-    title: A Conditional Convex Three-Distance Case of Erdős Problem 132
+    title: Exceptional-Word Closures for the Convex Three-Distance Case of Erdős Problem 132
     summary: >-
-      Formalizes the convex k=3 majorant-and-cover argument and proves that the
-      graph of the three largest distances has a vertex of degree at most six,
-      conditional on exactly one named interface,
-      ConvexTopThreeDraftReductionComplete. That interface packages the
-      complete maximal-gap and thirteen-word reduction with its route
-      closures; its remaining source-facing boundary is the coordinated-
-      majorant selection step used but not stated as a theorem in the ErLV89
-      proof sketch. Internally the development proves the geometric, metric,
-      cage, anti-saturation, route-assembly, and exceptional-branch rigidity
-      kernels, and records exact counterexamples and regression witnesses.
-      The interface is not a published theorem, and the general Erdős problem
-      remains open.
+      Kernelizes the thirteen exceptional cover words in the convex k=3
+      majorant argument and constructs every route closure unconditionally
+      from concrete full-two-rung, anti-saturation, terminal-cage, and
+      four-edge-cage data. It also proves the full two-rung shared-tip closure,
+      exceptional-count rigidity and rank/exchange obstruction, and an
+      explicit heptagon refutation of a tempting stronger majorant claim,
+      with rational regression witnesses. The source-facing minimum-degree
+      theorem remains only as an explicit conditional map: its named global
+      reduction interface is logically as strong as the conclusion, while
+      the clean full statement is posed separately in challenge PR #341.
+      The general Erdős problem remains open.
     branch: discrete geometry
     entry_module: LeanPool.Erdos132ConvexK3
     authors:
@@ -5186,25 +5185,25 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - LeanPool.Erdos132ConvexK3.convex_k3_degree_six_of_reduction
+      - LeanPool.Erdos132ConvexK3.concrete_word_closures
     main_results:
-      - declaration: LeanPool.Erdos132ConvexK3.convex_k3_degree_six_of_reduction
+      - declaration: LeanPool.Erdos132ConvexK3.concrete_word_closures
         informal: >-
-          If the single named interface ConvexTopThreeDraftReductionComplete
-          supplies the proof-producing thirteen-word reduction and all route
-          closures for every strictly convex configuration with three named
-          largest distance classes, then its top-three graph has a vertex of
-          degree at most six.
+          For the concrete geometric realization predicate, every one of the
+          thirteen exceptional cover words is wired to its proved route lemma
+          and therefore forces a vertex of degree at most six (at most five on
+          anti-saturation routes).
         source_ref: >-
-          Erdős--Lovász--Vesztergombi, Theorem 2.7 and its Figure 4 proof
-          sketch; the coordinated-majorant selection interface used here is
-          isolated explicitly and is not stated as a published theorem.
-      - declaration: LeanPool.Erdos132ConvexK3.heptagon_nondiameter_edge_is_majorant
+          Erdős--Lovász--Vesztergombi, Theorem 2.7, printed p. 548: “If S is
+          the set of vertices of a convex polygon then the graph G(S, k) has a
+          point of degree at most 3k−1.” Proof, printed p. 548: “Hence the
+          number of sides of P on the arc yz is at most
+          (a+k)+(k−1)+b≤3k−2.”
+      - declaration: LeanPool.Erdos132ConvexK3.full_two_rung_shared_tip_degree_le_six
         informal: >-
-          In an explicit rational convex heptagon, a second-largest-distance
-          edge is already terminal under both permitted cover moves, refuting
-          the stronger claim that every non-diameter top-three edge admits a
-          longer cover.
+          The full two-rung shared-tip split closes at degree six once the
+          diameter branch is excluded and the second and lower distance
+          branches satisfy their proved local bounds.
       - declaration: LeanPool.Erdos132ConvexK3.coordinated_exceptional_count_rigidity
         informal: >-
           Every exceptional jointly minimal pair of majorant paths lies in
@@ -5216,6 +5215,12 @@ projects:
           the rank ladder from the third-largest through the second-largest to
           the largest distance, while the proposed intermediate exchange edge
           remains nonterminal.
+      - declaration: LeanPool.Erdos132ConvexK3.heptagon_nondiameter_edge_is_majorant
+        informal: >-
+          In an explicit rational convex heptagon, a second-largest-distance
+          edge is already terminal under both permitted cover moves, refuting
+          the stronger claim that every non-diameter top-three edge admits a
+          longer cover.
       - declaration: LeanPool.Erdos132ConvexK3.Witnesses.ninePoint_top_three
         informal: >-
           An explicit rational nine-point regression configuration realizes

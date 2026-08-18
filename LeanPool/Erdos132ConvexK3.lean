@@ -7,23 +7,24 @@ Authors: Egor Lyfar
 import LeanPool.Erdos132ConvexK3.UseSite
 
 /-!
-# A Conditional Convex Three-Distance Case of Erdős Problem 132
+# Exceptional-Word Closures for the Convex Three-Distance Case of Erdős Problem 132
 
 Source: doi:10.1007/BF02187746, url:https://www.erdosproblems.com/132
 Authors: Egor Lyfar
 Status: verified
-Main declarations: `LeanPool.Erdos132ConvexK3.convex_k3_degree_six_of_reduction`
+Main declarations: `LeanPool.Erdos132ConvexK3.concrete_word_closures`
 Tags: discrete-geometry, distance-graphs, erdos-problems, convexity
 MSC: 52C10, 05C12
 -/
 
 /-!
-# A Conditional Convex Three-Distance Case of Erdős Problem 132
+# Exceptional-Word Closures for the Convex Three-Distance Case of Erdős Problem 132
 
-This project formalizes the convex `k = 3` minimum-degree argument conditional
-on the coordinated-majorant selection interface missing from the published
-Erdős--Lovász--Vesztergombi proof sketch. It also records the unconditional
-majorant counterexample, nonnested-pair witnesses, and exceptional-branch
-rigidity results used to isolate that interface. The general Erdős problem
-remains open.
+This project constructs the thirteen concrete exceptional-word closure routes
+from the proved full-two-rung, anti-saturation, terminal-cage, and four-edge
+kernels. It also records exceptional-branch rigidity, the obstruction to the
+proposed exchange, an explicit majorant counterexample, and rational regression
+witnesses. The conditional source-facing map remains in the development only
+to isolate the open global reduction posed by challenge PR #341. The general
+Erdős problem remains open.
 -/

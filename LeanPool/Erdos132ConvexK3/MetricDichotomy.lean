@@ -394,23 +394,11 @@ theorem metric_dichotomy_range_three
   apply (div_lt_iff₀ (by positivity : 0 < 4 * δ)).2
   nlinarith
 
-/-- The four cross-color branches from draft (4.2). -/
-inductive CrossColorPair where
-  | AA
-  | AB
-  | BA
-  | BB
-  deriving DecidableEq
-
-instance : Fintype CrossColorPair where
-  elems := {.AA, .AB, .BA, .BB}
-  complete := by
-    intro pair
-    cases pair <;> simp
-
 /-- Metric/sign dichotomy for one arbitrary full two-rung normalization.
 Equality belongs to the length branch; only strict failure enters the three
-beta regimes. -/
+beta regimes.  Since no earlier cross-color hypothesis occurs, this one
+theorem applies unchanged to all four `AA`, `AB`, `BA`, and `BB` branches
+from draft (4.2). -/
 theorem metric_sign_dichotomy
     {r p β γ h k δ : ℝ}
     (hr : 0 < r) (hrhi : r ≤ (1 : ℝ) / 2) (hp : 0 < p)
@@ -434,21 +422,6 @@ theorem metric_sign_dichotomy
           hβthree_fifths hβh hδ
       · exact metric_dichotomy_range_three hr hrhi hp hβsq hγ hfailure
           hh hhsq hk hksq hδ hδdef (lt_of_not_ge hβh)
-
-/-- The normalized proof has no hypothesis on the earlier cross colors.
-Consequently the same dichotomy closes `AA`, `AB`, `BA`, and `BB`. -/
-theorem all_four_cross_color_metric_sign_dichotomy
-    {r p β γ h k δ : ℝ}
-    (hr : 0 < r) (hrhi : r ≤ (1 : ℝ) / 2) (hp : 0 < p)
-    (hβsq : β ^ 2 = 1 - 4 * r * p) (hγ : 0 < γ)
-    (hh : 0 < h) (hhsq : h ^ 2 = 1 - r ^ 2)
-    (hk : 0 < k) (hksq : k ^ 2 = 1 - (r + p) ^ 2)
-    (hδ : 0 < δ) (hδdef : δ = h - k) :
-    ∀ _pair : CrossColorPair,
-      2 * β ≤ 1 + γ ∨
-        (1 + 2 * γ ^ 2 - 3 * β ^ 2) / (4 * δ) < h - β := by
-  intro _pair
-  exact metric_sign_dichotomy hr hrhi hp hβsq hγ hh hhsq hk hksq hδ hδdef
 
 /-- The exact equality boundary is assigned to the long/counting regime:
 strict edge-diagonal separation then forces the second center beyond `d₂`. -/

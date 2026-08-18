@@ -18,60 +18,15 @@ open statement and names the weaker obligation actually needed: an
 exceptional jointly minimal pair at the selected maximal-gap vertex is
 impossible.
 
-The degree hypotheses are exposed as finite neighbor sets with their three
-distance ranks.  This makes the extra use-site information available to a
-direct branch proof instead of hiding it behind a numeric degree inequality.
+The use-site package keeps only the data consumed by the branch proofs.
 -/
 
 namespace LeanPool.Erdos132ConvexK3
 
-/-- The complete top-three neighbor set at a vertex, with at least seven
-members and the rank of every member exposed. -/
-structure K3SevenNeighborAtVertex
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) (v : Fin n) where
-  /-- The complete finite set of top-three neighbors of `v`. -/
-  neighbors : Finset (Fin n)
-  card_ge_seven : 7 ≤ neighbors.card
-  degree_eq_card : vertexDegree P d₁ d₂ d₃ v = neighbors.card
-  distinct : ∀ w ∈ neighbors, w ≠ v
-  ranked : ∀ w ∈ neighbors,
-    sqDist (P v) (P w) = d₁ ∨ sqDist (P v) (P w) = d₂ ∨
-      sqDist (P v) (P w) = d₃
-
-/-- A numeric degree-seven hypothesis canonically exposes the actual finite
-neighbor set and each neighbor's rank. -/
-noncomputable def k3SevenNeighborAtVertexOfDegreeGeSeven
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ} {v : Fin n}
-    (hdegree : 7 ≤ vertexDegree P d₁ d₂ d₃ v) :
-    K3SevenNeighborAtVertex P d₁ d₂ d₃ v := by
-  classical
-  let N := ((Finset.univ.erase v).filter fun w ↦
-    sqDist (P v) (P w) = d₁ ∨ sqDist (P v) (P w) = d₂ ∨
-      sqDist (P v) (P w) = d₃)
-  refine {
-    neighbors := N
-    card_ge_seven := ?_
-    degree_eq_card := ?_
-    distinct := ?_
-    ranked := ?_ }
-  · simpa [N, vertexDegree] using hdegree
-  · rfl
-  · intro w hw
-    exact (Finset.mem_erase.mp (Finset.mem_filter.mp hw).1).1
-  · intro w hw
-    exact (Finset.mem_filter.mp hw).2
-
-theorem K3SevenNeighborAtVertex.degree_ge_seven
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ} {v : Fin n}
-    (V : K3SevenNeighborAtVertex P d₁ d₂ d₃ v) :
-    7 ≤ vertexDegree P d₁ d₂ d₃ v := by
-  rw [V.degree_eq_card]
-  exact V.card_ge_seven
-
 /-- All data present where the ErLV diagram is actually invoked: a convex
 top-three configuration in the high-minimum-degree contradiction branch, a
-maximal-gap vertex `x`, explicit seven-neighbor packages at `x` and `x+3`,
-and the jointly minimal pair selected around those two vertices. -/
+maximal-gap vertex `x`, and the jointly minimal pair selected around `x` and
+`x+3`. -/
 structure ErLVAtVertexUseSite
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
   convex : CyclicStrictConvex P
@@ -81,10 +36,6 @@ structure ErLVAtVertexUseSite
   x : Fin n
   maximalGap : ∀ v, firstNeighborGap P d₁ d₂ d₃ v ≤
     firstNeighborGap P d₁ d₂ d₃ x
-  /-- Exposed top-three neighbors at the maximal-gap vertex. -/
-  xNeighbors : K3SevenNeighborAtVertex P d₁ d₂ d₃ x
-  /-- Exposed top-three neighbors three cyclic steps later. -/
-  tNeighbors : K3SevenNeighborAtVertex P d₁ d₂ d₃ (cyclicAdvance x 3)
   /-- Jointly minimal pair of facing majorant paths. -/
   pair : CoordinatedK3MajorantPair P d₁ d₂ d₃
     (firstClockwiseNeighbor P d₁ d₂ d₃ x) x
@@ -111,9 +62,6 @@ noncomputable def erlvAtVertexUseSiteOfHighDegree
     highDegree := hHigh
     x := x
     maximalGap := hMax
-    xNeighbors := k3SevenNeighborAtVertexOfDegreeGeSeven (hHigh x)
-    tNeighbors := k3SevenNeighborAtVertexOfDegreeGeSeven
-      (hHigh (cyclicAdvance x 3))
     pair := pair }
 
 namespace ErLVAtVertexUseSite
@@ -522,12 +470,7 @@ theorem erlv_exceptional_use_site_localization_short_arc
     (S : ErLVAtVertexUseSite P d₁ d₂ d₃)
     (hExceptional : 3 ≤
       S.pair.first.rightMoves + S.pair.second.leftMoves)
-    (M : ℕ) (hM : M ≤ S.pair.second.rightMoves)
-    (_hOuter :
-      cyclicRetreat (firstClockwiseNeighbor P d₁ d₂ d₃ S.x)
-          S.pair.first.leftMoves =
-        cyclicAdvance
-          (firstCounterclockwiseNeighbor P d₁ d₂ d₃ (cyclicAdvance S.x 3)) M) :
+    (M : ℕ) (hM : M ≤ S.pair.second.rightMoves) :
     let D := erlvK3MaximalGapSetupOfMajorants
       S.pair.first S.pair.second (S.maximalGap (cyclicAdvance S.x 3)) M hM
     D.yzSides ≤ 5 := by
@@ -562,12 +505,7 @@ theorem erlv_exceptional_use_site_localization_avoids_five_rows
     (S : ErLVAtVertexUseSite P d₁ d₂ d₃)
     (hExceptional : 3 ≤
       S.pair.first.rightMoves + S.pair.second.leftMoves)
-    (M : ℕ) (hM : M ≤ S.pair.second.rightMoves)
-    (hOuter :
-      cyclicRetreat (firstClockwiseNeighbor P d₁ d₂ d₃ S.x)
-          S.pair.first.leftMoves =
-        cyclicAdvance
-          (firstCounterclockwiseNeighbor P d₁ d₂ d₃ (cyclicAdvance S.x 3)) M) :
+    (M : ℕ) (hM : M ≤ S.pair.second.rightMoves) :
     let D := erlvK3MaximalGapSetupOfMajorants
       S.pair.first S.pair.second (S.maximalGap (cyclicAdvance S.x 3)) M hM
     ¬IsExceptionalMajorantRow
@@ -581,7 +519,7 @@ theorem erlv_exceptional_use_site_localization_avoids_five_rows
     (maximal_gap_five_row_enumeration D).2 hRow
   have hShort : D.yzSides ≤ 5 :=
     erlv_exceptional_use_site_localization_short_arc
-      S hExceptional M hM hOuter
+      S hExceptional M hM
   omega
 
 /-- The two exact color subcases left at the shared tip in `(1,2)`. -/

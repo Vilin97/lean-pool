@@ -178,10 +178,9 @@ theorem penultimate_nontrivial_intersection_above
 /-- A local top-three bound has exactly the shared-tip split used in the
 proof: top class `A`, second class `B`, or at most `C`. -/
 theorem top_three_value_split
-    {F A B C : ℝ} (hCB : C < B) (hBA : B < A)
+    {F A B C : ℝ}
     (hbound : F ≤ A ∧ (F < A → F ≤ B) ∧ (F < B → F ≤ C)) :
     F = A ∨ F = B ∨ F ≤ C := by
-  have _hCA : C < A := hCB.trans hBA
   rcases lt_or_eq_of_le hbound.1 with hFA | hFA
   · have hFB := hbound.2.1 hFA
     rcases lt_or_eq_of_le hFB with hFB | hFB
