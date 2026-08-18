@@ -774,6 +774,7 @@ import LeanPool.Erdos132ConvexK3.ResidualBounds
 import LeanPool.Erdos132ConvexK3.TerminalCage
 import LeanPool.Erdos132ConvexK3.UseSite
 import LeanPool.Erdos132ConvexK3.Witnesses
+import LeanPool.Erdos132ConvexK3.WordClosures
 import LeanPool.Erdos132N14
 import LeanPool.Erdos132N14.Basic
 import LeanPool.Erdos132N14.DiameterDescent

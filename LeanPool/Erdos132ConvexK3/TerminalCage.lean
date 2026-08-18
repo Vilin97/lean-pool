@@ -146,12 +146,6 @@ theorem terminal_short_left_d3_partner_forces_outer_d1
   have hxRLe : xR ≤ d₂ := hxRClasses.2 hxRLt
   linarith
 
-/-- The equality boundary `d₁+d₃=2d₂` is routed to regime 1. -/
-theorem terminal_metric_equality_routes_long
-    {d₁ d₂ d₃ : ℝ} (heq : d₁ + d₃ = 2 * d₂) :
-    2 * d₂ ≤ d₁ + d₃ := by
-  linarith
-
 /-- Crude package (6.14): `3+2+1+1=7`. -/
 theorem terminal_crude_seven_slot_bound
     {degree leftArc rightArc wSlot : ℕ}
@@ -204,12 +198,15 @@ theorem terminal_d2_cage_metric_split_degree_le_six
     (hlongCollapse : 2 * d₂ ≤ d₁ + d₃ → rightArc ≤ 1)
     (hshortCollapse : d₁ + d₃ < 2 * d₂ → wSlot = 0 ∨ leftArc ≤ 2) :
     degree ≤ 6 := by
-  by_cases hlong : 2 * d₂ ≤ d₁ + d₃
+  by_cases heq : d₁ + d₃ = 2 * d₂
   · exact terminal_long_regime_degree_le_six hdegree hleft
-      (hlongCollapse hlong) hw
-  · have hshort : d₁ + d₃ < 2 * d₂ := lt_of_not_ge hlong
-    rcases hshortCollapse hshort with hNoW | hLeftCollapse
-    · exact terminal_short_no_w_degree_le_six hdegree hleft hright hNoW
-    · exact terminal_short_left_collapse_degree_le_six hdegree hLeftCollapse hright hw
+      (hlongCollapse (metric_equality_routes_long heq)) hw
+  · by_cases hlong : 2 * d₂ ≤ d₁ + d₃
+    · exact terminal_long_regime_degree_le_six hdegree hleft
+        (hlongCollapse hlong) hw
+    · have hshort : d₁ + d₃ < 2 * d₂ := lt_of_not_ge hlong
+      rcases hshortCollapse hshort with hNoW | hLeftCollapse
+      · exact terminal_short_no_w_degree_le_six hdegree hleft hright hNoW
+      · exact terminal_short_left_collapse_degree_le_six hdegree hLeftCollapse hright hw
 
 end LeanPool.Erdos132ConvexK3

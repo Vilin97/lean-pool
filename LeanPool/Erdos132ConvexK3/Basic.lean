@@ -56,7 +56,7 @@ that oriented edge's left open half-plane.  This signed-area formulation is
 stronger and less ambiguous than checking consecutive turns alone.
 -/
 def CyclicStrictConvex
-    {K : Type*} [Ring K] [LinearOrder K] [_strictOrder : IsStrictOrderedRing K]
+    {K : Type*} [Ring K] [LinearOrder K]
     {n : ℕ} [NeZero n]
     (P : Fin n → Point K) : Prop :=
   ∀ i j, j ≠ i → j ≠ cyclicNext i → 0 < turn (P i) (P (cyclicNext i)) (P j)
@@ -64,13 +64,13 @@ def CyclicStrictConvex
 /-- Four vertices in positive cyclic order, in the exact form needed for the
 diagonal-crossing proof. -/
 def StrictConvexQuad
-    {K : Type*} [Ring K] [LinearOrder K] [_strictOrder : IsStrictOrderedRing K]
+    {K : Type*} [Ring K] [LinearOrder K]
     (a b c d : Point K) : Prop :=
   0 < turn a b c ∧ 0 < turn a b d ∧ 0 < turn b c d ∧ 0 < turn c d a
 
 /-- Membership in the open left half-plane of the oriented line `a ⟶ b`. -/
 def InLeftOpenHalfPlane
-    {K : Type*} [Ring K] [LinearOrder K] [_strictOrder : IsStrictOrderedRing K]
+    {K : Type*} [Ring K] [LinearOrder K]
     (a b p : Point K) : Prop :=
   0 < turn a b p
 
@@ -90,7 +90,7 @@ def realizedSquaredDistances
 
 /-- `d₁ > d₂ > d₃` are exactly the three largest squared distance classes. -/
 def HasTopThreeDistanceClasses
-    {K : Type*} [Ring K] [LinearOrder K] [_strictOrder : IsStrictOrderedRing K] {n : ℕ}
+    {K : Type*} [Ring K] [LinearOrder K] {n : ℕ}
     (P : Fin n → Point K) (d₁ d₂ d₃ : K) : Prop :=
   d₃ < d₂ ∧ d₂ < d₁ ∧
     (∃ e ∈ unorderedPairList n, sqDist (P e.1) (P e.2) = d₁) ∧

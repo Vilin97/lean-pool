@@ -224,11 +224,4 @@ theorem four_edge_cage_short_min_degree_le_six
     · exact (hQ21 hstateQ).elim
     · exact hUniqueD1D1 ⟨hstateP.1, hstateP.2, hstateQ.1, hstateQ.2⟩
 
-/-- The equality boundary is in the long package row because its comparison
-is non-strict. -/
-theorem four_edge_cage_equality_routes_long
-    {d₁ d₂ d₃ : ℝ} (heq : d₁ + d₃ = 2 * d₂) :
-    2 * d₂ ≤ d₁ + d₃ := by
-  linarith
-
 end LeanPool.Erdos132ConvexK3

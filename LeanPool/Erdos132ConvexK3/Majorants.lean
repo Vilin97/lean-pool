@@ -13,8 +13,8 @@ import Mathlib.Data.Nat.Cast.Order.Ring
 This file isolates the integer bookkeeping in draft Sections 3--4.  A
 `K3Majorant` records cover moves, equivalently polygon sides consumed at its
 two ends.  In particular, the first majorant's fields are the draft's `a,b`;
-they are not counts of interior points.  This is the convention documented in
-REVIEW1 D5 and is the one for which the rank budget is `a + b ≤ 2`.
+they are not counts of interior points.  This is the side-count convention for
+which the rank budget is `a + b ≤ 2`.
 
 Signed integers are used for arc differences.  Thus the case `L < 0`, where
 `u` precedes `y` in unwrapped order, is represented rather than discarded.

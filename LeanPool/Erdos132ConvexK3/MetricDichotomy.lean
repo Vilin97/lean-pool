@@ -14,8 +14,8 @@ import Mathlib.Tactic.Ring
 
 The normalized algebraic kernel for draft Section 5 and Lean-plan step 10.
 The proof uses only the four cross-color metric parameters, so its conclusion
-applies uniformly to all four cross-color pairs.  The two radicals singled out
-in REVIEW4-PASS5 are retained as exact kernel inequalities.
+applies uniformly to all four cross-color pairs.  The two boundary radicals
+are retained as exact kernel inequalities.
 -/
 
 namespace LeanPool.Erdos132ConvexK3
@@ -423,6 +423,12 @@ theorem metric_sign_dichotomy
       · exact metric_dichotomy_range_three hr hrhi hp hβsq hγ hfailure
           hh hhsq hk hksq hδ hδdef (lt_of_not_ge hβh)
 
+/-- The equality boundary belongs to the non-strict long regime. -/
+theorem metric_equality_routes_long
+    {d₁ d₂ d₃ : ℝ} (heq : d₁ + d₃ = 2 * d₂) :
+    2 * d₂ ≤ d₁ + d₃ := by
+  linarith
+
 /-- The exact equality boundary is assigned to the long/counting regime:
 strict edge-diagonal separation then forces the second center beyond `d₂`. -/
 theorem metric_equality_forces_long_second_center
@@ -430,6 +436,7 @@ theorem metric_equality_forces_long_second_center
     (heq : d₁ + d₃ = 2 * d₂)
     (hED : d₁ + d₃ < q + d₂) :
     d₂ < q := by
+  have hlong := metric_equality_routes_long heq
   linarith
 
 end LeanPool.Erdos132ConvexK3

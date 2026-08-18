@@ -410,9 +410,6 @@ theorem chord_half_plane_separation
     rw [InLeftOpenHalfPlane, turn_cyclic c a b]
     exact habc
 
-/-- Squared distance on the complex model, used by the circle lemma. -/
-private def complexSqDistance (a b : ℂ) : ℝ := Complex.normSq (b - a)
-
 /-- **Same-half-plane two-circle uniqueness.** Two points with the same
 distances to distinct centers coincide if both are in the same open
 half-plane bounded by the line of centers. -/

@@ -446,22 +446,6 @@ theorem erlv_case22_cross_top_two_rank_data
   · exact Or.inl (by simpa only [sqDist_comm] using htz)
   · exact Or.inr (by simpa only [sqDist_comm] using hux)
 
-namespace ErLVAtVertexUseSite
-
-/-- The geometric outer-endpoint localization required to interpret `M` as
-the side distance from `u` to the first terminal endpoint.  This is exactly
-the missing nesting conclusion, specialized to one selected use-site pair. -/
-def OuterLocalized
-    {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (S : ErLVAtVertexUseSite P d₁ d₂ d₃) : Prop :=
-  ∃ M : ℕ, M ≤ S.pair.second.rightMoves ∧
-    cyclicRetreat (firstClockwiseNeighbor P d₁ d₂ d₃ S.x)
-        S.pair.first.leftMoves =
-      cyclicAdvance
-        (firstCounterclockwiseNeighbor P d₁ d₂ d₃ (cyclicAdvance S.x 3)) M
-
-end ErLVAtVertexUseSite
-
 /-- Once an exceptional inner-count branch has the missing outer
 localization, its arithmetic is already in the direct short-arc branch.  It
 does not produce one of the five exceptional rows. -/

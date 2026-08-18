@@ -3,17 +3,17 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.TerminalCage
-import LeanPool.Erdos132ConvexK3.Majorants
+import LeanPool.Erdos132ConvexK3.WordClosures
 import Lean.Elab.Tactic.Omega
 
 /-!
 # Thirteen-word assembly
 
-This file kernelizes the exact Section 7 routing table, packages the concrete
-local data consumed by its four closure theorems, and constructs every route
-handler unconditionally.  The final section separately records the stronger
-global reduction still needed to obtain the source-facing convex theorem.
+This file kernelizes the exact Section 7 routing table, assigns each word its
+own raw geometric realization predicate, and constructs every route handler
+from the corresponding geometric closure theorem.  The final section
+separately records the stronger global reduction still needed to obtain the
+source-facing convex theorem.
 -/
 
 namespace LeanPool.Erdos132ConvexK3
@@ -137,125 +137,23 @@ theorem full_two_rung_shared_tip_degree_le_six
   · exact hB hB'
   · exact (hLow hLow').trans (by omega)
 
-/-- Concrete local data consumed by a full two-rung word closure. -/
-structure FullTwoRungWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Vertex whose degree the full two-rung route bounds. -/
-  vertex : Fin n
-  /-- Shared upper tip used by the two inserted rungs. -/
-  sharedTip : Fin n
-  topSplit :
-    sqDist (P vertex) (P sharedTip) = d₁ ∨
-      sqDist (P vertex) (P sharedTip) = d₂ ∨
-        sqDist (P vertex) (P sharedTip) ≤ d₃
-  diameterImpossible : sqDist (P vertex) (P sharedTip) = d₁ → False
-  secondClassBound : sqDist (P vertex) (P sharedTip) = d₂ →
-    vertexDegree P d₁ d₂ d₃ vertex ≤ 6
-  lowerClassBound : sqDist (P vertex) (P sharedTip) ≤ d₃ →
-    vertexDegree P d₁ d₂ d₃ vertex ≤ 1
-
-/-- Concrete local data consumed by a one-penultimate anti-saturation word. -/
-structure AntiSaturationWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Vertex whose degree the anti-saturation route bounds. -/
-  vertex : Fin n
-  /-- Surviving shared tip after one penultimate rung is lost. -/
-  sharedTip : Fin n
-  topSplit :
-    sqDist (P vertex) (P sharedTip) = d₁ ∨
-      sqDist (P vertex) (P sharedTip) = d₂ ∨
-        sqDist (P vertex) (P sharedTip) ≤ d₃
-  diameterImpossible : sqDist (P vertex) (P sharedTip) = d₁ → False
-  secondClassBound : sqDist (P vertex) (P sharedTip) = d₂ →
-    vertexDegree P d₁ d₂ d₃ vertex ≤ 5
-  lowerClassBound : sqDist (P vertex) (P sharedTip) ≤ d₃ →
-    vertexDegree P d₁ d₂ d₃ vertex ≤ 1
-
-/-- Concrete local arc counts and metric collapses for a terminal cage word. -/
-structure TerminalCageWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Vertex at the center of the terminal cage count. -/
-  vertex : Fin n
-  /-- Number of available neighbors on the left boundary arc. -/
-  leftArc : ℕ
-  /-- Number of available neighbors on the right boundary arc. -/
-  rightArc : ℕ
-  /-- Optional neighbor in the outer circle slot. -/
-  outerSlot : ℕ
-  degreePartition : vertexDegree P d₁ d₂ d₃ vertex ≤
-    leftArc + rightArc + outerSlot + 1
-  leftArcBound : leftArc ≤ 3
-  rightArcBound : rightArc ≤ 2
-  outerSlotBound : outerSlot ≤ 1
-  longMetricCollapse : 2 * d₂ ≤ d₁ + d₃ → rightArc ≤ 1
-  shortMetricCollapse : d₁ + d₃ < 2 * d₂ →
-    outerSlot = 0 ∨ leftArc ≤ 2
-
-/-- Long-regime package data for the two endpoints of a four-edge cage. -/
-structure FourEdgeLongWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- First endpoint of the four-edge cage. -/
-  firstVertex : Fin n
-  /-- Second endpoint of the four-edge cage. -/
-  secondVertex : Fin n
-  /-- Left distance band at the first endpoint. -/
-  firstLeft : CageDistanceBand
-  /-- Right distance band at the first endpoint. -/
-  firstRight : CageDistanceBand
-  /-- Left distance band at the second endpoint. -/
-  secondLeft : CageDistanceBand
-  /-- Right distance band at the second endpoint. -/
-  secondRight : CageDistanceBand
-  firstPackage : vertexDegree P d₁ d₂ d₃ firstVertex ≤
-    fourEdgeLongPackage firstLeft + fourEdgeLongPackage firstRight
-  secondPackage : vertexDegree P d₁ d₂ d₃ secondVertex ≤
-    fourEdgeLongPackage secondLeft + fourEdgeLongPackage secondRight
-  uniqueDiameterPair : ¬(firstLeft = .d1 ∧ firstRight = .d1 ∧
-    secondLeft = .d1 ∧ secondRight = .d1)
-
-/-- Short-regime package data and occupied-circle exclusions for a
-four-edge cage. -/
-structure FourEdgeShortWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- First endpoint of the four-edge cage. -/
-  firstVertex : Fin n
-  /-- Second endpoint of the four-edge cage. -/
-  secondVertex : Fin n
-  /-- Left distance band at the first endpoint. -/
-  firstLeft : CageDistanceBand
-  /-- Right distance band at the first endpoint. -/
-  firstRight : CageDistanceBand
-  /-- Left distance band at the second endpoint. -/
-  secondLeft : CageDistanceBand
-  /-- Right distance band at the second endpoint. -/
-  secondRight : CageDistanceBand
-  firstPackage : vertexDegree P d₁ d₂ d₃ firstVertex ≤
-    fourEdgeGeneralPackage firstLeft + fourEdgeGeneralPackage firstRight
-  secondPackage : vertexDegree P d₁ d₂ d₃ secondVertex ≤
-    fourEdgeGeneralPackage secondLeft + fourEdgeGeneralPackage secondRight
-  firstD1D2Impossible : ¬(firstLeft = .d1 ∧ firstRight = .d2)
-  firstD2D1Impossible : ¬(firstLeft = .d2 ∧ firstRight = .d1)
-  secondD1D2Impossible : ¬(secondLeft = .d1 ∧ secondRight = .d2)
-  secondD2D1Impossible : ¬(secondLeft = .d2 ∧ secondRight = .d1)
-  uniqueDiameterPair : ¬(firstLeft = .d1 ∧ firstRight = .d1 ∧
-    secondLeft = .d1 ∧ secondRight = .d1)
-
-/-- Either metric package that closes a four-edge cage word. -/
-inductive FourEdgeCageWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  | long (data : FourEdgeLongWordRealization P d₁ d₂ d₃)
-  | short (data : FourEdgeShortWordRealization P d₁ d₂ d₃)
-
-/-- Geometric realization evidence for a word is exactly the local data
-consumed by the closure theorem selected in the Section 7 destination table. -/
+/-- Geometric realization evidence is word-specific raw polygon data. -/
 def RealizesGeom
     {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ)
-    (word : ExceptionalCoverWord) : Prop :=
-  match word.route with
-  | .fullTwoRung => Nonempty (FullTwoRungWordRealization P d₁ d₂ d₃)
-  | .antiSaturation => Nonempty (AntiSaturationWordRealization P d₁ d₂ d₃)
-  | .terminalCage => Nonempty (TerminalCageWordRealization P d₁ d₂ d₃)
-  | .fourEdgeCage => Nonempty (FourEdgeCageWordRealization P d₁ d₂ d₃)
+    (word : ExceptionalCoverWord) : Prop := match word with
+  | .row1_B32 => Nonempty (Row1B32WordRealization P d₁ d₂ d₃)
+  | .row1_B31 => Nonempty (Row1B31WordRealization P d₁ d₂ d₃)
+  | .row1_B21 => Nonempty (Row1B21WordRealization P d₁ d₂ d₃)
+  | .row2_AB => Nonempty (Row2ABWordRealization P d₁ d₂ d₃)
+  | .row2_BA => Nonempty (Row2BAWordRealization P d₁ d₂ d₃)
+  | .row3_BB_DD => Nonempty (Row3BBDDWordRealization P d₁ d₂ d₃)
+  | .row4_D32 => Nonempty (Row4D32WordRealization P d₁ d₂ d₃)
+  | .row4_D31 => Nonempty (Row4D31WordRealization P d₁ d₂ d₃)
+  | .row4_D21 => Nonempty (Row4D21WordRealization P d₁ d₂ d₃)
+  | .row4_CD => Nonempty (Row4CDWordRealization P d₁ d₂ d₃)
+  | .row4_DC => Nonempty (Row4DCWordRealization P d₁ d₂ d₃)
+  | .row4_DD => Nonempty (Row4DDWordRealization P d₁ d₂ d₃)
+  | .row5_BB_DD => Nonempty (Row5BBDDWordRealization P d₁ d₂ d₃)
 
 /-- Route-indexed local closure interface.  `Realizes w` supplies the local
 geometric data for the corresponding exceptional word. -/
@@ -270,15 +168,6 @@ structure DraftWordClosureInterface
   fourEdgeCage : ∀ w, w.route = .fourEdgeCage → Realizes w →
     ∃ v, degree v ≤ 6
 
-private theorem exists_degree_le_six_of_min
-    {n : ℕ} {degree : Fin n → ℕ} {firstVertex secondVertex : Fin n}
-    (hMinimum : min (degree firstVertex) (degree secondVertex) ≤ 6) :
-    ∃ v, degree v ≤ 6 := by
-  by_cases hFirst : degree firstVertex ≤ degree secondVertex
-  · exact ⟨firstVertex, by simpa [min_eq_left hFirst] using hMinimum⟩
-  · have hSecond : degree secondVertex ≤ degree firstVertex := le_of_not_ge hFirst
-    exact ⟨secondVertex, by simpa [min_eq_right hSecond] using hMinimum⟩
-
 /-- All thirteen concrete word realizations close unconditionally by the
 proved full-two-rung, anti-saturation, terminal-cage, and four-edge lemmas. -/
 theorem concrete_word_closures
@@ -287,37 +176,68 @@ theorem concrete_word_closures
       (RealizesGeom P d₁ d₂ d₃) := by
   constructor
   · intro word hRoute hRealizes
-    simp only [RealizesGeom, hRoute] at hRealizes
-    obtain ⟨data⟩ := hRealizes
-    exact ⟨data.vertex, full_two_rung_shared_tip_degree_le_six
-      data.topSplit data.diameterImpossible data.secondClassBound
-        data.lowerClassBound⟩
+    cases word with
+    | row1_B32 => simp [ExceptionalCoverWord.route] at hRoute
+    | row1_B31 => simp [ExceptionalCoverWord.route] at hRoute
+    | row1_B21 =>
+        obtain ⟨data⟩ : Nonempty (Row1B21WordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.geometry.vertex, row1_B21_realization_degree_le_six data⟩
+    | row2_AB =>
+        obtain ⟨data⟩ : Nonempty (Row2ABWordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.geometry.vertex, row2_AB_realization_degree_le_six data⟩
+    | row2_BA => simp [ExceptionalCoverWord.route] at hRoute
+    | row3_BB_DD =>
+        obtain ⟨data⟩ : Nonempty (Row3BBDDWordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.geometry.vertex, row3_BB_DD_realization_degree_le_six data⟩
+    | row4_D32 => simp [ExceptionalCoverWord.route] at hRoute
+    | row4_D31 => simp [ExceptionalCoverWord.route] at hRoute
+    | row4_D21 =>
+        obtain ⟨data⟩ : Nonempty (Row4D21WordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.geometry.vertex, row4_D21_realization_degree_le_six data⟩
+    | row4_CD =>
+        obtain ⟨data⟩ : Nonempty (Row4CDWordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.geometry.vertex, row4_CD_realization_degree_le_six data⟩
+    | row4_DC => simp [ExceptionalCoverWord.route] at hRoute
+    | row4_DD => simp [ExceptionalCoverWord.route] at hRoute
+    | row5_BB_DD =>
+        obtain ⟨data⟩ : Nonempty (Row5BBDDWordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.geometry.vertex, row5_BB_DD_realization_degree_le_six data⟩
   · intro word hRoute hRealizes
-    simp only [RealizesGeom, hRoute] at hRealizes
-    obtain ⟨data⟩ := hRealizes
-    exact ⟨data.vertex, one_penultimate_shared_tip_degree_le_five
-      data.topSplit data.diameterImpossible data.secondClassBound
-        data.lowerClassBound⟩
+    cases word with
+    | row1_B31 =>
+        obtain ⟨data⟩ : Nonempty (Row1B31WordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.geometry.vertex, row1_B31_realization_degree_le_five data⟩
+    | row2_BA =>
+        obtain ⟨data⟩ : Nonempty (Row2BAWordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.geometry.vertex, row2_BA_realization_degree_le_five data⟩
+    | row4_D31 =>
+        obtain ⟨data⟩ : Nonempty (Row4D31WordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.reflected.vertex, row4_D31_realization_degree_le_five data⟩
+    | row4_DC =>
+        obtain ⟨data⟩ : Nonempty (Row4DCWordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.reflected.vertex, row4_DC_realization_degree_le_five data⟩
+    | row1_B32 | row1_B21 | row2_AB | row3_BB_DD | row4_D32 | row4_D21 |
+        row4_CD | row4_DD | row5_BB_DD =>
+        simp [ExceptionalCoverWord.route] at hRoute
   · intro word hRoute hRealizes
-    simp only [RealizesGeom, hRoute] at hRealizes
-    obtain ⟨data⟩ := hRealizes
-    exact ⟨data.vertex, terminal_d2_cage_metric_split_degree_le_six
-      data.degreePartition data.leftArcBound data.rightArcBound
-        data.outerSlotBound data.longMetricCollapse data.shortMetricCollapse⟩
+    cases word with
+    | row1_B32 =>
+        obtain ⟨data⟩ : Nonempty (Row1B32WordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.vertex, row1_B32_realization_degree_le_six data⟩
+    | row4_D32 =>
+        obtain ⟨data⟩ : Nonempty (Row4D32WordRealization P d₁ d₂ d₃) := hRealizes
+        exact ⟨data.reflected.vertex, row4_D32_realization_degree_le_six data⟩
+    | row1_B31 | row1_B21 | row2_AB | row2_BA | row3_BB_DD | row4_D31 |
+        row4_D21 | row4_CD | row4_DC | row4_DD | row5_BB_DD =>
+        simp [ExceptionalCoverWord.route] at hRoute
   · intro word hRoute hRealizes
-    simp only [RealizesGeom, hRoute] at hRealizes
-    obtain ⟨data⟩ := hRealizes
-    cases data with
-    | long data =>
-        apply exists_degree_le_six_of_min
-        exact four_edge_cage_long_min_degree_le_six
-          data.firstPackage data.secondPackage data.uniqueDiameterPair
-    | short data =>
-        apply exists_degree_le_six_of_min
-        exact four_edge_cage_short_min_degree_le_six
-          data.firstPackage data.secondPackage data.firstD1D2Impossible
-            data.firstD2D1Impossible data.secondD1D2Impossible
-              data.secondD2D1Impossible data.uniqueDiameterPair
+    cases word with
+    | row4_DD =>
+        obtain ⟨data⟩ : Nonempty (Row4DDWordRealization P d₁ d₂ d₃) := hRealizes
+        exact row4_DD_realization_degree_le_six data
+    | row1_B32 | row1_B31 | row1_B21 | row2_AB | row2_BA | row3_BB_DD |
+        row4_D32 | row4_D31 | row4_D21 | row4_CD | row4_DC | row5_BB_DD =>
+        simp [ExceptionalCoverWord.route] at hRoute
 
 /-- Direct short-arc closure or one of the thirteen exceptional words. -/
 def HasThirteenWordReduction

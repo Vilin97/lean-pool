@@ -115,8 +115,8 @@ theorem ninePoint_insertions_isolated :
         fin_cases j <;> simp [ninePoint, sqDist] <;> norm_num
       _ = 0 := rfl
 
-/-- REVIEW2's exact rational hexagon, in positive cyclic order. -/
-def review2Hexagon : Fin 6 → Point ℚ :=
+/-- A second exact rational hexagon, in positive cyclic order. -/
+def rationalHexagon : Fin 6 → Point ℚ :=
   ![(0, -20),
     (24171 / 50380, -(12571661 / 629750)),
     (48331 / 50380, -(12546661 / 629750)),
@@ -124,13 +124,13 @@ def review2Hexagon : Fin 6 → Point ℚ :=
     (1, 0),
     (-1, 0)]
 
-theorem review2Hexagon_strict_convex : CyclicStrictConvex review2Hexagon := by
+theorem rationalHexagon_strict_convex : CyclicStrictConvex rationalHexagon := by
   intro i j hji hjnext
   fin_cases i <;> fin_cases j
-  all_goals norm_num [cyclicNext, Fin.add_def, review2Hexagon, turn] at *
+  all_goals norm_num [cyclicNext, Fin.add_def, rationalHexagon, turn] at *
 
-theorem review2Hexagon_top_three :
-    HasTopThreeDistanceClasses review2Hexagon
+theorem rationalHexagon_top_three :
+    HasTopThreeDistanceClasses rationalHexagon
       (96661 / 229) 401 (2776265163521 / 6927250000) := by
   refine ⟨by norm_num, by norm_num, ?_, ?_, ?_, ?_⟩
   · refine ⟨(3, 5), by decide, ?_⟩
@@ -145,14 +145,14 @@ theorem review2Hexagon_top_three :
     norm_num
   · rintro ⟨i, j⟩ hij
     fin_cases i <;> fin_cases j
-    all_goals norm_num [unorderedPairList, review2Hexagon, sqDist] at *
+    all_goals norm_num [unorderedPairList, rationalHexagon, sqDist] at *
 
-theorem review2Hexagon_key_edges :
-    sqDist (review2Hexagon 3) (review2Hexagon 5) = 96661 / 229 ∧
-    sqDist (review2Hexagon 0) (review2Hexagon 5) = 401 ∧
-    sqDist (review2Hexagon 3) (review2Hexagon 4) = 401 ∧
-    sqDist (review2Hexagon 0) (review2Hexagon 4) = 401 ∧
-    sqDist (review2Hexagon 2) (review2Hexagon 5) =
+theorem rationalHexagon_key_edges :
+    sqDist (rationalHexagon 3) (rationalHexagon 5) = 96661 / 229 ∧
+    sqDist (rationalHexagon 0) (rationalHexagon 5) = 401 ∧
+    sqDist (rationalHexagon 3) (rationalHexagon 4) = 401 ∧
+    sqDist (rationalHexagon 0) (rationalHexagon 4) = 401 ∧
+    sqDist (rationalHexagon 2) (rationalHexagon 5) =
       2776265163521 / 6927250000 := by
   change
     ((-1 : ℚ) - 1208 / 229) ^ 2 + (0 - (-(4480 / 229))) ^ 2 = 96661 / 229 ∧
@@ -163,27 +163,27 @@ theorem review2Hexagon_key_edges :
       (0 - (-(12546661 / 629750))) ^ 2 = 2776265163521 / 6927250000
   norm_num
 
-theorem review2Hexagon_lower_degrees :
-    vertexDegree review2Hexagon
+theorem rationalHexagon_lower_degrees :
+    vertexDegree rationalHexagon
         (96661 / 229) 401 (2776265163521 / 6927250000) 1 = 0 ∧
-      vertexDegree review2Hexagon
+      vertexDegree rationalHexagon
         (96661 / 229) 401 (2776265163521 / 6927250000) 2 = 1 := by
   constructor
   · calc
-      vertexDegree review2Hexagon
+      vertexDegree rationalHexagon
           (96661 / 229) 401 (2776265163521 / 6927250000) 1 =
           (∅ : Finset (Fin 6)).card := by
         apply vertexDegree_eq_of_neighbors
         intro j
-        fin_cases j <;> simp [review2Hexagon, sqDist] <;> norm_num
+        fin_cases j <;> simp [rationalHexagon, sqDist] <;> norm_num
       _ = 0 := rfl
   · calc
-      vertexDegree review2Hexagon
+      vertexDegree rationalHexagon
           (96661 / 229) 401 (2776265163521 / 6927250000) 2 =
           ({5} : Finset (Fin 6)).card := by
         apply vertexDegree_eq_of_neighbors
         intro j
-        fin_cases j <;> simp [review2Hexagon, sqDist] <;> norm_num
+        fin_cases j <;> simp [rationalHexagon, sqDist] <;> norm_num
       _ = 1 := by decide
 
 end LeanPool.Erdos132ConvexK3.Witnesses

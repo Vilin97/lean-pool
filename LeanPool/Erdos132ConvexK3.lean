@@ -20,11 +20,13 @@ MSC: 52C10, 05C12
 /-!
 # Exceptional-Word Closures for the Convex Three-Distance Case of Erdős Problem 132
 
-This project constructs the thirteen concrete exceptional-word closure routes
-from the proved full-two-rung, anti-saturation, terminal-cage, and four-edge
-kernels. It also records exceptional-branch rigidity, the obstruction to the
-proposed exchange, an explicit majorant counterexample, and rational regression
-witnesses. The conditional source-facing map remains in the development only
-to isolate the open global reduction posed by challenge PR #341. The general
-Erdős problem remains open.
+This project proves thirteen exceptional-word closures from word-specific raw
+geometric predicates. The six full-two-rung words are reduced by a rigid plane
+normalization to the canonical coordinate frame, where the local metric and
+counting kernels close all three distance branches; terminal, anti-saturation,
+and four-edge kernels close the other seven words. The development also records
+exceptional-branch rigidity, the obstruction to the proposed exchange, an
+explicit majorant counterexample, and rational regression witnesses. The
+conditional source-facing map remains only to isolate the open global reduction
+posed by challenge PR #341. The general Erdős problem remains open.
 -/

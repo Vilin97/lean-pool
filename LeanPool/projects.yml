@@ -5189,21 +5189,40 @@ projects:
     main_results:
       - declaration: LeanPool.Erdos132ConvexK3.concrete_word_closures
         informal: >-
-          For the concrete geometric realization predicate, every one of the
-          thirteen exceptional cover words is wired to its proved route lemma
-          and therefore forces a vertex of degree at most six (at most five on
-          anti-saturation routes).
+          For thirteen word-specific predicates containing only raw geometric
+          and combinatorial data, each realized exceptional cover word forces
+          a vertex of degree at most six: B:3→2 and D:3→2 use the terminal
+          cage, B:3→1, BA, D:3→1, and DC use one-penultimate
+          anti-saturation and give degree at most five, DD uses the four-edge
+          cage, and the remaining six words use the full two-rung theorem.
+        source_ref: >-
+          New derived variant contributed and proved in this Lean Pool
+          project. The thirteen-word classification and its closures are not
+          statements of ErLV89.
+      - declaration: LeanPool.Erdos132ConvexK3.fullTwoRung_realization_degree_le_six
+        informal: >-
+          Every raw full-two-rung realization has its displayed vertex of
+          degree at most six. A rigid normalization derives the canonical
+          coordinates, the diameter branch is impossible, the long branch is
+          counted from four raw boundary arcs, and the short branch contradicts
+          the exact two-rung identity and metric dichotomy.
+      - declaration: LeanPool.Erdos132ConvexK3.maximal_gap_signed_yz
+        informal: >-
+          The selected majorants give the exact signed side-count identity for
+          the boundary arc from y to z.
+        source_ref: >-
+          Erdős--Lovász--Vesztergombi, proof of Theorem 2.7, printed p. 548:
+          “Hence the number of sides of P on the arc yz is at most
+          (a+k)+(k−1)+b≤3k−2.”
+      - declaration: LeanPool.Erdos132ConvexK3.convex_k3_degree_six_of_reduction
+        informal: >-
+          The retained conditional map turns the separately open global
+          reduction interface into the convex k=3 minimum-degree conclusion;
+          it is not an unconditional proof of that source theorem.
         source_ref: >-
           Erdős--Lovász--Vesztergombi, Theorem 2.7, printed p. 548: “If S is
           the set of vertices of a convex polygon then the graph G(S, k) has a
-          point of degree at most 3k−1.” Proof, printed p. 548: “Hence the
-          number of sides of P on the arc yz is at most
-          (a+k)+(k−1)+b≤3k−2.”
-      - declaration: LeanPool.Erdos132ConvexK3.full_two_rung_shared_tip_degree_le_six
-        informal: >-
-          The full two-rung shared-tip split closes at degree six once the
-          diameter branch is excluded and the second and lower distance
-          branches satisfy their proved local bounds.
+          point of degree at most 3k−1.”
       - declaration: LeanPool.Erdos132ConvexK3.coordinated_exceptional_count_rigidity
         informal: >-
           Every exceptional jointly minimal pair of majorant paths lies in
@@ -5226,7 +5245,7 @@ projects:
           An explicit rational nine-point regression configuration realizes
           squared-distance classes 855625, 838525, and 811165 as its three
           largest classes.
-      - declaration: LeanPool.Erdos132ConvexK3.Witnesses.review2Hexagon_top_three
+      - declaration: LeanPool.Erdos132ConvexK3.Witnesses.rationalHexagon_top_three
         informal: >-
           An explicit rational six-point regression configuration realizes the
           three stated rational squared-distance values as its largest classes.
