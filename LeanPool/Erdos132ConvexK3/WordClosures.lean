@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 import LeanPool.Erdos132ConvexK3.TerminalCage
-import LeanPool.Erdos132ConvexK3.Majorants
 import Lean.Elab.Tactic.Omega
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.FieldSimp
@@ -23,16 +22,12 @@ and cardinality bounds are conclusions of the theorems below.
 
 namespace LeanPool.Erdos132ConvexK3
 
-private theorem sqDist_nonneg_local (a b : Point ℝ) : 0 ≤ sqDist a b := by
-  simp only [sqDist]
-  positivity
-
 private theorem sqDist_pos_of_ne_local {a b : Point ℝ} (hab : a ≠ b) :
     0 < sqDist a b := by
   by_contra hnot
   have hle : sqDist a b ≤ 0 := le_of_not_gt hnot
   have hzero : sqDist a b = 0 :=
-    le_antisymm hle (sqDist_nonneg_local a b)
+    le_antisymm hle (sqDist_nonneg a b)
   have hx : b.1 - a.1 = 0 := by
     simp only [sqDist] at hzero
     nlinarith [sq_nonneg (b.1 - a.1), sq_nonneg (b.2 - a.2)]
@@ -78,7 +73,7 @@ theorem normalizeAlong_sqDist
     {a b : Point ℝ} (hab : a ≠ b) (p q : Point ℝ) :
     sqDist (normalizeAlong a b p) (normalizeAlong a b q) = sqDist p q := by
   have hscale := normalizeAlong_scale_pos hab
-  have hscaleSq := Real.sq_sqrt (sqDist_nonneg_local a b)
+  have hscaleSq := Real.sq_sqrt (sqDist_nonneg a b)
   change ((normalizeAlong a b q).1 - (normalizeAlong a b p).1) ^ 2 +
       ((normalizeAlong a b q).2 - (normalizeAlong a b p).2) ^ 2 = sqDist p q
   rw [normalizeAlong_fst_sub, normalizeAlong_snd_sub]
@@ -116,7 +111,7 @@ theorem normalizeAlong_turn
     turn (normalizeAlong a b p) (normalizeAlong a b q)
       (normalizeAlong a b r) = turn p q r := by
   have hscale := normalizeAlong_scale_pos hab
-  have hscaleSq := Real.sq_sqrt (sqDist_nonneg_local a b)
+  have hscaleSq := Real.sq_sqrt (sqDist_nonneg a b)
   change ((normalizeAlong a b q).1 - (normalizeAlong a b p).1) *
       ((normalizeAlong a b r).2 - (normalizeAlong a b p).2) -
       ((normalizeAlong a b q).2 - (normalizeAlong a b p).2) *
@@ -157,7 +152,7 @@ private theorem normalizeAlong_second_center
     {a b : Point ℝ} (hab : a ≠ b) :
     normalizeAlong a b b = (Real.sqrt (sqDist a b), 0) := by
   have hscale := normalizeAlong_scale_pos hab
-  have hscaleSq := Real.sq_sqrt (sqDist_nonneg_local a b)
+  have hscaleSq := Real.sq_sqrt (sqDist_nonneg a b)
   apply Prod.ext
   · simp only [normalizeAlong]
     rw [div_eq_iff (ne_of_gt hscale)]
@@ -191,38 +186,22 @@ theorem normalizeAlong_top_three_classes
     HasTopThreeDistanceClasses (fun j ↦ normalizeAlong a b (P j)) d₁ d₂ d₃ := by
   simpa only [HasTopThreeDistanceClasses, normalizeAlong_sqDist hab] using hClasses
 
-private theorem mem_unorderedPairList_iff_local
-    {n : ℕ} {i j : Fin n} : (i, j) ∈ unorderedPairList n ↔ i < j := by
-  simp [unorderedPairList]
-
-private theorem top_three_class_bounds_of_ne_local
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃)
-    {i j : Fin n} (hij : i ≠ j) :
-    let d := sqDist (P i) (P j)
-    d ≤ d₁ ∧ (d < d₁ → d ≤ d₂) ∧ (d < d₂ → d ≤ d₃) := by
-  rcases hClasses with ⟨_, _, _, _, _, hall⟩
-  rcases lt_or_gt_of_ne hij with hij | hji
-  · exact hall (i, j) (mem_unorderedPairList_iff_local.mpr hij)
-  · simpa only [sqDist_comm] using
-      (hall (j, i) (mem_unorderedPairList_iff_local.mpr hji))
-
 private theorem top_three_values_nonnegative
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃) :
     0 ≤ d₁ ∧ 0 ≤ d₂ ∧ 0 ≤ d₃ := by
   rcases hClasses with ⟨_, _, ⟨e₁, _, he₁⟩, ⟨e₂, _, he₂⟩,
     ⟨e₃, _, he₃⟩, _⟩
-  exact ⟨he₁ ▸ sqDist_nonneg_local (P e₁.1) (P e₁.2),
-    he₂ ▸ sqDist_nonneg_local (P e₂.1) (P e₂.2),
-    he₃ ▸ sqDist_nonneg_local (P e₃.1) (P e₃.2)⟩
+  exact ⟨he₁ ▸ sqDist_nonneg (P e₁.1) (P e₁.2),
+    he₂ ▸ sqDist_nonneg (P e₂.1) (P e₂.2),
+    he₃ ▸ sqDist_nonneg (P e₃.1) (P e₃.2)⟩
 
 private theorem top_three_third_value_pos
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (hInjective : Function.Injective P)
     (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃) : 0 < d₃ := by
   rcases hClasses with ⟨_, _, _, _, ⟨e, heList, heq⟩, _⟩
-  have hindices : e.1 ≠ e.2 := ne_of_lt (mem_unorderedPairList_iff_local.mp heList)
+  have hindices : e.1 ≠ e.2 := ne_of_lt (mem_unorderedPairList_iff.mp heList)
   have hpoints : P e.1 ≠ P e.2 := hInjective.ne hindices
   simpa only [heq] using sqDist_pos_of_ne_local hpoints
 
@@ -233,7 +212,7 @@ private theorem top_three_first_bound_local
   by_cases hij : i = j
   · subst j
     simpa [sqDist] using (top_three_values_nonnegative hClasses).1
-  · exact (top_three_class_bounds_of_ne_local hClasses hij).1
+  · exact (top_three_class_bounds_of_ne hClasses hij).1
 
 private theorem euclideanDist_nonneg_local (a b : Point ℝ) :
     0 ≤ euclideanDist a b := by
@@ -300,7 +279,7 @@ private theorem top_three_radius_bounds_of_ne
         euclideanDist (P i) (P j) ≤ r₃) := by
   dsimp only
   obtain ⟨hd₁, hd₂, hd₃⟩ := top_three_values_nonnegative hClasses
-  have hbounds := top_three_class_bounds_of_ne_local hClasses hij
+  have hbounds := top_three_class_bounds_of_ne hClasses hij
   refine ⟨euclideanDist_le_sqrt_of_sqDist_le hbounds.1, ?_, ?_⟩
   · intro hlt
     exact euclideanDist_le_sqrt_of_sqDist_le
@@ -323,7 +302,7 @@ private theorem sqDist_eq_d₁_of_sqrt_d₂_lt
     {i j : Fin n} (hij : i ≠ j)
     (h : Real.sqrt d₂ < euclideanDist (P i) (P j)) :
     sqDist (P i) (P j) = d₁ := by
-  have hbounds := top_three_class_bounds_of_ne_local hClasses hij
+  have hbounds := top_three_class_bounds_of_ne hClasses hij
   by_contra hne
   have hlt : sqDist (P i) (P j) < d₁ := lt_of_le_of_ne hbounds.1 hne
   have hle := hbounds.2.1 hlt
@@ -336,7 +315,7 @@ private theorem sqDist_eq_d₁_or_d₂_of_sqrt_d₃_lt
     {i j : Fin n} (hij : i ≠ j)
     (h : Real.sqrt d₃ < euclideanDist (P i) (P j)) :
     sqDist (P i) (P j) = d₁ ∨ sqDist (P i) (P j) = d₂ := by
-  have hbounds := top_three_class_bounds_of_ne_local hClasses hij
+  have hbounds := top_three_class_bounds_of_ne hClasses hij
   by_cases h₁ : sqDist (P i) (P j) = d₁
   · exact Or.inl h₁
   have hlt₁ : sqDist (P i) (P j) < d₁ := lt_of_le_of_ne hbounds.1 h₁
@@ -531,7 +510,6 @@ private theorem arcNeighbors_card_le_of_one_slot
 structure Row1B32WordRealization
     {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
   pointsInjective : Function.Injective P
-  row : IsExceptionalMajorantRow 0 1 3 2
   classes : HasTopThreeDistanceClasses P d₁ d₂ d₃
   /-- First diameter center. -/
   x : Fin n
@@ -755,7 +733,7 @@ private theorem row1_B32_long_right_card_le_one
         rw [euclideanDist_eq_sqrt_sqDist] at htj
         have hd₁ := (top_three_values_nonnegative G.classes).1
         have hsq := congrArg (fun z : ℝ ↦ z ^ 2) htj
-        rw [Real.sq_sqrt (sqDist_nonneg_local (P G.t) (P j)),
+        rw [Real.sq_sqrt (sqDist_nonneg (P G.t) (P j)),
           Real.sq_sqrt hd₁] at hsq
         exact hsq
       exact Finset.mem_filter.mpr ⟨hjArc, htjSq, hVj⟩
@@ -840,7 +818,7 @@ theorem row1_B32_realization_degree_le_six
     (G : Row1B32WordRealization P d₁ d₂ d₃) :
     vertexDegree P d₁ d₂ d₃ G.vertex ≤ 6 := by
   obtain ⟨hVsLe, hVwLt⟩ := row1_B32_central_distances G
-  have hVsBounds := top_three_class_bounds_of_ne_local G.classes G.s_ne_vertex.symm
+  have hVsBounds := top_three_class_bounds_of_ne G.classes G.s_ne_vertex.symm
   rcases top_three_value_split hVsBounds with hVsD₁ | hVsD₂ | hVsLow
   · have hVsRadius := euclideanDist_eq_sqrt_of_sqDist_eq hVsD₁
     have horder := (top_three_radius_strict_order G.classes).2
@@ -862,7 +840,7 @@ theorem row1_B32_realization_degree_le_six
       have hqClass : q = Real.sqrt d₂ ∨ q ≤ Real.sqrt d₃ := by
         rcases lt_or_eq_of_le G.xw_le with hxwLt | hxwEq
         · right
-          have hxwBounds := top_three_class_bounds_of_ne_local G.classes G.x_ne_w
+          have hxwBounds := top_three_class_bounds_of_ne G.classes G.x_ne_w
           exact euclideanDist_le_sqrt_of_sqDist_le (hxwBounds.2.2 hxwLt)
         · left
           exact euclideanDist_eq_sqrt_of_sqDist_eq hxwEq
@@ -881,7 +859,7 @@ theorem row1_B32_realization_degree_le_six
         linarith
       have hVwLtSq : sqDist (P G.vertex) (P G.w) < d₂ :=
         sqDist_lt_of_euclideanDist_lt_sqrt hd₂ hVwLtRadius
-      have hVwBounds := top_three_class_bounds_of_ne_local G.classes G.w_ne_vertex.symm
+      have hVwBounds := top_three_class_bounds_of_ne G.classes G.w_ne_vertex.symm
       have hVwLeD₃ := hVwBounds.2.2 hVwLtSq
       by_cases hVwD₃ : sqDist (P G.vertex) (P G.w) = d₃
       · have hleftShort := row1_B32_short_left_card_le_two G hVsD₂ hxwD₂ hVwD₃
@@ -904,33 +882,30 @@ theorem row1_B32_realization_degree_le_six
       (P := P) (d₁ := d₁) (d₂ := d₂) (d₃ := d₃) G.arcPartition
     omega
 
-/-- Exact reflection of the row-1 terminal geometry.  The reflected labels
-are supplied in the row-1 orientation, so every geometric field is reused
-without a hidden counting premise. -/
-structure Row4D32WordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Reflected row-1 terminal geometry. -/
-  reflected : Row1B32WordRealization P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 0 2 3 1
+/-- Exact reflection of the row-1 terminal geometry, already relabelled into
+the common positive orientation. -/
+abbrev Row4D32WordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  Row1B32WordRealization P d₁ d₂ d₃
 
 /-- Reflection sends row 4 `D:3→2` to the raw row-1 terminal model. -/
 def row4D32Reflection
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : Row4D32WordRealization P d₁ d₂ d₃) :
     Row1B32WordRealization P d₁ d₂ d₃ :=
-  G.reflected
+  G
 
 theorem row4_D32_reflection_eq
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : Row4D32WordRealization P d₁ d₂ d₃) :
-    row4D32Reflection G = G.reflected := rfl
+    row4D32Reflection G = G := rfl
 
 /-- The reflected row-4 terminal word has the same degree-six closure. -/
 theorem row4_D32_realization_degree_le_six
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : Row4D32WordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.reflected.vertex ≤ 6 :=
-  row1_B32_realization_degree_le_six G.reflected
+    vertexDegree P d₁ d₂ d₃ G.vertex ≤ 6 :=
+  row1_B32_realization_degree_le_six G
 
 private theorem vertexDegree_le_partition_three
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -966,6 +941,91 @@ private theorem vertexDegree_le_partition_three
         (Nat.add_le_add_right (Finset.card_union_le _ _) _)
     _ ≤ (arcNeighbors P d₁ d₂ d₃ v leftArc).card +
           (arcNeighbors P d₁ d₂ d₃ v rightArc).card + 1 := by simp
+
+/-- Equal-radius shared-tip geometry normalizes to the diameter-lens kernel.
+The only positional inputs are the two signed sides of the center line. -/
+private theorem shared_tip_unique_farthest
+    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
+    (hInjective : Function.Injective P)
+    (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃)
+    {e t s vertex : Fin n}
+    (he_ne_t : e ≠ t)
+    (hes : sqDist (P e) (P s) = d₁)
+    (hts : sqDist (P t) (P s) = d₁)
+    (htipAbove : 0 < turn (P e) (P t) (P s))
+    (hvertexBelow : turn (P e) (P t) (P vertex) < 0) :
+    ∀ j, j ≠ s →
+      sqDist (P vertex) (P j) < sqDist (P vertex) (P s) := by
+  let N : Fin n → Point ℝ := fun j ↦ normalizeAlong (P e) (P t) (P j)
+  have hcenters : P e ≠ P t := hInjective.ne he_ne_t
+  let scale := Real.sqrt (sqDist (P e) (P t))
+  have hscale : 0 < scale := normalizeAlong_scale_pos hcenters
+  let c := scale / 2
+  have hc : 0 < c := by dsimp [c]; positivity
+  have hscaleEq : scale = 2 * c := by dsimp [c]; ring
+  have he : N e = (0, 0) := by
+    simpa only [N] using normalizeAlong_first_center hcenters
+  have htScale : N t = (scale, 0) := by
+    simpa only [N, scale] using normalizeAlong_second_center hcenters
+  have ht : N t = (2 * c, 0) := by simpa only [hscaleEq] using htScale
+  have hesN : sqDist (N e) (N s) = d₁ := by
+    simpa only [N, normalizeAlong_sqDist hcenters] using hes
+  have htsN : sqDist (N t) (N s) = d₁ := by
+    simpa only [N, normalizeAlong_sqDist hcenters] using hts
+  let H := (N s).2
+  have hsFirst : (N s).1 = c := by
+    rw [he] at hesN
+    rw [ht] at htsN
+    simp only [sqDist] at hesN htsN
+    nlinarith
+  have hs : N s = (c, H) := Prod.ext hsFirst rfl
+  have hH : 0 < H := by
+    have hsecond := normalizeAlong_second_coordinate hcenters (P s)
+    change (N s).2 = _ at hsecond
+    change 0 < (N s).2
+    rw [hsecond]
+    exact div_pos htipAbove hscale
+  let X := (N vertex).1
+  let Y := (N vertex).2
+  have hv : N vertex = (X, Y) := rfl
+  have hY : Y < 0 := by
+    have hsecond := normalizeAlong_second_coordinate hcenters (P vertex)
+    change (N vertex).2 = _ at hsecond
+    dsimp [Y]
+    rw [hsecond]
+    exact div_neg_of_neg_of_pos hvertexBelow hscale
+  have hd₁Radius : d₁ = c ^ 2 + H ^ 2 := by
+    rw [he, hs] at hesN
+    simpa [sqDist] using hesN.symm
+  have hVertexTipRaw := top_three_first_bound_local hClasses vertex s
+  have hVertexTipN : sqDist (N vertex) (N s) ≤ d₁ := by
+    simpa only [N, normalizeAlong_sqDist hcenters] using hVertexTipRaw
+  have hVertexTip : sqDist (X, Y) (c, H) ≤ c ^ 2 + H ^ 2 := by
+    rw [← hv, ← hs, ← hd₁Radius]
+    exact hVertexTipN
+  intro j hjs
+  have hleftRaw := top_three_first_bound_local hClasses e j
+  have hrightRaw := top_three_first_bound_local hClasses t j
+  have hleftN : sqDist (N e) (N j) ≤ d₁ := by
+    simpa only [N, normalizeAlong_sqDist hcenters] using hleftRaw
+  have hrightN : sqDist (N t) (N j) ≤ d₁ := by
+    simpa only [N, normalizeAlong_sqDist hcenters] using hrightRaw
+  have hjLens : InSharedDiameterLens c H (N j) := by
+    constructor
+    · rw [← he, ← hd₁Radius]
+      exact hleftN
+    · rw [← ht, ← hd₁Radius]
+      exact hrightN
+  have hpoints : P j ≠ P s := hInjective.ne hjs
+  have hnormalized : N j ≠ N s :=
+    (normalizeAlong_injective hcenters).ne hpoints
+  have hneTip : N j ≠ (c, H) := by
+    rw [← hs]
+    exact hnormalized
+  have hbound := diameter_lens_unique_farthest hc hH hY
+    hVertexTip hjLens hneTip
+  rw [← hv, ← hs] at hbound
+  simpa only [N, normalizeAlong_sqDist hcenters] using hbound
 
 /-- Raw shared-tip geometry with one surviving penultimate rung. -/
 structure OnePenultimateWordGeometry
@@ -1010,11 +1070,19 @@ structure OnePenultimateWordGeometry
   rightQuad : ∀ j ∈ rightArc,
     StrictConvexQuad (P t) (P s) (P j) (P vertex)
   rungQuad : StrictConvexQuad (P t) (P p) (P s) (P vertex)
+  tipAbove : 0 < turn (P e) (P t) (P s)
+  vertexBelow : turn (P e) (P t) (P vertex) < 0
   es : sqDist (P e) (P s) = d₁
   ts : sqDist (P t) (P s) = d₁
   tp : sqDist (P t) (P p) = d₂
-  tipUniqueFarthest : ∀ j, j ≠ s →
-    sqDist (P vertex) (P j) < sqDist (P vertex) (P s)
+
+private theorem one_penultimate_tip_unique_farthest
+    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
+    (G : OnePenultimateWordGeometry P d₁ d₂ d₃) :
+    ∀ j, j ≠ G.s →
+      sqDist (P G.vertex) (P j) < sqDist (P G.vertex) (P G.s) :=
+  shared_tip_unique_farthest G.pointsInjective G.classes G.e_ne_t
+    G.es G.ts G.tipAbove G.vertexBelow
 
 private theorem one_penultimate_arc_card_le_two_raw
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -1036,7 +1104,7 @@ private theorem one_penultimate_arc_card_le_two_raw
   · intro j hj
     have hjData := Finset.mem_filter.mp hj
     have hjArc := hjData.1
-    have hfarSq := G.tipUniqueFarthest j (hsArc j hjArc)
+    have hfarSq := one_penultimate_tip_unique_farthest G j (hsArc j hjArc)
     rw [hVs] at hfarSq
     rcases hjData.2.2 with hVj | hVj | hVj
     · exfalso
@@ -1103,7 +1171,7 @@ private theorem one_penultimate_low_degree_le_one
   have hjne := (Finset.mem_erase.mp hjData.1).1
   by_cases hjs : j = G.s
   · simp [hjs]
-  have hfar := G.tipUniqueFarthest j hjs
+  have hfar := one_penultimate_tip_unique_farthest G j hjs
   have hlt : sqDist (P G.vertex) (P j) < d₃ := hfar.trans_le hVs
   rcases hjData.2 with hj | hj | hj <;> linarith [G.classes.1, G.classes.2.1]
 
@@ -1114,12 +1182,12 @@ private theorem one_penultimate_tip_not_d₁
   intro hVs
   have hVpBounds := top_three_radius_bounds_of_ne G.classes G.p_ne_vertex.symm
   dsimp only at hVpBounds
-  have hfarSq := G.tipUniqueFarthest G.p G.p_ne_s
+  have hfarSq := one_penultimate_tip_unique_farthest G G.p G.p_ne_s
   have ⟨hd₁, _, _⟩ := top_three_values_nonnegative G.classes
   have hfar : euclideanDist (P G.vertex) (P G.p) <
       euclideanDist (P G.vertex) (P G.s) := by
     rw [euclideanDist_eq_sqrt_sqDist, euclideanDist_eq_sqrt_sqDist]
-    exact Real.sqrt_lt_sqrt (sqDist_nonneg_local _ _) hfarSq
+    exact Real.sqrt_lt_sqrt (sqDist_nonneg _ _) hfarSq
   have hED := edge_diagonal_inequality G.rungQuad
   rw [euclideanDist_eq_sqrt_of_sqDist_eq G.tp,
     euclideanDist_comm_local (P G.s) (P G.vertex),
@@ -1135,7 +1203,7 @@ private theorem one_penultimate_realization_degree_le_five
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : OnePenultimateWordGeometry P d₁ d₂ d₃) :
     vertexDegree P d₁ d₂ d₃ G.vertex ≤ 5 := by
-  have hVsBounds := top_three_class_bounds_of_ne_local G.classes G.s_ne_vertex.symm
+  have hVsBounds := top_three_class_bounds_of_ne G.classes G.s_ne_vertex.symm
   rcases top_three_value_split hVsBounds with hVs | hVs | hVs
   · exact (one_penultimate_tip_not_d₁ G hVs).elim
   · have hleft := one_penultimate_left_arc_card_le_two G hVs
@@ -1145,13 +1213,18 @@ private theorem one_penultimate_realization_degree_le_five
     omega
   · exact (one_penultimate_low_degree_le_one G hVs).trans (by omega)
 
+/-- A word whose labels have been transported into the common
+one-penultimate orientation. -/
+structure OnePenultimateWordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
+  /-- Raw geometry after the word-specific relabelling. -/
+  geometry : OnePenultimateWordGeometry P d₁ d₂ d₃
+
 /-- Row 1 `B:3→1`, with the surviving right-hand rung relabelled as
 `t-p`. -/
-structure Row1B31WordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- One-penultimate geometry in the row-1 orientation. -/
-  geometry : OnePenultimateWordGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 0 1 3 2
+abbrev Row1B31WordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  OnePenultimateWordRealization P d₁ d₂ d₃
 
 theorem row1_B31_realization_degree_le_five
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -1160,11 +1233,9 @@ theorem row1_B31_realization_degree_le_five
   one_penultimate_realization_degree_le_five G.geometry
 
 /-- Shifted row 2 `BA`, with centers `(v,t)` and the surviving right rung. -/
-structure Row2BAWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- One-penultimate geometry after the row-2 relabelling. -/
-  geometry : OnePenultimateWordGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 1 1 3 2
+abbrev Row2BAWordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  OnePenultimateWordRealization P d₁ d₂ d₃
 
 theorem row2_BA_realization_degree_le_five
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -1174,30 +1245,26 @@ theorem row2_BA_realization_degree_le_five
 
 /-- Reflected row 4 `D:3→1`, with the surviving left rung relabelled to
 the common `t-p` orientation. -/
-structure Row4D31WordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Reflected one-penultimate geometry. -/
-  reflected : OnePenultimateWordGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 0 2 3 1
+abbrev Row4D31WordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  OnePenultimateWordRealization P d₁ d₂ d₃
 
 theorem row4_D31_realization_degree_le_five
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : Row4D31WordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.reflected.vertex ≤ 5 :=
-  one_penultimate_realization_degree_le_five G.reflected
+    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 5 :=
+  one_penultimate_realization_degree_le_five G.geometry
 
 /-- Shifted reflected row 4 `DC`, using centers `(x,Q)`. -/
-structure Row4DCWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Reflected one-penultimate geometry after the `DC` relabelling. -/
-  reflected : OnePenultimateWordGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 0 2 3 1
+abbrev Row4DCWordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  OnePenultimateWordRealization P d₁ d₂ d₃
 
 theorem row4_DC_realization_degree_le_five
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : Row4DCWordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.reflected.vertex ≤ 5 :=
-  one_penultimate_realization_degree_le_five G.reflected
+    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 5 :=
+  one_penultimate_realization_degree_le_five G.geometry
 
 /-- One raw boundary branch in the four-edge cage.  The disjunction records
 the two cyclic orientations that yield the same edge--diagonal inequality. -/
@@ -1546,7 +1613,7 @@ private theorem exists_cage_band
     (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃)
     {v central : Fin n} (hne : v ≠ central) :
     ∃ band, RealizesCageBand P d₁ d₂ d₃ v central band := by
-  have hbounds := top_three_class_bounds_of_ne_local hClasses hne
+  have hbounds := top_three_class_bounds_of_ne hClasses hne
   rcases top_three_value_split hbounds with h₁ | h₂ | hlow
   · exact ⟨.d1, h₁⟩
   · exact ⟨.d2, h₂⟩
@@ -1631,7 +1698,6 @@ structure Row4DDWordRealization
   xs : sqDist (P x) (P s) = d₂
   tw : sqDist (P t) (P w) = d₂
   ts : sqDist (P t) (P s) = d₁
-  row : IsExceptionalMajorantRow 0 2 3 1
 
 private theorem fourEdge_mixed_d1_d2_impossible
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -1962,7 +2028,7 @@ private theorem fullTwoRungCanonicalFrame_exists
     rw [he, hs] at hesN
     simpa [sqDist] using hesN.symm
   have hbaseLeRaw := top_three_first_bound_local G.classes G.e G.t
-  have hscaleSq := Real.sq_sqrt (sqDist_nonneg_local (P G.e) (P G.t))
+  have hscaleSq := Real.sq_sqrt (sqDist_nonneg (P G.e) (P G.t))
   have hbaseLe : (2 * c) ^ 2 ≤ d₁ := by
     rw [← hscaleEq]
     dsimp [scale]
@@ -2013,43 +2079,9 @@ private theorem fullTwoRung_tip_unique_farthest
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : FullTwoRungGeometry P d₁ d₂ d₃) :
     ∀ j, j ≠ G.s →
-      sqDist (P G.vertex) (P j) < sqDist (P G.vertex) (P G.s) := by
-  obtain ⟨F⟩ := fullTwoRungCanonicalFrame_exists G
-  let N := G.normalized
-  have hcenters : P G.e ≠ P G.t := G.pointsInjective.ne G.e_ne_t
-  have hPdiameterRaw := top_three_first_bound_local G.classes G.vertex G.s
-  have hPdiameterN : sqDist (N G.vertex) (N G.s) ≤ d₁ := by
-    simpa only [N, FullTwoRungGeometry.normalized,
-      normalizeAlong_sqDist hcenters] using hPdiameterRaw
-  have hPdiameter : sqDist (F.X, F.Y) (F.c, F.H) ≤ F.c ^ 2 + F.H ^ 2 := by
-    rw [← F.vertex_coord, ← F.s_coord, ← F.d₁_radius]
-    exact hPdiameterN
-  intro j hjs
-  have hleftRaw := top_three_first_bound_local G.classes G.e j
-  have hrightRaw := top_three_first_bound_local G.classes G.t j
-  have hleftN : sqDist (N G.e) (N j) ≤ d₁ := by
-    simpa only [N, FullTwoRungGeometry.normalized,
-      normalizeAlong_sqDist hcenters] using hleftRaw
-  have hrightN : sqDist (N G.t) (N j) ≤ d₁ := by
-    simpa only [N, FullTwoRungGeometry.normalized,
-      normalizeAlong_sqDist hcenters] using hrightRaw
-  have hjLens : InSharedDiameterLens F.c F.H (N j) := by
-    constructor
-    · rw [← F.e_coord, ← F.d₁_radius]
-      exact hleftN
-    · rw [← F.t_coord, ← F.d₁_radius]
-      exact hrightN
-  have hpoints : P j ≠ P G.s := G.pointsInjective.ne hjs
-  have hnormalized : N j ≠ N G.s := by
-    exact (normalizeAlong_injective hcenters).ne hpoints
-  have hneTip : N j ≠ (F.c, F.H) := by
-    rw [← F.s_coord]
-    exact hnormalized
-  have hbound := diameter_lens_unique_farthest F.c_pos F.H_pos F.Y_neg
-    hPdiameter hjLens hneTip
-  rw [← F.vertex_coord, ← F.s_coord] at hbound
-  simpa only [N, FullTwoRungGeometry.normalized,
-    normalizeAlong_sqDist hcenters] using hbound
+      sqDist (P G.vertex) (P j) < sqDist (P G.vertex) (P G.s) :=
+  shared_tip_unique_farthest G.pointsInjective G.classes G.e_ne_t
+    G.es G.ts G.tipAbove G.vertexBelow
 
 private theorem fullTwoRung_diameter_branch_impossible
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2062,7 +2094,7 @@ private theorem fullTwoRung_diameter_branch_impossible
   have hfar : euclideanDist (P G.vertex) (P G.w) <
       euclideanDist (P G.vertex) (P G.s) := by
     rw [euclideanDist_eq_sqrt_sqDist, euclideanDist_eq_sqrt_sqDist]
-    exact Real.sqrt_lt_sqrt (sqDist_nonneg_local _ _) hfarSq
+    exact Real.sqrt_lt_sqrt (sqDist_nonneg _ _) hfarSq
   have hED := edge_diagonal_inequality G.antiSaturationQuad
   rw [euclideanDist_eq_sqrt_of_sqDist_eq G.tw,
     euclideanDist_comm_local (P G.s) (P G.vertex),
@@ -2118,39 +2150,63 @@ private theorem fullTwoRung_arc_neighbor_classes
     linarith
   exact ⟨hVj, sqDist_eq_d₁_of_sqrt_d₂_lt G.classes hcenterj hcenterFar⟩
 
+private theorem fullTwoRung_arc_card_le_one
+    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
+    (G : FullTwoRungGeometry P d₁ d₂ d₃)
+    (hVs : sqDist (P G.vertex) (P G.s) = d₂)
+    (hlong : 2 * Real.sqrt d₂ ≤ Real.sqrt d₁ + Real.sqrt d₃)
+    {arc : Finset (Fin n)} {center : Fin n}
+    (hcenterVertex : center ≠ G.vertex)
+    (hcenterArc : ∀ j ∈ arc, center ≠ j)
+    (hneTip : ∀ j ∈ arc, j ≠ G.s)
+    (hED : ∀ j ∈ arc,
+      euclideanDist (P G.vertex) (P j) + Real.sqrt d₁ <
+        Real.sqrt d₂ + euclideanDist (P center) (P j))
+    (hside :
+      (∀ j ∈ arc, InLeftOpenHalfPlane (P center) (P G.vertex) (P j)) ∨
+      (∀ j ∈ arc, InLeftOpenHalfPlane (P G.vertex) (P center) (P j))) :
+    (arcNeighbors P d₁ d₂ d₃ G.vertex arc).card ≤ 1 := by
+  rw [Finset.card_le_one_iff]
+  intro p q hp hq
+  have hpData := Finset.mem_filter.mp hp
+  have hqData := Finset.mem_filter.mp hq
+  have hpClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
+    (hcenterArc p hpData.1) (hneTip p hpData.1) hpData.2.2
+    (hED p hpData.1)
+  have hqClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
+    (hcenterArc q hqData.1) (hneTip q hqData.1) hqData.2.2
+    (hED q hqData.1)
+  apply G.pointsInjective
+  rcases hside with hforward | hreverse
+  · apply same_half_plane_two_circle_unique
+      (G.pointsInjective.ne hcenterVertex)
+    · exact hpClasses.2.trans hqClasses.2.symm
+    · exact hpClasses.1.trans hqClasses.1.symm
+    · exact hforward p hpData.1
+    · exact hforward q hqData.1
+  · apply same_half_plane_two_circle_unique
+      (G.pointsInjective.ne hcenterVertex.symm)
+    · exact hpClasses.1.trans hqClasses.1.symm
+    · exact hpClasses.2.trans hqClasses.2.symm
+    · exact hreverse p hpData.1
+    · exact hreverse q hqData.1
+
 private theorem fullTwoRung_ePositive_card_le_one
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : FullTwoRungGeometry P d₁ d₂ d₃)
     (hVs : sqDist (P G.vertex) (P G.s) = d₂)
     (hlong : 2 * Real.sqrt d₂ ≤ Real.sqrt d₁ + Real.sqrt d₃) :
     (arcNeighbors P d₁ d₂ d₃ G.vertex G.ePositiveArc).card ≤ 1 := by
-  rw [Finset.card_le_one_iff]
-  intro p q hp hq
-  have hpData := Finset.mem_filter.mp hp
-  have hqData := Finset.mem_filter.mp hq
-  have hpED := edge_diagonal_inequality (G.ePositiveQuad p hpData.1)
-  have hqED := edge_diagonal_inequality (G.ePositiveQuad q hqData.1)
-  rw [euclideanDist_comm_local (P G.s) (P G.e),
-    euclideanDist_eq_sqrt_of_sqDist_eq G.es,
-    euclideanDist_eq_sqrt_of_sqDist_eq hVs,
-    euclideanDist_comm_local (P p) (P G.e)] at hpED
-  rw [euclideanDist_comm_local (P G.s) (P G.e),
-    euclideanDist_eq_sqrt_of_sqDist_eq G.es,
-    euclideanDist_eq_sqrt_of_sqDist_eq hVs,
-    euclideanDist_comm_local (P q) (P G.e)] at hqED
-  have hpClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
-    (G.ePositive_center_ne p hpData.1) (G.ePositive_ne_tip p hpData.1)
-    hpData.2.2 (by linarith [hpED])
-  have hqClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
-    (G.ePositive_center_ne q hqData.1) (G.ePositive_ne_tip q hqData.1)
-    hqData.2.2 (by linarith [hqED])
-  apply G.pointsInjective
-  apply same_half_plane_two_circle_unique
-    (G.pointsInjective.ne G.vertex_ne_e.symm)
-  · exact hpClasses.2.trans hqClasses.2.symm
-  · exact hpClasses.1.trans hqClasses.1.symm
-  · exact G.ePositiveHalfPlane p hpData.1
-  · exact G.ePositiveHalfPlane q hqData.1
+  apply fullTwoRung_arc_card_le_one G hVs hlong G.vertex_ne_e.symm
+    G.ePositive_center_ne G.ePositive_ne_tip
+  · intro j hj
+    have hED := edge_diagonal_inequality (G.ePositiveQuad j hj)
+    rw [euclideanDist_comm_local (P G.s) (P G.e),
+      euclideanDist_eq_sqrt_of_sqDist_eq G.es,
+      euclideanDist_eq_sqrt_of_sqDist_eq hVs,
+      euclideanDist_comm_local (P j) (P G.e)] at hED
+    linarith
+  · exact Or.inl G.ePositiveHalfPlane
 
 private theorem fullTwoRung_eNegative_card_le_one
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2158,33 +2214,16 @@ private theorem fullTwoRung_eNegative_card_le_one
     (hVs : sqDist (P G.vertex) (P G.s) = d₂)
     (hlong : 2 * Real.sqrt d₂ ≤ Real.sqrt d₁ + Real.sqrt d₃) :
     (arcNeighbors P d₁ d₂ d₃ G.vertex G.eNegativeArc).card ≤ 1 := by
-  rw [Finset.card_le_one_iff]
-  intro p q hp hq
-  have hpData := Finset.mem_filter.mp hp
-  have hqData := Finset.mem_filter.mp hq
-  have hpED := edge_diagonal_inequality (G.eNegativeQuad p hpData.1)
-  have hqED := edge_diagonal_inequality (G.eNegativeQuad q hqData.1)
-  rw [euclideanDist_comm_local (P G.s) (P G.e),
-    euclideanDist_eq_sqrt_of_sqDist_eq G.es,
-    euclideanDist_eq_sqrt_of_sqDist_eq hVs,
-    euclideanDist_comm_local (P p) (P G.e)] at hpED
-  rw [euclideanDist_comm_local (P G.s) (P G.e),
-    euclideanDist_eq_sqrt_of_sqDist_eq G.es,
-    euclideanDist_eq_sqrt_of_sqDist_eq hVs,
-    euclideanDist_comm_local (P q) (P G.e)] at hqED
-  have hpClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
-    (G.eNegative_center_ne p hpData.1) (G.eNegative_ne_tip p hpData.1)
-    hpData.2.2 (by linarith [hpED])
-  have hqClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
-    (G.eNegative_center_ne q hqData.1) (G.eNegative_ne_tip q hqData.1)
-    hqData.2.2 (by linarith [hqED])
-  apply G.pointsInjective
-  apply same_half_plane_two_circle_unique
-    (G.pointsInjective.ne G.vertex_ne_e)
-  · exact hpClasses.1.trans hqClasses.1.symm
-  · exact hpClasses.2.trans hqClasses.2.symm
-  · exact G.eNegativeHalfPlane p hpData.1
-  · exact G.eNegativeHalfPlane q hqData.1
+  apply fullTwoRung_arc_card_le_one G hVs hlong G.vertex_ne_e.symm
+    G.eNegative_center_ne G.eNegative_ne_tip
+  · intro j hj
+    have hED := edge_diagonal_inequality (G.eNegativeQuad j hj)
+    rw [euclideanDist_comm_local (P G.s) (P G.e),
+      euclideanDist_eq_sqrt_of_sqDist_eq G.es,
+      euclideanDist_eq_sqrt_of_sqDist_eq hVs,
+      euclideanDist_comm_local (P j) (P G.e)] at hED
+    linarith
+  · exact Or.inr G.eNegativeHalfPlane
 
 private theorem fullTwoRung_tPositive_card_le_one
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2192,33 +2231,16 @@ private theorem fullTwoRung_tPositive_card_le_one
     (hVs : sqDist (P G.vertex) (P G.s) = d₂)
     (hlong : 2 * Real.sqrt d₂ ≤ Real.sqrt d₁ + Real.sqrt d₃) :
     (arcNeighbors P d₁ d₂ d₃ G.vertex G.tPositiveArc).card ≤ 1 := by
-  rw [Finset.card_le_one_iff]
-  intro p q hp hq
-  have hpData := Finset.mem_filter.mp hp
-  have hqData := Finset.mem_filter.mp hq
-  have hpED := edge_diagonal_inequality (G.tPositiveQuad p hpData.1)
-  have hqED := edge_diagonal_inequality (G.tPositiveQuad q hqData.1)
-  rw [euclideanDist_eq_sqrt_of_sqDist_eq G.ts,
-    euclideanDist_comm_local (P p) (P G.vertex),
-    euclideanDist_comm_local (P G.s) (P G.vertex),
-    euclideanDist_eq_sqrt_of_sqDist_eq hVs] at hpED
-  rw [euclideanDist_eq_sqrt_of_sqDist_eq G.ts,
-    euclideanDist_comm_local (P q) (P G.vertex),
-    euclideanDist_comm_local (P G.s) (P G.vertex),
-    euclideanDist_eq_sqrt_of_sqDist_eq hVs] at hqED
-  have hpClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
-    (G.tPositive_center_ne p hpData.1) (G.tPositive_ne_tip p hpData.1)
-    hpData.2.2 (by linarith [hpED])
-  have hqClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
-    (G.tPositive_center_ne q hqData.1) (G.tPositive_ne_tip q hqData.1)
-    hqData.2.2 (by linarith [hqED])
-  apply G.pointsInjective
-  apply same_half_plane_two_circle_unique
-    (G.pointsInjective.ne G.vertex_ne_t.symm)
-  · exact hpClasses.2.trans hqClasses.2.symm
-  · exact hpClasses.1.trans hqClasses.1.symm
-  · exact G.tPositiveHalfPlane p hpData.1
-  · exact G.tPositiveHalfPlane q hqData.1
+  apply fullTwoRung_arc_card_le_one G hVs hlong G.vertex_ne_t.symm
+    G.tPositive_center_ne G.tPositive_ne_tip
+  · intro j hj
+    have hED := edge_diagonal_inequality (G.tPositiveQuad j hj)
+    rw [euclideanDist_eq_sqrt_of_sqDist_eq G.ts,
+      euclideanDist_comm_local (P j) (P G.vertex),
+      euclideanDist_comm_local (P G.s) (P G.vertex),
+      euclideanDist_eq_sqrt_of_sqDist_eq hVs] at hED
+    linarith
+  · exact Or.inl G.tPositiveHalfPlane
 
 private theorem fullTwoRung_tNegative_card_le_one
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2226,33 +2248,16 @@ private theorem fullTwoRung_tNegative_card_le_one
     (hVs : sqDist (P G.vertex) (P G.s) = d₂)
     (hlong : 2 * Real.sqrt d₂ ≤ Real.sqrt d₁ + Real.sqrt d₃) :
     (arcNeighbors P d₁ d₂ d₃ G.vertex G.tNegativeArc).card ≤ 1 := by
-  rw [Finset.card_le_one_iff]
-  intro p q hp hq
-  have hpData := Finset.mem_filter.mp hp
-  have hqData := Finset.mem_filter.mp hq
-  have hpED := edge_diagonal_inequality (G.tNegativeQuad p hpData.1)
-  have hqED := edge_diagonal_inequality (G.tNegativeQuad q hqData.1)
-  rw [euclideanDist_eq_sqrt_of_sqDist_eq G.ts,
-    euclideanDist_comm_local (P p) (P G.vertex),
-    euclideanDist_comm_local (P G.s) (P G.vertex),
-    euclideanDist_eq_sqrt_of_sqDist_eq hVs] at hpED
-  rw [euclideanDist_eq_sqrt_of_sqDist_eq G.ts,
-    euclideanDist_comm_local (P q) (P G.vertex),
-    euclideanDist_comm_local (P G.s) (P G.vertex),
-    euclideanDist_eq_sqrt_of_sqDist_eq hVs] at hqED
-  have hpClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
-    (G.tNegative_center_ne p hpData.1) (G.tNegative_ne_tip p hpData.1)
-    hpData.2.2 (by linarith [hpED])
-  have hqClasses := fullTwoRung_arc_neighbor_classes G hVs hlong
-    (G.tNegative_center_ne q hqData.1) (G.tNegative_ne_tip q hqData.1)
-    hqData.2.2 (by linarith [hqED])
-  apply G.pointsInjective
-  apply same_half_plane_two_circle_unique
-    (G.pointsInjective.ne G.vertex_ne_t)
-  · exact hpClasses.1.trans hqClasses.1.symm
-  · exact hpClasses.2.trans hqClasses.2.symm
-  · exact G.tNegativeHalfPlane p hpData.1
-  · exact G.tNegativeHalfPlane q hqData.1
+  apply fullTwoRung_arc_card_le_one G hVs hlong G.vertex_ne_t.symm
+    G.tNegative_center_ne G.tNegative_ne_tip
+  · intro j hj
+    have hED := edge_diagonal_inequality (G.tNegativeQuad j hj)
+    rw [euclideanDist_eq_sqrt_of_sqDist_eq G.ts,
+      euclideanDist_comm_local (P j) (P G.vertex),
+      euclideanDist_comm_local (P G.s) (P G.vertex),
+      euclideanDist_eq_sqrt_of_sqDist_eq hVs] at hED
+    linarith
+  · exact Or.inr G.tNegativeHalfPlane
 
 private theorem fullTwoRung_degree_le_six_of_arc_bounds
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2444,9 +2449,9 @@ private theorem fullTwoRung_second_class_short_impossible
     rw [hVs] at hfarR
     exact hfarR
   have hVwLe : sqDist (P G.vertex) (P G.w) ≤ d₃ :=
-    (top_three_class_bounds_of_ne_local G.classes G.vertex_ne_w).2.2 hVwLt
+    (top_three_class_bounds_of_ne G.classes G.vertex_ne_w).2.2 hVwLt
   have hVrLe : sqDist (P G.vertex) (P G.r) ≤ d₃ :=
-    (top_three_class_bounds_of_ne_local G.classes G.vertex_ne_r).2.2 hVrLt
+    (top_three_class_bounds_of_ne G.classes G.vertex_ne_r).2.2 hVrLt
   have hclassNeg : d₂ - d₁ = -4 * F.c * F.offset := by
     linarith [F.classDifference]
   have hsum := two_rung_sum_identity_with_classes
@@ -2495,18 +2500,23 @@ theorem fullTwoRung_realization_degree_le_six
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : FullTwoRungGeometry P d₁ d₂ d₃) :
     vertexDegree P d₁ d₂ d₃ G.vertex ≤ 6 := by
-  have hVsBounds := top_three_class_bounds_of_ne_local G.classes G.vertex_ne_s
+  have hVsBounds := top_three_class_bounds_of_ne G.classes G.vertex_ne_s
   rcases top_three_value_split hVsBounds with hVs | hVs | hVs
   · exact (fullTwoRung_diameter_branch_impossible G hVs).elim
   · exact fullTwoRung_second_class_degree_le_six G hVs
   · exact (fullTwoRung_low_degree_le_one G hVs).trans (by omega)
 
-/-- Row 1 `B:2→1`, in the canonical full-two-rung orientation. -/
-structure Row1B21WordRealization
+/-- A word whose labels have been transported into the common full-two-rung
+orientation. -/
+structure FullTwoRungWordRealization
     {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Full-two-rung geometry in the row-1 orientation. -/
+  /-- Raw geometry after the word-specific relabelling. -/
   geometry : FullTwoRungGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 0 1 3 2
+
+/-- Row 1 `B:2→1`, in the canonical full-two-rung orientation. -/
+abbrev Row1B21WordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  FullTwoRungWordRealization P d₁ d₂ d₃
 
 theorem row1_B21_realization_degree_le_six
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2515,11 +2525,9 @@ theorem row1_B21_realization_degree_le_six
   fullTwoRung_realization_degree_le_six G.geometry
 
 /-- Shifted row 2 `AB`, relabelled into the full-two-rung frame. -/
-structure Row2ABWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Full-two-rung geometry after the row-2 relabelling. -/
-  geometry : FullTwoRungGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 1 1 3 2
+abbrev Row2ABWordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  FullTwoRungWordRealization P d₁ d₂ d₃
 
 theorem row2_AB_realization_degree_le_six
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2528,11 +2536,9 @@ theorem row2_AB_realization_degree_le_six
   fullTwoRung_realization_degree_le_six G.geometry
 
 /-- Row 3 `BB×DD`, with either lower shared-tip insertion selected. -/
-structure Row3BBDDWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Full-two-rung geometry for the selected row-3 insertion. -/
-  geometry : FullTwoRungGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 0 2 2 2
+abbrev Row3BBDDWordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  FullTwoRungWordRealization P d₁ d₂ d₃
 
 theorem row3_BB_DD_realization_degree_le_six
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2541,11 +2547,9 @@ theorem row3_BB_DD_realization_degree_le_six
   fullTwoRung_realization_degree_le_six G.geometry
 
 /-- Row 4 `D:2→1`, reflected and relabelled so positive turns are restored. -/
-structure Row4D21WordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Full-two-rung geometry in the reflected row-4 orientation. -/
-  geometry : FullTwoRungGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 0 2 3 1
+abbrev Row4D21WordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  FullTwoRungWordRealization P d₁ d₂ d₃
 
 theorem row4_D21_realization_degree_le_six
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2554,11 +2558,9 @@ theorem row4_D21_realization_degree_le_six
   fullTwoRung_realization_degree_le_six G.geometry
 
 /-- Shifted row 4 `CD`, reflected and relabelled into the common frame. -/
-structure Row4CDWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Full-two-rung geometry after the `CD` relabelling. -/
-  geometry : FullTwoRungGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 0 2 3 1
+abbrev Row4CDWordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  FullTwoRungWordRealization P d₁ d₂ d₃
 
 theorem row4_CD_realization_degree_le_six
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2567,11 +2569,9 @@ theorem row4_CD_realization_degree_le_six
   fullTwoRung_realization_degree_le_six G.geometry
 
 /-- Row 5 `BB×DD`, with either full insertion selected. -/
-structure Row5BBDDWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Full-two-rung geometry for the selected row-5 insertion. -/
-  geometry : FullTwoRungGeometry P d₁ d₂ d₃
-  row : IsExceptionalMajorantRow 0 2 3 2
+abbrev Row5BBDDWordRealization
+    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
+  FullTwoRungWordRealization P d₁ d₂ d₃
 
 theorem row5_BB_DD_realization_degree_le_six
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}

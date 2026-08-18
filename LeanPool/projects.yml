@@ -5208,8 +5208,9 @@ projects:
           the exact two-rung identity and metric dichotomy.
       - declaration: LeanPool.Erdos132ConvexK3.maximal_gap_signed_yz
         informal: >-
-          The selected majorants give the exact signed side-count identity for
-          the boundary arc from y to z.
+          If the unwrapped positions satisfy t=x+3, y=x+gapX, u=t+gapT,
+          s−u=M, and z−s=first.rightMoves, then the signed side count z−y
+          equals the setup's yzSides value.
         source_ref: >-
           Erdős--Lovász--Vesztergombi, proof of Theorem 2.7, printed p. 548:
           “Hence the number of sides of P on the arc yz is at most

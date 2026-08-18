@@ -3,13 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.Assembly
+import LeanPool.Erdos132ConvexK3.Basic
+import LeanPool.Erdos132ConvexK3.Majorants
 import LeanPool.Erdos132ConvexK3.Witnesses
 import Lean.Elab.Tactic.Omega
+import Mathlib.Algebra.Group.Fin.Basic
+import Mathlib.Data.Finset.Max
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Tauto
 
 /-!
@@ -109,31 +111,6 @@ isolated-vertex sentinel. -/
 noncomputable def firstClockwiseNeighbor
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) (v : Fin n) : Fin n :=
   cyclicRetreat v (firstClockwiseNeighborOffset P d₁ d₂ d₃ v).val
-
-/-- The executable unordered-pair list contains exactly the increasing
-representatives. -/
-theorem mem_unorderedPairList_iff
-    {n : ℕ} {i j : Fin n} : (i, j) ∈ unorderedPairList n ↔ i < j := by
-  simp [unorderedPairList]
-
-theorem sqDist_nonneg (a b : Point ℝ) : 0 ≤ sqDist a b := by
-  simp only [sqDist]
-  positivity
-
-/-- The top-three predicate supplies its global distance bound for every
-ordered pair of distinct labels, not only for the increasing representative
-stored in `unorderedPairList`. -/
-theorem top_three_class_bounds_of_ne
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃)
-    {i j : Fin n} (hij : i ≠ j) :
-    let d := sqDist (P i) (P j)
-    d ≤ d₁ ∧ (d < d₁ → d ≤ d₂) ∧ (d < d₂ → d ≤ d₃) := by
-  rcases hClasses with ⟨_, _, _, _, _, hall⟩
-  rcases lt_or_gt_of_ne hij with hij | hji
-  · exact hall (i, j) (mem_unorderedPairList_iff.mpr hij)
-  · simpa only [sqDist_comm] using
-      (hall (j, i) (mem_unorderedPairList_iff.mpr hji))
 
 /-- Strictly increasing a top-three edge produces another top-three edge.
 This is the rank fact behind termination of the primary-source cover process. -/
@@ -282,7 +259,9 @@ theorem exists_maximal_firstNeighborGap
     ∃ x : Fin n, ∀ v : Fin n,
       firstNeighborGap P d₁ d₂ d₃ v ≤ firstNeighborGap P d₁ d₂ d₃ x := by
   classical
-  exact Finite.exists_max (firstNeighborGap P d₁ d₂ d₃)
+  obtain ⟨x, _, hx⟩ := Finset.exists_max_image Finset.univ
+    (firstNeighborGap P d₁ d₂ d₃) ⟨0, Finset.mem_univ _⟩
+  exact ⟨x, fun v ↦ hx v (Finset.mem_univ _)⟩
 
 /-- A primary-source left cover of the oriented edge `ij`: retreating the
 left endpoint by one side strictly increases the squared distance. -/
@@ -329,7 +308,8 @@ strictly shorten it.  ErLV majorant existence therefore uses finite rank
 ascent with a terminal case; it does not use such a universal extension
 lemma. -/
 theorem heptagon_nondiameter_edge_is_majorant :
-    HasTopThreeDistanceClasses Witnesses.heptagon 7225 6649 5353 ∧
+    CyclicStrictConvex Witnesses.heptagon ∧
+      HasTopThreeDistanceClasses Witnesses.heptagon 7225 6649 5353 ∧
       sqDist (Witnesses.heptagon 0) (Witnesses.heptagon 5) = 6649 ∧
       (6649 : ℚ) ≠ 7225 ∧ IsMajorant Witnesses.heptagon 0 5 := by
   have hcur : sqDist (Witnesses.heptagon 0) (Witnesses.heptagon 5) = 6649 :=
@@ -339,7 +319,8 @@ theorem heptagon_nondiameter_edge_is_majorant :
   have hleft : sqDist (Witnesses.heptagon 6) (Witnesses.heptagon 5) = 74 := by
     change ((32 : ℚ) - 27) ^ 2 + (75 - 68) ^ 2 = 74
     norm_num
-  refine ⟨Witnesses.heptagon_top_three, hcur, by norm_num, ?_⟩
+  refine ⟨Witnesses.heptagon_strict_convex, Witnesses.heptagon_top_three,
+    hcur, by norm_num, ?_⟩
   constructor
   · intro hCover
     change sqDist (Witnesses.heptagon 0) (Witnesses.heptagon 5) <

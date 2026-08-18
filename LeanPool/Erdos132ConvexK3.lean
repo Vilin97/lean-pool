@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
+import LeanPool.Erdos132ConvexK3.Assembly
 import LeanPool.Erdos132ConvexK3.UseSite
 
 /-!

@@ -212,10 +212,10 @@ theorem concrete_word_closures
         exact ⟨data.geometry.vertex, row2_BA_realization_degree_le_five data⟩
     | row4_D31 =>
         obtain ⟨data⟩ : Nonempty (Row4D31WordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.reflected.vertex, row4_D31_realization_degree_le_five data⟩
+        exact ⟨data.geometry.vertex, row4_D31_realization_degree_le_five data⟩
     | row4_DC =>
         obtain ⟨data⟩ : Nonempty (Row4DCWordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.reflected.vertex, row4_DC_realization_degree_le_five data⟩
+        exact ⟨data.geometry.vertex, row4_DC_realization_degree_le_five data⟩
     | row1_B32 | row1_B21 | row2_AB | row3_BB_DD | row4_D32 | row4_D21 |
         row4_CD | row4_DD | row5_BB_DD =>
         simp [ExceptionalCoverWord.route] at hRoute
@@ -226,7 +226,7 @@ theorem concrete_word_closures
         exact ⟨data.vertex, row1_B32_realization_degree_le_six data⟩
     | row4_D32 =>
         obtain ⟨data⟩ : Nonempty (Row4D32WordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.reflected.vertex, row4_D32_realization_degree_le_six data⟩
+        exact ⟨data.vertex, row4_D32_realization_degree_le_six data⟩
     | row1_B31 | row1_B21 | row2_AB | row2_BA | row3_BB_DD | row4_D31 |
         row4_D21 | row4_CD | row4_DC | row4_DD | row5_BB_DD =>
         simp [ExceptionalCoverWord.route] at hRoute

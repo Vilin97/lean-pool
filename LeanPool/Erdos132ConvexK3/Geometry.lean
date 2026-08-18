@@ -399,7 +399,7 @@ theorem turn_swap
 boundary arcs represented by `b` and `d` lie in opposite open half-planes
 of chord `ac`. -/
 theorem chord_half_plane_separation
-    {K : Type*} [CommRing K] [LinearOrder K] [_strictOrder : IsStrictOrderedRing K]
+    {K : Type*} [CommRing K] [LinearOrder K]
     {a b c d : Point K}
     (h : StrictConvexQuad a b c d) :
     InLeftOpenHalfPlane a c d ∧ InLeftOpenHalfPlane c a b := by

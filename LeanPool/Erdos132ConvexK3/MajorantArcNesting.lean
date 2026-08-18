@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 import LeanPool.Erdos132ConvexK3.GlobalReduction
+import LeanPool.Erdos132ConvexK3.Geometry
 import Lean.Elab.Tactic.Omega
+import Mathlib.Order.Interval.Finset.Fin
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
@@ -233,7 +235,7 @@ theorem cyclic_strict_convex_turn_zero_of_lt
 
 /-- Relabel a cyclic configuration so that `base` becomes index zero. -/
 def cyclicRotate
-    {K : Type*} [_addGroup : AddCommGroup K] {n : ℕ} [_nonzero : NeZero n]
+    {K : Type*} {n : ℕ} [_nonzero : NeZero n]
     (P : Fin n → Point K) (base : Fin n) : Fin n → Point K :=
   fun i ↦ P (base + i)
 

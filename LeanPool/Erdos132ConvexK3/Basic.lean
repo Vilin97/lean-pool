@@ -6,6 +6,7 @@ Authors: Egor Lyfar
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.FinRange
+import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Ring
 
 /-!
@@ -100,16 +101,41 @@ def HasTopThreeDistanceClasses
       let d := sqDist (P e.1) (P e.2)
       d ≤ d₁ ∧ (d < d₁ → d ≤ d₂) ∧ (d < d₂ → d ≤ d₃)
 
+/-- The executable unordered-pair list contains exactly the increasing
+representatives. -/
+theorem mem_unorderedPairList_iff
+    {n : ℕ} {i j : Fin n} : (i, j) ∈ unorderedPairList n ↔ i < j := by
+  simp [unorderedPairList]
+
+theorem sqDist_nonneg (a b : Point ℝ) : 0 ≤ sqDist a b := by
+  simp only [sqDist]
+  exact add_nonneg (sq_nonneg _) (sq_nonneg _)
+
+/-- The top-three predicate supplies its global distance bound for every
+ordered pair of distinct labels, not only for the increasing representative
+stored in `unorderedPairList`. -/
+theorem top_three_class_bounds_of_ne
+    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
+    (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃)
+    {i j : Fin n} (hij : i ≠ j) :
+    let d := sqDist (P i) (P j)
+    d ≤ d₁ ∧ (d < d₁ → d ≤ d₂) ∧ (d < d₂ → d ≤ d₃) := by
+  rcases hClasses with ⟨_, _, _, _, _, hall⟩
+  rcases lt_or_gt_of_ne hij with hij | hji
+  · exact hall (i, j) (mem_unorderedPairList_iff.mpr hij)
+  · simpa only [sqDist_comm] using
+      (hall (j, i) (mem_unorderedPairList_iff.mpr hji))
+
 /-- Executable checker for `CyclicStrictConvex`. -/
 def cyclicStrictConvexCheck
-    {K : Type*} [Ring K] [LinearOrder K] [_strictOrder : IsStrictOrderedRing K]
+    {K : Type*} [Ring K] [LinearOrder K]
     {n : ℕ} [NeZero n] (P : Fin n → Point K) : Bool :=
   (List.finRange n).all fun i ↦
     (List.finRange n).all fun j ↦
       decide (j = i ∨ j = cyclicNext i ∨ 0 < turn (P i) (P (cyclicNext i)) (P j))
 
 theorem cyclicStrictConvex_of_check
-    {K : Type*} [Ring K] [LinearOrder K] [_strictOrder : IsStrictOrderedRing K]
+    {K : Type*} [Ring K] [LinearOrder K]
     {n : ℕ} [NeZero n] {P : Fin n → Point K}
     (h : cyclicStrictConvexCheck P = true) : CyclicStrictConvex P := by
   rw [cyclicStrictConvexCheck, List.all_eq_true] at h
@@ -124,7 +150,7 @@ theorem cyclicStrictConvex_of_check
 
 /-- Executable checker for the exact top-three distance-class predicate. -/
 def hasTopThreeDistanceClassesCheck
-    {K : Type*} [Ring K] [LinearOrder K] [_strictOrder : IsStrictOrderedRing K]
+    {K : Type*} [Ring K] [LinearOrder K]
     {n : ℕ} (P : Fin n → Point K) (d₁ d₂ d₃ : K) : Bool :=
   decide (d₃ < d₂) && decide (d₂ < d₁) &&
     (unorderedPairList n).any (fun e ↦ decide (sqDist (P e.1) (P e.2) = d₁)) &&
@@ -135,7 +161,7 @@ def hasTopThreeDistanceClassesCheck
       decide (d ≤ d₁ ∧ (d < d₁ → d ≤ d₂) ∧ (d < d₂ → d ≤ d₃)))
 
 theorem hasTopThreeDistanceClasses_of_check
-    {K : Type*} [Ring K] [LinearOrder K] [_strictOrder : IsStrictOrderedRing K]
+    {K : Type*} [Ring K] [LinearOrder K]
     {n : ℕ} {P : Fin n → Point K} {d₁ d₂ d₃ : K}
     (h : hasTopThreeDistanceClassesCheck P d₁ d₂ d₃ = true) :
     HasTopThreeDistanceClasses P d₁ d₂ d₃ := by
