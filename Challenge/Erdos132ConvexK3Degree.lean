@@ -73,8 +73,10 @@ noncomputable def topThreeDistanceDegree
       squaredDistance (points i) (points j) = d₂ ∨
         squaredDistance (points i) (points j) = d₃).card
 
-/-- The `k = 3` case of the minimum-degree question following Theorem 2.7 of
-Erdős--Lovász--Vesztergombi: the graph of the three largest distance classes
+/-- The `k = 3` case of the "perhaps degree at most `2k`" question posed by
+Erdős--Lovász--Vesztergombi (printed p. 542), which their Theorem 2.7
+(printed p. 548) answers only with the weaker bound `3k - 1`: the graph of
+the three largest distance classes
 of a finite strictly convex planar set has a vertex of degree at most six.
 Distances are represented by their squares, which preserves equality and
 order for Euclidean distances. -/

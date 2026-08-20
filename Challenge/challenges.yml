@@ -160,10 +160,12 @@ challenges:
   - slug: erdos132-convex-k3-degree
     title: Degree six for the three largest distances in convex position
     summary: >-
-      Prove the k = 3 case of the minimum-degree question raised after Theorem
-      2.7 of Erdős, Lovász, and Vesztergombi's 1989 paper: for a finite set in
-      strictly convex position, the graph joining pairs at one of the three
-      largest distances has minimum degree at most six. The three classes are
+      Prove the k = 3 case of the minimum-degree question posed on printed
+      p. 542 of Erdős, Lovász, and Vesztergombi's 1989 paper ("perhaps degree
+      at most 2k"), which their Theorem 2.7 on printed p. 548 answers only
+      with the weaker bound 3k - 1: for a finite set in strictly convex
+      position, the graph joining pairs at one of the three largest distances
+      has minimum degree at most six. The three classes are
       required to be distinct and realized, so configurations with fewer than
       three interpoint distances do not satisfy the hypotheses. The companion
       conditional pooled project in Vilin97/lean-pool#340, from branch
