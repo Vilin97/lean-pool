@@ -5164,9 +5164,11 @@ projects:
       exceptional-count rigidity and rank/exchange obstruction, and an
       explicit heptagon refutation of a tempting stronger majorant claim,
       with rational regression witnesses. The source-facing minimum-degree
-      theorem remains only as an explicit conditional map: its named global
-      reduction interface is logically as strong as the conclusion, while
-      the clean full statement is posed separately in challenge PR #341.
+      theorem remains only as an explicit conditional map for the stronger
+      open degree-six variant suggested by the paper's “perhaps degree at
+      most 2k” question: its named global reduction interface is logically
+      as strong as the conclusion, while the clean open statement is posed
+      separately in challenge PR #341.
       The general Erdős problem remains open.
     branch: discrete geometry
     entry_module: LeanPool.Erdos132ConvexK3
@@ -5217,13 +5219,18 @@ projects:
           (a+k)+(k−1)+b≤3k−2.”
       - declaration: LeanPool.Erdos132ConvexK3.convex_k3_degree_six_of_reduction
         informal: >-
-          The retained conditional map turns the separately open global
-          reduction interface into the convex k=3 minimum-degree conclusion;
-          it is not an unconditional proof of that source theorem.
+          This conditional map targets the STRONGER OPEN VARIANT that a
+          convex three-distance graph has minimum degree at most six. Its
+          separately open global reduction interface is logically as strong
+          as that conclusion; ErLV89 proves only the degree-eight bound
+          obtained from 3k−1 when k=3.
         source_ref: >-
-          Erdős--Lovász--Vesztergombi, Theorem 2.7, printed p. 548: “If S is
-          the set of vertices of a convex polygon then the graph G(S, k) has a
-          point of degree at most 3k−1.”
+          Erdős--Lovász--Vesztergombi, printed p. 542: “Perhaps in the convex
+          case there always exists an x_i such that the degree of x_i is at
+          most 2k.” Alongside it, Theorem 2.7, printed p. 548, proves only:
+          “If S is the set of vertices of a convex polygon then the graph
+          G(S, k) has a point of degree at most 3k−1.” Thus degree six for
+          k=3 is the stronger open variant; the proved source bound is eight.
       - declaration: LeanPool.Erdos132ConvexK3.coordinated_exceptional_count_rigidity
         informal: >-
           Every exceptional jointly minimal pair of majorant paths lies in
@@ -5250,6 +5257,12 @@ projects:
         informal: >-
           An explicit rational six-point regression configuration realizes the
           three stated rational squared-distance values as its largest classes.
+        source_ref: >-
+          Prior-art search receipt against pinned Mathlib v4.34.0-rc1
+          (de5ce8a9): manual rg searches for the exact values 96661/229 and
+          2776265163521/6927250000, and for few-distance, largest-distance,
+          rational-hexagon, convex-hexagon-distance, diameter-graph, and
+          diametral-graph vocabulary returned no matches.
     tags:
       - discrete-geometry
       - distance-graphs

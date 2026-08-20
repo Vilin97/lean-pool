@@ -280,7 +280,8 @@ theorem convex_top_three_min_degree_le_six_of_draft_reduction
   obtain ⟨Realizes, hCases, ⟨hClosures⟩⟩ := hReduction
   exact thirteen_word_assembly hCases hClosures
 
-/-- The intended unqualified convex theorem as a proposition. -/
+/-- The stronger open `k = 3`, degree-six variant posed by the paper's
+"perhaps degree at most `2k`" question after its degree-`3k - 1` theorem. -/
 def ConvexTopThreeDegreeSixStatement : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
@@ -296,8 +297,9 @@ def ConvexTopThreeDraftReductionComplete : Prop :=
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
       HasConvexK3DraftReduction P d₁ d₂ d₃
 
-/-- If the named global bridge is supplied, the actual convex degree-six
-statement follows with no further geometric or combinatorial assumptions. -/
+/-- If the named global bridge is supplied, the stronger open convex
+degree-six variant follows with no further geometric or combinatorial
+assumptions. -/
 theorem convex_top_three_degree_six_of_reduction_complete
     (hComplete : ConvexTopThreeDraftReductionComplete) :
     ConvexTopThreeDegreeSixStatement := by
@@ -305,9 +307,10 @@ theorem convex_top_three_degree_six_of_reduction_complete
   exact convex_top_three_min_degree_le_six_of_draft_reduction
     (hComplete P d₁ d₂ d₃ hConvex hClasses)
 
-/-- Conditional entry point.  Its interface is logically as strong as the
-conclusion; it is retained as an explicit map from the closure machinery to
-the open reduction, whose full statement is challenge PR #341. -/
+/-- Conditional entry point for the stronger open degree-six variant.  Its
+interface is logically as strong as the conclusion; it is retained as an
+explicit map from the closure machinery to the open reduction, whose full
+statement is challenge PR #341. -/
 theorem convex_k3_degree_six_of_reduction
     (hComplete : ConvexTopThreeDraftReductionComplete) :
     ConvexTopThreeDegreeSixStatement :=

@@ -451,6 +451,38 @@ private theorem circleSlot_card_le_one
   · exact hside p hpData.1
   · exact hside q hqData.1
 
+private theorem circleSlot_card_le_one_reverse
+    {n : ℕ} {P : Fin n → Point ℝ} (hInjective : Function.Injective P)
+    {arc : Finset (Fin n)} {firstCenter secondCenter : Fin n}
+    (hcenters : firstCenter ≠ secondCenter)
+    (hside : ∀ j ∈ arc,
+      InLeftOpenHalfPlane (P secondCenter) (P firstCenter) (P j))
+    {firstRadius secondRadius : ℝ} :
+    (circleSlot P arc firstCenter secondCenter firstRadius secondRadius).card ≤ 1 := by
+  rw [Finset.card_le_one_iff]
+  intro p q hp hq
+  have hpData := Finset.mem_filter.mp hp
+  have hqData := Finset.mem_filter.mp hq
+  apply hInjective
+  apply same_half_plane_two_circle_unique (hInjective.ne hcenters.symm)
+  · exact hpData.2.2.trans hqData.2.2.symm
+  · exact hpData.2.1.trans hqData.2.1.symm
+  · exact hside p hpData.1
+  · exact hside q hqData.1
+
+private theorem circleSlot_card_le_one_either
+    {n : ℕ} {P : Fin n → Point ℝ} (hInjective : Function.Injective P)
+    {arc : Finset (Fin n)} {firstCenter secondCenter : Fin n}
+    (hcenters : firstCenter ≠ secondCenter)
+    (hside :
+      (∀ j ∈ arc, InLeftOpenHalfPlane (P firstCenter) (P secondCenter) (P j)) ∨
+      (∀ j ∈ arc, InLeftOpenHalfPlane (P secondCenter) (P firstCenter) (P j)))
+    {firstRadius secondRadius : ℝ} :
+    (circleSlot P arc firstCenter secondCenter firstRadius secondRadius).card ≤ 1 := by
+  rcases hside with hforward | hreverse
+  · exact circleSlot_card_le_one hInjective hcenters hforward
+  · exact circleSlot_card_le_one_reverse hInjective hcenters hreverse
+
 private theorem arcNeighbors_card_le_of_three_slots
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     {v firstCenter secondCenter : Fin n} {arc : Finset (Fin n)}
@@ -540,8 +572,9 @@ structure Row1B32WordRealization
   leftHalfPlane : ∀ j ∈ leftArc,
     InLeftOpenHalfPlane (P x) (P vertex) (P j)
   left_x_ne : ∀ j ∈ leftArc, x ≠ j
+  /-- The return arc lies to the left of the reversed chord `vertex ⟶ t`. -/
   rightHalfPlane : ∀ j ∈ rightArc,
-    InLeftOpenHalfPlane (P t) (P vertex) (P j)
+    InLeftOpenHalfPlane (P vertex) (P t) (P j)
   right_t_ne : ∀ j ∈ rightArc, t ≠ j
   leftQuad : ∀ j ∈ leftArc,
     StrictConvexQuad (P vertex) (P j) (P s) (P x)
@@ -633,8 +666,8 @@ private theorem row1_B32_right_card_le_two
           (Finset.mem_filter.mpr ⟨hjArc, htj, hVj⟩))
       · exact Finset.mem_union.mpr (Or.inr
           (Finset.mem_filter.mpr ⟨hjArc, htj, hVj⟩))
-  · exact circleSlot_card_le_one G.pointsInjective G.t_ne_vertex G.rightHalfPlane
-  · exact circleSlot_card_le_one G.pointsInjective G.t_ne_vertex G.rightHalfPlane
+  · exact circleSlot_card_le_one_reverse G.pointsInjective G.t_ne_vertex G.rightHalfPlane
+  · exact circleSlot_card_le_one_reverse G.pointsInjective G.t_ne_vertex G.rightHalfPlane
 
 private theorem row1_B32_low_left_card_le_two
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -737,7 +770,7 @@ private theorem row1_B32_long_right_card_le_one
           Real.sq_sqrt hd₁] at hsq
         exact hsq
       exact Finset.mem_filter.mpr ⟨hjArc, htjSq, hVj⟩
-  · exact circleSlot_card_le_one G.pointsInjective G.t_ne_vertex G.rightHalfPlane
+  · exact circleSlot_card_le_one_reverse G.pointsInjective G.t_ne_vertex G.rightHalfPlane
 
 private theorem row1_B32_short_left_card_le_two
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -1063,8 +1096,9 @@ structure OnePenultimateWordGeometry
   right_s_ne : ∀ j ∈ rightArc, j ≠ s
   leftHalfPlane : ∀ j ∈ leftArc,
     InLeftOpenHalfPlane (P e) (P vertex) (P j)
+  /-- The return arc lies to the left of the reversed chord `vertex ⟶ t`. -/
   rightHalfPlane : ∀ j ∈ rightArc,
-    InLeftOpenHalfPlane (P t) (P vertex) (P j)
+    InLeftOpenHalfPlane (P vertex) (P t) (P j)
   leftQuad : ∀ j ∈ leftArc,
     StrictConvexQuad (P vertex) (P j) (P s) (P e)
   rightQuad : ∀ j ∈ rightArc,
@@ -1091,8 +1125,9 @@ private theorem one_penultimate_arc_card_le_two_raw
     (hcenter : center ≠ G.vertex)
     (hcenterArc : ∀ j ∈ arc, center ≠ j)
     (hsArc : ∀ j ∈ arc, j ≠ G.s)
-    (hside : ∀ j ∈ arc,
-      InLeftOpenHalfPlane (P center) (P G.vertex) (P j))
+    (hside :
+      (∀ j ∈ arc, InLeftOpenHalfPlane (P center) (P G.vertex) (P j)) ∨
+      (∀ j ∈ arc, InLeftOpenHalfPlane (P G.vertex) (P center) (P j)))
     (hED : ∀ j ∈ arc,
       euclideanDist (P G.vertex) (P j) + Real.sqrt d₁ <
         Real.sqrt d₂ + euclideanDist (P center) (P j))
@@ -1122,8 +1157,8 @@ private theorem one_penultimate_arc_card_le_two_raw
           (Finset.mem_filter.mpr ⟨hjArc, hcj, hVj⟩))
       · exact Finset.mem_union.mpr (Or.inr
           (Finset.mem_filter.mpr ⟨hjArc, hcj, hVj⟩))
-  · exact circleSlot_card_le_one G.pointsInjective hcenter hside
-  · exact circleSlot_card_le_one G.pointsInjective hcenter hside
+  · exact circleSlot_card_le_one_either G.pointsInjective hcenter hside
+  · exact circleSlot_card_le_one_either G.pointsInjective hcenter hside
 
 private theorem one_penultimate_left_arc_card_le_two
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -1131,7 +1166,7 @@ private theorem one_penultimate_left_arc_card_le_two
     (hVs : sqDist (P G.vertex) (P G.s) = d₂) :
     (arcNeighbors P d₁ d₂ d₃ G.vertex G.leftArc).card ≤ 2 := by
   apply one_penultimate_arc_card_le_two_raw G G.e_ne_vertex G.left_e_ne
-    G.left_s_ne G.leftHalfPlane
+    G.left_s_ne (Or.inl G.leftHalfPlane)
   · intro j hj
     have hED := edge_diagonal_inequality (G.leftQuad j hj)
     rw [euclideanDist_comm_local (P G.s) (P G.e),
@@ -1147,7 +1182,7 @@ private theorem one_penultimate_right_arc_card_le_two
     (hVs : sqDist (P G.vertex) (P G.s) = d₂) :
     (arcNeighbors P d₁ d₂ d₃ G.vertex G.rightArc).card ≤ 2 := by
   apply one_penultimate_arc_card_le_two_raw G G.t_ne_vertex G.right_t_ne
-    G.right_s_ne G.rightHalfPlane
+    G.right_s_ne (Or.inr G.rightHalfPlane)
   · intro j hj
     have hED := edge_diagonal_inequality (G.rightQuad j hj)
     rw [euclideanDist_eq_sqrt_of_sqDist_eq G.ts,
@@ -1275,8 +1310,10 @@ structure FourEdgeBranchGeometry
   arc : Finset (Fin n)
   center_ne_vertex : center ≠ vertex
   center_ne_arc : ∀ j ∈ arc, center ≠ j
-  halfPlane : ∀ j ∈ arc,
-    InLeftOpenHalfPlane (P center) (P vertex) (P j)
+  /-- One consistent side of the unoriented line through the two centers. -/
+  halfPlane :
+    (∀ j ∈ arc, InLeftOpenHalfPlane (P center) (P vertex) (P j)) ∨
+    (∀ j ∈ arc, InLeftOpenHalfPlane (P vertex) (P center) (P j))
   quad : ∀ j ∈ arc,
     StrictConvexQuad (P vertex) (P j) (P central) (P center) ∨
       StrictConvexQuad (P center) (P central) (P j) (P vertex)
@@ -1337,9 +1374,9 @@ private theorem fourEdgeBranch_card_le_three_of_central_d₁
           (Finset.mem_filter.mpr ⟨hjArc, hcj, hVj⟩))))
       · exact Finset.mem_union.mpr (Or.inr
           (Finset.mem_filter.mpr ⟨hjArc, hcj, hVj⟩))
-  · exact circleSlot_card_le_one hInjective B.center_ne_vertex B.halfPlane
-  · exact circleSlot_card_le_one hInjective B.center_ne_vertex B.halfPlane
-  · exact circleSlot_card_le_one hInjective B.center_ne_vertex B.halfPlane
+  · exact circleSlot_card_le_one_either hInjective B.center_ne_vertex B.halfPlane
+  · exact circleSlot_card_le_one_either hInjective B.center_ne_vertex B.halfPlane
+  · exact circleSlot_card_le_one_either hInjective B.center_ne_vertex B.halfPlane
 
 private theorem fourEdgeBranch_card_le_two_of_central_d₂
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -1378,8 +1415,8 @@ private theorem fourEdgeBranch_card_le_two_of_central_d₂
           (Finset.mem_filter.mpr ⟨hjArc, hcj, hVj⟩))
       · exact Finset.mem_union.mpr (Or.inr
           (Finset.mem_filter.mpr ⟨hjArc, hcj, hVj⟩))
-  · exact circleSlot_card_le_one hInjective B.center_ne_vertex B.halfPlane
-  · exact circleSlot_card_le_one hInjective B.center_ne_vertex B.halfPlane
+  · exact circleSlot_card_le_one_either hInjective B.center_ne_vertex B.halfPlane
+  · exact circleSlot_card_le_one_either hInjective B.center_ne_vertex B.halfPlane
 
 private theorem fourEdgeBranch_card_le_one_of_central_d₂_long
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -1415,7 +1452,7 @@ private theorem fourEdgeBranch_card_le_one_of_central_d₂_long
       have hcj := sqDist_eq_d₁_of_sqrt_d₂_lt hClasses
         (B.center_ne_arc j hjArc) hfar
       exact Finset.mem_filter.mpr ⟨hjArc, hcj, hVj⟩
-  · exact circleSlot_card_le_one hInjective B.center_ne_vertex B.halfPlane
+  · exact circleSlot_card_le_one_either hInjective B.center_ne_vertex B.halfPlane
 
 private theorem fourEdgeBranch_card_eq_zero_of_central_le_d₃
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
