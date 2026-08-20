@@ -157,3 +157,54 @@ challenges:
     msc:
       - "20C15"
       - "20D20"
+  - slug: erdos132-convex-k3-degree
+    title: Degree six for the three largest distances in convex position
+    summary: >-
+      Prove the k = 3 case of the minimum-degree question posed on printed
+      p. 542 of Erdős, Lovász, and Vesztergombi's 1989 paper ("perhaps degree
+      at most 2k"), which their Theorem 2.7 on printed p. 548 answers only
+      with the weaker bound 3k - 1: for a finite set in strictly convex
+      position, the graph joining pairs at one of the three largest distances
+      has minimum degree at most six. The three classes are
+      required to be distinct and realized, so configurations with fewer than
+      three interpoint distances do not satisfy the hypotheses. The companion
+      pooled project in Vilin97/lean-pool#343, from branch
+      lyfar/erdos132-convex-k3-clean, formalizes the full intended route,
+      including the coordinated-majorant selection step used but not stated
+      in the 1989 sketch. A solution is expected to land as a thin Solution
+      bridge from that project once it merges. The 10000-line estimate starts from the
+      existing roughly 5700-line conditional development and allows for the
+      missing step, whose eventual size is not yet known.
+    branch: discrete geometry
+    entry_module: Challenge.Erdos132ConvexK3Degree
+    proposers:
+      - Egor Lyfar
+    source:
+      title: On the graph of large distances
+      authors:
+        - Paul Erdős
+        - László Lovász
+        - Katalin Vesztergombi
+      doi: "10.1007/BF02187746"
+      url: https://www.erdosproblems.com/132
+    license: Apache-2.0
+    provenance: AI
+    status: open
+    estimated_lines: 10000
+    statements:
+      - declaration: Challenge.Erdos132ConvexK3Degree.degree_le_six
+        informal: >-
+          For every injectively labelled finite set of points in the real
+          Euclidean plane, listed in counterclockwise strictly convex position
+          and having at least three distinct interpoint distances, and for its
+          explicitly named three largest squared-distance classes, the graph
+          joining pairs in those classes has a vertex of degree at most six.
+          Squaring preserves equality and order of Euclidean distances.
+    tags:
+      - combinatorial-geometry
+      - distance-graphs
+      - convex-position
+      - erdos-problems
+    msc:
+      - "52C10"
+      - "05C12"
