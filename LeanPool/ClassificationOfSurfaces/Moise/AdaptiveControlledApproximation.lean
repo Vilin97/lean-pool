@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenCover
 import LeanPool.ClassificationOfSurfaces.Moise.HalfPlanePolygon
@@ -210,7 +210,7 @@ theorem cover_set_control (x : U) :
         y.1 ∈ (K.controlledAdaptiveOpenCover U hU f hf phi hphi).set x →
         z.1 ∈ (K.controlledAdaptiveOpenCover U hU f hf phi hphi).set x →
         dist (f y) (f z) ≤ eps / 4 := by
-  letI : LocallyCompactSpace U := hU.locallyCompactSpace
+  let : LocallyCompactSpace U := hU.locallyCompactSpace
   let M := N K U hU f hf phi hphi x
   refine ⟨M.scale, M.scale_pos, M.scale_le_one, ?_, ?_⟩
   · intro y hy

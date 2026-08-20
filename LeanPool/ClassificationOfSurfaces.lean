@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 
 import LeanPool.ClassificationOfSurfaces.API
@@ -141,7 +141,7 @@ import LeanPool.ClassificationOfSurfaces.WeightedCircle
 Source: url:https://github.com/mccorvie/classification-of-surfaces/tree/master/ClassificationOfSurfaces
 Authors: Ryan McCorvie, Jack McCarthy, SF Lean Meetup contributors
 Status: verified
-Main declarations: `LeanEval.Topology.ClassificationOfSurfaces.topological_classification_of_surfaces`
+Main declarations: `LeanEval.Topology.ClassificationOfSurfaces.classification_of_surfaces`
 Tags: geometric-topology, low-dimensional-topology, surfaces, manifolds, triangulation
 MSC: 57K20, 57N05
 -/

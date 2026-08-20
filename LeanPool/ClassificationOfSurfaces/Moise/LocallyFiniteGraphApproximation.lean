@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteTriangulation
 import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
@@ -150,7 +150,7 @@ theorem isCompact_preimage_subtypeVal_of_subset
     (hC : IsCompact C) (hCV : C ⊆ V) :
     IsCompact ((↑) ⁻¹' C : Set V) := by
   let f : C → V := fun x ↦ ⟨x.1, hCV x.2⟩
-  letI : CompactSpace C := isCompact_iff_compactSpace.mp hC
+  let : CompactSpace C := isCompact_iff_compactSpace.mp hC
   have hf : Continuous f := by
     apply Continuous.subtype_mk
     exact continuous_subtype_val
@@ -196,7 +196,7 @@ theorem locallyFinite_image_isEmbedding_of_isClosed_range
   · refine ⟨(Set.range f)ᶜ, hclosed.isOpen_compl.mem_nhds hy, ?_⟩
     have hempty : {i | (f '' A i ∩ (Set.range f)ᶜ).Nonempty} = ∅ := by
       ext i
-      simp only [Set.mem_setOf_eq, Set.notMem_empty, iff_false]
+      simp only [Set.mem_ofPred_eq, Set.notMem_empty, iff_false]
       rintro ⟨z, ⟨x, -, rfl⟩, hz⟩
       exact hz ⟨x, rfl⟩
     rw [hempty]
@@ -235,7 +235,7 @@ theorem isCompact_edgeImage (e : K.Edge) : IsCompact (G.edgeImage e) := by
     · rintro ⟨q, rfl⟩
       exact ⟨edgeToSupport (K := K) e q, ⟨q, rfl⟩, rfl⟩
   rw [himage]
-  letI : CompactSpace (K.edgeCarrier e) :=
+  let : CompactSpace (K.edgeCarrier e) :=
     isCompact_iff_compactSpace.mp (K.isCompact_edgeCarrier e)
   exact isCompact_range
     (G.isEmbedding.continuous.comp (continuous_edgeToSupport (K := K) e))
@@ -428,7 +428,7 @@ theorem isClosed_nonincidentEdgeImage (v : K.Vertex) :
     exact (G.isClosed_edgeImage e.1).preimage continuous_subtype_val
   convert hclosed using 1
   ext p
-  simp only [edgeImageInRange, Set.mem_preimage, Set.mem_iUnion, Set.mem_setOf_eq]
+  simp only [edgeImageInRange, Set.mem_preimage, Set.mem_iUnion, Set.mem_ofPred_eq]
 
 theorem vertexImage_not_mem_nonincidentEdgeImage (v : K.Vertex) :
     G.vertexImage v ∉ G.nonincidentEdgeImage v := by
@@ -539,7 +539,7 @@ theorem isClosed_otherVertexImages (v : K.Vertex) :
     simp [vertexImageCarrierInRange, vertexImageCarrier]
   convert hclosed using 1
   ext p
-  simp only [vertexImageCarrierInRange, Set.mem_preimage, Set.mem_iUnion, Set.mem_setOf_eq]
+  simp only [vertexImageCarrierInRange, Set.mem_preimage, Set.mem_iUnion, Set.mem_ofPred_eq]
 
 theorem vertexImage_not_mem_otherVertexImages (v : K.Vertex) :
     G.vertexImage v ∉ G.otherVertexImages v := by
@@ -722,7 +722,7 @@ theorem locallyFinite_vertexDisks : LocallyFinite G.vertexDiskInRange := by
           exact hz
     have hpCenter : dist (G.vertexImage v) x.1 ≤ d / 2 := by
       have hpc : dist (G.vertexImage v) p.1 ≤ G.vertexIsolationRadius v := by
-        simpa only [vertexDiskInRange, vertexDisk, Set.mem_setOf_eq,
+        simpa only [vertexDiskInRange, vertexDisk, Set.mem_ofPred_eq,
           Metric.mem_closedBall, dist_comm] using hpDisk
       have hpx : dist p.1 x.1 < d / 8 := Metric.mem_ball.mp hpU
       have hinf : Metric.infDist (G.vertexImage v) G.regionᶜ ≤
@@ -760,7 +760,7 @@ theorem locallyFinite_vertexDisks : LocallyFinite G.vertexDiskInRange := by
       G.map_mem_region ⟨K.vertexPoint v, K.vertexPoint_mem_support v⟩⟩
     have hpCenter : dist (G.vertexImage v) x.1 ≤ 2 := by
       have hpc : dist (G.vertexImage v) p.1 ≤ G.vertexIsolationRadius v := by
-        simpa only [vertexDiskInRange, vertexDisk, Set.mem_setOf_eq,
+        simpa only [vertexDiskInRange, vertexDisk, Set.mem_ofPred_eq,
           Metric.mem_closedBall, dist_comm] using hpDisk
       have hpx : dist p.1 x.1 < 1 := Metric.mem_ball.mp hpU
       have hmain : dist (G.vertexImage v) x.1 <
@@ -876,7 +876,7 @@ theorem isClosed_otherEdgeCentralCarriers (e : K.Edge) :
       (continuous_subtype_val : Continuous (Subtype.val : G.region → Plane))
   convert hclosed using 1
   ext p
-  simp only [edgeCentralCarrierInRange, Set.mem_preimage, Set.mem_iUnion, Set.mem_setOf_eq]
+  simp only [edgeCentralCarrierInRange, Set.mem_preimage, Set.mem_iUnion, Set.mem_ofPred_eq]
 
 theorem disjoint_edgeCentralCarrier_other (e : K.Edge) :
     Disjoint (G.edgeCentralCarrier e) (G.otherEdgeCentralCarriers e) := by
@@ -909,7 +909,7 @@ theorem isClosed_nonincidentVertexDisks (e : K.Edge) :
       (continuous_subtype_val : Continuous (Subtype.val : G.region → Plane))
   convert hclosed using 1
   ext p
-  simp only [vertexDiskInRange, Set.mem_preimage, Set.mem_iUnion, Set.mem_setOf_eq]
+  simp only [vertexDiskInRange, Set.mem_preimage, Set.mem_iUnion, Set.mem_ofPred_eq]
 
 theorem disjoint_edgeCentralCarrier_nonincidentVertexDisks (e : K.Edge) :
     Disjoint (G.edgeCentralCarrier e) (G.nonincidentVertexDisks e) := by
@@ -2590,7 +2590,7 @@ def edgeInSupport (e : K.Edge) : Set K.support :=
 
 theorem isCompact_edgeInSupport (e : K.Edge) :
     IsCompact (edgeInSupport (K := K) e) := by
-  letI : CompactSpace (K.edgeCarrier e) :=
+  let : CompactSpace (K.edgeCarrier e) :=
     isCompact_iff_compactSpace.mp (K.isCompact_edgeCarrier e)
   exact isCompact_range (continuous_edgeToSupport (K := K) e)
 
@@ -2906,7 +2906,7 @@ theorem locallyFinite_edgePieces : LocallyFinite (edgePiece (K := K)) := by
 
 theorem isClosed_edgePiece (G : K.PlaneGraphRealization) (e : K.Edge) :
     IsClosed (edgePiece (K := K) e) := by
-  letI : T2Space K.support := G.isEmbedding.t2Space
+  let : T2Space K.support := G.isEmbedding.t2Space
   exact (isCompact_edgeInSupport (K := K) e).isClosed.preimage continuous_subtype_val
 
 theorem isCompact_edgePiece (e : K.Edge) :
@@ -2924,7 +2924,7 @@ theorem isCompact_edgePiece (e : K.Edge) :
     · intro p hp
       exact ⟨⟨p.1, hp⟩, Subtype.ext rfl⟩
   rw [← hrange]
-  letI : CompactSpace (edgeInSupport (K := K) e) :=
+  let : CompactSpace (edgeInSupport (K := K) e) :=
     isCompact_iff_compactSpace.mp (isCompact_edgeInSupport (K := K) e)
   exact isCompact_range hinclude
 
@@ -2937,7 +2937,7 @@ theorem iUnion_edgePieces :
 
 theorem continuousOn_graphReplacementMap_edgePiece (e : K.Edge) :
     ContinuousOn G.graphReplacementMap (edgePiece (K := K) e) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   let lift : edgePiece (K := K) e → edgeInSupport (K := K) e :=
     fun p ↦ ⟨p.1.1, p.2⟩
   have hlift : Continuous lift := by
@@ -3108,7 +3108,7 @@ theorem locallyFinite_completeCarriers : LocallyFinite G.completeCarrierInRange 
     simp only [CentralPolygonalArc.completeCarrier, leftSpokeFamily,
       trimmedCarrierFamily, rightSpokeFamily, leftSpokeFamilyInRange,
       trimmedCarrierFamilyInRange, rightSpokeFamilyInRange, completeCarrierInRange,
-      Set.mem_union, Set.mem_setOf_eq]
+      Set.mem_union, Set.mem_ofPred_eq]
   rw [← heq]
   exact hall
 

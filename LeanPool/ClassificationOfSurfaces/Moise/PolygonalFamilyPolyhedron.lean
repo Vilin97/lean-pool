@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
 import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
@@ -90,7 +90,7 @@ def closedRegion : Set Plane :=
 
 omit [Fintype ι] in
 theorem isCompact_closedRegion [Finite ι] : IsCompact (closedRegion J) := by
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   exact isCompact_iUnion fun i ↦ (J i).isCompact_closedRegion
 
 /-- A positive radius of a ball containing every disk in the family. -/
@@ -634,7 +634,7 @@ omit [Fintype ι] in
 /-- A finite union of polygonal closed disks is a finite pure plane polyhedron. -/
 theorem closedRegion_is_polyhedron [Finite ι] :
     ∃ K : PlaneComplex, K.support = closedRegion J ∧ K.IsPure2 := by
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   exact ⟨(closedRegionMesh J).toPlaneComplex, closedRegionMesh_support J,
     (closedRegionMesh J).toPlaneComplex_isPure2⟩
 

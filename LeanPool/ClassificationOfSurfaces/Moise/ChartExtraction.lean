@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 import LeanPool.ClassificationOfSurfaces.Moise.BoundaryInvariant
@@ -87,7 +87,7 @@ theorem recenter_coordZero (hε : ε ≠ 0) (v : Plane) :
 /-- When the center sits on the edge line, recentering preserves the half-plane condition. -/
 theorem recenter_mem_halfPlane_iff (hε : 0 < ε) (hp : p 0 = 0) {v : Plane} :
     recenter p ε hε.ne' v ∈ HalfPlaneSet ↔ v ∈ HalfPlaneSet := by
-  simp only [HalfPlaneSet, Set.mem_setOf_eq, recenter_coordZero, hp, sub_zero]
+  simp only [HalfPlaneSet, Set.mem_ofPred_eq, recenter_coordZero, hp, sub_zero]
   constructor
   · intro h
     by_contra hneg

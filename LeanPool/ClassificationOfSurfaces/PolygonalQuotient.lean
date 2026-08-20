@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import Mathlib.Analysis.Complex.Circle
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
@@ -185,7 +185,7 @@ theorem iUnion_range_side {n : ℕ} (hn : 0 < n) :
     (⋃ i : Fin n, Set.range (side i)) =
       {x : PolygonCell n | (x : ℂ) ∈ Metric.sphere 0 1} := by
   ext x
-  simpa only [Set.mem_iUnion, Set.mem_range, Set.mem_setOf_eq] using
+  simpa only [Set.mem_iUnion, Set.mem_range, Set.mem_ofPred_eq] using
     (mem_sphere_iff_exists_side hn x).symm
 
 /-- The unique side of a monogon is a loop. -/

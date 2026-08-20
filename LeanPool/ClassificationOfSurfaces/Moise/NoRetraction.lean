@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
 import Mathlib.Analysis.Convex.GaugeRescale
@@ -50,9 +50,9 @@ theorem no_retraction_closedUnitDisk :
     ¬ ∃ r : ClosedUnitDisk → Circle,
       Continuous r ∧ ∀ z : Circle, r (circleToClosedUnitDisk z) = z := by
   rintro ⟨r, hr, hretract⟩
-  letI : ContractibleSpace ClosedUnitDisk :=
+  let : ContractibleSpace ClosedUnitDisk :=
     (convex_closedBall (0 : ℂ) 1).contractibleSpace ⟨0, by simp⟩
-  letI : LocallyPathConnectedSpace ClosedUnitDisk :=
+  let : LocallyPathConnectedSpace ClosedUnitDisk :=
     (convex_closedBall (0 : ℂ) 1).locallyPathConnectedSpace
   let f : C(ClosedUnitDisk, Circle) := ⟨r, hr⟩
   let center : ClosedUnitDisk := ⟨0, by simp⟩

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import Mathlib.Topology.MetricSpace.HausdorffDistance
 import Mathlib.Topology.Order.Compact
@@ -21,7 +21,7 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 open Filter
-open scoped Topology
+open scoped _root_.Topology
 
 /-- A positive control on `U` is strongly positive when it has a positive lower bound on every
 compact subset of `U`.  This is Moise's notation `phi >> 0`, stated without continuity. -/
@@ -90,7 +90,7 @@ theorem frontierCore_subset {X : Type*} [PseudoMetricSpace X]
   by_contra hxU
   have hzero : frontierDistance U x = 0 :=
     Metric.infDist_zero_of_mem (Set.mem_compl hxU)
-  rw [frontierCore, Set.mem_setOf_eq, hzero] at hx
+  rw [frontierCore, Set.mem_ofPred_eq, hzero] at hx
   have hpos : 0 < 1 / (n + 1 : ℝ) := by positivity
   linarith
 
@@ -114,7 +114,7 @@ theorem frontierCore_subset_interior_succ {X : Type*} [PseudoMetricSpace X]
   have hVsub : V ⊆ frontierCore U (n + 1) := by
     intro x hx
     change 1 / (n + 2 : ℝ) < frontierDistance U x at hx
-    simp only [frontierCore, Set.mem_setOf_eq]
+    simp only [frontierCore, Set.mem_ofPred_eq]
     have hden : (((n + 1 : ℕ) : ℝ) + 1) = n + 2 := by
       push_cast
       ring

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PLMoves
 import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
@@ -784,7 +784,7 @@ private theorem exists_pos_uniform_fintype {I : Type*} [Finite I] [Nonempty I]
     (hP : ∀ i, ∃ ε : ℝ, 0 < ε ∧ ∀ δ : ℝ, 0 < δ → δ < ε → P i δ) :
     ∃ ε : ℝ, 0 < ε ∧ ∀ i, ∀ δ : ℝ, 0 < δ → δ < ε → P i δ := by
   classical
-  letI := Fintype.ofFinite I
+  let := Fintype.ofFinite I
   let values : Finset ℝ := Finset.univ.image fun i => Classical.choose (hP i)
   have hvalues : values.Nonempty := by
     let i : I := Classical.choice inferInstance

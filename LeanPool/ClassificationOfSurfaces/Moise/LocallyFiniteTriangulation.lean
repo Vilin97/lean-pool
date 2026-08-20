@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
 import Mathlib.Topology.Compactness.LocallyFinite
@@ -1604,7 +1604,7 @@ noncomputable def compactIntrinsic [CompactSpace S] : IntrinsicTwoComplex := by
 
 theorem compactIntrinsic_face_mem [CompactSpace S] (f : K.Face) :
     K.faceVertices f ∈ K.compactIntrinsic.faces := by
-  letI : Fintype K.Face := K.faceFintype
+  let : Fintype K.Face := K.faceFintype
   exact Finset.mem_image.mpr ⟨f, Finset.mem_univ _, rfl⟩
 
 /-- Restrict a global standard-simplex point supported on `t` to the coordinates indexed by
@@ -1636,8 +1636,8 @@ theorem extendFaceCoordinates_restrictToFace [Fintype K.Vertex]
 theorem exists_containingFace [CompactSpace S]
     (x : K.compactIntrinsic.realization) :
     ∃ f : K.Face, ∀ v ∉ K.faceVertices f, x.1 v = 0 := by
-  letI : Fintype K.Face := K.faceFintype
-  letI : Fintype K.Vertex := K.vertexFintype
+  let : Fintype K.Face := K.faceFintype
+  let : Fintype K.Vertex := K.vertexFintype
   rcases x.2.2 with ⟨t, ht, hxt⟩
   obtain ⟨f, -, hft⟩ := Finset.mem_image.mp ht
   subst hft
@@ -1666,8 +1666,8 @@ theorem compactEval_eq_faceMap [CompactSpace S]
     (hx : ∀ v ∉ K.faceVertices f, x.1 v = 0) :
     K.compactEval x =
       K.faceMap f (K.restrictToFace (K.faceVertices f) ⟨x.1, x.2.1⟩ hx) := by
-  letI : Fintype K.Face := K.faceFintype
-  letI : Fintype K.Vertex := K.vertexFintype
+  let : Fintype K.Face := K.faceFintype
+  let : Fintype K.Vertex := K.vertexFintype
   apply K.faceMap_eq_iff.mpr
   rw [K.extendFaceCoordinates_restrictToFace,
     K.extendFaceCoordinates_restrictToFace]
@@ -1677,8 +1677,8 @@ private theorem continuous_faceRestriction [CompactSpace S] (f : K.Face) :
       {x : K.compactIntrinsic.realization //
         x ∈ K.compactIntrinsic.faceCarrier (K.faceVertices f)} ↦
       K.restrictToFace (K.faceVertices f) ⟨x.1.1, x.1.2.1⟩ x.2 := by
-  letI : Fintype K.Face := K.faceFintype
-  letI : Fintype K.Vertex := K.vertexFintype
+  let : Fintype K.Face := K.faceFintype
+  let : Fintype K.Vertex := K.vertexFintype
   apply Continuous.subtype_mk
   have houter : Continuous fun x :
       {x : K.compactIntrinsic.realization //
@@ -1689,8 +1689,8 @@ private theorem continuous_faceRestriction [CompactSpace S] (f : K.Face) :
   exact continuous_pi fun v ↦ (continuous_apply v.1).comp (hinner.comp houter)
 
 theorem continuous_compactEval [CompactSpace S] : Continuous K.compactEval := by
-  letI : Fintype K.Face := K.faceFintype
-  letI : Fintype K.Vertex := K.vertexFintype
+  let : Fintype K.Face := K.faceFintype
+  let : Fintype K.Vertex := K.vertexFintype
   let carriers : K.Face → Set K.compactIntrinsic.realization :=
     fun f ↦ K.compactIntrinsic.faceCarrier (K.faceVertices f)
   have hclosed : ∀ f, IsClosed (carriers f) :=
@@ -1708,7 +1708,7 @@ theorem continuous_compactEval [CompactSpace S] : Continuous K.compactEval := by
       exact ⟨⟨K.faceVertices f, K.compactIntrinsic_face_mem f⟩, hxf⟩
   have hlocal : ∀ f, ContinuousOn K.compactEval (carriers f) := by
     intro f
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hc := (K.faceMap_continuous f).comp (K.continuous_faceRestriction f)
     convert hc using 1
     funext x
@@ -1716,8 +1716,8 @@ theorem continuous_compactEval [CompactSpace S] : Continuous K.compactEval := by
   exact (locallyFinite_of_finite carriers).continuous hcover.symm hclosed hlocal
 
 theorem injective_compactEval [CompactSpace S] : Function.Injective K.compactEval := by
-  letI : Fintype K.Face := K.faceFintype
-  letI : Fintype K.Vertex := K.vertexFintype
+  let : Fintype K.Face := K.faceFintype
+  let : Fintype K.Vertex := K.vertexFintype
   intro x y hxy
   have hcoeff := K.faceMap_eq_iff.mp hxy
   rw [K.extendFaceCoordinates_restrictToFace,
@@ -1727,8 +1727,8 @@ theorem injective_compactEval [CompactSpace S] : Function.Injective K.compactEva
 /-- The compact evaluation has exactly the ambient support of the locally finite complex as its
 range. -/
 theorem range_compactEval [CompactSpace S] : Set.range K.compactEval = K.support := by
-  letI : Fintype K.Face := K.faceFintype
-  letI : Fintype K.Vertex := K.vertexFintype
+  let : Fintype K.Face := K.faceFintype
+  let : Fintype K.Vertex := K.vertexFintype
   apply Set.Subset.antisymm
   · rintro y ⟨x, rfl⟩
     refine Set.mem_iUnion.mpr ⟨K.containingFace x, ?_⟩
@@ -1824,7 +1824,7 @@ theorem onSupport_support [Finite K.Face] : K.onSupport.support = Set.univ := by
 /-- A finite ambient triangle complex has compact support, independently of compactness of the
 ambient space. -/
 theorem isCompact_support_of_finite [Finite K.Face] : IsCompact K.support := by
-  letI : Fintype K.Face := Fintype.ofFinite K.Face
+  let : Fintype K.Face := Fintype.ofFinite K.Face
   exact isCompact_iUnion fun f => K.isCompact_faceCarrier f
 
 /-- A finite compatible triangle family triangulates its own support. -/

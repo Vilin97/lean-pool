@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
 
@@ -254,20 +254,20 @@ variable (K : PlaneComplex) {v : K.Vertex}
 private theorem cycle_index_injective (p : K.vertexGraph.Walk v v) (hp : p.IsCycle) :
     Function.Injective (fun i : ZMod p.length => p.getVert i.val) := by
   have hn : 0 < p.length := lt_of_lt_of_le (by omega) hp.three_le_length
-  letI : NeZero p.length := ⟨hn.ne'⟩
+  let : NeZero p.length := ⟨hn.ne'⟩
   intro i j hij
   apply ZMod.val_injective
   apply hp.getVert_injOn'
-  · simp only [Set.mem_setOf_eq]
+  · simp only [Set.mem_ofPred_eq]
     exact Nat.le_sub_one_of_lt i.val_lt
-  · simp only [Set.mem_setOf_eq]
+  · simp only [Set.mem_ofPred_eq]
     exact Nat.le_sub_one_of_lt j.val_lt
   · exact hij
 
 private theorem cycle_index_ne_next (p : K.vertexGraph.Walk v v) (hp : p.IsCycle)
     (i : ZMod p.length) : i ≠ i + 1 := by
   have hn : 0 < p.length := lt_of_lt_of_le (by omega) hp.three_le_length
-  letI : NeZero p.length := ⟨hn.ne'⟩
+  let : NeZero p.length := ⟨hn.ne'⟩
   intro hi
   have hzero : (0 : ZMod p.length) = 1 := by
     calc
@@ -277,7 +277,7 @@ private theorem cycle_index_ne_next (p : K.vertexGraph.Walk v v) (hp : p.IsCycle
   have hval := congrArg ZMod.val hzero
   have hone : (1 : ZMod p.length).val = 1 := by
     have hn3 := hp.three_le_length
-    letI : Fact ((1 : ℕ) < p.length) := ⟨by omega⟩
+    let : Fact ((1 : ℕ) < p.length) := ⟨by omega⟩
     exact ZMod.val_one p.length
   rw [ZMod.val_zero, hone] at hval
   omega
@@ -285,7 +285,7 @@ private theorem cycle_index_ne_next (p : K.vertexGraph.Walk v v) (hp : p.IsCycle
 private theorem cycle_index_ne_add_two (p : K.vertexGraph.Walk v v) (hp : p.IsCycle)
     (i : ZMod p.length) : i ≠ i + 2 := by
   have hn : 0 < p.length := lt_of_lt_of_le (by omega) hp.three_le_length
-  letI : NeZero p.length := ⟨hn.ne'⟩
+  let : NeZero p.length := ⟨hn.ne'⟩
   intro hi
   have hzero : (0 : ZMod p.length) = 2 := by
     calc
@@ -304,10 +304,10 @@ private theorem cycle_next_val (p : K.vertexGraph.Walk v v) (hp : p.IsCycle)
     (i : ZMod p.length) :
     (i + 1).val = if i.val + 1 < p.length then i.val + 1 else 0 := by
   have hn : 0 < p.length := lt_of_lt_of_le (by omega) hp.three_le_length
-  letI : NeZero p.length := ⟨hn.ne'⟩
+  let : NeZero p.length := ⟨hn.ne'⟩
   have hone : (1 : ZMod p.length).val = 1 := by
     have hn3 := hp.three_le_length
-    letI : Fact ((1 : ℕ) < p.length) := ⟨by omega⟩
+    let : Fact ((1 : ℕ) < p.length) := ⟨by omega⟩
     exact ZMod.val_one p.length
   rw [ZMod.val_add, hone]
   split_ifs with hi
@@ -320,7 +320,7 @@ private theorem cycle_adj (p : K.vertexGraph.Walk v v) (hp : p.IsCycle)
     (i : ZMod p.length) :
     K.vertexGraph.Adj (p.getVert i.val) (p.getVert (i + 1).val) := by
   have hn : 0 < p.length := lt_of_lt_of_le (by omega) hp.three_le_length
-  letI : NeZero p.length := ⟨hn.ne'⟩
+  let : NeZero p.length := ⟨hn.ne'⟩
   rw [cycle_next_val K p hp i]
   split_ifs with hi
   · exact p.adj_getVert_succ i.val_lt
@@ -432,7 +432,7 @@ theorem polygonalCircleOfCycle_carrier_eq_range_walkGeometricPath
     (K.polygonalCircleOfCycle p hp).carrier =
       Set.range (K.walkGeometricPath p) := by
   have hn : 0 < p.length := lt_of_lt_of_le (by omega) hp.three_le_length
-  letI : NeZero p.length := ⟨hn.ne'⟩
+  let : NeZero p.length := ⟨hn.ne'⟩
   apply Set.Subset.antisymm
   · intro x hx
     change x ∈ ⋃ i : ZMod p.length,
@@ -441,9 +441,9 @@ theorem polygonalCircleOfCycle_carrier_eq_range_walkGeometricPath
     obtain ⟨i, hi⟩ := Set.mem_iUnion.mp hx
     rw [cycle_next_val K p hp i] at hi
     by_cases hnext : i.val + 1 < p.length
-    · rw [if_pos hnext] at hi
+    · rw [ite_eq_left hnext] at hi
       exact K.walkSegment_subset_range p ⟨i.val, i.val_lt⟩ hi
-    · rw [if_neg hnext] at hi
+    · rw [ite_eq_right hnext] at hi
       have hlast : i.val + 1 = p.length := by
         have := i.val_lt
         omega
@@ -463,9 +463,9 @@ theorem polygonalCircleOfCycle_carrier_eq_range_walkGeometricPath
         Nat.mod_eq_of_lt i.isLt]
     rw [cycle_next_val K p hp j, hj]
     by_cases hnext : i.val + 1 < p.length
-    · rw [if_pos hnext]
+    · rw [ite_eq_left hnext]
       exact hi
-    · rw [if_neg hnext]
+    · rw [ite_eq_right hnext]
       have hlast : i.val + 1 = p.length := by
         have := i.isLt
         omega

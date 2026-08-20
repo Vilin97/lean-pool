@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicPresentation
 
@@ -379,7 +379,6 @@ theorem expand_edgeCount (P : FiniteCyclicPresentation) (a : P.Edge) :
     (expand P a).edgeCount = P.edgeCount + 1 :=
   rfl
 
-@[simp]
 theorem expand_faces_length (P : FiniteCyclicPresentation) (a : P.Edge) :
     (expand P a).faces.length = P.faces.length := by
   simp [expand]

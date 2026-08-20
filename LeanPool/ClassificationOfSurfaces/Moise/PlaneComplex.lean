@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import Mathlib.Analysis.Convex.Topology
 import Mathlib.Analysis.Convex.Between
@@ -516,7 +516,7 @@ noncomputable abbrev restrictTriangles (p : Finset M.Vertex → Prop) [Decidable
   triangle_inter := fun s hs t ht =>
     M.triangle_inter s (Finset.mem_filter.mp hs).1 t (Finset.mem_filter.mp ht).1
 
-@[simp] theorem mem_restrictTriangles_triangles (p : Finset M.Vertex → Prop)
+theorem mem_restrictTriangles_triangles (p : Finset M.Vertex → Prop)
     [DecidablePred p] {t : Finset M.Vertex} :
     t ∈ (M.restrictTriangles p).triangles ↔ t ∈ M.triangles ∧ p t := by
   change t ∈ M.triangles.filter p ↔ t ∈ M.triangles ∧ p t
@@ -755,7 +755,7 @@ noncomputable abbrev oneSkeleton : PlaneComplex where
     intro s hs t ht
     exact K.face_inter s (Finset.mem_filter.mp hs).1 t (Finset.mem_filter.mp ht).1
 
-@[simp] theorem mem_oneSkeleton_simplexes {s : Finset K.Vertex} :
+theorem mem_oneSkeleton_simplexes {s : Finset K.Vertex} :
     s ∈ K.oneSkeleton.simplexes ↔ s ∈ K.simplexes ∧ s.card ≤ 2 := by
   classical
   exact Finset.mem_filter
@@ -1272,7 +1272,7 @@ theorem exists_weights_of_mem_cellCarrier {p : Plane} {t : Finset K.Vertex}
     rw [K.baryEval_eq_sum_of_support hsupp]
     have hite : ∑ v ∈ t, (if v ∈ t then w (K.position v) else 0) • K.position v =
         ∑ v ∈ t, w (K.position v) • K.position v :=
-      Finset.sum_congr rfl fun v hv => by rw [if_pos hv]
+      Finset.sum_congr rfl fun v hv => by rw [ite_eq_left hv]
     have himg2 : ∑ q ∈ t.image K.position, w q • q =
         ∑ v ∈ t, w (K.position v) • K.position v :=
       Finset.sum_image fun v _ v' _ h => K.position_injective h

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReduction
 
@@ -2135,7 +2135,7 @@ def negativeBoundaryContextSignedIso {n : ℕ}
         have hhole :=
           Dyck.reverseEdgeRelabeling_of_ne
             carrier hole hcarrierHole.symm false
-        simp only [Bool.false_eq_true, if_false] at hhole
+        simp only [Bool.false_eq_true, ite_false] at hhole
         simp only [dart, Bool.not_true,
           Dyck.reverseEdgeRelabeling_neg,
           Dyck.reverseEdgeRelabeling_pos] at ⊢
@@ -2145,7 +2145,7 @@ def negativeBoundaryContextSignedIso {n : ℕ}
         have hhole :=
           Dyck.reverseEdgeRelabeling_of_ne
             carrier hole hcarrierHole.symm true
-        simp only [if_true] at hhole
+        simp only [ite_true] at hhole
         simp only [dart, Bool.not_true,
           Dyck.reverseEdgeRelabeling_neg,
           Dyck.reverseEdgeRelabeling_pos] at ⊢

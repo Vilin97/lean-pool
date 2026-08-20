@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.PolygonCellRadial
 import Mathlib.Topology.Instances.AddCircle.Real
@@ -101,7 +101,7 @@ theorem stretch_length (weights : List ℕ) :
                 (w : ℝ) +
                   stretch (v :: weights)
                     ((w :: v :: weights).length - 1) := by
-              rw [stretch, if_neg hnot]
+              rw [stretch, ite_eq_right hnot]
             _ = (w : ℝ) +
                   stretch (v :: weights) (v :: weights).length := by
               congr 2
@@ -127,7 +127,7 @@ theorem unstretch_sum (weights : List ℕ) (h : Positive weights) :
           have hlt : (w : ℝ) < (w + weights.sum : ℕ) := by
             exact_mod_cast Nat.lt_add_of_pos_right hsumpos
           linarith
-        simp only [List.sum_cons, List.length_cons, unstretch, hnot, if_false]
+        simp only [List.sum_cons, List.length_cons, unstretch, hnot, ite_false]
         rw [show (↑(w + weights.sum) : ℝ) - w = weights.sum by
           push_cast
           ring]
@@ -182,9 +182,9 @@ theorem stretch_nonneg {weights : List ℕ} (h : Positive weights)
   | nil => simp
   | cons w weights ih =>
       by_cases hx : x ≤ 1
-      · rw [stretch, if_pos hx]
+      · rw [stretch, ite_eq_left hx]
         exact mul_nonneg (by exact_mod_cast h.head.le) hx0
-      · rw [stretch, if_neg hx]
+      · rw [stretch, ite_eq_right hx]
         have hx0' : 0 ≤ x - 1 := by linarith
         have hxlen' : x - 1 ≤ weights.length := by
           rw [sub_le_iff_le_add]
@@ -199,13 +199,13 @@ theorem stretch_le_sum {weights : List ℕ} (h : Positive weights)
   | nil => simp
   | cons w weights ih =>
       by_cases hx : x ≤ 1
-      · rw [stretch, if_pos hx]
+      · rw [stretch, ite_eq_left hx]
         have hw0 : (0 : ℝ) ≤ w := by positivity
         have hmul : (w : ℝ) * x ≤ w := by nlinarith
         rw [List.sum_cons, Nat.cast_add]
         exact hmul.trans
           (le_add_of_nonneg_right (Nat.cast_nonneg _))
-      · rw [stretch, if_neg hx]
+      · rw [stretch, ite_eq_right hx]
         have hx0' : 0 ≤ x - 1 := by linarith
         have hxlen' : x - 1 ≤ weights.length := by
           rw [sub_le_iff_le_add]
@@ -223,9 +223,9 @@ theorem stretch_pos {weights : List ℕ} (h : Positive weights)
       linarith
   | cons w weights =>
       by_cases hx : x ≤ 1
-      · rw [stretch, if_pos hx]
+      · rw [stretch, ite_eq_left hx]
         exact mul_pos (by exact_mod_cast h.head) hx0
-      · rw [stretch, if_neg hx]
+      · rw [stretch, ite_eq_right hx]
         have hx0' : 0 ≤ x - 1 := by linarith
         have hxlen' : x - 1 ≤ weights.length := by
           rw [sub_le_iff_le_add]
@@ -242,9 +242,9 @@ theorem unstretch_nonneg {weights : List ℕ} (h : Positive weights)
   | nil => simp
   | cons w weights ih =>
       by_cases hy : y ≤ w
-      · rw [unstretch, if_pos hy]
+      · rw [unstretch, ite_eq_left hy]
         exact div_nonneg hy0 (by exact_mod_cast h.head.le)
-      · rw [unstretch, if_neg hy]
+      · rw [unstretch, ite_eq_right hy]
         have hy0' : 0 ≤ y - w := by linarith
         have hysum' : y - w ≤ weights.sum := by
           rw [sub_le_iff_le_add]
@@ -258,7 +258,7 @@ theorem unstretch_le_length {weights : List ℕ} (h : Positive weights)
   | nil => simp
   | cons w weights ih =>
       by_cases hy : y ≤ w
-      · rw [unstretch, if_pos hy]
+      · rw [unstretch, ite_eq_left hy]
         have hw : (0 : ℝ) < w := by exact_mod_cast h.head
         have hdiv : y / (w : ℝ) ≤ 1 := (div_le_one hw).2 hy
         rw [List.length_cons]
@@ -266,7 +266,7 @@ theorem unstretch_le_length {weights : List ℕ} (h : Positive weights)
         exact hdiv.trans (by
           have : (0 : ℝ) ≤ weights.length := by positivity
           linarith)
-      · rw [unstretch, if_neg hy]
+      · rw [unstretch, ite_eq_right hy]
         have hy0' : 0 ≤ y - w := by linarith
         have hysum' : y - w ≤ weights.sum := by
           rw [sub_le_iff_le_add]
@@ -285,9 +285,9 @@ theorem unstretch_pos {weights : List ℕ} (h : Positive weights)
       linarith
   | cons w weights =>
       by_cases hy : y ≤ w
-      · rw [unstretch, if_pos hy]
+      · rw [unstretch, ite_eq_left hy]
         exact div_pos hy0 (by exact_mod_cast h.head)
-      · rw [unstretch, if_neg hy]
+      · rw [unstretch, ite_eq_right hy]
         have hy0' : 0 ≤ y - w := by linarith
         have hysum' : y - w ≤ weights.sum := by
           rw [sub_le_iff_le_add]
@@ -305,12 +305,12 @@ theorem unstretch_stretch {weights : List ℕ} (h : Positive weights)
       simp [show x = 0 by linarith]
   | cons w weights ih =>
       by_cases hx : x ≤ 1
-      · rw [stretch, if_pos hx]
+      · rw [stretch, ite_eq_left hx]
         have hw : (0 : ℝ) < w := by exact_mod_cast h.head
         have hselect : (w : ℝ) * x ≤ w := by nlinarith
-        rw [unstretch, if_pos hselect]
+        rw [unstretch, ite_eq_left hselect]
         exact (div_eq_iff hw.ne').2 (by ring)
-      · rw [stretch, if_neg hx]
+      · rw [stretch, ite_eq_right hx]
         have hx0' : 0 < x - 1 := by linarith
         have hxlen' : x - 1 ≤ weights.length := by
           rw [sub_le_iff_le_add]
@@ -320,7 +320,7 @@ theorem unstretch_stretch {weights : List ℕ} (h : Positive weights)
         have hselect :
             ¬((w : ℝ) + stretch weights (x - 1) ≤ w) := by
           linarith
-        rw [unstretch, if_neg hselect]
+        rw [unstretch, ite_eq_right hselect]
         have ih' := ih h.tail hx0'.le hxlen'
         rw [show (w : ℝ) + stretch weights (x - 1) - w =
           stretch weights (x - 1) by ring]
@@ -336,12 +336,12 @@ theorem stretch_unstretch {weights : List ℕ} (h : Positive weights)
       simp [show y = 0 by linarith]
   | cons w weights ih =>
       by_cases hy : y ≤ w
-      · rw [unstretch, if_pos hy]
+      · rw [unstretch, ite_eq_left hy]
         have hw : (0 : ℝ) < w := by exact_mod_cast h.head
         have hselect : y / (w : ℝ) ≤ 1 := (div_le_one hw).2 hy
-        rw [stretch, if_pos hselect]
+        rw [stretch, ite_eq_left hselect]
         exact (mul_div_cancel₀ y hw.ne')
-      · rw [unstretch, if_neg hy]
+      · rw [unstretch, ite_eq_right hy]
         have hy0' : 0 < y - w := by linarith
         have hysum' : y - w ≤ weights.sum := by
           rw [sub_le_iff_le_add]
@@ -351,7 +351,7 @@ theorem stretch_unstretch {weights : List ℕ} (h : Positive weights)
         have hselect :
             ¬(1 + unstretch weights (y - w) ≤ 1) := by
           linarith
-        rw [stretch, if_neg hselect]
+        rw [stretch, ite_eq_right hselect]
         have ih' := ih h.tail hy0'.le hysum'
         rw [show 1 + unstretch weights (y - w) - 1 =
           unstretch weights (y - w) by ring]
@@ -521,9 +521,9 @@ theorem addCircleHomeomorph_apply_of_mem_Ico
     addCircleHomeomorph weights h hne
         (x : AddCircle (weights.length : ℝ)) =
       (stretch weights x : AddCircle (weights.sum : ℝ)) := by
-  letI : Fact (0 < (weights.length : ℝ)) :=
+  let : Fact (0 < (weights.length : ℝ)) :=
     ⟨by exact_mod_cast List.length_pos_of_ne_nil hne⟩
-  letI : Fact (0 < (weights.sum : ℝ)) :=
+  let : Fact (0 < (weights.sum : ℝ)) :=
     ⟨by exact_mod_cast List.sum_pos weights h hne⟩
   unfold addCircleHomeomorph
   simp only [Homeomorph.trans_apply]
@@ -575,7 +575,7 @@ theorem stretch_index_add
       refine Fin.cases ?_ (fun j => ?_) i
       · simp only [Fin.val_zero, Nat.cast_zero, zero_add, List.take_zero,
           List.sum_nil, List.get_cons_zero]
-        rw [stretch, if_pos t.property.2]
+        rw [stretch, ite_eq_left t.property.2]
       · by_cases hboundary :
           ((Fin.succ j : ℕ) : ℝ) + (t : ℝ) ≤ 1
         · have hjval : j.val = 0 := by
@@ -590,9 +590,9 @@ theorem stretch_index_add
             apply le_antisymm
             · simpa [Fin.succ, hjval] using hboundary
             · exact t.property.1
-          rw [stretch, if_pos hboundary]
+          rw [stretch, ite_eq_left hboundary]
           simp [List.take_succ_cons, hjval, ht0]
-        · rw [stretch, if_neg hboundary]
+        · rw [stretch, ite_eq_right hboundary]
           have harg :
               (((Fin.succ j : ℕ) : ℝ) + (t : ℝ) - 1) =
                 (j : ℝ) + t := by

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.GraphRefinement
 import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArcModel
@@ -25,7 +25,7 @@ theorem exists_pos_uniform_fintype' {I : Type*} [Finite I] [Nonempty I]
     (hP : ∀ i, ∃ ε : ℝ, 0 < ε ∧ ∀ δ : ℝ, 0 < δ → δ < ε → P i δ) :
     ∃ ε : ℝ, 0 < ε ∧ ∀ i, ∀ δ : ℝ, 0 < δ → δ < ε → P i δ := by
   classical
-  letI := Fintype.ofFinite I
+  let := Fintype.ofFinite I
   let values : Finset ℝ := Finset.univ.image fun i => Classical.choose (hP i)
   have hvalues : values.Nonempty := by
     let i : I := Classical.choice inferInstance
@@ -59,8 +59,8 @@ theorem exists_lastExitData {γ : ℝ → Plane} {center : Plane} {radius : ℝ}
     (hstart : γ 0 = center) (hfinish : γ 1 ∉ Metric.closedBall center radius) :
     Nonempty (LastExitData γ center radius) := by
   let I := Set.Icc (0 : ℝ) 1
-  let γI : I → Plane := I.restrict γ
-  have hγI : Continuous γI := hcont.restrict
+  let γI : I → Plane := I.domRestrict γ
+  have hγI : Continuous γI := hcont.domRestrict
   let E : Set I := γI ⁻¹' Metric.closedBall center radius
   have hEclosed : IsClosed E := Metric.isClosed_closedBall.preimage hγI
   have hEcompact : IsCompact E := hEclosed.isCompact
@@ -163,8 +163,8 @@ theorem exists_weakLastExitData {γ : ℝ → Plane} {center : Plane} {radius : 
     (hfinish : γ 1 ∉ Metric.closedBall center radius) :
     Nonempty (WeakLastExitData γ center radius) := by
   let I := Set.Icc (0 : ℝ) 1
-  let γI : I → Plane := I.restrict γ
-  have hγI : Continuous γI := hcont.restrict
+  let γI : I → Plane := I.domRestrict γ
+  have hγI : Continuous γI := hcont.domRestrict
   let E : Set I := γI ⁻¹' Metric.closedBall center radius
   have hEclosed : IsClosed E := Metric.isClosed_closedBall.preimage hγI
   have hEcompact : IsCompact E := hEclosed.isCompact
@@ -476,7 +476,7 @@ theorem Path.trans_injective_of_range_inter {X : Type*} [TopologicalSpace X]
   intro s t hst
   rw [Path.trans_apply, Path.trans_apply] at hst
   by_cases hs : (s : ℝ) ≤ 1 / 2 <;> by_cases ht : (t : ℝ) ≤ 1 / 2 <;>
-    simp only [dif_pos, hs, ht] at hst
+    simp only [dite_eq_left, hs, ht] at hst
   · have heq := hγ hst
     apply Subtype.ext
     have hval := congrArg Subtype.val heq
@@ -2240,7 +2240,7 @@ theorem graphReplacementMap_vertex {h : Plane → Plane}
     (hv : ({v} : Finset K.Vertex) ∈ K.simplexes) :
     K.graphReplacementMap hcont D C (K.position v) = h (K.position v) := by
   classical
-  rw [graphReplacementMap, if_pos ⟨v, hv, rfl⟩]
+  rw [graphReplacementMap, ite_eq_left ⟨v, hv, rfl⟩]
 
 private theorem mem_openSegment_of_mem_edge_not_vertex
     {x : Plane} (i : Fin (Fintype.card K.EdgeFace))
@@ -2284,7 +2284,7 @@ theorem graphReplacementMap_eq_edge {h : Plane → Plane}
     K.graphReplacementMap hcont D C x = K.edgeReplacementMap hcont D C i x := by
   classical
   let hx : ∃ j : Fin (Fintype.card K.EdgeFace), x ∈ K.cellCarrier (K.edgeAt j).1 := ⟨i, hxi⟩
-  rw [graphReplacementMap, if_neg hnv, dif_pos hx,
+  rw [graphReplacementMap, ite_eq_right hnv, dite_eq_left hx,
     K.edgeIndexAt_eq_of_not_vertex hnv hx i hxi]
 
 theorem graphReplacementMap_eq_edge_on_cellCarrier {h : Plane → Plane}

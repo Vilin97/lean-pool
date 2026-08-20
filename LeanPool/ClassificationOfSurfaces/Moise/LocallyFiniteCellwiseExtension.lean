@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceFilling
 
@@ -37,7 +37,7 @@ noncomputable def faceMap {f : K.Face} (F : K.FacePLFilling (G := G) f) :
 theorem continuous_faceMap {f : K.Face} (F : K.FacePLFilling (G := G) f) :
     Continuous F.faceMap := by
   have hF : Continuous (fun p : standardFaceRegion ↦ F.map p.1) :=
-    continuousOn_iff_continuous_restrict.mp F.continuousOn
+    continuousOn_iff_continuous_domRestrict.mp F.continuousOn
   exact hF.comp (K.facePlaneHomeomorph f).continuous
 
 theorem injective_faceMap {f : K.Face} (F : K.FacePLFilling (G := G) f) :
@@ -558,7 +558,7 @@ theorem continuous_polygonalReplacementMap (H : K.CellwiseCompatibility G) :
   · intro f
     exact (isCompact_faceInSupport (K := K) f).isClosed
   · intro f
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     convert K.continuous_polygonalReplacementMapOnFace H f using 1
     funext p
     exact K.polygonalReplacementMap_eqOn_faceInSupport H f p
@@ -622,7 +622,7 @@ theorem continuous_polygonalReplacementInverse (H : K.CellwiseCompatibility G) :
   · intro f
     exact (isCompact_faceInSupport (K := L) f).isClosed
   · intro f
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     convert K.continuous_polygonalReplacementInverseOnFace H f using 1
     funext p
     exact K.polygonalReplacementInverse_eqOn_faceInSupport H f p

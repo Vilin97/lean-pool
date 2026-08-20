@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicRealization
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicTriangulation
@@ -74,7 +74,6 @@ theorem cyclicFace_finiteCyclicFaceEquiv (f : T.Triangle) :
       (T.toFiniteSurfaceTriangulation.finiteCyclicFaceEquiv f) = f :=
   T.toFiniteSurfaceTriangulation.finiteCyclicFaceEquiv.symm_apply_apply f
 
-@[simp]
 theorem finiteCyclicFaceEquiv_cyclicFace
     (f : T.toFiniteCyclicPresentation.Face) :
     T.toFiniteSurfaceTriangulation.finiteCyclicFaceEquiv (T.cyclicFace f) = f :=
@@ -512,7 +511,6 @@ theorem faceQuotientMap_congr
   subst y
   rfl
 
-@[simp]
 theorem faceQuotientMap_faceHomeomorph
     (valid : T.toFiniteCyclicPresentation.IsSurfaceValid)
     (f : T.toFiniteCyclicPresentation.Face)
@@ -863,7 +861,7 @@ theorem continuous_realizationInverse
   have hlocal : ∀ f : T.Triangle,
       ContinuousOn (T.realizationInverse valid) (carriers f) := by
     intro f
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     change Continuous (fun x : T.toIntrinsic.ClosedFace f =>
       T.realizationInverse valid x.1)
     let pf := T.toFiniteSurfaceTriangulation.finiteCyclicFaceEquiv f

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
 
@@ -1168,7 +1168,7 @@ noncomputable def midpointCentralWeights (t : K.Face) (p : K.Vertex → ℝ) :
           1 - 2 * p (K.faceVertex t (i + 2)) else 0) := by
       apply Fintype.sum_eq_single i
       intro j hji
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hji (K.faceEdge_injective t (Sum.inr.inj h).symm)
     _ = 1 - 2 * p (K.faceVertex t (i + 2)) := by simp
@@ -1179,7 +1179,7 @@ theorem midpointCentralWeights_support (t : K.Face) (p : K.Vertex → ℝ) :
   rw [midpointCentralWeights]
   apply Finset.sum_eq_zero
   intro i _
-  rw [if_neg]
+  rw [ite_eq_right]
   intro h
   apply hw
   rw [midpointCentralFace]

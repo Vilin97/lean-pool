@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
 import LeanPool.ClassificationOfSurfaces.Moise.FrontierGlue
@@ -120,13 +120,13 @@ theorem affine_map_midpoint
   have hs : s.affineCombination ℝ p w = midpoint ℝ x y := by
     simp only [s, p, w, Finset.affineCombination_eq_linear_combination, hw,
       Finset.sum_insert, Finset.mem_singleton, Bool.false_eq_true, not_false_eq_true,
-      Finset.sum_singleton, if_false, if_true, midpoint, AffineMap.lineMap_apply_module]
+      Finset.sum_singleton, ite_false, ite_true, midpoint, AffineMap.lineMap_apply_module]
     congr 1
     norm_num
   have ht : s.affineCombination ℝ (a ∘ p) w = midpoint ℝ (a x) (a y) := by
     simp only [s, p, w, Finset.affineCombination_eq_linear_combination, hw,
       Finset.sum_insert, Finset.mem_singleton, Bool.false_eq_true, not_false_eq_true,
-      Finset.sum_singleton, Function.comp_apply, if_false, if_true, midpoint,
+      Finset.sum_singleton, Function.comp_apply, ite_false, ite_true, midpoint,
       AffineMap.lineMap_apply_module]
     congr 1
     norm_num

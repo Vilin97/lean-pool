@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.CellComplexQuotient
 import LeanPool.ClassificationOfSurfaces.Representatives
@@ -173,7 +173,7 @@ theorem orientableBoundaryWord_get_handle_block (p n : ℕ) (i : Fin p) (k : Fin
         some ((orientableHandleBlock (n := n) i).get k) := by
     simp only [orientableBoundaryWord, orientableHandleWords_eq_ofFn]
     rw [List.getElem?_append_left (by simp; omega)]
-    rw [List.getElem?_ofFn, dif_pos (by omega)]
+    rw [List.getElem?_ofFn, dite_eq_left (by omega)]
     simp [orientableHandleLinearDart, orientableHandleBlock, Nat.mod_eq_of_lt k.isLt]
   simp only [hopt]
   exact Option.get_some _ _
@@ -193,7 +193,7 @@ theorem orientableBoundaryWord_get_boundary_block (p n : ℕ) (j : Fin n) (k : F
     simp only [List.length_ofFn]
     have hidx : 4 * p + j.val * 3 + k.val - p * 4 = j.val * 3 + k.val := by
       omega
-    rw [hidx, List.getElem?_ofFn, dif_pos (by omega)]
+    rw [hidx, List.getElem?_ofFn, dite_eq_left (by omega)]
     simp [orientableBoundaryLinearDart, orientableBoundaryBlock, Nat.mod_eq_of_lt k.isLt]
   simp only [hopt]
   exact Option.get_some _ _
@@ -300,7 +300,7 @@ theorem nonOrientableBoundaryWord_get_crosscap_block
         some ((nonOrientableCrosscapBlock (n := n) i).get k) := by
     simp only [nonOrientableBoundaryWord, nonOrientableCrosscapWords_eq_ofFn]
     rw [List.getElem?_append_left (by simp; omega)]
-    rw [List.getElem?_ofFn, dif_pos (by omega)]
+    rw [List.getElem?_ofFn, dite_eq_left (by omega)]
     simp [nonOrientableCrosscapLinearDart, nonOrientableCrosscapBlock,
       Nat.mod_eq_of_lt k.isLt]
   simp only [hopt]
@@ -322,7 +322,7 @@ theorem nonOrientableBoundaryWord_get_boundary_block
     simp only [List.length_ofFn]
     have hidx : 2 * p + j.val * 3 + k.val - p * 2 = j.val * 3 + k.val := by
       omega
-    rw [hidx, List.getElem?_ofFn, dif_pos (by omega)]
+    rw [hidx, List.getElem?_ofFn, dite_eq_left (by omega)]
     simp [nonOrientableBoundaryLinearDart, nonOrientableBoundaryBlock,
       Nat.mod_eq_of_lt k.isLt]
   simp only [hopt]

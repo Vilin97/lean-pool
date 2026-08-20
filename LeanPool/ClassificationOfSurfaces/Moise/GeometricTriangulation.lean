@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Topology.Homeomorph.Lemmas
@@ -568,8 +568,8 @@ theorem nonempty_geometricTriangulation_iff_explicit
     exact ⟨T.Vertex, T.vertexFintype, T.vertexDecidableEq, T.faces,
       T.faces_card, ⟨T.homeo⟩⟩
   · rintro ⟨V, hVfinite, hVdecidable, F, hF, ⟨h⟩⟩
-    letI : Fintype V := hVfinite
-    letI : DecidableEq V := hVdecidable
+    let : Fintype V := hVfinite
+    let : DecidableEq V := hVdecidable
     exact ⟨{ Vertex := V, faces := F, faces_card := hF, homeo := h }⟩
 
 namespace GeometricTriangulation
@@ -607,7 +607,7 @@ deduce global dual connectivity. -/
 theorem faces_isDualConnected_of_isVertexStarConnected [ConnectedSpace S]
     (hstar : TriangleFamily.IsVertexStarConnected T.faces) :
     TriangleFamily.IsDualConnected T.faces := by
-  letI : ConnectedSpace T.realization :=
+  let : ConnectedSpace T.realization :=
     T.homeo.connectedSpace_iff.mpr inferInstance
   have hpre : IsPreconnected (GeometricRealization T.Vertex T.faces) := by
     simpa only [Subtype.range_val] using

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteControlledApproximation
 
@@ -891,11 +891,11 @@ theorem continuousOn_facewiseComparison (G : K.PlaneGraphRealization)
     · have h01 : triCoord (standardOppIndex 0) a =
           triCoord (standardOppIndex 1) a := by
         rw [haeq, min_eq_left h12]
-      rw [K.sidePiece_interface G f (by decide : (0 : ZMod 3) ≠ 1) h01, if_pos h12]
+      rw [K.sidePiece_interface G f (by decide : (0 : ZMod 3) ≠ 1) h01, ite_eq_left h12]
     · have h02 : triCoord (standardOppIndex 0) a =
           triCoord (standardOppIndex 2) a := by
         rw [haeq, min_eq_right (le_of_not_ge h12)]
-      rw [K.sidePiece_interface G f (by decide : (0 : ZMod 3) ≠ 2) h02, if_neg h12]
+      rw [K.sidePiece_interface G f (by decide : (0 : ZMod 3) ≠ 2) h02, ite_eq_right h12]
   · exact (K.continuous_sidePiece G f 0).continuousOn
   · apply ContinuousOn.if
     · rintro a ⟨-, haF⟩
@@ -918,7 +918,7 @@ theorem facewiseComparison_eq_sidePiece (G : K.PlaneGraphRealization)
     exact h3 i
   rw [facewiseComparison]
   rcases hi with rfl | rfl | rfl
-  · rw [if_pos]
+  · rw [ite_eq_left]
     rw [hzero]
     exact le_min (hnn _) (hnn _)
   · split_ifs with h₀ h₁
@@ -964,9 +964,9 @@ private theorem dist_completePath_comparison_lt_of_middle (G : K.PlaneGraphReali
       A.parameterizationData.curve
         (AffineMap.lineMap A.exitData.left A.exitData.right (2 * (2 * r - 1))) := by
     rw [CentralPolygonalArc.completePath, Path.trans_apply]
-    rw [dif_neg (show ¬ ((⟨r, hr⟩ : unitInterval) : ℝ) ≤ 1 / 2 from hr2)]
+    rw [dite_eq_right (show ¬ ((⟨r, hr⟩ : unitInterval) : ℝ) ≤ 1 / 2 from hr2)]
     rw [Path.trans_apply]
-    rw [dif_pos (by
+    rw [dite_eq_left (by
       change (2 * ((⟨r, hr⟩ : unitInterval) : ℝ) - 1) ≤ 1 / 2
       linarith)]
     change A.parameterizationData.curve
@@ -974,7 +974,7 @@ private theorem dist_completePath_comparison_lt_of_middle (G : K.PlaneGraphReali
     rw [Path.segment_apply]
   have hprofile : sideParamProfile G f i r =
       AffineMap.lineMap (sideTrimLeft G f i) (sideTrimRight G f i) (4 * r - 2) := by
-    rw [sideParamProfile, if_neg hr2, if_pos hr34]
+    rw [sideParamProfile, ite_eq_right hr2, ite_eq_left hr34]
   have hT : AffineMap.lineMap (sideTrimLeft G f i) (sideTrimRight G f i) (4 * r - 2) =
       (G.edgeTrim e).left + ((G.edgeTrim e).right - (G.edgeTrim e).left) *
         (AffineMap.lineMap A.exitData.left A.exitData.right (2 * (2 * r - 1))) := by
@@ -1100,10 +1100,10 @@ theorem dist_completePath_comparison_lt (G : K.PlaneGraphRealization)
         AffineMap.lineMap (G.vertexImage (K.edgeFirst e)) A.leftEndpoint
           (2 * r) := by
       rw [CentralPolygonalArc.completePath, Path.trans_apply]
-      rw [dif_pos (show ((⟨r, hr⟩ : unitInterval) : ℝ) ≤ 1 / 2 from hr2)]
+      rw [dite_eq_left (show ((⟨r, hr⟩ : unitInterval) : ℝ) ≤ 1 / 2 from hr2)]
       rw [Path.segment_apply]
     have hprofile : sideParamProfile G f i r = 2 * r * sideTrimLeft G f i := by
-      rw [sideParamProfile, if_pos hr2]
+      rw [sideParamProfile, ite_eq_left hr2]
     have hsrcpt : K.faceEdgeSourcePoint f i (2 * r * sideTrimLeft G f i) =
         AffineMap.lineMap (K.faceEdgeSourcePoint f i 0)
           (K.faceEdgeSourcePoint f i (sideTrimLeft G f i)) (2 * r) := by
@@ -1155,15 +1155,15 @@ theorem dist_completePath_comparison_lt (G : K.PlaneGraphRealization)
           AffineMap.lineMap A.rightEndpoint (G.vertexImage (K.edgeSecond e))
             (2 * (2 * r - 1) - 1) := by
         rw [CentralPolygonalArc.completePath, Path.trans_apply]
-        rw [dif_neg (by linarith : ¬ ((⟨r, hr⟩ : unitInterval) : ℝ) ≤ 1 / 2)]
+        rw [dite_eq_right (by linarith : ¬ ((⟨r, hr⟩ : unitInterval) : ℝ) ≤ 1 / 2)]
         rw [Path.trans_apply]
-        rw [dif_neg (by
+        rw [dite_eq_right (by
           change ¬ (2 * ((⟨r, hr⟩ : unitInterval) : ℝ) - 1) ≤ 1 / 2
           linarith)]
         rw [Path.segment_apply]
       have hprofile : sideParamProfile G f i r =
           AffineMap.lineMap (sideTrimRight G f i) 1 (4 * r - 3) := by
-        rw [sideParamProfile, if_neg (not_le.mpr hr2), if_neg (not_le.mpr hr34)]
+        rw [sideParamProfile, ite_eq_right (not_le.mpr hr2), ite_eq_right (not_le.mpr hr34)]
       have hw' : 4 * r - 3 = 2 * (2 * r - 1) - 1 := by ring
       have hsrcpt : K.faceEdgeSourcePoint f i
           (AffineMap.lineMap (sideTrimRight G f i) 1 (4 * r - 3)) =

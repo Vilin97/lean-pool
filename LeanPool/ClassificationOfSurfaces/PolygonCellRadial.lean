@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.PolygonalQuotient
 import Mathlib.Topology.Homeomorph.Lemmas
@@ -128,7 +128,7 @@ theorem continuousAt_radialMap_of_ne (h : Circle ≃ₜ Circle)
       (continuous_subtype_val.comp
         (h.continuous.comp continuous_direction))
   have hOn : ContinuousOn (radialMap h) ({0}ᶜ : Set ℂ) := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     exact hrestrict
   exact (hOn z hz).continuousAt (isOpen_compl_singleton.mem_nhds hz)
 

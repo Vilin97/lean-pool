@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicCancellation
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicReduction
@@ -1069,14 +1069,14 @@ theorem exists_decomposition_of_count_eq_one {n : ℕ}
     simp only [List.map_append, List.map_cons, List.count_append,
       List.count_cons] at hcount
     rw [hdedge] at hcount
-    simp only [beq_self_eq_true, if_true] at hcount
+    simp only [beq_self_eq_true, ite_true] at hcount
     omega
   have hrightCount : (right.map edgeOfDart).count a = 0 := by
     rw [hword] at hcount
     simp only [List.map_append, List.map_cons, List.count_append,
       List.count_cons] at hcount
     rw [hdedge] at hcount
-    simp only [beq_self_eq_true, if_true] at hcount
+    simp only [beq_self_eq_true, ite_true] at hcount
     omega
   have hleft : a ∉ left.map edgeOfDart :=
     List.count_eq_zero.mp hleftCount
@@ -1129,7 +1129,7 @@ theorem exists_doubleOccurrenceForm_of_count_eq_two {n : ℕ}
     simp only [List.map_append, List.map_cons, List.count_append,
       List.count_cons] at hcount
     rw [hfirstEdge] at hcount
-    simp only [beq_self_eq_true, if_true] at hcount
+    simp only [beq_self_eq_true, ite_true] at hcount
     simp only [cyclicRemainder, List.map_append, List.count_append]
     omega
   rcases exists_decomposition_of_count_eq_one
@@ -3869,8 +3869,10 @@ private theorem exists_positiveTarget_of_thirdTarget {n : ℕ}
     (hfirstSecond : first ≠ second) (hsecondOuter : second ≠ outer)
     (hsecondInside : second ∉ insideTail.map edgeOfDart)
     (hsecondOutside : second ∉ outsideTail.map edgeOfDart)
-    (validSource : (Dyck.target first [.pos second] [.pos outer]
-      (SignedDart.neg second :: insideTail ++ SignedDart.neg outer :: outsideTail)).IsSurfaceValid) :
+    (validSource :
+      (Dyck.target first [.pos second] [.pos outer]
+        (SignedDart.neg second :: insideTail ++
+          SignedDart.neg outer :: outsideTail)).IsSurfaceValid) :
     ∃ validTarget : (Dyck.oneFace
         (positiveTargetWord outer first second insideTail outsideTail)).IsSurfaceValid,
       NormalizationEquivalent
@@ -4543,7 +4545,7 @@ def targetCut {n : ℕ} (word : List (SignedDart (Fin n))) :
     convert
       (List.isRotated_append
         (l := [.pos (carrier n)] ++ P2.retainWord word)
-        (l' := [.neg (carrier n)])) using 1 ;
+        (l' := [.neg (carrier n)])) using 1;
       simp [targetWord, List.cons_append]
 
 /-- The right side of the enveloped cut contains the positive carrier followed by the retained
@@ -5107,9 +5109,9 @@ theorem normalForm_isEvalAdmissible_of_ne_nil {n : ℕ}
     · right
       simp only [boundaryCount]
       by_cases hraw : rawBoundaryCount atoms = 0
-      · rw [if_pos hraw]
+      · rw [ite_eq_left hraw]
         omega
-      · rw [if_neg hraw]
+      · rw [ite_eq_right hraw]
         omega
     · left
       omega
@@ -5203,7 +5205,7 @@ theorem rawBoundaryCount_append {n : ℕ}
           simpa [rawBoundaryCount] using ih
       | extracted block =>
           cases block <;>
-            simp [rawBoundaryCount, ih] ;
+            simp [rawBoundaryCount, ih];
             omega
       | completed =>
           simpa [rawBoundaryCount] using ih
@@ -5792,7 +5794,7 @@ theorem rawBoundaryCount_inverseSequence {n : ℕ}
       | extracted block =>
           cases block <;>
             simp [rawBoundaryCount, inverse,
-              ExtractedBlock.inverse] ;
+              ExtractedBlock.inverse];
             omega
       | completed =>
           simp [rawBoundaryCount, inverse]

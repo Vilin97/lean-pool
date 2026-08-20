@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 
@@ -56,7 +56,7 @@ def faceCarrier (t : Finset K.Vertex) : Set K.realization :=
 theorem mem_realization_iff (x : K.Vertex → ℝ) :
     x ∈ GeometricRealization K.Vertex K.faces ↔
       ∃ t ∈ K.faces, x ∈ K.ambientFaceCarrier t := by
-  simp only [GeometricRealization, ambientFaceCarrier, Set.mem_setOf_eq]
+  simp only [GeometricRealization, ambientFaceCarrier, Set.mem_ofPred_eq]
   tauto
 
 theorem mem_faceCarrier_iff (t : Finset K.Vertex) (x : K.realization) :
@@ -66,7 +66,7 @@ theorem mem_faceCarrier_iff (t : Finset K.Vertex) (x : K.realization) :
 theorem faceCarrier_eq_preimage (t : Finset K.Vertex) :
     K.faceCarrier t = Subtype.val ⁻¹' K.ambientFaceCarrier t := by
   ext x
-  simp only [faceCarrier, ambientFaceCarrier, Set.mem_setOf_eq, Set.mem_preimage]
+  simp only [faceCarrier, ambientFaceCarrier, Set.mem_ofPred_eq, Set.mem_preimage]
   constructor
   · exact fun hx => ⟨x.2.1, hx⟩
   · exact fun hx => hx.2

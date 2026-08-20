@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicP1
 
@@ -278,7 +278,6 @@ theorem split_edgeCount (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     (split P cut).edgeCount = P.edgeCount + 1 :=
   rfl
 
-@[simp]
 theorem split_faces_length (P : FiniteCyclicPresentation) (cut : P2Cut P) :
     (split P cut).faces.length = P.faces.length + 1 := by
   simp [split]
@@ -696,7 +695,7 @@ private theorem sum_replace_add {ι : Type*} [Fintype ι] [DecidableEq ι]
     rw [← Finset.add_sum_erase Finset.univ
       (fun x ↦ if x = selected then left else values x)
       (Finset.mem_univ selected)]
-    simp only [if_pos]
+    simp only [ite_eq_left]
     congr 1
     apply Finset.sum_congr rfl
     intro x hx
@@ -929,7 +928,7 @@ theorem edge_mem_orientedBoundary_iff
   | mk face orientation =>
       cases orientation
       · rfl
-      · rw [orientedBoundary, if_pos rfl, map_edgeOfDart_inverseWord]
+      · rw [orientedBoundary, ite_eq_left rfl, map_edgeOfDart_inverseWord]
         exact List.mem_reverse
 
 /-- An edge of the selected face occurs in one of the two cut pieces. -/

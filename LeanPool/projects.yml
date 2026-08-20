@@ -5799,9 +5799,9 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - LeanEval.Topology.ClassificationOfSurfaces.topological_classification_of_surfaces
+      - LeanEval.Topology.ClassificationOfSurfaces.classification_of_surfaces
     main_results:
-      - declaration: LeanEval.Topology.ClassificationOfSurfaces.topological_classification_of_surfaces
+      - declaration: LeanEval.Topology.ClassificationOfSurfaces.classification_of_surfaces
         informal: >-
           Every compact connected Hausdorff topological 2-manifold with
           boundary is homeomorphic to the sphere, an orientable normal-form

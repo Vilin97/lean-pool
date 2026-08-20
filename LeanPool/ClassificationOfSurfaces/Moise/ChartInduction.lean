@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.ChartInductionCore
 
@@ -611,7 +611,7 @@ private theorem oldToAmalgamatedFun_injective {Local Old Target : Type*}
             (Sum.inr (localToTarget (Classical.choose hv)) :
                 AmalgamatedVertex localToOld Target) =
               Sum.inr (localToTarget (Classical.choose hw)) := by
-          simpa only [oldToAmalgamatedFun, dif_pos hv, dif_pos hw] using hvw
+          simpa only [oldToAmalgamatedFun, dite_eq_left hv, dite_eq_left hw] using hvw
         exact Sum.inr_injective (show
           (Sum.inr (localToTarget (Classical.choose hv)) :
               OldVertexComplement localToOld ⊕ Target) =
@@ -624,17 +624,17 @@ private theorem oldToAmalgamatedFun_injective {Local Old Target : Type*}
         _ = localToOld (Classical.choose hw) := congrArg localToOld hlocal
         _ = w := Classical.choose_spec hw
     · exfalso
-      simp only [oldToAmalgamatedFun, dif_pos hv, dif_neg hw, reduceCtorEq] at hvw
+      simp only [oldToAmalgamatedFun, dite_eq_left hv, dite_eq_right hw, reduceCtorEq] at hvw
   · by_cases hw : ∃ u : Local, localToOld u = w
     · exfalso
-      simp only [oldToAmalgamatedFun, dif_neg hv, dif_pos hw, reduceCtorEq] at hvw
+      simp only [oldToAmalgamatedFun, dite_eq_right hv, dite_eq_left hw, reduceCtorEq] at hvw
     · have hextra :
           (⟨v, hv⟩ : OldVertexComplement localToOld) = ⟨w, hw⟩ := by
         have hs :
             (Sum.inl (⟨v, hv⟩ : OldVertexComplement localToOld) :
                 AmalgamatedVertex localToOld Target) =
               Sum.inl ⟨w, hw⟩ := by
-          simpa only [oldToAmalgamatedFun, dif_neg hv, dif_neg hw] using hvw
+          simpa only [oldToAmalgamatedFun, dite_eq_right hv, dite_eq_right hw] using hvw
         exact Sum.inl_injective (show
           (Sum.inl (⟨v, hv⟩ : OldVertexComplement localToOld) :
               OldVertexComplement localToOld ⊕ Target) =
@@ -660,7 +660,7 @@ private theorem oldToAmalgamated_local {Local Old Target : Type*}
     Sum.inr (localToTarget u)
   rw [show oldToAmalgamatedFun localToOld localToTarget (localToOld u) =
       Sum.inr (localToTarget (Classical.choose hlocal)) by
-    simp only [oldToAmalgamatedFun, dif_pos hlocal]]
+    simp only [oldToAmalgamatedFun, dite_eq_left hlocal]]
   congr 1
   exact congrArg localToTarget
     (localToOld.injective (Classical.choose_spec hlocal))
@@ -686,7 +686,7 @@ private theorem exists_local_of_positive_of_amalgamated_coordinates
         Sum.inl ⟨v, hlocal⟩ := by
     change oldToAmalgamatedFun localToOld localToTarget v =
       Sum.inl ⟨v, hlocal⟩
-    simp only [oldToAmalgamatedFun, dif_neg hlocal]
+    simp only [oldToAmalgamatedFun, dite_eq_right hlocal]
   have hzero : oldWeight v = 0 := by
     rw [← hOld v, hvCommon, hcoords]
     exact hTarget ⟨v, hlocal⟩
@@ -1713,7 +1713,7 @@ private theorem MixedLocalFanData.exists_local_of_oldToCommon_eq_target
   have hleft : M.oldToCommon v = Sum.inl ⟨v, hlocal⟩ := by
     change oldToAmalgamatedFun M.localUsedOldEmbedding M.localUsedVertexEmbedding v =
       Sum.inl ⟨v, hlocal⟩
-    simp only [oldToAmalgamatedFun, dif_neg hlocal]
+    simp only [oldToAmalgamatedFun, dite_eq_right hlocal]
   rw [hleft] at h
   have h' :
       (Sum.inl (⟨v, hlocal⟩ : OldVertexComplement M.localUsedOldEmbedding) :
@@ -1725,7 +1725,7 @@ private theorem MixedLocalFanData.oldToCommon_extra
     M.oldToCommon v.1 = Sum.inl v := by
   change oldToAmalgamatedFun M.localUsedOldEmbedding M.localUsedVertexEmbedding v.1 =
     Sum.inl v
-  simp only [oldToAmalgamatedFun, dif_neg v.2]
+  simp only [oldToAmalgamatedFun, dite_eq_right v.2]
 
 private noncomputable abbrev MixedLocalFanCertificate.compactVertexEquiv
     (M : MixedLocalFanData) (C : MixedLocalFanCertificate M) :
@@ -1797,7 +1797,7 @@ private theorem MixedLocalFanCertificate.exists_oldPoint_of_local
       C.mixedOldComplex.compactEval x = localEval z ∧
       C.hasLocalCommonCoordinates M x z := by
   classical
-  letI : Fintype M.UsedOldVertex :=
+  let : Fintype M.UsedOldVertex :=
     C.mixedOldComplex.compactIntrinsic.vertexFintype
   obtain ⟨t, ht, hzt⟩ := z.2.2
   let tf : M.localComplex.Face := ⟨t, ht⟩
@@ -2002,7 +2002,7 @@ private theorem MixedLocalFanCertificate.fanFace_oldPoint_mem_baseEdge_of_common
     C.mixedOldComplex.compactEval xb ∈ M.ambient.faceCarrier
       (M.ambient.faceEdge f.1.1 f.1.2.1).1 := by
   classical
-  letI : Fintype M.UsedOldVertex :=
+  let : Fintype M.UsedOldVertex :=
     C.mixedOldComplex.compactIntrinsic.vertexFintype
   let fc := M.marking.fanCenterVertex f.1
   let gc : M.marking.FanVertex := M.marking.fanVertexEmbedding f.1 fc
@@ -2026,7 +2026,7 @@ private theorem MixedLocalFanCertificate.fanFace_oldPoint_mem_baseEdge_of_common
   have hucCommon : M.oldToCommon uc = Sum.inl ⟨uc, hnotLocal⟩ := by
     change oldToAmalgamatedFun M.localUsedOldEmbedding M.localUsedVertexEmbedding uc =
       Sum.inl ⟨uc, hnotLocal⟩
-    simp only [oldToAmalgamatedFun, dif_neg hnotLocal]
+    simp only [oldToAmalgamatedFun, dite_eq_right hnotLocal]
   let vc : C.mixedOldComplex.compactIntrinsic.Vertex :=
     (MixedLocalFanCertificate.compactVertexEquiv M C).symm uc
   have hvcCommon :
@@ -2100,7 +2100,7 @@ private theorem MixedLocalFanCertificate.positive_usedOld_isLocal_of_common
     (hv : 0 < xb.1 (C.compactVertexEquiv.symm v)) :
     ∃ u : M.localComplex.UsedVertex, M.localUsedOldEmbedding u = v := by
   classical
-  letI : Fintype M.UsedOldVertex :=
+  let : Fintype M.UsedOldVertex :=
     C.mixedOldComplex.compactIntrinsic.vertexFintype
   apply exists_local_of_positive_of_amalgamated_coordinates
     M.localUsedOldEmbedding M.localUsedVertexEmbedding
@@ -2150,7 +2150,7 @@ private theorem MixedLocalFanCertificate.fanFace_oldPoint_mem_selected_of_common
         (pushGeometricRealization M.targetToCommon targetFaces yb).1) :
     C.mixedOldComplex.compactEval xb ∈ D.selectedSet := by
   classical
-  letI : Fintype M.UsedOldVertex :=
+  let : Fintype M.UsedOldVertex :=
     C.mixedOldComplex.compactIntrinsic.vertexFintype
   let x₂ : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inr f)} :=
     C.mixedOldComplex.restrictToFace
@@ -2267,7 +2267,7 @@ private theorem MixedLocalFanCertificate.localFace_relabel_agree
         (pushGeometricRealization M.targetToCommon targetFaces yb).1) :
     eOld xb = eTarget yb := by
   classical
-  letI : Fintype M.UsedOldVertex :=
+  let : Fintype M.UsedOldVertex :=
     C.mixedOldComplex.compactIntrinsic.vertexFintype
   let x₂ : stdSimplex ℝ {v // v ∈ M.mixedUsedFaceVertices (Sum.inl tf)} :=
     C.mixedOldComplex.restrictToFace
@@ -3164,7 +3164,7 @@ private theorem exists_patchSubmesh_covering_compact
     hV.preimage continuous_subtype_val
   have htargetOpen : IsOpen (Vmodel ∩ interior patchModel) :=
     hVmodelOpen.inter isOpen_interior
-  letI : LocallyCompactSpace c.kind.modelRegion :=
+  let : LocallyCompactSpace c.kind.modelRegion :=
     c.kind.modelRegionLocallyCompactSpace
   obtain ⟨E, hEcompact, hDinterior, hEtarget⟩ :=
     exists_compact_between hDcompact htargetOpen hDtarget
@@ -3208,7 +3208,7 @@ private theorem exists_crossingWeldPatchContext
   let D := W.remainder
   have hDcompact : IsCompact D :=
     c.isCompact_core.diff isOpen_interior
-  letI : CompactSpace D := isCompact_iff_compactSpace.mp hDcompact
+  let : CompactSpace D := isCompact_iff_compactSpace.mp hDcompact
   let dToDomain := W.remainderToDomain
   let dModel := W.remainderModel
   let dCoord := W.remainderCoordinate
@@ -5663,7 +5663,7 @@ theorem MoiseChart.exists_crossing_weld_of_boundaryPreservingStraightening
       A ∪ c.core ⊆ interior (Set.range e₁ ∪ Set.range e₂) := by
   dsimp
   classical
-  letI : SecondCountableTopology S := moise_secondCountableTopology S
+  let : SecondCountableTopology S := moise_secondCountableTopology S
   obtain ⟨W⟩ := exists_crossingWeldStraighteningContext S c hT hstraight
   obtain ⟨P⟩ := exists_crossingWeldPatchContext S c hc W
   let geometry : ChartInductionGeometry S c T A P :=

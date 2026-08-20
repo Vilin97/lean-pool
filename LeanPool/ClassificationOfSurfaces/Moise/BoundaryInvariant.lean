@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.Brouwer
 import LeanPool.ClassificationOfSurfaces.Surface
@@ -179,7 +179,7 @@ theorem isOpen_range_halfSpace_of_isOpen_of_isEmbedding_of_boundary
     by_cases hp : 0 ≤ p.1 0
     · by_cases hq : 0 ≤ q.1 0
       · have hb : base p = base q := by
-          simpa only [doubled, if_pos hp, if_pos hq] using hpq
+          simpa only [doubled, ite_eq_left hp, ite_eq_left hq] using hpq
         have hfu : f (toU p) = f (toU q) := Subtype.ext hb
         have hu : toU p = toU q := hf.injective hfu
         have hfold :
@@ -190,7 +190,7 @@ theorem isOpen_range_halfSpace_of_isOpen_of_isEmbedding_of_boundary
       · have hqneg : q.1 0 < 0 := lt_of_not_ge hq
         have hb :
             base p = reflectAcrossHalfPlaneBoundary (base q) := by
-          simpa only [doubled, if_pos hp, if_neg hq] using hpq
+          simpa only [doubled, ite_eq_left hp, ite_eq_right hq] using hpq
         have hcoord := congrArg (fun z : Moise.Plane => z 0) hb
         have hpbase : 0 ≤ base p 0 := (f (toU p)).2
         have hqbase : 0 ≤ base q 0 := (f (toU q)).2
@@ -208,7 +208,7 @@ theorem isOpen_range_halfSpace_of_isOpen_of_isEmbedding_of_boundary
       by_cases hq : 0 ≤ q.1 0
       · have hb :
             reflectAcrossHalfPlaneBoundary (base p) = base q := by
-          simpa only [doubled, if_neg hp, if_pos hq] using hpq
+          simpa only [doubled, ite_eq_right hp, ite_eq_left hq] using hpq
         have hcoord := congrArg (fun z : Moise.Plane => z 0) hb
         have hpbase : 0 ≤ base p 0 := (f (toU p)).2
         have hqbase : 0 ≤ base q 0 := (f (toU q)).2
@@ -226,7 +226,7 @@ theorem isOpen_range_halfSpace_of_isOpen_of_isEmbedding_of_boundary
         have hr :
             reflectAcrossHalfPlaneBoundary (base p) =
               reflectAcrossHalfPlaneBoundary (base q) := by
-          simpa only [doubled, if_neg hp, if_neg hq] using hpq
+          simpa only [doubled, ite_eq_right hp, ite_eq_right hq] using hpq
         have hb : base p = base q := hreflectInj hr
         have hfu : f (toU p) = f (toU q) := Subtype.ext hb
         have hu : toU p = toU q := hf.injective hfu
@@ -253,7 +253,7 @@ theorem isOpen_range_halfSpace_of_isOpen_of_isEmbedding_of_boundary
         simpa only [heq] using x.2⟩
       refine ⟨p, ?_⟩
       have hp : 0 ≤ p.1 0 := x.1.2
-      simp only [doubled, if_pos hp, base]
+      simp only [doubled, ite_eq_left hp, base]
       rw [show toU p = x by
         apply Subtype.ext
         exact Subtype.ext (hfold_nonneg x.1.1 x.1.2)]
@@ -262,12 +262,12 @@ theorem isOpen_range_halfSpace_of_isOpen_of_isEmbedding_of_boundary
       by_cases hsign : 0 ≤ p.1 0
       · refine ⟨toU p, ?_⟩
         have : base p = z.1 := by
-          simpa only [doubled, if_pos hsign] using hp
+          simpa only [doubled, ite_eq_left hsign] using hp
         exact Subtype.ext this
       · have hpneg : p.1 0 < 0 := lt_of_not_ge hsign
         have hreflect :
             reflectAcrossHalfPlaneBoundary (base p) = z.1 := by
-          simpa only [doubled, if_neg hsign] using hp
+          simpa only [doubled, ite_eq_right hsign] using hp
         have hcoord := congrArg (fun w : Moise.Plane => w 0) hreflect
         have hbaseNonneg : 0 ≤ base p 0 := (f (toU p)).2
         have hzNonneg : 0 ≤ z.1 0 := z.2

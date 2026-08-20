@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteFaceModel
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceExtension
@@ -116,7 +116,7 @@ noncomputable def faceBoundaryMap (f : K.Face) (p : Plane) : Plane := by
 theorem continuousOn_faceBoundaryMap (f : K.Face) :
     ContinuousOn (K.faceBoundaryMap (G := G) f)
       (frontier standardFaceRegion) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   convert G.continuous_graphReplacementMap.comp (K.continuous_faceBoundaryLift f) using 1
   funext p
   exact K.faceBoundaryMap_apply f p

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicNormalizationResult
 
@@ -49,7 +49,7 @@ def unorientedIsoOfOrientedBoundaries
         have hinverse :=
           inverseWord_isRotated (boundary_rotated f)
         simpa only [FiniteCyclicPresentation.orientedBoundary,
-          hreverse, if_true, inverseWord_inverseWord,
+          hreverse, ite_true, inverseWord_inverseWord,
           EdgeRelabeling.inverseWord_map_mapDart] using hinverse
 
 /-! ### Deleting a selected edge name -/
@@ -696,7 +696,6 @@ def mergeTarget
     (mergeLeftWord left) (mergeRightWord right)
     (mergeMiddleWords P e f g hfg)
 
-@[simp]
 theorem mergeSource_faces_length
     {P : FiniteCyclicPresentation} {f g : P.Face} {e : P.Edge}
     (left : PositiveOccurrence P f e)

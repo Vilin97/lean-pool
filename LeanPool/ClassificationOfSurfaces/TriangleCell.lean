@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
@@ -103,7 +103,7 @@ theorem boundaryParam_mem_frontier {x : ℝ} (hx : x ∈ Set.Icc (0 : ℝ) 3) :
           (Moise.standardTriangleVertex 0)
           (Moise.standardTriangleVertex 1) x =
         boundaryParam x
-    rw [boundaryParam, if_pos hx1]
+    rw [boundaryParam, ite_eq_left hx1]
   · have hx1' : 1 < x := lt_of_not_ge hx1
     by_cases hx2 : x ≤ 2
     · apply Set.mem_iUnion.mpr
@@ -116,7 +116,7 @@ theorem boundaryParam_mem_frontier {x : ℝ} (hx : x ∈ Set.Icc (0 : ℝ) 3) :
             (Moise.standardTriangleVertex 1)
             (Moise.standardTriangleVertex 2) (x - 1) =
           boundaryParam x
-      rw [boundaryParam, if_neg hx1, if_pos hx2]
+      rw [boundaryParam, ite_eq_right hx1, ite_eq_left hx2]
     · have hx2' : 2 < x := lt_of_not_ge hx2
       apply Set.mem_iUnion.mpr
       refine ⟨(2 : ZMod 3), ?_⟩
@@ -128,7 +128,7 @@ theorem boundaryParam_mem_frontier {x : ℝ} (hx : x ∈ Set.Icc (0 : ℝ) 3) :
             (Moise.standardTriangleVertex 2)
             (Moise.standardTriangleVertex 0) (x - 2) =
           boundaryParam x
-      rw [boundaryParam, if_neg hx1, if_neg hx2]
+      rw [boundaryParam, ite_eq_right hx1, ite_eq_right hx2]
 
 /-- The affine boundary traversal, with its frontier-membership proof. -/
 noncomputable def boundaryParamIcc (x : Set.Icc (0 : ℝ) (0 + 3)) :
@@ -276,7 +276,7 @@ theorem surjective_boundaryQuotMap : Function.Surjective boundaryQuotMap := by
     change boundaryParamIcc x = p
     apply Subtype.ext
     change boundaryParam t = p.1
-    rw [boundaryParam, if_pos ht.2]
+    rw [boundaryParam, ite_eq_left ht.2]
     exact htp
   · change p.1 ∈ segment ℝ
       (Moise.standardTriangleVertex 1) (Moise.standardTriangleVertex 2) at hi
@@ -292,7 +292,7 @@ theorem surjective_boundaryQuotMap : Function.Surjective boundaryQuotMap := by
     · subst t
       simpa [Moise.standardTriangleVertex] using htp
     · have htpos : 0 < t := lt_of_le_of_ne ht.1 (Ne.symm ht0)
-      rw [boundaryParam, if_neg (by linarith), if_pos (by linarith [ht.2])]
+      rw [boundaryParam, ite_eq_right (by linarith), ite_eq_left (by linarith [ht.2])]
       convert htp using 1; ring
   · change p.1 ∈ segment ℝ
       (Moise.standardTriangleVertex 2) (Moise.standardTriangleVertex 0) at hi
@@ -308,7 +308,7 @@ theorem surjective_boundaryQuotMap : Function.Surjective boundaryQuotMap := by
     · subst t
       simpa [Moise.standardTriangleVertex] using htp
     · have htpos : 0 < t := lt_of_le_of_ne ht.1 (Ne.symm ht0)
-      rw [boundaryParam, if_neg (by linarith), if_neg (by linarith)]
+      rw [boundaryParam, ite_eq_right (by linarith), ite_eq_right (by linarith)]
       convert htp using 1; ring
 
 /-- The additive circle of circumference three is the standard triangular frontier. -/
@@ -433,7 +433,7 @@ theorem circleBoundaryHomeomorph_side
   rcases hicases with rfl | rfl | rfl
   · have hxval : x = (t : ℝ) := by simp [x]
     have hrot : finRotate 3 (0 : Fin 3) = 1 := rfl
-    rw [hxval, hrot, boundaryParam, if_pos t.2.2]
+    rw [hxval, hrot, boundaryParam, ite_eq_left t.2.2]
   · have hxval : x = 1 + (t : ℝ) := by norm_num [x]
     have hrot : finRotate 3 (1 : Fin 3) = 2 := rfl
     rw [hxval, hrot]
@@ -443,8 +443,8 @@ theorem circleBoundaryHomeomorph_side
       norm_num [boundaryParam, AffineMap.lineMap_apply_module]
     · have htpos : 0 < (t : ℝ) :=
         lt_of_le_of_ne t.2.1 (Ne.symm ht0)
-      rw [boundaryParam, if_neg (by linarith),
-        if_pos (by linarith [t.2.2])]
+      rw [boundaryParam, ite_eq_right (by linarith),
+        ite_eq_left (by linarith [t.2.2])]
       congr 2
       ring
   · have hxval : x = 2 + (t : ℝ) := by norm_num [x]
@@ -456,8 +456,8 @@ theorem circleBoundaryHomeomorph_side
       norm_num [boundaryParam, AffineMap.lineMap_apply_module]
     · have htpos : 0 < (t : ℝ) :=
         lt_of_le_of_ne t.2.1 (Ne.symm ht0)
-      rw [boundaryParam, if_neg (by linarith),
-        if_neg (by linarith)]
+      rw [boundaryParam, ite_eq_right (by linarith),
+        ite_eq_right (by linarith)]
       congr 2
       ring
 

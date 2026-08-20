@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceBoundary
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
@@ -131,10 +131,10 @@ theorem continuousOn_faceBoundaryMap (t : K.Face) :
     ContinuousOn
       (K.faceBoundaryMap (hcont := hcont) (hinj := hinj) (D := D) (C := C) t)
       (frontier standardFaceRegion) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have hg : Continuous (fun x : K.oneSkeleton =>
       K.graphReplacementMap hcont hinj D C x.1) :=
-    continuousOn_iff_continuous_restrict.mp
+    continuousOn_iff_continuous_domRestrict.mp
       (K.continuousOn_graphReplacementMap_oneSkeleton hcont hinj D C)
   convert hg.comp (K.continuous_faceBoundaryLift t) using 1
   funext p

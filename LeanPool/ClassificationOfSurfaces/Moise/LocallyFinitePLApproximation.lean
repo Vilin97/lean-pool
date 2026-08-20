@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteCellwiseExtension
 
@@ -66,7 +66,7 @@ noncomputable def faceOriginalMap (G : K.PlaneGraphRealization) (f : K.Face)
 
 theorem continuousOn_faceOriginalMap (f : K.Face) :
     ContinuousOn (faceOriginalMap G f) standardFaceRegion := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   convert G.isEmbedding.continuous.comp
     ((continuous_faceToSupport (K := K) f).comp
       (K.facePlaneHomeomorph f).symm.continuous) using 1
@@ -146,7 +146,7 @@ theorem isClosed_outsideVertexImages (f : K.Face) :
   convert hclosed using 1
   ext p
   simp only [PlaneGraphRealization.vertexImageCarrierInRange, Set.mem_preimage,
-    Set.mem_iUnion, Set.mem_setOf_eq]
+    Set.mem_iUnion, Set.mem_ofPred_eq]
 
 theorem faceImage_disjoint_outsideVertexImages (f : K.Face) :
     Disjoint (G.map '' faceInSupport (K := K) f) (outsideVertexImages G f) := by

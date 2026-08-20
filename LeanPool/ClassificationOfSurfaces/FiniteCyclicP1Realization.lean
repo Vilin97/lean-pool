@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicMoves
 import LeanPool.ClassificationOfSurfaces.WeightedCircle
@@ -136,7 +136,7 @@ def firstExpandedOccurrence
     (expand P a).BoundaryOccurrence :=
   ⟨faceEquiv P a o.1, expandedStartIndex P a o.1 o.2⟩
 
-theorem expandWord_getElem?_expandedStart {n : ℕ} (a : Fin n)
+theorem expandWord_getElem_expandedStart {n : ℕ} (a : Fin n)
     (word : List (SignedDart (Fin n))) (i : Fin word.length) :
     (expandWord a word)[((word.map (dartWeight a)).take i).sum]? =
       (expandDart a (word.get i))[0]? := by
@@ -185,7 +185,7 @@ theorem dartWeight_eq_one_iff {n : ℕ} (a : Fin n)
 
 /-- More generally, lookup inside an expanded block agrees with lookup in the substituted
 dart-word. -/
-theorem expandWord_getElem?_expandedOffset {n : ℕ} (a : Fin n)
+theorem expandWord_getElem_expandedOffset {n : ℕ} (a : Fin n)
     (word : List (SignedDart (Fin n))) (i : Fin word.length)
     (k : ℕ) (hk : k < (expandDart a (word.get i)).length) :
     (expandWord a word)[
@@ -219,7 +219,7 @@ theorem firstExpandedOccurrence_dart
         ⟨0, expandDart_length_pos a o.dart⟩ := by
   rcases o with ⟨f, i⟩
   have hlookup :=
-    expandWord_getElem?_expandedStart a (P.boundary f) i
+    expandWord_getElem_expandedStart a (P.boundary f) i
   have hstart :
       (((P.boundary f).map (dartWeight a)).take i).sum <
         (expandWord a (P.boundary f)).length := by
@@ -410,7 +410,7 @@ theorem expandedOccurrenceAt_dart
   let k' : Fin (expandDart a ((P.boundary f).get i)).length :=
     Fin.cast (length_expandDart_eq_dartWeight a _).symm k
   have hlookup :=
-    expandWord_getElem?_expandedOffset a (P.boundary f) i k'
+    expandWord_getElem_expandedOffset a (P.boundary f) i k'
       k'.isLt
   have hstart :
       (((P.boundary f).map (dartWeight a)).take i).sum + k <
@@ -771,7 +771,7 @@ theorem secondExpandedOccurrence_dart
       (dartWeight_eq_two_iff a _).2 hselected
     omega
   have hlookup :=
-    expandWord_getElem?_expandedOffset a (P.boundary f) i 1 hk
+    expandWord_getElem_expandedOffset a (P.boundary f) i 1 hk
   have hstart :
       (((P.boundary f).map (dartWeight a)).take i).sum + 1 <
         (expandWord a (P.boundary f)).length := by
@@ -1769,8 +1769,7 @@ theorem unexpandParameter_flip_reverse {n : ℕ} (a : Fin n)
       unitInterval.symm (unexpandParameter a d k u) := by
   apply Subtype.ext
   simp only [unexpandParameter_val,
-    reverseOffset, Fin.val_cast, Fin.val_rev, dartWeight_flip,
-    unitInterval.coe_symm_eq]
+    reverseOffset, dartWeight_flip, unitInterval.coe_symm_eq]
   have hk : k.val + 1 ≤ dartWeight a d :=
     k.isLt
   have hw : (dartWeight a d : ℝ) ≠ 0 := by

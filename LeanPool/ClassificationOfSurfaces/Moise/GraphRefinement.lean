@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.GraphSubdivision
 
@@ -55,9 +55,9 @@ theorem markedEdgeChain_vertex_even (point : P → Plane)
       omega⟩ = K.position (K.edgeFirst i) := by
   classical
   simp only [markedEdgeChain]
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   have hmod : (2 * i.val) % 2 = 0 := by omega
-  rw [if_pos hmod]
+  rw [ite_eq_left hmod]
   have hdiv : 2 * i.val / 2 = i.val := by omega
   congr 2
   exact Fin.ext hdiv
@@ -70,9 +70,9 @@ theorem markedEdgeChain_vertex_odd (point : P → Plane)
       omega⟩ = K.position (K.edgeSecond i) := by
   classical
   simp only [markedEdgeChain]
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   have hmod : (2 * i.val + 1) % 2 ≠ 0 := by omega
-  rw [if_neg hmod]
+  rw [ite_eq_right hmod]
   have hdiv : (2 * i.val + 1) / 2 = i.val := by omega
   congr 2
   exact Fin.ext hdiv
@@ -86,7 +86,7 @@ theorem markedEdgeChain_vertex_mark (point : P → Plane) (p : P) :
         omega⟩ = point p := by
   classical
   simp only [markedEdgeChain]
-  rw [dif_neg (by omega), dif_pos (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_left (by omega)]
   have hsub : 2 * Fintype.card K.EdgeFace + (markEquiv p).val -
       2 * Fintype.card K.EdgeFace = (markEquiv p).val := by omega
   have hfin : (⟨2 * Fintype.card K.EdgeFace + (markEquiv p).val -
@@ -103,7 +103,7 @@ theorem markedEdgeChain_vertex_original (point : P → Plane)
         omega⟩ = K.position (K.vertexAt i) := by
   classical
   simp only [markedEdgeChain]
-  rw [dif_neg (by omega), dif_neg (by omega), dif_pos (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_left (by omega)]
   have hsub : 2 * Fintype.card K.EdgeFace + Fintype.card P + i.val -
       (2 * Fintype.card K.EdgeFace + Fintype.card P) = i.val := by omega
   congr 2

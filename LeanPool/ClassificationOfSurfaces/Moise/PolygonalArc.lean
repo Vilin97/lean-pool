@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.BrokenLine
 import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
@@ -78,9 +78,9 @@ theorem segmentFamilyChain_vertex_even {I : Type*} [Fintype I]
           omega⟩ = left i := by
   classical
   simp only [segmentFamilyChain]
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   have hmod : (2 * (Fintype.equivFin I i).val) % 2 = 0 := by omega
-  rw [if_pos hmod]
+  rw [ite_eq_left hmod]
   have hdiv : 2 * (Fintype.equivFin I i).val / 2 =
       (Fintype.equivFin I i).val := by omega
   have hi : (⟨2 * (Fintype.equivFin I i).val / 2, by omega⟩ :
@@ -95,9 +95,9 @@ theorem segmentFamilyChain_vertex_odd {I : Type*} [Fintype I]
           omega⟩ = right i := by
   classical
   simp only [segmentFamilyChain]
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   have hmod : (2 * (Fintype.equivFin I i).val + 1) % 2 ≠ 0 := by omega
-  rw [if_neg hmod]
+  rw [ite_eq_right hmod]
   have hdiv : (2 * (Fintype.equivFin I i).val + 1) / 2 =
       (Fintype.equivFin I i).val := by omega
   have hi : (⟨(2 * (Fintype.equivFin I i).val + 1) / 2, by omega⟩ :

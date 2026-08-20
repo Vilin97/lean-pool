@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PolygonalPolyhedron
 import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangle
@@ -73,7 +73,7 @@ theorem insertZeroVertex_natCast (J : PolygonalCircle) (p : Plane) {m : ℕ}
     (hm0 : 0 < m) (hm : m < J.n + 1) :
     J.insertZeroVertex p (m : ZMod (J.n + 1)) = J.vertex (m : ZMod J.n) := by
   rw [insertZeroVertex, ZMod.val_natCast_of_lt hm]
-  simp only [if_neg hm0.ne']
+  simp only [ite_eq_right hm0.ne']
 
 /-- The prospective edges of `insertZero`, before packaging the simple-polygon proofs. -/
 def insertZeroEdgeSegment (J : PolygonalCircle) (p : Plane)
@@ -145,7 +145,7 @@ theorem insertZeroVertex_adjacent_ne (J : PolygonalCircle) {p : Plane}
     rw [hsucc]
     unfold insertZeroVertex
     rw [ZMod.val_one_eq_one_mod, Nat.mod_eq_of_lt htwo]
-    simp only [if_neg (by omega : (1 : ℕ) ≠ 0)]
+    simp only [ite_eq_right (by omega : (1 : ℕ) ≠ 0)]
     simpa only [Nat.cast_one] using hp1
   by_cases hmn : m = J.n
   · rw [hmn]
@@ -371,7 +371,7 @@ theorem disjoint_insertZero_last_next (J : PolygonalCircle) {p : Plane}
   simp only [zero_add, one_add_one_eq_two, hbase, Set.mem_singleton_iff] at hxBase
   exact J.vertex_one_not_mem_insertZero_last hp hp0 hp1 (hxBase ▸ hxLast)
 
-private theorem natCast_eq_natCast_of_lt {n m l : ℕ} [NeZero n]
+private theorem natCast_eq_natCast_of_lt {n m l : ℕ}
     (hm : m < n) (hl : l < n) (h : (m : ZMod n) = (l : ZMod n)) : m = l := by
   have hv := congrArg ZMod.val h
   rwa [ZMod.val_natCast_of_lt hm, ZMod.val_natCast_of_lt hl] at hv
@@ -415,7 +415,7 @@ theorem insertZero_nonadjacent_disjoint (J : PolygonalCircle) {p : Plane}
     (i j : ZMod (J.n + 1)) (hij : i ≠ j) (hprev : i ≠ j + 1)
     (hnext : j ≠ i + 1) :
     J.insertZeroEdgeSegment p i ∩ J.insertZeroEdgeSegment p j = ∅ := by
-  letI : Fact (1 < J.n) := ⟨by have := J.three_le; omega⟩
+  let : Fact (1 < J.n) := ⟨by have := J.three_le; omega⟩
   let m := i.val
   let l := j.val
   have hm : m < J.n + 1 := i.val_lt
@@ -757,7 +757,7 @@ theorem rotate_carrier (J : PolygonalCircle) (a : ZMod J.n) :
     obtain ⟨i, hi⟩ := hp
     apply J.edgeSegment_subset_carrier (i + a)
     change p ∈ segment ℝ (J.vertex (i + a)) (J.vertex (i + a + 1))
-    convert hi using 1 <;> ring
+    convert hi using 1; ring
   · intro p hp
     unfold carrier at hp
     rw [Set.mem_iUnion] at hp
@@ -766,7 +766,7 @@ theorem rotate_carrier (J : PolygonalCircle) (a : ZMod J.n) :
     unfold carrier rotate edgeSegment
     rw [Set.mem_iUnion]
     refine ⟨i - a, ?_⟩
-    convert hi using 1 <;> ring
+    convert hi using 1; ring
 
 /-- The bounded and unbounded complementary components depend only on the polygon carrier, not
 on its cyclic indexing. -/
@@ -1186,7 +1186,7 @@ theorem forwardCutVertex_natCast {k m : ℕ} (hm : m < k + 1) :
 theorem edgeBeforeChord_inter_chord {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < J.n)
     (hP : J.vertex 0 = C.P) (hQ : J.vertex (k : ZMod J.n) = C.Q) :
     J.edgeSegment ((k - 1 : ℕ) : ZMod J.n) ∩ segment ℝ C.Q C.P = {C.Q} := by
-  letI : Fact (1 < J.n) := ⟨by omega⟩
+  let : Fact (1 < J.n) := ⟨by omega⟩
   have hkpos : 0 < k := by omega
   have hkmem : C.Q ∈ J.edgeSegment ((k - 1 : ℕ) : ZMod J.n) := by
     rw [← hQ]
@@ -1229,7 +1229,7 @@ theorem edgeBeforeChord_inter_chord {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < J.n)
 theorem chord_inter_firstEdge {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < J.n)
     (hP : J.vertex 0 = C.P) (hQ : J.vertex (k : ZMod J.n) = C.Q) :
     segment ℝ C.Q C.P ∩ J.edgeSegment 0 = {C.P} := by
-  letI : Fact (1 < J.n) := ⟨by omega⟩
+  let : Fact (1 < J.n) := ⟨by omega⟩
   have hQnot : C.Q ∉ J.edgeSegment 0 := by
     rw [← hQ]
     intro hmem
@@ -1264,7 +1264,7 @@ theorem chord_disjoint_middleEdge {k m : ℕ} (hm0 : 0 < m) (hmk : m + 1 < k)
     (hk : k < J.n) (hP : J.vertex 0 = C.P)
     (hQ : J.vertex (k : ZMod J.n) = C.Q) :
     Disjoint (segment ℝ C.Q C.P) (J.edgeSegment (m : ZMod J.n)) := by
-  letI : Fact (1 < J.n) := ⟨by omega⟩
+  let : Fact (1 < J.n) := ⟨by omega⟩
   have hPnot : C.P ∉ J.edgeSegment (m : ZMod J.n) := by
     rw [← hP]
     intro hmem
@@ -1362,7 +1362,7 @@ theorem forwardCut_consecutive_inter {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < J.n
     forwardCutEdgeSegment (J := J) k i ∩
       forwardCutEdgeSegment (J := J) k (i + 1) =
         {forwardCutVertex (J := J) k (i + 1)} := by
-  letI : Fact (1 < k + 1) := ⟨by omega⟩
+  let : Fact (1 < k + 1) := ⟨by omega⟩
   let m := i.val
   have hm : m < k + 1 := i.val_lt
   have hcast : (m : ZMod (k + 1)) = i := ZMod.natCast_zmod_val i
@@ -1412,7 +1412,7 @@ theorem forwardCut_nonadjacent_disjoint {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < 
     (hnext : j ≠ i + 1) :
     forwardCutEdgeSegment (J := J) k i ∩
       forwardCutEdgeSegment (J := J) k j = ∅ := by
-  letI : Fact (1 < J.n) := ⟨by omega⟩
+  let : Fact (1 < J.n) := ⟨by omega⟩
   let m := i.val
   let l := j.val
   have hm : m < k + 1 := i.val_lt
@@ -1706,7 +1706,7 @@ theorem backwardArc_inter_chord {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < J.n)
 theorem forwardArc_inter_backwardArc {k : ℕ} (hk2 : 2 ≤ k) (hk : k + 1 < J.n)
     (hP : J.vertex 0 = C.P) (hQ : J.vertex (k : ZMod J.n) = C.Q) :
     forwardArc (J := J) k ∩ backwardArc (J := J) k = {C.P, C.Q} := by
-  letI : Fact (1 < J.n) := ⟨by omega⟩
+  let : Fact (1 < J.n) := ⟨by omega⟩
   apply Set.Subset.antisymm
   · rintro x ⟨hxF, hxB⟩
     simp only [forwardArc, Set.mem_iUnion] at hxF

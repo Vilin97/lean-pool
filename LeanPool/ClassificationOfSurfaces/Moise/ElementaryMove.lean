@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.AmbientHomeomorph
 import LeanPool.ClassificationOfSurfaces.Moise.LineSubdivision
@@ -910,10 +910,10 @@ noncomputable def diamondFanCenterRealization (a : ℝ) (ha0 : -2 < a) (ha1 : a 
   refine ⟨x, single_mem_stdSimplex ℝ 4, {0, 4, 2}, ?_, ?_⟩
   · apply Finset.mem_filter.mpr
     refine ⟨?_, ?_⟩
-    apply Finset.mem_biUnion.mpr
-    exact ⟨{0, 4, 2}, by simp [diamondFanTriangles], by simp⟩
-    show ({0, 4, 2} : Finset (Fin 5)).card = 3
-    decide
+    · apply Finset.mem_biUnion.mpr
+      exact ⟨{0, 4, 2}, by simp [diamondFanTriangles], by simp⟩
+    · change ({0, 4, 2} : Finset (Fin 5)).card = 3
+      decide
   · intro v hv
     simp only [x, Pi.single_apply]
     split_ifs with h

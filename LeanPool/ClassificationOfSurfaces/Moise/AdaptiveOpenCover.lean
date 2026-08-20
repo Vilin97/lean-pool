@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTriangulation
 
@@ -52,12 +52,12 @@ def safety : K.AdaptiveSafety U where
 /-- Subordination to an open cover is locally attainable under repeated midpoint subdivision. -/
 theorem safety_isAdmissible :
     @AdaptiveSafety.IsAdmissible K U C.safety := by
-  letI : K.AdaptiveSafety U := C.safety
+  let : K.AdaptiveSafety U := C.safety
   refine { exists_safe := ?_, locally_parent_safe := ?_ }
   · intro _ p hp
     obtain ⟨i, hpi⟩ := C.covers hp
-    letI : K.AdaptiveSafety (C.set i) := K.defaultAdaptiveSafety (C.set i)
-    letI : AdaptiveSafety.IsAdmissible (K := K) (U := C.set i) :=
+    let : K.AdaptiveSafety (C.set i) := K.defaultAdaptiveSafety (C.set i)
+    let : AdaptiveSafety.IsAdmissible (K := K) (U := C.set i) :=
       K.defaultAdaptiveSafety_admissible (C.set i)
     obtain ⟨n, t, ht, hpt⟩ :=
       K.exists_safeLevelFace_containing (C.set i) (C.isOpen i) hpi
@@ -99,22 +99,22 @@ noncomputable abbrev locallyFiniteTriangleComplex (hU : IsOpen U) :
 /-- The cover-subordinate adaptive complex covers all of `U`. -/
 theorem locallyFiniteTriangleComplex_support (hU : IsOpen U) :
     (locallyFiniteTriangleComplex K U C hU).support = Set.univ := by
-  letI : K.AdaptiveSafety U := C.safety
-  letI : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
+  let : K.AdaptiveSafety U := C.safety
+  let : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
   exact K.adaptiveLocallyFiniteTriangleComplex_support U hU
 
 /-- Distinct faces of the cover-subordinate adaptive complex carry distinct vertex triples. -/
 theorem faceVertices_injective (hU : IsOpen U) :
     Function.Injective (locallyFiniteTriangleComplex K U C hU).faceVertices := by
-  letI : K.AdaptiveSafety U := C.safety
-  letI : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
+  let : K.AdaptiveSafety U := C.safety
+  let : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
   exact K.adaptiveGlobalFanFaceVertices_injective U hU
 
 /-- Every adaptive tile selected by `C` lies in one member of the cover. -/
 theorem exists_cover_set_of_adaptiveFace
     (t : @IntrinsicTwoComplex.AdaptiveFace K U C.safety) :
     ∃ i, @IntrinsicTwoComplex.adaptiveFaceCarrier K U C.safety t ⊆ C.set i := by
-  letI : K.AdaptiveSafety U := C.safety
+  let : K.AdaptiveSafety U := C.safety
   rcases t with ⟨(_ | n), t⟩
   · exact t.2
   · exact t.2.1
@@ -124,8 +124,8 @@ theorem exists_cover_set_of_complex_face (hU : IsOpen U)
     (f : (locallyFiniteTriangleComplex K U C hU).Face) :
     ∃ i, Subtype.val ''
         ((locallyFiniteTriangleComplex K U C hU).faceCarrier f) ⊆ C.set i := by
-  letI : K.AdaptiveSafety U := C.safety
-  letI : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
+  let : K.AdaptiveSafety U := C.safety
+  let : AdaptiveSafety.IsAdmissible (K := K) (U := U) := C.safety_isAdmissible
   obtain ⟨i, hi⟩ := exists_cover_set_of_adaptiveFace K U C f.1
   refine ⟨i, ?_⟩
   rintro p ⟨q, hq, rfl⟩

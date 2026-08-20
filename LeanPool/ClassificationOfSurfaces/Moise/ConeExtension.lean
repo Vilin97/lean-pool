@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.FreeTriangleMove
 import Mathlib.Analysis.Convex.Between
@@ -27,7 +27,7 @@ namespace ClassificationOfSurfaces
 namespace Moise
 
 open Filter
-open scoped Pointwise Topology
+open scoped Pointwise _root_.Topology
 
 /-- A nondegenerate plane triangle has infinitely many interior points. -/
 theorem IsTriangle.infinite_interior {C : Set Plane} (hC : IsTriangle C) :
@@ -961,7 +961,7 @@ theorem repositionMap_apply_realization (position' : K.Vertex → Plane)
       (K.reposition position' hinj haff hface).baryEval x.1 := by
   have hxmem : K.baryEval x.1 ∈ K.support :=
     (K.realizationHomeomorphAll x).2
-  simp only [repositionMap, dif_pos hxmem, repositionHomeomorphAll]
+  simp only [repositionMap, dite_eq_left hxmem, repositionHomeomorphAll]
   change ((K.reposition position' hinj haff hface).realizationHomeomorphAll
     (K.realizationHomeomorphAll.symm ⟨K.baryEval x.1, hxmem⟩)).1 = _
   have heq : K.realizationHomeomorphAll.symm ⟨K.baryEval x.1, hxmem⟩ = x := by
@@ -1015,7 +1015,7 @@ theorem repositionMap_affineOn_face (position' : K.Vertex → Plane)
     IsAffineOn (K.repositionMap position' hinj haff hface) (K.cellCarrier s) := by
   classical
   have hsne := K.nonempty_of_mem s hs
-  letI : Nonempty s := ⟨⟨hsne.choose, hsne.choose_spec⟩⟩
+  let : Nonempty s := ⟨⟨hsne.choose, hsne.choose_spec⟩⟩
   let p : s → Plane := fun v => K.position v
   let q : s → Plane := fun v => position' v
   obtain ⟨g, hg⟩ := exists_affineMap_eqOn_affineIndependent p q (K.affineIndependent s hs)

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
 import LeanPool.ClassificationOfSurfaces.Moise.FineSubdivision
@@ -76,7 +76,7 @@ theorem interior_convexHull_fin3_eq_simplex_interior (p : Fin 3 → Plane)
   have hrange : Set.range (b : Fin 3 → Plane) = Set.range p := rfl
   rw [← hrange, interior_convexHull_affineBasis b]
   ext x
-  simp only [Affine.Simplex.interior, Affine.Simplex.setInterior, Set.mem_setOf_eq]
+  simp only [Affine.Simplex.interior, Affine.Simplex.setInterior, Set.mem_ofPred_eq]
   constructor
   · intro hx
     let w : Fin 3 → ℝ := fun i => b.coord i x
@@ -763,7 +763,7 @@ theorem PolygonalCircle.mem_exteriorRegion_of_continuous_extension
   have hbDcont : Continuous bD := by
     apply Continuous.subtype_mk
     exact straight.continuous.comp
-      (continuousOn_iff_continuous_restrict.mp hbcont)
+      (continuousOn_iff_continuous_domRestrict.mp hbcont)
   have hbDinj : Function.Injective bD := by
     intro x y hxy
     apply Subtype.ext
@@ -780,7 +780,7 @@ theorem PolygonalCircle.mem_exteriorRegion_of_continuous_extension
     rw [hbx, hzy]
   have hfrontierCompact : IsCompact (frontier C) :=
     hC.isCompact.of_isClosed_subset isClosed_frontier hCclosed.frontier_subset
-  letI : CompactSpace (frontier C) :=
+  let : CompactSpace (frontier C) :=
     isCompact_iff_compactSpace.mp hfrontierCompact
   let bHomeo : frontier C ≃ₜ frontier D :=
     (hbDcont.isClosedEmbedding hbDinj).isEmbedding.toHomeomorphOfSurjective hbDsurj
@@ -791,7 +791,7 @@ theorem PolygonalCircle.mem_exteriorRegion_of_continuous_extension
   have htoPunctured : Continuous toPunctured := by
     apply Continuous.subtype_mk
     exact straight.continuous.comp
-      (continuousOn_iff_continuous_restrict.mp hFcont)
+      (continuousOn_iff_continuous_domRestrict.mp hFcont)
   let r : C → frontier C := fun x => bHomeo.symm (R (toPunctured x))
   have hrcont : Continuous r :=
     bHomeo.symm.continuous.comp (hRcont.comp htoPunctured)
@@ -832,10 +832,10 @@ theorem exists_continuous_extension_of_close_on_frontier
         ∀ x ∈ C, dist (F x) (h x) ≤ r := by
   let d : C(frontier C, Plane) :=
     ⟨fun x => b x.1 - h x.1,
-      (continuousOn_iff_continuous_restrict.mp hbcont).sub
-        (continuousOn_iff_continuous_restrict.mp
+      (continuousOn_iff_continuous_domRestrict.mp hbcont).sub
+        (continuousOn_iff_continuous_domRestrict.mp
           (hhcont.mono hCclosed.frontier_subset))⟩
-  letI : TietzeExtension (Metric.closedBall (0 : Plane) r) :=
+  let : TietzeExtension (Metric.closedBall (0 : Plane) r) :=
     Metric.instTietzeExtensionClosedBall ℝ 0 hr
   have hdBall : ∀ x, d x ∈ Metric.closedBall (0 : Plane) r := by
     intro x
@@ -1483,14 +1483,14 @@ theorem pl_extension_of_triangle_boundary {C C' : Set Plane}
         hzsupp hz0 hz1, hzeval]
     rw [hF, htarget, hboundary]
   · rw [← hPsupport]
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hcont : Continuous fun z : P.support =>
         (P.repositionHomeomorphAll qpos qinj qaff qface z).1 :=
       continuous_subtype_val.comp
         (P.repositionHomeomorphAll qpos qinj qaff qface).continuous
     convert hcont using 1
     funext z
-    simp [Set.restrict, F, PlaneComplex.repositionMap, z.2]
+    simp [Set.domRestrict, F, PlaneComplex.repositionMap, z.2]
   · rw [← hPsupport]
     exact P.repositionMap_injOn_support qpos qinj qaff qface
   · rw [← hPsupport, ← hRsupport]
@@ -1731,7 +1731,7 @@ theorem PlaneComplex.cellwiseExtensionMap_eqOn_cell (K : PlaneComplex)
   intro x hx
   have hexists : ∃ u : {u : Finset K.Vertex // u ∈ K.cells},
       x ∈ K.cellCarrier u.1 := ⟨t, hx⟩
-  rw [cellwiseExtensionMap, dif_pos hexists]
+  rw [cellwiseExtensionMap, dite_eq_left hexists]
   exact PlaneComplex.CellExtensionData.family_eqOn_cell_inter E
     (Classical.choose hexists) t ⟨(Classical.choose_spec hexists), hx⟩
 

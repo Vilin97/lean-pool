@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PolygonalJordan
 import Mathlib.Analysis.Convex.Combination
@@ -196,7 +196,7 @@ theorem standardTriangleCircle_carrier :
         Set.range standardTriangleVertex := rfl
     rw [← hrange, interior_convexHull_affineBasis standardTriangleAffineBasis]
     ext x
-    simp only [Affine.Simplex.interior, Affine.Simplex.setInterior, Set.mem_setOf_eq]
+    simp only [Affine.Simplex.interior, Affine.Simplex.setInterior, Set.mem_ofPred_eq]
     constructor
     · intro hx
       let w : Fin 3 → ℝ := fun i => standardTriangleAffineBasis.coord i x

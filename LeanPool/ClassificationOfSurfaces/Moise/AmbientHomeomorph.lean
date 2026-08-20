@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 import Mathlib.Topology.Piecewise
@@ -153,19 +153,19 @@ noncomputable def extendHomeomorphByIdentity {P : Set Plane} (hP : IsClosed P)
     have := congrArg Subtype.val (e.symm_apply_eq.mpr he.symm)
     exact this
   have hfContinuousOn : ContinuousOn f P := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hcont : Continuous fun x : P => (e x).1 :=
       continuous_subtype_val.comp e.continuous
     convert hcont using 1
     funext x
-    simp [Set.restrict, f, x.property]
+    simp [Set.domRestrict, f, x.property]
   have hgContinuousOn : ContinuousOn g P := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hcont : Continuous fun x : P => (e.symm x).1 :=
       continuous_subtype_val.comp e.symm.continuous
     convert hcont using 1
     funext x
-    simp [Set.restrict, g, x.property]
+    simp [Set.domRestrict, g, x.property]
   have hfContinuous : Continuous f := by
     have hpaste : Set.piecewise P f id = f := by
       funext x

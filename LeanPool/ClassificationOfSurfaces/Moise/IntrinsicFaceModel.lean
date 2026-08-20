@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicSubdivision
 import LeanPool.ClassificationOfSurfaces.Moise.Anchors
@@ -19,7 +19,7 @@ namespace Topology
 namespace ClassificationOfSurfaces
 namespace Moise
 
-open scoped BigOperators Topology
+open scoped BigOperators _root_.Topology
 
 theorem standardTrianglePlaneComplex_pure : standardTrianglePlaneComplex.IsPure2 := by
   intro s hs
@@ -551,7 +551,7 @@ theorem facePlaneHomeomorph_symm_val (t : K.Face)
   change (K.faceReindexFromStandard t z).1.1 = K.facePlaneInverseAffine t p.1
   funext v
   by_cases hv : v ∈ t.1
-  · simp only [faceReindexFromStandard, dif_pos hv,
+  · simp only [faceReindexFromStandard, dite_eq_left hv,
       facePlaneInverseAffine, AffineMap.comp_apply,
       K.faceCoordExtensionAffine_apply_of_mem _ _ hv]
     exact congrFun hz ((K.faceVertexEquiv t).symm ⟨v, hv⟩)

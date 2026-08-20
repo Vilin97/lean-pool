@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 
 import Mathlib.Analysis.Complex.Tietze
@@ -48,7 +48,7 @@ Stone-Weierstrass approximation, and a measure-theoretic perturbation argument.
 
 namespace LeanEval.Topology.ClassificationOfSurfaces.InvarianceOfDomain
 
-open MeasureTheory Metric Set ContinuousLinearMap LinearMap Topology Polynomial
+open MeasureTheory Metric Set ContinuousLinearMap LinearMap _root_.Topology Polynomial
 
 variable {E} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
 variable (E) in
@@ -107,7 +107,7 @@ theorem differentiable_approx_of_continuous {δ : ℝ} (hδ : 0 < δ) {U : Set E
     refine lt_of_le_of_ne (norm_nonneg _) fun h_eq => ?_
     let w : Fin n → ℝ := fun _ => 1
     have hw : w ≠ 0 := by
-      haveI : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp Module.finrank_pos
+      have : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp Module.finrank_pos
       obtain ⟨i⟩ := (inferInstance : Nonempty (Fin n))
       intro h
       have : w i = 0 := congr_fun h i
@@ -221,7 +221,7 @@ theorem invariance_of_domain_interior (f : E → E)
   -- The inverse map of `f` is continuous.
   let FInvCmap : C(f '' closedBall 0 1, (closedBall (0 : E) 1)) :=
   ⟨FEquiv.symm,  Continuous.continuous_symm_of_equiv_compact_to_t2 (continuous_induced_rng.mpr <|
-    ContinuousOn.restrict hf_cont)⟩
+    ContinuousOn.domRestrict hf_cont)⟩
   -- `f(B^n)` is closed.
   have hballimageclosed : IsClosed (f '' closedBall 0 1) :=
     ((isCompact_closedBall 0 1).image_of_continuousOn hf_cont).isClosed
@@ -292,7 +292,7 @@ theorem invariance_of_domain_interior (f : E → E)
     rw [isCompact_iff_isClosed_bounded]
     -- `Σ₁` is the complement of the open ball, so it is closed.
     have hcompl : {y | ‖y - c‖ ≥ ε }ᶜ = ball c ε := by
-      ext y; simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_le, mem_ball_iff_norm]
+      ext y; simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_le, mem_ball_iff_norm]
     have hopen : IsOpen {y | ‖y - c‖ ≥ ε }ᶜ := hcompl ▸ isOpen_ball
     -- `f(B^n)` is compact as it is the image of a compact set under a continuous function
     -- As compact sets are bounded and `Σ₁` is contained in this, `Σ₁` is bounded.
@@ -311,7 +311,7 @@ theorem invariance_of_domain_interior (f : E → E)
   have hPhicont : ContinuousOn Phi (f '' closedBall 0 1) := by
     refine ContinuousOn.add continuousOn_const (ContinuousOn.smul ?_
     (ContinuousOn.sub (continuousOn_id' (f '' closedBall 0 1)) continuousOn_const))
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     exact Continuous.max ((Continuous.div continuous_const (Continuous.norm
     (Continuous.sub continuous_subtype_val continuous_const)))
     (fun y ↦ by
@@ -362,8 +362,8 @@ theorem invariance_of_domain_interior (f : E → E)
     simp only [h, _root_.zero_sub, norm_neg] at hP
     linarith
   -- It is possible that `P` vanishes on `Σ₂`, so we construct a perturbation `P'` that does not.
-  letI : MeasurableSpace E := borel E
-  haveI : BorelSpace E := ⟨rfl⟩
+  let : MeasurableSpace E := borel E
+  have : BorelSpace E := ⟨rfl⟩
   -- `Σ₂` has measure `0`; `P` is differentiable. The image of `Σ₂` under P also has measure `0`.
   have hP_image_null : volume (P '' (sphere c ε)) = 0 :=
     MeasureTheory.addHaar_image_eq_zero_of_differentiableOn_of_addHaar_eq_zero volume
@@ -659,7 +659,7 @@ theorem isOpen_range_of_isOpen_of_continuous_injective
     exact Function.Injective.extend_apply Subtype.val_injective f
       (fun _ ↦ f u) x
   have hf₀_cont : ContinuousOn f₀ U := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     convert hfcont using 1
     funext x
     exact hf₀_eq x
@@ -767,7 +767,7 @@ theorem mem_interior_range_of_eq_of_mem_interior_range_of_isInteriorPoint
     rw [hcz]
     exact hx
   have hcSymm : Continuous (fun w : W ↦ c.symm w.1) := by
-    apply ContinuousOn.restrict
+    apply ContinuousOn.domRestrict
     exact (continuousOn_extChartAt_symm (I := I) z).mono fun w hw ↦
       interior_subset hw.1
   let toOldRange : W → Set.range f :=

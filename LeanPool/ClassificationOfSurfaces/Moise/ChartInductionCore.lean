@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import Mathlib.Topology.Metrizable.Urysohn
 import LeanPool.ClassificationOfSurfaces.Moise.ChartPatch
@@ -1928,7 +1928,7 @@ theorem exists_chartMatchingControl [T2Space S] [CompactSpace S]
         (∀ y : T.chartOverlap c,
           dist (g' y : Plane) (T.chartOverlapMap c y) ≤ mu y) →
         MatchesAtFrontier (T.chartOverlap c) g T.embed := by
-  letI : MetricSpace S := TopologicalSpace.metrizableSpaceMetric S
+  let : MetricSpace S := TopologicalSpace.metrizableSpaceMetric S
   exact exists_chartMatchingControl_of_metricSpace T c
 
 /-- The geometric certificate retained from a controlled chart replacement.  Besides the
@@ -2967,7 +2967,7 @@ theorem exists_synchronizedPatch_local_weld
         e₁ x = e₂ y → (x : V → ℝ) = (y : V → ℝ)) ∧
       (∀ e ∈ (F₁ ∪ F₂).biUnion fun t ↦ t.powersetCard 2,
         ((F₁ ∪ F₂).filter fun t ↦ e ⊆ t).card ≤ 2) := by
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   refine ⟨(synchronizedPatchOldMesh c.kind J).Vertex, inferInstance, inferInstance,
     (synchronizedPatchOldMesh c.kind J).triangles,
     (synchronizedPatchNewMesh c.kind J).triangles,
@@ -4974,7 +4974,7 @@ theorem relativeLevelAlignmentLine_mem
   refine ⟨t, Finset.mem_toList.mpr (Finset.mem_univ t), ?_⟩
   apply List.mem_flatMap.mpr
   refine ⟨s, Finset.mem_toList.mpr (Finset.mem_univ s), ?_⟩
-  rw [if_pos hparent]
+  rw [ite_eq_left hparent]
   apply List.mem_map.mpr
   exact ⟨k, Finset.mem_toList.mpr (Finset.mem_univ k), rfl⟩
 
@@ -5532,8 +5532,8 @@ private theorem straightenedChartOpen_coordZero_iff_boundary
   let C₀ := T.toIntrinsic.controlledAdaptiveOpenCover U hU f hf
     (regionSafeControl V f mu)
     (stronglyPositiveOn_regionSafeControl hV hf hmem hmu)
-  letI : T.toIntrinsic.AdaptiveSafety U := C₀.safety
-  letI : IntrinsicTwoComplex.AdaptiveSafety.IsAdmissible
+  let : T.toIntrinsic.AdaptiveSafety U := C₀.safety
+  let : IntrinsicTwoComplex.AdaptiveSafety.IsAdmissible
       (K := T.toIntrinsic) (U := U) := C₀.safety_isAdmissible
   let R := T.toIntrinsic.regionControlledAdaptiveComplex U hU V hV f hf hmem mu hmu
   let q := straightenedChartOpenSourceHomeomorph R G H hRsupport
@@ -5662,7 +5662,7 @@ theorem exists_straightenedChartOpen
       Disjoint (g '' U) (T.embed '' Uᶜ) ∧
       _root_.Topology.IsEmbedding (frontierGlue U g T.embed) := by
   classical
-  letI : MetricSpace S' := TopologicalSpace.metrizableSpaceMetric S'
+  let : MetricSpace S' := TopologicalSpace.metrizableSpaceMetric S'
   let toOverlap : U → T.chartOverlap c := fun x ↦ ⟨x.1, hsub x.2⟩
   have htoOverlapEmbedding : _root_.Topology.IsEmbedding toOverlap := by
     simpa [toOverlap] using _root_.Topology.IsEmbedding.inclusion hsub
@@ -5675,8 +5675,8 @@ theorem exists_straightenedChartOpen
   let C₀ := T.toIntrinsic.controlledAdaptiveOpenCover U hU f hf
     (regionSafeControl V f mu)
     (stronglyPositiveOn_regionSafeControl hV hf hmem hmu)
-  letI : T.toIntrinsic.AdaptiveSafety U := C₀.safety
-  letI : IntrinsicTwoComplex.AdaptiveSafety.IsAdmissible
+  let : T.toIntrinsic.AdaptiveSafety U := C₀.safety
+  let : IntrinsicTwoComplex.AdaptiveSafety.IsAdmissible
       (K := T.toIntrinsic) (U := U) := C₀.safety_isAdmissible
   let R := T.toIntrinsic.regionControlledAdaptiveComplex U hU V hV f hf hmem mu hmu
   have hRsupport : R.support = Set.univ := by
@@ -5789,7 +5789,7 @@ theorem exists_straightenedChartOpen
         (continuous_subtype_val.comp q.continuous))
     have hcomp : Continuous (fun y : U ↦ (c.chart.symm (g' y)).1) :=
       continuous_subtype_val.comp (c.chart.symm.continuous.comp hg'cont)
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     exact hcomp.congr fun y ↦ (hgval y).symm
   have hginj : Set.InjOn g U := by
     intro x hx y hy hxy
@@ -6031,7 +6031,7 @@ theorem PartialTriangulation.exists_glued {S : Type*} [TopologicalSpace S] [T2Sp
   have hunion : ∀ x : V → ℝ, x ∈ GeometricRealization V (F₁ ∪ F₂) ↔
       x ∈ GeometricRealization V F₁ ∨ x ∈ GeometricRealization V F₂ := by
     intro x
-    simp only [GeometricRealization, Set.mem_setOf_eq, Finset.mem_union]
+    simp only [GeometricRealization, Set.mem_ofPred_eq, Finset.mem_union]
     constructor
     · rintro ⟨hstd, t, ht | ht, hsupp⟩
       · exact Or.inl ⟨hstd, t, ht, hsupp⟩
@@ -6269,8 +6269,7 @@ theorem radoInvariant_empty (S : Type*) [TopologicalSpace S]
   coresCompact := isCompact_empty
   combSurface := by
     intro e he
-    simp only [PartialTriangulation.edges, PartialTriangulation.empty,
-      Finset.biUnion_empty] at he
+    simp only [PartialTriangulation.edges, PartialTriangulation.empty] at he
     exact absurd he (Finset.notMem_empty e)
   boundaryFacewiseRegular := by
     intro t ht
@@ -6366,7 +6365,7 @@ open chart domains cover the surface. -/
 theorem moise_secondCountableTopology : SecondCountableTopology S := by
   obtain ⟨m, charts, hcover, _⟩ := moise_finite_chart_cover S
   let U : Fin m → Set S := fun i ↦ (charts i).domain
-  haveI : ∀ i, SecondCountableTopology (U i) :=
+  have : ∀ i, SecondCountableTopology (U i) :=
     fun i ↦ (charts i).chart.secondCountableTopology
   apply TopologicalSpace.secondCountableTopology_of_countable_cover (U := U)
   · exact fun i ↦ (charts i).isOpen_domain
@@ -6421,7 +6420,7 @@ theorem PartialTriangulation.exists_boundaryPreservingStraightening
     (T : PartialTriangulation S) (c : MoiseChart S) (hc : c.BoundaryFaithful)
     (hboundary : T.BoundaryFacewiseRegular) :
     PartialTriangulation.BoundaryPreservingStraightening S T c := by
-  letI : SecondCountableTopology S := moise_secondCountableTopology S
+  let : SecondCountableTopology S := moise_secondCountableTopology S
   intro A hA
   obtain ⟨U, hU, V, hV, Q, Qatlas, g', g, hVsub, hVavoid, hVprotected,
       hUprotected, hgcoord, hqzero, hUsub, hgval, hgfix, hgmatch, hgcont, hginj,
@@ -6494,7 +6493,7 @@ theorem PartialTriangulation.exists_straightenedChartOverlap
       Disjoint (g '' T.chartOverlap c) (T.embed '' (T.chartOverlap c)ᶜ) ∧
       _root_.Topology.IsEmbedding
         (frontierGlue (T.chartOverlap c) g T.embed) := by
-  letI : SecondCountableTopology S := moise_secondCountableTopology S
+  let : SecondCountableTopology S := moise_secondCountableTopology S
   classical
   let U : Set T.toIntrinsic.realization := T.chartOverlap c
   let hU : IsOpen U := T.isOpen_chartOverlap c
@@ -6510,8 +6509,8 @@ theorem PartialTriangulation.exists_straightenedChartOverlap
   let C₀ := T.toIntrinsic.controlledAdaptiveOpenCover U hU f hf
     (regionSafeControl V f mu)
     (stronglyPositiveOn_regionSafeControl hV hf hmem hmu)
-  letI : T.toIntrinsic.AdaptiveSafety U := C₀.safety
-  letI : IntrinsicTwoComplex.AdaptiveSafety.IsAdmissible
+  let : T.toIntrinsic.AdaptiveSafety U := C₀.safety
+  let : IntrinsicTwoComplex.AdaptiveSafety.IsAdmissible
       (K := T.toIntrinsic) (U := U) := C₀.safety_isAdmissible
   let R := T.toIntrinsic.regionControlledAdaptiveComplex U hU V hV f hf hmem mu hmu
   have hRsupport : R.support = Set.univ := by
@@ -6611,7 +6610,7 @@ theorem PartialTriangulation.exists_straightenedChartOverlap
         (continuous_subtype_val.comp q.continuous))
     have hcomp : Continuous (fun y : U ↦ (c.chart.symm (g' y)).1) :=
       continuous_subtype_val.comp (c.chart.symm.continuous.comp hg'cont)
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     exact hcomp.congr fun y ↦ (hgval y).symm
   have hginj : Set.InjOn g U := by
     intro x hx y hy hxy

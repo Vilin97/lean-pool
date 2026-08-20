@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PolygonalArc
 
@@ -251,9 +251,9 @@ theorem edgeChain_vertex_even (i : Fin (Fintype.card K.EdgeFace)) :
       omega⟩ = K.position (K.edgeFirst i) := by
   classical
   simp only [edgeChain]
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   have hmod : (2 * i.val) % 2 = 0 := by omega
-  rw [if_pos hmod]
+  rw [ite_eq_left hmod]
   have hdiv : 2 * i.val / 2 = i.val := by omega
   congr 2
   exact Fin.ext hdiv
@@ -265,9 +265,9 @@ theorem edgeChain_vertex_odd (i : Fin (Fintype.card K.EdgeFace)) :
       omega⟩ = K.position (K.edgeSecond i) := by
   classical
   simp only [edgeChain]
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   have hmod : (2 * i.val + 1) % 2 ≠ 0 := by omega
-  rw [if_neg hmod]
+  rw [ite_eq_right hmod]
   have hdiv : (2 * i.val + 1) / 2 = i.val := by omega
   congr 2
   exact Fin.ext hdiv
@@ -279,7 +279,7 @@ theorem edgeChain_vertex_original (i : Fin (Fintype.card K.Vertex)) :
       omega⟩ = K.position (K.vertexAt i) := by
   classical
   simp only [edgeChain]
-  rw [dif_neg (by omega), dif_pos (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_left (by omega)]
   have hsub : 2 * Fintype.card K.EdgeFace + i.val -
       2 * Fintype.card K.EdgeFace = i.val := by omega
   congr 2
@@ -465,9 +465,9 @@ theorem sampledEdgeChain_vertex_even (cuts : ℕ)
       omega⟩ = K.position (K.edgeFirst i) := by
   classical
   simp only [sampledEdgeChain]
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   have hmod : (2 * i.val) % 2 = 0 := by omega
-  rw [if_pos hmod]
+  rw [ite_eq_left hmod]
   have hdiv : 2 * i.val / 2 = i.val := by omega
   congr 2
   exact Fin.ext hdiv
@@ -480,9 +480,9 @@ theorem sampledEdgeChain_vertex_odd (cuts : ℕ)
       omega⟩ = K.position (K.edgeSecond i) := by
   classical
   simp only [sampledEdgeChain]
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   have hmod : (2 * i.val + 1) % 2 ≠ 0 := by omega
-  rw [if_neg hmod]
+  rw [ite_eq_right hmod]
   have hdiv : (2 * i.val + 1) / 2 = i.val := by omega
   congr 2
   exact Fin.ext hdiv
@@ -496,7 +496,7 @@ theorem sampledEdgeChain_vertex_sample (cuts : ℕ) (s : K.EdgeSample cuts) :
         omega⟩ = K.edgeSamplePoint cuts s := by
   classical
   simp only [sampledEdgeChain]
-  rw [dif_neg (by omega), dif_pos (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_left (by omega)]
   have hsub : 2 * Fintype.card K.EdgeFace + (K.edgeSampleEquiv cuts s).val -
       2 * Fintype.card K.EdgeFace = (K.edgeSampleEquiv cuts s).val := by omega
   have hfin : (⟨2 * Fintype.card K.EdgeFace + (K.edgeSampleEquiv cuts s).val -
@@ -689,7 +689,7 @@ theorem sampledEdgeChain_vertex_original (cuts : ℕ)
         omega⟩ = K.position (K.vertexAt i) := by
   classical
   simp only [sampledEdgeChain]
-  rw [dif_neg (by omega), dif_neg (by omega), dif_pos (by omega)]
+  rw [dite_eq_right (by omega), dite_eq_right (by omega), dite_eq_left (by omega)]
   have hsub : 2 * Fintype.card K.EdgeFace + Fintype.card (K.EdgeSample cuts) + i.val -
       (2 * Fintype.card K.EdgeFace + Fintype.card (K.EdgeSample cuts)) = i.val := by omega
   congr 2

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCloseGraphApproximation
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicCellwiseExtension
@@ -154,7 +154,7 @@ noncomputable def faceInteriorMap {t : K.Face} (F : A.FaceFilling t) :
 theorem continuous_intrinsicMap {t : K.Face} (F : A.FaceFilling t) :
     Continuous F.faceInteriorMap := by
   have hF : Continuous (fun p : standardFaceRegion ↦ F.map p.1) :=
-    continuousOn_iff_continuous_restrict.mp F.continuousOn
+    continuousOn_iff_continuous_domRestrict.mp F.continuousOn
   exact hF.comp (K.facePlaneHomeomorph t).continuous
 
 theorem injective_intrinsicMap {t : K.Face} (F : A.FaceFilling t) :
@@ -246,7 +246,7 @@ theorem continuous_closeCellwiseMap : Continuous A.closeCellwiseMap := by
   have hclosed : ∀ t : K.Face, IsClosed (carriers t) := fun t ↦ K.faceCarrier_closed t.1
   have hlocal : ∀ t : K.Face, ContinuousOn A.closeCellwiseMap (carriers t) := by
     intro t
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     convert FaceFilling.continuous_intrinsicMap A (A.faceFilling t) using 1
     funext x
     exact A.closeCellwiseMap_eqOn_face t x.1 x.2

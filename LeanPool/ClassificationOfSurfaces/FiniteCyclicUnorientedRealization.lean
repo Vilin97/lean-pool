@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicSignedRealization
 import Mathlib.Data.Fin.Rev
@@ -297,7 +297,7 @@ theorem boundary_get_sideIndex
   · let target := inverseWord (Q.boundary (e.faceEquiv f))
     let mapped := (P.boundary f).map e.edgeRelabeling.mapDart
     have hrot : target.rotate (e.faceRotation f) = mapped := by
-      simpa only [target, mapped, hreverse, orientedBoundary, if_true] using
+      simpa only [target, mapped, hreverse, orientedBoundary, ite_true] using
         e.rotate_target_orientedBoundary f
     have hlen : target.length = mapped.length := by
       rw [← hrot, List.length_rotate]
@@ -507,9 +507,9 @@ private theorem sideIndex_injective
           ((e.orientedSideIndex validQ f j).cast
             (Q.orientedBoundary_length
               (⟨e.faceEquiv f, e.reverseFace f⟩ : Q.OrientedFace))).rev := by
-        simpa only [sideIndex, if_pos hreverse] using hij
+        simpa only [sideIndex, ite_eq_left hreverse] using hij
       exact Fin.rev_injective hrev
-    · simpa only [sideIndex, if_neg hreverse] using hij
+    · simpa only [sideIndex, ite_eq_right hreverse] using hij
   exact Fin.cast_injective
     (Q.orientedBoundary_length
       (⟨e.faceEquiv f, e.reverseFace f⟩ : Q.OrientedFace)) hcast

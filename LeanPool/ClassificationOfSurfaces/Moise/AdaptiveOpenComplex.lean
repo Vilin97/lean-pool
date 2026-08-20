@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.OpenMidpointComplex
 import LeanPool.ClassificationOfSurfaces.Moise.LocallyFiniteTriangulation
@@ -642,7 +642,7 @@ theorem finite_adaptiveFace_level_lt (N : ℕ) :
     have hface : s = t := Subtype.ext (eq_of_heq (Sigma.mk.inj_iff.mp hst).2)
     subst t
     rfl
-  letI : Finite {t : K.AdaptiveFace U // t.1 < N} :=
+  let : Finite {t : K.AdaptiveFace U // t.1 < N} :=
     Finite.of_injective encode hencode
   exact Set.finite_coe_iff.mp
     (show Finite {t : K.AdaptiveFace U // t.1 < N} from inferInstance)
@@ -665,7 +665,7 @@ theorem locallyFinite_adaptiveFaceCarrierInOpen (hU : IsOpen U) :
       (Metric.mem_ball_self hε2)
   · apply (K.finite_adaptiveFace_level_lt U (N + 1)).subset
     intro t ht
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     by_contra hlevel
     have hNlevel : N + 1 ≤ t.1 := Nat.le_of_not_gt hlevel
     rcases t with ⟨(_ | n), t⟩
@@ -726,7 +726,7 @@ theorem isCompact_adaptiveFaceCarrierInOpen (t : K.AdaptiveFace U) :
     · intro hx
       exact ⟨⟨x.1, hx⟩, Subtype.ext rfl⟩
   rw [← hrange]
-  letI : CompactSpace {x // x ∈ K.adaptiveFaceCarrier U t} :=
+  let : CompactSpace {x // x ∈ K.adaptiveFaceCarrier U t} :=
     isCompact_iff_compactSpace.mp (K.isCompact_levelFaceCarrier t.2.1)
   exact isCompact_range he
 
@@ -777,8 +777,8 @@ theorem mem_boundaryVertices_iff (hU : IsOpen U) (t : K.AdaptiveFace U)
         ∃ (u : K.TouchingFace U t) (v : K.AdaptiveVertexOccurrence U u.1),
           K.adaptiveVertexPoint U u.1 v = p := by
   classical
-  letI : Finite (K.TouchingFace U t) := K.finite_touchingFace U hU t
-  letI : Fintype (K.TouchingFace U t) := Fintype.ofFinite _
+  let : Finite (K.TouchingFace U t) := K.finite_touchingFace U hU t
+  let : Fintype (K.TouchingFace U t) := Fintype.ofFinite _
   simp only [boundaryVertices, Finset.mem_filter, Finset.mem_image, Finset.mem_univ,
     true_and]
   constructor
@@ -1216,7 +1216,7 @@ theorem adaptiveEdgeFirstCorner_ne_second (t : K.AdaptiveFace U) (i : ZMod 3) :
   have hcoord := congrArg (fun x : (K.safeSubdivision t.1).refined.realization ↦
     x.1 ((K.safeSubdivision t.1).refined.faceVertex t.2.1 i)) hsource
   simp only [(K.safeSubdivision t.1).refined.facePoint_val,
-    Pi.single_apply, if_neg hvne] at hcoord
+    Pi.single_apply, ite_eq_right hvne] at hcoord
   norm_num at hcoord
 
 theorem two_le_boundaryEdgeVertices_card (hU : IsOpen U)

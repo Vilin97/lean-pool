@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.RepresentativeCarrier
 import LeanPool.ClassificationOfSurfaces.WeightedCircle
@@ -20,7 +20,7 @@ namespace LeanEval.Topology.ClassificationOfSurfaces
 
 open Complex
 open Metric Bornology Filter Set
-open scoped Topology
+open scoped _root_.Topology
 
 namespace DiskSquare
 
@@ -209,7 +209,7 @@ theorem frontier_square :
     frontier square = boundary := by
   rw [frontier, isClosed_square.closure_eq, interior_square]
   ext z
-  simp only [square, boundary, Set.mem_sdiff, Set.mem_setOf_eq, not_lt]
+  simp only [square, boundary, Set.mem_sdiff, Set.mem_ofPred_eq, not_lt]
   constructor
   · exact fun h ↦ le_antisymm h.1 h.2
   · intro h
@@ -2421,7 +2421,7 @@ theorem rightPerimeter_firstOldArc_last (r : ℕ) (hr : 0 < r) :
 theorem exists_finalOldArc_of_re_nonpos
     (l : ℕ) (hl : 0 < l) (z : boundary) (hz : z.1.re ≤ 0) :
     ∃ s : Set.Icc (0 : ℝ) l, finalOldArc l hl s = z := by
-  letI : PreconnectedSpace (Set.Icc (0 : ℝ) l) :=
+  let : PreconnectedSpace (Set.Icc (0 : ℝ) l) :=
     isPreconnected_iff_preconnectedSpace.mp isPreconnected_Icc
   let perimeter : Set.Icc (0 : ℝ) l → ℝ :=
     fun s ↦ leftPerimeter (finalOldArc l hl s)
@@ -2441,7 +2441,7 @@ theorem exists_finalOldArc_of_re_nonpos
 theorem exists_firstOldArc_of_re_nonneg
     (r : ℕ) (hr : 0 < r) (z : boundary) (hz : 0 ≤ z.1.re) :
     ∃ s : Set.Icc (0 : ℝ) r, firstOldArc r hr s = z := by
-  letI : PreconnectedSpace (Set.Icc (0 : ℝ) r) :=
+  let : PreconnectedSpace (Set.Icc (0 : ℝ) r) :=
     isPreconnected_iff_preconnectedSpace.mp isPreconnected_Icc
   let perimeter : Set.Icc (0 : ℝ) r → ℝ :=
     fun s ↦ rightPerimeter (firstOldArc r hr s)
@@ -2543,7 +2543,7 @@ theorem outerArc_apply_of_le
       finalOldArc l hl (finalArcParameter l r x)
     else
       firstOldArc r hr (firstArcParameter l r x)) = _
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
   apply congrArg (finalOldArc l hl)
   apply Subtype.ext
   simp [finalArcParameter, min_eq_left hx]
@@ -2563,7 +2563,7 @@ theorem outerArc_apply_of_not_le
       finalOldArc l hl (finalArcParameter l r x)
     else
       firstOldArc r hr (firstArcParameter l r x)) = _
-  rw [if_neg hx]
+  rw [ite_eq_right hx]
   apply congrArg (firstOldArc r hr)
   apply Subtype.ext
   simp [firstArcParameter, max_eq_left (by linarith : 0 ≤ x.1 - l)]
@@ -2934,7 +2934,7 @@ theorem outerAddCircleHomeomorph_apply_of_mem_Ico
         (x : AddCircle (l + r : ℝ)) =
       outerArc l r hl hr
         ⟨x, ⟨hx.1, hx.2.le⟩⟩ := by
-  letI : Fact (0 < (l + r : ℝ)) := ⟨by positivity⟩
+  let : Fact (0 < (l + r : ℝ)) := ⟨by positivity⟩
   unfold outerAddCircleHomeomorph
   simp only [Homeomorph.trans_apply]
   have hsource :

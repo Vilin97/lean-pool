@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.PlaneComplex
 import Mathlib.Analysis.Convex.Segment
@@ -1421,8 +1421,6 @@ theorem strictLocalMesh_support (t : M.Triangle)
       rw [show R.toPlaneComplex.support =
           convexHull ℝ (Set.range standardTrianglePosition) from
         referenceSplitMesh_support a b _ _ _ _]
-      change e '' convexHull ℝ (Set.range standardTrianglePosition) =
-        convexHull ℝ (M.position '' (t.1 : Set M.Vertex))
       have hrange : Set.range (M.position ∘ M.orderedVertex t) =
           M.position '' (t.1 : Set M.Vertex) := by
         rw [Set.range_comp, M.range_orderedVertex t]
@@ -1551,8 +1549,6 @@ theorem strictMeshFor_support (v : Fin 3 → M.Vertex)
       rw [show R.toPlaneComplex.support =
           convexHull ℝ (Set.range standardTrianglePosition) from
         referenceSplitMesh_support a b _ _ _ _]
-      change e '' convexHull ℝ (Set.range standardTrianglePosition) =
-        convexHull ℝ (Set.range (M.position ∘ v))
       exact triangleAffineEquiv_image_convexHull standardTrianglePosition (M.position ∘ v)
         standardTrianglePosition_affineIndependent hv
 
@@ -1696,8 +1692,6 @@ theorem edgeMeshFor_support (v : Fin 3 → M.Vertex)
       rw [show R.toPlaneComplex.support =
           convexHull ℝ (Set.range standardTrianglePosition) from
         referenceEdgeSplitMesh_support c _ _]
-      change e '' convexHull ℝ (Set.range standardTrianglePosition) =
-        convexHull ℝ (Set.range (M.position ∘ v))
       exact triangleAffineEquiv_image_convexHull standardTrianglePosition (M.position ∘ v)
         standardTrianglePosition_affineIndependent hv
 
@@ -3690,7 +3684,7 @@ theorem parent_inter_vertexSupportCoord_zero (t : M.Triangle) (i : Fin 3) :
           by_contra hij
           have : M.vertexSupportCoord t i (p j) = 1 := by
             change M.vertexSupportCoord t i (M.position (M.orderedVertex t j)) = 1
-            rw [M.vertexSupportCoord_vertex, if_neg hij]
+            rw [M.vertexSupportCoord_vertex, ite_eq_right hij]
           have hzero' : M.vertexSupportCoord t i (p j) = 0 := by
             rw [hj]
             exact hzero

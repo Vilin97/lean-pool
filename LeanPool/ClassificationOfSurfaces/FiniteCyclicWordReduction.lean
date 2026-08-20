@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicWordReductionCore
 
@@ -1292,7 +1292,7 @@ theorem carrier_not_mem_tail {n : ℕ}
     List.map_append, List.map_cons, List.map_nil,
     edgeOfDart_dart, List.count_append,
     List.count_cons, List.count_nil,
-    beq_self_eq_true, if_true,
+    beq_self_eq_true, ite_true,
     targetTokens] at hcount
   simp [hcarrierHole.symm] at hcount
   intro htail

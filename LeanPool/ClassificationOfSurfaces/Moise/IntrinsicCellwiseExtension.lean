@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceFilling
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicMidpointSubdivision
@@ -39,7 +39,7 @@ theorem continuous_intrinsicMap {t : K.Face} (F : K.FacePLFilling
     (hcont := hcont) (hinj := hinj) (D := D) (C := C) t) :
     Continuous F.intrinsicMap := by
   have hF : Continuous (fun p : standardFaceRegion ↦ F.map p.1) :=
-    continuousOn_iff_continuous_restrict.mp F.continuousOn
+    continuousOn_iff_continuous_domRestrict.mp F.continuousOn
   exact hF.comp (K.facePlaneHomeomorph t).continuous
 
 theorem injective_intrinsicMap {t : K.Face} (F : K.FacePLFilling
@@ -281,7 +281,7 @@ theorem continuous_cellwisePLFillingMap :
       ContinuousOn (K.cellwisePLFillingMap
         (hcont := hcont) (hinj := hinj) (D := D) (C := C)) (carriers t) := by
     intro t
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hF := (K.facePLFilling
       (hcont := hcont) (hinj := hinj) (D := D) (C := C) t).continuous_intrinsicMap
     convert hF using 1
@@ -322,7 +322,7 @@ noncomputable def faceOriginalMap (t : K.Face) (p : Plane) : Plane := by
 
 theorem continuousOn_faceOriginalMap (hcont : Continuous h) (t : K.Face) :
     ContinuousOn (K.faceOriginalMap (h := h) t) standardFaceRegion := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   convert hcont.comp
     (continuous_subtype_val.comp (K.facePlaneHomeomorph t).symm.continuous) using 1
   funext p

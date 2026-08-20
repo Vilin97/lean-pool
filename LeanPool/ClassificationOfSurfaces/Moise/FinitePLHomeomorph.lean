@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.CommonSubdivision
 import LeanPool.ClassificationOfSurfaces.Moise.ConeExtension
@@ -103,14 +103,14 @@ noncomputable def inverseOn (F : FinitePLHomeomorphBetween f A B) : Plane → Pl
 
 theorem inverseOn_mem (F : FinitePLHomeomorphBetween f A B) {y : Plane} (hy : y ∈ B) :
     F.inverseOn y ∈ A := by
-  simp only [inverseOn, dif_pos hy]
+  simp only [inverseOn, dite_eq_left hy]
   exact (Classical.choose_spec (show ∃ x ∈ A, f x = y by
     rw [← F.image_eq] at hy
     exact hy)).1
 
 theorem apply_inverseOn (F : FinitePLHomeomorphBetween f A B) {y : Plane} (hy : y ∈ B) :
     f (F.inverseOn y) = y := by
-  simp only [inverseOn, dif_pos hy]
+  simp only [inverseOn, dite_eq_left hy]
   exact (Classical.choose_spec (show ∃ x ∈ A, f x = y by
     rw [← F.image_eq] at hy
     exact hy)).2

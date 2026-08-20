@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.FiniteCyclicCancellation
 
@@ -552,7 +552,7 @@ def expandSourceSignedIsoSplitMarkedTarget {n : ℕ}
           rw [hsourceBoundary, htargetBoundary]
           simp only [targetCut, markedTargetCut,
             P2.selectedBoundary, P2.selectedOrientedBoundary,
-            P2.storedWord, Bool.false_eq_true, if_false,
+            P2.storedWord, Bool.false_eq_true, ite_false,
             P2.freshEdge]
           rw [P1.expandWord_append,
             Cancellation.expandWord_retainWord_fresh,
@@ -595,7 +595,7 @@ def expandSourceSignedIsoSplitMarkedTarget {n : ℕ}
       rw [markedMiddleFaceEquiv_rightFace,
         P2.split_boundary_right, P2.split_boundary_right]
       simp only [targetCut, markedTargetCut, P2.rightBoundary,
-        P2.rightOrientedBoundary, P2.storedWord, if_false,
+        P2.rightOrientedBoundary, P2.storedWord, ite_false,
         Bool.false_eq_true, P2.freshEdge]
       rw [P1.expandWord_cons, P1.expandDart_neg_self,
         Cancellation.expandWord_retainWord_fresh]

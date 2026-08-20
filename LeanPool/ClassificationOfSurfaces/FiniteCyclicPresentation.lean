@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.SignedPresentation
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
@@ -466,7 +466,7 @@ theorem orientedBoundary_edgeMultiplicity (P : FiniteCyclicPresentation)
       cases orientation
       · rfl
       · unfold faceEdgeMultiplicity
-        rw [orientedBoundary, if_pos rfl, map_edgeOfDart_inverseWord]
+        rw [orientedBoundary, ite_eq_left rfl, map_edgeOfDart_inverseWord]
         exact (List.reverse_perm _).count_eq e
 
 /-- Total number of boundary occurrences of an unoriented edge. -/

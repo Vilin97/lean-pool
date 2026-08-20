@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveTileComplex
 
@@ -1966,7 +1966,7 @@ theorem adaptiveFanLaterBasePath_subset_earlierBaseEdge_of_faceMap_eq
     apply Continuous.subtype_mk
     exact continuous_subtype_val
   have haOpenCont : Continuous aOpen := hacont.comp hinccont
-  letI : PreconnectedSpace (Set.Ioo (0 : ℝ) 1) :=
+  let : PreconnectedSpace (Set.Ioo (0 : ℝ) 1) :=
     isPreconnected_iff_preconnectedSpace.mp isPreconnected_Ioo
   have hApreconnected : IsPreconnected A := isPreconnected_range haOpenCont
   have hAcarrier : A ⊆ standardTriangleCircle.carrier := by

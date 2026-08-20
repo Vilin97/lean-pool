@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.AdaptiveOpenComplex
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicFaceModel
@@ -97,7 +97,7 @@ noncomputable def edgeParameterValue (_ : K.EdgeMarking)
 theorem edgeParameterValue_eq (e : K.Edge) {p : K.realization}
     (hp : p ∈ K.faceCarrier e.1) :
     M.edgeParameterValue e p = (K.edgeParameter e p hp : ℝ) := by
-  simp only [edgeParameterValue, dif_pos hp]
+  simp only [edgeParameterValue, dite_eq_left hp]
 
 /-- The total parameter remains injective when restricted to its intended edge carrier. -/
 theorem edgeParameterValue_injOn (e : K.Edge) :
@@ -3277,7 +3277,7 @@ theorem markedFanCompactIntrinsic_hasSurfaceEdgeValence
   intro e he
   let fanFaceFintype : Fintype M.FanFace := inferInstance
   let L := M.markedFanLocallyFiniteTriangleComplex
-  letI : Fintype L.Face := L.faceFintype
+  let : Fintype L.Face := L.faceFintype
   have hfaces :
       L.compactIntrinsic.faces =
         (@Finset.univ M.FanFace fanFaceFintype).image
@@ -3357,7 +3357,7 @@ noncomputable def markedFanSubdivision : K.Subdivision where
   affineOnFace := by
     intro s hs
     let L := M.markedFanLocallyFiniteTriangleComplex
-    letI : Fintype L.Vertex :=
+    let : Fintype L.Vertex :=
       M.markedFanLocallyFiniteTriangleComplex.compactIntrinsic.vertexFintype
     change s ∈ L.compactIntrinsic.faces at hs
     rw [L.compactIntrinsic_faces] at hs
@@ -3386,7 +3386,7 @@ noncomputable def markedFanSubdivision : K.Subdivision where
   subordinate := by
     intro s hs
     let L := M.markedFanLocallyFiniteTriangleComplex
-    letI : Fintype L.Vertex :=
+    let : Fintype L.Vertex :=
       M.markedFanLocallyFiniteTriangleComplex.compactIntrinsic.vertexFintype
     change s ∈ L.compactIntrinsic.faces at hs
     rw [L.compactIntrinsic_faces] at hs

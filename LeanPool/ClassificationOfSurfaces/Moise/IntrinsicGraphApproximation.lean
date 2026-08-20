@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 ClassificationOfSurfaces contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Ryan McCorvie and Jack McCarthy
+Authors: Ryan McCorvie, Jack McCarthy
 -/
 import LeanPool.ClassificationOfSurfaces.Moise.IntrinsicComplex
 import LeanPool.ClassificationOfSurfaces.Moise.GraphPolygonalization
@@ -1420,7 +1420,7 @@ theorem graphReplacementMap_vertex {h : K.realization → Plane}
     (v : K.UsedVertex) :
     K.graphReplacementMap hcont hinj D C (K.vertexPoint v) = h (K.vertexPoint v) := by
   classical
-  rw [graphReplacementMap, if_pos ⟨v, rfl⟩]
+  rw [graphReplacementMap, ite_eq_left ⟨v, rfl⟩]
 
 private theorem edgeReplacementMap_eq_vertex {h : K.realization → Plane}
     (hcont : Continuous h) (hinj : Function.Injective h)
@@ -1464,10 +1464,10 @@ theorem graphReplacementMap_eq_edge {h : K.realization → Plane}
       K.edgeReplacementMap hcont hinj D C e x := by
   classical
   by_cases hv : K.IsGraphVertexPoint x
-  · rw [graphReplacementMap, if_pos hv]
+  · rw [graphReplacementMap, ite_eq_left hv]
     exact (K.edgeReplacementMap_eq_vertex hcont hinj D C e x hx hv).symm
   · have hxOne : x ∈ K.oneSkeleton := ⟨e, hx⟩
-    rw [graphReplacementMap, if_neg hv, dif_pos hxOne]
+    rw [graphReplacementMap, ite_eq_right hv, dite_eq_left hxOne]
     let d := K.edgeAt x hxOne
     have hxd := K.edgeAt_spec x hxOne
     change x ∈ K.faceCarrier d.1 at hxd
@@ -1643,11 +1643,11 @@ theorem graphReplacementMap_isEmbedding_oneSkeleton
     (D : K.VertexDiskControl h) (C : K.CentralTubeControl hcont hinj D) :
     _root_.Topology.IsEmbedding
       (fun x : K.oneSkeleton => K.graphReplacementMap hcont hinj D C x.1) := by
-  letI : CompactSpace K.oneSkeleton :=
+  let : CompactSpace K.oneSkeleton :=
     isCompact_iff_compactSpace.mp K.oneSkeleton_closed.isCompact
   apply Topology.IsClosedEmbedding.toIsEmbedding
   apply Continuous.isClosedEmbedding
-  · exact continuousOn_iff_continuous_restrict.mp
+  · exact continuousOn_iff_continuous_domRestrict.mp
       (K.continuousOn_graphReplacementMap_oneSkeleton hcont hinj D C)
   · intro x y hxy
     exact Subtype.ext (K.graphReplacementMap_injectiveOn_oneSkeleton hcont hinj D C
