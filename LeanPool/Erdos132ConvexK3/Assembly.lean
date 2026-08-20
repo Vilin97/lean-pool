@@ -9,11 +9,11 @@ import Lean.Elab.Tactic.Omega
 /-!
 # Thirteen-word assembly
 
-This file kernelizes the exact Section 7 routing table, assigns each word its
-own raw geometric realization predicate, and constructs every route handler
-from the corresponding geometric closure theorem.  The final section
-separately records the stronger global reduction still needed to obtain the
-source-facing convex theorem.
+This file kernelizes the exact Section 7 routing table, routes its thirteen
+tags through four shared geometric realization predicates, and transports the
+four corresponding closure theorems through one word-indexed family.  The
+final section separately records the stronger global reduction still needed
+to obtain the source-facing convex theorem.
 -/
 
 namespace LeanPool.Erdos132ConvexK3
@@ -89,6 +89,11 @@ def ExceptionalCoverWord.route : ExceptionalCoverWord → WordClosureRoute
   | .row1_B21 | .row2_AB | .row3_BB_DD | .row4_D21 | .row4_CD |
       .row5_BB_DD => .fullTwoRung
 
+/-- Degree bound supplied by each of the four local closure routes. -/
+def WordClosureRoute.degreeBound : WordClosureRoute → ℕ
+  | .antiSaturation => 5
+  | .fullTwoRung | .terminalCage | .fourEdgeCage => 6
+
 /-- Transparent finite check that the audit datatype has exactly 13 words. -/
 theorem thirteen_word_count : Fintype.card ExceptionalCoverWord = 13 := by
   decide
@@ -137,23 +142,69 @@ theorem full_two_rung_shared_tip_degree_le_six
   · exact hB hB'
   · exact (hLow hLow').trans (by omega)
 
-/-- Geometric realization evidence is word-specific raw polygon data. -/
+/-- The thirteen tags routed to the four shared geometric predicates:
+terminal, one-penultimate, full-two-rung, and four-edge `DD`. -/
+def WordRealization
+    {n : ℕ} (word : ExceptionalCoverWord)
+    (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop := match word with
+  | .row1_B32 | .row4_D32 => Nonempty (Row1B32WordRealization P d₁ d₂ d₃)
+  | .row1_B31 | .row2_BA | .row4_D31 | .row4_DC =>
+      Nonempty (OnePenultimateWordGeometry P d₁ d₂ d₃)
+  | .row1_B21 | .row2_AB | .row3_BB_DD | .row4_D21 | .row4_CD |
+      .row5_BB_DD => Nonempty (FullTwoRungGeometry P d₁ d₂ d₃)
+  | .row4_DD => Nonempty (Row4DDWordRealization P d₁ d₂ d₃)
+
+/-- One transport theorem closes every tag through its shared predicate. -/
+theorem realization_degree_bound
+    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
+    (word : ExceptionalCoverWord) (hRealizes : WordRealization word P d₁ d₂ d₃) :
+    ∃ v, vertexDegree P d₁ d₂ d₃ v ≤ word.route.degreeBound := by
+  cases word with
+  | row1_B32 =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, row1_B32_realization_degree_le_six G⟩
+  | row1_B31 =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, one_penultimate_realization_degree_le_five G⟩
+  | row1_B21 =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
+  | row2_AB =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
+  | row2_BA =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, one_penultimate_realization_degree_le_five G⟩
+  | row3_BB_DD =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
+  | row4_D32 =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, row1_B32_realization_degree_le_six G⟩
+  | row4_D31 =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, one_penultimate_realization_degree_le_five G⟩
+  | row4_D21 =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
+  | row4_CD =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
+  | row4_DC =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, one_penultimate_realization_degree_le_five G⟩
+  | row4_DD =>
+      obtain ⟨G⟩ := hRealizes
+      exact row4_DD_realization_degree_le_six G
+  | row5_BB_DD =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
+
+/-- A tag is realized when its routed shared geometric predicate is inhabited. -/
 def RealizesGeom
     {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ)
-    (word : ExceptionalCoverWord) : Prop := match word with
-  | .row1_B32 => Nonempty (Row1B32WordRealization P d₁ d₂ d₃)
-  | .row1_B31 => Nonempty (Row1B31WordRealization P d₁ d₂ d₃)
-  | .row1_B21 => Nonempty (Row1B21WordRealization P d₁ d₂ d₃)
-  | .row2_AB => Nonempty (Row2ABWordRealization P d₁ d₂ d₃)
-  | .row2_BA => Nonempty (Row2BAWordRealization P d₁ d₂ d₃)
-  | .row3_BB_DD => Nonempty (Row3BBDDWordRealization P d₁ d₂ d₃)
-  | .row4_D32 => Nonempty (Row4D32WordRealization P d₁ d₂ d₃)
-  | .row4_D31 => Nonempty (Row4D31WordRealization P d₁ d₂ d₃)
-  | .row4_D21 => Nonempty (Row4D21WordRealization P d₁ d₂ d₃)
-  | .row4_CD => Nonempty (Row4CDWordRealization P d₁ d₂ d₃)
-  | .row4_DC => Nonempty (Row4DCWordRealization P d₁ d₂ d₃)
-  | .row4_DD => Nonempty (Row4DDWordRealization P d₁ d₂ d₃)
-  | .row5_BB_DD => Nonempty (Row5BBDDWordRealization P d₁ d₂ d₃)
+    (word : ExceptionalCoverWord) : Prop :=
+  WordRealization word P d₁ d₂ d₃
 
 /-- Route-indexed local closure interface.  `Realizes w` supplies the local
 geometric data for the corresponding exceptional word. -/
@@ -168,76 +219,25 @@ structure DraftWordClosureInterface
   fourEdgeCage : ∀ w, w.route = .fourEdgeCage → Realizes w →
     ∃ v, degree v ≤ 6
 
-/-- All thirteen concrete word realizations close unconditionally by the
-proved full-two-rung, anti-saturation, terminal-cage, and four-edge lemmas. -/
+/-- All thirteen tags close unconditionally through the four shared geometric
+realization predicates. -/
 theorem concrete_word_closures
     {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :
     DraftWordClosureInterface (vertexDegree P d₁ d₂ d₃)
       (RealizesGeom P d₁ d₂ d₃) := by
+  have close : ∀ word, RealizesGeom P d₁ d₂ d₃ word →
+      ∃ v, vertexDegree P d₁ d₂ d₃ v ≤ word.route.degreeBound := by
+    intro word hRealizes
+    exact realization_degree_bound word hRealizes
   constructor
   · intro word hRoute hRealizes
-    cases word with
-    | row1_B32 => simp [ExceptionalCoverWord.route] at hRoute
-    | row1_B31 => simp [ExceptionalCoverWord.route] at hRoute
-    | row1_B21 =>
-        obtain ⟨data⟩ : Nonempty (Row1B21WordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row1_B21_realization_degree_le_six data⟩
-    | row2_AB =>
-        obtain ⟨data⟩ : Nonempty (Row2ABWordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row2_AB_realization_degree_le_six data⟩
-    | row2_BA => simp [ExceptionalCoverWord.route] at hRoute
-    | row3_BB_DD =>
-        obtain ⟨data⟩ : Nonempty (Row3BBDDWordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row3_BB_DD_realization_degree_le_six data⟩
-    | row4_D32 => simp [ExceptionalCoverWord.route] at hRoute
-    | row4_D31 => simp [ExceptionalCoverWord.route] at hRoute
-    | row4_D21 =>
-        obtain ⟨data⟩ : Nonempty (Row4D21WordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row4_D21_realization_degree_le_six data⟩
-    | row4_CD =>
-        obtain ⟨data⟩ : Nonempty (Row4CDWordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row4_CD_realization_degree_le_six data⟩
-    | row4_DC => simp [ExceptionalCoverWord.route] at hRoute
-    | row4_DD => simp [ExceptionalCoverWord.route] at hRoute
-    | row5_BB_DD =>
-        obtain ⟨data⟩ : Nonempty (Row5BBDDWordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row5_BB_DD_realization_degree_le_six data⟩
+    simpa only [hRoute, WordClosureRoute.degreeBound] using close word hRealizes
   · intro word hRoute hRealizes
-    cases word with
-    | row1_B31 =>
-        obtain ⟨data⟩ : Nonempty (Row1B31WordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row1_B31_realization_degree_le_five data⟩
-    | row2_BA =>
-        obtain ⟨data⟩ : Nonempty (Row2BAWordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row2_BA_realization_degree_le_five data⟩
-    | row4_D31 =>
-        obtain ⟨data⟩ : Nonempty (Row4D31WordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row4_D31_realization_degree_le_five data⟩
-    | row4_DC =>
-        obtain ⟨data⟩ : Nonempty (Row4DCWordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.geometry.vertex, row4_DC_realization_degree_le_five data⟩
-    | row1_B32 | row1_B21 | row2_AB | row3_BB_DD | row4_D32 | row4_D21 |
-        row4_CD | row4_DD | row5_BB_DD =>
-        simp [ExceptionalCoverWord.route] at hRoute
+    simpa only [hRoute, WordClosureRoute.degreeBound] using close word hRealizes
   · intro word hRoute hRealizes
-    cases word with
-    | row1_B32 =>
-        obtain ⟨data⟩ : Nonempty (Row1B32WordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.vertex, row1_B32_realization_degree_le_six data⟩
-    | row4_D32 =>
-        obtain ⟨data⟩ : Nonempty (Row4D32WordRealization P d₁ d₂ d₃) := hRealizes
-        exact ⟨data.vertex, row4_D32_realization_degree_le_six data⟩
-    | row1_B31 | row1_B21 | row2_AB | row2_BA | row3_BB_DD | row4_D31 |
-        row4_D21 | row4_CD | row4_DC | row4_DD | row5_BB_DD =>
-        simp [ExceptionalCoverWord.route] at hRoute
+    simpa only [hRoute, WordClosureRoute.degreeBound] using close word hRealizes
   · intro word hRoute hRealizes
-    cases word with
-    | row4_DD =>
-        obtain ⟨data⟩ : Nonempty (Row4DDWordRealization P d₁ d₂ d₃) := hRealizes
-        exact row4_DD_realization_degree_le_six data
-    | row1_B32 | row1_B31 | row1_B21 | row2_AB | row2_BA | row3_BB_DD |
-        row4_D32 | row4_D31 | row4_D21 | row4_CD | row4_DC | row5_BB_DD =>
-        simp [ExceptionalCoverWord.route] at hRoute
+    simpa only [hRoute, WordClosureRoute.degreeBound] using close word hRealizes
 
 /-- Direct short-arc closure or one of the thirteen exceptional words. -/
 def HasThirteenWordReduction

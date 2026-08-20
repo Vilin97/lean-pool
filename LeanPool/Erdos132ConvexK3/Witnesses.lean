@@ -3,7 +3,7 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import LeanPool.Erdos132ConvexK3.WordClosures
+import LeanPool.Erdos132ConvexK3.Assembly
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.NormNum
@@ -290,14 +290,12 @@ private def terminalWordGeometry :
 
 /-- The terminal pentagon inhabits the row-1 `B:3→2` realization. -/
 theorem row1_B32_realization_nonempty :
-    Nonempty (Row1B32WordRealization terminalWordPoints
-      13140625 8935625 8790625) :=
+    WordRealization .row1_B32 terminalWordPoints 13140625 8935625 8790625 :=
   ⟨terminalWordGeometry⟩
 
-/-- The terminal pentagon also inhabits the reflected row-4 `D:3→2` alias. -/
+/-- The terminal pentagon also inhabits the reflected row-4 `D:3→2` tag. -/
 theorem row4_D32_realization_nonempty :
-    Nonempty (Row4D32WordRealization terminalWordPoints
-      13140625 8935625 8790625) :=
+    WordRealization .row4_D32 terminalWordPoints 13140625 8935625 8790625 :=
   ⟨terminalWordGeometry⟩
 
 /-- An integer-scaled rational shared-tip configuration in cyclic order
@@ -397,29 +395,25 @@ private def onePenultimateGeometry :
   tp := by norm_num [sharedTipPoints, sqDist]
 }
 
-private def onePenultimateWordGeometry :
-    OnePenultimateWordRealization sharedTipPoints 2112500 1748500 1732250 :=
-  { geometry := onePenultimateGeometry }
-
 /-- The shared-tip hexagon inhabits the row-1 `B:3→1` realization. -/
 theorem row1_B31_realization_nonempty :
-    Nonempty (Row1B31WordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨onePenultimateWordGeometry⟩
+    WordRealization .row1_B31 sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨onePenultimateGeometry⟩
 
 /-- The shared-tip hexagon inhabits the row-2 `BA` realization. -/
 theorem row2_BA_realization_nonempty :
-    Nonempty (Row2BAWordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨onePenultimateWordGeometry⟩
+    WordRealization .row2_BA sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨onePenultimateGeometry⟩
 
 /-- The shared-tip hexagon inhabits the row-4 `D:3→1` realization. -/
 theorem row4_D31_realization_nonempty :
-    Nonempty (Row4D31WordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨onePenultimateWordGeometry⟩
+    WordRealization .row4_D31 sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨onePenultimateGeometry⟩
 
 /-- The shared-tip hexagon inhabits the row-4 `DC` realization. -/
 theorem row4_DC_realization_nonempty :
-    Nonempty (Row4DCWordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨onePenultimateWordGeometry⟩
+    WordRealization .row4_DC sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨onePenultimateGeometry⟩
 
 private def fullTwoRungGeometry :
     FullTwoRungGeometry sharedTipPoints 2112500 1748500 1732250 := {
@@ -508,39 +502,35 @@ private def fullTwoRungGeometry :
     all_goals norm_num [sharedTipPoints, StrictConvexQuad, turn]
 }
 
-private def fullTwoRungWordGeometry :
-    FullTwoRungWordRealization sharedTipPoints 2112500 1748500 1732250 :=
-  { geometry := fullTwoRungGeometry }
-
 /-- The two-rung hexagon inhabits the row-1 `B:2→1` realization. -/
 theorem row1_B21_realization_nonempty :
-    Nonempty (Row1B21WordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨fullTwoRungWordGeometry⟩
+    WordRealization .row1_B21 sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨fullTwoRungGeometry⟩
 
 /-- The two-rung hexagon inhabits the row-2 `AB` realization. -/
 theorem row2_AB_realization_nonempty :
-    Nonempty (Row2ABWordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨fullTwoRungWordGeometry⟩
+    WordRealization .row2_AB sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨fullTwoRungGeometry⟩
 
 /-- The two-rung hexagon inhabits the row-3 `BB×DD` realization. -/
 theorem row3_BB_DD_realization_nonempty :
-    Nonempty (Row3BBDDWordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨fullTwoRungWordGeometry⟩
+    WordRealization .row3_BB_DD sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨fullTwoRungGeometry⟩
 
 /-- The two-rung hexagon inhabits the row-4 `D:2→1` realization. -/
 theorem row4_D21_realization_nonempty :
-    Nonempty (Row4D21WordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨fullTwoRungWordGeometry⟩
+    WordRealization .row4_D21 sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨fullTwoRungGeometry⟩
 
 /-- The two-rung hexagon inhabits the row-4 `CD` realization. -/
 theorem row4_CD_realization_nonempty :
-    Nonempty (Row4CDWordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨fullTwoRungWordGeometry⟩
+    WordRealization .row4_CD sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨fullTwoRungGeometry⟩
 
 /-- The two-rung hexagon inhabits the row-5 `BB×DD` realization. -/
 theorem row5_BB_DD_realization_nonempty :
-    Nonempty (Row5BBDDWordRealization sharedTipPoints 2112500 1748500 1732250) :=
-  ⟨fullTwoRungWordGeometry⟩
+    WordRealization .row5_BB_DD sharedTipPoints 2112500 1748500 1732250 :=
+  ⟨fullTwoRungGeometry⟩
 
 /-- A rational six-point four-edge cage with two distinct lower endpoints. -/
 def fourEdgePoints : Fin 6 → Point ℝ :=
@@ -710,7 +700,7 @@ private def fourEdgeWordGeometry :
 
 /-- The explicit four-edge cage inhabits the row-4 `DD` realization. -/
 theorem row4_DD_realization_nonempty :
-    Nonempty (Row4DDWordRealization fourEdgePoints 2112500 1748500 1690000) :=
+    WordRealization .row4_DD fourEdgePoints 2112500 1748500 1690000 :=
   ⟨fourEdgeWordGeometry⟩
 
 end LeanPool.Erdos132ConvexK3.Witnesses

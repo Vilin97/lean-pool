@@ -5157,10 +5157,11 @@ projects:
   - slug: erdos132-convex-k3
     title: Exceptional-Word Closures for the Convex Three-Distance Case of Erdős Problem 132
     summary: >-
-      Kernelizes the thirteen exceptional cover words in the convex k=3
-      majorant argument and constructs every route closure unconditionally
-      from concrete full-two-rung, anti-saturation, terminal-cage, and
-      four-edge-cage data. It also proves the full two-rung shared-tip closure,
+      Kernelizes a thirteen-tag routing interface for the exceptional cover
+      words in the convex k=3 majorant argument and constructs every route
+      closure unconditionally from four shared full-two-rung, anti-saturation,
+      terminal-cage, and four-edge-cage predicates. It also proves the full
+      two-rung shared-tip closure,
       exceptional-count rigidity and rank/exchange obstruction, and an
       explicit heptagon refutation of a tempting stronger majorant claim,
       with rational regression witnesses. The source-facing minimum-degree
@@ -5191,12 +5192,13 @@ projects:
     main_results:
       - declaration: LeanPool.Erdos132ConvexK3.concrete_word_closures
         informal: >-
-          For thirteen word-specific predicates containing only raw geometric
-          and combinatorial data, each realized exceptional cover word forces
-          a vertex of degree at most six: B:3→2 and D:3→2 use the terminal
-          cage, B:3→1, BA, D:3→1, and DC use one-penultimate
-          anti-saturation and give degree at most five, DD uses the four-edge
-          cage, and the remaining six words use the full two-rung theorem.
+          A thirteen-tag routing interface over four shared geometric
+          realization predicates maps B:3→2 and D:3→2 to
+          Row1B32WordRealization, B:3→1, BA, D:3→1, and DC to
+          OnePenultimateWordGeometry, DD to Row4DDWordRealization, and the
+          remaining six tags to FullTwoRungGeometry. Each inhabited routed
+          predicate supplies a vertex of degree at most six, with the
+          one-penultimate route proving the stronger bound five.
         source_ref: >-
           New derived variant contributed and proved in this Lean Pool
           project. The thirteen-word classification and its closures are not
@@ -5208,15 +5210,6 @@ projects:
           coordinates, the diameter branch is impossible, the long branch is
           counted from four raw boundary arcs, and the short branch contradicts
           the exact two-rung identity and metric dichotomy.
-      - declaration: LeanPool.Erdos132ConvexK3.maximal_gap_signed_yz
-        informal: >-
-          If the unwrapped positions satisfy t=x+3, y=x+gapX, u=t+gapT,
-          s−u=M, and z−s=first.rightMoves, then the signed side count z−y
-          equals the setup's yzSides value.
-        source_ref: >-
-          Erdős--Lovász--Vesztergombi, proof of Theorem 2.7, printed p. 548:
-          “Hence the number of sides of P on the arc yz is at most
-          (a+k)+(k−1)+b≤3k−2.”
       - declaration: LeanPool.Erdos132ConvexK3.convex_k3_degree_six_of_reduction
         informal: >-
           This conditional map targets the STRONGER OPEN VARIANT that a
@@ -5233,15 +5226,20 @@ projects:
           k=3 is the stronger open variant; the proved source bound is eight.
       - declaration: LeanPool.Erdos132ConvexK3.coordinated_exceptional_count_rigidity
         informal: >-
-          Every exceptional jointly minimal pair of majorant paths lies in
-          exactly one of the inner-move cases (1,2), (2,1), or (2,2), and
-          minimality forces the stated move counts for every substitute path.
+          Every exceptional jointly minimal pair lies in case (1,2), (2,1),
+          or (2,2). In (1,2), every first substitute has at least one right
+          move while every second substitute has exactly two left moves and
+          zero right moves. In (2,1), every first substitute has exactly two
+          right moves and zero left moves while every second substitute has at
+          least one left move. Only in (2,2) are those exact substitute counts
+          proved on both sides.
       - declaration: LeanPool.Erdos132ConvexK3.coordinated_exceptional_rank_and_exchange_obstruction
         informal: >-
-          In each exceptional inner-move case, every forced two-move chain has
-          the rank ladder from the third-largest through the second-largest to
-          the largest distance, while the proposed intermediate exchange edge
-          remains nonterminal.
+          Assuming the three top distance classes and TopThreeAdjacent for
+          both starting edges z–x and t–u, each forced two-move chain in an
+          exceptional inner-move case has the rank ladder from the
+          third-largest through the second-largest to the largest distance,
+          while its proposed intermediate exchange edge remains nonterminal.
       - declaration: LeanPool.Erdos132ConvexK3.heptagon_nondiameter_edge_is_majorant
         informal: >-
           In an explicit rational convex heptagon, a second-largest-distance
@@ -5257,12 +5255,6 @@ projects:
         informal: >-
           An explicit rational six-point regression configuration realizes the
           three stated rational squared-distance values as its largest classes.
-        source_ref: >-
-          Prior-art search receipt against pinned Mathlib v4.34.0-rc1
-          (de5ce8a9): manual rg searches for the exact values 96661/229 and
-          2776265163521/6927250000, and for few-distance, largest-distance,
-          rational-hexagon, convex-hexagon-distance, diameter-graph, and
-          diametral-graph vocabulary returned no matches.
     tags:
       - discrete-geometry
       - distance-graphs

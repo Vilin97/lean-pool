@@ -915,31 +915,6 @@ theorem row1_B32_realization_degree_le_six
       (P := P) (d₁ := d₁) (d₂ := d₂) (d₃ := d₃) G.arcPartition
     omega
 
-/-- Exact reflection of the row-1 terminal geometry, already relabelled into
-the common positive orientation. -/
-abbrev Row4D32WordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  Row1B32WordRealization P d₁ d₂ d₃
-
-/-- Reflection sends row 4 `D:3→2` to the raw row-1 terminal model. -/
-def row4D32Reflection
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row4D32WordRealization P d₁ d₂ d₃) :
-    Row1B32WordRealization P d₁ d₂ d₃ :=
-  G
-
-theorem row4_D32_reflection_eq
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row4D32WordRealization P d₁ d₂ d₃) :
-    row4D32Reflection G = G := rfl
-
-/-- The reflected row-4 terminal word has the same degree-six closure. -/
-theorem row4_D32_realization_degree_le_six
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row4D32WordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.vertex ≤ 6 :=
-  row1_B32_realization_degree_le_six G
-
 private theorem vertexDegree_le_partition_three
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     {v s : Fin n} {leftArc rightArc : Finset (Fin n)}
@@ -1234,7 +1209,8 @@ private theorem one_penultimate_tip_not_d₁
     ⟨hVpBounds.1, hVpBounds.2.1⟩ hfar (by linarith [hED, hVsRadius])
   exact hnot (euclideanDist_eq_sqrt_of_sqDist_eq hVs)
 
-private theorem one_penultimate_realization_degree_le_five
+/-- Every raw one-penultimate realization has displayed degree at most five. -/
+theorem one_penultimate_realization_degree_le_five
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (G : OnePenultimateWordGeometry P d₁ d₂ d₃) :
     vertexDegree P d₁ d₂ d₃ G.vertex ≤ 5 := by
@@ -1247,59 +1223,6 @@ private theorem one_penultimate_realization_degree_le_five
       (P := P) (d₁ := d₁) (d₂ := d₂) (d₃ := d₃) G.arcPartition
     omega
   · exact (one_penultimate_low_degree_le_one G hVs).trans (by omega)
-
-/-- A word whose labels have been transported into the common
-one-penultimate orientation. -/
-structure OnePenultimateWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Raw geometry after the word-specific relabelling. -/
-  geometry : OnePenultimateWordGeometry P d₁ d₂ d₃
-
-/-- Row 1 `B:3→1`, with the surviving right-hand rung relabelled as
-`t-p`. -/
-abbrev Row1B31WordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  OnePenultimateWordRealization P d₁ d₂ d₃
-
-theorem row1_B31_realization_degree_le_five
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row1B31WordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 5 :=
-  one_penultimate_realization_degree_le_five G.geometry
-
-/-- Shifted row 2 `BA`, with centers `(v,t)` and the surviving right rung. -/
-abbrev Row2BAWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  OnePenultimateWordRealization P d₁ d₂ d₃
-
-theorem row2_BA_realization_degree_le_five
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row2BAWordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 5 :=
-  one_penultimate_realization_degree_le_five G.geometry
-
-/-- Reflected row 4 `D:3→1`, with the surviving left rung relabelled to
-the common `t-p` orientation. -/
-abbrev Row4D31WordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  OnePenultimateWordRealization P d₁ d₂ d₃
-
-theorem row4_D31_realization_degree_le_five
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row4D31WordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 5 :=
-  one_penultimate_realization_degree_le_five G.geometry
-
-/-- Shifted reflected row 4 `DC`, using centers `(x,Q)`. -/
-abbrev Row4DCWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  OnePenultimateWordRealization P d₁ d₂ d₃
-
-theorem row4_DC_realization_degree_le_five
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row4DCWordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 5 :=
-  one_penultimate_realization_degree_le_five G.geometry
 
 /-- One raw boundary branch in the four-edge cage.  The disjunction records
 the two cyclic orientations that yield the same edge--diagonal inequality. -/
@@ -2542,78 +2465,5 @@ theorem fullTwoRung_realization_degree_le_six
   · exact (fullTwoRung_diameter_branch_impossible G hVs).elim
   · exact fullTwoRung_second_class_degree_le_six G hVs
   · exact (fullTwoRung_low_degree_le_one G hVs).trans (by omega)
-
-/-- A word whose labels have been transported into the common full-two-rung
-orientation. -/
-structure FullTwoRungWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) where
-  /-- Raw geometry after the word-specific relabelling. -/
-  geometry : FullTwoRungGeometry P d₁ d₂ d₃
-
-/-- Row 1 `B:2→1`, in the canonical full-two-rung orientation. -/
-abbrev Row1B21WordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  FullTwoRungWordRealization P d₁ d₂ d₃
-
-theorem row1_B21_realization_degree_le_six
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row1B21WordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 6 :=
-  fullTwoRung_realization_degree_le_six G.geometry
-
-/-- Shifted row 2 `AB`, relabelled into the full-two-rung frame. -/
-abbrev Row2ABWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  FullTwoRungWordRealization P d₁ d₂ d₃
-
-theorem row2_AB_realization_degree_le_six
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row2ABWordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 6 :=
-  fullTwoRung_realization_degree_le_six G.geometry
-
-/-- Row 3 `BB×DD`, with either lower shared-tip insertion selected. -/
-abbrev Row3BBDDWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  FullTwoRungWordRealization P d₁ d₂ d₃
-
-theorem row3_BB_DD_realization_degree_le_six
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row3BBDDWordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 6 :=
-  fullTwoRung_realization_degree_le_six G.geometry
-
-/-- Row 4 `D:2→1`, reflected and relabelled so positive turns are restored. -/
-abbrev Row4D21WordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  FullTwoRungWordRealization P d₁ d₂ d₃
-
-theorem row4_D21_realization_degree_le_six
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row4D21WordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 6 :=
-  fullTwoRung_realization_degree_le_six G.geometry
-
-/-- Shifted row 4 `CD`, reflected and relabelled into the common frame. -/
-abbrev Row4CDWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  FullTwoRungWordRealization P d₁ d₂ d₃
-
-theorem row4_CD_realization_degree_le_six
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row4CDWordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 6 :=
-  fullTwoRung_realization_degree_le_six G.geometry
-
-/-- Row 5 `BB×DD`, with either full insertion selected. -/
-abbrev Row5BBDDWordRealization
-    {n : ℕ} (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) :=
-  FullTwoRungWordRealization P d₁ d₂ d₃
-
-theorem row5_BB_DD_realization_degree_le_six
-    {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (G : Row5BBDDWordRealization P d₁ d₂ d₃) :
-    vertexDegree P d₁ d₂ d₃ G.geometry.vertex ≤ 6 :=
-  fullTwoRung_realization_degree_le_six G.geometry
 
 end LeanPool.Erdos132ConvexK3
