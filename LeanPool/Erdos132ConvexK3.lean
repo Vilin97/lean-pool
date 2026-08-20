@@ -5,7 +5,9 @@ Authors: Egor Lyfar
 -/
 
 import LeanPool.Erdos132ConvexK3.Assembly
+import LeanPool.Erdos132ConvexK3.RegressionWitnesses
 import LeanPool.Erdos132ConvexK3.UseSite
+import LeanPool.Erdos132ConvexK3.Witnesses
 
 /-!
 # Exceptional-Word Closures for the Convex Three-Distance Case of Erdős Problem 132

@@ -770,6 +770,7 @@ import LeanPool.Erdos132ConvexK3.MajorantArcNesting
 import LeanPool.Erdos132ConvexK3.Majorants
 import LeanPool.Erdos132ConvexK3.MetricDichotomy
 import LeanPool.Erdos132ConvexK3.Penultimate
+import LeanPool.Erdos132ConvexK3.RegressionWitnesses
 import LeanPool.Erdos132ConvexK3.ResidualBounds
 import LeanPool.Erdos132ConvexK3.TerminalCage
 import LeanPool.Erdos132ConvexK3.UseSite

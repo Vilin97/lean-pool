@@ -27,24 +27,6 @@ theorem dot_comm (u v : Point ℝ) : dot u v = dot v u := by
   simp [dot]
   ring
 
-theorem sqDist_pos_of_ne {a b : Point ℝ} (h : a ≠ b) : 0 < sqDist a b := by
-  by_contra hn
-  have hle : sqDist a b ≤ 0 := le_of_not_gt hn
-  have h1 : (b.1 - a.1) ^ 2 = 0 := by
-    have hsq1 : 0 ≤ (b.1 - a.1) ^ 2 := sq_nonneg _
-    have hsq2 : 0 ≤ (b.2 - a.2) ^ 2 := sq_nonneg _
-    unfold sqDist at hle
-    nlinarith
-  have h2 : (b.2 - a.2) ^ 2 = 0 := by
-    have hsq1 : 0 ≤ (b.1 - a.1) ^ 2 := sq_nonneg _
-    have hsq2 : 0 ≤ (b.2 - a.2) ^ 2 := sq_nonneg _
-    unfold sqDist at hle
-    nlinarith
-  apply h
-  apply Prod.ext
-  · exact (sub_eq_zero.mp (sq_eq_zero_iff.mp h1)).symm
-  · exact (sub_eq_zero.mp (sq_eq_zero_iff.mp h2)).symm
-
 /-- A failed endpoint cover gives a strict acute-angle dot product, provided
 the polygon side used by that cover is nondegenerate. -/
 theorem dot_pos_of_sqDist_le

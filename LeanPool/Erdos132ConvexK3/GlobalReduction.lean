@@ -5,7 +5,7 @@ Authors: Egor Lyfar
 -/
 import LeanPool.Erdos132ConvexK3.Basic
 import LeanPool.Erdos132ConvexK3.Majorants
-import LeanPool.Erdos132ConvexK3.Witnesses
+import LeanPool.Erdos132ConvexK3.RegressionWitnesses
 import Lean.Elab.Tactic.Omega
 import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Data.Finset.Max

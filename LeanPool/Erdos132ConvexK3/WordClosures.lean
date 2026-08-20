@@ -22,23 +22,6 @@ and cardinality bounds are conclusions of the theorems below.
 
 namespace LeanPool.Erdos132ConvexK3
 
-private theorem sqDist_pos_of_ne_local {a b : Point ℝ} (hab : a ≠ b) :
-    0 < sqDist a b := by
-  by_contra hnot
-  have hle : sqDist a b ≤ 0 := le_of_not_gt hnot
-  have hzero : sqDist a b = 0 :=
-    le_antisymm hle (sqDist_nonneg a b)
-  have hx : b.1 - a.1 = 0 := by
-    simp only [sqDist] at hzero
-    nlinarith [sq_nonneg (b.1 - a.1), sq_nonneg (b.2 - a.2)]
-  have hy : b.2 - a.2 = 0 := by
-    simp only [sqDist] at hzero
-    nlinarith [sq_nonneg (b.1 - a.1), sq_nonneg (b.2 - a.2)]
-  apply hab
-  apply Prod.ext
-  · linarith
-  · linarith
-
 /-- Translate the first center to the origin and rotate the directed center
 line onto the positive horizontal axis. -/
 noncomputable def normalizeAlong (a b p : Point ℝ) : Point ℝ :=
@@ -50,7 +33,7 @@ noncomputable def normalizeAlong (a b p : Point ℝ) : Point ℝ :=
 
 private theorem normalizeAlong_scale_pos {a b : Point ℝ} (hab : a ≠ b) :
     0 < Real.sqrt (sqDist a b) :=
-  Real.sqrt_pos.2 (sqDist_pos_of_ne_local hab)
+  Real.sqrt_pos.2 (sqDist_pos_of_ne hab)
 
 private theorem normalizeAlong_fst_sub
     (a b p q : Point ℝ) :
@@ -91,14 +74,14 @@ theorem normalizeAlong_sqDist
           Real.sqrt (sqDist a b) ^ 2 := by rw [hid]
     _ = (q.1 - p.1) ^ 2 + (q.2 - p.2) ^ 2 := by
       rw [hscaleSq]
-      field_simp [ne_of_gt (sqDist_pos_of_ne_local hab)]
+      field_simp [ne_of_gt (sqDist_pos_of_ne hab)]
     _ = sqDist p q := by simp only [sqDist]
 
 private theorem normalizeAlong_injective
     {a b : Point ℝ} (hab : a ≠ b) : Function.Injective (normalizeAlong a b) := by
   intro p q hpq
   by_contra hpq'
-  have hpositive := sqDist_pos_of_ne_local hpq'
+  have hpositive := sqDist_pos_of_ne hpq'
   have hzero : sqDist (normalizeAlong a b p) (normalizeAlong a b q) = 0 := by
     rw [hpq]
     simp [sqDist]
@@ -139,7 +122,7 @@ theorem normalizeAlong_turn
     _ = (q.1 - p.1) * (r.2 - p.2) -
         (q.2 - p.2) * (r.1 - p.1) := by
       rw [hscaleSq]
-      field_simp [ne_of_gt (sqDist_pos_of_ne_local hab)]
+      field_simp [ne_of_gt (sqDist_pos_of_ne hab)]
     _ = turn p q r := by simp only [turn]
 
 private theorem normalizeAlong_first_center
@@ -203,7 +186,7 @@ private theorem top_three_third_value_pos
   rcases hClasses with ⟨_, _, _, _, ⟨e, heList, heq⟩, _⟩
   have hindices : e.1 ≠ e.2 := ne_of_lt (mem_unorderedPairList_iff.mp heList)
   have hpoints : P e.1 ≠ P e.2 := hInjective.ne hindices
-  simpa only [heq] using sqDist_pos_of_ne_local hpoints
+  simpa only [heq] using sqDist_pos_of_ne hpoints
 
 private theorem top_three_first_bound_local
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
@@ -2289,7 +2272,7 @@ private theorem fullTwoRung_metric_split
         4 * F.heightDrop * (F.H - Real.sqrt d₂) := by
   have hd₁ : 0 < d₁ := by
     rw [← G.es]
-    exact sqDist_pos_of_ne_local (G.pointsInjective.ne G.e_ne_s)
+    exact sqDist_pos_of_ne (G.pointsInjective.ne G.e_ne_s)
   have hd₃ : 0 < d₃ := top_three_third_value_pos G.pointsInjective G.classes
   have hd₂ : 0 < d₂ := hd₃.trans G.classes.1
   let D := Real.sqrt d₁

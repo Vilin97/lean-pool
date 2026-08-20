@@ -142,63 +142,39 @@ theorem full_two_rung_shared_tip_degree_le_six
   · exact hB hB'
   · exact (hLow hLow').trans (by omega)
 
-/-- The thirteen tags routed to the four shared geometric predicates:
-terminal, one-penultimate, full-two-rung, and four-edge `DD`. -/
+/-- The four shared geometric realization predicates, indexed by closure route. -/
+def WordClosureRealization
+    {n : ℕ} (route : WordClosureRoute)
+    (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop := match route with
+  | .terminalCage => Nonempty (Row1B32WordRealization P d₁ d₂ d₃)
+  | .antiSaturation => Nonempty (OnePenultimateWordGeometry P d₁ d₂ d₃)
+  | .fullTwoRung => Nonempty (FullTwoRungGeometry P d₁ d₂ d₃)
+  | .fourEdgeCage => Nonempty (Row4DDWordRealization P d₁ d₂ d₃)
+
+/-- A word is realized when the geometric predicate selected by its route is inhabited. -/
 def WordRealization
     {n : ℕ} (word : ExceptionalCoverWord)
-    (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop := match word with
-  | .row1_B32 | .row4_D32 => Nonempty (Row1B32WordRealization P d₁ d₂ d₃)
-  | .row1_B31 | .row2_BA | .row4_D31 | .row4_DC =>
-      Nonempty (OnePenultimateWordGeometry P d₁ d₂ d₃)
-  | .row1_B21 | .row2_AB | .row3_BB_DD | .row4_D21 | .row4_CD |
-      .row5_BB_DD => Nonempty (FullTwoRungGeometry P d₁ d₂ d₃)
-  | .row4_DD => Nonempty (Row4DDWordRealization P d₁ d₂ d₃)
+    (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop :=
+  WordClosureRealization word.route P d₁ d₂ d₃
 
-/-- One transport theorem closes every tag through its shared predicate. -/
+/-- One transport theorem closes each of the four shared realization routes. -/
 theorem realization_degree_bound
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
-    (word : ExceptionalCoverWord) (hRealizes : WordRealization word P d₁ d₂ d₃) :
-    ∃ v, vertexDegree P d₁ d₂ d₃ v ≤ word.route.degreeBound := by
-  cases word with
-  | row1_B32 =>
+    (route : WordClosureRoute) (hRealizes : WordClosureRealization route P d₁ d₂ d₃) :
+    ∃ v, vertexDegree P d₁ d₂ d₃ v ≤ route.degreeBound := by
+  cases route with
+  | fullTwoRung =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
+  | antiSaturation =>
+      obtain ⟨G⟩ := hRealizes
+      exact ⟨G.vertex, one_penultimate_realization_degree_le_five G⟩
+  | terminalCage =>
       obtain ⟨G⟩ := hRealizes
       exact ⟨G.vertex, row1_B32_realization_degree_le_six G⟩
-  | row1_B31 =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, one_penultimate_realization_degree_le_five G⟩
-  | row1_B21 =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
-  | row2_AB =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
-  | row2_BA =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, one_penultimate_realization_degree_le_five G⟩
-  | row3_BB_DD =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
-  | row4_D32 =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, row1_B32_realization_degree_le_six G⟩
-  | row4_D31 =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, one_penultimate_realization_degree_le_five G⟩
-  | row4_D21 =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
-  | row4_CD =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
-  | row4_DC =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, one_penultimate_realization_degree_le_five G⟩
-  | row4_DD =>
+  | fourEdgeCage =>
       obtain ⟨G⟩ := hRealizes
       exact row4_DD_realization_degree_le_six G
-  | row5_BB_DD =>
-      obtain ⟨G⟩ := hRealizes
-      exact ⟨G.vertex, fullTwoRung_realization_degree_le_six G⟩
 
 /-- A tag is realized when its routed shared geometric predicate is inhabited. -/
 def RealizesGeom
@@ -228,7 +204,7 @@ theorem concrete_word_closures
   have close : ∀ word, RealizesGeom P d₁ d₂ d₃ word →
       ∃ v, vertexDegree P d₁ d₂ d₃ v ≤ word.route.degreeBound := by
     intro word hRealizes
-    exact realization_degree_bound word hRealizes
+    exact realization_degree_bound word.route hRealizes
   constructor
   · intro word hRoute hRealizes
     simpa only [hRoute, WordClosureRoute.degreeBound] using close word hRealizes
@@ -280,8 +256,9 @@ theorem convex_top_three_min_degree_le_six_of_draft_reduction
   obtain ⟨Realizes, hCases, ⟨hClosures⟩⟩ := hReduction
   exact thirteen_word_assembly hCases hClosures
 
-/-- The stronger open `k = 3`, degree-six variant posed by the paper's
-"perhaps degree at most `2k`" question after its degree-`3k - 1` theorem. -/
+/-- The stronger open `k = 3`, degree-six variant from the paper's p. 542
+"perhaps degree at most `2k`" question, which precedes Theorem 2.7 on p. 548
+and its weaker degree-`3k - 1` bound. -/
 def ConvexTopThreeDegreeSixStatement : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
