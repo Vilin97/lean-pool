@@ -246,9 +246,8 @@ def HasConvexK3DraftReduction
     HasThirteenWordReduction (vertexDegree P d₁ d₂ d₃) Realizes ∧
       Nonempty (DraftWordClosureInterface (vertexDegree P d₁ d₂ d₃) Realizes)
 
-/-- Conditional final existential theorem: once the global reduction package
-is constructed, the thirteen kernel routes produce a vertex of degree at
-most six. -/
+/-- A global reduction package and its thirteen kernel routes produce a
+vertex of degree at most six. -/
 theorem convex_top_three_min_degree_le_six_of_draft_reduction
     {n : ℕ} [_nonzero : NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
     (hReduction : HasConvexK3DraftReduction P d₁ d₂ d₃) :
@@ -256,27 +255,21 @@ theorem convex_top_three_min_degree_le_six_of_draft_reduction
   obtain ⟨Realizes, hCases, ⟨hClosures⟩⟩ := hReduction
   exact thirteen_word_assembly hCases hClosures
 
-/-- The stronger open `k = 3`, degree-six variant from the paper's p. 542
-"perhaps degree at most `2k`" question, which precedes Theorem 2.7 on p. 548
-and its weaker degree-`3k - 1` bound. -/
+/-- The `k = 3` degree-six statement suggested by the paper's p. 542
+"perhaps degree at most `2k`" question. -/
 def ConvexTopThreeDegreeSixStatement : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
       ∃ v, vertexDegree P d₁ d₂ d₃ v ≤ 6
 
-/-- Exact missing bridge from the two public hypotheses to the reduction.
-Because `HasThirteenWordReduction` admits the target as its direct branch,
-this interface is logically as strong as the desired conclusion.  It is
-retained only as an explicit map from the proved closure machinery to the
-open global reduction; challenge PR #341 records the clean full statement. -/
+/-- Bridge from the two public geometric hypotheses to the complete draft
+reduction package. -/
 def ConvexTopThreeDraftReductionComplete : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
       HasConvexK3DraftReduction P d₁ d₂ d₃
 
-/-- If the named global bridge is supplied, the stronger open convex
-degree-six variant follows with no further geometric or combinatorial
-assumptions. -/
+/-- The named global bridge implies the convex degree-six statement. -/
 theorem convex_top_three_degree_six_of_reduction_complete
     (hComplete : ConvexTopThreeDraftReductionComplete) :
     ConvexTopThreeDegreeSixStatement := by
@@ -284,10 +277,8 @@ theorem convex_top_three_degree_six_of_reduction_complete
   exact convex_top_three_min_degree_le_six_of_draft_reduction
     (hComplete P d₁ d₂ d₃ hConvex hClasses)
 
-/-- Conditional entry point for the stronger open degree-six variant.  Its
-interface is logically as strong as the conclusion; it is retained as an
-explicit map from the closure machinery to the open reduction, whose full
-statement is challenge PR #341. -/
+/-- Abstract entry point from a complete reduction bridge to the convex
+degree-six statement. -/
 theorem convex_k3_degree_six_of_reduction
     (hComplete : ConvexTopThreeDraftReductionComplete) :
     ConvexTopThreeDegreeSixStatement :=

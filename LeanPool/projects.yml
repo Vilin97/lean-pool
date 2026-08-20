@@ -5155,22 +5155,19 @@ projects:
       - "51K05"
       - "52A10"
   - slug: erdos132-convex-k3
-    title: Exceptional-Word Closures for the Convex Three-Distance Case of Erdős Problem 132
+    title: Convex Three-Distance Degree-Six Theorem and Exceptional-Word Closures
     summary: >-
-      Kernelizes a thirteen-tag routing interface for the exceptional cover
-      words in the convex k=3 majorant argument and constructs every route
-      closure unconditionally from four shared full-two-rung, anti-saturation,
-      terminal-cage, and four-edge-cage predicates. It also proves the full
-      two-rung shared-tip closure,
-      exceptional-count rigidity and rank/exchange obstruction, and an
-      explicit heptagon refutation of a tempting stronger majorant claim,
-      with rational regression witnesses. The source-facing minimum-degree
-      theorem remains only as an explicit conditional map for the stronger
-      open degree-six variant suggested by the paper's “perhaps degree at
-      most 2k” question: its named global reduction interface is logically
-      as strong as the conclusion, while the clean open statement is posed
-      separately in challenge PR #341.
-      The general Erdős problem remains open.
+      Proves that every finite cyclically strictly convex planar configuration
+      has a vertex incident to at most six edges from its three largest
+      distance classes. The proof selects a maximal-gap vertex and coordinated
+      majorants, closes all exceptional inner branches, performs the five-row
+      enumeration, and transports all thirteen canonical cover words to four
+      shared full-two-rung, anti-saturation, terminal-cage, and four-edge-cage
+      predicates. It also proves exceptional-count rigidity and an explicit
+      heptagon refutation of a tempting stronger majorant claim, with rational
+      regression witnesses. This settles the k=3 instance of the paper's
+      suggested degree-2k convex bound; it does not settle the general-k
+      suggestion or the general Erdős problem 132.
     branch: discrete geometry
     entry_module: LeanPool.Erdos132ConvexK3
     authors:
@@ -5188,8 +5185,40 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - LeanPool.Erdos132ConvexK3.concrete_word_closures
+      - LeanPool.Erdos132ConvexK3.convex_top_three_degree_six
     main_results:
+      - declaration: LeanPool.Erdos132ConvexK3.convex_top_three_degree_six
+        informal: >-
+          For every nonempty finite cyclically strictly convex planar
+          configuration with three strictly ordered largest squared-distance
+          classes d₁, d₂, and d₃, some vertex is incident to at most six pairs
+          whose squared distance is one of those three classes.
+        source_ref: >-
+          Erdős--Lovász--Vesztergombi, printed p. 542, suggest the stronger
+          convex bound degree at most 2k; this theorem proves its k=3 case.
+          Their Theorem 2.7 on p. 548 proves only degree at most 3k-1, which
+          specializes to eight. The degree-six statement is a new derived
+          result of this project, not a theorem stated in ErLV89.
+      - declaration: LeanPool.Erdos132ConvexK3.convex_top_three_draft_reduction_complete
+        informal: >-
+          Cyclic strict convexity and the three-largest-distance-class
+          hypothesis construct the full maximal-gap, thirteen-word reduction
+          package together with route-specific closure evidence, without any
+          remaining coordinated-majorant or geometric-adapter assumption.
+        source_ref: >-
+          New proof-producing assembly theorem in this project. It combines
+          the ErLV89 majorant framework with the project's maximal-gap tail,
+          terminal-color, five-row, and thirteen-word transport lemmas.
+      - declaration: LeanPool.Erdos132ConvexK3.global_thirteen_word_closure_complete
+        informal: >-
+          Every one of the thirteen canonical maximal-gap cover words
+          transports to its routed full-two-rung, anti-saturation,
+          terminal-cage, or four-edge-cage realization, and hence supplies
+          the corresponding degree bound.
+        source_ref: >-
+          New geometric transport theorem in this project. The thirteen-word
+          classification and its four-predicate closure interface are not
+          statements of ErLV89.
       - declaration: LeanPool.Erdos132ConvexK3.concrete_word_closures
         informal: >-
           A thirteen-tag routing interface over four shared geometric
@@ -5212,18 +5241,19 @@ projects:
           the exact two-rung identity and metric dichotomy.
       - declaration: LeanPool.Erdos132ConvexK3.convex_k3_degree_six_of_reduction
         informal: >-
-          This conditional map targets the STRONGER OPEN VARIANT that a
-          convex three-distance graph has minimum degree at most six. Its
-          separately open global reduction interface is logically as strong
-          as that conclusion; ErLV89 proves only the degree-eight bound
-          obtained from 3k−1 when k=3.
+          This implication from the abstract reduction interface is retained
+          as the final assembly map. Its hypothesis is now discharged by
+          convex_top_three_draft_reduction_complete, yielding the unconditional
+          theorem convex_top_three_degree_six; ErLV89 itself proves only the
+          degree-eight bound obtained from 3k−1 when k=3.
         source_ref: >-
           Erdős--Lovász--Vesztergombi, printed p. 542: “Perhaps in the convex
           case there always exists an x_i such that the degree of x_i is at
           most 2k.” Alongside it, Theorem 2.7, printed p. 548, proves only:
           “If S is the set of vertices of a convex polygon then the graph
           G(S, k) has a point of degree at most 3k−1.” Thus degree six for
-          k=3 is the stronger open variant; the proved source bound is eight.
+          k=3 is the stronger suggested variant; the proved source bound is
+          eight, while this project's global closure proves degree six.
       - declaration: LeanPool.Erdos132ConvexK3.coordinated_exceptional_count_rigidity
         informal: >-
           Every exceptional jointly minimal pair lies in case (1,2), (2,1),

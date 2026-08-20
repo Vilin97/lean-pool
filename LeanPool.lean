@@ -764,6 +764,8 @@ import LeanPool.Erdos132ConvexK3.Assembly
 import LeanPool.Erdos132ConvexK3.Basic
 import LeanPool.Erdos132ConvexK3.CoordinatedMajorants
 import LeanPool.Erdos132ConvexK3.Geometry
+import LeanPool.Erdos132ConvexK3.GlobalAssembly
+import LeanPool.Erdos132ConvexK3.GlobalClosure
 import LeanPool.Erdos132ConvexK3.GlobalReduction
 import LeanPool.Erdos132ConvexK3.Lens
 import LeanPool.Erdos132ConvexK3.MajorantArcNesting
@@ -772,7 +774,9 @@ import LeanPool.Erdos132ConvexK3.MetricDichotomy
 import LeanPool.Erdos132ConvexK3.Penultimate
 import LeanPool.Erdos132ConvexK3.RegressionWitnesses
 import LeanPool.Erdos132ConvexK3.ResidualBounds
+import LeanPool.Erdos132ConvexK3.TailClosure
 import LeanPool.Erdos132ConvexK3.TerminalCage
+import LeanPool.Erdos132ConvexK3.TerminalColorClosure
 import LeanPool.Erdos132ConvexK3.UseSite
 import LeanPool.Erdos132ConvexK3.Witnesses
 import LeanPool.Erdos132ConvexK3.WordClosures
