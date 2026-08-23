@@ -20,7 +20,6 @@ projects:
     status: verified
     provenance: mix
     main_declarations:
-      - LeanPool.Erdos81PaperIContrib.fg_cone_isClosed
       - LeanPool.Erdos81PaperIContrib.covering_packing_duality
     main_results:
       - declaration: LeanPool.Erdos81PaperIContrib.fg_cone_isClosed

@@ -13,7 +13,7 @@ import LeanPool.Erdos81PaperIContrib.FgConeClosed
 Source: url:https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/main/preprints/PAPER_I
 Authors: Juan Pablo Traverso Gianini
 Status: verified
-Main declarations: `LeanPool.Erdos81PaperIContrib.fg_cone_isClosed`, `LeanPool.Erdos81PaperIContrib.covering_packing_duality`
+Main declarations: `LeanPool.Erdos81PaperIContrib.covering_packing_duality`
 Tags: convex-geometry, linear-programming, duality, farkas-lemma
 MSC: 52A20, 90C05
 -/
