@@ -1,4 +1,37 @@
 projects:
+  - slug: erdos81-paper-ii-chordal-heredity
+    title: Chordal graphs and induced-subgraph heredity
+    summary: >-
+      Defines chordal graphs through the cycle-and-chord characterization and proves that
+      chordality is inherited along induced graph embeddings and by induced subgraphs.
+    branch: graph theory
+    entry_module: LeanPool.Erdos81PaperIIContrib
+    authors:
+      - Juan Pablo Traverso Gianini
+    source:
+      title: Complete-Split Extremizers for a Fractional Triangle-Cover Functional on Chordal Graphs
+      authors:
+        - Juan Pablo Traverso Gianini
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/main/preprints/PAPER_II
+      github_repo: jtraverso/erdos-81-chordal-clique-partitions
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SimpleGraph.IsChordal.comap
+    main_results:
+      - declaration: SimpleGraph.IsChordal.comap
+        informal: >-
+          A graph that embeds as an induced subgraph of a chordal graph is itself chordal.
+      - declaration: SimpleGraph.IsChordal.induce
+        informal: >-
+          Every induced subgraph of a chordal graph is chordal.
+    tags:
+      - graph-theory
+      - chordal-graphs
+      - induced-subgraphs
+    msc:
+      - "05C75"
   - slug: boolean-isoperimetry
     title: Boolean Isoperimetry and Conway--Guy Coherent Gaps
     summary: >-
