@@ -1,4 +1,46 @@
 projects:
+  - slug: connes-rigidity
+    title: Conditional formalization of Zhou's Connes-rigidity counterexample
+    summary: >-
+      Constructs Zhou's two countable discrete groups and, assuming the project's
+      universe-zero property-(T) predicate for EL₃(𝔽₂[t]), proves that both satisfy
+      the same predicate, are ICC and nonisomorphic, while their group von Neumann
+      algebras are trace-preservingly normally star-isomorphic. The property-(T)
+      interface quantifies only over universe-zero Hilbert spaces; no equivalence
+      to the standard universe-polymorphic definition is proved.
+    branch: operator algebras and geometric group theory
+    entry_module: LeanPool.ConnesRigidity
+    authors:
+      - Utensil Song
+    source:
+      title: ICC property(T) groups without W*-superrigidity
+      authors:
+        - Shuoxing Zhou
+      arxiv: "2608.02327"
+      url: https://github.com/utensil/connes-rigidity
+      github_repo: utensil/connes-rigidity
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Connes.theoremA
+    main_results:
+      - declaration: Connes.theoremA
+        informal: >-
+          Assuming the universe-zero property-(T) predicate for EL₃(𝔽₂[t]),
+          constructs two countable discrete ICC groups satisfying that predicate
+          which are nonisomorphic although their group von Neumann algebras are
+          trace-preservingly normally star-isomorphic.
+    tags:
+      - operator-algebras
+      - von-neumann-algebras
+      - property-t
+      - group-theory
+      - connes-rigidity
+    msc:
+      - "46L10"
+      - "20F65"
+      - "22D10"
   - slug: erdos81-paper-i-contrib
     title: Finitely generated cones and finite LP duality
     summary: >-
