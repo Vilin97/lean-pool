@@ -169,21 +169,13 @@ challenges:
       distinct and realized, so configurations with fewer than three
       interpoint distances do not satisfy the hypotheses.
       Morić--Pritchard, "Counting large distances in convex polygons"
-      (arXiv:1103.0412), Theorem 1.4, prove m₁ + m₂ + m₃ ≤ 3n for
+      (arXiv:1103.0412), Theorem 1.4, prove m1 + m2 + m3 <= 3n for
       sufficiently large n, which gives the same degree-six consequence in
-      that range; that consequence is not new here. Their largeness threshold
-      is ineffective as stated, so no explicit N can be extracted from it.
-      What this challenge asks for is the all-n theorem: it removes the
-      sufficiently-large-n restriction, rather than treating k = 3 as an
-      untouched case.
-      The companion pooled project LeanPool.Erdos132ConvexK3
-      (Vilin97/lean-pool#343, merged) settles this all-n k=3 instance of the
-      paper's suggested degree-2k convex bound with a machine-checked proof
-      in 15,233 lines of Lean across 21 files; it does not settle the
-      general-k suggestion or the general Erdős problem 132. A solution is
-      expected to land as a thin Solution bridge from that project, so the
-      estimate below reflects the size of that completed development rather
-      than a guess.
+      that range. This challenge is therefore the all-n completion, not an
+      untouched k = 3 case. The companion pooled project
+      LeanPool.Erdos132ConvexK3 (Vilin97/lean-pool#343, merged) proves it for
+      every finite n; a solution is expected to land as a thin Solution
+      bridge from that project.
     branch: discrete geometry
     entry_module: Challenge.Erdos132ConvexK3Degree
     proposers:
