@@ -10,7 +10,10 @@ on:
 
 concurrency:
   group: readme-stats
-  cancel-in-progress: true
+  # A newer main push waits while the running job notices that its generated
+  # PR is stale and exits. This also lets the publisher finish successfully
+  # before its own README-only merge starts the final no-op verification run.
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -47,6 +50,7 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
+          base_sha="$(git rev-parse HEAD)"
           if git diff --quiet -- README.md; then
             echo "README stats already up to date."
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -96,6 +100,7 @@ jobs:
               --jq .number)"
           fi
           {
+            echo "base=$base_sha"
             echo "changed=true"
             echo "number=$number"
           } >> "$GITHUB_OUTPUT"
@@ -104,6 +109,7 @@ jobs:
       - name: Merge after required checks pass
         if: steps.publish.outputs.changed == 'true'
         env:
+          BASE_SHA: ${{ steps.publish.outputs.base }}
           GH_TOKEN: ${{ secrets.REBASE_TOKEN }}
           NUMBER: ${{ steps.publish.outputs.number }}
           REPO: ${{ github.repository }}
@@ -123,8 +129,13 @@ jobs:
                   break
                 fi
                 ;;
-              DIRTY)
-                echo "::error::Generated PR #$NUMBER conflicts with main."
+              BEHIND|DIRTY)
+                current_main="$(gh api "repos/$REPO/commits/main" --jq .sha)"
+                if [ "$current_main" != "$BASE_SHA" ]; then
+                  echo "::notice::Main advanced; a queued run will refresh PR #$NUMBER."
+                  exit 0
+                fi
+                echo "::error::Generated PR #$NUMBER is unexpectedly $state."
                 exit 1
                 ;;
             esac
@@ -134,5 +145,14 @@ jobs:
             echo "::error::Required checks did not pass within 165 minutes."
             exit 1
           fi
-          gh pr merge "$NUMBER" --repo "$REPO" --merge --delete-branch \
-            --match-head-commit "$checked_head"
+          if gh pr merge "$NUMBER" --repo "$REPO" --merge --delete-branch \
+              --match-head-commit "$checked_head"; then
+            exit 0
+          fi
+          current_main="$(gh api "repos/$REPO/commits/main" --jq .sha)"
+          if [ "$current_main" != "$BASE_SHA" ]; then
+            echo "::notice::Main advanced before merge; the queued run will refresh."
+            exit 0
+          fi
+          echo "::error::Could not merge generated PR #$NUMBER."
+          exit 1
