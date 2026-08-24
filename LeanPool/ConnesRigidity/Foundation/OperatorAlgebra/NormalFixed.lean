@@ -18,12 +18,12 @@ The normal fixed component of the Connes rigidity formalization.
 
 namespace Connes
 
-universe u
+universe u v
 
 noncomputable section
 
 variable {G : Type u} [Group G]
-  {K : Type u} [NormedAddCommGroup K] [InnerProductSpace ℂ K] [CompleteSpace K]
+  {K : Type v} [NormedAddCommGroup K] [InnerProductSpace ℂ K] [CompleteSpace K]
 
 /-- Vectors fixed by a subgroup under a unitary representation. Paper: §4. -/
 def normalFixedSubmodule (N : Subgroup G)

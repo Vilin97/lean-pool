@@ -23,12 +23,14 @@ open Construction.PaperKernel
 
 noncomputable section
 
+universe v
+
 /-- The concrete headline follows from the cited EJZK property-(T) input.
 All remaining spectral, factor, ICC, and nonisomorphism certificates are
 constructed internally. Paper: §§7. -/
-theorem theoremA (propertyTInput : PaperPropertyT.EJZKInput) :
+theorem theoremA (propertyTInput : PaperPropertyT.EJZKInput.{v}) :
     ∃ Γ₁ Γ₂ : CountableDiscreteGroup.{0},
-      HasKazhdanPropertyT Γ₁ ∧ HasKazhdanPropertyT Γ₂ ∧
+      HasKazhdanPropertyT.{0, v} Γ₁ ∧ HasKazhdanPropertyT.{0, v} Γ₂ ∧
       IsICC Γ₁ ∧ IsICC Γ₂ ∧
       TracialGroupFactorsIsomorphic Γ₁ Γ₂ ∧
       ¬ Nonempty (Γ₁ ≃* Γ₂) := by

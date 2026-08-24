@@ -25,7 +25,7 @@ noncomputable section
 open MeasureTheory
 open scoped ENNReal NNReal
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A]
   [DiscreteTopology A]
@@ -37,7 +37,7 @@ variable [MeasurableSingletonClass (DiscreteCharacterSpace A)]
 /-- Projection-valued spectral data for a unitary representation. Paper: §4. -/
 structure ProjectionValuedSpectralMeasure
     (E : SplitAbelianExtension A G H)
-    (K : Type u) [NormedAddCommGroup K]
+    (K : Type v) [NormedAddCommGroup K]
     [InnerProductSpace ℂ K] [CompleteSpace K]
     (π : UnitaryRepresentation G K) where
   /--
@@ -85,7 +85,7 @@ structure ProjectionValuedSpectralMeasure
 namespace ProjectionValuedSpectralMeasure
 
 variable {E : SplitAbelianExtension A G H}
-variable {K : Type u} [NormedAddCommGroup K]
+variable {K : Type v} [NormedAddCommGroup K]
   [InnerProductSpace ℂ K] [CompleteSpace K]
 variable {π : UnitaryRepresentation G K}
 
@@ -212,7 +212,7 @@ The `HasQuotientFixedApproximation` construction used in the Connes rigidity for
 def HasQuotientFixedApproximation
     (E : SplitAbelianExtension A G H)
     (π : UnitaryRepresentation G K) : Prop :=
-  HasKazhdanPropertyT H →
+  HasKazhdanPropertyT.{u, v} H →
     π.HasAlmostInvariantUnitVectors →
       ∀ (J : Finset A) (ε : ℝ), 0 < ε →
         ∃ x : QuotientFixedUnitVector E K π,
@@ -228,7 +228,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)]
   [MeasurableSingletonClass (DiscreteCharacterSpace A)] in
 theorem exists_quotientFixedUnitVector_with_displacement
-    (hH : HasKazhdanPropertyT H)
+    (hH : HasKazhdanPropertyT.{u, v} H)
     (hπ : π.HasAlmostInvariantUnitVectors)
     (T : Finset G) (ε : ℝ) (hε : 0 < ε) :
     ∃ x : QuotientFixedUnitVector E K π,
@@ -459,16 +459,16 @@ omit [BorelSpace (DiscreteCharacterSpace A)] in
 approximation follows generically from quotient property (T). Paper: §4. -/
 theorem relative_propertyT_of_projectionValuedSpectralMeasure
     (E : SplitAbelianExtension A G H)
-    (hH : HasKazhdanPropertyT H)
+    (hH : HasKazhdanPropertyT.{u, v} H)
     (J : Finset A) {c : ℝ} (hc : 0 < c)
     (hdetection : HasFiniteSpectralDetection E J c)
-    (pvm : ∀ (K : Type u)
+    (pvm : ∀ (K : Type v)
       (_ : NormedAddCommGroup K)
       (_ : InnerProductSpace ℂ K)
       (_ : CompleteSpace K)
       (π : UnitaryRepresentation G K),
         ProjectionValuedSpectralMeasure E K π) :
-    HasKazhdanPropertyT G := by
+    HasKazhdanPropertyT.{u, v} G := by
   apply spectral_criterion E hH J hc hdetection
   intro K _ _ _ π
   exact ProjectionValuedSpectralMeasure.toSpectralMeasureInterface

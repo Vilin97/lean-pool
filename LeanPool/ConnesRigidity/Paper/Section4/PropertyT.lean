@@ -21,7 +21,7 @@ namespace PaperPropertyT
 open Construction
 open Construction.PaperKernel
 
-universe u
+universe v
 
 /-- The elementary subgroup appearing in the cited EJZK theorem. Paper: §4. -/
 noncomputable def elementaryGroup : CountableDiscreteGroup :=
@@ -39,12 +39,12 @@ noncomputable def elementaryEquivSL3 :
 /-- The external EJZK property-(T) input used by Zhou §4. Paper: §4,
 Proposition 4.1(b). -/
 structure EJZKInput where
-  propertyT : HasKazhdanPropertyT elementaryGroup
+  propertyT : HasKazhdanPropertyT.{0, v} elementaryGroup
 
 /-- Transport the cited elementary-group theorem across Zhou Proposition 4.1(a).
 Paper: §4. -/
-theorem sl3_propertyT_from_EJZK (input : EJZKInput) :
-    HasKazhdanPropertyT SpecialLinear.sl3Group := by
+theorem sl3_propertyT_from_EJZK (input : EJZKInput.{v}) :
+    HasKazhdanPropertyT.{0, v} SpecialLinear.sl3Group := by
   exact (OpenAIPort.hasKazhdanPropertyT_iff_of_mulEquiv
     elementaryGroup SpecialLinear.sl3Group elementaryEquivSL3).mp input.propertyT
 
@@ -89,7 +89,7 @@ noncomputable abbrev lambdaTwo : CountableDiscreteGroup :=
 
 /- The finite quotient Property-(T) input is discharged by averaging. Paper: §4. -/
 theorem finiteSymplecticGroup_propertyT :
-    HasKazhdanPropertyT finiteSymplecticGroup := by
+    HasKazhdanPropertyT.{0, v} finiteSymplecticGroup := by
   let _ : Fintype (finiteSymplecticGroup : Type) := by
     change Fintype Q
     infer_instance

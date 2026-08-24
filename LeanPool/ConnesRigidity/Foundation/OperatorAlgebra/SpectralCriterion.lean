@@ -25,7 +25,7 @@ namespace Connes
 
 noncomputable section
 
-universe u
+universe u v
 
 open MeasureTheory
 open scoped ENNReal NNReal CompactlySupported
@@ -162,7 +162,7 @@ def spectralDetectionEnergy
 /-- A normalized vector fixed by the quotient section. Paper: §4. -/
 structure QuotientFixedUnitVector
     (E : SplitAbelianExtension A G H)
-    (K : Type u) [NormedAddCommGroup K]
+    (K : Type v) [NormedAddCommGroup K]
     [InnerProductSpace ℂ K] [CompleteSpace K]
     (π : UnitaryRepresentation G K) where
   /--
@@ -177,11 +177,11 @@ structure QuotientFixedUnitVector
 Paper: §4. -/
 structure SpectralMeasureInterface
     (E : SplitAbelianExtension A G H)
-    (K : Type u) [NormedAddCommGroup K]
+    (K : Type v) [NormedAddCommGroup K]
     [InnerProductSpace ℂ K] [CompleteSpace K]
     (π : UnitaryRepresentation G K) where
   quotient_fixed_approximation :
-    HasKazhdanPropertyT H →
+    HasKazhdanPropertyT.{u, v} H →
       π.HasAlmostInvariantUnitVectors →
         ∀ (J : Finset A) (ε : ℝ), 0 < ε →
           ∃ ξ : QuotientFixedUnitVector E K π,
@@ -218,11 +218,11 @@ def HasFiniteSpectralDetection
 omit [BorelSpace (DiscreteCharacterSpace A)] in
 theorem exists_positive_spectral_atom
     (E : SplitAbelianExtension A G H)
-    {K : Type u} [NormedAddCommGroup K]
+    {K : Type v} [NormedAddCommGroup K]
     [InnerProductSpace ℂ K] [CompleteSpace K]
     (π : UnitaryRepresentation G K)
     (spectral : SpectralMeasureInterface E K π)
-    (hH : HasKazhdanPropertyT H)
+    (hH : HasKazhdanPropertyT.{u, v} H)
     (hπ : π.HasAlmostInvariantUnitVectors)
     (J : Finset A) {c : ℝ} (hc : 0 < c)
     (hdetection : HasFiniteSpectralDetection E J c) :
@@ -239,11 +239,11 @@ theorem exists_positive_spectral_atom
 omit [BorelSpace (DiscreteCharacterSpace A)] in
 theorem spectral_criterion_representation
     (E : SplitAbelianExtension A G H)
-    {K : Type u} [NormedAddCommGroup K]
+    {K : Type v} [NormedAddCommGroup K]
     [InnerProductSpace ℂ K] [CompleteSpace K]
     (π : UnitaryRepresentation G K)
     (spectral : SpectralMeasureInterface E K π)
-    (hH : HasKazhdanPropertyT H)
+    (hH : HasKazhdanPropertyT.{u, v} H)
     (J : Finset A) {c : ℝ} (hc : 0 < c)
     (hdetection : HasFiniteSpectralDetection E J c)
     (hπ : π.HasAlmostInvariantUnitVectors) :
@@ -258,16 +258,16 @@ theorem spectral_criterion_representation
 omit [BorelSpace (DiscreteCharacterSpace A)] in
 theorem spectral_criterion
     (E : SplitAbelianExtension A G H)
-    (hH : HasKazhdanPropertyT H)
+    (hH : HasKazhdanPropertyT.{u, v} H)
     (J : Finset A) {c : ℝ} (hc : 0 < c)
     (hdetection : HasFiniteSpectralDetection E J c)
-    (spectral : ∀ (K : Type u)
+    (spectral : ∀ (K : Type v)
       (_ : NormedAddCommGroup K)
       (_ : InnerProductSpace ℂ K)
       (_ : CompleteSpace K)
       (π : UnitaryRepresentation G K),
         SpectralMeasureInterface E K π) :
-    HasKazhdanPropertyT G := by
+    HasKazhdanPropertyT.{u, v} G := by
   intro K _ _ _ π hπ
   exact spectral_criterion_representation E π
     (spectral K inferInstance inferInstance inferInstance π)

@@ -41,7 +41,7 @@ universe u v
 
 /-- Public OpenAI transfer of almost-invariant vectors. Paper: §4. -/
 theorem hasAlmostInvariantUnitVectors_comp
-    {G H K : Type u} [Group G] [Group H]
+    {G H : Type u} {K : Type v} [Group G] [Group H]
     [NormedAddCommGroup K] [InnerProductSpace ℂ K] [CompleteSpace K]
     (π : UnitaryRepresentation H K)
     (f : G →* H)
@@ -58,8 +58,8 @@ theorem hasAlmostInvariantUnitVectors_comp
 theorem hasKazhdanPropertyT_of_surjective
     (G H : CountableDiscreteGroup.{u})
     (f : G →* H) (hf : Function.Surjective f)
-    (hG : HasKazhdanPropertyT G) :
-    HasKazhdanPropertyT H := by
+    (hG : HasKazhdanPropertyT.{u, v} G) :
+    HasKazhdanPropertyT.{u, v} H := by
   intro K _ _ _ π hπ
   obtain ⟨ξ, hξ, hinv⟩ :=
     hG K inferInstance inferInstance inferInstance (π.comp f)
@@ -72,7 +72,7 @@ theorem hasKazhdanPropertyT_of_surjective
 /-- Public OpenAI property-(T) transport across a group equivalence. Paper: §4. -/
 theorem hasKazhdanPropertyT_iff_of_mulEquiv
     (G H : CountableDiscreteGroup.{u}) (e : G ≃* H) :
-    HasKazhdanPropertyT G ↔ HasKazhdanPropertyT H := by
+    HasKazhdanPropertyT.{u, v} G ↔ HasKazhdanPropertyT.{u, v} H := by
   constructor
   · exact hasKazhdanPropertyT_of_surjective G H e.toMonoidHom e.surjective
   · exact hasKazhdanPropertyT_of_surjective H G e.symm.toMonoidHom e.symm.surjective

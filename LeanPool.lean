@@ -617,6 +617,15 @@ import LeanPool.ConnesRigidity.Construction.SquareSpan
 import LeanPool.ConnesRigidity.Core
 import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4Basic
 import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificate
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard0
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard1
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard2
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard3
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard4
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard5
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard6
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelCertificateShard7
+import LeanPool.ConnesRigidity.Foundation.GroupTheory.Sp4KernelDetector
 import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.Basic
 import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ElementaryGeneration
 import LeanPool.ConnesRigidity.Foundation.GroupTheory.SpecialLinear.ICC

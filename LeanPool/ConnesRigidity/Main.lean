@@ -14,13 +14,15 @@ Completion boundary for Zhou's Theorem A.
 
 namespace Connes
 
+universe v
+
 /-- Zhou's Theorem A. The only external mathematical input is the cited EJZK
 property-(T) theorem for `EL₃(𝔽₂[t])`; every construction and all other
 paper arguments are proved in this project. Paper: §7. -/
 theorem theoremA
-    (hEJZK : HasKazhdanPropertyT PaperPropertyT.elementaryGroup) :
+    (hEJZK : HasKazhdanPropertyT.{0, v} PaperPropertyT.elementaryGroup) :
     ∃ Γ₁ Γ₂ : CountableDiscreteGroup.{0},
-      HasKazhdanPropertyT Γ₁ ∧ HasKazhdanPropertyT Γ₂ ∧
+      HasKazhdanPropertyT.{0, v} Γ₁ ∧ HasKazhdanPropertyT.{0, v} Γ₂ ∧
       IsICC Γ₁ ∧ IsICC Γ₂ ∧
       TracialGroupFactorsIsomorphic Γ₁ Γ₂ ∧
       ¬ Nonempty (Γ₁ ≃* Γ₂) := by

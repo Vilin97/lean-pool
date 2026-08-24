@@ -3,11 +3,9 @@ projects:
     title: Conditional formalization of Zhou's Connes-rigidity counterexample
     summary: >-
       Constructs Zhou's two countable discrete groups and, assuming the project's
-      universe-zero property-(T) predicate for EL₃(𝔽₂[t]), proves that both satisfy
-      the same predicate, are ICC and nonisomorphic, while their group von Neumann
-      algebras are trace-preservingly normally star-isomorphic. The property-(T)
-      interface quantifies only over universe-zero Hilbert spaces; no equivalence
-      to the standard universe-polymorphic definition is proved.
+      universe-polymorphic property-(T) predicate for EL₃(𝔽₂[t]), proves that both
+      satisfy the same predicate, are ICC and nonisomorphic, while their group von
+      Neumann algebras are trace-preservingly normally star-isomorphic.
     branch: operator algebras and geometric group theory
     entry_module: LeanPool.ConnesRigidity
     authors:
@@ -27,10 +25,10 @@ projects:
     main_results:
       - declaration: Connes.theoremA
         informal: >-
-          Assuming the universe-zero property-(T) predicate for EL₃(𝔽₂[t]),
-          constructs two countable discrete ICC groups satisfying that predicate
-          which are nonisomorphic although their group von Neumann algebras are
-          trace-preservingly normally star-isomorphic.
+          At any Hilbert-space universe, assuming property-(T) for EL₃(𝔽₂[t]),
+          constructs two countable discrete ICC groups satisfying property-(T)
+          at that universe which are nonisomorphic although their group von Neumann
+          algebras are trace-preservingly normally star-isomorphic.
     tags:
       - operator-algebras
       - von-neumann-algebras

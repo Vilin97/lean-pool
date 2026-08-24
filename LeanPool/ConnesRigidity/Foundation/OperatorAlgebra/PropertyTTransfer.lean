@@ -21,7 +21,7 @@ The property t transfer component of the Connes rigidity formalization.
 
 namespace Connes
 
-universe u
+universe u v
 
 namespace CountableDiscreteGroup
 
@@ -66,8 +66,8 @@ equivalence to the subgroup. -/
 theorem relativePropertyT_of_subgroupEquiv
     (L G : CountableDiscreteGroup.{u}) (N : Subgroup G)
     (e : L ≃* OpenAIPort.CountableDiscreteGroup.subgroup G N)
-    (hL : HasKazhdanPropertyT L) :
-    HasRelativePropertyT G N := by
+    (hL : HasKazhdanPropertyT.{u, v} L) :
+    HasRelativePropertyT.{u, v} G N := by
   classical
   intro K _ _ _ π hπ
   let f : (L : Type u) →* G := N.subtype.comp e.toMonoidHom
@@ -88,8 +88,8 @@ representation with relative property-(T). This is the quantitative bridge
 behind Zhou's Lemma 4.7. -/
 theorem normalFixedQuotient_hasAlmostInvariantUnitVectors
     (G : CountableDiscreteGroup.{u}) (N : Subgroup G) [N.Normal]
-    (hrelative : HasRelativePropertyT G N)
-    {K : Type u} [NormedAddCommGroup K]
+    (hrelative : HasRelativePropertyT.{u, v} G N)
+    {K : Type v} [NormedAddCommGroup K]
     [InnerProductSpace ℂ K] [CompleteSpace K]
     (π : UnitaryRepresentation G K)
     (hπ : π.HasAlmostInvariantUnitVectors) :
@@ -283,9 +283,10 @@ representation boundary, so its quantitative transfer proof remains an
 explicit project obligation rather than being hidden in a data structure. -/
 theorem hasKazhdanPropertyT_of_relative_and_quotient
     (G : CountableDiscreteGroup.{u}) (N : Subgroup G)
-    (hN : N.Normal) (hrelative : HasRelativePropertyT G N)
-    (hquotient : HasKazhdanPropertyT (CountableDiscreteGroup.quotient G N hN)) :
-    HasKazhdanPropertyT G := by
+    (hN : N.Normal) (hrelative : HasRelativePropertyT.{u, v} G N)
+    (hquotient : HasKazhdanPropertyT.{u, v}
+      (CountableDiscreteGroup.quotient G N hN)) :
+    HasKazhdanPropertyT.{u, v} G := by
   classical
   let normalInstance : N.Normal := hN
   intro K _ _ _ π hπ
@@ -314,13 +315,13 @@ theorem hasKazhdanPropertyT_of_relative_and_quotient
 quotient identification. -/
 theorem hasKazhdanPropertyT_of_finiteExtension
     (data : FiniteExtensionData L G Q)
-    (hL : HasKazhdanPropertyT L)
-    (hQ : HasKazhdanPropertyT Q) :
-    HasKazhdanPropertyT G := by
-  let hrelative : HasRelativePropertyT G data.subgroup :=
+    (hL : HasKazhdanPropertyT.{u, v} L)
+    (hQ : HasKazhdanPropertyT.{u, v} Q) :
+    HasKazhdanPropertyT.{u, v} G := by
+  let hrelative : HasRelativePropertyT.{u, v} G data.subgroup :=
     relativePropertyT_of_subgroupEquiv L G data.subgroup
       data.subgroupEquiv hL
-  let hquotient : HasKazhdanPropertyT
+  let hquotient : HasKazhdanPropertyT.{u, v}
     (CountableDiscreteGroup.quotient G data.subgroup data.normal) :=
     (OpenAIPort.hasKazhdanPropertyT_iff_of_mulEquiv
       (CountableDiscreteGroup.quotient G data.subgroup data.normal) Q

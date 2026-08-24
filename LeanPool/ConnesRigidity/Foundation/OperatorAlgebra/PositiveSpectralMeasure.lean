@@ -41,7 +41,7 @@ section
 open Connes MeasureTheory
 open scoped ENNReal NNReal CompactlySupported
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A]
 variable {G H : CountableDiscreteGroup.{u}}
@@ -66,7 +66,7 @@ omit [MeasurableSpace (DiscreteCharacterSpace A)]
 /-- A positive spectral functional associated with a unitary representation. -/
 structure PositiveSpectralFunctional
     (E : SplitAbelianExtension A G H)
-    (V : Type u) [NormedAddCommGroup V]
+    (V : Type v) [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) where
   /--
@@ -87,7 +87,7 @@ structure PositiveSpectralFunctional
 namespace PositiveSpectralFunctional
 
 variable {E : SplitAbelianExtension A G H}
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type v} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 variable {π : UnitaryRepresentation G V}
 
@@ -185,7 +185,7 @@ The `kernelFixedSubmodule` construction used in the Connes rigidity formalizatio
 -/
 def kernelFixedSubmodule
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) : Submodule ℂ V :=
   ⨅ a : A,
@@ -198,7 +198,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem mem_kernelFixedSubmodule
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (x : V) :
     x ∈ kernelFixedSubmodule E π ↔
@@ -213,7 +213,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem kernelFixedSubmodule_isClosed
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) :
     IsClosed (kernelFixedSubmodule E π : Set V) := by
@@ -224,7 +224,7 @@ theorem kernelFixedSubmodule_isClosed
 
 instance kernelFixedSubmodule_completeSpace
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) :
     CompleteSpace (kernelFixedSubmodule E π) :=
@@ -235,7 +235,7 @@ The `trivialCharacterProjection` construction used in the Connes rigidity formal
 -/
 def trivialCharacterProjection
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) : V →L[ℂ] V :=
   (kernelFixedSubmodule E π).starProjection
@@ -245,7 +245,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem trivialCharacterProjection_kernel_fixed
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (x : V) (a : A) :
     (π (E.inclusion (Multiplicative.ofAdd a)) : V →L[ℂ] V)
@@ -259,7 +259,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem kernel_map_kernelFixedSubmodule
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (a : A) :
     (kernelFixedSubmodule E π).map
@@ -282,7 +282,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem trivialCharacterProjection_kernel_commutes
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (a : A) (x : V) :
     (π (E.inclusion (Multiplicative.ofAdd a)) : V →L[ℂ] V)
@@ -317,7 +317,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem trivialCharacterProjection_kernel_orbit
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (a : A) (x : V) :
     trivialCharacterProjection E π
@@ -331,7 +331,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem quotient_preserves_kernelFixedSubmodule
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V)
     (h : H) {x : V} (hx : x ∈ kernelFixedSubmodule E π) :
@@ -373,7 +373,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem quotient_map_kernelFixedSubmodule
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (h : H) :
     (kernelFixedSubmodule E π).map
@@ -401,7 +401,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem trivialCharacterProjection_quotient_commutes
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (h : H) (x : V) :
     (π (E.splitting h) : V →L[ℂ] V)
@@ -436,13 +436,13 @@ section
 open Connes MeasureTheory
 open scoped BigOperators CompactlySupported
 
-universe u v
+universe u v w
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A]
 variable {G H : CountableDiscreteGroup.{u}}
 variable [MeasurableSpace (DiscreteCharacterSpace A)]
   [BorelSpace (DiscreteCharacterSpace A)]
-variable {W : Type u} [NormedAddCommGroup W]
+variable {W : Type w} [NormedAddCommGroup W]
   [InnerProductSpace ℂ W] [CompleteSpace W]
 variable {E : SplitAbelianExtension A G H}
 variable {π : UnitaryRepresentation G W}
@@ -637,7 +637,7 @@ section
 open Connes MeasureTheory
 open scoped ENNReal NNReal CompactlySupported
 
-universe u
+universe u w
 
 theorem weighted_norm_sq_eq_sub_pairwise_dist_sq
     {ι V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
@@ -733,7 +733,7 @@ theorem spectralFiniteAverageTest_eq_sub_energy {ι : Type*}
 namespace PositiveSpectralFunctional
 
 variable {E : SplitAbelianExtension A G H}
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type w} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 variable {π : UnitaryRepresentation G V}
 
@@ -775,7 +775,7 @@ section
 
 open Connes MeasureTheory
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A]
 variable {G H : CountableDiscreteGroup.{u}}
@@ -787,7 +787,7 @@ The `HasKernelOrbitAffineApproximation` construction used in the Connes rigidity
 -/
 def HasKernelOrbitAffineApproximation
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) : Prop :=
   ∀ (x : V), trivialCharacterProjection E π x = 0 →
@@ -800,7 +800,7 @@ def HasKernelOrbitAffineApproximation
 namespace PositiveSpectralFunctional
 
 variable {E : SplitAbelianExtension A G H}
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type v} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 variable {π : UnitaryRepresentation G V}
 
@@ -868,22 +868,22 @@ end PositiveSpectralFunctional
 
 theorem spectral_criterion_of_positive_functional_and_orbitApproximation
     (E : SplitAbelianExtension A G H)
-    (hH : HasKazhdanPropertyT H)
+    (hH : HasKazhdanPropertyT.{u, v} H)
     (J : Finset A) {c : ℝ} (hc : 0 < c)
     (hdetection : HasFiniteSpectralDetection E J c)
-    (functional : ∀ (V : Type u)
+    (functional : ∀ (V : Type v)
       (_ : NormedAddCommGroup V)
       (_ : InnerProductSpace ℂ V)
       (_ : CompleteSpace V)
       (π : UnitaryRepresentation G V),
         PositiveSpectralFunctional E V π)
-    (approximation : ∀ (V : Type u)
+    (approximation : ∀ (V : Type v)
       (_ : NormedAddCommGroup V)
       (_ : InnerProductSpace ℂ V)
       (_ : CompleteSpace V)
       (π : UnitaryRepresentation G V),
         HasKernelOrbitAffineApproximation E π) :
-    HasKazhdanPropertyT G := by
+    HasKazhdanPropertyT.{u, v} G := by
   apply spectral_criterion E hH J hc hdetection
   intro V _ _ _ π
   exact (functional V inferInstance inferInstance inferInstance π)
@@ -898,11 +898,11 @@ section
 open Connes Metric WeakDual
 open scoped CompactlySupported
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A]
 variable {G H : CountableDiscreteGroup.{u}}
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type v} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 
 /--
@@ -1207,9 +1207,9 @@ section
 
 open scoped InnerProduct
 
-universe u
+universe u v
 
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type v} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 
 /--
@@ -1240,7 +1240,7 @@ section
 open Connes MeasureTheory
 open scoped CompactlySupported
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A]
 variable {H : CountableDiscreteGroup.{u}}
@@ -1345,7 +1345,7 @@ end DualRiesz
 
 section VectorState
 
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type v} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 
 theorem positiveVectorState_unitary_pullback
@@ -1369,11 +1369,11 @@ section
 
 open Connes WeakDual
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A]
 variable {G H : CountableDiscreteGroup.{u}}
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type v} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 
 /--
@@ -1815,7 +1815,7 @@ section JointCharacterFunctional
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A]
 variable {G H : CountableDiscreteGroup.{u}}
-variable {W : Type u} [NormedAddCommGroup W]
+variable {W : Type v} [NormedAddCommGroup W]
   [InnerProductSpace ℂ W] [CompleteSpace W]
 
 /--
@@ -1945,11 +1945,11 @@ section
 
 open Connes InnerProductSpace
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A]
 variable {G H : CountableDiscreteGroup.{u}}
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type v} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 
 /--
@@ -2099,12 +2099,12 @@ open Connes
 noncomputable
 section
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A]
 variable {G H : CountableDiscreteGroup.{u}}
 variable (E : SplitAbelianExtension A G H)
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type v} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 variable (π : UnitaryRepresentation G V)
 
@@ -2208,7 +2208,7 @@ variable {G H : CountableDiscreteGroup.{u}}
 
 theorem kernelOrbit_exists_finset_affineCombination_norm_lt
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (x : V)
     (hzero : (0 : V) ∈ closedConvexHull ℝ
@@ -2232,7 +2232,7 @@ section
 
 open Connes
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A]
 variable {G H : CountableDiscreteGroup.{u}}
@@ -2244,7 +2244,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem zero_mem_kernelOrbitClosedConvexHull_of_projection_eq_zero
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (x : V)
     (hx : trivialCharacterProjection E π x = 0) :
@@ -2262,7 +2262,7 @@ omit [TopologicalSpace A] [DiscreteTopology A]
   [BorelSpace (DiscreteCharacterSpace A)] in
 theorem kernelOrbitAffineApproximation
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) :
     HasKernelOrbitAffineApproximation E π := by
@@ -2277,16 +2277,16 @@ theorem kernelOrbitAffineApproximation
 
 theorem spectral_criterion_of_positive_functional_unconditional
     (E : SplitAbelianExtension A G H)
-    (hH : HasKazhdanPropertyT H)
+    (hH : HasKazhdanPropertyT.{u, v} H)
     (J : Finset A) {c : ℝ} (hc : 0 < c)
     (hdetection : HasFiniteSpectralDetection E J c)
-    (functional : ∀ (V : Type u)
+    (functional : ∀ (V : Type v)
       (_ : NormedAddCommGroup V)
       (_ : InnerProductSpace ℂ V)
       (_ : CompleteSpace V)
       (π : UnitaryRepresentation G V),
         PositiveSpectralFunctional E V π) :
-    HasKazhdanPropertyT G := by
+    HasKazhdanPropertyT.{u, v} G := by
   apply spectral_criterion_of_positive_functional_and_orbitApproximation
     E hH J hc hdetection functional
   exact fun V _ _ _ π ↦ kernelOrbitAffineApproximation E π
@@ -2298,13 +2298,13 @@ section
 
 open Connes MeasureTheory
 
-universe u
+universe u v
 
 variable {A : Type u} [AddCommGroup A] [TopologicalSpace A] [DiscreteTopology A]
 variable {G H : CountableDiscreteGroup.{u}}
 variable [MeasurableSpace (DiscreteCharacterSpace A)]
   [BorelSpace (DiscreteCharacterSpace A)]
-variable {V : Type u} [NormedAddCommGroup V]
+variable {V : Type v} [NormedAddCommGroup V]
   [InnerProductSpace ℂ V] [CompleteSpace V]
 
 /--
@@ -2333,10 +2333,10 @@ the dual of the abelian kernel implies property-(T) of the total group.
 -/
 theorem spectral_criterion_unconditional
     (E : SplitAbelianExtension A G H)
-    (hH : HasKazhdanPropertyT H)
+    (hH : HasKazhdanPropertyT.{u, v} H)
     (J : Finset A) {c : ℝ} (hc : 0 < c)
     (hdetection : HasFiniteSpectralDetection E J c) :
-    HasKazhdanPropertyT G := by
+    HasKazhdanPropertyT.{u, v} G := by
   apply spectral_criterion_of_positive_functional_unconditional
     E hH J hc hdetection
   exact fun W _ _ _ π => jointPositiveSpectralFunctional E π

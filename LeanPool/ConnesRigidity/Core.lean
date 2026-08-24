@@ -71,9 +71,10 @@ def HasAlmostInvariantUnitVectors (π : UnitaryRepresentation G H) : Prop :=
 
 end UnitaryRepresentation
 
-/-- Property-(T) predicate boundary. Paper: §4. -/
+/-- Property-(T), universe-polymorphic in the representation carrier so concrete
+`Type 0` groups are not restricted to `Type 0` Hilbert spaces. Paper: §4. -/
 def HasKazhdanPropertyT (G : CountableDiscreteGroup.{u}) : Prop :=
-  ∀ (H : Type u)
+  ∀ (H : Type v)
     (_ : NormedAddCommGroup H)
     (_ : InnerProductSpace ℂ H)
     (_ : CompleteSpace H)
@@ -81,10 +82,11 @@ def HasKazhdanPropertyT (G : CountableDiscreteGroup.{u}) : Prop :=
     π.HasAlmostInvariantUnitVectors →
       ∃ ξ : H, ξ ≠ 0 ∧ π.IsInvariant ξ
 
-/-- Relative property-(T) for a group and a subgroup. Paper: §4. -/
+/-- Relative property-(T), universe-polymorphic in the representation carrier so
+concrete `Type 0` groups are not restricted to `Type 0` Hilbert spaces. Paper: §4. -/
 def HasRelativePropertyT
     (G : CountableDiscreteGroup.{u}) (N : Subgroup G) : Prop :=
-  ∀ (H : Type u)
+  ∀ (H : Type v)
     (_ : NormedAddCommGroup H)
     (_ : InnerProductSpace ℂ H)
     (_ : CompleteSpace H)

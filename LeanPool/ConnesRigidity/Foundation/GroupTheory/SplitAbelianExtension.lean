@@ -19,7 +19,7 @@ The split abelian extension component of the Connes rigidity formalization.
 
 namespace Connes
 
-universe u
+universe u v
 
 /-- Split abelian extension data for the spectral property-(T) argument. Paper: §4. -/
 structure SplitAbelianExtension
@@ -80,7 +80,7 @@ theorem exists_kernel_mul_splitting
 /-- Kernel and quotient fixedness give full invariance. Paper: §4. -/
 theorem invariant_of_kernel_and_quotient
     (E : SplitAbelianExtension A G H)
-    {V : Type u} [NormedAddCommGroup V]
+    {V : Type v} [NormedAddCommGroup V]
     [InnerProductSpace ℂ V] [CompleteSpace V]
     (π : UnitaryRepresentation G V) (ξ : V)
     (hkernel : ∀ a : A,

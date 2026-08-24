@@ -28,6 +28,8 @@ open PaperPropertyT
 
 noncomputable section
 
+universe v
+
 /-- Borel structure on the raw compact character carrier used by §4. Paper: §4. -/
 noncomputable instance paperRawCharacterMeasurableSpace :
     MeasurableSpace (DiscreteCharacterSpace PaperKernel.D) :=
@@ -70,20 +72,20 @@ structure SpectralData
 
 /-- The intermediate group of an action is property-(T) from spectral data. Paper: §4. -/
 theorem lambda_propertyT_of_spectralData
-    (input : EJZKInput)
+    (input : EJZKInput.{v})
     (action : H →* MulAut (Multiplicative PaperKernel.D))
     (data : SpectralData action) :
-    HasKazhdanPropertyT (lambdaOf action) := by
+    HasKazhdanPropertyT.{0, v} (lambdaOf action) := by
   exact spectral_criterion_unconditional
     (PaperSplitExtensions.lambdaExtension action) (sl3_propertyT_from_EJZK input)
       data.J data.c_pos data.detection
 
 /-- The full semidirect group of an action is property-(T) from spectral data. Paper: §4. -/
 theorem gamma_propertyT_of_spectralData
-    (input : EJZKInput)
+    (input : EJZKInput.{v})
     (action : H →* MulAut (Multiplicative PaperKernel.D))
     (data : SpectralData action) :
-    HasKazhdanPropertyT (PaperKernel.paperGammaOf action) := by
+    HasKazhdanPropertyT.{0, v} (PaperKernel.paperGammaOf action) := by
   exact PropertyTTransfer.hasKazhdanPropertyT_of_finiteExtension
     (PaperFiniteExtensions.finiteExtension action)
     (lambda_propertyT_of_spectralData input action data)
@@ -91,11 +93,11 @@ theorem gamma_propertyT_of_spectralData
 
 /-- Both concrete Zhou groups have property-(T) from the two spectral inputs. Paper: §4. -/
 theorem completion_of_spectralData
-    (input : EJZKInput)
+    (input : EJZKInput.{v})
     (dataOne : SpectralData PaperKernel.paperThetaOneHom)
     (dataTwo : SpectralData PaperKernel.paperThetaTwoHom) :
-    HasKazhdanPropertyT PaperKernel.paperGammaOne ∧
-      HasKazhdanPropertyT PaperKernel.paperGammaTwo := by
+    HasKazhdanPropertyT.{0, v} PaperKernel.paperGammaOne ∧
+      HasKazhdanPropertyT.{0, v} PaperKernel.paperGammaTwo := by
   exact ⟨
     gamma_propertyT_of_spectralData input
       PaperKernel.paperThetaOneHom dataOne,

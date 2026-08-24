@@ -19,7 +19,7 @@ The finite index component of the Connes rigidity formalization.
 namespace Connes
 namespace OpenAIPort
 
-universe u
+universe u v
 
 open scoped ENNReal
 
@@ -93,7 +93,7 @@ theorem quotientOut_baseCoset_mem :
 section Induced
 
 variable [S.FiniteIndex]
-variable {H : Type u}
+variable {H : Type v}
 variable [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 /--
@@ -348,8 +348,8 @@ end FiniteIndex
 theorem hasKazhdanPropertyT_subgroup_of_finiteIndex
     (G : CountableDiscreteGroup.{u}) (S : Subgroup G)
     [S.FiniteIndex]
-    (hG : HasKazhdanPropertyT G) :
-    HasKazhdanPropertyT (CountableDiscreteGroup.subgroup G S) := by
+    (hG : HasKazhdanPropertyT.{u, max u v} G) :
+    HasKazhdanPropertyT.{u, v} (CountableDiscreteGroup.subgroup G S) := by
   intro H _ _ _ π hπ
   let quotientFintype : Fintype (G ⧸ S) := S.fintypeQuotientOfFiniteIndex
   obtain ⟨η, hη, hinv⟩ :=
