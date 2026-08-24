@@ -212,7 +212,7 @@ lemma cross_distinct_identity (s : Fin 3) (f h : R) :
 
 /- Distinct-coordinate cross terms with bounded coefficients lie in a finite
 chart span. Paper: §4. -/
-lemma cross_distinct_mem (N : ℕ) (_hN : 0 < N) (s : Fin 3)
+lemma cross_distinct_mem (N : ℕ) (s : Fin 3)
     (f h : R) (hf : f ∈ polynomialChart N) (hh : h ∈ polynomialChart N) :
     cross (f • basisVector (next s)) (h • basisVector (nextNext s)) ∈
       chartSubmodule N := by
@@ -318,22 +318,22 @@ lemma cross_comm (a b : A) : cross a b = cross b a := by
   abel
 
 /-- Every bounded cross term on distinct standard coordinates is chart-generated. Paper: §4. -/
-lemma cross_scalar_basis_ne_mem (N : ℕ) (hN : 0 < N)
+lemma cross_scalar_basis_ne_mem (N : ℕ)
     (i j : Fin 3) (hij : i ≠ j) (f h : R)
     (hf : f ∈ polynomialChart N) (hh : h ∈ polynomialChart N) :
     cross (f • basisVector i) (h • basisVector j) ∈ chartSubmodule N := by
   fin_cases i <;> fin_cases j
   · exact False.elim (hij rfl)
-  · simpa [next, nextNext] using cross_distinct_mem N hN 2 f h hf hh
+  · simpa [next, nextNext] using cross_distinct_mem N 2 f h hf hh
   · rw [cross_comm]
-    simpa [next, nextNext] using cross_distinct_mem N hN 1 h f hh hf
+    simpa [next, nextNext] using cross_distinct_mem N 1 h f hh hf
   · rw [cross_comm]
-    simpa [next, nextNext] using cross_distinct_mem N hN 2 h f hh hf
+    simpa [next, nextNext] using cross_distinct_mem N 2 h f hh hf
   · exact False.elim (hij rfl)
-  · simpa [next, nextNext] using cross_distinct_mem N hN 0 f h hf hh
-  · simpa [next, nextNext] using cross_distinct_mem N hN 1 f h hf hh
+  · simpa [next, nextNext] using cross_distinct_mem N 0 f h hf hh
+  · simpa [next, nextNext] using cross_distinct_mem N 1 f h hf hh
   · rw [cross_comm]
-    simpa [next, nextNext] using cross_distinct_mem N hN 0 h f hh hf
+    simpa [next, nextNext] using cross_distinct_mem N 0 h f hh hf
   · exact False.elim (hij rfl)
 
 /-- A vector with bounded coordinates has its diagonal in one finite chart span. Paper: §4. -/
@@ -346,11 +346,11 @@ lemma diagonal_mem_chart_of_coeff (N : ℕ) (hN : 0 < N) (a : A)
   have hdiag0 := diagonal_smul_basis_any_mem N hN 0 (a 0) h0
   have hdiag1 := diagonal_smul_basis_any_mem N hN 1 (a 1) h1
   have hdiag2 := diagonal_smul_basis_any_mem N hN 2 (a 2) h2
-  have hcross01 := cross_scalar_basis_ne_mem N hN 0 1 (by decide)
+  have hcross01 := cross_scalar_basis_ne_mem N 0 1 (by decide)
     (a 0) (a 1) h0 h1
-  have hcross02 := cross_scalar_basis_ne_mem N hN 0 2 (by decide)
+  have hcross02 := cross_scalar_basis_ne_mem N 0 2 (by decide)
     (a 0) (a 2) h0 h2
-  have hcross12 := cross_scalar_basis_ne_mem N hN 1 2 (by decide)
+  have hcross12 := cross_scalar_basis_ne_mem N 1 2 (by decide)
     (a 1) (a 2) h1 h2
   exact (chartSubmodule N).add_mem
     ((chartSubmodule N).add_mem
