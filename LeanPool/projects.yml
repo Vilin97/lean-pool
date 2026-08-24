@@ -6006,19 +6006,21 @@ projects:
   - slug: erdos81-paper-iii-sum-zero-triangles
     title: Near-perfect triangle packings from sum-zero triples
     summary: >-
-      Constructs pairwise edge-disjoint triangles in any finite complete graph so that every
-      vertex is incident to at most three uncovered edges, using a cyclic-group sum-zero triple
-      system.
+      Records a reusable formalization byproduct accompanying Paper III: pairwise edge-disjoint
+      triangles in any finite complete graph such that every vertex is incident to at most three
+      uncovered edges, using a cyclic-group sum-zero triple system.
     branch: extremal and design combinatorics
     entry_module: LeanPool.Erdos81PaperIIIContrib
     authors:
       - Juan Pablo Traverso Gianini
       - Aristotle
     source:
-      title: Clique partitions with linear error in split graphs via structured triangle packing
+      title: >-
+        SumZeroTriangles.lean, a reusable formalization byproduct accompanying Linear-Error Clique
+        Partitions of Split Graphs via Structured Triangle Packing
       authors:
-        - Juan Pablo Traverso Gianini
-      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/main/preprints/PAPER_III
+        - Aristotle
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/main/preprints/PAPER_III/05_formalization/lean_v1.4_freeze/Contrib/SumZeroTriangles.lean
       github_repo: jtraverso/erdos-81-chordal-clique-partitions
     license: Apache-2.0
     status: verified

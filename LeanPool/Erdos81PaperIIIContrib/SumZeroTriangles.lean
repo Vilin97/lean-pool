@@ -22,7 +22,7 @@ import Mathlib.Tactic.Ring
 This file gives an explicit, constructive family of pairwise edge-disjoint triangles inside an
 arbitrary finite vertex set `U` which leaves at most `3` uncovered edges at each vertex.
 
-The construction is the classical *sum-zero* triple system.  Label the `n = |U|` vertices
+The construction is a *sum-zero* triple system. Label the `n = |U|` vertices
 bijectively by the elements of the cyclic group `ZMod n` and take as triangles all triples of
 distinct vertices whose labels sum to `0`.  Two such triples sharing an edge share two labels, and
 the third label is then determined, so the triples are pairwise edge-disjoint.  A pair of distinct
