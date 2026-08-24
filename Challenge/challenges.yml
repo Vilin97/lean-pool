@@ -165,16 +165,47 @@ challenges:
       at most 2k"), which their Theorem 2.7 on printed p. 548 answers only
       with the weaker bound 3k - 1: for a finite set in strictly convex
       position, the graph joining pairs at one of the three largest distances
-      has minimum degree at most six. The three classes are
-      required to be distinct and realized, so configurations with fewer than
-      three interpoint distances do not satisfy the hypotheses. The companion
-      pooled project in Vilin97/lean-pool#343, from branch
-      lyfar/erdos132-convex-k3-clean, formalizes the full intended route,
-      including the coordinated-majorant selection step used but not stated
-      in the 1989 sketch. A solution is expected to land as a thin Solution
-      bridge from that project once it merges. The 10000-line estimate starts from the
-      existing roughly 5700-line conditional development and allows for the
-      missing step, whose eventual size is not yet known.
+      has minimum degree at most six. The three classes are required to be
+      distinct and realized, so configurations with fewer than three
+      interpoint distances do not satisfy the hypotheses.
+      Close prior art is credited and distinguished: Morić and Pritchard,
+      "Counting large distances in convex polygons" (arXiv:1103.0412), prove
+      their Theorem 1.4 — a k <= 4 statement, cited here whole rather than
+      row-by-row — that for large enough n the count mi of occurrences of the
+      i-th largest distance in a convex n-gon satisfies m1 + m2 + m3 <= 3n
+      and m1 + m2 + m3 + m4 <= 4n, m3 <= (3/2)n and m4 <= (13/8)n,
+      m1 + m3 <= 2n and m2 + m3 <= (9/4)n. Its first row already implies
+      this challenge's degree-six conclusion wherever it applies: the
+      top-three-distance edges are exactly the pairs counted by
+      m1 + m2 + m3, so the handshake lemma gives total degree
+      2(m1 + m2 + m3) <= 6n, i.e. some vertex of degree at most six. Both
+      that consequence and the 3n facet itself are NOT new. Their largeness
+      condition is ineffective as stated: Theorem 1.4 is proved only for
+      n > C(k, 2(2k+L))/(alpha - 1), where C is the constant of their
+      Lemma 1.5, known solely as C(k,l) = O(k^2 (k+l)^2) with no numeric
+      implied constant anywhere in the paper; the authors write verbatim
+      "We do not think either lemma is tight" and leave open in their
+      Section 7 "can the functions C, C' in Lemma 1.5 and Lemma 1.6 be
+      improved?", so no reader can extract an N making Theorem 1.4 hold for
+      all n >= N. With no largeness hypothesis at all, the same paper's
+      Theorem 1.3 bounds the number of top-k distances by (2k - 1)n for
+      every n (at k = 3: 5n), superseding the 1989 paper's general 3kn bound
+      while still falling short of the degree-six conclusion. This challenge
+      therefore asks for exactly what Morić-Pritchard do not supply: the
+      all-n / finite-small-n completion of their large-n theorem, NOT an
+      entirely untouched k = 3 case. It is also strictly weaker than the
+      1989 Conjecture 1.2 (top-k distances at most kn): at k = 3 that
+      conjecture asserts m1 + m2 + m3 <= 3n for every n, stays open as an
+      all-n statement (Morić-Pritchard settle it only for large n), and
+      implies this challenge's conclusion by handshake but not conversely.
+      The companion pooled project in Vilin97/lean-pool#343, from branch
+      lyfar/erdos132-convex-k3-clean, now closes the gap this entry leaves
+      open: it proves precisely this statement for every finite n,
+      machine-checked in Lean, in 15,329 lines across 21 files, including
+      the coordinated-majorant selection step used but not stated in the
+      1989 sketch. A solution is expected to land as a thin Solution bridge
+      from that project once it merges, so the estimate below reflects the
+      size of that completed development rather than a guess.
     branch: discrete geometry
     entry_module: Challenge.Erdos132ConvexK3Degree
     proposers:
@@ -190,7 +221,7 @@ challenges:
     license: Apache-2.0
     provenance: AI
     status: open
-    estimated_lines: 10000
+    estimated_lines: 15329
     statements:
       - declaration: Challenge.Erdos132ConvexK3Degree.degree_le_six
         informal: >-

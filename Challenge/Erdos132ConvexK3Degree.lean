@@ -16,7 +16,7 @@ Proposed by: Egor Lyfar
 Open declarations: `Challenge.Erdos132ConvexK3Degree.degree_le_six`
 Tags: combinatorial-geometry, distance-graphs, convex-position, erdos-problems
 MSC: 52C10, 05C12
-Estimated size: ~10000 lines of Lean
+Estimated size: ~15329 lines of Lean
 
 Informal statement:
 * `Challenge.Erdos132ConvexK3Degree.degree_le_six` — For every injectively labelled finite set of
