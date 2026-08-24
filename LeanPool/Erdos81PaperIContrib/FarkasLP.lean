@@ -19,12 +19,17 @@ import LeanPool.Erdos81PaperIContrib.FgConeClosed
 Built on `fg_cone_isClosed` (Weyl, in `FgConeClosed.lean`) and Mathlib's convex-cone
 hyperplane separation:
 * `LeanPool.Erdos81PaperIContrib.farkas_ge` — finite Farkas lemma (inequality form).
-* `LeanPool.Erdos81PaperIContrib.covering_packing_duality` — finite LP strong duality
-  (covering/packing form): the maximum packing value equals the covering optimum and is
-  attained.
+* `LeanPool.Erdos81PaperIContrib.covering_packing_duality` — finite LP duality
+  (covering/packing form): a maximum packing is attained and its value equals the covering
+  infimum.
 
 These stay over `EuclideanSpace ℝ ι` (a finite-dimensional real inner-product space),
 the natural setting for the `ProperCone`/inner-dual separation used here.
+
+The Farkas and LP conclusions overlap the pooled Duality project's more general
+`inequalityFarkas_neg` and `StandardLP.strongDuality` results. This module gives a self-contained
+specialization built directly from the finitely generated cone closedness theorem in
+`FgConeClosed.lean`.
 
 -/
 
@@ -119,9 +124,10 @@ theorem farkas_ge [Fintype ι] [Fintype κ]
       rw [← Finset.sum_neg_distrib]; apply Finset.sum_congr rfl; intro i _; ring
     rw [h2]; linarith
 
-/-- **Finite LP strong duality (covering/packing).** For a nonnegative incidence matrix `A`
-with nonnegative capacities `r`, in which every column has a positive entry, there is a
-maximum packing `w` whose value equals the covering optimum. -/
+/-- **Finite LP duality (covering/packing).** For a nonnegative incidence matrix `A` with
+nonnegative capacities `r`, in which every column has a positive entry, there is a maximum
+packing `w` whose unit-objective value equals the infimum cost of nonnegative coverings with
+unit demand. This conclusion does not assert that the covering infimum is attained. -/
 theorem covering_packing_duality [Fintype ι] [Fintype κ]
     (A : ι → κ → ℝ) (r : ι → ℝ)
     (hA : ∀ e t, 0 ≤ A e t) (hr : ∀ e, 0 ≤ r e)

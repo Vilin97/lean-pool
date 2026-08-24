@@ -85,28 +85,30 @@ lemma simplicial_cone_isClosed
       intro k _
       simp [k.2]
 
-/-- **Conic Carathéodory.** Any nonnegative combination of a finite family equals a
-nonnegative combination over a linearly independent subfamily with the same value. -/
-lemma conic_caratheodory [Fintype κ]
-    (v : κ → E) (c : κ → ℝ) (hc : ∀ k, 0 ≤ c k) :
-    ∃ (d : κ → ℝ) (s : Finset κ), (∀ k, 0 ≤ d k) ∧ (∀ k ∉ s, d k = 0) ∧
-      LinearIndepOn ℝ v s ∧ (∑ k ∈ s, d k • v k) = ∑ k, c k • v k := by
+/-- **Conic Carathéodory.** Over any linearly ordered field, a nonnegative combination of a
+finite family equals a nonnegative combination over a linearly independent subfamily with the
+same value. This algebraic reduction requires no topology on the ambient module. -/
+lemma conic_caratheodory {R M : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R]
+    [AddCommGroup M] [Module R M] [Fintype κ]
+    (v : κ → M) (c : κ → R) (hc : ∀ k, 0 ≤ c k) :
+    ∃ (d : κ → R) (s : Finset κ), (∀ k, 0 ≤ d k) ∧ (∀ k ∉ s, d k = 0) ∧
+      LinearIndepOn R v s ∧ (∑ k ∈ s, d k • v k) = ∑ k, c k • v k := by
   classical
   obtain ⟨s, hs⟩ : ∃ s : Finset κ,
-      (∃ d : κ → ℝ, (∀ k, 0 ≤ d k) ∧ (∀ k ∉ s, d k = 0) ∧
+      (∃ d : κ → R, (∀ k, 0 ≤ d k) ∧ (∀ k ∉ s, d k = 0) ∧
         (∑ k ∈ s, d k • v k = ∑ k, c k • v k)) ∧
-      ∀ t : Finset κ, (∃ d : κ → ℝ, (∀ k, 0 ≤ d k) ∧ (∀ k ∉ t, d k = 0) ∧
+      ∀ t : Finset κ, (∃ d : κ → R, (∀ k, 0 ≤ d k) ∧ (∀ k ∉ t, d k = 0) ∧
         (∑ k ∈ t, d k • v k = ∑ k, c k • v k)) → s.card ≤ t.card := by
     apply_rules [Set.exists_min_image]
     · exact Set.toFinite _
     · exact ⟨Finset.univ, ⟨c, hc, fun k hk => False.elim <| hk <| Finset.mem_univ _, by
         simp⟩⟩
-  by_cases h_lin_dep : ¬ LinearIndepOn ℝ v s
+  by_cases h_lin_dep : ¬ LinearIndepOn R v s
   · obtain ⟨d, hd_nonneg, hd_zero, hd_sum⟩ := hs.left
-    obtain ⟨a, ha_nonzero, ha_support, ha_sum⟩ : ∃ a : κ → ℝ,
+    obtain ⟨a, ha_nonzero, ha_support, ha_sum⟩ : ∃ a : κ → R,
         (∃ k ∈ s, a k ≠ 0) ∧ (∀ k ∉ s, a k = 0) ∧
         (∑ k ∈ s, a k • v k = 0) ∧ (∃ k ∈ s, a k > 0) := by
-      obtain ⟨a, ha_nonzero, ha_sum⟩ : ∃ a : κ → ℝ,
+      obtain ⟨a, ha_nonzero, ha_sum⟩ : ∃ a : κ → R,
           (∃ k ∈ s, a k ≠ 0) ∧ (∀ k ∉ s, a k = 0) ∧
           (∑ k ∈ s, a k • v k = 0) := by
         rw [linearIndepOn_iff'] at h_lin_dep
@@ -134,7 +136,7 @@ lemma conic_caratheodory [Fintype κ]
       · exact ⟨a, ha_nonzero, ha_sum.1, ha_sum.2, by
           push Not at h_neg
           exact h_neg⟩
-    obtain ⟨θ, hθ_pos, hθ_min⟩ : ∃ θ > 0,
+    obtain ⟨θ, hθ_min⟩ : ∃ θ,
         (∀ k ∈ s, d k - θ * a k ≥ 0) ∧ (∃ k ∈ s, d k - θ * a k = 0) := by
       obtain ⟨k₀, hk₀⟩ : ∃ k₀ ∈ s, a k₀ > 0 ∧
           ∀ k ∈ s, a k > 0 → d k / a k ≥ d k₀ / a k₀ := by
@@ -145,26 +147,7 @@ lemma conic_caratheodory [Fintype κ]
         obtain ⟨hk₀s, hk₀pos⟩ := Finset.mem_filter.mp hk₀f
         exact ⟨k₀, hk₀s, hk₀pos, fun k hk hk' =>
           hk₀min k (Finset.mem_filter.mpr ⟨hk, hk'⟩)⟩
-      refine ⟨d k₀ / a k₀,
-        div_pos (lt_of_le_of_ne (hd_nonneg k₀) (Ne.symm ?_)) hk₀.2.1, ?_,
-        k₀, hk₀.1, ?_⟩
-      · -- Otherwise removing `k₀` contradicts minimality of the support.
-        intro h
-        have hk₀v : d k₀ • v k₀ = (0 : E) := by rw [h, zero_smul]
-        have hzero : ∀ k ∉ s.erase k₀, d k = 0 := by
-          intro k hk
-          rw [Finset.mem_erase, not_and_or, not_not] at hk
-          rcases hk with hk | hk
-          · rw [hk]
-            exact h
-          · exact hd_zero k hk
-        have hval : ∑ k ∈ s.erase k₀, d k • v k = ∑ k, c k • v k := by
-          rw [Finset.sum_erase s hk₀v]
-          exact hd_sum
-        have hcard := hs.2 (s.erase k₀) ⟨d, hd_nonneg, hzero, hval⟩
-        rw [Finset.card_erase_of_mem hk₀.1] at hcard
-        have hpos : 0 < s.card := Finset.card_pos.mpr ⟨k₀, hk₀.1⟩
-        omega
+      refine ⟨d k₀ / a k₀, ?_, k₀, hk₀.1, ?_⟩
       · intro k hk
         by_cases hk' : a k > 0
         · have hle : d k₀ / a k₀ * a k ≤ d k :=
@@ -273,6 +256,12 @@ theorem hull_isClosed_of_finite {s : Set E} (hs : s.Finite) :
   let _ : Fintype s := hs.fintype
   rw [hull_eq_engine]
   exact fg_cone_isClosed (fun k : s => (k : E))
+
+/-- A finitely generated pointed cone in a real normed space is closed. -/
+theorem PointedCone.FG.isClosed {C : PointedCone ℝ E} (hC : C.FG) :
+    IsClosed (C : Set E) := by
+  obtain ⟨s, rfl⟩ := hC
+  exact hull_isClosed_of_finite s.finite_toSet
 
 /-- **A simplicial pointed cone is closed** (Mathlib-API form). -/
 theorem isSimplicial_isClosed {C : PointedCone ℝ E} (hC : C.IsSimplicial) :
