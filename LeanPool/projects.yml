@@ -6004,10 +6004,11 @@ projects:
       - "57K20"
       - "57N05"
   - slug: erdos81-paper-ii-chordal-heredity
-    title: Chordal graphs and induced-subgraph heredity
+    title: "Chordal graphs: minimal separators and Dirac's theorem"
     summary: >-
-      Defines chordal graphs through the cycle-and-chord characterization and proves that
-      chordality is inherited along induced graph embeddings and by induced subgraphs.
+      A reusable formalization byproduct accompanying Paper II: defines chordal graphs through
+      the cycle-and-chord characterization, proves induced-subgraph heredity and the clique
+      property for minimal separators, and formalizes both parts of Dirac's theorem.
     branch: graph theory
     entry_module: LeanPool.Erdos81PaperIIContrib
     authors:
@@ -6016,13 +6017,16 @@ projects:
       title: Complete-Split Extremizers for a Fractional Triangle-Cover Functional on Chordal Graphs
       authors:
         - Juan Pablo Traverso Gianini
-      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/main/preprints/PAPER_II
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/main/preprints/PAPER_II/05_formalization/lean_v1.2_freeze/Contrib/Submission/Chordal.lean
       github_repo: jtraverso/erdos-81-chordal-clique-partitions
     license: Apache-2.0
     status: verified
     provenance: AI
     main_declarations:
       - SimpleGraph.IsChordal.comap
+      - SimpleGraph.IsChordal.minimalSeparator_isClique
+      - SimpleGraph.IsChordal.exists_isSimplicial
+      - SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial
     main_results:
       - declaration: SimpleGraph.IsChordal.comap
         informal: >-
@@ -6030,9 +6034,21 @@ projects:
       - declaration: SimpleGraph.IsChordal.induce
         informal: >-
           Every induced subgraph of a chordal graph is chordal.
+      - declaration: SimpleGraph.IsChordal.minimalSeparator_isClique
+        informal: >-
+          Every minimal vertex separator in a chordal graph is a clique.
+      - declaration: SimpleGraph.IsChordal.exists_isSimplicial
+        informal: >-
+          Every nonempty finite chordal graph has a simplicial vertex.
+      - declaration: SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial
+        informal: >-
+          Every connected non-complete finite chordal graph has two non-adjacent simplicial
+          vertices.
     tags:
       - graph-theory
       - chordal-graphs
       - induced-subgraphs
+      - minimal-separators
+      - simplicial-vertices
     msc:
       - "05C75"
