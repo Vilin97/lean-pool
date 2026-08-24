@@ -928,6 +928,9 @@ import LeanPool.Erdos403
 import LeanPool.Erdos403.Basic
 import LeanPool.Erdos403.FactBase
 import LeanPool.Erdos403.Sharp
+import LeanPool.Erdos81PaperIContrib
+import LeanPool.Erdos81PaperIContrib.FarkasLP
+import LeanPool.Erdos81PaperIContrib.FgConeClosed
 import LeanPool.Erdos81PaperIIIContrib
 import LeanPool.Erdos81PaperIIIContrib.SumZeroTriangles
 import LeanPool.Erdos865
