@@ -6023,9 +6023,6 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - SimpleGraph.IsChordal.comap
-      - SimpleGraph.IsChordal.minimalSeparator_isClique
-      - SimpleGraph.IsChordal.exists_isSimplicial
       - SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial
     main_results:
       - declaration: SimpleGraph.IsChordal.comap
