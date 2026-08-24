@@ -297,7 +297,7 @@ theorem productShear_first (p : Additive PChar × Additive QChar) :
     (fun z : Additive PChar => (Additive.toMul z) x) hfirst
   change (Additive.toMul (productToCharacter (p, q))) (pInl x) =
     (Additive.toMul p) x at hvalue
-  convert hvalue using 1 ; rfl
+  convert hvalue using 1; rfl
 
 theorem productCoordinate_first_eq (p : Additive PChar) (q : Additive QChar) :
     (PaperDualHaar.characterCoordinatesEquiv

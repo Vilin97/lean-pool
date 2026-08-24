@@ -106,7 +106,7 @@ theorem linearCharacter_characterLinear
       ((BinaryPontryaginDual.characterLinear (M := PaperKernel.D) χ)
         (Multiplicative.toAdd x)) = χ x
   convert (BinaryPontryaginDual.characterLinear_circle (M := PaperKernel.D) χ
-    (Multiplicative.toAdd x)) using 1 ; rfl
+    (Multiplicative.toAdd x)) using 1; rfl
 
 /-- Character extraction is additive in the binary character group. Paper: §3. -/
 def characterToLinear :
