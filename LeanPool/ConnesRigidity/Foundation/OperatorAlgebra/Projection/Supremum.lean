@@ -12,7 +12,7 @@ witness, replaced the local multiplication relation by inherited operator
 order, and separated the abstract specification from its concrete proof.
 Paper: §3. See the upstream PORT_MAP.md.
 -/
-import Mathlib.Analysis.CStarAlgebra.Projection
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Order
 import Mathlib.Analysis.InnerProductSpace.StarOrder
 import LeanPool.ConnesRigidity.Core
 
@@ -39,8 +39,12 @@ theorem StarSubalgebra.le_iff_mul_eq_left_of_isStarProjection
     p ≤ q ↔ p * q = p := by
   have hp' : IsStarProjection (p : E →L[ℂ] E) := hp.map A.subtype
   have hq' : IsStarProjection (q : E →L[ℂ] E) := hq.map A.subtype
-  rw [← Subtype.coe_le_coe, hp'.le_iff_mul_eq_left hq']
-  exact ⟨fun h ↦ Subtype.ext h, fun h ↦ congrArg Subtype.val h⟩
+  constructor
+  · intro h
+    apply Subtype.ext
+    exact (hq'.mul_right_and_mul_left_of_nonneg_of_le hp'.nonneg h).1
+  · intro h
+    exact hp'.le_of_mul_eq_left hq' (congrArg Subtype.val h)
 
 /-- A star-algebra equivalence preserves operator order between subalgebra projections. -/
 @[simp]
