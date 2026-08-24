@@ -5917,3 +5917,40 @@ projects:
       - "14H40"
       - "30F30"
       - "32G20"
+  - slug: classification-of-surfaces
+    title: Classification of Compact Surfaces
+    summary: >-
+      Formalizes the classification of compact connected Hausdorff topological
+      2-manifolds with boundary as the sphere, an orientable normal-form
+      quotient, or a non-orientable normal-form quotient, using triangulation
+      and finite cyclic polygonal presentations.
+    branch: geometric and low-dimensional topology
+    entry_module: LeanPool.ClassificationOfSurfaces
+    authors:
+      - Ryan McCorvie
+      - Jack McCarthy
+      - SF Lean Meetup contributors
+    source:
+      title: Classification of Compact Surfaces
+      url: "https://github.com/mccorvie/classification-of-surfaces/tree/master/ClassificationOfSurfaces"
+      github_repo: mccorvie/classification-of-surfaces
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanEval.Topology.ClassificationOfSurfaces.classification_of_surfaces
+    main_results:
+      - declaration: LeanEval.Topology.ClassificationOfSurfaces.classification_of_surfaces
+        informal: >-
+          Every compact connected Hausdorff topological 2-manifold with
+          boundary is homeomorphic to the sphere, an orientable normal-form
+          quotient, or a non-orientable normal-form quotient.
+    tags:
+      - geometric-topology
+      - low-dimensional-topology
+      - surfaces
+      - manifolds
+      - triangulation
+    msc:
+      - "57K20"
+      - "57N05"
