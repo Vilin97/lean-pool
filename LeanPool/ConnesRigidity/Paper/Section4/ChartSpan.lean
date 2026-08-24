@@ -98,30 +98,6 @@ lemma diagonal_single_next_identity (s : Fin 3) (w : A) :
   apply Subtype.ext
   simp only [PaperKernel.diagonal, Submodule.coe_add,
     TensorProduct.add_tmul, TensorProduct.tmul_add]
-  have h2K (x : A) : (2 : k) • x = 0 := by
-    rw [show (2 : k) = 0 by decide, zero_smul]
-  have h3K (x : A) : (3 : k) • x = x := by
-    rw [show (3 : k) = 1 by decide, one_smul]
-  have h4K (x : A) : (4 : k) • x = 0 := by
-    rw [show (4 : k) = 0 by decide, zero_smul]
-  have h2A (x : A) : 2 • x = 0 :=
-    ZModModule.char_nsmul_eq_zero 2 x
-  have h3A (x : A) : 3 • x = x := by
-    change (Nat.succ 2) • x = x
-    rw [succ_nsmul, h2A, zero_add]
-  have h4A (x : A) : 4 • x = 0 := by
-    change (Nat.succ 3) • x = 0
-    rw [succ_nsmul, h3A]
-    exact ZModModule.add_self x
-  have h2 (x : PaperKernel.TensorAA) : 2 • x = 0 :=
-    ZModModule.char_nsmul_eq_zero 2 x
-  have h3 (x : PaperKernel.TensorAA) : 3 • x = x := by
-    change (Nat.succ 2) • x = x
-    rw [succ_nsmul, h2, zero_add]
-  have h4 (x : PaperKernel.TensorAA) : 4 • x = 0 := by
-    change (Nat.succ 3) • x = 0
-    rw [succ_nsmul, h3]
-    exact ZModModule.add_self x
   have h2Z (x : PaperKernel.TensorAA) : (2 : ℤ) • x = 0 := by
     rw [two_zsmul]
     exact ZModModule.add_self x
@@ -194,12 +170,6 @@ lemma cross_distinct_identity (s : Fin 3) (f h : R) :
   apply Subtype.ext
   simp only [cross, PaperKernel.diagonal, Submodule.coe_add,
     TensorProduct.add_tmul, TensorProduct.tmul_add]
-  have h2AZ (x : A) : (2 : ℤ) • x = 0 := by
-    rw [two_zsmul]
-    exact ZModModule.add_self x
-  have h4AZ (x : A) : (4 : ℤ) • x = 0 := by
-    rw [show (4 : ℤ) = 2 + 2 by norm_num, add_zsmul]
-    simp [h2AZ]
   have h2CZ (x : PaperKernel.TensorAA) : (2 : ℤ) • x = 0 := by
     rw [two_zsmul]
     exact ZModModule.add_self x
@@ -247,18 +217,9 @@ lemma cross_same_identity (i : Fin 3) (f h : R) :
   apply Subtype.ext
   simp only [cross, PaperKernel.diagonal, Submodule.coe_add,
     add_smul, TensorProduct.add_tmul, TensorProduct.tmul_add]
-  have h2AZ (x : A) : (2 : ℤ) • x = 0 := by
-    rw [two_zsmul]
-    exact ZModModule.add_self x
-  have h4AZ (x : A) : (4 : ℤ) • x = 0 := by
-    rw [show (4 : ℤ) = 2 + 2 by norm_num, add_zsmul]
-    simp [h2AZ]
   have h2CZ (x : PaperKernel.TensorAA) : (2 : ℤ) • x = 0 := by
     rw [two_zsmul]
     exact ZModModule.add_self x
-  have h4CZ (x : PaperKernel.TensorAA) : (4 : ℤ) • x = 0 := by
-    rw [show (4 : ℤ) = 2 + 2 by norm_num, add_zsmul]
-    simp [h2CZ]
   abel_nf
   simp only [h2CZ]
   simp only [add_zero]
