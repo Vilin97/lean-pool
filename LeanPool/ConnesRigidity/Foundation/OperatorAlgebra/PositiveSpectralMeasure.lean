@@ -35,7 +35,8 @@ The positive spectral measure component of the Connes rigidity formalization.
 
 namespace Connes
 
-noncomputable section
+noncomputable
+section
 
 open Connes MeasureTheory
 open scoped ENNReal NNReal CompactlySupported
@@ -430,7 +431,8 @@ theorem trivialCharacterProjection_quotient_commutes
 
 end
 
-noncomputable section
+noncomputable
+section
 open Connes MeasureTheory
 open scoped BigOperators CompactlySupported
 
@@ -629,7 +631,8 @@ end PositiveSpectralFunctional
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes MeasureTheory
 open scoped ENNReal NNReal CompactlySupported
@@ -767,7 +770,8 @@ end PositiveSpectralFunctional
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes MeasureTheory
 
@@ -888,7 +892,8 @@ theorem spectral_criterion_of_positive_functional_and_orbitApproximation
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes Metric WeakDual
 open scoped CompactlySupported
@@ -1151,7 +1156,8 @@ theorem jointFunctionalCalculus_characterEvaluation
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open WeakDual
 
@@ -1196,7 +1202,8 @@ theorem inverseGelfand_naturality
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open scoped InnerProduct
 
@@ -1227,7 +1234,8 @@ omit [CompleteSpace V] in
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes MeasureTheory
 open scoped CompactlySupported
@@ -1356,7 +1364,8 @@ end VectorState
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes WeakDual
 
@@ -1599,7 +1608,8 @@ theorem jointFunctionalCalculus_quotient_covariance
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes MeasureTheory
 open scoped CompactlySupported
@@ -1930,7 +1940,8 @@ end JointCharacterFunctional
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes InnerProductSpace
 
@@ -2085,7 +2096,8 @@ section
 
 open Connes
 
-noncomputable section
+noncomputable
+section
 
 universe u
 
@@ -2152,7 +2164,8 @@ end
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes
 
@@ -2214,7 +2227,8 @@ theorem kernelOrbit_exists_finset_affineCombination_norm_lt
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes
 
@@ -2279,7 +2293,8 @@ theorem spectral_criterion_of_positive_functional_unconditional
 
 end
 
-noncomputable section
+noncomputable
+section
 
 open Connes MeasureTheory
 
