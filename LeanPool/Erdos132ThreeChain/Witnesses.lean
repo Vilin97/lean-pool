@@ -46,9 +46,9 @@ theorem centroid_chain_config :
 
 
 /-- The rhombus is a four-point set whose squared diameter is `3` and whose non-diameter squared
-distances form the one-term geometric 3-chain `{1}`, so it has `h = 1`.  It therefore cannot
-witness `threeChain_support_empty`, whose wrapper assumes `2 ≤ h`.  Instead, it witnesses the
-`h = 1` diameter and support data targeted by `nonDiameterSqDists_ne_chain`, while its four-point
+distances form the one-term geometric 3-chain `{1}`, so it has `h = 1`.  The headline wrapper
+assumes `2 ≤ h`, so the rhombus is not a witness for it.  What it witnesses is the `h = 1`
+diameter and support data targeted by `nonDiameterSqDists_ne_chain`, while its four-point
 cardinality deliberately fails that theorem's separate `n ≥ 13` hypothesis. -/
 theorem rhombus_nonDiameter_support :
     ∃ X : Finset Point, X.card = 4 ∧ IsSqDiameter X 3 ∧ nonDiameterSqDists X 3 = chain 1 1 := by
