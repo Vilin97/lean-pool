@@ -12,11 +12,8 @@ import LeanPool.Erdos81PaperIIContrib.Chordal
 Source: url:https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/main/preprints/PAPER_II/05_formalization/lean_v1.2_freeze/Contrib/Submission/Chordal.lean
 Authors: Juan Pablo Traverso Gianini
 Status: verified
-Main declarations: `SimpleGraph.IsChordal.comap`,
-  `SimpleGraph.IsChordal.minimalSeparator_isClique`,
-  `SimpleGraph.IsChordal.exists_isSimplicial`,
-  `SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial`
-Tags: graph-theory, chordal-graphs, minimal-separators, simplicial-vertices
+Main declarations: `SimpleGraph.IsChordal.comap`, `SimpleGraph.IsChordal.minimalSeparator_isClique`, `SimpleGraph.IsChordal.exists_isSimplicial`, `SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial`
+Tags: graph-theory, chordal-graphs, induced-subgraphs, minimal-separators, simplicial-vertices
 MSC: 05C75
 -/
 
