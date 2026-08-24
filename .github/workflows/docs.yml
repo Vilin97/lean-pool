@@ -18,6 +18,7 @@ on:
     branches:
       - main
     paths:
+      - 'README.md'
       - '**/*.lean'
       - 'LeanPool/projects.yml'
       - 'Challenge/challenges.yml'
@@ -48,13 +49,36 @@ jobs:
   preflight:
     runs-on: ubuntu-latest
     name: Documentation preflight
+    outputs:
+      readme_only: ${{ steps.scope.outputs.readme_only }}
     steps:
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Detect README-only change
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          readme_only=false
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            files="$(git diff --name-only "$BASE_SHA"..."$HEAD_SHA")"
+            if [ "$files" = "README.md" ]; then
+              readme_only=true
+            fi
+          fi
+          echo "readme_only=$readme_only" >> "$GITHUB_OUTPUT"
+          echo "README-only change: $readme_only"
 
       # docbuild deliberately reuses the root workspace's compiled artifacts.
       # Fail before restoring anything if those workspaces ever diverge.
       - name: Check documentation workspace compatibility
+        if: steps.scope.outputs.readme_only != 'true'
         run: |
           set -euo pipefail
           if ! cmp lean-toolchain docbuild/lean-toolchain; then
@@ -81,6 +105,7 @@ jobs:
       # root build that CI already produced instead of compiling the
       # entire pool again under a separate cache namespace.
       - name: Restore Lean build cache
+        if: steps.scope.outputs.readme_only != 'true'
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
@@ -92,6 +117,7 @@ jobs:
             Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
 
       - name: Install Lean
+        if: steps.scope.outputs.readme_only != 'true'
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
         with:
           auto-config: false
@@ -102,6 +128,7 @@ jobs:
       # oleans match the current manifest. `cache get` is incremental, so run it
       # unconditionally and then verify the checkout revision.
       - name: Install and verify Mathlib cache
+        if: steps.scope.outputs.readme_only != 'true'
         run: |
           set -euo pipefail
           ~/.elan/bin/lake exe cache get
@@ -113,6 +140,7 @@ jobs:
           fi
 
       - name: Check generated roots
+        if: steps.scope.outputs.readme_only != 'true'
         run: ~/.elan/bin/lake exe mk_all --check
 
   # Runs in parallel with the doc-gen4 build; its (small) artifact is merged
@@ -126,6 +154,7 @@ jobs:
     needs:
       - preflight
       - mathlib_doc_info
+    if: needs.preflight.outputs.readme_only != 'true'
     runs-on: ubuntu-latest
     name: Build exposition site
     steps:
@@ -203,6 +232,7 @@ jobs:
   # can consume the remainder of GitHub's six-hour job limit.
   mathlib_doc_info:
     needs: preflight
+    if: needs.preflight.outputs.readme_only != 'true'
     runs-on: ubuntu-latest
     name: Build Mathlib documentation data
     steps:
@@ -294,6 +324,7 @@ jobs:
     needs:
       - preflight
       - mathlib_doc_info
+    if: needs.preflight.outputs.readme_only != 'true'
     runs-on: ubuntu-latest
     name: Build doc-gen4 site
     steps:
