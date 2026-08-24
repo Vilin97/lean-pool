@@ -1,4 +1,38 @@
 projects:
+  - slug: erdos81-paper-iii-sum-zero-triangles
+    title: Near-perfect triangle packings from sum-zero triples
+    summary: >-
+      Constructs pairwise edge-disjoint triangles in any finite complete graph so that every
+      vertex is incident to at most three uncovered edges, using a cyclic-group sum-zero triple
+      system.
+    branch: extremal and design combinatorics
+    entry_module: LeanPool.Erdos81PaperIIIContrib
+    authors:
+      - Juan Pablo Traverso Gianini
+      - Aristotle
+    source:
+      title: Clique partitions with linear error in split graphs via structured triangle packing
+      authors:
+        - Juan Pablo Traverso Gianini
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/tree/main/preprints/PAPER_III
+      github_repo: jtraverso/erdos-81-chordal-clique-partitions
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SumZeroTriangles.exists_triangle_packing_clique
+    main_results:
+      - declaration: SumZeroTriangles.exists_triangle_packing_clique
+        informal: >-
+          Every finite complete graph has a family of pairwise edge-disjoint triangles leaving
+          uncovered degree at most three at every vertex.
+    tags:
+      - extremal-combinatorics
+      - triangle-packing
+      - cyclic-groups
+    msc:
+      - "05B07"
+      - "05C70"
   - slug: boolean-isoperimetry
     title: Boolean Isoperimetry and Conway--Guy Coherent Gaps
     summary: >-
