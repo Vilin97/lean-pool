@@ -19,9 +19,7 @@ every three-vector Gram matrix in the plane forces each triple product `⟪u i, 
 ⟪u j, u k⟫` to equal `-c ^ 3 / 8`, and then the explicit combination `c • u₁ - 2 ⟪u₁, u₂⟫ • u₂
 - 2 ⟪u₁, u₃⟫ • u₃ - 2 ⟪u₁, u₄⟫ • u₄` has squared length `-2 * c ^ 3 < 0`.
 
-This is the five-point Gram obstruction in its scale-free form.  The equivalent determinant
-statement, whose value is `-27 * r ^ 4`, is recorded as `symDet4_chain_five` in
-`LeanPool/Erdos132ThreeChain/Witnesses.lean`.
+This is the five-point Gram obstruction in its scale-free form.
 -/
 
 namespace Erdos132ThreeChain

@@ -8,53 +8,16 @@ import LeanPool.Erdos132ThreeChain.Statement
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
-# Witnesses and the determinant form of the five-point obstruction
+# Witnesses for the chain configurations
 
-Two things are recorded here.
-
-First, the four-point catalogue is not vacuous: `rhombus_chain_config` and
+The four-point catalogue is not vacuous: `rhombus_chain_config` and
 `centroid_chain_config` exhibit the two planar patterns of the chain-quadruple theorem — the
 rhombus made of two equilateral triangles glued along an edge (five short edges and one long
 one) and the equilateral triangle together with its centroid (three short edges and three long
 ones).  Both have all six squared distances inside the adjacent pair `{1, 3}`.
-
-Second, `symDet4_chain_five` records the determinant form of the five-point obstruction.  The
-doubled anchored Gram matrix of the only assignment that survives the four-point catalogue has
-determinant `-27 * r ^ 4`, whereas `symDet4_dotp_eq_zero` shows that the Gram matrix of four
-plane vectors is singular.  `no_four_on_circle` proves the same obstruction in the
-equivalent sum-of-squares form, which avoids having to enumerate principal minors at all.
 -/
 
 namespace Erdos132ThreeChain
-
-/-- The determinant of the symmetric `4 × 4` matrix with diagonal `d₁ d₂ d₃ d₄` and
-off-diagonal entries `eᵢⱼ`. -/
-def symDet4 (d₁ d₂ d₃ d₄ e₁₂ e₁₃ e₁₄ e₂₃ e₂₄ e₃₄ : ℝ) : ℝ :=
-  d₁ * d₂ * d₃ * d₄ - d₁ * d₂ * e₃₄ ^ 2 - d₁ * d₃ * e₂₄ ^ 2 - d₁ * d₄ * e₂₃ ^ 2
-    + 2 * d₁ * e₂₃ * e₂₄ * e₃₄ - d₂ * d₃ * e₁₄ ^ 2 - d₂ * d₄ * e₁₃ ^ 2
-    + 2 * d₂ * e₁₃ * e₁₄ * e₃₄ - d₃ * d₄ * e₁₂ ^ 2 + 2 * d₃ * e₁₂ * e₁₄ * e₂₄
-    + 2 * d₄ * e₁₂ * e₁₃ * e₂₃ + e₁₂ ^ 2 * e₃₄ ^ 2 - 2 * e₁₂ * e₁₃ * e₂₄ * e₃₄
-    - 2 * e₁₂ * e₁₄ * e₂₃ * e₃₄ + e₁₃ ^ 2 * e₂₄ ^ 2 - 2 * e₁₃ * e₁₄ * e₂₃ * e₂₄
-    + e₁₄ ^ 2 * e₂₃ ^ 2
-
-/-- The Gram matrix of four vectors of the plane is singular. -/
-theorem symDet4_dotp_eq_zero (o p q r s : Point) :
-    symDet4 (dotp o p p) (dotp o q q) (dotp o r r) (dotp o s s) (dotp o p q) (dotp o p r)
-      (dotp o p s) (dotp o q r) (dotp o q s) (dotp o r s) = 0 := by
-  simp only [symDet4, dotp]; ring
-
-/-- The doubled anchored Gram determinant of the only five-point assignment that survives the
-four-point catalogue — a triangle of `3 * r` edges together with seven `r` edges — equals
-`-27 * r ^ 4`. -/
-theorem symDet4_chain_five (r : ℝ) :
-    symDet4 (2 * r) (2 * r) (2 * r) (2 * r) r r r (-r) (-r) (-r) = -27 * r ^ 4 := by
-  simp only [symDet4]; ring
-
-theorem symDet4_chain_five_ne_zero {r : ℝ} (hr : 0 < r) :
-    symDet4 (2 * r) (2 * r) (2 * r) (2 * r) r r r (-r) (-r) (-r) ≠ 0 := by
-  rw [symDet4_chain_five]
-  have : (0 : ℝ) < r ^ 4 := by positivity
-  linarith
 
 /-- The rhombus of two equilateral triangles glued along an edge: five squared distances equal
 `1` and one equals `3`.  This is the first pattern of the four-point catalogue, and it witnesses
@@ -82,10 +45,11 @@ theorem centroid_chain_config :
     simp only [sqDist, Prod.mk.injEq, ne_eq, not_and] <;> intros <;> nlinarith [h3, hpos]
 
 
-/-- The rhombus witnesses that the definitions in the headline theorem are not vacuous: it is a
-four-point set whose squared diameter is `3` and whose set of non-diameter squared distances is
-exactly the one-term geometric 3-chain `{1}`.  Thus `IsSqDiameter`, `nonDiameterSqDists` and
-`chain` do realise the configuration that `threeChain_support_empty` forbids for `n ≥ 13`. -/
+/-- The rhombus is a four-point set whose squared diameter is `3` and whose non-diameter squared
+distances form the one-term geometric 3-chain `{1}`, so it has `h = 1`.  It therefore cannot
+witness `threeChain_support_empty`, whose wrapper assumes `2 ≤ h`.  Instead, it witnesses the
+`h = 1` diameter and support data targeted by `nonDiameterSqDists_ne_chain`, while its four-point
+cardinality deliberately fails that theorem's separate `n ≥ 13` hypothesis. -/
 theorem rhombus_nonDiameter_support :
     ∃ X : Finset Point, X.card = 4 ∧ IsSqDiameter X 3 ∧ nonDiameterSqDists X 3 = chain 1 1 := by
   classical

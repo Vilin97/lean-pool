@@ -5795,12 +5795,12 @@ projects:
       novelty for it, and the overlap is set out in full below. The result is
       unconditional.
 
-      There is no prior write-up behind this development. The 3-chain statement was produced
-      by the author's automated research pipeline in August 2026; the cited source poses the
-      ambient Erdos problem and states nothing about geometric 3-chains, and the result does
-      not resolve that problem, whose distance spectra need not be geometric 3-chains. The
-      descriptive labels used in the Lean docstrings are internal to this development and
-      refer to no numbered result elsewhere.
+      There is no prior write-up behind this development. The restriction to ratio 3 is ad hoc:
+      the 3-chain statement was produced by the author's automated research pipeline in August
+      2026, while the cited source poses the ambient Erdos problem and does not state this
+      restriction or result. This theorem does not resolve Erdos 132, whose distance spectra need
+      not be geometric 3-chains. The descriptive labels used in the Lean docstrings are internal
+      to this development and refer to no numbered result elsewhere.
 
       Overlap disclosure. Erdos132ThreeChain.hopfPannwitz is NOT offered as a new result. The
       pooled project Erdos132N14 already contains the same diameter bound, and the version
