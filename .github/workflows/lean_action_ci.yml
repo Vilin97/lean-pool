@@ -64,6 +64,7 @@ on:
       - 'scripts/nolints-style.txt'
       - 'scripts/ci/**'
       - '.github/CODE_QUALITY.md'
+      - '.github/workflows/readme-stats.yml'
       - '.github/workflows/lean_action_ci.yml'
   workflow_dispatch:
     inputs:
