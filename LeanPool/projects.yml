@@ -5165,9 +5165,10 @@ projects:
       shared full-two-rung, anti-saturation, terminal-cage, and four-edge-cage
       predicates. It also proves exceptional-count rigidity and an explicit
       heptagon refutation of a tempting stronger majorant claim, with rational
-      regression witnesses. This settles the k=3 instance of the paper's
-      suggested degree-2k convex bound; it does not settle the general-k
-      suggestion or the general Erdős problem 132.
+      regression witnesses. This settles the all-n k=3 instance of the paper's
+      suggested degree-2k convex bound; Morić--Pritchard proved the corresponding
+      top-three edge bound for sufficiently large n. It does not settle the
+      general-k suggestion or the general Erdős problem 132.
     branch: discrete geometry
     entry_module: LeanPool.Erdos132ConvexK3
     authors:
@@ -5195,10 +5196,13 @@ projects:
           whose squared distance is one of those three classes.
         source_ref: >-
           Erdős--Lovász--Vesztergombi, printed p. 542, suggest the stronger
-          convex bound degree at most 2k; this theorem proves its k=3 case.
-          Their Theorem 2.7 on p. 548 proves only degree at most 3k-1, which
-          specializes to eight. The degree-six statement is a new derived
-          result of this project, not a theorem stated in ErLV89.
+          convex bound degree at most 2k. Morić--Pritchard, "Counting large
+          distances in convex polygons" (arXiv:1103.0412), Theorem 1.4, prove
+          m₁ + m₂ + m₃ ≤ 3n for sufficiently large n, which gives the same
+          degree-six consequence in that range. The novelty here is the all-n
+          theorem: it removes the sufficiently-large-n restriction. ErLV89
+          Theorem 2.7, printed p. 548, proves only degree at most 3k-1, which
+          specializes to eight.
       - declaration: LeanPool.Erdos132ConvexK3.convex_top_three_draft_reduction_complete
         informal: >-
           Cyclic strict convexity and the three-largest-distance-class

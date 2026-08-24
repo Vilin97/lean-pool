@@ -121,8 +121,11 @@ private noncomputable def properDiagonalCrossing
     nlinarith
   have hdenSubT : 0 < den - nt := by
     rcases h with ⟨_, _, hbcd, _⟩
-    dsimp [den, nt, complexTurn, complexCross] at hbcd ⊢
-    nlinarith
+    have hidentity : den - nt = complexTurn b c d := by
+      dsimp [den, nt, complexTurn, complexCross]
+      ring
+    rw [hidentity]
+    exact hbcd
   have hnu : 0 < nu := h.1
   have hdenSubU : 0 < den - nu := by
     rcases h with ⟨_, _, _, hcda⟩

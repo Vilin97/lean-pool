@@ -10,7 +10,7 @@ import Mathlib.Tactic.Linarith
 /-!
 # Terminal-color closure at the maximal-gap use site
 
-This file ports Sections 6--8 of the accepted convex `k = 3` paper proof.
+This file formalizes Sections 6--8 of the project's internal multi-agent proof draft.
 It closes the three terminal-color obligations left after `TailClosure.lean`:
 `(1,2)-d₁`, `(2,1)-d₁`, and `(2,1)-d₂`.
 -/
@@ -84,7 +84,7 @@ theorem cyclic_offset_in_consecutive_left_open_half_plane
 
 /-- Equal radii from the first vertex of a strict convex quadrilateral are
 strictly ordered from its consecutive second vertex.  This is the kernel
-form of paper Lemma 3.4. -/
+form of project proof-draft Lemma 3.4. -/
 theorem equal_radius_arc_strict_order
     {a b r₁ r₂ : Point ℝ}
     (hquad : StrictConvexQuad a b r₁ r₂)
@@ -1115,7 +1115,7 @@ private theorem case21_d1_false_of_tail_card_le_one
   have hdegree := erlv_x_degree_le_of_tail_card S β 1 hβ htail
   exact high_degree_le_six_false S S.x (hdegree.trans (by omega))
 
-/-- Session-9 obligation 3/8: terminal color `(2,1)-d₁` (paper Section 7). -/
+/-- Session-9 obligation 3/8: terminal color `(2,1)-d₁` (project proof-draft Section 7). -/
 theorem erlv_at_vertex_case21_other_d1_impossible_of_tail :
     ErLVAtVertexCase21OtherD1Impossible := by
   intro n _ P d₁ d₂ d₃ S h21 hOther
@@ -1782,7 +1782,7 @@ private theorem case21_d2_left_half
   rw [← hpoint] at h
   simpa using h
 
-/-- Session-9 obligation 4/8: terminal color `(2,1)-d₂` (paper Section 8). -/
+/-- Session-9 obligation 4/8: terminal color `(2,1)-d₂` (project proof-draft Section 8). -/
 theorem erlv_at_vertex_case21_other_d2_impossible_of_tail :
     ErLVAtVertexCase21OtherD2Impossible := by
   intro n _ P d₁ d₂ d₃ S h21 hOther

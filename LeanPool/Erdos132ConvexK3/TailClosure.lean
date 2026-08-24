@@ -10,8 +10,8 @@ import Mathlib.Tactic.Linarith
 /-!
 # Maximal-gap tail closure
 
-This file ports the counting and elementary geometry in Lemma 4.1 of the
-accepted convex `k = 3` paper proof.  The argument splits the neighbors of
+This file formalizes the counting and elementary geometry in Lemma 4.1 of the
+project's internal multi-agent proof draft.  The argument splits the neighbors of
 the maximal-gap vertex at the first counterclockwise neighbor of `x + 3`:
 the head has at most four offsets, while strict edge--diagonal comparison
 and same-half-plane two-circle uniqueness leave at most two tail slots (one
@@ -188,7 +188,7 @@ theorem far_arc_strict_center_comparison
   nlinarith
 
 /-- With exactly three ranked distances, a strict comparison has only the
-three ordered radius slots used in the paper proof. -/
+three ordered radius slots used in the project proof draft. -/
 theorem strict_top_three_rank_slots
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ} {x p r : Fin n}
     (hClasses : HasTopThreeDistanceClasses P d₁ d₂ d₃)
@@ -270,7 +270,7 @@ private theorem d3_d1_tail_slot_empty
     rw [hkSlot.2.2, hpz] at hsquared
     linarith [S.classes.2.1]
 
-/-- **Maximal-gap tail lemma (paper Lemma 4.1).**  Suppose `p = x + 1`,
+/-- **Maximal-gap tail lemma (project proof-draft Lemma 4.1).**  Suppose `p = x + 1`,
 `u` is the first counterclockwise neighbor of `x + 3`, and `z` is the first
 clockwise neighbor of `x`.  Under the three displayed ladder colors, an
 `xu = d₁` anchor gives degree at most six, while `xu = d₂` gives degree at

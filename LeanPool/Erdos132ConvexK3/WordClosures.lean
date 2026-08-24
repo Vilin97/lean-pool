@@ -242,11 +242,8 @@ private theorem sqDist_eq_of_euclideanDist_eq_sqrt
 private theorem sqrt_lt_euclideanDist_of_sqDist_lt
     {a b : Point ℝ} {d : ℝ} (hd : 0 ≤ d)
     (h : d < sqDist a b) : Real.sqrt d < euclideanDist a b := by
-  have hsqrt := Real.sq_sqrt hd
-  have hdist := euclideanDist_sq a b
-  have hnonneg := euclideanDist_nonneg_local a b
-  have hsqrtNonneg := Real.sqrt_nonneg d
-  nlinarith
+  apply (Real.sqrt_lt hd (euclideanDist_nonneg_local a b)).2
+  simpa only [euclideanDist_sq] using h
 
 private theorem top_three_radius_bounds_of_ne
     {n : ℕ} {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ}
