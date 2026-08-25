@@ -2,13 +2,14 @@
 
 Emits a JSON plan on stdout for the `Lean Action CI` workflow:
 
-    {"mode": "single" | "sharded",
+    {"mode": "skip" | "single" | "sharded",
      "shard_count": <int>,
      "matrix": {"include": [{"shard": "00", "projects": "ProjA ProjB"}, ...]},
      "reason": "<human-readable explanation>"}
 
-`single` keeps the classic one-job pipeline — the fast path for a typical
-PR that adds or edits one project. `sharded` splits the build across
+`skip` handles an exact README-only change. `single` keeps the
+classic one-job pipeline — the fast path for a typical PR that adds or edits
+one project. `sharded` splits the build across
 parallel jobs for the cases that take hours serially: a cold cache, a
 toolchain/manifest bump, or a refactor touching many projects.
 
@@ -91,6 +92,17 @@ def main() -> None:
     diff_available = os.environ.get("DIFF_AVAILABLE", "true") != "false"
     cold = os.environ.get("COLD", "") == "true"
     force_full = os.environ.get("FORCE_FULL", "") == "true"
+
+    if diff_available and changed_files == ["README.md"] and not force_full:
+        plan = {
+            "mode": "skip",
+            "shard_count": 0,
+            # Keep the matrix expression valid even though its jobs are skipped.
+            "matrix": {"include": [{"shard": "00", "projects": ""}]},
+            "reason": "README-only change",
+        }
+        print(json.dumps(plan))
+        return
 
     weights = project_weights()
     global_change = bool(GLOBAL_BUILD_INPUTS.intersection(changed_files))
