@@ -6048,12 +6048,14 @@ projects:
     summary: >-
       Records a reusable formalization byproduct accompanying Paper III: pairwise edge-disjoint
       triangles in any finite complete graph such that every vertex is incident to at most three
-      uncovered edges, using a cyclic-group sum-zero triple system.
+      uncovered edges, using a cyclic-group sum-zero triple system, with a bridge to Mathlib's
+      SimpleGraph API.
     branch: extremal and design combinatorics
     entry_module: LeanPool.Erdos81PaperIIIContrib
     authors:
       - Juan Pablo Traverso Gianini
       - Aristotle
+      - Vasily Ilin
     source:
       title: >-
         SumZeroTriangles.lean, a reusable formalization byproduct accompanying Linear-Error Clique
@@ -6066,8 +6068,13 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - SumZeroTriangles.exists_triangle_packing_clique
+      - SumZeroTriangles.exists_simpleGraph_triangle_packing
     main_results:
+      - declaration: SumZeroTriangles.exists_simpleGraph_triangle_packing
+        informal: >-
+          For every finite vertex type, its complete simple graph has a family of pairwise
+          edge-disjoint triangle graphs whose uncovered graph has degree at most three at every
+          vertex.
       - declaration: SumZeroTriangles.exists_triangle_packing_clique
         informal: >-
           Every finite complete graph has a family of pairwise edge-disjoint triangles leaving
