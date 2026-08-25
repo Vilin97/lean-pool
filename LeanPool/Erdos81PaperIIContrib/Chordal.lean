@@ -30,7 +30,8 @@ self-contained and depends only on Mathlib.
 
 ## Main results
 * `SimpleGraph.IsChordal.comap` — chordality pulls back along an injective vertex map
-* `SimpleGraph.IsChordal.minimalSeparator_isClique` — minimal vertex separators are cliques
+* `SimpleGraph.IsChordal.minimalSeparator_isClique` — finite minimal separators of fixed vertex
+  pairs are cliques
 * `SimpleGraph.IsChordal.exists_isSimplicial` — Dirac (1961): a nonempty finite chordal graph has a
   simplicial vertex
 * `SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial` — a connected non-complete finite chordal
@@ -901,7 +902,7 @@ private theorem isMinimalSeparatorF_of_set (G : SimpleGraph V) {S : Finset V} {a
 end DiracPort
 
 
-/-- In a chordal graph, every minimal vertex separator is a clique. -/
+/-- In a chordal graph, every finite minimal separator of two fixed vertices is a clique. -/
 theorem IsChordal.minimalSeparator_isClique (hG : G.IsChordal)
     {S : Finset V} {a b : V} (hS : G.IsMinimalSeparator (S : Set V) a b) :
     G.IsClique (S : Set V) :=
