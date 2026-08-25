@@ -12,6 +12,12 @@
   "includeIssuesTable": true,
   "includeConfidenceScore": false,
   "includeSequenceDiagram": false,
+  "confidenceScoreSection": {
+    "included": false
+  },
+  "sequenceDiagramSection": {
+    "included": false
+  },
   "statusCheck": true,
   "statusCommentsEnabled": true,
   "comment": "Advisory cross-file review against Lean Pool's supervisory rubric. This is not by itself a significance, source-verification, or merge verdict."
