@@ -1020,6 +1020,17 @@ import LeanPool.Erdos132N14.HopfPannwitzGeometry
 import LeanPool.Erdos132N14.Main
 import LeanPool.Erdos132N14.PublishedInputs
 import LeanPool.Erdos132N14.RegularTridecagon
+import LeanPool.Erdos132ThreeChain
+import LeanPool.Erdos132ThreeChain.Basic
+import LeanPool.Erdos132ThreeChain.CaroWei
+import LeanPool.Erdos132ThreeChain.FivePoints
+import LeanPool.Erdos132ThreeChain.FourPoints
+import LeanPool.Erdos132ThreeChain.HopfPannwitz
+import LeanPool.Erdos132ThreeChain.Plane
+import LeanPool.Erdos132ThreeChain.PowerThree
+import LeanPool.Erdos132ThreeChain.Statement
+import LeanPool.Erdos132ThreeChain.Support
+import LeanPool.Erdos132ThreeChain.Witnesses
 import LeanPool.Erdos137
 import LeanPool.Erdos137.AxiomAudit
 import LeanPool.Erdos137.Base
