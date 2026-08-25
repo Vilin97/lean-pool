@@ -22,6 +22,7 @@ MSC: 05C75
 
 This reusable formalization byproduct accompanying *Complete-Split Extremizers for a Fractional
 Triangle-Cover Functional on Chordal Graphs* defines chordal graphs using the cycle-and-chord
-characterization, proves induced-subgraph heredity and the clique property for minimal vertex
-separators, and formalizes both parts of Dirac's theorem on simplicial vertices.
+characterization, proves induced-subgraph heredity and the clique property for finite minimal
+separators of fixed vertex pairs, and formalizes both parts of Dirac's theorem on simplicial
+vertices.
 -/

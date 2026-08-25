@@ -6253,7 +6253,8 @@ projects:
     summary: >-
       A reusable formalization byproduct accompanying Paper II: defines chordal graphs through
       the cycle-and-chord characterization, proves induced-subgraph heredity and the clique
-      property for minimal separators, and formalizes both parts of Dirac's theorem.
+      property for finite minimal separators of fixed vertex pairs, and formalizes both parts of
+      Dirac's theorem.
     branch: graph theory
     entry_module: LeanPool.Erdos81PaperIIContrib
     authors:
@@ -6278,7 +6279,7 @@ projects:
           Every induced subgraph of a chordal graph is chordal.
       - declaration: SimpleGraph.IsChordal.minimalSeparator_isClique
         informal: >-
-          Every minimal vertex separator in a chordal graph is a clique.
+          Every finite minimal separator of two fixed vertices in a chordal graph is a clique.
       - declaration: SimpleGraph.IsChordal.exists_isSimplicial
         informal: >-
           Every nonempty finite chordal graph has a simplicial vertex.
