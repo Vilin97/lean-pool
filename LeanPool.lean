@@ -1064,6 +1064,9 @@ import LeanPool.Erdos81PaperIContrib.FarkasLP
 import LeanPool.Erdos81PaperIContrib.FgConeClosed
 import LeanPool.Erdos81PaperIIContrib
 import LeanPool.Erdos81PaperIIContrib.Chordal
+import LeanPool.Erdos81PaperIIIContrib
+import LeanPool.Erdos81PaperIIIContrib.SimpleGraph
+import LeanPool.Erdos81PaperIIIContrib.SumZeroTriangles
 import LeanPool.Erdos865
 import LeanPool.Erdos865.Defs
 import LeanPool.Erdos865.FoldedAux
