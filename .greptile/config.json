@@ -1,0 +1,18 @@
+{
+  "strictness": 2,
+  "commentTypes": [
+    "logic",
+    "syntax",
+    "style"
+  ],
+  "triggerOnUpdates": true,
+  "triggerOnDrafts": false,
+  "shouldUpdateDescription": false,
+  "updateSummaryOnly": false,
+  "includeIssuesTable": true,
+  "includeConfidenceScore": false,
+  "includeSequenceDiagram": false,
+  "statusCheck": true,
+  "statusCommentsEnabled": true,
+  "comment": "Advisory cross-file review against Lean Pool's supervisory rubric. This is not by itself a significance, source-verification, or merge verdict."
+}

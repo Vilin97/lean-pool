@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "description": "Authoritative repository and contribution instructions."
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "description": "Submission requirements, content-PR boundaries, and local validation guidance."
+    },
+    {
+      "path": "MOTIVATION.md",
+      "description": "Lean Pool's scope and role between Mathlib and merely-true."
+    },
+    {
+      "path": ".github/REVIEW_RULES.md",
+      "description": "Shared rules for the repository's independent GPT-5.6 review rubrics."
+    },
+    {
+      "path": ".github/CODE_QUALITY.md",
+      "description": "Deterministic gates and code-quality conventions; avoid duplicating mechanical checks."
+    },
+    {
+      "path": "LeanPool/projects.yml",
+      "description": "Project registry used to check catalog consistency, prior overlap, and the established level of pooled projects."
+    }
+  ]
+}
