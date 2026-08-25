@@ -6205,3 +6205,46 @@ projects:
       - "52C10"
       - "52C35"
       - "05C69"
+  - slug: erdos81-paper-iii-sum-zero-triangles
+    title: Near-perfect triangle packings from sum-zero triples
+    summary: >-
+      Records a reusable formalization byproduct accompanying Paper III: pairwise edge-disjoint
+      triangles in any finite complete graph such that every vertex is incident to at most three
+      uncovered edges, using a cyclic-group sum-zero triple system, with a bridge to Mathlib's
+      SimpleGraph API.
+    branch: extremal and design combinatorics
+    entry_module: LeanPool.Erdos81PaperIIIContrib
+    authors:
+      - Juan Pablo Traverso Gianini
+      - Aristotle
+      - Vasily Ilin
+    source:
+      title: >-
+        SumZeroTriangles.lean, a reusable formalization byproduct accompanying Linear-Error Clique
+        Partitions of Split Graphs via Structured Triangle Packing
+      authors:
+        - Aristotle
+      url: https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/main/preprints/PAPER_III/05_formalization/lean_v1.4_freeze/Contrib/SumZeroTriangles.lean
+      github_repo: jtraverso/erdos-81-chordal-clique-partitions
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SumZeroTriangles.exists_simpleGraph_triangle_packing
+    main_results:
+      - declaration: SumZeroTriangles.exists_simpleGraph_triangle_packing
+        informal: >-
+          For every finite vertex type, its complete simple graph has a family of pairwise
+          edge-disjoint triangle graphs whose uncovered graph has degree at most three at every
+          vertex.
+      - declaration: SumZeroTriangles.exists_triangle_packing_clique
+        informal: >-
+          Every finite complete graph has a family of pairwise edge-disjoint triangles leaving
+          uncovered degree at most three at every vertex.
+    tags:
+      - extremal-combinatorics
+      - triangle-packing
+      - cyclic-groups
+    msc:
+      - "05B07"
+      - "05C70"
