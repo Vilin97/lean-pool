@@ -1,8 +1,10 @@
 name: Lean Action CI
 
-# The build runs in one of two modes, decided per run by a cheap `plan` job
+# The build runs in one of three modes, decided per run by a cheap `plan` job
 # (scripts/ci/plan-build-shards.py) from the diff and the cache state:
 #
+# - `skip`: an exact README-only change. It still reports the
+#   protected `Build project` check without spending hours rebuilding Lean.
 # - `single`: the classic one-job pipeline. This is the fast path for the
 #   common case — a PR that adds or edits a project or three — and is
 #   byte-for-byte the pre-sharding behavior.
@@ -48,6 +50,7 @@ on:
       # build, no linters, and no quality checks at all.
       - 'bump/**'
     paths:
+      - 'README.md'
       - '**/*.lean'
       - 'lakefile.toml'
       - 'lean-toolchain'
@@ -61,6 +64,7 @@ on:
       - 'scripts/nolints-style.txt'
       - 'scripts/ci/**'
       - '.github/CODE_QUALITY.md'
+      - '.github/workflows/readme-stats.yml'
       - '.github/workflows/lean_action_ci.yml'
   workflow_dispatch:
     inputs:
@@ -463,10 +467,20 @@ jobs:
             echo "::error::Build planning failed."
             exit 1
           fi
-          if [ "$MODE" = "single" ]; then
-            [ "$BUILD_RESULT" = "success" ] || { echo "::error::Build failed."; exit 1; }
-          else
-            [ "$SHARD_RESULT" = "success" ] || { echo "::error::A build shard failed."; exit 1; }
-            [ "$FINALIZE_RESULT" = "success" ] || { echo "::error::Assembly or linting failed."; exit 1; }
-          fi
+          case "$MODE" in
+            skip)
+              echo "No Lean build inputs changed."
+              ;;
+            single)
+              [ "$BUILD_RESULT" = "success" ] || { echo "::error::Build failed."; exit 1; }
+              ;;
+            sharded)
+              [ "$SHARD_RESULT" = "success" ] || { echo "::error::A build shard failed."; exit 1; }
+              [ "$FINALIZE_RESULT" = "success" ] || { echo "::error::Assembly or linting failed."; exit 1; }
+              ;;
+            *)
+              echo "::error::Unknown build mode: $MODE"
+              exit 1
+              ;;
+          esac
           echo "CI passed in $MODE mode."
