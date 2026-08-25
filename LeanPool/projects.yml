@@ -6131,9 +6131,10 @@ projects:
     authors:
       - Egor Lyfar
     source:
-      title: "Erdos Problem #132"
+      title: "Erdős Problem #132"
       authors:
-        - Paul Erdos
+        - Paul Erdős
+        - János Pach
       url: https://www.erdosproblems.com/132
       github_repo: lyfar/lean-pool
     license: Apache-2.0

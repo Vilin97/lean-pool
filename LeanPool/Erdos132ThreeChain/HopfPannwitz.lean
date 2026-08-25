@@ -37,11 +37,6 @@ namespace Erdos132ThreeChain
 
 open Finset
 
-/-- `IsSqDiameter X D` says that `D` is the squared diameter of `X`: it is realised by two
-distinct points of `X`, and it dominates every squared distance inside `X`. -/
-def IsSqDiameter (X : Finset Point) (D : ℝ) : Prop :=
-  (∃ p ∈ X, ∃ q ∈ X, p ≠ q ∧ sqDist p q = D) ∧ ∀ p ∈ X, ∀ q ∈ X, sqDist p q ≤ D
-
 /-- Adjacency in the diameter graph: distinct points at squared distance exactly `D`. -/
 def DiameterAdj (D : ℝ) (p q : Point) : Prop := p ≠ q ∧ sqDist p q = D
 

@@ -38,11 +38,6 @@ namespace Erdos132ThreeChain
 
 open Finset
 
-/-- The set of squared distances realised by distinct points of `X` that are not the squared
-diameter `D`. -/
-def nonDiameterSqDists (X : Finset Point) (D : ℝ) : Set ℝ :=
-  {d : ℝ | ∃ p ∈ X, ∃ q ∈ X, p ≠ q ∧ sqDist p q = d ∧ d ≠ D}
-
 /-- **The 3-chain support theorem.**  Let `n ≥ 13` and `a > 0`, and let `X` be a set of `n`
 points of the plane with squared diameter `D`.  Then the set of squared distances realised by
 distinct points of `X` other than `D` is never the geometric 3-chain `{a * 3 ^ j | j < h}`, for

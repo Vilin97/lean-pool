@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos132ThreeChain.Statement
+import LeanPool.Erdos132ThreeChain.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 /-!
@@ -43,54 +43,6 @@ theorem centroid_chain_config :
   refine ⟨(0, 0), (1, 0), (-(1 / 2), Real.sqrt 3 / 2), (-(1 / 2), -(Real.sqrt 3 / 2)), ?_, ?_,
     ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     simp only [sqDist, Prod.mk.injEq, ne_eq, not_and] <;> intros <;> nlinarith [h3, hpos]
-
-
-/-- The rhombus is a four-point set whose squared diameter is `3` and whose non-diameter squared
-distances form the one-term geometric 3-chain `{1}`, so it has `h = 1`.  The headline wrapper
-assumes `2 ≤ h`, so the rhombus is not a witness for it.  What it witnesses is the `h = 1`
-diameter and support data targeted by `nonDiameterSqDists_ne_chain`, while its four-point
-cardinality deliberately fails that theorem's separate `n ≥ 13` hypothesis. -/
-theorem rhombus_nonDiameter_support :
-    ∃ X : Finset Point, X.card = 4 ∧ IsSqDiameter X 3 ∧ nonDiameterSqDists X 3 = chain 1 1 := by
-  classical
-  obtain ⟨A, B, C, D, hAB, hAC, hAD, hBC, hBD, hCD, dAB, dAC, dAD, dBC, dBD, dCD⟩ :=
-    rhombus_chain_config
-  have eBA : sqDist B A = 1 := by rw [sqDist_comm B A]; exact dAB
-  have eCA : sqDist C A = 1 := by rw [sqDist_comm C A]; exact dAC
-  have eDA : sqDist D A = 1 := by rw [sqDist_comm D A]; exact dAD
-  have eCB : sqDist C B = 1 := by rw [sqDist_comm C B]; exact dBC
-  have eDB : sqDist D B = 1 := by rw [sqDist_comm D B]; exact dBD
-  have eDC : sqDist D C = 3 := by rw [sqDist_comm D C]; exact dCD
-  have hmem : ∀ p ∈ ({A, B, C, D} : Finset Point), p = A ∨ p = B ∨ p = C ∨ p = D := by
-    intro p hp
-    simp only [Finset.mem_insert, Finset.mem_singleton] at hp
-    tauto
-  have hvals : ∀ p ∈ ({A, B, C, D} : Finset Point), ∀ q ∈ ({A, B, C, D} : Finset Point),
-      sqDist p q = 0 ∨ sqDist p q = 1 ∨ sqDist p q = 3 := by
-    intro p hp q hq
-    rcases hmem p hp with rfl | rfl | rfl | rfl <;>
-      rcases hmem q hq with rfl | rfl | rfl | rfl <;>
-      first
-        | exact Or.inl (sqDist_self _)
-        | exact Or.inr (Or.inl (by assumption))
-        | exact Or.inr (Or.inr (by assumption))
-  refine ⟨{A, B, C, D}, ?_, ⟨⟨C, by simp, D, by simp, hCD, dCD⟩, ?_⟩, ?_⟩
-  · rw [Finset.card_insert_of_notMem (by simp [hAB, hAC, hAD]),
-      Finset.card_insert_of_notMem (by simp [hBC, hBD]),
-      Finset.card_insert_of_notMem (by simp [hCD]), Finset.card_singleton]
-  · intro p hp q hq
-    rcases hvals p hp q hq with h | h | h <;> rw [h] <;> norm_num
-  · ext x
-    constructor
-    · rintro ⟨p, hp, q, hq, hpq, rfl, hne⟩
-      rcases hvals p hp q hq with h | h | h
-      · exact absurd (sqDist_eq_zero_iff.mp h) hpq
-      · exact ⟨0, by norm_num, by rw [h]; norm_num⟩
-      · exact absurd h hne
-    · rintro ⟨j, hj, rfl⟩
-      have hj0 : j = 0 := by omega
-      subst hj0
-      exact ⟨A, by simp, B, by simp, hAB, by rw [dAB]; norm_num, by norm_num⟩
 
 
 /-- Five points of the plane whose squared distances are `1`, `3` and `4`: the rhombus of two
@@ -137,11 +89,8 @@ theorem chainTwo_nonDiameter_support :
     intro p hp q hq
     rcases hmem p hp with rfl | rfl | rfl | rfl | rfl <;>
       rcases hmem q hq with rfl | rfl | rfl | rfl | rfl <;>
-      first
-        | exact Or.inl (sqDist_self _)
-        | exact Or.inr (Or.inl (by assumption))
-        | exact Or.inr (Or.inr (Or.inl (by assumption)))
-        | exact Or.inr (Or.inr (Or.inr (by assumption)))
+      simp only [sqDist_self, dAB, dAC, dAE, dAF, dBC, dBE, dBF, dCE, dCF, dEF,
+        eBA, eCA, eEA, eFA, eCB, eEB, eFB, eEC, eFC, eFE, true_or, or_true]
   refine ⟨{A, B, C, E, F}, ?_, ⟨⟨B, by simp, F, by simp, hBF, dBF⟩, ?_⟩, ?_⟩
   · rw [Finset.card_insert_of_notMem (by simp [hAB, hAC, hAE, hAF]),
       Finset.card_insert_of_notMem (by simp [hBC, hBE, hBF]),

@@ -12,8 +12,9 @@ import Mathlib.Tactic.Ring
 /-!
 # Planar squared distances and geometric 3-chains
 
-This file sets up the two elementary objects used throughout the project: points of the
-Euclidean plane together with their squared distance, and the geometric 3-chain
+This file sets up the elementary objects used throughout the project: points of the Euclidean
+plane together with their squared distance, squared diameters and non-diameter distance
+supports, and the geometric 3-chain
 
 `L h a = {a, 3a, 9a, …, 3 ^ (h - 1) * a}`
 
@@ -57,6 +58,11 @@ theorem sqDist_eq_zero_iff {p q : Point} : sqDist p q = 0 ↔ p = q := by
 theorem sqDist_pos {p q : Point} (h : p ≠ q) : 0 < sqDist p q :=
   lt_of_le_of_ne (sqDist_nonneg p q) fun hc => h (sqDist_eq_zero_iff.mp hc.symm)
 
+/-- `IsSqDiameter X D` says that `D` is the squared diameter of `X`: it is realised by two
+distinct points of `X`, and it dominates every squared distance inside `X`. -/
+def IsSqDiameter (X : Finset Point) (D : ℝ) : Prop :=
+  (∃ p ∈ X, ∃ q ∈ X, p ≠ q ∧ sqDist p q = D) ∧ ∀ p ∈ X, ∀ q ∈ X, sqDist p q ≤ D
+
 /-- The geometric 3-chain of length `h` and base `a`: the set `{a * 3 ^ j | j < h}`. -/
 def chain (a : ℝ) (h : ℕ) : Set ℝ := {x : ℝ | ∃ j < h, x = a * 3 ^ j}
 
@@ -67,6 +73,11 @@ theorem base_mem_chain {a : ℝ} {h : ℕ} (hh : 0 < h) : a ∈ chain a h :=
 
 theorem triple_base_mem_chain {a : ℝ} {h : ℕ} (hh : 2 ≤ h) : a * 3 ∈ chain a h :=
   ⟨1, hh, by norm_num⟩
+
+/-- The set of squared distances realised by distinct points of `X` that are not the squared
+diameter `D`. -/
+def nonDiameterSqDists (X : Finset Point) (D : ℝ) : Set ℝ :=
+  {d : ℝ | ∃ p ∈ X, ∃ q ∈ X, p ≠ q ∧ sqDist p q = d ∧ d ≠ D}
 
 /-- `IsChainValue c x` records that `x` is `c` times a nonnegative power of three.  It is the
 scale-free shadow of `chain`: if `c` is the smallest value of a chain that `x` belongs to,
