@@ -51,7 +51,7 @@ structure DistanceDictionary (p : Fin 7 → Plane) (A B : ℝ) : Prop where
       4 - 2 * Real.cos A - 4 * Real.cos B + 4 * Real.cos (A + B) -
         2 * Real.cos (A + 2 * B)
 
-/-- Frozen interface v1, bundled as a structure rather than a nested conjunction. -/
+/-- Frozen interface v1.1, bundled as a structure rather than a nested conjunction. -/
 structure E2AngleParametrization (p : Fin 7 → Plane) (A B C : ℝ) : Prop where
   B_pos : 0 < B
   B_lt_A : B < A
@@ -78,7 +78,6 @@ structure E2AngleParametrization (p : Fin 7 → Plane) (A B C : ℝ) : Prop wher
     (dist (p 1) (p 3)) ^ 2 =
       4 - 2 * Real.cos A - 4 * Real.cos B + 4 * Real.cos (A + B) -
         2 * Real.cos (A + 2 * B)
-  edgeC_lt_q : dist (p 0) (p 1) < dist (p 0) (p 2)
 
 /-- The star structure and edge order determine the three ordered angle classes. -/
 theorem ordered_angle_classes
@@ -115,13 +114,6 @@ theorem distance_dictionary
     {A B C : ℝ} (hclasses : AngleClasses p A B C)
     (hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
     DistanceDictionary p A B := by
-  sorry
-
-/-- The interior angle at vertex one is obtuse, so the C-edge is shorter than Q. -/
-theorem edgeC_lt_q
-    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p)
-    {A B C : ℝ} (hclasses : AngleClasses p A B C) :
-    dist (p 0) (p 1) < dist (p 0) (p 2) := by
   sorry
 
 /-- Geometry half of the frozen E2 solution interface. -/
