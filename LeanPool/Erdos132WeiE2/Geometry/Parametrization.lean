@@ -269,6 +269,22 @@ private theorem walkComplexEdge_ne_zero
     fin_cases k <;> decide
   exact hne hi
 
+private theorem walkComplexEdge_norm
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) (k : Fin 7) :
+    ‖walkComplexEdge p k‖ = 1 := by
+  have hstep : walkIndex (k + 1) = walkIndex k + 3 := by
+    simp only [walkIndex]
+    omega
+  have hmap := complexPlaneEquiv.symm.toLinearIsometry.norm_map
+    (p (walkIndex (k + 1)) - p (walkIndex k))
+  have hsource : ‖p (walkIndex (k + 1)) - p (walkIndex k)‖ = 1 := by
+    rw [norm_sub_rev, ← dist_eq_norm, hstep, h.hdiam]
+  calc
+    ‖walkComplexEdge p k‖ =
+        ‖p (walkIndex (k + 1)) - p (walkIndex k)‖ := by
+      simpa [walkComplexEdge, walkComplexPoint, toComplex, map_sub] using hmap
+    _ = 1 := hsource
+
 private theorem walkComplexAngle_eq_apex
     (p : Fin 7 → Plane) (k : Fin 7) :
     InnerProductGeometry.angle (-walkComplexEdge p k) (walkComplexEdge p (k + 1)) =
@@ -387,6 +403,546 @@ private theorem walkComplexTurn_sum
         (Real.pi + Real.pi + Real.pi + Real.pi + Real.pi + Real.pi + Real.pi) := by
           abel
     _ = Real.pi := by rw [hexterior, hsevenPi, zero_add]
+
+private theorem walkComplexTurn_cases
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    (∀ k, walkComplexTurn p k =
+      -(apexAngle p (walkIndex (k + 1)) : Real.Angle)) ∨
+    (∀ k, walkComplexTurn p k =
+      (apexAngle p (walkIndex (k + 1)) : Real.Angle)) := by
+  obtain ⟨ε, hε, hturn⟩ := diameter_star_structure h
+  rcases hε with rfl | rfl
+  · left
+    intro k
+    have harea := hturn k
+    have hcross :
+        complexCross (-walkComplexEdge p k) (walkComplexEdge p (k + 1)) < 0 := by
+      rw [walkComplexCross_eq_neg_orientedArea]
+      norm_num at harea ⊢
+      linarith
+    have hoangle := complex_oangle_eq_neg_angle_of_cross_neg hcross
+    rw [walkComplexAngle_eq_apex] at hoangle
+    exact hoangle
+  · right
+    intro k
+    have harea := hturn k
+    have hcross :
+        0 < complexCross (-walkComplexEdge p k) (walkComplexEdge p (k + 1)) := by
+      rw [walkComplexCross_eq_neg_orientedArea]
+      norm_num at harea ⊢
+      linarith
+    have hoangle := complex_oangle_eq_angle_of_cross_pos hcross
+    rw [walkComplexAngle_eq_apex] at hoangle
+    exact hoangle
+
+private theorem walkExteriorTurn_cases
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    (∀ k, walkExteriorTurn p k =
+      -(apexAngle p (walkIndex (k + 1)) : Real.Angle) - Real.pi) ∨
+    (∀ k, walkExteriorTurn p k =
+      (apexAngle p (walkIndex (k + 1)) : Real.Angle) - Real.pi) := by
+  rcases walkComplexTurn_cases h with hneg | hpos
+  · left
+    intro k
+    have hrelation := walkComplexTurn_eq_exterior_add_pi h k
+    rw [hneg k] at hrelation
+    calc
+      walkExteriorTurn p k =
+          (walkExteriorTurn p k + Real.pi) - Real.pi := by
+            rw [add_sub_cancel_right]
+      _ = -(apexAngle p (walkIndex (k + 1)) : Real.Angle) - Real.pi := by
+            rw [← hrelation]
+  · right
+    intro k
+    have hrelation := walkComplexTurn_eq_exterior_add_pi h k
+    rw [hpos k] at hrelation
+    calc
+      walkExteriorTurn p k =
+          (walkExteriorTurn p k + Real.pi) - Real.pi := by
+            rw [add_sub_cancel_right]
+      _ = (apexAngle p (walkIndex (k + 1)) : Real.Angle) - Real.pi := by
+            rw [← hrelation]
+
+private theorem walkComplexEdge_mul_conj_re
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) (i j : Fin 7) :
+    (walkComplexEdge p i * starRingEnd ℂ (walkComplexEdge p j)).re =
+      Real.Angle.cos
+        (Complex.orientation.oangle (walkComplexEdge p i) (walkComplexEdge p j)) := by
+  have hinner := Complex.orientation.inner_eq_norm_mul_norm_mul_cos_oangle
+    (walkComplexEdge p i) (walkComplexEdge p j)
+  rw [walkComplexEdge_norm h i, walkComplexEdge_norm h j] at hinner
+  simpa [Complex.inner, mul_comm] using hinner
+
+private theorem angle_neg_turn_two (x y : ℝ) :
+    (-(x : Real.Angle) - Real.pi) + (-(y : Real.Angle) - Real.pi) =
+      -((x + y : ℝ) : Real.Angle) := by
+  simp only [sub_eq_add_neg, Real.Angle.neg_coe_pi]
+  calc
+    -(x : Real.Angle) + Real.pi + (-(y : Real.Angle) + Real.pi) =
+        (-(x : Real.Angle) - y) + (Real.pi + Real.pi) := by abel
+    _ = -((x + y : ℝ) : Real.Angle) := by simp; abel
+
+private theorem angle_pos_turn_two (x y : ℝ) :
+    ((x : Real.Angle) - Real.pi) + ((y : Real.Angle) - Real.pi) =
+      ((x + y : ℝ) : Real.Angle) := by
+  simp only [sub_eq_add_neg, Real.Angle.neg_coe_pi]
+  calc
+    (x : Real.Angle) + Real.pi + ((y : Real.Angle) + Real.pi) =
+        ((x : Real.Angle) + y) + (Real.pi + Real.pi) := by abel
+    _ = ((x + y : ℝ) : Real.Angle) := by simp
+
+private theorem angle_neg_turn_three (x y z : ℝ) :
+    (-(x : Real.Angle) - Real.pi) + (-(y : Real.Angle) - Real.pi) +
+        (-(z : Real.Angle) - Real.pi) =
+      -((x + y + z : ℝ) : Real.Angle) - Real.pi := by
+  calc
+    (-(x : Real.Angle) - Real.pi) + (-(y : Real.Angle) - Real.pi) +
+          (-(z : Real.Angle) - Real.pi) =
+        ((-(x : Real.Angle) - Real.pi) + (-(y : Real.Angle) - Real.pi)) +
+          (-(z : Real.Angle) - Real.pi) := by abel
+    _ = -((x + y : ℝ) : Real.Angle) + (-(z : Real.Angle) - Real.pi) := by
+      rw [angle_neg_turn_two]
+    _ = -((x + y + z : ℝ) : Real.Angle) - Real.pi := by
+      simp only [Real.Angle.coe_add]
+      abel
+
+private theorem angle_pos_turn_three (x y z : ℝ) :
+    ((x : Real.Angle) - Real.pi) + ((y : Real.Angle) - Real.pi) +
+        ((z : Real.Angle) - Real.pi) =
+      ((x + y + z : ℝ) : Real.Angle) - Real.pi := by
+  calc
+    ((x : Real.Angle) - Real.pi) + ((y : Real.Angle) - Real.pi) +
+          ((z : Real.Angle) - Real.pi) =
+        (((x : Real.Angle) - Real.pi) + ((y : Real.Angle) - Real.pi)) +
+          ((z : Real.Angle) - Real.pi) := by abel
+    _ = ((x + y : ℝ) : Real.Angle) + ((z : Real.Angle) - Real.pi) := by
+      rw [angle_pos_turn_two]
+    _ = ((x + y + z : ℝ) : Real.Angle) - Real.pi := by
+      simp only [Real.Angle.coe_add]
+      abel
+
+private theorem angle_neg_turn_four (w x y z : ℝ) :
+    (-(w : Real.Angle) - Real.pi) + (-(x : Real.Angle) - Real.pi) +
+          (-(y : Real.Angle) - Real.pi) + (-(z : Real.Angle) - Real.pi) =
+      -((w + x + y + z : ℝ) : Real.Angle) := by
+  calc
+    (-(w : Real.Angle) - Real.pi) + (-(x : Real.Angle) - Real.pi) +
+          (-(y : Real.Angle) - Real.pi) + (-(z : Real.Angle) - Real.pi) =
+        ((-(w : Real.Angle) - Real.pi) + (-(x : Real.Angle) - Real.pi)) +
+          ((-(y : Real.Angle) - Real.pi) + (-(z : Real.Angle) - Real.pi)) := by abel
+    _ = -((w + x : ℝ) : Real.Angle) - ((y + z : ℝ) : Real.Angle) := by
+      rw [angle_neg_turn_two, angle_neg_turn_two]
+      simp [sub_eq_add_neg]
+    _ = -((w + x + y + z : ℝ) : Real.Angle) := by
+      simp only [Real.Angle.coe_add]
+      abel
+
+private theorem angle_pos_turn_four (w x y z : ℝ) :
+    ((w : Real.Angle) - Real.pi) + ((x : Real.Angle) - Real.pi) +
+          ((y : Real.Angle) - Real.pi) + ((z : Real.Angle) - Real.pi) =
+      ((w + x + y + z : ℝ) : Real.Angle) := by
+  calc
+    ((w : Real.Angle) - Real.pi) + ((x : Real.Angle) - Real.pi) +
+          ((y : Real.Angle) - Real.pi) + ((z : Real.Angle) - Real.pi) =
+        (((w : Real.Angle) - Real.pi) + ((x : Real.Angle) - Real.pi)) +
+          (((y : Real.Angle) - Real.pi) + ((z : Real.Angle) - Real.pi)) := by abel
+    _ = ((w + x : ℝ) : Real.Angle) + ((y + z : ℝ) : Real.Angle) := by
+      rw [angle_pos_turn_two, angle_pos_turn_two]
+    _ = ((w + x + y + z : ℝ) : Real.Angle) := by
+      simp only [Real.Angle.coe_add]
+      abel
+
+private theorem angle_neg_turn_five (v w x y z : ℝ) :
+    (-(v : Real.Angle) - Real.pi) + (-(w : Real.Angle) - Real.pi) +
+          (-(x : Real.Angle) - Real.pi) + (-(y : Real.Angle) - Real.pi) +
+        (-(z : Real.Angle) - Real.pi) =
+      -((v + w + x + y + z : ℝ) : Real.Angle) - Real.pi := by
+  calc
+    (-(v : Real.Angle) - Real.pi) + (-(w : Real.Angle) - Real.pi) +
+          (-(x : Real.Angle) - Real.pi) + (-(y : Real.Angle) - Real.pi) +
+        (-(z : Real.Angle) - Real.pi) =
+      ((-(v : Real.Angle) - Real.pi) + (-(w : Real.Angle) - Real.pi) +
+          (-(x : Real.Angle) - Real.pi) + (-(y : Real.Angle) - Real.pi)) +
+        (-(z : Real.Angle) - Real.pi) := by abel
+    _ = -((v + w + x + y : ℝ) : Real.Angle) +
+        (-(z : Real.Angle) - Real.pi) := by rw [angle_neg_turn_four]
+    _ = -((v + w + x + y + z : ℝ) : Real.Angle) - Real.pi := by
+      simp only [Real.Angle.coe_add]
+      abel
+
+private theorem angle_pos_turn_five (v w x y z : ℝ) :
+    ((v : Real.Angle) - Real.pi) + ((w : Real.Angle) - Real.pi) +
+          ((x : Real.Angle) - Real.pi) + ((y : Real.Angle) - Real.pi) +
+        ((z : Real.Angle) - Real.pi) =
+      ((v + w + x + y + z : ℝ) : Real.Angle) - Real.pi := by
+  calc
+    ((v : Real.Angle) - Real.pi) + ((w : Real.Angle) - Real.pi) +
+          ((x : Real.Angle) - Real.pi) + ((y : Real.Angle) - Real.pi) +
+        ((z : Real.Angle) - Real.pi) =
+      (((v : Real.Angle) - Real.pi) + ((w : Real.Angle) - Real.pi) +
+          ((x : Real.Angle) - Real.pi) + ((y : Real.Angle) - Real.pi)) +
+        ((z : Real.Angle) - Real.pi) := by abel
+    _ = ((v + w + x + y : ℝ) : Real.Angle) +
+        ((z : Real.Angle) - Real.pi) := by rw [angle_pos_turn_four]
+    _ = ((v + w + x + y + z : ℝ) : Real.Angle) - Real.pi := by
+      simp only [Real.Angle.coe_add]
+      abel
+
+private structure WalkGram (p : Fin 7 → Plane) (A B : ℝ) : Prop where
+  dot01 : (walkComplexEdge p 0 * starRingEnd ℂ (walkComplexEdge p 1)).re = -Real.cos A
+  dot12 : (walkComplexEdge p 1 * starRingEnd ℂ (walkComplexEdge p 2)).re = -Real.cos B
+  dot23 : (walkComplexEdge p 2 * starRingEnd ℂ (walkComplexEdge p 3)).re = -Real.cos A
+  dot34 : (walkComplexEdge p 3 * starRingEnd ℂ (walkComplexEdge p 4)).re = -Real.cos B
+  dot45 : (walkComplexEdge p 4 * starRingEnd ℂ (walkComplexEdge p 5)).re = -Real.cos A
+  dot02 : (walkComplexEdge p 0 * starRingEnd ℂ (walkComplexEdge p 2)).re = Real.cos (A + B)
+  dot13 : (walkComplexEdge p 1 * starRingEnd ℂ (walkComplexEdge p 3)).re = Real.cos (A + B)
+  dot24 : (walkComplexEdge p 2 * starRingEnd ℂ (walkComplexEdge p 4)).re = Real.cos (A + B)
+  dot35 : (walkComplexEdge p 3 * starRingEnd ℂ (walkComplexEdge p 5)).re = Real.cos (A + B)
+  dot03 : (walkComplexEdge p 0 * starRingEnd ℂ (walkComplexEdge p 3)).re = -Real.cos (2 * A + B)
+  dot14 : (walkComplexEdge p 1 * starRingEnd ℂ (walkComplexEdge p 4)).re = -Real.cos (A + 2 * B)
+  dot25 : (walkComplexEdge p 2 * starRingEnd ℂ (walkComplexEdge p 5)).re = -Real.cos (2 * A + B)
+  dot04 : (walkComplexEdge p 0 * starRingEnd ℂ (walkComplexEdge p 4)).re = Real.cos (2 * (A + B))
+  dot15 : (walkComplexEdge p 1 * starRingEnd ℂ (walkComplexEdge p 5)).re = Real.cos (2 * (A + B))
+  dot05 : (walkComplexEdge p 0 * starRingEnd ℂ (walkComplexEdge p 5)).re = -Real.cos (3 * A + 2 * B)
+
+private theorem walk_oangle_02 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 0) (walkComplexEdge p 2) =
+      walkExteriorTurn p 0 + walkExteriorTurn p 1 := by
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 0) (walkComplexEdge_ne_zero h 1)
+      (walkComplexEdge_ne_zero h 2)
+
+private theorem walk_oangle_13 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 1) (walkComplexEdge p 3) =
+      walkExteriorTurn p 1 + walkExteriorTurn p 2 := by
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 1) (walkComplexEdge_ne_zero h 2)
+      (walkComplexEdge_ne_zero h 3)
+
+private theorem walk_oangle_24 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 2) (walkComplexEdge p 4) =
+      walkExteriorTurn p 2 + walkExteriorTurn p 3 := by
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 2) (walkComplexEdge_ne_zero h 3)
+      (walkComplexEdge_ne_zero h 4)
+
+private theorem walk_oangle_35 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 3) (walkComplexEdge p 5) =
+      walkExteriorTurn p 3 + walkExteriorTurn p 4 := by
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 3) (walkComplexEdge_ne_zero h 4)
+      (walkComplexEdge_ne_zero h 5)
+
+private theorem walk_oangle_03 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 0) (walkComplexEdge p 3) =
+      walkExteriorTurn p 0 + walkExteriorTurn p 1 + walkExteriorTurn p 2 := by
+  rw [← walk_oangle_02 h]
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 0) (walkComplexEdge_ne_zero h 2)
+      (walkComplexEdge_ne_zero h 3)
+
+private theorem walk_oangle_14 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 1) (walkComplexEdge p 4) =
+      walkExteriorTurn p 1 + walkExteriorTurn p 2 + walkExteriorTurn p 3 := by
+  rw [← walk_oangle_13 h]
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 1) (walkComplexEdge_ne_zero h 3)
+      (walkComplexEdge_ne_zero h 4)
+
+private theorem walk_oangle_25 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 2) (walkComplexEdge p 5) =
+      walkExteriorTurn p 2 + walkExteriorTurn p 3 + walkExteriorTurn p 4 := by
+  rw [← walk_oangle_24 h]
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 2) (walkComplexEdge_ne_zero h 4)
+      (walkComplexEdge_ne_zero h 5)
+
+private theorem walk_oangle_04 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 0) (walkComplexEdge p 4) =
+      walkExteriorTurn p 0 + walkExteriorTurn p 1 + walkExteriorTurn p 2 +
+        walkExteriorTurn p 3 := by
+  rw [← walk_oangle_03 h]
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 0) (walkComplexEdge_ne_zero h 3)
+      (walkComplexEdge_ne_zero h 4)
+
+private theorem walk_oangle_15 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 1) (walkComplexEdge p 5) =
+      walkExteriorTurn p 1 + walkExteriorTurn p 2 + walkExteriorTurn p 3 +
+        walkExteriorTurn p 4 := by
+  rw [← walk_oangle_14 h]
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 1) (walkComplexEdge_ne_zero h 4)
+      (walkComplexEdge_ne_zero h 5)
+
+private theorem walk_oangle_05 {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    Complex.orientation.oangle (walkComplexEdge p 0) (walkComplexEdge p 5) =
+      walkExteriorTurn p 0 + walkExteriorTurn p 1 + walkExteriorTurn p 2 +
+        walkExteriorTurn p 3 + walkExteriorTurn p 4 := by
+  rw [← walk_oangle_04 h]
+  symm
+  exact Complex.orientation.oangle_add
+    (walkComplexEdge_ne_zero h 0) (walkComplexEdge_ne_zero h 4)
+      (walkComplexEdge_ne_zero h 5)
+
+private theorem walkGram_of_negative_turns
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p)
+    {A B C : ℝ} (hclasses : AngleClasses p A B C)
+    (hturn : ∀ k, walkExteriorTurn p k =
+      -(apexAngle p (walkIndex (k + 1)) : Real.Angle) - Real.pi) :
+    WalkGram p A B := by
+  have ht0 : walkExteriorTurn p 0 = -(A : Real.Angle) - Real.pi := by
+    have ht := hturn 0
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle3] using ht
+  have ht1 : walkExteriorTurn p 1 = -(B : Real.Angle) - Real.pi := by
+    have ht := hturn 1
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle6] using ht
+  have ht2 : walkExteriorTurn p 2 = -(A : Real.Angle) - Real.pi := by
+    have ht := hturn 2
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle2] using ht
+  have ht3 : walkExteriorTurn p 3 = -(B : Real.Angle) - Real.pi := by
+    have ht := hturn 3
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle5] using ht
+  have ht4 : walkExteriorTurn p 4 = -(A : Real.Angle) - Real.pi := by
+    have ht := hturn 4
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle1] using ht
+  refine
+    { dot01 := ?_, dot12 := ?_, dot23 := ?_, dot34 := ?_, dot45 := ?_,
+      dot02 := ?_, dot13 := ?_, dot24 := ?_, dot35 := ?_, dot03 := ?_,
+      dot14 := ?_, dot25 := ?_, dot04 := ?_, dot15 := ?_, dot05 := ?_ }
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 0) = _
+    rw [ht0, Real.Angle.cos_sub_pi, Real.Angle.cos_neg, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 1) = _
+    rw [ht1, Real.Angle.cos_sub_pi, Real.Angle.cos_neg, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 2) = _
+    rw [ht2, Real.Angle.cos_sub_pi, Real.Angle.cos_neg, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 3) = _
+    rw [ht3, Real.Angle.cos_sub_pi, Real.Angle.cos_neg, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 4) = _
+    rw [ht4, Real.Angle.cos_sub_pi, Real.Angle.cos_neg, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_02 h, ht0, ht1,
+      angle_neg_turn_two, Real.Angle.cos_neg, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_13 h, ht1, ht2,
+      angle_neg_turn_two, add_comm B A, Real.Angle.cos_neg, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_24 h, ht2, ht3,
+      angle_neg_turn_two, Real.Angle.cos_neg, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_35 h, ht3, ht4,
+      angle_neg_turn_two, add_comm B A, Real.Angle.cos_neg, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_03 h, ht0, ht1, ht2,
+      angle_neg_turn_three, Real.Angle.cos_sub_pi, Real.Angle.cos_neg,
+      Real.Angle.cos_coe, show A + B + A = 2 * A + B by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_14 h, ht1, ht2, ht3,
+      angle_neg_turn_three, Real.Angle.cos_sub_pi, Real.Angle.cos_neg,
+      Real.Angle.cos_coe, show B + A + B = A + 2 * B by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_25 h, ht2, ht3, ht4,
+      angle_neg_turn_three, Real.Angle.cos_sub_pi, Real.Angle.cos_neg,
+      Real.Angle.cos_coe, show A + B + A = 2 * A + B by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_04 h, ht0, ht1, ht2, ht3,
+      angle_neg_turn_four, Real.Angle.cos_neg, Real.Angle.cos_coe,
+      show A + B + A + B = 2 * (A + B) by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_15 h, ht1, ht2, ht3, ht4,
+      angle_neg_turn_four, Real.Angle.cos_neg, Real.Angle.cos_coe,
+      show B + A + B + A = 2 * (A + B) by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_05 h, ht0, ht1, ht2, ht3, ht4,
+      angle_neg_turn_five, Real.Angle.cos_sub_pi, Real.Angle.cos_neg,
+      Real.Angle.cos_coe, show A + B + A + B + A = 3 * A + 2 * B by ring]
+
+private theorem walkGram_of_positive_turns
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p)
+    {A B C : ℝ} (hclasses : AngleClasses p A B C)
+    (hturn : ∀ k, walkExteriorTurn p k =
+      (apexAngle p (walkIndex (k + 1)) : Real.Angle) - Real.pi) :
+    WalkGram p A B := by
+  have ht0 : walkExteriorTurn p 0 = (A : Real.Angle) - Real.pi := by
+    have ht := hturn 0
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle3] using ht
+  have ht1 : walkExteriorTurn p 1 = (B : Real.Angle) - Real.pi := by
+    have ht := hturn 1
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle6] using ht
+  have ht2 : walkExteriorTurn p 2 = (A : Real.Angle) - Real.pi := by
+    have ht := hturn 2
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle2] using ht
+  have ht3 : walkExteriorTurn p 3 = (B : Real.Angle) - Real.pi := by
+    have ht := hturn 3
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle5] using ht
+  have ht4 : walkExteriorTurn p 4 = (A : Real.Angle) - Real.pi := by
+    have ht := hturn 4
+    norm_num [walkIndex] at ht
+    simpa [hclasses.angle1] using ht
+  refine
+    { dot01 := ?_, dot12 := ?_, dot23 := ?_, dot34 := ?_, dot45 := ?_,
+      dot02 := ?_, dot13 := ?_, dot24 := ?_, dot35 := ?_, dot03 := ?_,
+      dot14 := ?_, dot25 := ?_, dot04 := ?_, dot15 := ?_, dot05 := ?_ }
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 0) = _
+    rw [ht0, Real.Angle.cos_sub_pi, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 1) = _
+    rw [ht1, Real.Angle.cos_sub_pi, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 2) = _
+    rw [ht2, Real.Angle.cos_sub_pi, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 3) = _
+    rw [ht3, Real.Angle.cos_sub_pi, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h]
+    change Real.Angle.cos (walkExteriorTurn p 4) = _
+    rw [ht4, Real.Angle.cos_sub_pi, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_02 h, ht0, ht1,
+      angle_pos_turn_two, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_13 h, ht1, ht2,
+      angle_pos_turn_two, add_comm B A, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_24 h, ht2, ht3,
+      angle_pos_turn_two, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_35 h, ht3, ht4,
+      angle_pos_turn_two, add_comm B A, Real.Angle.cos_coe]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_03 h, ht0, ht1, ht2,
+      angle_pos_turn_three, Real.Angle.cos_sub_pi, Real.Angle.cos_coe,
+      show A + B + A = 2 * A + B by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_14 h, ht1, ht2, ht3,
+      angle_pos_turn_three, Real.Angle.cos_sub_pi, Real.Angle.cos_coe,
+      show B + A + B = A + 2 * B by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_25 h, ht2, ht3, ht4,
+      angle_pos_turn_three, Real.Angle.cos_sub_pi, Real.Angle.cos_coe,
+      show A + B + A = 2 * A + B by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_04 h, ht0, ht1, ht2, ht3,
+      angle_pos_turn_four, Real.Angle.cos_coe,
+      show A + B + A + B = 2 * (A + B) by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_15 h, ht1, ht2, ht3, ht4,
+      angle_pos_turn_four, Real.Angle.cos_coe,
+      show B + A + B + A = 2 * (A + B) by ring]
+  · rw [walkComplexEdge_mul_conj_re h, walk_oangle_05 h, ht0, ht1, ht2, ht3, ht4,
+      angle_pos_turn_five, Real.Angle.cos_sub_pi, Real.Angle.cos_coe,
+      show A + B + A + B + A = 3 * A + 2 * B by ring]
+
+private theorem walkGram
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p)
+    {A B C : ℝ} (hclasses : AngleClasses p A B C) : WalkGram p A B := by
+  rcases walkExteriorTurn_cases h with hneg | hpos
+  · exact walkGram_of_negative_turns h hclasses hneg
+  · exact walkGram_of_positive_turns h hclasses hpos
+
+private theorem complex_normSq_add_three (a b c : ℂ) :
+    Complex.normSq (a + b + c) = Complex.normSq a + Complex.normSq b +
+      Complex.normSq c + 2 * (a * starRingEnd ℂ b).re +
+        2 * (a * starRingEnd ℂ c).re + 2 * (b * starRingEnd ℂ c).re := by
+  simp [Complex.normSq_apply, Complex.mul_re]
+  ring
+
+private theorem complex_normSq_add_four (a b c d : ℂ) :
+    Complex.normSq (a + b + c + d) =
+      Complex.normSq a + Complex.normSq b + Complex.normSq c + Complex.normSq d +
+        2 * (a * starRingEnd ℂ b).re + 2 * (a * starRingEnd ℂ c).re +
+        2 * (a * starRingEnd ℂ d).re + 2 * (b * starRingEnd ℂ c).re +
+        2 * (b * starRingEnd ℂ d).re + 2 * (c * starRingEnd ℂ d).re := by
+  simp [Complex.normSq_apply, Complex.mul_re]
+  ring
+
+private theorem complex_normSq_add_six (a b c d e f : ℂ) :
+    Complex.normSq (a + b + c + d + e + f) =
+      Complex.normSq a + Complex.normSq b + Complex.normSq c + Complex.normSq d +
+        Complex.normSq e + Complex.normSq f +
+        2 * (a * starRingEnd ℂ b).re + 2 * (a * starRingEnd ℂ c).re +
+        2 * (a * starRingEnd ℂ d).re + 2 * (a * starRingEnd ℂ e).re +
+        2 * (a * starRingEnd ℂ f).re + 2 * (b * starRingEnd ℂ c).re +
+        2 * (b * starRingEnd ℂ d).re + 2 * (b * starRingEnd ℂ e).re +
+        2 * (b * starRingEnd ℂ f).re + 2 * (c * starRingEnd ℂ d).re +
+        2 * (c * starRingEnd ℂ e).re + 2 * (c * starRingEnd ℂ f).re +
+        2 * (d * starRingEnd ℂ e).re + 2 * (d * starRingEnd ℂ f).re +
+        2 * (e * starRingEnd ℂ f).re := by
+  simp [Complex.normSq_apply, Complex.mul_re]
+  ring
+
+private theorem walkComplexEdge_normSq
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) (k : Fin 7) :
+    Complex.normSq (walkComplexEdge p k) = 1 := by
+  rw [Complex.normSq_eq_norm_sq, walkComplexEdge_norm h k]
+  norm_num
+
+private theorem walkComplexPoint_dist
+    (p : Fin 7 → Plane) (i j : Fin 7) :
+    dist (p (walkIndex i)) (p (walkIndex j)) =
+      ‖walkComplexPoint p i - walkComplexPoint p j‖ := by
+  have hmap := complexPlaneEquiv.symm.toLinearIsometry.dist_map
+    (p (walkIndex i)) (p (walkIndex j))
+  rw [dist_eq_norm] at hmap
+  simpa [walkComplexPoint, toComplex] using hmap.symm
+
+private theorem walk_sum_0_3 (p : Fin 7 → Plane) :
+    walkComplexPoint p 3 - walkComplexPoint p 0 =
+      walkComplexEdge p 0 + walkComplexEdge p 1 + walkComplexEdge p 2 := by
+  simp [walkComplexEdge]
+
+private theorem walk_sum_0_4 (p : Fin 7 → Plane) :
+    walkComplexPoint p 4 - walkComplexPoint p 0 =
+      walkComplexEdge p 0 + walkComplexEdge p 1 + walkComplexEdge p 2 +
+        walkComplexEdge p 3 := by
+  simp [walkComplexEdge]
+
+private theorem walk_sum_1_5 (p : Fin 7 → Plane) :
+    walkComplexPoint p 5 - walkComplexPoint p 1 =
+      walkComplexEdge p 1 + walkComplexEdge p 2 + walkComplexEdge p 3 +
+        walkComplexEdge p 4 := by
+  simp [walkComplexEdge]
+
+private theorem walk_sum_0_6 (p : Fin 7 → Plane) :
+    walkComplexPoint p 6 - walkComplexPoint p 0 =
+      walkComplexEdge p 0 + walkComplexEdge p 1 + walkComplexEdge p 2 +
+        walkComplexEdge p 3 + walkComplexEdge p 4 + walkComplexEdge p 5 := by
+  simp [walkComplexEdge]
+
+private theorem walk_norm_trig_identity (A B : ℝ) :
+    6 - 6 * Real.cos A - 4 * Real.cos B + 8 * Real.cos (A + B) -
+          4 * Real.cos (2 * A + B) - 2 * Real.cos (A + 2 * B) +
+        4 * Real.cos (2 * (A + B)) - 2 * Real.cos (3 * A + 2 * B) =
+      (2 - 2 * Real.cos A) *
+        (3 + 4 * Real.cos (A + B) + 2 * Real.cos (2 * (A + B))) := by
+  rw [show 2 * A + B = (A + B) + A by ring, Real.cos_add]
+  rw [show A + 2 * B = (A + B) + B by ring, Real.cos_add]
+  rw [show 3 * A + 2 * B = 2 * (A + B) + A by ring, Real.cos_add]
+  rw [Real.cos_add (A + B) B, Real.cos_add (2 * (A + B)) A]
+  rw [Real.cos_two_mul (A + B), Real.sin_two_mul (A + B),
+    Real.cos_add A B, Real.sin_add A B]
+  linear_combination
+    (4 * Real.cos A * Real.cos B ^ 2 -
+        4 * Real.cos B * Real.sin A * Real.sin B + 4 * Real.cos B) *
+      (Real.sin_sq_add_cos_sq A) +
+    (2 * Real.cos A) * (Real.sin_sq_add_cos_sq B)
+
+private theorem two_mul_sin_half_sq (A : ℝ) :
+    (2 * Real.sin (A / 2)) ^ 2 = 2 - 2 * Real.cos A := by
+  have hcos := Real.cos_two_mul (A / 2)
+  rw [show 2 * (A / 2) = A by ring] at hcos
+  nlinarith [Real.sin_sq_add_cos_sq (A / 2)]
+
+private theorem one_add_two_cos_sq (S : ℝ) :
+    (1 + 2 * Real.cos S) ^ 2 =
+      3 + 4 * Real.cos S + 2 * Real.cos (2 * S) := by
+  rw [Real.cos_two_mul]
+  nlinarith [Real.sin_sq_add_cos_sq S]
 
 /-- The star structure and edge order determine the three ordered angle classes. -/
 theorem ordered_angle_classes
@@ -515,7 +1071,63 @@ theorem star_scalar_closure
     {A B C : ℝ} (hclasses : AngleClasses p A B C)
     (hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
     2 * Real.sin (A / 2) * (1 + 2 * Real.cos (A + B)) = 1 := by
-  sorry
+  have hgram := walkGram h hclasses
+  have hdiam04 : dist (p 0) (p 4) = 1 := by
+    have hd := h.hdiam 4
+    simpa [dist_comm] using hd
+  have hpoint : dist (p 0) (p 4) =
+      ‖walkComplexPoint p 0 - walkComplexPoint p 6‖ := by
+    simpa [walkIndex] using walkComplexPoint_dist p 0 6
+  have hwalkNorm :
+      ‖walkComplexEdge p 0 + walkComplexEdge p 1 + walkComplexEdge p 2 +
+          walkComplexEdge p 3 + walkComplexEdge p 4 + walkComplexEdge p 5‖ = 1 := by
+    rw [← walk_sum_0_6, norm_sub_rev, ← hpoint]
+    exact hdiam04
+  have hwalkNormSq :
+      Complex.normSq
+        (walkComplexEdge p 0 + walkComplexEdge p 1 + walkComplexEdge p 2 +
+          walkComplexEdge p 3 + walkComplexEdge p 4 + walkComplexEdge p 5) = 1 := by
+    rw [Complex.normSq_eq_norm_sq, hwalkNorm]
+    norm_num
+  rw [complex_normSq_add_six, walkComplexEdge_normSq h 0,
+    walkComplexEdge_normSq h 1, walkComplexEdge_normSq h 2,
+    walkComplexEdge_normSq h 3, walkComplexEdge_normSq h 4,
+    walkComplexEdge_normSq h 5, hgram.dot01, hgram.dot02, hgram.dot03,
+    hgram.dot04, hgram.dot05, hgram.dot12, hgram.dot13, hgram.dot14,
+    hgram.dot15, hgram.dot23, hgram.dot24, hgram.dot25, hgram.dot34,
+    hgram.dot35, hgram.dot45] at hwalkNormSq
+  have htrigProduct :
+      (2 - 2 * Real.cos A) *
+        (3 + 4 * Real.cos (A + B) + 2 * Real.cos (2 * (A + B))) = 1 := by
+    rw [← walk_norm_trig_identity]
+    nlinarith [hwalkNormSq]
+  rw [← two_mul_sin_half_sq, ← one_add_two_cos_sq] at htrigProduct
+  have hsquare :
+      (2 * Real.sin (A / 2) * (1 + 2 * Real.cos (A + B))) ^ 2 = 1 := by
+    simpa [mul_pow] using htrigProduct
+  have hApos : 0 < A := by
+    rw [← hclasses.angle1]
+    exact apexAngle_pos h 1
+  have hBpos : 0 < B := by
+    rw [← hclasses.angle5]
+    exact apexAngle_pos h 5
+  have hCpos : 0 < C := by
+    rw [← hclasses.angle0]
+    exact apexAngle_pos h 0
+  have hsinpos : 0 < Real.sin (A / 2) := by
+    apply Real.sin_pos_of_pos_of_lt_pi
+    · linarith
+    · have hAlt : A < Real.pi := by
+        rw [← hclasses.angle1]
+        exact apexAngle_lt_pi h 1
+      linarith [Real.pi_pos]
+  have hsumlt : A + B < Real.pi / 2 := by linarith
+  have hcospos : 0 < Real.cos (A + B) := by
+    apply Real.cos_pos_of_mem_Ioo
+    constructor <;> linarith [Real.pi_pos]
+  have hproductpos :
+      0 < 2 * Real.sin (A / 2) * (1 + 2 * Real.cos (A + B)) := by positivity
+  nlinarith
 
 /-- Norm expansion of the normalized certificate walk gives required G6, G8, and G9. -/
 theorem distance_dictionary
@@ -523,7 +1135,35 @@ theorem distance_dictionary
     {A B C : ℝ} (hclasses : AngleClasses p A B C)
     (hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
     DistanceDictionary p A B := by
-  sorry
+  have _hsum : 2 * C + 3 * A + 2 * B = Real.pi := hsum
+  have hgram := walkGram h hclasses
+  have hqdist : dist (p 0) (p 2) =
+      ‖walkComplexPoint p 0 - walkComplexPoint p 3‖ := by
+    simpa [walkIndex] using walkComplexPoint_dist p 0 3
+  have hradist : dist (p 0) (p 5) =
+      ‖walkComplexPoint p 0 - walkComplexPoint p 4‖ := by
+    simpa [walkIndex] using walkComplexPoint_dist p 0 4
+  have hrbdist : dist (p 1) (p 3) =
+      ‖walkComplexPoint p 5 - walkComplexPoint p 1‖ := by
+    simpa [walkIndex] using walkComplexPoint_dist p 5 1
+  constructor
+  · rw [hqdist, norm_sub_rev, walk_sum_0_3, Complex.sq_norm,
+      complex_normSq_add_three, walkComplexEdge_normSq h 0,
+      walkComplexEdge_normSq h 1, walkComplexEdge_normSq h 2,
+      hgram.dot01, hgram.dot02, hgram.dot12]
+    ring
+  · rw [hradist, norm_sub_rev, walk_sum_0_4, Complex.sq_norm,
+      complex_normSq_add_four, walkComplexEdge_normSq h 0,
+      walkComplexEdge_normSq h 1, walkComplexEdge_normSq h 2,
+      walkComplexEdge_normSq h 3, hgram.dot01, hgram.dot02, hgram.dot03,
+      hgram.dot12, hgram.dot13, hgram.dot23]
+    ring
+  · rw [hrbdist, walk_sum_1_5, Complex.sq_norm, complex_normSq_add_four,
+      walkComplexEdge_normSq h 1, walkComplexEdge_normSq h 2,
+      walkComplexEdge_normSq h 3, walkComplexEdge_normSq h 4,
+      hgram.dot12, hgram.dot13, hgram.dot14, hgram.dot23, hgram.dot24,
+      hgram.dot34]
+    ring
 
 /-- Geometry half of the frozen E2 solution interface. -/
 theorem e2_angle_parametrization
@@ -537,6 +1177,33 @@ theorem e2_angle_parametrization
     (hBA : dist (p 1) (p 2) < dist (p 4) (p 5))
     (hAC : dist (p 4) (p 5) < dist (p 0) (p 1)) :
     ∃ A B C : ℝ, E2AngleParametrization p A B C := by
-  sorry
+  let h : E2GeometryHypotheses p :=
+    { hdiam := hdiam
+      hshort := hshort
+      hC := hC
+      hB := hB
+      hA₁ := hA₁
+      hA₂ := hA₂
+      hBA := hBA
+      hAC := hAC }
+  obtain ⟨A, B, C, hBpos, hBAngle, hACAngle, hCthird, hclasses⟩ :=
+    ordered_angle_classes h
+  have hsum := star_angle_sum h hclasses
+  have hclosure := star_scalar_closure h hclasses hsum
+  have hedges := edge_formulas h hclasses
+  have hdictionary := distance_dictionary h hclasses hsum
+  exact ⟨A, B, C,
+    { B_pos := hBpos
+      B_lt_A := hBAngle
+      A_lt_C := hACAngle
+      C_lt_pi_div_three := hCthird
+      angle_sum := hsum
+      closure := hclosure
+      edgeC := hedges.edgeC
+      edgeB := hedges.edgeB
+      edgeA := hedges.edgeA
+      q_sq := hdictionary.q_sq
+      ra_sq := hdictionary.ra_sq
+      rb_sq := hdictionary.rb_sq }⟩
 
 end LeanPool.Erdos132WeiE2.Geometry
