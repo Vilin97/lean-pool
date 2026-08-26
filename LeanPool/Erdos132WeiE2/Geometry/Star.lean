@@ -51,6 +51,64 @@ private theorem orientedArea_affine_combo
   rw [hre, him]
   ring
 
+/-- A noncollinear triple has nonzero signed area in the chosen coordinates. -/
+private theorem orientedArea_ne_zero_of_not_collinear
+    {a b c : Plane} (hcol : ¬Collinear ℝ ({a, b, c} : Set Plane)) :
+    orientedArea a b c ≠ 0 := by
+  intro harea
+  apply hcol
+  rw [collinear_iff_exists_forall_eq_smul_vadd]
+  have hab : a ≠ b := by
+    intro hab
+    subst b
+    exact hcol (by simpa [Set.pair_comm] using collinear_pair ℝ a c)
+  let u : ℂ := toComplex b - toComplex a
+  let v : ℂ := toComplex c - toComplex a
+  have hu : u ≠ 0 := by
+    intro hu
+    have : toComplex b = toComplex a := sub_eq_zero.mp hu
+    have hba : b = a := complexPlaneEquiv.symm.injective (by
+      simpa [toComplex] using this)
+    exact hab hba.symm
+  have hcross : u.re * v.im - u.im * v.re = 0 := by
+    simpa [orientedArea, u, v] using harea
+  obtain ⟨r, hvr⟩ : ∃ r : ℝ, v = r • u := by
+    by_cases hure : u.re = 0
+    · have huim : u.im ≠ 0 := by
+        intro huim
+        apply hu
+        apply Complex.ext <;> simp_all
+      refine ⟨v.im / u.im, ?_⟩
+      apply Complex.ext
+      · simp only [Complex.smul_re]
+        have hvre : v.re = 0 := by
+          rw [hure, zero_mul, zero_sub] at hcross
+          have hproduct : u.im * v.re = 0 := by linarith
+          exact (mul_eq_zero.mp hproduct).resolve_left huim
+        simp [hure, hvre]
+      · simp only [Complex.smul_im]
+        change v.im = (v.im / u.im) * u.im
+        exact (div_mul_cancel₀ v.im huim).symm
+    · refine ⟨v.re / u.re, ?_⟩
+      apply Complex.ext
+      · simp only [Complex.smul_re]
+        change v.re = (v.re / u.re) * u.re
+        exact (div_mul_cancel₀ v.re hure).symm
+      · simp only [Complex.smul_im]
+        change v.im = (v.re / u.re) * u.im
+        field_simp
+        nlinarith
+  have hplane : c - a = r • (b - a) := by
+    apply complexPlaneEquiv.symm.injective
+    simpa [u, v, toComplex] using hvr
+  refine ⟨a, b - a, ?_⟩
+  intro x hx
+  simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hx
+  rcases hx with rfl | rfl | rfl
+  · exact ⟨0, by simp⟩
+  · exact ⟨1, by simp⟩
+  · exact ⟨r, by simpa [vadd_eq_add] using (sub_eq_iff_eq_add.mp hplane)⟩
+
 /-- A proper segment crossing gives alternating signed areas once one area
 in each line direction is known to be nonzero. -/
 theorem alternating_oriented_areas_of_open_segments_meet
@@ -90,6 +148,51 @@ theorem alternating_oriented_areas_of_open_segments_meet
       linear_combination orientedArea c d a * hrelationCD
     have hpositive := mul_pos hr (sq_pos_of_ne_zero hcda)
     nlinarith
+
+/-- With the endpoint order induced by two crossed edges, the two consecutive
+turns have the same strict sign. -/
+private theorem consecutive_turn_product_pos_of_open_segments_meet
+    {a b c d : Plane} (hmeet : OpenSegmentsMeet a b c d)
+    (habc : orientedArea a b c ≠ 0) (hcda : orientedArea c d a ≠ 0) :
+    0 < orientedArea a b c * orientedArea b c d := by
+  have hsigns :=
+    alternating_oriented_areas_of_open_segments_meet hmeet habc hcda
+  have hcyclicABC : orientedArea b c a = orientedArea a b c := by
+    simp only [orientedArea, Complex.sub_re, Complex.sub_im]
+    ring
+  have hcyclicBCD : orientedArea c d b = orientedArea b c d := by
+    simp only [orientedArea, Complex.sub_re, Complex.sub_im]
+    ring
+  have hbcd : orientedArea b c d ≠ 0 := by
+    intro hbcd
+    have hcdb : orientedArea c d b = 0 := by simpa [hcyclicBCD] using hbcd
+    rw [hcdb, mul_zero] at hsigns
+    linarith [hsigns.2]
+  obtain ⟨x, hxab, hxcd⟩ := hmeet
+  obtain ⟨r, s, hr, _hs, hrs, hxAB⟩ := hxab
+  obtain ⟨u, v, _hu, hv, huv, hxCD⟩ := hxcd
+  have hareaAB :
+      orientedArea b c x = r * orientedArea a b c := by
+    rw [← hxAB, orientedArea_affine_combo b c a b r s hrs, hcyclicABC]
+    simp only [orientedArea, sub_self, Complex.zero_re, Complex.zero_im,
+      mul_zero, add_zero]
+  have hareaCD :
+      orientedArea b c x = v * orientedArea b c d := by
+    rw [← hxCD, orientedArea_affine_combo b c c d u v huv]
+    simp only [orientedArea]
+    ring
+  have hrelation :
+      r * orientedArea a b c = v * orientedArea b c d := hareaAB.symm.trans hareaCD
+  have hscaled :
+      r * (orientedArea a b c) ^ 2 =
+        v * (orientedArea a b c * orientedArea b c d) := by
+    linear_combination orientedArea a b c * hrelation
+  have hpositive := mul_pos hr (sq_pos_of_ne_zero habc)
+  have hproduct_ne := mul_ne_zero habc hbcd
+  have hproduct_nonneg :
+      0 ≤ orientedArea a b c * orientedArea b c d := by
+    nlinarith
+  exact lt_of_le_of_ne hproduct_nonneg hproduct_ne.symm
 
 /-- The four endpoints of two diameter pairs are in convex position. -/
 private theorem diameter_endpoints_convexIndependent
@@ -472,6 +575,67 @@ theorem all_diameter_edges_cross
   · exact hinjective.ne hi3j
   · exact hinjective.ne hi3j3
 
+/-- Four successive vertices of the diameter walk form the convex quadrilateral
+whose opposite diameter edges cross. -/
+private theorem walk_four_convexIndependent
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) (k : Fin 7) :
+    ConvexIndependent ℝ
+      ![p (walkIndex k), p (walkIndex (k + 1)),
+        p (walkIndex (k + 2)), p (walkIndex (k + 3))] := by
+  apply diameter_endpoints_convexIndependent
+  · have hd := h.hdiam (walkIndex k)
+    fin_cases k <;> simpa [walkIndex] using hd
+  · have hd := h.hdiam (walkIndex (k + 2))
+    fin_cases k <;> simpa [walkIndex] using hd
+  · exact dist_le_one_of_diameter_pattern h _ _
+  · exact dist_le_one_of_diameter_pattern h _ _
+  · exact dist_le_one_of_diameter_pattern h _ _
+  · exact dist_le_one_of_diameter_pattern h _ _
+  · exact (pairwise_distinct_of_diameter_pattern h).ne (by
+      fin_cases k <;> decide)
+  · exact (pairwise_distinct_of_diameter_pattern h).ne (by
+      fin_cases k <;> decide)
+  · exact (pairwise_distinct_of_diameter_pattern h).ne (by
+      fin_cases k <;> decide)
+  · exact (pairwise_distinct_of_diameter_pattern h).ne (by
+      fin_cases k <;> decide)
+
+private theorem walk_turn_ne_zero
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) (k : Fin 7) :
+    orientedArea (p (walkIndex k)) (p (walkIndex (k + 1)))
+      (p (walkIndex (k + 2))) ≠ 0 := by
+  apply orientedArea_ne_zero_of_not_collinear
+  simpa using convexIndependent_not_collinear (walk_four_convexIndependent h k)
+    (i := (0 : Fin 4)) (j := 1) (k := 2) (by decide) (by decide) (by decide)
+
+private theorem walk_cross_area_ne_zero
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) (k : Fin 7) :
+    orientedArea (p (walkIndex (k + 2))) (p (walkIndex (k + 3)))
+      (p (walkIndex k)) ≠ 0 := by
+  apply orientedArea_ne_zero_of_not_collinear
+  simpa using convexIndependent_not_collinear (walk_four_convexIndependent h k)
+    (i := (2 : Fin 4)) (j := 3) (k := 0) (by decide) (by decide) (by decide)
+
+private theorem walk_edges_two_apart_cross
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) (k : Fin 7) :
+    OpenSegmentsMeet
+      (p (walkIndex k)) (p (walkIndex (k + 1)))
+      (p (walkIndex (k + 2))) (p (walkIndex (k + 3))) := by
+  have hcross := all_diameter_edges_cross h (walkIndex k) (walkIndex (k + 2))
+    (by fin_cases k <;> decide) (by fin_cases k <;> decide)
+    (by fin_cases k <;> decide) (by fin_cases k <;> decide)
+  fin_cases k <;> simpa [walkIndex] using hcross
+
+private theorem consecutive_walk_turn_product_pos
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) (k : Fin 7) :
+    0 < orientedArea (p (walkIndex k)) (p (walkIndex (k + 1)))
+        (p (walkIndex (k + 2))) *
+      orientedArea (p (walkIndex (k + 1))) (p (walkIndex (k + 2)))
+        (p (walkIndex (k + 3))) := by
+  exact consecutive_turn_product_pos_of_open_segments_meet
+    (walk_edges_two_apart_cross h k) (walk_turn_ne_zero h k)
+    (walk_cross_area_ne_zero h k)
+
 /-- Along the diameter-cycle walk, every turn has one common orientation. -/
 def SameTurnStar (p : Fin 7 → Plane) : Prop :=
   ∃ ε : ℝ, (ε = 1 ∨ ε = -1) ∧
@@ -482,6 +646,43 @@ def SameTurnStar (p : Fin 7 → Plane) : Prop :=
 /-- The seven unit diameters have the standard star orientation, up to reflection. -/
 theorem diameter_star_structure
     {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) : SameTurnStar p := by
-  sorry
+  let turn : Fin 7 → ℝ := fun k ↦
+    orientedArea (p (walkIndex k)) (p (walkIndex (k + 1)))
+      (p (walkIndex (k + 2)))
+  have hstep (k : Fin 7) : 0 < turn k * turn (k + 1) := by
+    have hs := consecutive_walk_turn_product_pos h k
+    fin_cases k <;> simpa [turn] using hs
+  have hne : turn 0 ≠ 0 := by simpa [turn] using walk_turn_ne_zero h 0
+  have next_negative {x y : ℝ} (hx : x < 0) (hxy : 0 < x * y) : y < 0 := by
+    rcases mul_pos_iff.mp hxy with hpos | hneg
+    · linarith [hpos.1]
+    · exact hneg.2
+  have next_positive {x y : ℝ} (hx : 0 < x) (hxy : 0 < x * y) : 0 < y := by
+    rcases mul_pos_iff.mp hxy with hpos | hneg
+    · exact hpos.2
+    · linarith [hneg.1]
+  rcases lt_or_gt_of_ne hne with hnegative | hpositive
+  · have h1 : turn 1 < 0 := next_negative hnegative (by simpa using hstep 0)
+    have h2 : turn 2 < 0 := next_negative h1 (by simpa using hstep 1)
+    have h3 : turn 3 < 0 := next_negative h2 (by simpa using hstep 2)
+    have h4 : turn 4 < 0 := next_negative h3 (by simpa using hstep 3)
+    have h5 : turn 5 < 0 := next_negative h4 (by simpa using hstep 4)
+    have h6 : turn 6 < 0 := next_negative h5 (by simpa using hstep 5)
+    refine ⟨-1, Or.inr rfl, ?_⟩
+    intro k
+    have hk : turn k < 0 := by
+      fin_cases k <;> assumption
+    simpa [turn] using (show 0 < (-1 : ℝ) * turn k by linarith)
+  · have h1 : 0 < turn 1 := next_positive hpositive (by simpa using hstep 0)
+    have h2 : 0 < turn 2 := next_positive h1 (by simpa using hstep 1)
+    have h3 : 0 < turn 3 := next_positive h2 (by simpa using hstep 2)
+    have h4 : 0 < turn 4 := next_positive h3 (by simpa using hstep 3)
+    have h5 : 0 < turn 5 := next_positive h4 (by simpa using hstep 4)
+    have h6 : 0 < turn 6 := next_positive h5 (by simpa using hstep 5)
+    refine ⟨1, Or.inl rfl, ?_⟩
+    intro k
+    have hk : 0 < turn k := by
+      fin_cases k <;> assumption
+    simpa [turn] using hk
 
 end LeanPool.Erdos132WeiE2.Geometry
