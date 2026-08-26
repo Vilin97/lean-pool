@@ -69,6 +69,50 @@ structure E2AngleParametrization (p : Fin 7 → Plane) (A B C : ℝ) : Prop wher
       4 - 2 * Real.cos A - 4 * Real.cos B + 4 * Real.cos (A + B) -
         2 * Real.cos (A + 2 * B)
 
+/-- Equal base lengths in two unit apex triangles give equal apex angles. -/
+private theorem apexAngle_eq_of_base_dist_eq
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) {i j : Fin 7}
+    (hbase : dist (p (i + 3)) (p (i + 4)) =
+      dist (p (j + 3)) (p (j + 4))) :
+    apexAngle p i = apexAngle p j := by
+  have hleft (k : Fin 7) : dist (p (k + 3)) (p k) = 1 := by
+    simpa [dist_comm] using h.hdiam k
+  have hright (k : Fin 7) : dist (p k) (p (k + 4)) = 1 := by
+    have hd := h.hdiam (k + 4)
+    have hindex : (k + 4) + 3 = k := by omega
+    simpa [hindex, dist_comm] using hd
+  have hcongruent := EuclideanGeometry.side_side_side
+    (show dist (p (i + 3)) (p i) = dist (p (j + 3)) (p j) by
+      rw [hleft i, hleft j])
+    (show dist (p i) (p (i + 4)) = dist (p j) (p (j + 4)) by
+      rw [hright i, hright j])
+    (show dist (p (i + 4)) (p (i + 3)) =
+        dist (p (j + 4)) (p (j + 3)) by
+      simpa [dist_comm] using hbase)
+  simpa [apexAngle] using
+    EuclideanGeometry.angle_eq_of_congruent hcongruent (0 : Fin 3) 1 2
+
+/-- The challenge edge equalities give the certificate angle-class pattern. -/
+theorem apex_angle_classes
+    {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
+    AngleClasses p (apexAngle p 1) (apexAngle p 5) (apexAngle p 0) := by
+  have h04 : apexAngle p 0 = apexAngle p 4 :=
+    apexAngle_eq_of_base_dist_eq h h.hC.symm
+  have h12 : apexAngle p 1 = apexAngle p 2 :=
+    apexAngle_eq_of_base_dist_eq h h.hA₁
+  have h23 : apexAngle p 2 = apexAngle p 3 :=
+    apexAngle_eq_of_base_dist_eq h h.hA₂
+  have h56 : apexAngle p 5 = apexAngle p 6 :=
+    apexAngle_eq_of_base_dist_eq h h.hB
+  exact
+    { angle0 := rfl
+      angle1 := rfl
+      angle2 := h12.symm
+      angle3 := h23.symm.trans h12.symm
+      angle4 := h04.symm
+      angle5 := rfl
+      angle6 := h56.symm }
+
 /-- The star structure and edge order determine the three ordered angle classes. -/
 theorem ordered_angle_classes
     {p : Fin 7 → Plane} (h : E2GeometryHypotheses p) :
