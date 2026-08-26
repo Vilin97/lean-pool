@@ -198,7 +198,12 @@ challenges:
       url: https://github.com/lyfar/erdos132-wei-certificates
     license: Apache-2.0
     provenance: AI
-    status: open
+    status: solved
+    solution:
+      module: Solution.WeiLiCongGao
+      authors:
+        - Egor Lyfar
+      project: LeanPool.Erdos132WeiE2
     estimated_lines: 4000
     statements:
       - declaration: Challenge.WeiLiCongGao.e2_pattern_six_distances
