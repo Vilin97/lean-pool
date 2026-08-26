@@ -10,17 +10,21 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
 
 namespace LeanPool.Erdos132WeiE2.Algebra
 
+/-- The tangent-coordinate numerator of the E2 closure curve. -/
 def closurePolynomial (x y : ℝ) : ℝ :=
   x ^ 2 * y ^ 2 + x ^ 2 + 4 * x * y ^ 2 - 12 * x + y ^ 2 + 1
 
+/-- The tangent-coordinate numerator forced by the distance collision `RA = Q`. -/
 def pRQ (x y : ℝ) : ℝ :=
   x ^ 4 * y ^ 2 + x ^ 4 + 16 * x ^ 3 * y + 2 * x ^ 2 * y ^ 2 -
     30 * x ^ 2 - 16 * x * y + y ^ 2 + 1
 
+/-- The tangent-coordinate numerator forced by the distance collision `RA = eC`. -/
 def pRC (x y : ℝ) : ℝ :=
   x ^ 4 * y ^ 2 + 2 * x ^ 4 * y + x ^ 4 + 2 * x ^ 3 * y ^ 2 - 2 * x ^ 3 +
     2 * x ^ 2 * y ^ 2 - 30 * x ^ 2 + 2 * x * y ^ 2 - 2 * x + y ^ 2 - 2 * y + 1
 
+/-- The tangent-coordinate numerator forced by the distance collision `RB = eC`. -/
 def pBC (x y : ℝ) : ℝ :=
   x ^ 4 * y ^ 4 + 2 * x ^ 4 * y ^ 3 - 6 * x ^ 4 * y ^ 2 + 2 * x ^ 4 * y +
     x ^ 4 + 2 * x ^ 3 * y ^ 4 - 32 * x ^ 3 * y - 2 * x ^ 3 +
@@ -28,6 +32,7 @@ def pBC (x y : ℝ) : ℝ :=
     2 * x * y ^ 4 + 32 * x * y - 2 * x + y ^ 4 - 2 * y ^ 3 - 6 * y ^ 2 -
     2 * y + 1
 
+/-- The tangent-coordinate numerator forced by the distance collision `RB = eA`. -/
 def pBA (x y : ℝ) : ℝ :=
   (x - y) * (x * y + 1) * (x ^ 2 * y + x * y ^ 2 + 3 * x - y)
 

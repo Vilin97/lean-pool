@@ -41,6 +41,7 @@ noncomputable def case1C0 (x y : ℝ) : ℝ :=
     ((-5865 : ℝ) / 1024) * y +
     ((-5855 : ℝ) / 1024) * 1
 
+/-- Bézout case 1 cofactor `C1` for `(F, P_RQ, P_BC)`, from `runs/hypa/cofactors.json`. -/
 noncomputable def case1C1 (x y : ℝ) : ℝ :=
   ((-1235 : ℝ) / 4096) * x ^ 4 * y +
     ((1235 : ℝ) / 4096) * x ^ 4 +
@@ -60,6 +61,7 @@ noncomputable def case1C1 (x y : ℝ) : ℝ :=
     ((9047 : ℝ) / 2048) * y +
     ((15531 : ℝ) / 2048) * 1
 
+/-- Bézout case 1 cofactor `C2` for `(F, P_RQ, P_BC)`, from `runs/hypa/cofactors.json`. -/
 noncomputable def case1C2 (x y : ℝ) : ℝ :=
   ((-1235 : ℝ) / 1024) * x ^ 3 +
     ((43 : ℝ) / 1024) * x ^ 2 * y +
@@ -115,6 +117,7 @@ lemma case1_bezout_identity (x y : ℝ) :
   norm_num [case1C0, case1C1, case1C2]
   ring
 
+/-- Bézout case 2 cofactor `C0` for `(F, P_RQ, P_BA)`, from `runs/hypa/cofactors.json`. -/
 noncomputable def case2C0 (x y : ℝ) : ℝ :=
   ((6167 : ℝ) / 20480) * x ^ 6 * y +
     ((-6167 : ℝ) / 20480) * x ^ 6 +
@@ -146,6 +149,7 @@ noncomputable def case2C0 (x y : ℝ) : ℝ :=
     ((-8299 : ℝ) / 960) * y +
     ((-21769 : ℝ) / 3840) * 1
 
+/-- Bézout case 2 cofactor `C1` for `(F, P_RQ, P_BA)`, from `runs/hypa/cofactors.json`. -/
 noncomputable def case2C1 (x y : ℝ) : ℝ :=
   ((-6167 : ℝ) / 20480) * x ^ 4 * y +
     ((6167 : ℝ) / 20480) * x ^ 4 +
@@ -165,6 +169,7 @@ noncomputable def case2C1 (x y : ℝ) : ℝ :=
     ((8299 : ℝ) / 960) * y +
     ((25609 : ℝ) / 3840) * 1
 
+/-- Bézout case 2 cofactor `C2` for `(F, P_RQ, P_BA)`, from `runs/hypa/cofactors.json`. -/
 noncomputable def case2C2 (x y : ℝ) : ℝ :=
   ((6167 : ℝ) / 640) * x ^ 3 +
     ((-137 : ℝ) / 384) * x ^ 2 * y +
@@ -207,6 +212,7 @@ lemma case2_bezout_identity (x y : ℝ) :
   norm_num [case2C0, case2C1, case2C2]
   ring
 
+/-- Bézout case 3 cofactor `C0` for `(F, P_RC, P_BA)`, from `runs/hypa/cofactors.json`. -/
 noncomputable def case3C0 (x y : ℝ) : ℝ :=
   ((82203 : ℝ) / 28672) * x ^ 6 * y +
     ((81293 : ℝ) / 43008) * x ^ 5 * y +
@@ -238,6 +244,7 @@ noncomputable def case3C0 (x y : ℝ) : ℝ :=
     ((-1644313 : ℝ) / 21504) * y +
     ((-165611 : ℝ) / 21504) * 1
 
+/-- Bézout case 3 cofactor `C1` for `(F, P_RC, P_BA)`, from `runs/hypa/cofactors.json`. -/
 noncomputable def case3C1 (x y : ℝ) : ℝ :=
   ((-82203 : ℝ) / 28672) * x ^ 4 * y +
     ((26363 : ℝ) / 768) * x ^ 3 * y +
@@ -256,6 +263,7 @@ noncomputable def case3C1 (x y : ℝ) : ℝ :=
     ((2018543 : ℝ) / 21504) * y +
     ((187115 : ℝ) / 21504) * 1
 
+/-- Bézout case 3 cofactor `C2` for `(F, P_RC, P_BA)`, from `runs/hypa/cofactors.json`. -/
 noncomputable def case3C2 (x y : ℝ) : ℝ :=
   ((82203 : ℝ) / 14336) * x ^ 4 +
     ((-300705 : ℝ) / 7168) * x ^ 3 * y +
