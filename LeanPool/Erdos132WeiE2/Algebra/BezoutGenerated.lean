@@ -3,7 +3,15 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
-import Mathlib.Tactic
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
+
+/-!
+# Generated E2 Bézout cofactors
+
+Generated from `runs/hypa/cofactors.json`; do not hand-edit.
+-/
 
 namespace LeanPool.Erdos132WeiE2.Algebra
 

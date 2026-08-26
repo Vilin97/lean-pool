@@ -7,6 +7,12 @@ import LeanPool.Erdos132WeiE2.Algebra.G10
 import LeanPool.Erdos132WeiE2.Counting.Endgame
 import Mathlib.Analysis.InnerProductSpace.PiL2
 
+/-!
+# Six-distance assembly for the E2 diameter-heptagon pattern
+
+This module combines the algebraic exclusions and finite counting endgame.
+-/
+
 namespace LeanPool.Erdos132WeiE2.Counting
 
 open LeanPool.Erdos132WeiE2.Algebra

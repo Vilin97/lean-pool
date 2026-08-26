@@ -8,6 +8,13 @@ import LeanPool.Erdos132WeiE2.Algebra.BezoutGenerated
 import LeanPool.Erdos132WeiE2.Algebra.TanExpressions
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
 
+/-!
+# Algebraic exclusions for the E2 diameter-heptagon pattern
+
+This module converts the possible distance collisions to tangent-coordinate polynomials and
+applies the generated Bézout certificates.
+-/
+
 namespace LeanPool.Erdos132WeiE2.Algebra
 
 /-- The tangent-coordinate numerator of the E2 closure curve. -/

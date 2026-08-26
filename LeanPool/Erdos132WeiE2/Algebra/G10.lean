@@ -5,6 +5,12 @@ Authors: Egor Lyfar
 -/
 import LeanPool.Erdos132WeiE2.Algebra.Exclusions
 
+/-!
+# The strict E2 comparison between the C-edge and Q-diagonal
+
+This module derives `eC < Q` from the frozen trigonometric interface.
+-/
+
 namespace LeanPool.Erdos132WeiE2.Algebra
 
 /-- The exact polynomial identity supplied with the amended G10 certificate. -/
