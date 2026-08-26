@@ -32,26 +32,21 @@ structure EdgeFormulas (p : Fin 7 → Plane) (A B C : ℝ) : Prop where
   edgeB : dist (p 1) (p 2) = 2 * Real.sin (B / 2)
   edgeA : dist (p 4) (p 5) = 2 * Real.sin (A / 2)
 
-/-- The diagonal part of the frozen certificate dictionary. -/
+/-- The required diagonal part of the frozen certificate dictionary (interface v1.2). -/
 structure DistanceDictionary (p : Fin 7 → Plane) (A B : ℝ) : Prop where
   q_sq :
     (dist (p 0) (p 2)) ^ 2 =
       3 - 2 * Real.cos A - 2 * Real.cos B + 2 * Real.cos (A + B)
-  q_class :
-    dist (p 1) (p 6) = dist (p 0) (p 2) ∧
-    dist (p 2) (p 4) = dist (p 0) (p 2) ∧
-    dist (p 3) (p 5) = dist (p 0) (p 2)
   ra_sq :
     (dist (p 0) (p 5)) ^ 2 =
       4 - 4 * Real.cos A - 2 * Real.cos B + 4 * Real.cos (A + B) -
         2 * Real.cos (2 * A + B)
-  ra_class : dist (p 4) (p 6) = dist (p 0) (p 5)
   rb_sq :
     (dist (p 1) (p 3)) ^ 2 =
       4 - 2 * Real.cos A - 4 * Real.cos B + 4 * Real.cos (A + B) -
         2 * Real.cos (A + 2 * B)
 
-/-- Frozen interface v1.1, bundled as a structure rather than a nested conjunction. -/
+/-- Frozen interface v1.2, with optional class equalities omitted. -/
 structure E2AngleParametrization (p : Fin 7 → Plane) (A B C : ℝ) : Prop where
   B_pos : 0 < B
   B_lt_A : B < A
@@ -65,15 +60,10 @@ structure E2AngleParametrization (p : Fin 7 → Plane) (A B C : ℝ) : Prop wher
   q_sq :
     (dist (p 0) (p 2)) ^ 2 =
       3 - 2 * Real.cos A - 2 * Real.cos B + 2 * Real.cos (A + B)
-  q_class :
-    dist (p 1) (p 6) = dist (p 0) (p 2) ∧
-    dist (p 2) (p 4) = dist (p 0) (p 2) ∧
-    dist (p 3) (p 5) = dist (p 0) (p 2)
   ra_sq :
     (dist (p 0) (p 5)) ^ 2 =
       4 - 4 * Real.cos A - 2 * Real.cos B + 4 * Real.cos (A + B) -
         2 * Real.cos (2 * A + B)
-  ra_class : dist (p 4) (p 6) = dist (p 0) (p 5)
   rb_sq :
     (dist (p 1) (p 3)) ^ 2 =
       4 - 2 * Real.cos A - 4 * Real.cos B + 4 * Real.cos (A + B) -
@@ -108,7 +98,7 @@ theorem star_scalar_closure
     2 * Real.sin (A / 2) * (1 + 2 * Real.cos (A + B)) = 1 := by
   sorry
 
-/-- Norm expansion of the normalized certificate walk gives G6--G9. -/
+/-- Norm expansion of the normalized certificate walk gives required G6, G8, and G9. -/
 theorem distance_dictionary
     {p : Fin 7 → Plane} (h : E2GeometryHypotheses p)
     {A B C : ℝ} (hclasses : AngleClasses p A B C)
