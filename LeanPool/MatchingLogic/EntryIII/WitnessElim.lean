@@ -178,30 +178,6 @@ private theorem substVar_not_mem_FV_of_ne {a b t : Nat}
         · have htq : t ∉ FV p := by simpa [FV_ex, htv] using htp
           simpa [FV_ex, htv] using ih htq
 
-private theorem substVar_eq_self_of_not_mem_FV {a b : Nat}
-    {p : Pattern S Nat} (ha : a ∉ FV p) : substVar a b p = p := by
-  induction p with
-  | var v =>
-      simp only [FV_var, Set.mem_singleton_iff] at ha
-      simp [substVar, Ne.symm ha]
-  | bot => rfl
-  | app sigma args ih =>
-      simp only [FV_app, Set.mem_iUnion, not_exists] at ha
-      simp only [substVar]
-      congr
-      funext i
-      exact ih i (ha i)
-  | imp p q ihp ihq =>
-      simp only [FV_imp, Set.mem_union, not_or] at ha
-      simp [substVar, ihp ha.1, ihq ha.2]
-  | ex v p ih =>
-      by_cases hva : v = a
-      · simp [substVar, hva]
-      · have hap : a ∉ FV p := by
-          intro hmem
-          exact ha ⟨hmem, Ne.symm hva⟩
-        simp [substVar, hva, ih hap]
-
 private theorem avoidTwo_not_mem_FV {y z : Nat} {p : Pattern S Nat}
     (hy : y ∉ FV p) : y ∉ FV (avoidTwo y z p) := by
   induction p with
@@ -278,7 +254,7 @@ private theorem substVar_comp_of_fresh {x y z : Nat} {p : Pattern S Nat}
       have hyp : y ∉ FV p := by simpa [FV_ex, Ne.symm hay'] using hy
       by_cases hax : a = x
       · subst a
-        have hself := substVar_eq_self_of_not_mem_FV (a := y) (b := z) hyp
+        have hself := substVar_eq_self_of_not_mem_FV (x := y) (y := z) hyp
         simp [substVar, hself]
       · simp [substVar, hax, hay', ih hyp hay.2 haz.2]
 

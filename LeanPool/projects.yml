@@ -6263,9 +6263,10 @@ projects:
       - Anthropic
       - OpenAI
     source:
-      title: Basic matching logic in Lean 4
+      title: Completeness and incompleteness of basic matching logic
       authors:
-        - Aurélien Eveil
+        - Xiaohong Chen
+        - Grigore Roșu
       arxiv: "2608.13306"
       github_repo: eveil-labs/matching-logic-lean
       commit: 4628a26bb2db117de1a11cbedcb620db9124cdb8

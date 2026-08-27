@@ -175,6 +175,54 @@ inductive Provable (Γ : Set (Pattern S Var)) : Pattern S Var → Prop
       Provable Γ (.imp (C₁.plug (Pattern.and (.var x) φ))
         (Pattern.nt (C₂.plug (Pattern.and (.var x) (Pattern.nt φ)))))
 
+/-! ### Small public Hilbert toolkit -/
+
+/-- Provability is monotone in its hypotheses. -/
+theorem Provable.weaken {Γ Δ : Set (Pattern S Var)} {φ : Pattern S Var}
+    (hΓΔ : Γ ⊆ Δ) (h : Provable Γ φ) : Provable Δ φ := by
+  induction h with
+  | hyp hφ => exact .hyp (hΓΔ hφ)
+  | taut hp => exact .taut hp
+  | mp _ _ ihφ himp => exact .mp ihφ himp
+  | exQuant hfree => exact .exQuant hfree
+  | exGen _ hfree ih => exact .exGen ih hfree
+  | propBot => exact .propBot
+  | propOr => exact .propOr
+  | propEx hfree => exact .propEx hfree
+  | framing _ ih => exact .framing ih
+  | existence => exact .existence
+  | singleton C₁ C₂ => exact .singleton C₁ C₂
+
+/-- A theorem is usable under arbitrary hypotheses. -/
+theorem Provable.weaken_empty {Γ : Set (Pattern S Var)} {φ : Pattern S Var}
+    (h : Provable (∅ : Set (Pattern S Var)) φ) : Provable Γ φ :=
+  h.weaken (by simp)
+
+private theorem taut_top : PForm.Taut (.imp .bot .bot) := by
+  intro _
+  rfl
+
+/-- `⊤` is derivable in every theory. -/
+theorem provable_top (Γ : Set (Pattern S Var)) :
+    Provable Γ (Pattern.tp : Pattern S Var) := by
+  exact .taut (θ := fun _ => .bot) taut_top
+
+private theorem taut_and_intro :
+    PForm.Taut (.imp (.atom 0) (.imp (.atom 1)
+      (.imp (.imp (.atom 0) (.imp (.atom 1) .bot)) .bot))) := by
+  intro v
+  cases h₀ : v 0 <;> cases h₁ : v 1 <;> simp [PForm.eval, h₀, h₁]
+
+/-- Derived conjunction introduction. -/
+theorem Provable.and_intro {Γ : Set (Pattern S Var)} {φ ψ : Pattern S Var}
+    (hφ : Provable Γ φ) (hψ : Provable Γ ψ) :
+    Provable Γ (Pattern.and φ ψ) := by
+  have ht : Provable Γ (.imp φ (.imp ψ (Pattern.and φ ψ))) := by
+    simpa [PForm.subst, Pattern.and, Pattern.nt] using
+      (Provable.taut (Γ := Γ) (θ := fun n => if n = 0 then φ else ψ)
+        taut_and_intro)
+  exact .mp hψ (.mp hφ ht)
+
 /-! ### Lemma 5 -/
 
 /-- The propositional tautology introducing double negation. -/
@@ -249,6 +297,15 @@ theorem necessitation {Γ : Set (Pattern S Var)} {ψ : Pattern S Var}
 def conj : List (Pattern S Var) → Pattern S Var
   | [] => Pattern.tp
   | φ :: l => Pattern.and φ (conj l)
+
+/-- Introduce the pinned finite conjunction of a list of derivable patterns. -/
+theorem provable_conj {Γ : Set (Pattern S Var)} (l : List (Pattern S Var))
+    (h : ∀ δ ∈ l, Provable Γ δ) : Provable Γ (conj l) := by
+  induction l with
+  | nil => exact provable_top Γ
+  | cons δ l ih =>
+      exact .and_intro (h δ (by simp))
+        (ih (by intro ψ hψ; exact h ψ (by simp [hψ])))
 
 /-- **(L) Strong local completeness.**  If `Δ ⊨loc φ` then `⊢ (⋀Δ₀) → φ` for
 some finite `Δ₀ ⊆ Δ`.  The paper uses this as a black box, citing Definition 3.3

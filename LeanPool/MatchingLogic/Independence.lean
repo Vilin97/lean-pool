@@ -40,32 +40,6 @@ variable {S : Signature} {Var : Type} [DecidableEq Var]
 
 /-! ### Hypotheses that can be dropped -/
 
-private theorem satSet_localize_iff_aux (M : Model S)
-    (Γ : Set (Pattern S Var)) : M.SatSet (localize Γ) ↔ M.SatSet Γ := by
-  constructor
-  · intro hloc γ hγ
-    exact hloc γ (subset_localize Γ hγ)
-  · rintro hsat ψ ⟨γ, hγ, p, rfl⟩ ρ
-    change M.denote ρ (boxes p γ) = Set.univ
-    rw [denote_boxes]
-    ext u
-    simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
-    intro v _
-    rw [hsat γ hγ ρ]
-    exact Set.mem_univ v
-
-private theorem globalCons_of_localCons_aux {Γ : Set (Pattern S Var)}
-    {φ : Pattern S Var} (h : LocalCons (localize Γ) φ) : GlobalCons Γ φ := by
-  intro M hM ρ
-  have hloc : M.SatSet (localize Γ) := (satSet_localize_iff_aux M Γ).2 hM
-  apply Set.eq_univ_of_forall
-  intro u
-  apply h M ρ
-  simp only [Model.denoteSet, Set.mem_iInter]
-  intro ψ hψ
-  rw [hloc ψ hψ ρ]
-  exact Set.mem_univ u
-
 /-- **Theorem 13 does not need `φ` closed.**  The paper's `semantic_localization`
 follows from this by discarding `hφ`. -/
 theorem semantic_localization_of_closed_Γ {Γ : Set (Pattern S Var)}
@@ -131,12 +105,12 @@ theorem semantic_localization_of_closed_Γ {Γ : Set (Pattern S Var)}
       have hsatφ := hglobal N hsatΓ ν
       rw [hsatφ]
       exact Set.mem_univ q
-  · exact globalCons_of_localCons_aux
+  · exact globalCons_of_localCons_localize
 
 /-- **Lemma 7 needs no closedness at all.** -/
 theorem globalCons_of_localCons_localize_general {Γ : Set (Pattern S Var)}
     {φ : Pattern S Var} (h : LocalCons (localize Γ) φ) : GlobalCons Γ φ := by
-  exact globalCons_of_localCons_aux h
+  exact globalCons_of_localCons_localize h
 
 /-- **`M ⊨ Γ` iff `M ⊨ Δ_Γ` needs no closedness either.**
 
@@ -146,7 +120,7 @@ i.e. through the proof system.  Here it comes from Lemma 4 alone.  That is why
 depends on neither of the paper's two black boxes (L) and (S). -/
 theorem satSet_localize_iff_general (M : Model S) (Γ : Set (Pattern S Var)) :
     M.SatSet (localize Γ) ↔ M.SatSet Γ := by
-  exact satSet_localize_iff_aux M Γ
+  exact satSet_localize_iff M
 
 /-! ### Hypotheses that cannot be dropped -/
 

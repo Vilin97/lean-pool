@@ -92,7 +92,7 @@ end Pattern
 
 /-- Plugging an application context commutes with an injective renaming. -/
 theorem AppCtx.plug_rename_injective
-    (f : Var → Var') (_hf : Function.Injective f)
+    (f : Var → Var')
     (C : AppCtx S Var) (p : Pattern S Var) :
     (C.plug p).rename f = (C.rename f).plug (p.rename f) := by
   induction C with
@@ -151,7 +151,7 @@ theorem Provable.renameInjective [DecidableEq Var] [DecidableEq Var']
       simpa [Pattern.rename] using
         (Provable.existence (Γ := Pattern.rename f '' Gamma) (x := f x))
   | @singleton x phi C1 C2 =>
-      simpa [AppCtx.plug_rename_injective f hf, Pattern.rename,
+      simpa [AppCtx.plug_rename_injective f, Pattern.rename,
         Pattern.and, Pattern.nt] using
         (Provable.singleton (Γ := Pattern.rename f '' Gamma) (x := f x)
           (φ := phi.rename f) (C1.rename f) (C2.rename f))

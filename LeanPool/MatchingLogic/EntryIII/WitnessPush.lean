@@ -166,7 +166,7 @@ private theorem taut_choice :
 /-- Predicate-logic choice in the exact form needed by Lemma 80.  Nonemptiness
 is supplied proof-theoretically by existential introduction. -/
 theorem Provable.imp_exists_to_exists_imp {Gamma : Set (Pattern S Nat)}
-    {y : Nat} {a q : Pattern S Nat} (_hy : y ∉ FV a) :
+    {y : Nat} {a q : Pattern S Nat} :
     Provable Gamma (.imp (.imp a (.ex y q)) (.ex y (.imp a q))) := by
   let e : Pattern S Nat := .ex y q
   let r : Pattern S Nat := .ex y (.imp a q)
@@ -283,9 +283,7 @@ theorem Provable.witnessPushArg {Gamma : Set (Pattern S Nat)}
     simpa [e, q] using
       (Provable.exists_captureAvoidingSubst (Gamma := Gamma) hyphi)
   have her : Provable Gamma (.imp (.imp e (.ex y q)) r) := by
-    apply Provable.imp_exists_to_exists_imp
-    intro hmem
-    exact hyphi hmem.1
+    exact Provable.imp_exists_to_exists_imp
   have hr : Provable Gamma r := .mp heq her
   have hPhi : Provable Gamma (.imp Phi (Pattern.and Phi r)) := by
     have ht : Provable Gamma

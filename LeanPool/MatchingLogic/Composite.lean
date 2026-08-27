@@ -120,6 +120,6 @@ theorem semantic_localization {Γ : Set (Pattern S Var)} {φ : Pattern S Var}
           (cover_sat_iff M C hC hne star hstar hφ ρ).mp hsatφ
         exact hwφ (hCφ hwC)
       exact hnotSatφ (hglobal N hsatΓ)
-  · exact globalCons_of_localCons_localize hΓ hφ
+  · exact globalCons_of_localCons_localize
 
 end MatchingLogic

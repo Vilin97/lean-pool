@@ -27,7 +27,8 @@ variable {S : Signature} {Var : Type} [DecidableEq Var]
 
 attribute [local instance] Classical.propDecidable
 
-private theorem substVar_eq_self_of_not_mem {x y : Var} {φ : Pattern S Var}
+/-- Raw variable substitution is inert when its source variable is not free. -/
+theorem Pattern.substVar_eq_self_of_not_mem_FV {x y : Var} {φ : Pattern S Var}
     (hx : x ∉ FV φ) : substVar x y φ = φ := by
   induction φ with
   | var z =>
@@ -57,7 +58,7 @@ private theorem substVar_eq_self_of_not_mem {x y : Var} {φ : Pattern S Var}
 
 /-- Semantic substitution for the capture-free variable-for-variable
 substitution used by rule (3). -/
-private theorem denote_substVar (M : Model S) (ρ : Var → M.carrier)
+theorem Model.denote_substVar_of_captureFree (M : Model S) (ρ : Var → M.carrier)
     {x y : Var} {φ : Pattern S Var} (hcf : CaptureFree x y φ) :
     M.denote ρ (substVar x y φ) =
       M.denote (Function.update ρ x (ρ y)) φ := by
@@ -87,7 +88,7 @@ private theorem denote_substVar (M : Model S) (ρ : Var → M.carrier)
           simp only [ite_eq_right hzx, denote_ex]
           congr 1
           funext a
-          rw [substVar_eq_self_of_not_mem hxfree]
+          rw [Pattern.substVar_eq_self_of_not_mem_FV hxfree]
           apply denote_congr M φ
           intro q hq
           have hqx : q ≠ x := fun h => hxfree (h ▸ hq)
@@ -264,7 +265,7 @@ theorem soundness : Soundness S Var := by
       intro M _ ρ
       apply imp_total_of_subset M ρ
       intro u hu
-      rw [denote_substVar M ρ hcf] at hu
+      rw [M.denote_substVar_of_captureFree ρ hcf] at hu
       exact Set.mem_iUnion.mpr ⟨ρ _, hu⟩
   | exGen hφψ hxfree ih =>
       rename_i x φ₁ φ₂

@@ -94,7 +94,7 @@ theorem denoteSet_localize_greatest (M : Model S) (ρ : Var → M.carrier)
 /-- `M ⊨ Γ` and `M ⊨ Δ_Γ` are equivalent: localizing does not change the
 models.  Proved here from Lemma 4 rather than from necessitation. -/
 theorem satSet_localize_iff (M : Model S) {Γ : Set (Pattern S Var)}
-    (_hΓ : ∀ γ ∈ Γ, Closed γ) : M.SatSet (localize Γ) ↔ M.SatSet Γ := by
+    : M.SatSet (localize Γ) ↔ M.SatSet Γ := by
   constructor
   · intro hloc γ hγ
     exact hloc γ (subset_localize Γ hγ)
@@ -109,10 +109,9 @@ theorem satSet_localize_iff (M : Model S) {Γ : Set (Pattern S Var)}
 
 /-- **Lemma 7.**  If `Δ_Γ ⊨loc φ` then `Γ ⊨ φ`. -/
 theorem globalCons_of_localCons_localize {Γ : Set (Pattern S Var)}
-    {φ : Pattern S Var} (hΓ : ∀ γ ∈ Γ, Closed γ) (_hφ : Closed φ)
-    (h : LocalCons (localize Γ) φ) : GlobalCons Γ φ := by
+    {φ : Pattern S Var} (h : LocalCons (localize Γ) φ) : GlobalCons Γ φ := by
   intro M hM ρ
-  have hloc : M.SatSet (localize Γ) := (satSet_localize_iff M hΓ).2 hM
+  have hloc : M.SatSet (localize Γ) := (satSet_localize_iff M).2 hM
   apply Set.eq_univ_of_forall
   intro u
   apply h M ρ

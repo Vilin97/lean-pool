@@ -44,8 +44,8 @@ def InfiniteFreshVariableSupply (Gamma : Set (Pattern S Nat)) : Prop :=
 /-- An infinite supply of usable witnesses upgrades ordinary witnessedness to
 raw-fresh witnessedness.  The proof is short: `p.allVars` is finite. -/
 theorem freshWitnessed_of_witnessed_of_supply
-    {Gamma : Set (Pattern S Nat)} (_hM : IsMCS Gamma) (_hW : Witnessed Gamma)
-    (hSupply : InfiniteWitnessSupply Gamma) : FreshWitnessed Gamma := by
+    {Gamma : Set (Pattern S Nat)} (hSupply : InfiniteWitnessSupply Gamma) :
+    FreshWitnessed Gamma := by
   intro x p hex
   obtain ⟨y, hySupply, hyFresh⟩ :=
     (hSupply hex).exists_notMem_finset p.allVars
@@ -58,23 +58,6 @@ noncomputable section
 /-- Local decidable equality used by the fresh-variable supply construction. -/
 local instance witnessSupplyDecidableEqPattern : DecidableEq (Pattern S Nat) :=
   Classical.decEq _
-
-/-- A pattern collecting the raw variables of every member of a finite list. -/
-private def Pattern.supplyListSupport : List (Pattern S Nat) → Pattern S Nat
-  | [] => .bot
-  | p :: l => .imp p (supplyListSupport l)
-
-private theorem Pattern.allVars_subset_supplyListSupport
-    {l : List (Pattern S Nat)} {p : Pattern S Nat} (hp : p ∈ l) :
-    p.allVars ⊆ (supplyListSupport l).allVars := by
-  induction l with
-  | nil => simp at hp
-  | cons q l ih =>
-      rcases List.mem_cons.mp hp with rfl | hp
-      · intro y hy
-        exact Finset.mem_union_left _ hy
-      · intro y hy
-        exact Finset.mem_union_right _ (ih hp hy)
 
 /-- The starting set together with the finite list of witnesses adjoined so
 far. -/
@@ -89,7 +72,7 @@ private noncomputable def Pattern.supplyFresh
     (l : List (Pattern S Nat)) (p : Pattern S Nat) : Nat :=
   Classical.choose
     (hSupply.exists_notMem_finset
-      ((supplyListSupport l).allVars ∪ p.allVars))
+      ((listSupport l).allVars ∪ p.allVars))
 
 private theorem Pattern.supplyFresh_mem_reserve
     (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
@@ -97,16 +80,16 @@ private theorem Pattern.supplyFresh_mem_reserve
     supplyFresh Gamma hSupply l p ∈ {y : Nat | ∀ q ∈ Gamma, y ∉ FV q} :=
   (Classical.choose_spec
     (hSupply.exists_notMem_finset
-      ((supplyListSupport l).allVars ∪ p.allVars))).1
+      ((listSupport l).allVars ∪ p.allVars))).1
 
 private theorem Pattern.supplyFresh_not_mem_blocked
     (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
     (l : List (Pattern S Nat)) (p : Pattern S Nat) :
     supplyFresh Gamma hSupply l p ∉
-      (supplyListSupport l).allVars ∪ p.allVars :=
+      (listSupport l).allVars ∪ p.allVars :=
   (Classical.choose_spec
     (hSupply.exists_notMem_finset
-      ((supplyListSupport l).allVars ∪ p.allVars))).2
+      ((listSupport l).allVars ∪ p.allVars))).2
 
 private theorem Pattern.supplyFresh_not_mem_body
     (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
@@ -126,7 +109,7 @@ private theorem Pattern.supplyFresh_not_mem_stage_FV
   · intro hfree
     apply supplyFresh_not_mem_blocked Gamma hSupply l p
     apply Finset.mem_union_left
-    exact allVars_subset_supplyListSupport hqList (q.FV_subset_allVars hfree)
+    exact allVars_subset_listSupport hqList (q.FV_subset_allVars hfree)
 
 private def supplyAddWitness
     (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)

@@ -158,11 +158,12 @@ theorem locConsistent_insert_captureAvoidingWitness
 
 /-- A binder-free pattern whose `allVars` contains the variables of every
 pattern in the list. -/
-private def Pattern.listSupport : List (Pattern S Nat) → Pattern S Nat
+def Pattern.listSupport : List (Pattern S Nat) → Pattern S Nat
   | [] => .bot
   | p :: l => .imp p (listSupport l)
 
-private theorem Pattern.allVars_subset_listSupport {l : List (Pattern S Nat)}
+/-- Every member's raw-variable support lies in the list support. -/
+theorem Pattern.allVars_subset_listSupport {l : List (Pattern S Nat)}
     {p : Pattern S Nat} (hp : p ∈ l) : p.allVars ⊆ (listSupport l).allVars := by
   induction l with
   | nil => simp at hp

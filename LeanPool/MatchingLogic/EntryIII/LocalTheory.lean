@@ -28,29 +28,6 @@ noncomputable section
 local instance instDecidableEqPatternLocalTheory : DecidableEq (Pattern S Var) :=
   Classical.decEq _
 
-/-! ### Small public Hilbert toolkit -/
-
-/-- Provability is monotone in its hypotheses. -/
-theorem Provable.weaken {Gamma Delta : Set (Pattern S Var)} {phi : Pattern S Var}
-    (hGD : Gamma ⊆ Delta) (h : Provable Gamma phi) : Provable Delta phi := by
-  induction h with
-  | hyp hphi => exact .hyp (hGD hphi)
-  | taut hp => exact .taut hp
-  | mp _ _ ihphi himp => exact .mp ihphi himp
-  | exQuant hfree => exact .exQuant hfree
-  | exGen _ hfree ih => exact .exGen ih hfree
-  | propBot => exact .propBot
-  | propOr => exact .propOr
-  | propEx hfree => exact .propEx hfree
-  | framing _ ih => exact .framing ih
-  | existence => exact .existence
-  | singleton C1 C2 => exact .singleton C1 C2
-
-/-- A theorem is usable under arbitrary hypotheses. -/
-theorem Provable.weaken_empty {Gamma : Set (Pattern S Var)} {phi : Pattern S Var}
-    (h : Provable (∅ : Set (Pattern S Var)) phi) : Provable Gamma phi :=
-  h.weaken (by simp)
-
 private theorem taut_imp_refl : PForm.Taut (.imp (.atom 0) (.atom 0)) := by
   intro v
   cases h : v 0 <;> simp [PForm.eval, h]
@@ -77,15 +54,6 @@ theorem Provable.imp_trans {Gamma : Set (Pattern S Var)}
       taut_imp_trans
   exact .mp h2 (.mp h1 ht)
 
-private theorem taut_top : PForm.Taut (.imp .bot .bot) := by
-  intro _
-  rfl
-
-/-- `⊤` is derivable in every theory. -/
-theorem provable_top (Gamma : Set (Pattern S Var)) :
-    Provable Gamma (Pattern.tp : Pattern S Var) := by
-  exact .taut (θ := fun _ => .bot) taut_top
-
 private theorem taut_imp_of :
     PForm.Taut (.imp (.atom 0) (.imp (.atom 1) (.atom 0))) := by
   intro v
@@ -97,22 +65,6 @@ theorem Provable.imp_of {Gamma : Set (Pattern S Var)}
   have ht : Provable Gamma (.imp phi (.imp psi phi)) := by
     exact .taut (θ := fun n => if n = 0 then phi else psi) taut_imp_of
   exact .mp h ht
-
-private theorem taut_and_intro :
-    PForm.Taut (.imp (.atom 0) (.imp (.atom 1)
-      (.imp (.imp (.atom 0) (.imp (.atom 1) .bot)) .bot))) := by
-  intro v
-  cases h0 : v 0 <;> cases h1 : v 1 <;> simp [PForm.eval, h0, h1]
-
-/-- Derived conjunction introduction. -/
-theorem Provable.and_intro {Gamma : Set (Pattern S Var)} {phi psi : Pattern S Var}
-    (hphi : Provable Gamma phi) (hpsi : Provable Gamma psi) :
-    Provable Gamma (Pattern.and phi psi) := by
-  have ht : Provable Gamma (.imp phi (.imp psi (Pattern.and phi psi))) := by
-    simpa [PForm.subst, Pattern.and, Pattern.nt] using
-      (Provable.taut (Γ := Gamma) (θ := fun n => if n = 0 then phi else psi)
-        taut_and_intro)
-  exact .mp hpsi (.mp hphi ht)
 
 private theorem taut_and_elim_left :
     PForm.Taut (.imp (.imp (.imp (.atom 0) (.imp (.atom 1) .bot)) .bot) (.atom 0)) := by
@@ -161,15 +113,6 @@ theorem Provable.or_intro_right (Gamma : Set (Pattern S Var)) (phi psi : Pattern
   simpa [PForm.subst, Pattern.or, Pattern.nt] using
     (Provable.taut (Γ := Gamma) (θ := fun n => if n = 0 then phi else psi)
       taut_or_intro_right)
-
-/-- Introduce the pinned finite conjunction of a list of derivable patterns. -/
-theorem provable_conj {Gamma : Set (Pattern S Var)} (l : List (Pattern S Var))
-    (h : ∀ delta ∈ l, Provable Gamma delta) : Provable Gamma (conj l) := by
-  induction l with
-  | nil => exact provable_top Gamma
-  | cons delta l ih =>
-      exact .and_intro (h delta (by simp))
-        (ih (by intro psi hpsi; exact h psi (by simp [hpsi])))
 
 private theorem taut_imp_apply :
     PForm.Taut (.imp (.imp (.atom 0) (.atom 1))
