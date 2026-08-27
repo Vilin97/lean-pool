@@ -7,7 +7,7 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 /-
 Basic matching logic — syntax, models, denotation, and backward closure.
 
-Source: Xiaohong Chen and Grigore Roșu, "Completeness and incompleteness of basic
+Source: Xiaohong Chen and Grigore Rosu, "Completeness and incompleteness of basic
 matching logic", arXiv:2608.13306v1 (13 Aug 2026), Sections 2 and 3.
 
 This file is the pinned interface the rest of the development is built against.

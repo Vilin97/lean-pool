@@ -67,7 +67,7 @@ theorem cover_sat_iff (hC : M.BackwardClosed C) (hne : C.Nonempty)
 
 end Cover
 
-/-- **Theorem 13 (semantic localization).**  `Γ ⊨ φ ⟺ Δ_Γ ⊨loc φ`.
+/-- **Theorem 13 (semantic localization).**  `Γ ⊨ φ ↔ Δ_Γ ⊨loc φ`.
 
 `(⇐)` is Lemma 7.  `(⇒)` is contrapositive: a local countermodel gives a point
 `w` with `w ∈ ⟦Δ_Γ⟧` and `w ∉ ⟦φ⟧`; take `C := ⇝*[w]`, which is backward
