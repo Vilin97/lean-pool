@@ -6248,3 +6248,62 @@ projects:
     msc:
       - "05B07"
       - "05C70"
+  - slug: matching-logic-completeness
+    title: Global completeness of definedness-free matching logic
+    summary: >-
+      Formalizes the positive core of Chen and Roșu's basic matching-logic paper,
+      including locality, the double-cover construction, semantic localization,
+      soundness, and a canonical-model proof of strong local completeness. The
+      resulting global-completeness theorem discharges both the paper's local
+      completeness and soundness hypotheses for countably infinite variable types.
+    branch: mathematical logic and formal methods
+    entry_module: LeanPool.MatchingLogic
+    authors:
+      - Aurélien Eveil
+      - Anthropic
+      - OpenAI
+    source:
+      title: Basic matching logic in Lean 4
+      authors:
+        - Aurélien Eveil
+      arxiv: "2608.13306"
+      github_repo: eveil-labs/matching-logic-lean
+      commit: 4628a26bb2db117de1a11cbedcb620db9124cdb8
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - MatchingLogic.global_completeness_entryIII
+    main_results:
+      - declaration: MatchingLogic.locality
+        informal: >-
+          For a backward-closed subset of a matching-logic model, two valuations
+          that agree inside the subset and both stay outside it otherwise give
+          identical denotations after restriction to that subset.
+      - declaration: MatchingLogic.two_copies
+        informal: >-
+          The double-cover model over a nonempty backward-closed proper subset has
+          exactly the denotation predicted by each of its two projections back to
+          the original model.
+      - declaration: MatchingLogic.semantic_localization
+        informal: >-
+          For a closed theory and closed conclusion, global semantic consequence
+          is equivalent to local consequence from the localized theory.
+      - declaration: MatchingLogic.strongLocalCompleteness
+        informal: >-
+          Basic matching logic has strong local completeness over an arbitrary
+          signature when the element-variable type is countably infinite.
+      - declaration: MatchingLogic.global_completeness_entryIII
+        informal: >-
+          For closed premises and conclusion over a countably infinite
+          element-variable type, global semantic consequence is equivalent to
+          derivability, with both soundness and local completeness discharged.
+    tags:
+      - matching-logic
+      - mathematical-logic
+      - modal-logic
+      - completeness
+      - formal-methods
+    msc:
+      - "03B45"
+      - "03B70"
