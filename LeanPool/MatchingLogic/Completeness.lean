@@ -46,7 +46,7 @@ theorem proof_theoretic_localization
       exact necessitation (Provable.hyp hγ) p
     exact Provable.mp hconj himp.weaken_empty
 
-/-- **Corollary 15 (global completeness).**  `Γ ⊨ φ ↔ Γ ⊢ φ`.
+/-- **Corollary 15 (one-sorted global completeness).**  `Γ ⊨ φ ↔ Γ ⊢ φ`.
 
 This is the paper's main positive result, and entry point (ii) of its
 mechanization challenge: Corollary 15 with (L) and (S) assumed. -/

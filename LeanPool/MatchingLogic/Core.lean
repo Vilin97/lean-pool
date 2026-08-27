@@ -5,7 +5,8 @@ Authors: Aurélien Eveil, Anthropic, OpenAI
 -/
 
 /-
-Basic matching logic — syntax, models, denotation, and backward closure.
+One-sorted basic matching logic — syntax, models, denotation, and backward
+closure.
 
 Source: Xiaohong Chen and Grigore Rosu, "Completeness and incompleteness of basic
 matching logic", arXiv:2608.13306v1 (13 Aug 2026), Sections 2 and 3.

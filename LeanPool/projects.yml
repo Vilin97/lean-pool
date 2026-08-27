@@ -6249,14 +6249,14 @@ projects:
       - "05B07"
       - "05C70"
   - slug: matching-logic-completeness
-    title: Global completeness of definedness-free matching logic
+    title: Global completeness of one-sorted definedness-free matching logic
     summary: >-
-      Formalizes Chen and Roșu's global-completeness argument and independently
-      discharges its local-completeness oracle by mechanizing the canonical-model
-      construction from their 2019 Matching μ-Logic technical report (Theorem 73,
-      Lemmas 80–81, and strong local completeness Theorem 83). The resulting
-      theorem supplies both local completeness and soundness for countably
-      infinite variable types.
+      Formalizes the one-sorted case of Chen and Roșu's global-completeness
+      argument and independently discharges its local-completeness oracle by
+      mechanizing the canonical-model construction from their 2019 Matching
+      μ-Logic technical report (Theorem 73, Lemmas 80–81, and strong local
+      completeness Theorem 83). The resulting theorem supplies both local
+      completeness and soundness for countably infinite variable types.
     branch: mathematical logic and formal methods
     entry_module: LeanPool.MatchingLogic
     authors:
@@ -6296,13 +6296,15 @@ projects:
           is equivalent to local consequence from the localized theory.
       - declaration: MatchingLogic.strongLocalCompleteness
         informal: >-
-          Basic matching logic has strong local completeness over an arbitrary
-          signature when the element-variable type is countably infinite.
+          One-sorted basic matching logic has strong local completeness over an
+          arbitrary one-sorted finitary signature when the element-variable type
+          is countably infinite.
       - declaration: MatchingLogic.global_completeness_entryIII
         informal: >-
-          For closed premises and conclusion over a countably infinite
-          element-variable type, global semantic consequence is equivalent to
-          derivability, with both soundness and local completeness discharged.
+          For a one-sorted finitary signature, closed premises and conclusion,
+          and a countably infinite element-variable type, global semantic
+          consequence is equivalent to derivability, with both soundness and
+          local completeness discharged.
     tags:
       - matching-logic
       - mathematical-logic

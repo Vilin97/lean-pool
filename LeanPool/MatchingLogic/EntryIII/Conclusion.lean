@@ -42,20 +42,21 @@ type `Nat`. -/
 theorem finiteLocalCompleteness : FiniteLocalCompleteness S Nat :=
   finiteLocalCompleteness_of_finiteLocalModelExistence finiteLocalModelExistence
 
-/-- Unconditional strong local completeness over `Nat`. -/
+/-- Unconditional one-sorted strong local completeness over `Nat`. -/
 theorem strongLocalCompleteness_nat : StrongLocalCompleteness S Nat :=
   strongLocalCompleteness_of_finiteLocalCompleteness finiteLocalCompleteness
 
-/-- Entry point (iii), at the source-faithful scope of a countably infinite
-element-variable type. -/
+/-- Entry point (iii), at the source-faithful scope of one-sorted finitary
+signatures and a countably infinite element-variable type. -/
 theorem strongLocalCompleteness {Var : Type}
     [DecidableEq Var] [Denumerable Var] :
     StrongLocalCompleteness S Var :=
   (strongLocalCompleteness_iff_nat (S := S) (Var := Var)).mpr
     strongLocalCompleteness_nat
 
-/-- Corollary 15 with both soundness and strong local completeness supplied by
-the development.  Only the paper's closedness premises remain. -/
+/-- The one-sorted case of Corollary 15 with both soundness and strong local
+completeness supplied by the development.  Only the paper's closedness premises
+remain. -/
 theorem global_completeness_entryIII {Var : Type}
     [DecidableEq Var] [Denumerable Var]
     {Gamma : Set (Pattern S Var)} {phi : Pattern S Var}
