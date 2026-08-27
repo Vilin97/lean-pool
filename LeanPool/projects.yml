@@ -6251,11 +6251,12 @@ projects:
   - slug: matching-logic-completeness
     title: Global completeness of definedness-free matching logic
     summary: >-
-      Formalizes the positive core of Chen and Roșu's basic matching-logic paper,
-      including locality, the double-cover construction, semantic localization,
-      soundness, and a canonical-model proof of strong local completeness. The
-      resulting global-completeness theorem discharges both the paper's local
-      completeness and soundness hypotheses for countably infinite variable types.
+      Formalizes Chen and Roșu's global-completeness argument and independently
+      discharges its local-completeness oracle by mechanizing the canonical-model
+      construction from their 2019 Matching μ-Logic technical report (Theorem 73,
+      Lemmas 80–81, and strong local completeness Theorem 83). The resulting
+      theorem supplies both local completeness and soundness for countably
+      infinite variable types.
     branch: mathematical logic and formal methods
     entry_module: LeanPool.MatchingLogic
     authors:
@@ -6263,11 +6264,14 @@ projects:
       - Anthropic
       - OpenAI
     source:
-      title: Completeness and incompleteness of basic matching logic
+      title: >-
+        Completeness and incompleteness of basic matching logic; Matching μ-Logic
+        (2019 technical report)
       authors:
         - Xiaohong Chen
         - Grigore Roșu
       arxiv: "2608.13306"
+      url: https://hdl.handle.net/2142/102281
       github_repo: eveil-labs/matching-logic-lean
       commit: 4628a26bb2db117de1a11cbedcb620db9124cdb8
     license: Apache-2.0

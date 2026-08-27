@@ -31,7 +31,9 @@ def exList : List Nat -> Pattern S Nat -> Pattern S Nat
   | [], p => p
   | y :: ys, p => .ex y (exList ys p)
 
-private theorem substVar_not_mem_FV_of_ne {x y z : Nat}
+/-- A variable distinct from the replacement and absent from the source remains
+absent after raw variable substitution. -/
+theorem substVar_not_mem_FV_of_ne {x y z : Nat}
     {p : Pattern S Nat} (hzy : z ≠ y) (hzp : z ∉ FV p) :
     z ∉ FV (substVar x y p) := by
   induction p with
@@ -53,6 +55,18 @@ private theorem substVar_not_mem_FV_of_ne {x y z : Nat}
         · have hzbody : z ∉ FV p := by
             simpa [FV_ex, hza] using hzp
           simpa [FV_ex, hza] using ih hzbody
+
+/-- Raw substitution commutes with a list of existential binders when its
+source is distinct from every binder. -/
+theorem substVar_exList {a b : Nat} (ys : List Nat) (p : Pattern S Nat)
+    (ha : ∀ y ∈ ys, a ≠ y) :
+    substVar a b (exList ys p) = exList ys (substVar a b p) := by
+  induction ys with
+  | nil => rfl
+  | cons y ys ih =>
+      have hay : a ≠ y := ha y (by simp)
+      simp only [exList, substVar, ite_eq_right (Ne.symm hay)]
+      rw [ih (fun u hu => ha u (by simp [hu]))]
 
 private theorem avoidBinder_not_mem_FV {y z : Nat} {p : Pattern S Nat}
     (hzp : z ∉ FV p) : z ∉ FV (avoidBinder y p) := by

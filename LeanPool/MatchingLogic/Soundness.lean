@@ -16,6 +16,7 @@ removes one of the two black boxes from Corollary 15.
 Statement pinned before any proof was attempted.
 -/
 import LeanPool.MatchingLogic.ProofSystem
+import LeanPool.MatchingLogic.Sanity
 
 /-!
 # MatchingLogic.Soundness
@@ -132,16 +133,6 @@ private theorem pform_taut_total (M : Model S) (ρ : Var → M.carrier)
   apply (pform_mem_denote_iff M ρ θ u p).mpr
   exact hp (fun n => decide (u ∈ M.denote ρ (θ n)))
 
-private theorem Model.app_eq_empty_at (M : Model S) (σ : S.Sym)
-    (A : Fin (S.arity σ) → Set M.carrier) (i : Fin (S.arity σ))
-    (hi : A i = ∅) : M.app σ A = ∅ := by
-  ext u
-  simp only [Model.app, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
-  rintro ⟨a, ha, -⟩
-  have hai := ha i
-  rw [hi] at hai
-  exact hai
-
 private theorem Model.app_update_union (M : Model S) (σ : S.Sym)
     (A : Fin (S.arity σ) → Set M.carrier) (i : Fin (S.arity σ))
     (B C : Set M.carrier) :
@@ -240,7 +231,7 @@ private theorem denote_appCtx_empty (M : Model S) (ρ : Var → M.carrier)
   | hole => exact hφ
   | node σ i args C ih =>
       simp only [AppCtx.plug, denote_app]
-      apply Model.app_eq_empty_at M σ _ i
+      apply Model.app_eq_empty M σ _ i
       simpa using ih
 
 /-- **(S) is provable, not merely assumable.**  The paper cites soundness to its
@@ -285,7 +276,7 @@ theorem soundness : Soundness S Var := by
       intro M _ ρ
       apply imp_total_of_subset M ρ
       rw [denote_app_update]
-      rw [Model.app_eq_empty_at M σ _ i (by simp)]
+      rw [Model.app_eq_empty M σ _ i (by simp)]
       exact Set.empty_subset _
   | propOr =>
       intro M _ ρ

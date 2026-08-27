@@ -156,12 +156,10 @@ private theorem locConsistent_supplyAddWitness
           tauto]
       exact hcons
 
-private def supplyWitnessStages
+private abbrev supplyWitnessStages
     (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
-    (enum : Nat → Pattern S Nat) : Nat → List (Pattern S Nat)
-  | 0 => []
-  | n + 1 =>
-      supplyAddWitness Gamma hSupply (supplyWitnessStages Gamma hSupply enum n) (enum n)
+    (enum : Nat → Pattern S Nat) : Nat → List (Pattern S Nat) :=
+  henkinStages (supplyAddWitness Gamma hSupply) enum []
 
 private theorem supplyWitnessStages_locConsistent
     (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
@@ -170,62 +168,25 @@ private theorem supplyWitnessStages_locConsistent
       (supplyStageTheory Gamma (supplyWitnessStages Gamma hSupply enum n)) := by
   intro n
   induction n with
-  | zero => simpa [supplyWitnessStages, supplyStageTheory] using hGamma
+  | zero => simpa [henkinStages, supplyStageTheory] using hGamma
   | succ n ih =>
-      simpa [supplyWitnessStages] using
+      simpa [henkinStages] using
         locConsistent_supplyAddWitness Gamma hSupply
           (supplyWitnessStages Gamma hSupply enum n) (enum n) ih
-
-private theorem supplyWitnessStages_subset_succ
-    (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
-    (enum : Nat → Pattern S Nat) (n : Nat) :
-    supplyStageTheory Gamma (supplyWitnessStages Gamma hSupply enum n) ⊆
-      supplyStageTheory Gamma (supplyWitnessStages Gamma hSupply enum (n + 1)) := by
-  simpa [supplyWitnessStages] using
-    supplyStageTheory_subset_addWitness Gamma hSupply
-      (supplyWitnessStages Gamma hSupply enum n) (enum n)
-
-private theorem supplyWitnessStages_mono
-    (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
-    (enum : Nat → Pattern S Nat) :
-    Monotone (fun n =>
-      supplyStageTheory Gamma (supplyWitnessStages Gamma hSupply enum n)) :=
-  monotone_nat_of_le_succ (supplyWitnessStages_subset_succ Gamma hSupply enum)
 
 private def suppliedHenkinTheory
     (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
     (enum : Nat → Pattern S Nat) : Set (Pattern S Nat) :=
-  {q | ∃ n, q ∈ supplyStageTheory Gamma (supplyWitnessStages Gamma hSupply enum n)}
-
-private theorem suppliedHenkinTheory_covers_list
-    (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
-    (enum : Nat → Pattern S Nat) (l : List (Pattern S Nat))
-    (hl : ∀ q ∈ l, q ∈ suppliedHenkinTheory Gamma hSupply enum) :
-    ∃ n, ∀ q ∈ l,
-      q ∈ supplyStageTheory Gamma (supplyWitnessStages Gamma hSupply enum n) := by
-  induction l with
-  | nil => exact ⟨0, by simp⟩
-  | cons q l ih =>
-      rcases hl q (by simp) with ⟨n, hn⟩
-      obtain ⟨m, hm⟩ := ih (by
-        intro r hr
-        exact hl r (by simp [hr]))
-      refine ⟨max n m, ?_⟩
-      intro r hr
-      rcases List.mem_cons.mp hr with rfl | hr
-      · exact supplyWitnessStages_mono Gamma hSupply enum
-          (Nat.le_max_left n m) hn
-      · exact supplyWitnessStages_mono Gamma hSupply enum
-          (Nat.le_max_right n m) (hm r hr)
+  henkinLimit (supplyStageTheory Gamma) (supplyAddWitness Gamma hSupply) enum []
 
 private theorem suppliedHenkinTheory_locConsistent
     (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
     (enum : Nat → Pattern S Nat) (hGamma : LocConsistent Gamma) :
     LocConsistent (suppliedHenkinTheory Gamma hSupply enum) := by
-  intro hbad
-  rcases hbad with ⟨l, hl, hp⟩
-  obtain ⟨n, hn⟩ := suppliedHenkinTheory_covers_list Gamma hSupply enum l hl
-  exact supplyWitnessStages_locConsistent Gamma hSupply enum hGamma n ⟨l, hn, hp⟩
+  exact henkinLimit_locConsistent (supplyStageTheory Gamma)
+    (supplyAddWitness Gamma hSupply) enum []
+    (supplyStageTheory_subset_addWitness Gamma hSupply)
+    (supplyWitnessStages_locConsistent Gamma hSupply enum hGamma)
 
 private theorem Gamma_subset_suppliedHenkinTheory
     (Gamma : Set (Pattern S Nat)) (hSupply : InfiniteFreshVariableSupply Gamma)
@@ -246,7 +207,7 @@ private theorem suppliedHenkinTheory_has_freshWitness
   let y := Pattern.supplyFresh Gamma hSupply l p
   refine ⟨y, Pattern.supplyFresh_not_mem_body Gamma hSupply l p, n + 1, ?_⟩
   apply Set.mem_union_right
-  simp [supplyWitnessStages, hn, supplyAddWitness, l, y]
+  simp [henkinStages, hn, supplyAddWitness, l, y]
 
 /-- A locally consistent set extends to a fresh-witnessed MCS provided the
 starting syntax leaves an infinite reserve of variables free in none of its

@@ -141,16 +141,6 @@ def FreshExListTrace : List Nat → List Nat → Pattern S Nat → Prop
       z ∉ (exList ys p).allVars ∧ FreshExListTrace ys zs (substVar y z p)
   | _, _, _ => False
 
-private theorem substVar_exList {a b : Nat} (ys : List Nat) (p : Pattern S Nat)
-    (ha : ∀ y ∈ ys, a ≠ y) :
-    substVar a b (exList ys p) = exList ys (substVar a b p) := by
-  induction ys with
-  | nil => rfl
-  | cons y ys ih =>
-      have hay : a ≠ y := ha y (by simp)
-      simp only [exList, substVar, ite_eq_right (Ne.symm hay)]
-      rw [ih (fun u hu => ha u (by simp [hu]))]
-
 end Pattern
 
 /-- Recursively eliminate an `exList` in a fresh-witness MCS.  The result is

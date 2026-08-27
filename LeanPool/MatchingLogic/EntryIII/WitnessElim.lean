@@ -157,27 +157,6 @@ private theorem avoidTwo_alphaEq (y z : Nat) (p : Pattern S Nat) :
         exact (AlphaEq.ex a ih).trans (AlphaEq.alphaEx hwq)
       · exact AlphaEq.ex a ih
 
-private theorem substVar_not_mem_FV_of_ne {a b t : Nat}
-    {p : Pattern S Nat} (htb : t ≠ b) (htp : t ∉ FV p) :
-    t ∉ FV (substVar a b p) := by
-  induction p with
-  | var v => by_cases hva : v = a <;> simp_all [substVar]
-  | bot => simp [substVar]
-  | app sigma args ih =>
-      simp only [substVar, FV_app, Set.mem_iUnion, not_exists] at htp ⊢
-      exact fun i => ih i (htp i)
-  | imp p q ihp ihq =>
-      simp only [substVar, FV_imp, Set.mem_union, not_or] at htp ⊢
-      exact ⟨ihp htp.1, ihq htp.2⟩
-  | ex v p ih =>
-      by_cases hva : v = a
-      · simpa [substVar, hva] using htp
-      · simp only [substVar, ite_eq_right hva]
-        by_cases htv : t = v
-        · simp [FV_ex, htv]
-        · have htq : t ∉ FV p := by simpa [FV_ex, htv] using htp
-          simpa [FV_ex, htv] using ih htq
-
 private theorem avoidTwo_not_mem_FV {y z : Nat} {p : Pattern S Nat}
     (hy : y ∉ FV p) : y ∉ FV (avoidTwo y z p) := by
   induction p with
@@ -211,7 +190,8 @@ private theorem avoidTwo_not_mem_FV {y z : Nat} {p : Pattern S Nat}
         · have hyp : y ∉ FV p := by simpa [FV_ex, Ne.symm hay] using hy
           have hyq := ih hyp
           intro hmem
-          exact (substVar_not_mem_FV_of_ne (a := a) (b := w)
+          exact (substVar_not_mem_FV_of_ne (x := a) (y := w)
+            (z := y)
             (Ne.symm hwy) hyq) hmem.1
       · rename_i hnot
         have hay : a ≠ y := fun h => hnot (Or.inl h)
@@ -320,16 +300,6 @@ private theorem substVar_witnessBody_update {sigma : S.Sym}
     have hupdate : Function.update w i z j = w j := by simp [hji]
     simpa only [hupdate, imp.injEq, ite_eq_left_iff, ex.injEq, true_and,
       and_true] using And.intro hPhiRaw (And.intro hcond hother)
-
-private theorem substVar_exList {a b : Nat} (ys : List Nat)
-    (q : Pattern S Nat) (ha : ∀ y ∈ ys, a ≠ y) :
-    substVar a b (exList ys q) = exList ys (substVar a b q) := by
-  induction ys with
-  | nil => rfl
-  | cons y ys ih =>
-      have hay : a ≠ y := ha y (by simp)
-      simp only [exList, substVar, ite_eq_right (Ne.symm hay)]
-      rw [ih (fun u hu => ha u (by simp [hu]))]
 
 private theorem allVars_subset_exList (ys : List Nat) (q : Pattern S Nat) :
     q.allVars ⊆ (exList ys q).allVars := by

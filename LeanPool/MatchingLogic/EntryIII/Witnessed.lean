@@ -154,6 +154,65 @@ theorem locConsistent_insert_captureAvoidingWitness
     he.mp (LocProvable.of_provable halpha)
   exact hGamma (hex.mp hnex)
 
+/-! ### Shared Henkin-stage infrastructure -/
+
+/-- Iterate a witness-adjunction operation along an enumeration. -/
+def henkinStages {α : Type} (step : List α → α → List α)
+    (enum : Nat → α) (base : List α) : Nat → List α
+  | 0 => base
+  | n + 1 => step (henkinStages step enum base n) (enum n)
+
+/-- The union of the theories represented by all finite Henkin stages. -/
+def henkinLimit {α : Type} (stageTheory : List α → Set α)
+    (step : List α → α → List α) (enum : Nat → α) (base : List α) : Set α :=
+  {q | ∃ n, q ∈ stageTheory (henkinStages step enum base n)}
+
+/-- A stage operation that only enlarges represented theories gives a monotone
+sequence of finite Henkin stages. -/
+theorem henkinStages_mono {α : Type} (stageTheory : List α → Set α)
+    (step : List α → α → List α) (enum : Nat → α) (base : List α)
+    (hstep : ∀ l phi, stageTheory l ⊆ stageTheory (step l phi)) :
+    Monotone (fun n => stageTheory (henkinStages step enum base n)) :=
+  monotone_nat_of_le_succ fun n => by
+    simpa [henkinStages] using hstep (henkinStages step enum base n) (enum n)
+
+/-- Every finite list drawn from a Henkin limit already appears at one common
+finite stage. -/
+theorem henkinLimit_covers_list {α : Type} (stageTheory : List α → Set α)
+    (step : List α → α → List α) (enum : Nat → α) (base l : List α)
+    (hstep : ∀ stage phi, stageTheory stage ⊆ stageTheory (step stage phi))
+    (hl : ∀ q ∈ l, q ∈ henkinLimit stageTheory step enum base) :
+    ∃ n, ∀ q ∈ l, q ∈ stageTheory (henkinStages step enum base n) := by
+  induction l with
+  | nil => exact ⟨0, by simp⟩
+  | cons q l ih =>
+      rcases hl q (by simp) with ⟨n, hn⟩
+      obtain ⟨m, hm⟩ := ih (by
+        intro r hr
+        exact hl r (by simp [hr]))
+      refine ⟨max n m, ?_⟩
+      intro r hr
+      rcases List.mem_cons.mp hr with rfl | hr
+      · exact henkinStages_mono stageTheory step enum base hstep
+          (Nat.le_max_left n m) hn
+      · exact henkinStages_mono stageTheory step enum base hstep
+          (Nat.le_max_right n m) (hm r hr)
+
+/-- Local consistency at every finite stage passes to the shared Henkin limit. -/
+theorem henkinLimit_locConsistent
+    (stageTheory : List (Pattern S Nat) → Set (Pattern S Nat))
+    (step : List (Pattern S Nat) → Pattern S Nat → List (Pattern S Nat))
+    (enum : Nat → Pattern S Nat) (base : List (Pattern S Nat))
+    (hstep : ∀ stage phi, stageTheory stage ⊆ stageTheory (step stage phi))
+    (hconsistent : ∀ n,
+      LocConsistent (stageTheory (henkinStages step enum base n))) :
+    LocConsistent (henkinLimit stageTheory step enum base) := by
+  intro hbad
+  rcases hbad with ⟨l, hl, hp⟩
+  obtain ⟨n, hn⟩ :=
+    henkinLimit_covers_list stageTheory step enum base l hstep hl
+  exact hconsistent n ⟨l, hn, hp⟩
+
 /-! ### Finite fresh-support stages -/
 
 /-- A binder-free pattern whose `allVars` contains the variables of every
@@ -231,10 +290,9 @@ private theorem locConsistent_addWitness (l : List (Pattern S Nat))
       exact hcons
 
 /-- The finite Henkin stages.  Stage `n+1` handles enumeration entry `n`. -/
-private def witnessStages (enum : Nat → Pattern S Nat)
-    (base : List (Pattern S Nat)) : Nat → List (Pattern S Nat)
-  | 0 => base
-  | n + 1 => addWitness (witnessStages enum base n) (enum n)
+private abbrev witnessStages (enum : Nat → Pattern S Nat)
+    (base : List (Pattern S Nat)) : Nat → List (Pattern S Nat) :=
+  henkinStages addWitness enum base
 
 private theorem witnessStages_locConsistent (enum : Nat → Pattern S Nat)
     (base : List (Pattern S Nat))
@@ -244,51 +302,21 @@ private theorem witnessStages_locConsistent (enum : Nat → Pattern S Nat)
   induction n with
   | zero => exact hbase
   | succ n ih =>
-      simpa [witnessStages] using
+      simpa [henkinStages] using
         locConsistent_addWitness (witnessStages enum base n) (enum n) ih
-
-private theorem witnessStages_subset_succ (enum : Nat → Pattern S Nat)
-    (base : List (Pattern S Nat)) (n : Nat) :
-    ({q | q ∈ witnessStages enum base n} : Set (Pattern S Nat)) ⊆
-      {q | q ∈ witnessStages enum base (n + 1)} := by
-  simpa [witnessStages] using
-    listTheory_subset_addWitness (witnessStages enum base n) (enum n)
-
-private theorem witnessStages_mono (enum : Nat → Pattern S Nat)
-    (base : List (Pattern S Nat)) :
-    Monotone (fun n => ({q | q ∈ witnessStages enum base n} : Set (Pattern S Nat))) :=
-  monotone_nat_of_le_succ (witnessStages_subset_succ enum base)
 
 /-- Union of all finite witness-adjunction stages. -/
 private def henkinTheory (enum : Nat → Pattern S Nat)
     (base : List (Pattern S Nat)) : Set (Pattern S Nat) :=
-  {q | ∃ n, q ∈ witnessStages enum base n}
-
-private theorem henkinTheory_covers_list (enum : Nat → Pattern S Nat)
-    (base : List (Pattern S Nat)) (l : List (Pattern S Nat))
-    (hl : ∀ q ∈ l, q ∈ henkinTheory enum base) :
-    ∃ n, ∀ q ∈ l, q ∈ witnessStages enum base n := by
-  induction l with
-  | nil => exact ⟨0, by simp⟩
-  | cons q l ih =>
-      rcases hl q (by simp) with ⟨n, hn⟩
-      obtain ⟨m, hm⟩ := ih (by
-        intro r hr
-        exact hl r (by simp [hr]))
-      refine ⟨max n m, ?_⟩
-      intro r hr
-      rcases List.mem_cons.mp hr with rfl | hr
-      · exact witnessStages_mono enum base (Nat.le_max_left n m) hn
-      · exact witnessStages_mono enum base (Nat.le_max_right n m) (hm r hr)
+  henkinLimit (fun l => {q | q ∈ l}) addWitness enum base
 
 private theorem henkinTheory_locConsistent (enum : Nat → Pattern S Nat)
     (base : List (Pattern S Nat))
     (hbase : LocConsistent ({q | q ∈ base} : Set (Pattern S Nat))) :
     LocConsistent (henkinTheory enum base) := by
-  intro hbad
-  rcases hbad with ⟨l, hl, hp⟩
-  obtain ⟨n, hn⟩ := henkinTheory_covers_list enum base l hl
-  exact witnessStages_locConsistent enum base hbase n ⟨l, hn, hp⟩
+  exact henkinLimit_locConsistent (fun l => {q | q ∈ l}) addWitness enum base
+    listTheory_subset_addWitness
+    (witnessStages_locConsistent enum base hbase)
 
 private theorem base_subset_henkinTheory (enum : Nat → Pattern S Nat)
     (base : List (Pattern S Nat)) :
@@ -304,7 +332,7 @@ private theorem henkinTheory_has_freshWitness
   obtain ⟨n, hn⟩ := henum (.ex x p)
   let y := Pattern.henkinFresh (witnessStages enum base n) p
   refine ⟨y, Pattern.henkinFresh_not_mem_body _ _, n + 1, ?_⟩
-  simp [witnessStages, hn, addWitness, y]
+  simp [henkinStages, hn, addWitness, y]
 
 /-! ### Witnessed Lindenbaum extension -/
 

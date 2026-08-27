@@ -21,7 +21,7 @@ import LeanPool.MatchingLogic.SortedProof
 /-!
 # Global completeness of definedness-free matching logic
 
-Source: arxiv:2608.13306
+Source: arxiv:2608.13306, url:https://hdl.handle.net/2142/102281
 Authors: Aurélien Eveil, Anthropic, OpenAI
 Status: verified
 Main declarations: `MatchingLogic.global_completeness_entryIII`

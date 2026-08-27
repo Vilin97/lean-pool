@@ -35,9 +35,6 @@ end Signature
 
 namespace Pattern
 
-private theorem pair_ne_of_ne_tag {a b x y : Nat} (hab : a ≠ b) :
-    Nat.pair a x ≠ Nat.pair b y := fun h => hab (Nat.pair_eq_pair.mp h).1
-
 /-- Regard a pattern over a finite sub-signature as a pattern over `S`. -/
 def liftSignature [DecidableEq S.Sym] (F : Finset S.Sym) :
     Pattern (S.restrict F) Var → Pattern S Var
