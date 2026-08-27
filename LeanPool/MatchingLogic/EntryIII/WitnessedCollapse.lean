@@ -21,6 +21,71 @@ open Set
 
 noncomputable section
 
+variable {S : Signature}
+
+/-- The complete theory of a model at one point under a fixed valuation. -/
+def pointedTheory (M : Model S) (rho : Nat → M.carrier) (u : M.carrier) :
+    Set (Pattern S Nat) :=
+  {p | u ∈ M.denote rho p}
+
+private theorem pointedTheory_mem_denote_conj (M : Model S)
+    (rho : Nat → M.carrier) (u : M.carrier)
+    (l : List (Pattern S Nat))
+    (hl : ∀ p ∈ l, u ∈ M.denote rho p) :
+    u ∈ M.denote rho (conj l) := by
+  induction l with
+  | nil => simp [conj]
+  | cons p l ih =>
+      have hp := hl p (by simp)
+      have htail := ih (by
+        intro q hq
+        exact hl q (by simp [hq]))
+      simpa [conj, Pattern.and, Pattern.nt] using And.intro hp htail
+
+/-- Every pointed model theory is a maximal locally consistent set. -/
+theorem pointedTheory_isMCS (M : Model S) (rho : Nat → M.carrier)
+    (u : M.carrier) : IsMCS (pointedTheory M rho u) := by
+  constructor
+  · rintro ⟨l, hl, hp⟩
+    have hconj : u ∈ M.denote rho (conj l) :=
+      pointedTheory_mem_denote_conj M rho u l (by
+        intro p hp'
+        exact hl p hp')
+    have htotal := soundness (∅ : Set (Pattern S Nat))
+      (.imp (conj l) .bot) hp M (by simp [Model.SatSet]) rho
+    have himp : u ∈ M.denote rho (.imp (conj l) .bot) := by
+      rw [htotal]
+      exact Set.mem_univ u
+    simp only [denote_imp, denote_bot, Set.union_empty, Set.mem_compl_iff] at himp
+    exact himp hconj
+  · intro Delta hstrict hDeltaConsistent
+    obtain ⟨p, hpDelta, hpNotGamma⟩ := Set.exists_of_ssubset hstrict
+    have hnotpGamma : Pattern.nt p ∈ pointedTheory M rho u := by
+      change u ∈ M.denote rho (Pattern.nt p)
+      change u ∉ M.denote rho p at hpNotGamma
+      simpa only [denote_nt, Set.mem_compl_iff] using hpNotGamma
+    have hpLoc : LocProvable Delta p := LocProvable.of_mem hpDelta
+    have hnotpLoc : LocProvable Delta (Pattern.nt p) :=
+      LocProvable.of_mem (hstrict.1 hnotpGamma)
+    exact hDeltaConsistent (hpLoc.mp hnotpLoc)
+
+/-- A surjective valuation gives the pointed theory a name for every semantic
+existential witness. -/
+theorem pointedTheory_witnessed (M : Model S) (rho : Nat → M.carrier)
+    (u : M.carrier) (hrho : Function.Surjective rho) :
+    Witnessed (pointedTheory M rho u) := by
+  intro x p hex
+  change u ∈ M.denote rho (.ex x p) at hex
+  simp only [denote_ex, Set.mem_iUnion] at hex
+  obtain ⟨a, ha⟩ := hex
+  obtain ⟨y, hy⟩ := hrho a
+  refine ⟨y, ?_⟩
+  change u ∈ M.denote rho
+    (.imp (.ex x p) (Pattern.captureAvoidingSubst x y p))
+  apply Set.mem_union_right
+  rw [M.denote_captureAvoidingSubst]
+  simpa [hy] using ha
+
 /-- The countermodel needs no symbols: variables and existential quantification
 already separate ordinary witnesses from fresh witnesses. -/
 abbrev WitnessCollapseSig : Signature where
@@ -38,7 +103,7 @@ def witnessCollapseRho : Nat → witnessCollapseModel.carrier := fun n => n = 0
 
 /-- The complete pointed theory at `true`. -/
 def witnessCollapseTheory : Set (Pattern WitnessCollapseSig Nat) :=
-  {p | true ∈ witnessCollapseModel.denote witnessCollapseRho p}
+  pointedTheory witnessCollapseModel witnessCollapseRho true
 
 private theorem witnessCollapseRho_surjective : Function.Surjective witnessCollapseRho := by
   intro b
@@ -46,62 +111,15 @@ private theorem witnessCollapseRho_surjective : Function.Surjective witnessColla
   | false => exact ⟨1, by simp [witnessCollapseRho]⟩
   | true => exact ⟨0, by simp [witnessCollapseRho]⟩
 
-private theorem mem_denote_conj
-    (l : List (Pattern WitnessCollapseSig Nat))
-    (hl : ∀ p ∈ l, true ∈ witnessCollapseModel.denote witnessCollapseRho p) :
-    true ∈ witnessCollapseModel.denote witnessCollapseRho (conj l) := by
-  induction l with
-  | nil => simp [conj]
-  | cons p l ih =>
-      have hp := hl p (by simp)
-      have htail := ih (by
-        intro q hq
-        exact hl q (by simp [hq]))
-      simpa [conj, Pattern.and, Pattern.nt] using And.intro hp htail
-
 /-- The pointed theory is a genuine maximal locally consistent set. -/
 theorem witnessCollapseTheory_isMCS : IsMCS witnessCollapseTheory := by
-  constructor
-  · rintro ⟨l, hl, hp⟩
-    have hconj : true ∈ witnessCollapseModel.denote witnessCollapseRho (conj l) :=
-      mem_denote_conj l (by
-        intro p hp
-        exact hl p hp)
-    have htotal := soundness
-      (∅ : Set (Pattern WitnessCollapseSig Nat))
-      (.imp (conj l) .bot) hp witnessCollapseModel (by simp [Model.SatSet])
-      witnessCollapseRho
-    have himp : true ∈ witnessCollapseModel.denote witnessCollapseRho
-        (.imp (conj l) .bot) := by
-      rw [htotal]
-      exact Set.mem_univ true
-    simp only [denote_imp, denote_bot, Set.union_empty, Set.mem_compl_iff] at himp
-    exact himp hconj
-  · intro Delta hstrict hDeltaConsistent
-    obtain ⟨p, hpDelta, hpNotGamma⟩ := Set.exists_of_ssubset hstrict
-    have hnotpGamma : Pattern.nt p ∈ witnessCollapseTheory := by
-      change true ∈ witnessCollapseModel.denote witnessCollapseRho (Pattern.nt p)
-      change true ∉ witnessCollapseModel.denote witnessCollapseRho p at hpNotGamma
-      simpa only [denote_nt, Set.mem_compl_iff] using hpNotGamma
-    have hpLoc : LocProvable Delta p := LocProvable.of_mem hpDelta
-    have hnotpLoc : LocProvable Delta (Pattern.nt p) :=
-      LocProvable.of_mem (hstrict.1 hnotpGamma)
-    exact hDeltaConsistent (hpLoc.mp hnotpLoc)
+  exact pointedTheory_isMCS witnessCollapseModel witnessCollapseRho true
 
 /-- Surjectivity of the valuation supplies an ordinary name for every semantic
 existential witness. -/
 theorem witnessCollapseTheory_witnessed : Witnessed witnessCollapseTheory := by
-  intro x p hex
-  change true ∈ witnessCollapseModel.denote witnessCollapseRho (.ex x p) at hex
-  simp only [denote_ex, Set.mem_iUnion] at hex
-  obtain ⟨a, ha⟩ := hex
-  obtain ⟨y, hy⟩ := witnessCollapseRho_surjective a
-  refine ⟨y, ?_⟩
-  change true ∈ witnessCollapseModel.denote witnessCollapseRho
-    (.imp (.ex x p) (Pattern.captureAvoidingSubst x y p))
-  apply Set.mem_union_right
-  rw [witnessCollapseModel.denote_captureAvoidingSubst]
-  simpa [hy] using ha
+  exact pointedTheory_witnessed witnessCollapseModel witnessCollapseRho true
+    witnessCollapseRho_surjective
 
 /-- The existential `∃ 0. var 0` belongs to the pointed theory, but every
 fresh name denotes `false`, so no fresh Henkin implication belongs to it. -/

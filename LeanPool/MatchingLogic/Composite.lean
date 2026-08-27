@@ -74,9 +74,10 @@ end Cover
 closed, contains `w`, and satisfies `C ⊆ ⟦Γ⟧` by Lemma 8.  If `C = M` we are
 done; otherwise the double cover `N` of Definition 10 satisfies `Γ` and refutes
 `φ`, by Corollary 12. -/
-theorem semantic_localization {Γ : Set (Pattern S Var)} {φ : Pattern S Var}
-    (hΓ : ∀ γ ∈ Γ, Closed γ) (hφ : Closed φ) :
+theorem semantic_localization_of_closed_Γ {Γ : Set (Pattern S Var)}
+    {φ : Pattern S Var} (hΓ : ∀ γ ∈ Γ, Closed γ) :
     GlobalCons Γ φ ↔ LocalCons (localize Γ) φ := by
+  classical
   constructor
   · intro hglobal M ρ w hw
     by_contra hwφ
@@ -114,12 +115,37 @@ theorem semantic_localization {Γ : Set (Pattern S Var)} {φ : Pattern S Var}
         have huΓ' : ∀ δ, δ ∈ Γ → u ∈ M.denote ρ δ := by
           simpa only [Model.denoteSet, Set.mem_iInter] using huΓ
         exact huΓ' γ hγ
-      have hnotSatφ : ¬N.Sat φ := by
-        intro hsatφ
-        have hCφ :=
-          (cover_sat_iff M C hC hne star hstar hφ ρ).mp hsatφ
-        exact hwφ (hCφ hwC)
-      exact hnotSatφ (hglobal N hsatΓ)
+      let ν : Var → C × Bool := fun x =>
+        if hx : ρ x ∈ C then (⟨ρ x, hx⟩, false) else (⟨w, hwC⟩, true)
+      let ρ' : Var → M.carrier := fun x => proj M C star false (ν x)
+      have hagree : AgreeOn C ρ ρ' := by
+        intro x
+        by_cases hx : ρ x ∈ C
+        · exact Or.inl ⟨by simp [ρ', ν, hx, proj], hx⟩
+        · exact Or.inr ⟨hx, by simp [ρ', ν, hx, proj, hstar]⟩
+      have hloc := locality M hC φ ρ ρ' hagree
+      have hwφ' : w ∉ M.denote ρ' φ := by
+        intro hw'
+        have hm : w ∈ M.denote ρ' φ ∩ C := ⟨hw', hwC⟩
+        rw [← hloc] at hm
+        exact hwφ hm.1
+      let q : C × Bool := (⟨w, hwC⟩, false)
+      have hqφ : q ∉ N.denote ν φ := by
+        intro hq
+        have hproj := (two_copies M C hC hne star hstar φ ν q).mp hq
+        apply hwφ'
+        simpa [N, q, ρ'] using hproj
+      apply hqφ
+      have hsatφ := hglobal N hsatΓ ν
+      rw [hsatφ]
+      exact Set.mem_univ q
   · exact globalCons_of_localCons_localize
+
+/-- **Theorem 13 (paper-facing statement).**  The paper assumes the conclusion
+closed globally; the mechanized proof above shows that assumption is unused. -/
+theorem semantic_localization {Γ : Set (Pattern S Var)} {φ : Pattern S Var}
+    (hΓ : ∀ γ ∈ Γ, Closed γ) (_hφ : Closed φ) :
+    GlobalCons Γ φ ↔ LocalCons (localize Γ) φ :=
+  semantic_localization_of_closed_Γ hΓ
 
 end MatchingLogic

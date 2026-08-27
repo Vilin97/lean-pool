@@ -86,7 +86,7 @@ private theorem completed_truth_at_complexity
             have hgenerated : ∀ i, Generated root (components i) := by
               intro i
               exact world.property.tail
-                ((canonicalStep_iff root world.val (components i)).mpr
+                ((canonicalStep_iff world.val (components i)).mpr
                   ⟨sigma, components, i, hinterp, rfl⟩)
             let generatedComponents : Fin (S.arity sigma) → GeneratedCarrier root :=
               fun i => ⟨components i, hgenerated i⟩

@@ -141,7 +141,7 @@ def alphaWitnessRho : Nat → alphaWitnessModel.carrier := fun n => n = 0
 
 /-- The complete pointed theory of `alphaWitnessModel` at `true`. -/
 def alphaWitnessTheory : Set (Pattern AlphaWitnessSig Nat) :=
-  {p | true ∈ alphaWitnessModel.denote alphaWitnessRho p}
+  pointedTheory alphaWitnessModel alphaWitnessRho true
 
 private theorem alphaWitnessRho_surjective :
     Function.Surjective alphaWitnessRho := by
@@ -150,60 +150,12 @@ private theorem alphaWitnessRho_surjective :
   | false => exact ⟨1, by simp [alphaWitnessRho]⟩
   | true => exact ⟨0, by simp [alphaWitnessRho]⟩
 
-private theorem alphaWitness_mem_denote_conj
-    (l : List (Pattern AlphaWitnessSig Nat))
-    (hl : ∀ p ∈ l, true ∈ alphaWitnessModel.denote alphaWitnessRho p) :
-    true ∈ alphaWitnessModel.denote alphaWitnessRho (conj l) := by
-  induction l with
-  | nil => simp [conj]
-  | cons p l ih =>
-      have hp := hl p (by simp)
-      have htail := ih (by
-        intro q hq
-        exact hl q (by simp [hq]))
-      simpa [conj, Pattern.and, Pattern.nt] using And.intro hp htail
-
 theorem alphaWitnessTheory_isMCS : IsMCS alphaWitnessTheory := by
-  constructor
-  · rintro ⟨l, hl, hp⟩
-    have hconj : true ∈ alphaWitnessModel.denote alphaWitnessRho (conj l) :=
-      alphaWitness_mem_denote_conj l (by
-        intro p hp'
-        exact hl p hp')
-    have htotal := soundness
-      (∅ : Set (Pattern AlphaWitnessSig Nat))
-      (.imp (conj l) .bot) hp alphaWitnessModel (by simp [Model.SatSet])
-      alphaWitnessRho
-    have himp : true ∈ alphaWitnessModel.denote alphaWitnessRho
-        (.imp (conj l) .bot) := by
-      rw [htotal]
-      exact Set.mem_univ true
-    simp only [denote_imp, denote_bot, Set.union_empty,
-      Set.mem_compl_iff] at himp
-    exact himp hconj
-  · intro Delta hstrict hDeltaConsistent
-    obtain ⟨p, hpDelta, hpNotGamma⟩ := Set.exists_of_ssubset hstrict
-    have hnotpGamma : Pattern.nt p ∈ alphaWitnessTheory := by
-      change true ∈ alphaWitnessModel.denote alphaWitnessRho (Pattern.nt p)
-      change true ∉ alphaWitnessModel.denote alphaWitnessRho p at hpNotGamma
-      simpa only [denote_nt, Set.mem_compl_iff] using hpNotGamma
-    have hpLoc : LocProvable Delta p := LocProvable.of_mem hpDelta
-    have hnotpLoc : LocProvable Delta (Pattern.nt p) :=
-      LocProvable.of_mem (hstrict.1 hnotpGamma)
-    exact hDeltaConsistent (hpLoc.mp hnotpLoc)
+  exact pointedTheory_isMCS alphaWitnessModel alphaWitnessRho true
 
 theorem alphaWitnessTheory_witnessed : Witnessed alphaWitnessTheory := by
-  intro x p hex
-  change true ∈ alphaWitnessModel.denote alphaWitnessRho (.ex x p) at hex
-  simp only [denote_ex, Set.mem_iUnion] at hex
-  obtain ⟨a, ha⟩ := hex
-  obtain ⟨y, hy⟩ := alphaWitnessRho_surjective a
-  refine ⟨y, ?_⟩
-  change true ∈ alphaWitnessModel.denote alphaWitnessRho
-    (.imp (.ex x p) (Pattern.captureAvoidingSubst x y p))
-  apply Set.mem_union_right
-  rw [alphaWitnessModel.denote_captureAvoidingSubst]
-  simpa [hy] using ha
+  exact pointedTheory_witnessed alphaWitnessModel alphaWitnessRho true
+    alphaWitnessRho_surjective
 
 /-- The existential pattern whose binder cannot be renamed to variable zero. -/
 def alphaBlocked : Pattern AlphaWitnessSig Nat :=
@@ -221,12 +173,12 @@ theorem alphaBlocked_mem : alphaBlocked ∈ alphaWitnessTheory := by
 
 private theorem alphaWitness_complexity_pos
     (p : Pattern AlphaWitnessSig Nat) : 0 < p.complexity := by
-  induction p with
+  cases p with
   | var => simp [Pattern.complexity]
   | bot => simp [Pattern.complexity]
-  | app sigma args ih => simp [Pattern.complexity]
-  | imp p q ihp ihq => simp [Pattern.complexity]
-  | ex x p ih => simp [Pattern.complexity]
+  | app sigma args => simp [Pattern.complexity]
+  | imp p q => simp [Pattern.complexity]
+  | ex x p => simp [Pattern.complexity]
 
 private theorem alphaWitness_complexity_one
     (p : Pattern AlphaWitnessSig Nat) (h : p.complexity = 1) :
@@ -420,26 +372,15 @@ private theorem alphaBlocked_not_alphaEq_imp {x' : Nat}
       Set.union_singleton] at hden
     have hmem := Set.ext_iff.mp hden ()
     simp at hmem
-  · by_cases hax : a = x'
-    · subst a
-      have hden := halpha.denote_eq
-        (M := alphaUnitFullModel) (rho := alphaUnitRho)
-      simp only [alphaUnitFullModel, alphaBlocked, denote_ex,
-        Function.update_eq_self, denote_app, Model.app, pairArgs,
-        Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
-        Set.mem_singleton_iff, and_self, exists_const, Set.ofPred_true,
-        denote_imp, denote_bot, Set.union_empty] at hden
-      have hmem := Set.ext_iff.mp hden ()
-      simp at hmem
-    · have hden := halpha.denote_eq
-        (M := alphaUnitFullModel) (rho := alphaUnitRho)
-      simp only [alphaUnitFullModel, alphaBlocked, denote_ex,
-        Function.update_eq_self, denote_app, Model.app, pairArgs,
-        Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
-        Set.mem_singleton_iff, and_self, exists_const, Set.ofPred_true,
-        denote_imp, denote_bot, Set.union_empty] at hden
-      have hmem := Set.ext_iff.mp hden ()
-      simp at hmem
+  · have hden := halpha.denote_eq
+      (M := alphaUnitFullModel) (rho := alphaUnitRho)
+    simp only [alphaUnitFullModel, alphaBlocked, denote_ex,
+      Function.update_eq_self, denote_app, Model.app, pairArgs,
+      Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
+      Set.mem_singleton_iff, and_self, exists_const, Set.ofPred_true,
+      denote_imp, denote_bot, Set.union_empty] at hden
+    have hmem := Set.ext_iff.mp hden ()
+    simp at hmem
   · have hden := halpha.denote_eq
       (M := alphaUnitEmptyModel) (rho := alphaUnitRho)
     simp only [alphaUnitEmptyModel, alphaBlocked, denote_ex,
