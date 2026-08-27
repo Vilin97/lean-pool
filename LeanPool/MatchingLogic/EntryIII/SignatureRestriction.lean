@@ -213,6 +213,20 @@ noncomputable def signatureNatCode {T : Signature} [Encodable T.Sym] :
   | .bot => Nat.pair 3 0
   | .ex x phi => Nat.pair 4 (Nat.pair x phi.signatureNatCode)
 
+private def signatureNatTag : Pattern T Nat → Nat
+  | .var _ => 0
+  | .app _ _ => 1
+  | .imp _ _ => 2
+  | .bot => 3
+  | .ex _ _ => 4
+
+private theorem signatureNatTag_eq_of_code_eq {T : Signature} [Encodable T.Sym]
+    {p q : Pattern T Nat} (h : p.signatureNatCode = q.signatureNatCode) :
+    signatureNatTag p = signatureNatTag q := by
+  have h' := congrArg (fun n => (Nat.unpair n).1) h
+  cases p <;> cases q <;>
+    simp [signatureNatTag, signatureNatCode] at h' ⊢
+
 /-- The natural serialization is injective whenever the symbol type is encodable. -/
 theorem signatureNatCode_injective {T : Signature} [Encodable T.Sym] :
     Function.Injective (@signatureNatCode T _) := by
@@ -220,70 +234,53 @@ theorem signatureNatCode_injective {T : Signature} [Encodable T.Sym] :
   induction p with
   | var x =>
       intro q h
-      cases q with
-      | var y =>
-          unfold signatureNatCode at h
-          exact congrArg Pattern.var (Nat.pair_eq_pair.mp h).2
-      | app => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | imp => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | bot => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | ex => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
+      have htag := signatureNatTag_eq_of_code_eq h
+      cases q
+      case var y =>
+        exact congrArg Pattern.var (Nat.pair_eq_pair.mp h).2
+      all_goals simp [signatureNatTag] at htag
   | bot =>
       intro q h
-      cases q with
-      | var => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | app => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | imp => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | bot => rfl
-      | ex => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
+      have htag := signatureNatTag_eq_of_code_eq h
+      cases q
+      case bot => rfl
+      all_goals simp [signatureNatTag] at htag
   | imp p q ihp ihq =>
       intro r h
-      cases r with
-      | var => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | app => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | imp p' q' =>
-          unfold signatureNatCode at h
-          have h' := (Nat.pair_eq_pair.mp h).2
-          have hpq := Nat.pair_eq_pair.mp h'
-          cases ihp hpq.1
-          cases ihq hpq.2
-          rfl
-      | bot => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | ex => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
+      have htag := signatureNatTag_eq_of_code_eq h
+      cases r
+      case imp p' q' =>
+        have hpq := Nat.pair_eq_pair.mp (Nat.pair_eq_pair.mp h).2
+        cases ihp hpq.1
+        cases ihq hpq.2
+        rfl
+      all_goals simp [signatureNatTag] at htag
   | ex x p ih =>
       intro q h
-      cases q with
-      | var => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | app => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | imp => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | bot => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | ex y q =>
-          unfold signatureNatCode at h
-          have h' := (Nat.pair_eq_pair.mp h).2
-          have hxp := Nat.pair_eq_pair.mp h'
-          cases hxp.1
-          cases ih hxp.2
-          rfl
+      have htag := signatureNatTag_eq_of_code_eq h
+      cases q
+      case ex y q =>
+        have hxp := Nat.pair_eq_pair.mp (Nat.pair_eq_pair.mp h).2
+        cases hxp.1
+        cases ih hxp.2
+        rfl
+      all_goals simp [signatureNatTag] at htag
   | app sigma args ih =>
       intro q h
-      cases q with
-      | var => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | app tau bs =>
-          unfold signatureNatCode at h
-          have h' := (Nat.pair_eq_pair.mp h).2
-          have hsargs := Nat.pair_eq_pair.mp h'
-          have hst : sigma = tau := Encodable.encode_injective hsargs.1
-          subst tau
-          have hargs : List.ofFn (fun i => (args i).signatureNatCode) =
-              List.ofFn (fun i => (bs i).signatureNatCode) :=
-            Encodable.encode_injective hsargs.2
-          congr
-          funext i
-          apply ih i
-          exact congrFun (List.ofFn_injective hargs) i
-      | imp => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | bot => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
-      | ex => unfold signatureNatCode at h; exact (pair_ne_of_ne_tag (by omega) h).elim
+      have htag := signatureNatTag_eq_of_code_eq h
+      cases q
+      case app tau bs =>
+        have hsargs := Nat.pair_eq_pair.mp (Nat.pair_eq_pair.mp h).2
+        have hst : sigma = tau := Encodable.encode_injective hsargs.1
+        subst tau
+        have hargs : List.ofFn (fun i => (args i).signatureNatCode) =
+            List.ofFn (fun i => (bs i).signatureNatCode) :=
+          Encodable.encode_injective hsargs.2
+        congr
+        funext i
+        apply ih i
+        exact congrFun (List.ofFn_injective hargs) i
+      all_goals simp [signatureNatTag] at htag
 
 end Pattern
 

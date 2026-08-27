@@ -344,6 +344,138 @@ abbrev alphaCornerSelectorModel : Model AlphaWitnessSig where
   nonempty := ⟨false⟩
   interp _ a := if a 0 = false ∧ a 1 = true then {true} else ∅
 
+private theorem alphaBlocked_alphaEq_app_no_bot {x' : Nat}
+    {a b : Pattern AlphaWitnessSig Nat}
+    (halpha : Pattern.AlphaEq alphaBlocked
+      (.ex x' (.app .pair (pairArgs a b)))) : a ≠ .bot ∧ b ≠ .bot := by
+  constructor
+  · intro ha
+    subst a
+    have hden := halpha.denote_eq
+      (M := alphaUnitFullModel) (rho := alphaUnitRho)
+    simp [alphaBlocked, alphaUnitFullModel, Model.app, pairArgs,
+      alphaUnitRho] at hden
+  · intro hb
+    subst b
+    have hden := halpha.denote_eq
+      (M := alphaUnitFullModel) (rho := alphaUnitRho)
+    simp [alphaBlocked, alphaUnitFullModel, Model.app, pairArgs,
+      alphaUnitRho] at hden
+
+private theorem alphaBlocked_alphaEq_app_variables {x' a b : Nat}
+    (halpha : Pattern.AlphaEq alphaBlocked
+      (.ex x' (.app .pair (pairArgs (.var a) (.var b))))) :
+    a = x' ∧ b = 0 := by
+  have hax : a = x' := by
+    by_contra hax
+    have hden := halpha.denote_eq
+      (M := alphaFirstSelectorModel) (rho := fun _ => false)
+    have hleft : true ∈ alphaFirstSelectorModel.denote
+        (fun _ => false) alphaBlocked := by
+      simp only [alphaFirstSelectorModel, Fin.isValue, alphaBlocked,
+        denote_ex, denote_app, Model.app, pairArgs, Fin.forall_fin_two,
+        denote_var, Function.update_self, Set.mem_singleton_iff, ne_eq,
+        zero_ne_one, not_false_eq_true, Function.update_of_ne,
+        Set.mem_ite_empty_right, Set.mem_iUnion, Set.mem_ofPred_eq,
+        and_true, Bool.exists_bool, and_self]
+      exact Or.inr ⟨boolPair true false, by simp [boolPair]⟩
+    rw [hden] at hleft
+    simp [alphaFirstSelectorModel, Model.app, pairArgs, hax] at hleft
+    aesop
+  refine ⟨hax, ?_⟩
+  subst a
+  by_contra hb0
+  have hden := halpha.denote_eq
+    (M := alphaCornerSelectorModel) (rho := fun n => n = 0)
+  have hleft : true ∈ alphaCornerSelectorModel.denote
+      (fun n => n = 0) alphaBlocked := by
+    simp only [alphaCornerSelectorModel, Fin.isValue, alphaBlocked,
+      denote_ex, denote_app, Model.app, pairArgs, Fin.forall_fin_two,
+      denote_var, Function.update_self, Set.mem_singleton_iff, ne_eq,
+      zero_ne_one, not_false_eq_true, Function.update_of_ne, decide_true,
+      Set.mem_ite_empty_right, Set.mem_iUnion, Set.mem_ofPred_eq, and_true,
+      Bool.exists_bool, and_self]
+    exact Or.inl ⟨boolPair false true, by simp [boolPair]⟩
+  rw [hden] at hleft
+  by_cases hbx : b = x'
+  · simp [alphaCornerSelectorModel, Model.app, pairArgs, hbx] at hleft
+    aesop
+  · simp [alphaCornerSelectorModel, Model.app, pairArgs, hb0, hbx] at hleft
+    aesop
+
+private theorem alphaBlocked_not_alphaEq_imp {x' : Nat}
+    {a b : Pattern AlphaWitnessSig Nat}
+    (ha : (∃ z, a = .var z) ∨ a = .bot)
+    (hb : (∃ z, b = .var z) ∨ b = .bot)
+    (halpha : Pattern.AlphaEq alphaBlocked (.ex x' (.imp a b))) : False := by
+  have hempty := halpha.denote_eq
+    (M := alphaUnitEmptyModel) (rho := alphaUnitRho)
+  have hfull := halpha.denote_eq
+    (M := alphaUnitFullModel) (rho := alphaUnitRho)
+  rcases ha with ⟨a, rfl⟩ | rfl <;>
+    rcases hb with ⟨b, rfl⟩ | rfl
+  · simp only [alphaUnitEmptyModel, alphaBlocked, denote_ex,
+      Function.update_eq_self, denote_app, Model.app, pairArgs,
+      Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
+      Set.mem_singleton_iff, and_self, Set.mem_empty_iff_false, and_false,
+      exists_const, Set.ofPred_false, Set.iUnion_empty, denote_imp,
+      Set.union_singleton] at hempty
+    have hmem := Set.ext_iff.mp hempty ()
+    simp at hmem
+  · by_cases hax : a = x'
+    · subst a
+      simp only [alphaUnitFullModel, alphaBlocked, denote_ex,
+        Function.update_eq_self, denote_app, Model.app, pairArgs,
+        Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
+        Set.mem_singleton_iff, and_self, exists_const, Set.ofPred_true,
+        denote_imp, denote_bot, Set.union_empty] at hfull
+      have hmem := Set.ext_iff.mp hfull ()
+      simp at hmem
+    · simp only [alphaUnitFullModel, alphaBlocked, denote_ex,
+        Function.update_eq_self, denote_app, Model.app, pairArgs,
+        Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
+        Set.mem_singleton_iff, and_self, exists_const, Set.ofPred_true,
+        denote_imp, denote_bot, Set.union_empty] at hfull
+      have hmem := Set.ext_iff.mp hfull ()
+      simp at hmem
+  · simp only [alphaUnitEmptyModel, alphaBlocked, denote_ex,
+      Function.update_eq_self, denote_app, Model.app, pairArgs,
+      Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
+      Set.mem_singleton_iff, and_self, Set.mem_empty_iff_false, and_false,
+      exists_const, Set.ofPred_false, Set.iUnion_empty, denote_imp,
+      denote_bot, Set.compl_empty, Set.union_singleton, Set.mem_univ,
+      Set.insert_eq_of_mem] at hempty
+    have hmem := Set.ext_iff.mp hempty ()
+    simp at hmem
+  · simp only [alphaUnitEmptyModel, alphaBlocked, denote_ex,
+      Function.update_eq_self, denote_app, Model.app, pairArgs,
+      Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
+      Set.mem_singleton_iff, and_self, Set.mem_empty_iff_false, and_false,
+      exists_const, Set.ofPred_false, Set.iUnion_empty, denote_imp,
+      denote_bot, Set.compl_empty, Set.union_empty] at hempty
+    have hmem := Set.ext_iff.mp hempty ()
+    simp at hmem
+
+private theorem alphaBlocked_not_alphaEq_nested_ex {x' z w : Nat}
+    {a : Pattern AlphaWitnessSig Nat}
+    (ha : (∃ v, a = .var v) ∨ a = .bot)
+    (halpha : Pattern.AlphaEq alphaBlocked (.ex x' (.ex z (.ex w a)))) : False := by
+  have hempty := halpha.denote_eq
+    (M := alphaUnitEmptyModel) (rho := alphaUnitRho)
+  have hfull := halpha.denote_eq
+    (M := alphaUnitFullModel) (rho := alphaUnitRho)
+  rcases ha with ⟨a, rfl⟩ | rfl
+  · simp only [alphaUnitEmptyModel, alphaBlocked, denote_ex,
+      Function.update_eq_self, denote_app, Model.app, pairArgs,
+      Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
+      Set.mem_singleton_iff, and_self, Set.mem_empty_iff_false, and_false,
+      exists_const, Set.ofPred_false, Set.iUnion_empty,
+      Set.iUnion_singleton_eq_range, Set.range_id'] at hempty
+    have hmem := Set.ext_iff.mp hempty ()
+    simp at hmem
+  · simp [alphaBlocked, alphaUnitFullModel, Model.app, pairArgs,
+      alphaUnitRho] at hfull
+
 private theorem alphaBlocked_alphaEq_body_shape {x' : Nat}
     {p' : Pattern AlphaWitnessSig Nat}
     (halpha : Pattern.AlphaEq alphaBlocked (.ex x' p')) :
@@ -356,127 +488,15 @@ private theorem alphaBlocked_alphaEq_body_shape {x' : Nat}
   rcases alphaWitness_body_shape p' hpComplexity with
       ⟨a, b, rfl, ha, hb⟩ | ⟨a, b, rfl, ha, hb⟩ |
         ⟨z, w, a, rfl, ha⟩
-  · rcases ha with ⟨a, rfl⟩ | rfl <;>
-      rcases hb with ⟨b, rfl⟩ | rfl
-    · have hax : a = x' := by
-        by_contra hax
-        have hden := halpha.denote_eq
-          (M := alphaFirstSelectorModel) (rho := fun _ => false)
-        have hleft : true ∈ alphaFirstSelectorModel.denote
-            (fun _ => false) alphaBlocked := by
-          simp only [alphaFirstSelectorModel, Fin.isValue, alphaBlocked,
-            denote_ex, denote_app, Model.app, pairArgs, Fin.forall_fin_two,
-            denote_var, Function.update_self, Set.mem_singleton_iff, ne_eq,
-            zero_ne_one, not_false_eq_true, Function.update_of_ne,
-            Set.mem_ite_empty_right, Set.mem_iUnion, Set.mem_ofPred_eq,
-            and_true, Bool.exists_bool, and_self]
-          exact Or.inr ⟨boolPair true false, by simp [boolPair]⟩
-        rw [hden] at hleft
-        simp [alphaFirstSelectorModel, Model.app, pairArgs, hax] at hleft
-        aesop
-      refine ⟨a, b, rfl, hax, ?_⟩
-      subst a
-      by_contra hb0
-      have hden := halpha.denote_eq
-        (M := alphaCornerSelectorModel)
-        (rho := fun n => n = 0)
-      have hleft : true ∈ alphaCornerSelectorModel.denote
-          (fun n => n = 0) alphaBlocked := by
-        simp only [alphaCornerSelectorModel, Fin.isValue, alphaBlocked,
-          denote_ex, denote_app, Model.app, pairArgs, Fin.forall_fin_two,
-          denote_var, Function.update_self, Set.mem_singleton_iff, ne_eq,
-          zero_ne_one, not_false_eq_true, Function.update_of_ne, decide_true,
-          Set.mem_ite_empty_right, Set.mem_iUnion, Set.mem_ofPred_eq, and_true,
-          Bool.exists_bool, and_self]
-        exact Or.inl ⟨boolPair false true, by simp [boolPair]⟩
-      rw [hden] at hleft
-      by_cases hbx : b = x'
-      · simp [alphaCornerSelectorModel, Model.app, pairArgs,
-          hbx] at hleft
-        aesop
-      · simp [alphaCornerSelectorModel, Model.app, pairArgs,
-          hb0, hbx] at hleft
-        aesop
-    · have hden := halpha.denote_eq
-        (M := alphaUnitFullModel) (rho := alphaUnitRho)
-      simp [alphaBlocked, alphaUnitFullModel, Model.app, pairArgs,
-        alphaUnitRho] at hden
-    · have hden := halpha.denote_eq
-        (M := alphaUnitFullModel) (rho := alphaUnitRho)
-      simp [alphaBlocked, alphaUnitFullModel, Model.app, pairArgs,
-        alphaUnitRho] at hden
-    · have hden := halpha.denote_eq
-        (M := alphaUnitFullModel) (rho := alphaUnitRho)
-      simp [alphaBlocked, alphaUnitFullModel, Model.app, pairArgs,
-        alphaUnitRho] at hden
-  · rcases ha with ⟨a, rfl⟩ | rfl <;>
-      rcases hb with ⟨b, rfl⟩ | rfl
-    · have hden := halpha.denote_eq
-        (M := alphaUnitEmptyModel) (rho := alphaUnitRho)
-      simp only [alphaUnitEmptyModel, alphaBlocked, denote_ex,
-        Function.update_eq_self, denote_app, Model.app, pairArgs,
-        Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
-        Set.mem_singleton_iff, and_self, Set.mem_empty_iff_false, and_false,
-        exists_const, Set.ofPred_false, Set.iUnion_empty, denote_imp,
-        Set.union_singleton] at hden
-      have hmem := Set.ext_iff.mp hden ()
-      simp at hmem
-    · by_cases hax : a = x'
-      · subst a
-        have hden := halpha.denote_eq
-          (M := alphaUnitFullModel) (rho := alphaUnitRho)
-        simp only [alphaUnitFullModel, alphaBlocked, denote_ex,
-          Function.update_eq_self, denote_app, Model.app, pairArgs,
-          Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
-          Set.mem_singleton_iff, and_self, exists_const, Set.ofPred_true,
-          denote_imp, denote_bot, Set.union_empty] at hden
-        have hmem := Set.ext_iff.mp hden ()
-        simp at hmem
-      · have hden := halpha.denote_eq
-          (M := alphaUnitFullModel) (rho := alphaUnitRho)
-        simp only [alphaUnitFullModel, alphaBlocked, denote_ex,
-          Function.update_eq_self, denote_app, Model.app, pairArgs,
-          Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
-          Set.mem_singleton_iff, and_self, exists_const, Set.ofPred_true,
-          denote_imp, denote_bot, Set.union_empty] at hden
-        have hmem := Set.ext_iff.mp hden ()
-        simp at hmem
-    · have hden := halpha.denote_eq
-        (M := alphaUnitEmptyModel) (rho := alphaUnitRho)
-      simp only [alphaUnitEmptyModel, alphaBlocked, denote_ex,
-        Function.update_eq_self, denote_app, Model.app, pairArgs,
-        Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
-        Set.mem_singleton_iff, and_self, Set.mem_empty_iff_false, and_false,
-        exists_const, Set.ofPred_false, Set.iUnion_empty, denote_imp,
-        denote_bot, Set.compl_empty, Set.union_singleton, Set.mem_univ,
-        Set.insert_eq_of_mem] at hden
-      have hmem := Set.ext_iff.mp hden ()
-      simp at hmem
-    · have hden := halpha.denote_eq
-        (M := alphaUnitEmptyModel) (rho := alphaUnitRho)
-      simp only [alphaUnitEmptyModel, alphaBlocked, denote_ex,
-        Function.update_eq_self, denote_app, Model.app, pairArgs,
-        Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
-        Set.mem_singleton_iff, and_self, Set.mem_empty_iff_false, and_false,
-        exists_const, Set.ofPred_false, Set.iUnion_empty, denote_imp,
-        denote_bot, Set.compl_empty, Set.union_empty] at hden
-      have hmem := Set.ext_iff.mp hden ()
-      simp at hmem
-  · rcases ha with ⟨a, rfl⟩ | rfl
-    · have hden := halpha.denote_eq
-        (M := alphaUnitEmptyModel) (rho := alphaUnitRho)
-      simp only [alphaUnitEmptyModel, alphaBlocked, denote_ex,
-        Function.update_eq_self, denote_app, Model.app, pairArgs,
-        Fin.forall_fin_two, denote_var, alphaUnitRho, Fin.isValue,
-        Set.mem_singleton_iff, and_self, Set.mem_empty_iff_false, and_false,
-        exists_const, Set.ofPred_false, Set.iUnion_empty,
-        Set.iUnion_singleton_eq_range, Set.range_id'] at hden
-      have hmem := Set.ext_iff.mp hden ()
-      simp at hmem
-    · have hden := halpha.denote_eq
-        (M := alphaUnitFullModel) (rho := alphaUnitRho)
-      simp [alphaBlocked, alphaUnitFullModel, Model.app, pairArgs,
-        alphaUnitRho] at hden
+  · obtain ⟨hna, hnb⟩ := alphaBlocked_alphaEq_app_no_bot halpha
+    rcases ha with ⟨a, rfl⟩ | rfl
+    · rcases hb with ⟨b, rfl⟩ | rfl
+      · obtain ⟨hax, hb0⟩ := alphaBlocked_alphaEq_app_variables halpha
+        exact ⟨a, b, rfl, hax, hb0⟩
+      · exact (hnb rfl).elim
+    · exact (hna rfl).elim
+  · exact (alphaBlocked_not_alphaEq_imp ha hb halpha).elim
+  · exact (alphaBlocked_not_alphaEq_nested_ex ha halpha).elim
 
 /-- No proof-theoretic alpha variant of `alphaBlocked` has a fresh usable
 witness in the pointed binary model. -/
