@@ -311,7 +311,7 @@ theorem provable_conj {Γ : Set (Pattern S Var)} (l : List (Pattern S Var))
 some finite `Δ₀ ⊆ Δ`.  The paper uses this as a black box, citing Definition 3.3
 and "Theorem 3.8" of its reference [4] -- but Theorem 3.8 there is the WEAK
 statement; strong local completeness is Theorem 3.7 (Theorem 83 of Chen and
-Roșu, *Matching μ-Logic*, 2019 technical report,
+Rosu, *Matching μ-Logic*, 2019 technical report,
 https://hdl.handle.net/2142/102281).  See
 `FINDINGS.md`. -/
 def StrongLocalCompleteness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
