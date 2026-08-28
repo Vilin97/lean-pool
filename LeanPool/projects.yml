@@ -6359,3 +6359,66 @@ projects:
     msc:
       - "03B45"
       - "03B70"
+  - slug: finite-graph-fundamental-group
+    title: Fundamental groups of finite connected graphs
+    summary: >-
+      Constructs the standard interval-cell realization of a finite connected directed
+      multigraph and proves that its topological fundamental group is a free group of rank
+      E - V + 1. The proof uses an explicit spanning-tree basis and develops a verified
+      path-lifting cover, a contraction of the covering tree, root-change equivalences, the
+      tree/triviality criterion, and the corresponding free-abelian result.
+    branch: algebraic topology and graph theory
+    entry_module: LeanPool.FiniteGraphFundamentalGroup
+    authors:
+      - Arthur Freitas Ramos
+      - David Hulak
+      - Ruy de Queiroz
+    source:
+      title: "Algebraic Topology, Additional Topic 1.A: Graphs and Free Groups"
+      authors:
+        - Allen Hatcher
+      url: https://pi.math.cornell.edu/~hatcher/AT/AT.pdf
+      github_repo: Arthur742Ramos/finite-graph-fundamental-group
+      commit: dd57e3ab8bc5a7042fcc5498e778b008d87ac032
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - FiniteGraphFreeGroup.graphTopologicalFundamentalGroupEquiv
+    main_results:
+      - declaration: FiniteGraphFreeGroup.graphTopologicalFundamentalGroupEquiv
+        informal: >-
+          For a finite weakly connected directed multigraph, the topological fundamental group
+          of its interval-cell quotient realization at any vertex is explicitly isomorphic to
+          the free group on E + 1 - V generators.
+      - declaration: FiniteGraphFreeGroup.graphCombinatorialToTopologicalEquiv
+        informal: >-
+          The endomorphism group at a vertex in the graph's free groupoid is explicitly
+          isomorphic to the topological fundamental group of the interval-cell realization.
+      - declaration: FiniteGraphFreeGroup.graphCoverProjection_isCovering
+        informal: >-
+          The canonical path-lifting projection from rooted free-groupoid paths to graph
+          vertices is a quiver covering, with bijective maps on every incoming and outgoing
+          edge star.
+      - declaration: FiniteGraphFreeGroup.graphRealization_tree_simplyConnected
+        informal: >-
+          The interval-cell realization of a directed arborescence is simply connected, via an
+          explicit continuous contraction to its root.
+      - declaration: FiniteGraphFreeGroup.graphFundamentalGroup_subsingleton_iff_cycleRank_zero
+        informal: >-
+          The combinatorial fundamental group is trivial exactly when the graph's cycle rank
+          E + 1 - V is zero.
+      - declaration: FiniteGraphFreeGroup.graphFundamentalGroupFreeAbelianizationEquiv
+        informal: >-
+          The additive abelianization of the graph fundamental group is the free abelian group
+          on E + 1 - V generators.
+    tags:
+      - algebraic-topology
+      - graph-theory
+      - fundamental-groups
+      - free-groups
+      - covering-spaces
+    msc:
+      - "05C25"
+      - "55Q05"
+      - "20F65"
