@@ -630,6 +630,29 @@ theorem graphCover_target_lift
   exact hhom.trans (by
     exact eqRec_heq h e.hom)
 
+private theorem graphVertexStar_edge_endpoint
+    {V : Type u} [Quiver.{u} V] {root v : V}
+    (x : graphCoverVertexOver root v)
+    (e : Quiver.Total (graphCoverVertex root)) (t : I)
+    (hstar : (e.left = x.1 ∧ t < graphHalf) ∨
+      (e.right = x.1 ∧ graphHalf < t))
+    (hendpoint : t = 0 ∨ t = 1) :
+    graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
+      graphRealizationQuotient (Sum.inl (graphDiscreteVertex x.1)) := by
+  rcases hendpoint with ht | ht
+  · have he : e.left = x.1 := by
+      rcases hstar with hstar | hstar
+      · exact hstar.1
+      · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_pos)) (ht ▸ hstar.2))
+    rw [ht]
+    exact (graphEdgePath_zero e).trans (congrArg graphVertex he)
+  · have he : e.right = x.1 := by
+      rcases hstar with hstar | hstar
+      · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_lt_one)) (ht ▸ hstar.2))
+      · exact hstar.1
+    rw [ht]
+    exact (graphEdgePath_one e).trans (congrArg graphVertex he)
+
 private theorem graphCoverRealizationProjection_vertexStar_injective_vertex
     {V : Type u} [Quiver.{u} V] {root v : V}
     (x : graphCoverVertexOver root v)
@@ -668,37 +691,9 @@ private theorem graphCoverRealizationProjection_vertexStar_injective_vertex
       have hbz : bz = graphDiscreteEdge e := by
         simp [e, graphDiscreteEdge, graphEdgeUnderlying]
       rw [hbz]
-      rcases graphRealization_vertex_edge_endpoint hbase' with ht | ht
-      · have hes : e.left = x.1 := by
-          rcases hb₀ with hb₀ | hb₀
-          · exact hb₀.1
-          · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_pos)) (ht ▸ hb₀.2))
-        calc
-          graphRealizationQuotient (Sum.inl (graphDiscreteVertex
-              (graphVertexUnderlying av))) =
-              graphRealizationQuotient (Sum.inl (graphDiscreteVertex e.left)) := by
-                exact congrArg (fun z : graphCoverVertex root =>
-                  graphRealizationQuotient (Sum.inl (graphDiscreteVertex z)))
-                  (hav.trans hes.symm)
-          _ = graphRealizationQuotient (Sum.inr
-              ⟨graphDiscreteEdge e, 0⟩) := (graphEdgePath_zero e).symm
-          _ = graphRealizationQuotient (Sum.inr
-              ⟨graphDiscreteEdge e, t⟩) := by rw [ht]
-      · have het : e.right = x.1 := by
-          rcases hb₀ with hb₀ | hb₀
-          · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_lt_one)) (ht ▸ hb₀.2))
-          · exact hb₀.1
-        calc
-          graphRealizationQuotient (Sum.inl (graphDiscreteVertex
-              (graphVertexUnderlying av))) =
-              graphRealizationQuotient (Sum.inl (graphDiscreteVertex e.right)) := by
-                exact congrArg (fun z : graphCoverVertex root =>
-                  graphRealizationQuotient (Sum.inl (graphDiscreteVertex z)))
-                  (hav.trans het.symm)
-          _ = graphRealizationQuotient (Sum.inr
-              ⟨graphDiscreteEdge e, 1⟩) := (graphEdgePath_one e).symm
-          _ = graphRealizationQuotient (Sum.inr
-              ⟨graphDiscreteEdge e, t⟩) := by rw [ht]
+      have hendpoint := graphRealization_vertex_edge_endpoint hbase'
+      exact (congrArg graphVertex hav).trans
+        (graphVertexStar_edge_endpoint x e t hb₀ hendpoint).symm
 
 private theorem graphCoverRealizationProjection_vertexStar_injective_edge_vertex
     {V : Type u} [Quiver.{u} V] {root v : V}
@@ -716,58 +711,8 @@ private theorem graphCoverRealizationProjection_vertexStar_injective_edge_vertex
             ⟨e.left.1, e.right.1, e.hom.1⟩, t⟩)) :
     graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
       graphRealizationQuotient (Sum.inl bv) := by
-  rcases graphRealization_vertex_edge_endpoint hbase with ht | ht
-  · have hes : e.left = x.1 := by
-      rcases ha₀ with ha₀ | ha₀
-      · exact ha₀.1
-      · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_pos)) (ht ▸ ha₀.2))
-    calc
-      graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
-          graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, 0⟩) := by rw [ht]
-      _ = graphRealizationQuotient (Sum.inl (graphDiscreteVertex e.left)) :=
-        graphEdgePath_zero e
-      _ = graphRealizationQuotient (Sum.inl
-          (graphDiscreteVertex (graphVertexUnderlying bv))) := by
-            exact congrArg (fun z : graphCoverVertex root =>
-              graphRealizationQuotient (Sum.inl (graphDiscreteVertex z)))
-              (hes.trans hbv.symm)
-  · have het : e.right = x.1 := by
-      rcases ha₀ with ha₀ | ha₀
-      · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_lt_one)) (ht ▸ ha₀.2))
-      · exact ha₀.1
-    calc
-      graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
-          graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, 1⟩) := by rw [ht]
-      _ = graphRealizationQuotient (Sum.inl (graphDiscreteVertex e.right)) :=
-        graphEdgePath_one e
-      _ = graphRealizationQuotient (Sum.inl
-          (graphDiscreteVertex (graphVertexUnderlying bv))) := by
-            exact congrArg (fun z : graphCoverVertex root =>
-              graphRealizationQuotient (Sum.inl (graphDiscreteVertex z)))
-              (het.trans hbv.symm)
-
-private theorem graphVertexStar_edge_endpoint
-    {V : Type u} [Quiver.{u} V] {root v : V}
-    (x : graphCoverVertexOver root v)
-    (e : Quiver.Total (graphCoverVertex root)) (t : I)
-    (hstar : (e.left = x.1 ∧ t < graphHalf) ∨
-      (e.right = x.1 ∧ graphHalf < t))
-    (hendpoint : t = 0 ∨ t = 1) :
-    graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
-      graphRealizationQuotient (Sum.inl (graphDiscreteVertex x.1)) := by
-  rcases hendpoint with ht | ht
-  · have he : e.left = x.1 := by
-      rcases hstar with hstar | hstar
-      · exact hstar.1
-      · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_pos)) (ht ▸ hstar.2))
-    rw [ht]
-    exact (graphEdgePath_zero e).trans (congrArg graphVertex he)
-  · have he : e.right = x.1 := by
-      rcases hstar with hstar | hstar
-      · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_lt_one)) (ht ▸ hstar.2))
-      · exact hstar.1
-    rw [ht]
-    exact (graphEdgePath_one e).trans (congrArg graphVertex he)
+  exact (graphVertexStar_edge_endpoint x e t ha₀
+    (graphRealization_vertex_edge_endpoint hbase)).trans (congrArg graphVertex hbv.symm)
 
 private theorem graphCoverRealizationProjection_vertexStar_injective_edges
     {V : Type u} [Quiver.{u} V] {root v : V}
@@ -983,6 +928,51 @@ theorem graphCoverRealizationProjection_vertexStar_surjective
             _ = graphEdgePath e t := by rw [hde]
             _ = y := hzy
 
+private theorem graphCoverRealizationProjection_edgeHalf_isOpen
+    {V : Type u} [Quiver.{u} V] {root v : V}
+    (x : graphCoverVertexOver root v) {W : Set (graphRealization V)}
+    (hopen : IsOpen
+      (graphCoverRealizationProjection root ⁻¹' W ∩ graphVertexStar x.1))
+    (e : Quiver.Total V) (endpoint : V) (J : Set I) (hJ : IsOpen J)
+    (hlift : endpoint = v → ∃ d : Quiver.Total (graphCoverVertex root),
+      (⟨d.left.1, d.right.1, d.hom.1⟩ : Quiver.Total V) = e ∧
+        ∀ t ∈ J, graphEdgePath d t ∈ graphVertexStar x.1)
+    (hforce : ∀ t ∈ J, graphEdgePath e t ∈ W → endpoint = v) :
+    IsOpen {t : I | t ∈ J ∧ graphEdgePath e t ∈ W} := by
+  by_cases hev : endpoint = v
+  · obtain ⟨d, hde, hstar⟩ := hlift hev
+    have hmap (t : I) :
+        graphCoverRealizationProjection root (graphEdgePath d t) = graphEdgePath e t := by
+      calc
+        graphCoverRealizationProjection root (graphEdgePath d t) =
+            graphEdgePath
+              (⟨d.left.1, d.right.1, d.hom.1⟩ : Quiver.Total V) t := by
+          exact graphRealizationMap_edgePath (graphCoverProjection root) d t
+        _ = graphEdgePath e t := by rw [hde]
+    have hset :
+        {t : I | t ∈ J ∧ graphEdgePath e t ∈ W} =
+          (graphEdgePath d) ⁻¹'
+            (graphCoverRealizationProjection root ⁻¹' W ∩ graphVertexStar x.1) ∩ J := by
+      ext t
+      constructor
+      · rintro ⟨ht, htW⟩
+        have hmapW : graphCoverRealizationProjection root (graphEdgePath d t) ∈ W := by
+          rw [hmap t]
+          exact htW
+        exact ⟨⟨hmapW, hstar t ht⟩, ht⟩
+      · rintro ⟨ht, htJ⟩
+        refine ⟨htJ, ?_⟩
+        rw [← hmap t]
+        exact ht.1
+    rw [hset]
+    exact (hopen.preimage (graphEdgePath d).continuous).inter hJ
+  · have hempty : {t : I | t ∈ J ∧ graphEdgePath e t ∈ W} = ∅ := by
+      ext t
+      simp only [Set.mem_empty_iff_false, iff_false]
+      exact fun ht => hev (hforce t ht.1 ht.2)
+    rw [hempty]
+    exact isOpen_empty
+
 theorem graphCoverRealizationProjection_vertexStar_open_iff
     {V : Type u} [Quiver.{u} V]
     {root v : V} (x : graphCoverVertexOver root v)
@@ -995,11 +985,6 @@ theorem graphCoverRealizationProjection_vertexStar_open_iff
       (continuous_graphCoverRealizationProjection root)).inter
       (graphVertexStar_isOpen x.1)
   · intro hopen
-    have hopen_cover : IsOpen
-        (graphRealizationQuotient ⁻¹'
-          (graphCoverRealizationProjection root ⁻¹' W ∩
-            graphVertexStar x.1)) :=
-      (graphRealization_isOpen_iff.mp hopen)
     have hbase_pre : IsOpen (graphRealizationQuotient ⁻¹' W) := by
       rw [isOpen_sum_iff]
       constructor
@@ -1034,144 +1019,50 @@ theorem graphCoverRealizationProjection_vertexStar_open_iff
             · exact ht.2.2
         have hsource_open :
             IsOpen {t : I | t < graphHalf ∧ graphEdgePath e t ∈ W} := by
-          by_cases hev : e.left = v
-          · obtain ⟨d, hdl, hde⟩ := graphCover_source_lift x.1 e
+          apply graphCoverRealizationProjection_edgeHalf_isOpen x hopen e e.left
+            {t : I | t < graphHalf} isOpen_Iio
+          · intro hev
+            obtain ⟨d, hdl, hde⟩ := graphCover_source_lift x.1 e
               (x.2.trans hev.symm)
-            have hopen_d : IsOpen
-                ((graphEdgePath d) ⁻¹'
-                  (graphCoverRealizationProjection root ⁻¹' W ∩
-                    graphVertexStar x.1)) :=
-              hopen.preimage (graphEdgePath d).continuous
-            have hset :
-                {t : I | t < graphHalf ∧ graphEdgePath e t ∈ W} =
-                  (graphEdgePath d) ⁻¹'
-                    (graphCoverRealizationProjection root ⁻¹' W ∩
-                      graphVertexStar x.1) ∩
-                    {t : I | t < graphHalf} := by
-              ext t
-              constructor
-              · rintro ⟨ht, htW⟩
-                have hmap :
-                    graphCoverRealizationProjection root (graphEdgePath d t) =
-                      graphEdgePath e t := by
-                  calc
-                    graphCoverRealizationProjection root (graphEdgePath d t) =
-                        graphEdgePath
-                          (⟨d.left.1, d.right.1, d.hom.1⟩ : Quiver.Total V) t := by
-                      exact graphRealizationMap_edgePath
-                        (graphCoverProjection root) d t
-                    _ = graphEdgePath e t := by rw [hde]
-                have hmem : graphEdgePath d t ∈ graphVertexStar x.1 := by
-                  refine ⟨Sum.inr ⟨graphDiscreteEdge d, t⟩, ?_, rfl⟩
-                  simp [graphVertexStarPre, graphEdgeUnderlying,
-                    graphDiscreteEdge, hdl, ht]
-                have hmapW :
-                    graphCoverRealizationProjection root (graphEdgePath d t) ∈ W :=
-                  hmap.symm ▸ htW
-                exact ⟨⟨hmapW, hmem⟩, ht⟩
-              · rintro ⟨htA, ht⟩
-                have hmap :
-                    graphCoverRealizationProjection root (graphEdgePath d t) =
-                      graphEdgePath e t := by
-                  calc
-                    graphCoverRealizationProjection root (graphEdgePath d t) =
-                        graphEdgePath
-                          (⟨d.left.1, d.right.1, d.hom.1⟩ : Quiver.Total V) t := by
-                      exact graphRealizationMap_edgePath
-                        (graphCoverProjection root) d t
-                    _ = graphEdgePath e t := by rw [hde]
-                exact ⟨ht, hmap ▸ htA.1⟩
-            rw [hset]
-            exact hopen_d.inter isOpen_Iio
-          · have hempty : {t : I |
-                t < graphHalf ∧ graphEdgePath e t ∈ W} = ∅ := by
-              ext t
-              constructor
-              · rintro ⟨ht, htW⟩
-                have hstar :
-                    Sum.inr ⟨graphDiscreteEdge e, t⟩ ∈
-                      graphVertexStarPre v := by
-                  rw [← graphVertexStar_preimage]
-                  exact hW htW
-                change ((e.left = v ∧ t < graphHalf) ∨
-                  (e.right = v ∧ graphHalf < t)) at hstar
-                rcases hstar with hstar | hstar
-                · exact (hev hstar.1).elim
-                · exact (not_lt_of_ge (le_of_lt hstar.2)) ht
-              · intro ht
-                exact False.elim (by simp at ht)
-            rw [hempty]
-            exact isOpen_empty
+            refine ⟨d, hde, ?_⟩
+            intro t ht
+            refine ⟨Sum.inr ⟨graphDiscreteEdge d, t⟩, ?_, rfl⟩
+            change ((d.left = x.1 ∧ t < graphHalf) ∨
+              (d.right = x.1 ∧ graphHalf < t))
+            exact Or.inl ⟨hdl, ht⟩
+          · intro t ht htW
+            have hstar :
+                Sum.inr ⟨graphDiscreteEdge e, t⟩ ∈ graphVertexStarPre v := by
+              rw [← graphVertexStar_preimage]
+              exact hW htW
+            change ((e.left = v ∧ t < graphHalf) ∨
+              (e.right = v ∧ graphHalf < t)) at hstar
+            rcases hstar with hstar | hstar
+            · exact hstar.1
+            · exact False.elim ((not_lt_of_ge (le_of_lt hstar.2)) ht)
         have htarget_open :
             IsOpen {t : I | graphHalf < t ∧ graphEdgePath e t ∈ W} := by
-          by_cases hev : e.right = v
-          · obtain ⟨d, hdr, hde⟩ := graphCover_target_lift x.1 e
+          apply graphCoverRealizationProjection_edgeHalf_isOpen x hopen e e.right
+            {t : I | graphHalf < t} isOpen_Ioi
+          · intro hev
+            obtain ⟨d, hdr, hde⟩ := graphCover_target_lift x.1 e
               (hev.trans x.2.symm)
-            have hopen_d : IsOpen
-                ((graphEdgePath d) ⁻¹'
-                  (graphCoverRealizationProjection root ⁻¹' W ∩
-                    graphVertexStar x.1)) :=
-              hopen.preimage (graphEdgePath d).continuous
-            have hset :
-                {t : I | graphHalf < t ∧ graphEdgePath e t ∈ W} =
-                  (graphEdgePath d) ⁻¹'
-                    (graphCoverRealizationProjection root ⁻¹' W ∩
-                      graphVertexStar x.1) ∩
-                    {t : I | graphHalf < t} := by
-              ext t
-              constructor
-              · rintro ⟨ht, htW⟩
-                have hmap :
-                    graphCoverRealizationProjection root (graphEdgePath d t) =
-                      graphEdgePath e t := by
-                  calc
-                    graphCoverRealizationProjection root (graphEdgePath d t) =
-                        graphEdgePath
-                          (⟨d.left.1, d.right.1, d.hom.1⟩ : Quiver.Total V) t := by
-                      exact graphRealizationMap_edgePath
-                        (graphCoverProjection root) d t
-                    _ = graphEdgePath e t := by rw [hde]
-                have hmem : graphEdgePath d t ∈ graphVertexStar x.1 := by
-                  refine ⟨Sum.inr ⟨graphDiscreteEdge d, t⟩, ?_, rfl⟩
-                  simp [graphVertexStarPre, graphEdgeUnderlying,
-                    graphDiscreteEdge, hdr, ht]
-                have hmapW :
-                    graphCoverRealizationProjection root (graphEdgePath d t) ∈ W :=
-                  hmap.symm ▸ htW
-                exact ⟨⟨hmapW, hmem⟩, ht⟩
-              · rintro ⟨htA, ht⟩
-                have hmap :
-                    graphCoverRealizationProjection root (graphEdgePath d t) =
-                      graphEdgePath e t := by
-                  calc
-                    graphCoverRealizationProjection root (graphEdgePath d t) =
-                        graphEdgePath
-                          (⟨d.left.1, d.right.1, d.hom.1⟩ : Quiver.Total V) t := by
-                      exact graphRealizationMap_edgePath
-                        (graphCoverProjection root) d t
-                    _ = graphEdgePath e t := by rw [hde]
-                exact ⟨ht, hmap ▸ htA.1⟩
-            rw [hset]
-            exact hopen_d.inter isOpen_Ioi
-          · have hempty : {t : I |
-                graphHalf < t ∧ graphEdgePath e t ∈ W} = ∅ := by
-              ext t
-              constructor
-              · rintro ⟨ht, htW⟩
-                have hstar :
-                    Sum.inr ⟨graphDiscreteEdge e, t⟩ ∈
-                      graphVertexStarPre v := by
-                  rw [← graphVertexStar_preimage]
-                  exact hW htW
-                change ((e.left = v ∧ t < graphHalf) ∨
-                  (e.right = v ∧ graphHalf < t)) at hstar
-                rcases hstar with hstar | hstar
-                · exact (not_lt_of_ge (le_of_lt hstar.2)) ht
-                · exact (hev hstar.1).elim
-              · intro ht
-                exact False.elim (by simp at ht)
-            rw [hempty]
-            exact isOpen_empty
+            refine ⟨d, hde, ?_⟩
+            intro t ht
+            refine ⟨Sum.inr ⟨graphDiscreteEdge d, t⟩, ?_, rfl⟩
+            change ((d.left = x.1 ∧ t < graphHalf) ∨
+              (d.right = x.1 ∧ graphHalf < t))
+            exact Or.inr ⟨hdr, ht⟩
+          · intro t ht htW
+            have hstar :
+                Sum.inr ⟨graphDiscreteEdge e, t⟩ ∈ graphVertexStarPre v := by
+              rw [← graphVertexStar_preimage]
+              exact hW htW
+            change ((e.left = v ∧ t < graphHalf) ∨
+              (e.right = v ∧ graphHalf < t)) at hstar
+            rcases hstar with hstar | hstar
+            · exact False.elim ((not_lt_of_ge (le_of_lt hstar.2)) ht)
+            · exact hstar.1
         have hsource' : IsOpen {t : I |
             e.left = v ∧ t < graphHalf ∧ graphEdgePath e t ∈ W} := by
           by_cases hev : e.left = v

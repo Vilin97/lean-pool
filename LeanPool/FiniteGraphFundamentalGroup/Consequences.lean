@@ -68,22 +68,40 @@ noncomputable def graphFundamentalGroupEquiv {V : Type u} [Quiver.{u} V]
   exact (graphFundamentalGroupBasis root).reindex
     (graphCycleBasisIndexEquiv root) |>.repr
 
+/-- A weak-connectivity path, interpreted as a morphism in the free groupoid. -/
+noncomputable def graphRootChangeHom {V : Type u} [Quiver.{u} V]
+    [WeaklyConnected V] (root₁ root₂ : V) :
+    (Quiver.FreeGroupoid.of V).obj root₁ ⟶ (Quiver.FreeGroupoid.of V).obj root₂ := by
+  classical
+  exact if h : root₁ = root₂ then
+    eqToHom (congrArg (Quiver.FreeGroupoid.of V).obj h)
+  else
+    composePath ((Quiver.Symmetrify.lift (Quiver.FreeGroupoid.of V)).mapPath
+      (Classical.choice (WeaklyConnected.path root₁ root₂)))
+
 /--
-Changing the root produces a group equivalence.  This is the concrete
-basepoint-independence statement available for the combinatorial model; no
-topological realization is being silently invoked.
+Changing the root produces a group equivalence by conjugating along a weak-connectivity path.
+No finiteness assumption or topological realization is needed.
 -/
 noncomputable def graphFundamentalGroupRootEquiv {V : Type u} [Quiver.{u} V]
-    [Fintype V] [FiniteQuiver V] [WeaklyConnected V]
+    [WeaklyConnected V]
     (root₁ root₂ : V) :
-    graphFundamentalGroup root₁ ≃* graphFundamentalGroup root₂ :=
-  (graphFundamentalGroupEquiv root₁).trans (graphFundamentalGroupEquiv root₂).symm
+    graphFundamentalGroup root₁ ≃* graphFundamentalGroup root₂ := by
+  let f := graphRootChangeHom root₁ root₂
+  exact
+    { toFun := fun γ => inv f ≫ γ ≫ f
+      invFun := fun δ => f ≫ δ ≫ inv f
+      left_inv := fun γ => by simp
+      right_inv := fun δ => by simp
+      map_mul' := fun γ₁ γ₂ => by
+        simp [CategoryTheory.End.mul_def, Category.assoc] }
 
 @[simp]
 theorem graphFundamentalGroupRootEquiv_refl {V : Type u} [Quiver.{u} V]
-    [Fintype V] [FiniteQuiver V] [WeaklyConnected V] (root : V) :
+    [WeaklyConnected V] (root : V) :
     graphFundamentalGroupRootEquiv root root = MulEquiv.refl _ := by
-  simp [graphFundamentalGroupRootEquiv]
+  ext γ
+  simp [graphFundamentalGroupRootEquiv, graphRootChangeHom]
 
 /-- The geodesic tree has `V - 1` edges and therefore cannot exceed the edge set. -/
 theorem graph_tree_edge_count_le {V : Type u} [Quiver.{u} V]

@@ -47,9 +47,6 @@ noncomputable def totalFintype [Fintype V] [∀ a b : V, Fintype (a ⟶ b)]
   classical
   exact Fintype.ofEquiv _ (totalEquiv T).symm
 
-noncomputable instance totalFintypeInst [Fintype V] [∀ a b : V, Fintype (a ⟶ b)]
-    (T : WideSubquiver V) : Fintype (Quiver.Total T) := totalFintype T
-
 noncomputable instance wideSubquiverHomFintype
     [∀ a b : V, Fintype (a ⟶ b)] (T : WideSubquiver V) (a b : T) :
     Fintype (@Quiver.Hom T T.quiver a b) := by
