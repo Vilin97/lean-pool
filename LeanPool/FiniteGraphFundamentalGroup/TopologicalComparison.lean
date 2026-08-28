@@ -1551,6 +1551,111 @@ theorem baseSymPathValue_cast_heq
   cases hb
   rfl
 
+private def graphCoverEndpointFiber (root : V) (x : graphCoverVertex root)
+    (hx : x.1 = root) :
+    graphCoverRealizationProjection root ⁻¹' {graphVertex root} :=
+  ⟨graphVertex x, congrArg graphVertex hx⟩
+
+private structure GraphLoopLiftData (root : V)
+    (p : @Quiver.Path (Symmetrify V) (Quiver.symmetrifyQuiver V) root root) where
+  endpoint : graphCoverVertex root
+  lift : @Quiver.Path (Symmetrify (graphCoverVertex root))
+    (Quiver.symmetrifyQuiver (graphCoverVertex root))
+    (graphCoverRootVertex root) endpoint
+  endpoint_base : endpoint.1 = root
+  projection_value :
+    HEq (baseSymPathValue ((graphCoverProjection root).symmetrify.mapPath lift))
+      (baseSymPathValue p)
+  monodromy_endpoint :
+    (graphCoverRealizationProjection_isCovering root).monodromy
+        (Path.Homotopic.Quotient.mk
+          (@graphRealizationQuiverPath V _ _ _ p))
+        (graphCoverRootFiberPoint root) =
+      graphCoverEndpointFiber root endpoint endpoint_base
+
+private theorem graphLoopLiftData_exists (root : V)
+    (p : @Quiver.Path (Symmetrify V) (Quiver.symmetrifyQuiver V) root root) :
+    Nonempty (GraphLoopLiftData root p) := by
+  have hpstart : (graphCoverProjection root).symmetrify.obj
+        (graphCoverRootVertex root) = (show Symmetrify V from root) := by
+    rfl
+  let p' := Quiver.Path.cast hpstart.symm (rfl : root = root) p
+  obtain ⟨⟨x, r⟩, hstar⟩ :=
+    ((graphCoverProjection_isCovering root).symmetrify.pathStar_bijective
+      (graphCoverRootVertex root)).2 ⟨root, p'⟩
+  obtain ⟨hx, hr⟩ := Sigma.mk.inj_iff.mp hstar
+  change x.1 = root at hx
+  have hx' : (show Symmetrify V from root) =
+      (graphCoverProjection root).symmetrify.obj x := by
+    change root = x.1
+    exact hx.symm
+  have hr_cast : (graphCoverProjection root).symmetrify.mapPath r =
+      p'.cast rfl hx' := by
+    exact (Quiver.Path.eq_cast_iff_heq rfl hx' p'
+      ((graphCoverProjection root).symmetrify.mapPath r)).2 hr
+  let P := graphCoverRealizationProjection root
+  let cov := graphCoverRealizationProjection_isCovering root
+  let e₀ := graphCoverRootFiberPoint root
+  let ptop : Path (graphVertex root) (graphVertex root) :=
+    @graphRealizationQuiverPath V _ _ _ p
+  let lift : Path (graphVertex (graphCoverRootVertex root))
+      (graphVertex x) :=
+    @graphRealizationQuiverPath (graphCoverVertex root)
+      (graphCoverQuiver root) _ _ r
+  let base : Path
+      (graphVertex (V := V) ((graphCoverProjection root).symmetrify.obj
+        (show Symmetrify (graphCoverVertex root) from graphCoverRootVertex root)))
+      (graphVertex (V := V) ((graphCoverProjection root).symmetrify.obj x)) :=
+    @graphRealizationQuiverPath V _ _ _
+      ((graphCoverProjection root).symmetrify.mapPath r)
+  have hmap : lift.map cov.continuous = base :=
+    graphCoverRealizationQuiverPath_map root r
+  have hendpoint : P (graphVertex x) = graphVertex root := by
+    change graphVertex x.1 = graphVertex root
+    exact congrArg graphVertex hx
+  have hbase_cast : base = ptop.cast e₀.2 hendpoint := by
+    dsimp [base, ptop]
+    rw [hr_cast]
+    have h1 := graphRealizationQuiverPath_cast (W := V)
+      (rfl : (graphCoverProjection root).symmetrify.obj
+        (show Symmetrify (graphCoverVertex root) from graphCoverRootVertex root) =
+        (graphCoverProjection root).symmetrify.obj
+          (show Symmetrify (graphCoverVertex root) from graphCoverRootVertex root))
+      hx' p'
+    have h2 := graphRealizationQuiverPath_cast (W := V)
+      hpstart.symm (rfl : root = root) p
+    rw [h1, h2]
+    ext t
+    rfl
+  have hclass :
+      (Path.Homotopic.Quotient.mk lift).map ⟨P, cov.continuous⟩ =
+        (Path.Homotopic.Quotient.mk ptop).cast e₀.2 hendpoint := by
+    rw [← Path.Homotopic.Quotient.mk_map, hmap, hbase_cast]
+    rfl
+  have hmonodromy :
+      cov.monodromy (Path.Homotopic.Quotient.mk ptop) e₀ =
+        graphCoverEndpointFiber root x hx := by
+    exact cov.monodromy_eq_of_map_eq
+      (Path.Homotopic.Quotient.mk lift) hclass
+  have hpathcast : Quiver.Path.cast rfl hx' p' =
+      Quiver.Path.cast hpstart.symm hx' p := by
+    dsimp [p']
+    rw [Quiver.Path.cast_cast]
+  have hvalueeq :
+      baseSymPathValue (Quiver.Path.cast rfl hx' p') =
+        baseSymPathValue (Quiver.Path.cast hpstart.symm hx' p) := by
+    rw [hpathcast]
+  have hprojection :
+      baseSymPathValue ((graphCoverProjection root).symmetrify.mapPath r) =
+        baseSymPathValue (Quiver.Path.cast rfl hx' p') := by
+    exact congrArg baseSymPathValue hr_cast
+  have hprojection_value :
+      HEq (baseSymPathValue ((graphCoverProjection root).symmetrify.mapPath r))
+        (baseSymPathValue p) :=
+    (heq_of_eq (hprojection.trans hvalueeq)).trans
+      (baseSymPathValue_cast_heq hpstart.symm hx' p)
+  exact ⟨⟨x, r, hx, hprojection_value, hmonodromy⟩⟩
+
 private theorem graphCombinatorialToTopological_injective_of_paths
     (root : V)
     (p q : @Quiver.Path (Symmetrify V) (Quiver.symmetrifyQuiver V) root root)
@@ -1559,184 +1664,51 @@ private theorem graphCombinatorialToTopological_injective_of_paths
       Path.Homotopic.Quotient.mk
         (@graphRealizationQuiverPath V _ _ _ q)) :
     baseSymPathValue p = baseSymPathValue q := by
-  have hpstart : (graphCoverProjection root).symmetrify.obj
-        (graphCoverRootVertex root) = (show Symmetrify V from root) := by
-    rfl
-  let p' := Quiver.Path.cast hpstart.symm (rfl : root = root) p
-  let q' := Quiver.Path.cast hpstart.symm (rfl : root = root) q
-  obtain ⟨⟨xp, rp⟩, hpstar⟩ :=
-    ((graphCoverProjection_isCovering root).symmetrify.pathStar_bijective
-      (graphCoverRootVertex root)).2 ⟨root, p'⟩
-  obtain ⟨⟨xq, rq⟩, hqstar⟩ :=
-    ((graphCoverProjection_isCovering root).symmetrify.pathStar_bijective
-      (graphCoverRootVertex root)).2 ⟨root, q'⟩
-  have hp_parts := Sigma.mk.inj_iff.mp hpstar
-  have hq_parts := Sigma.mk.inj_iff.mp hqstar
-  obtain ⟨hxp, hrp⟩ := hp_parts
-  obtain ⟨hxq, hrq⟩ := hq_parts
-  change xp.1 = root at hxp
-  change xq.1 = root at hxq
+  obtain ⟨pData⟩ := graphLoopLiftData_exists root p
+  obtain ⟨qData⟩ := graphLoopLiftData_exists root q
+  obtain ⟨xp, rp, hxp, hpvalue, hpmonodromy⟩ := pData
+  obtain ⟨xq, rq, hxq, hqvalue, hqmonodromy⟩ := qData
   let P := graphCoverRealizationProjection root
   let cov := graphCoverRealizationProjection_isCovering root
   let e₀ := graphCoverRootFiberPoint root
-  have hxp' : (show Symmetrify V from root) =
-        (graphCoverProjection root).symmetrify.obj xp := by
-    change root = xp.1
-    exact hxp.symm
-  have hxq' : (show Symmetrify V from root) =
-        (graphCoverProjection root).symmetrify.obj xq := by
-    change root = xq.1
-    exact hxq.symm
-  have hrp_cast : (graphCoverProjection root).symmetrify.mapPath rp =
-        (p'.cast rfl hxp') := by
-    exact (Quiver.Path.eq_cast_iff_heq rfl hxp' p'
-      ((graphCoverProjection root).symmetrify.mapPath rp)).2 hrp
-  have hrq_cast : (graphCoverProjection root).symmetrify.mapPath rq =
-        (q'.cast rfl hxq') := by
-    exact (Quiver.Path.eq_cast_iff_heq rfl hxq' q'
-      ((graphCoverProjection root).symmetrify.mapPath rq)).2 hrq
-  let ptop : Path (graphVertex root) (graphVertex root) :=
-    @graphRealizationQuiverPath V _ _ _ p
-  let qtop : Path (graphVertex root) (graphVertex root) :=
-    @graphRealizationQuiverPath V _ _ _ q
-  let plift : Path (graphVertex (graphCoverRootVertex root))
-      (graphVertex xp) :=
-    @graphRealizationQuiverPath (graphCoverVertex root)
-      (graphCoverQuiver root) _ _ rp
-  let qlift : Path (graphVertex (graphCoverRootVertex root))
-      (graphVertex xq) :=
-    @graphRealizationQuiverPath (graphCoverVertex root)
-      (graphCoverQuiver root) _ _ rq
-  let pbase : Path
-      (graphVertex (V := V) ((graphCoverProjection root).symmetrify.obj
-        (show Symmetrify (graphCoverVertex root) from graphCoverRootVertex root)))
-      (graphVertex (V := V) ((graphCoverProjection root).symmetrify.obj xp)) :=
-    @graphRealizationQuiverPath V _ _ _
-      ((graphCoverProjection root).symmetrify.mapPath rp)
-  let qbase : Path
-      (graphVertex (V := V) ((graphCoverProjection root).symmetrify.obj
-        (show Symmetrify (graphCoverVertex root) from graphCoverRootVertex root)))
-      (graphVertex (V := V) ((graphCoverProjection root).symmetrify.obj xq)) :=
-    @graphRealizationQuiverPath V _ _ _
-      ((graphCoverProjection root).symmetrify.mapPath rq)
-  have hpmap : plift.map cov.continuous = pbase := by
-    exact graphCoverRealizationQuiverPath_map root rp
-  have hqmap : qlift.map cov.continuous = qbase := by
-    exact graphCoverRealizationQuiverPath_map root rq
-  have hep : P (graphVertex xp) = graphVertex root := by
-    change graphVertex xp.1 = graphVertex root
-    exact congrArg graphVertex hxp
-  have heq : P (graphVertex xq) = graphVertex root := by
-    change graphVertex xq.1 = graphVertex root
-    exact congrArg graphVertex hxq
-  have hpbase_cast : pbase = ptop.cast e₀.2 hep := by
-    dsimp [pbase, ptop]
-    rw [hrp_cast]
-    have h1 := graphRealizationQuiverPath_cast (W := V)
-      (rfl : (graphCoverProjection root).symmetrify.obj
-        (show Symmetrify (graphCoverVertex root) from graphCoverRootVertex root) =
-        (graphCoverProjection root).symmetrify.obj
-          (show Symmetrify (graphCoverVertex root) from graphCoverRootVertex root))
-      hxp' p'
-    have h2 := graphRealizationQuiverPath_cast (W := V)
-      hpstart.symm (rfl : root = root) p
-    rw [h1, h2]
-    ext t
-    rfl
-  have hqbase_cast : qbase = qtop.cast e₀.2 heq := by
-    dsimp [qbase, qtop]
-    rw [hrq_cast]
-    have h1 := graphRealizationQuiverPath_cast (W := V)
-      (rfl : (graphCoverProjection root).symmetrify.obj
-        (show Symmetrify (graphCoverVertex root) from graphCoverRootVertex root) =
-        (graphCoverProjection root).symmetrify.obj
-          (show Symmetrify (graphCoverVertex root) from graphCoverRootVertex root))
-      hxq' q'
-    have h2 := graphRealizationQuiverPath_cast (W := V)
-      hpstart.symm (rfl : root = root) q
-    rw [h1, h2]
-    ext t
-    rfl
-  let ep : P ⁻¹' {graphVertex root} :=
-    ⟨graphVertex (V := graphCoverVertex root) (xp : graphCoverVertex root), hep⟩
-  let eqp : P ⁻¹' {graphVertex root} :=
-    ⟨graphVertex (V := graphCoverVertex root) (xq : graphCoverVertex root), heq⟩
-  have hpclass :
-      (Path.Homotopic.Quotient.mk plift).map
-          ⟨P, cov.continuous⟩ =
-        (Path.Homotopic.Quotient.mk ptop).cast e₀.2 hep := by
-    rw [← Path.Homotopic.Quotient.mk_map, hpmap, hpbase_cast]
-    rfl
-  have hqclass :
-      (Path.Homotopic.Quotient.mk qlift).map
-          ⟨P, cov.continuous⟩ =
-        (Path.Homotopic.Quotient.mk qtop).cast e₀.2 heq := by
-    rw [← Path.Homotopic.Quotient.mk_map, hqmap, hqbase_cast]
-    rfl
-  have hpmono : cov.monodromy (Path.Homotopic.Quotient.mk ptop) e₀ = ep := by
-    exact cov.monodromy_eq_of_map_eq
-      (Path.Homotopic.Quotient.mk plift) hpclass
-  have hqmono : cov.monodromy (Path.Homotopic.Quotient.mk qtop) e₀ = eqp := by
-    exact cov.monodromy_eq_of_map_eq
-      (Path.Homotopic.Quotient.mk qlift) hqclass
-  have hepf : ep = eqp := by
+  have hfiber :
+      graphCoverEndpointFiber root xp hxp =
+        graphCoverEndpointFiber root xq hxq := by
     calc
-      ep = cov.monodromy (Path.Homotopic.Quotient.mk ptop) e₀ := hpmono.symm
-      _ = cov.monodromy (Path.Homotopic.Quotient.mk qtop) e₀ := by
-        congr 1
-      _ = eqp := hqmono
+      _ = cov.monodromy
+          (Path.Homotopic.Quotient.mk
+            (@graphRealizationQuiverPath V _ _ _ p)) e₀ :=
+        hpmonodromy.symm
+      _ = cov.monodromy
+          (Path.Homotopic.Quotient.mk
+            (@graphRealizationQuiverPath V _ _ _ q)) e₀ := by
+        rw [htop]
+      _ = _ := hqmonodromy
   have hvertex :
-      graphVertex (V := graphCoverVertex root) (xp : graphCoverVertex root) =
-        graphVertex (V := graphCoverVertex root) (xq : graphCoverVertex root) := by
+      graphVertex (V := graphCoverVertex root) xp =
+        graphVertex (V := graphCoverVertex root) xq := by
     exact congrArg (fun z : P ⁻¹' {graphVertex root} =>
-      (z : graphCoverRealization root)) hepf
-  have hxpq : (xp : graphCoverVertex root) = (xq : graphCoverVertex root) := by
-    apply graphVertex_injective (V := graphCoverVertex root)
-    exact hvertex
-  cases hxpq
-  have hval : coverSymPathValue rp = coverSymPathValue rq := by
-    exact (coverSymPathValue_endpoint (xp : graphCoverVertex root) rp).symm.trans
-      (coverSymPathValue_endpoint (xp : graphCoverVertex root) rq)
-  have hbase :
-      baseSymPathValue ((graphCoverProjection root).symmetrify.mapPath rp) =
-        baseSymPathValue ((graphCoverProjection root).symmetrify.mapPath rq) := by
+      (z : graphCoverRealization root)) hfiber
+  have hendpoint : xp = xq := by
+    exact graphVertex_injective hvertex
+  cases hendpoint
+  have hlift :
+      coverSymPathValue rp = coverSymPathValue rq := by
+    exact (coverSymPathValue_endpoint xp rp).symm.trans
+      (coverSymPathValue_endpoint xp rq)
+  have hprojection :
+      baseSymPathValue
+          ((graphCoverProjection root).symmetrify.mapPath rp) =
+        baseSymPathValue
+          ((graphCoverProjection root).symmetrify.mapPath rq) := by
     rw [← coverSymPathValue_eq_baseSymPathValue rp,
       ← coverSymPathValue_eq_baseSymPathValue rq]
-    exact hval
-  have hbase' := hbase
-  rw [hrp_cast, hrq_cast] at hbase'
-  have hpcast :
-      Quiver.Path.cast rfl hxp' p' =
-        Quiver.Path.cast hpstart.symm hxp' p := by
-    dsimp [p']
-    rw [Quiver.Path.cast_cast]
-  have hqcast :
-      Quiver.Path.cast rfl hxq' q' =
-        Quiver.Path.cast hpstart.symm hxq' q := by
-    dsimp [q']
-    rw [Quiver.Path.cast_cast]
-  have hpvaleq :
-      baseSymPathValue (Quiver.Path.cast rfl hxp' p') =
-        baseSymPathValue (Quiver.Path.cast hpstart.symm hxp' p) := by
-    rw [hpcast]
-  have hqvaleq :
-      baseSymPathValue (Quiver.Path.cast rfl hxq' q') =
-        baseSymPathValue (Quiver.Path.cast hpstart.symm hxq' q) := by
-    rw [hqcast]
-  have hpval : HEq
-      (baseSymPathValue (Quiver.Path.cast rfl hxp' p'))
-      (baseSymPathValue p) :=
-    (heq_of_eq hpvaleq).trans
-      (baseSymPathValue_cast_heq hpstart.symm hxp' p)
-  have hqval : HEq
-      (baseSymPathValue (Quiver.Path.cast rfl hxq' q'))
-      (baseSymPathValue q) :=
-    (heq_of_eq hqvaleq).trans
-      (baseSymPathValue_cast_heq hpstart.symm hxq' q)
+    exact hlift
   have hmid : HEq (baseSymPathValue p)
-      (baseSymPathValue (Quiver.Path.cast rfl hxq' q')) :=
-    hpval.symm.trans (heq_of_eq hbase')
-  exact eq_of_heq (hmid.trans hqval)
+      (baseSymPathValue
+        ((graphCoverProjection root).symmetrify.mapPath rq)) :=
+    hpvalue.symm.trans (heq_of_eq hprojection)
+  exact eq_of_heq (hmid.trans hqvalue)
 
 theorem graphCombinatorialToTopological_injective
     (root : V) :

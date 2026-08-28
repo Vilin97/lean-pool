@@ -81,6 +81,11 @@ private def treeContractionCoordinate (t s : I) : I :=
         _ = 1 := by norm_num
   ⟩
 
+private theorem continuous_treeContractionCoordinate :
+    Continuous (fun p : I × I => treeContractionCoordinate p.1 p.2) := by
+  apply Continuous.subtype_mk
+  fun_prop
+
 @[simp]
 theorem treeContractionCoordinate_zero_right (t : I) :
     treeContractionCoordinate t 0 = ⟨(1 + (t : ℝ)) / 2, by
@@ -112,32 +117,8 @@ theorem treeContractionCoordinate_one_right (t : I) :
 /-- The square which contracts the cell of an edge towards the root. -/
 def graphTreeEdgeContraction (e : Quiver.Total V) : C(I × I, graphRealization V) where
   toFun p := graphTreeRootPath e.right (treeContractionCoordinate p.1 p.2)
-  continuous_toFun := by
-    apply (graphTreeRootPath e.right).continuous.comp
-    let prop : ∀ p : I × I,
-        (1 - (p.2 : ℝ)) * ((1 + (p.1 : ℝ)) / 2) ∈ I := fun p => by
-      have hs : 0 ≤ 1 - (p.2 : ℝ) := by linarith [p.2.2.2]
-      have hs' : 1 - (p.2 : ℝ) ≤ 1 := by linarith [p.2.2.1]
-      have ht : 0 ≤ (1 + (p.1 : ℝ)) / 2 := by linarith [p.1.2.1]
-      have ht' : (1 + (p.1 : ℝ)) / 2 ≤ 1 := by linarith [p.1.2.2]
-      constructor
-      · exact mul_nonneg hs ht
-      · calc
-          (1 - (p.2 : ℝ)) * ((1 + (p.1 : ℝ)) / 2) ≤
-              1 * ((1 + (p.1 : ℝ)) / 2) := mul_le_mul_of_nonneg_right hs' ht
-          _ ≤ 1 * 1 := mul_le_mul_of_nonneg_left ht' (by norm_num)
-          _ = 1 := by norm_num
-    have hcont : Continuous (fun p : I × I =>
-        (⟨(1 - (p.2 : ℝ)) * ((1 + (p.1 : ℝ)) / 2), prop p⟩ : I)) :=
-      Continuous.subtype_mk (by fun_prop) prop
-    have heq : (fun p : I × I =>
-        (⟨(1 - (p.2 : ℝ)) * ((1 + (p.1 : ℝ)) / 2), prop p⟩ : I)) =
-        (fun p => treeContractionCoordinate p.1 p.2) := by
-      funext p
-      apply Subtype.ext
-      rfl
-    rw [heq] at hcont
-    exact hcont
+  continuous_toFun :=
+    (graphTreeRootPath e.right).continuous.comp continuous_treeContractionCoordinate
 
 /-- The path which contracts a vertex of the tree to the root. -/
 def graphTreeVertexContraction (v : V) : C(I, graphRealization V) :=

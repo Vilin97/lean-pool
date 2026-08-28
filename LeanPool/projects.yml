@@ -6364,7 +6364,7 @@ projects:
     summary: >-
       Constructs the standard interval-cell realization of a finite connected directed
       multigraph and proves that its topological fundamental group is a free group of rank
-      E - V + 1. The development also supplies an explicit spanning-tree basis, a verified
+      E - V + 1. The proof uses an explicit spanning-tree basis and develops a verified
       path-lifting cover, a contraction of the covering tree, root-change equivalences, the
       tree/triviality criterion, and the corresponding free-abelian result.
     branch: algebraic topology and graph theory
@@ -6395,10 +6395,6 @@ projects:
         informal: >-
           The endomorphism group at a vertex in the graph's free groupoid is explicitly
           isomorphic to the topological fundamental group of the interval-cell realization.
-      - declaration: FiniteGraphFreeGroup.graphFundamentalGroupBasis
-        informal: >-
-          The directed edges outside a certified spanning tree form an explicit free basis for
-          the combinatorial fundamental group.
       - declaration: FiniteGraphFreeGroup.graphCoverProjection_isCovering
         informal: >-
           The canonical path-lifting projection from rooted free-groupoid paths to graph
