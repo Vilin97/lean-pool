@@ -2752,6 +2752,7 @@ import LeanPool.Monsky.TriangleCorollary
 import LeanPool.MoserLatticeColorings
 import LeanPool.MoserLatticeColorings.Basic
 import LeanPool.MoserLatticeColorings.Ring
+import LeanPool.MulticolorTriangleRamsey
 import LeanPool.Neukirch
 import LeanPool.Neukirch.ExtensionOfDedekindDomains
 import LeanPool.Neukirch.HilbertRamificationTheory

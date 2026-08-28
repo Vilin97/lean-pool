@@ -1,4 +1,49 @@
 projects:
+  - slug: multicolor-triangle-ramsey
+    title: Superexponential lower bounds for multicolor triangle Ramsey numbers
+    summary: >-
+      Resolves Erdős problem 183 by proving that the k-color triangle Ramsey
+      number has a k-th root tending to infinity. The development constructs
+      saturated palette families and recursive edge colorings, derives an
+      explicit superexponential lower bound, and proves matching order-of-growth
+      bounds for the logarithm of the Ramsey number.
+    branch: extremal combinatorics and Ramsey theory
+    entry_module: LeanPool.MulticolorTriangleRamsey
+    authors:
+      - OpenAI
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - ErdosProblems.MulticolourTriangleRamsey.erdos_problem_183_explicit
+    main_results:
+      - declaration: ErdosProblems.MulticolourTriangleRamsey.erdos_183
+        informal: >-
+          The k-th root of the k-color triangle Ramsey number tends to infinity,
+          resolving Erdős problem 183.
+      - declaration: ErdosProblems.MulticolourTriangleRamsey.erdos_problem_183_explicit
+        informal: >-
+          For every k at least two, the k-color triangle Ramsey number is at least
+          ((k^(1/3))/(6 exp(38) log k))^k, and its k-th root tends to infinity.
+      - declaration: ErdosProblems.MulticolourTriangleRamsey.triangleRamseyNumber_log_isTheta
+        informal: >-
+          The logarithm of the k-color triangle Ramsey number has order
+          k log k.
+    tags:
+      - extremal-combinatorics
+      - ramsey-theory
+      - graph-coloring
+      - erdos-problems
+    msc:
+      - "05D10"
+      - "05C55"
   - slug: connes-rigidity
     title: Conditional formalization of Zhou's Connes-rigidity counterexample
     summary: >-
