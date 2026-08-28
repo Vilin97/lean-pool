@@ -68,11 +68,6 @@ noncomputable def graphFundamentalGroupEquiv {V : Type u} [Quiver.{u} V]
   exact (graphFundamentalGroupBasis root).reindex
     (graphCycleBasisIndexEquiv root) |>.repr
 
-theorem graphFundamentalGroupEquiv_nonempty {V : Type u} [Quiver.{u} V]
-    [Fintype V] [FiniteQuiver V] [WeaklyConnected V] (root : V) :
-    Nonempty (graphFundamentalGroup root ≃* FreeGroup (Fin (cycleRank (V := V)))) :=
-  ⟨graphFundamentalGroupEquiv root⟩
-
 /--
 Changing the root produces a group equivalence.  This is the concrete
 basepoint-independence statement available for the combinatorial model; no

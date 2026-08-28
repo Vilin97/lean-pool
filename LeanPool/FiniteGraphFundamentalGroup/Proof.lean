@@ -87,10 +87,6 @@ noncomputable instance symmetrifyHomFintype [∀ a b : V, Fintype (a ⟶ b)]
   change Fintype ((@Quiver.Hom V _ a b) ⊕ (@Quiver.Hom V _ b a))
   infer_instance
 
-noncomputable instance setSubtypeFintype {α : Type u} [Fintype α] (s : Set α) : Fintype s := by
-  classical
-  exact Fintype.subtype (Finset.univ.filter fun x => x ∈ s) (by simp)
-
 /-- Identifies a wide subquiver's total arrows with the corresponding subset of base arrows. -/
 def wideTotalEquiv {V : Type u} [Quiver.{u} V] (H : WideSubquiver V) :
     Quiver.Total H ≃ (wideSubquiverEquivSetTotal H : Set (Quiver.Total V)) where
@@ -98,6 +94,11 @@ def wideTotalEquiv {V : Type u} [Quiver.{u} V] (H : WideSubquiver V) :
   invFun e := ⟨e.1.left, e.1.right, ⟨e.1.hom, e.2⟩⟩
   left_inv e := by cases e; rfl
   right_inv e := by cases e; rfl
+
+noncomputable instance wideSubquiverSetTotalFintype {V : Type u} [Quiver.{u} V]
+    [Fintype V] [∀ a b : V, Fintype (a ⟶ b)] (H : WideSubquiver V) :
+    Fintype (wideSubquiverEquivSetTotal H : Set (Quiver.Total V)) :=
+  Fintype.ofEquiv (Quiver.Total H) (wideTotalEquiv H)
 
 lemma exists_last_data (T : WideSubquiver V) [Arborescence T]
     {b : T} (hb : b ≠ root T) :
@@ -497,6 +498,12 @@ noncomputable def graphGeneratorSet {V : Type u} [Quiver.{u} V]
   (wideSubquiverEquivSetTotal
     (wideSubquiverSymmetrify (graphTree root)))ᶜ
 
+noncomputable instance graphGeneratorSetFintype {V : Type u} [Quiver.{u} V]
+    [Fintype V] [FiniteQuiver V] [WeaklyConnected V] (root : V) :
+    Fintype (graphGeneratorSet root) := by
+  classical
+  exact Fintype.subtype (Finset.univ.filter fun e => e ∈ graphGeneratorSet root) (by simp)
+
 lemma graphGeneratorSet_card {V : Type u} [Quiver.{u} V]
     [Fintype V] [FiniteQuiver V] [WeaklyConnected V] (root : V) :
     Fintype.card (graphGeneratorSet root) =
@@ -516,20 +523,21 @@ lemma graphGeneratorSet_card {V : Type u} [Quiver.{u} V]
     Fintype.card_congr generatorTotalEquiv
   have hcomp : Fintype.card (Sᶜ : Set (Quiver.Total G)) =
       Fintype.card (Quiver.Total G) - Fintype.card S := by
-    exact @Fintype.card_subtype_compl _ _ (fun e : Quiver.Total G => e ∈ S)
-      (setSubtypeFintype S) (setSubtypeFintype Sᶜ)
+    exact Fintype.card_subtype_compl (fun e : Quiver.Total G => e ∈ S)
   have htreele : Fintype.card S ≤ Fintype.card (Quiver.Total G) := by
     exact Fintype.card_subtype_le _
   have htreele' : Fintype.card V - 1 ≤ Fintype.card (Quiver.Total V) := by
     rw [← hS, ← htotal]
     exact htreele
   have hVpos : 1 ≤ Fintype.card V := Fintype.card_pos_iff.mpr ⟨root⟩
-  change Fintype.card (Sᶜ : Set (Quiver.Total G)) =
-    edgeCount (V := V) + 1 - vertexCount (V := V)
-  rw [hcomp, htotal, hS]
-  change Fintype.card (Quiver.Total V) - (Fintype.card V - 1) =
-    Fintype.card (Quiver.Total V) + 1 - Fintype.card V
-  omega
+  calc
+    Fintype.card (graphGeneratorSet root) =
+        Fintype.card (Sᶜ : Set (Quiver.Total G)) := Fintype.card_congr (Equiv.refl _)
+    _ = edgeCount (V := V) + 1 - vertexCount (V := V) := by
+      rw [hcomp, htotal, hS]
+      change Fintype.card (Quiver.Total V) - (Fintype.card V - 1) =
+        Fintype.card (Quiver.Total V) + 1 - Fintype.card V
+      omega
 
 /-! The final theorem is kept in the original statement form for the Palomar
     Challenge/Solution correspondence.  The reusable, basis-valued API and
