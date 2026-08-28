@@ -1402,6 +1402,14 @@ import LeanPool.FelConjecture
 import LeanPool.FelConjecture.Solution
 import LeanPool.Fineqs
 import LeanPool.Fineqs.Main
+import LeanPool.FiniteGraphFundamentalGroup
+import LeanPool.FiniteGraphFundamentalGroup.Consequences
+import LeanPool.FiniteGraphFundamentalGroup.Cover
+import LeanPool.FiniteGraphFundamentalGroup.Proof
+import LeanPool.FiniteGraphFundamentalGroup.Realization
+import LeanPool.FiniteGraphFundamentalGroup.TopologicalComparison
+import LeanPool.FiniteGraphFundamentalGroup.TopologicalCover
+import LeanPool.FiniteGraphFundamentalGroup.TreeContraction
 import LeanPool.FiveEighthsTheorem
 import LeanPool.FiveEighthsTheorem.Basic
 import LeanPool.Flean
