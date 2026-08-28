@@ -374,12 +374,10 @@ theorem graphCoverPreMap_vertexStar_preimage {V : Type u} [Quiver.{u} V]
         change ((e.left.1 = v ∧ t < graphHalf) ∨
           (e.right.1 = v ∧ graphHalf < t)) at hz
         rcases hz with hz | hz
-        · have he : e.left.1 = v := hz.1
-          refine Set.mem_iUnion.mpr ⟨⟨e.left, hz.1⟩, ?_⟩
+        · refine Set.mem_iUnion.mpr ⟨⟨e.left, hz.1⟩, ?_⟩
           simp only [graphVertexStarPre]
           exact Or.inl ⟨rfl, hz.2⟩
-        · have he : e.right.1 = v := hz.1
-          refine Set.mem_iUnion.mpr ⟨⟨e.right, hz.1⟩, ?_⟩
+        · refine Set.mem_iUnion.mpr ⟨⟨e.right, hz.1⟩, ?_⟩
           simp only [graphVertexStarPre]
           exact Or.inr ⟨rfl, hz.2⟩
       · intro hz
@@ -748,6 +746,29 @@ private theorem graphCoverRealizationProjection_vertexStar_injective_edge_vertex
               graphRealizationQuotient (Sum.inl (graphDiscreteVertex z)))
               (het.trans hbv.symm)
 
+private theorem graphVertexStar_edge_endpoint
+    {V : Type u} [Quiver.{u} V] {root v : V}
+    (x : graphCoverVertexOver root v)
+    (e : Quiver.Total (graphCoverVertex root)) (t : I)
+    (hstar : (e.left = x.1 ∧ t < graphHalf) ∨
+      (e.right = x.1 ∧ graphHalf < t))
+    (hendpoint : t = 0 ∨ t = 1) :
+    graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
+      graphRealizationQuotient (Sum.inl (graphDiscreteVertex x.1)) := by
+  rcases hendpoint with ht | ht
+  · have he : e.left = x.1 := by
+      rcases hstar with hstar | hstar
+      · exact hstar.1
+      · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_pos)) (ht ▸ hstar.2))
+    rw [ht]
+    exact (graphEdgePath_zero e).trans (congrArg graphVertex he)
+  · have he : e.right = x.1 := by
+      rcases hstar with hstar | hstar
+      · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_lt_one)) (ht ▸ hstar.2))
+      · exact hstar.1
+    rw [ht]
+    exact (graphEdgePath_one e).trans (congrArg graphVertex he)
+
 private theorem graphCoverRealizationProjection_vertexStar_injective_edges
     {V : Type u} [Quiver.{u} V] {root v : V}
     (x : graphCoverVertexOver root v)
@@ -779,38 +800,10 @@ private theorem graphCoverRealizationProjection_vertexStar_injective_edges
         simpa [ht0] using hbase'
       exact (graphEdgePath_zero eb).symm.trans hbase0
     rcases graphRealization_vertex_edge_endpoint hvertex with ht'0 | ht'1
-    · have he : e.left = x.1 := by
-        rcases ha₀ with ha₀ | ha₀
-        · exact ha₀.1
-        · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_pos)) (ht0 ▸ ha₀.2))
-      have hf : f.left = x.1 := by
-        rcases hb₀ with hb₀ | hb₀
-        · exact hb₀.1
-        · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_pos)) (ht'0 ▸ hb₀.2))
-      calc
-        graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
-            graphRealizationQuotient (Sum.inl (graphDiscreteVertex x.1)) := by
-          rw [ht0]
-          exact (graphEdgePath_zero e).trans (congrArg graphVertex he)
-        _ = graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge f, t'⟩) := by
-          rw [ht'0]
-          exact (congrArg graphVertex hf.symm).trans (graphEdgePath_zero f).symm
-    · have he : e.left = x.1 := by
-        rcases ha₀ with ha₀ | ha₀
-        · exact ha₀.1
-        · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_pos)) (ht0 ▸ ha₀.2))
-      have hf : f.right = x.1 := by
-        rcases hb₀ with hb₀ | hb₀
-        · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_lt_one)) (ht'1 ▸ hb₀.2))
-        · exact hb₀.1
-      calc
-        graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
-            graphRealizationQuotient (Sum.inl (graphDiscreteVertex x.1)) := by
-          rw [ht0]
-          exact (graphEdgePath_zero e).trans (congrArg graphVertex he)
-        _ = graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge f, t'⟩) := by
-          rw [ht'1]
-          exact (congrArg graphVertex hf.symm).trans (graphEdgePath_one f).symm
+    · exact (graphVertexStar_edge_endpoint x e t ha₀ (Or.inl ht0)).trans
+        (graphVertexStar_edge_endpoint x f t' hb₀ (Or.inl ht'0)).symm
+    · exact (graphVertexStar_edge_endpoint x e t ha₀ (Or.inl ht0)).trans
+        (graphVertexStar_edge_endpoint x f t' hb₀ (Or.inr ht'1)).symm
   · by_cases ht1 : t = 1
     · have hvertex :
           graphRealizationQuotient (Sum.inl (graphDiscreteVertex eb.right)) =
@@ -821,38 +814,10 @@ private theorem graphCoverRealizationProjection_vertexStar_injective_edges
           simpa [ht1] using hbase'
         exact (graphEdgePath_one eb).symm.trans hbase1
       rcases graphRealization_vertex_edge_endpoint hvertex with ht'0 | ht'1
-      · have he : e.right = x.1 := by
-          rcases ha₀ with ha₀ | ha₀
-          · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_lt_one)) (ht1 ▸ ha₀.2))
-          · exact ha₀.1
-        have hf : f.left = x.1 := by
-          rcases hb₀ with hb₀ | hb₀
-          · exact hb₀.1
-          · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_pos)) (ht'0 ▸ hb₀.2))
-        calc
-          graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
-              graphRealizationQuotient (Sum.inl (graphDiscreteVertex x.1)) := by
-            rw [ht1]
-            exact (graphEdgePath_one e).trans (congrArg graphVertex he)
-          _ = graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge f, t'⟩) := by
-            rw [ht'0]
-            exact (congrArg graphVertex hf.symm).trans (graphEdgePath_zero f).symm
-      · have he : e.right = x.1 := by
-          rcases ha₀ with ha₀ | ha₀
-          · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_lt_one)) (ht1 ▸ ha₀.2))
-          · exact ha₀.1
-        have hf : f.right = x.1 := by
-          rcases hb₀ with hb₀ | hb₀
-          · exact False.elim ((not_lt_of_ge (le_of_lt graphHalf_lt_one)) (ht'1 ▸ hb₀.2))
-          · exact hb₀.1
-        calc
-          graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge e, t⟩) =
-              graphRealizationQuotient (Sum.inl (graphDiscreteVertex x.1)) := by
-            rw [ht1]
-            exact (graphEdgePath_one e).trans (congrArg graphVertex he)
-          _ = graphRealizationQuotient (Sum.inr ⟨graphDiscreteEdge f, t'⟩) := by
-            rw [ht'1]
-            exact (congrArg graphVertex hf.symm).trans (graphEdgePath_one f).symm
+      · exact (graphVertexStar_edge_endpoint x e t ha₀ (Or.inr ht1)).trans
+          (graphVertexStar_edge_endpoint x f t' hb₀ (Or.inl ht'0)).symm
+      · exact (graphVertexStar_edge_endpoint x e t ha₀ (Or.inr ht1)).trans
+          (graphVertexStar_edge_endpoint x f t' hb₀ (Or.inr ht'1)).symm
     · have ht0' : 0 < t := lt_of_le_of_ne t.2.1 (Ne.symm ht0)
       have ht1' : t < 1 := lt_of_le_of_ne t.2.2 ht1
       have ht0ne : t' ≠ 0 := by

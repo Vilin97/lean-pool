@@ -37,22 +37,6 @@ namespace FiniteGraphFreeGroup
 
 variable {V : Type u} [Quiver.{u} V]
 
-/-- Encodes a symmetric graph edge as an underlying edge together with its orientation. -/
-def symEdgeLetter {a b : Symmetrify V}
-    (e : @Quiver.Hom (Symmetrify V) (Quiver.symmetrifyQuiver V) a b) :
-    Quiver.Total V × Bool := by
-  cases e with
-  | inl e => exact (⟨a, b, e⟩, true)
-  | inr e => exact (⟨b, a, e⟩, false)
-
-/-- The list of signed edge letters traversed by a symmetric graph path. -/
-def symPathWord {a b : Symmetrify V}
-    (p : @Quiver.Path (Symmetrify V) (Quiver.symmetrifyQuiver V) a b) :
-    List (Quiver.Total V × Bool) := by
-  induction p with
-  | nil => exact []
-  | cons p e ih => exact symEdgeLetter e :: ih
-
 /-- Evaluates a symmetric path in the canonical cover as a base free-groupoid morphism. -/
 def coverSymPathValue {root : V}
     {a b : Symmetrify (graphCoverVertex root)}
@@ -259,44 +243,6 @@ theorem coverSymEdgeLetter_cancel {root : V}
           cases htotal
           rfl
 
-theorem coverSymEdge_eq_of_letter_eq {root : V}
-    {a b c : Symmetrify (graphCoverVertex root)}
-    (e : @Quiver.Hom (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root)) a b)
-    (f : @Quiver.Hom (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root)) a c)
-    (h : coverSymEdgeLetter e = coverSymEdgeLetter f) : HEq e f := by
-  change graphCoverVertex root at a b c
-  cases e with
-  | inl e =>
-      cases f with
-      | inl f =>
-          have htot :
-              (⟨a.1, b.1, e.1⟩ : Quiver.Total V) =
-                ⟨a.1, c.1, f.1⟩ := by
-            simpa [coverSymEdgeLetter] using congrArg Prod.fst h
-          have hstar := graphCoverStarEquiv_map_eq_of_total_eq
-            a ⟨a, b, e⟩ ⟨a, c, f⟩ rfl rfl htot
-          have hstar' := (graphCoverStarEquiv root a).injective hstar
-          cases hstar'
-          exact HEq.rfl
-      | inr f =>
-          simp [coverSymEdgeLetter] at h
-  | inr e =>
-      cases f with
-      | inl f =>
-          simp [coverSymEdgeLetter] at h
-      | inr f =>
-          have htot :
-              (⟨b.1, a.1, e.1⟩ : Quiver.Total V) =
-                ⟨c.1, a.1, f.1⟩ := by
-            simpa [coverSymEdgeLetter] using congrArg Prod.fst h
-          have hcostar := graphCoverCostarEquiv_map_eq_of_total_eq
-            a ⟨b, a, e⟩ ⟨c, a, f⟩ rfl rfl htot
-          have hcostar' := (graphCoverCostarEquiv root a).injective hcostar
-          cases hcostar'
-          exact HEq.rfl
-
 theorem coverSymPathWord_isReduced {root : V}
     {a : Symmetrify (graphCoverVertex root)}
     (p : @Quiver.Path (Symmetrify (graphCoverVertex root))
@@ -481,6 +427,16 @@ theorem coverSymEdge_star_eq_of_letter_eq {root : V}
           cases hcostar'
           rfl
 
+theorem coverSymEdge_eq_of_letter_eq {root : V}
+    {a b c : Symmetrify (graphCoverVertex root)}
+    (e : @Quiver.Hom (Symmetrify (graphCoverVertex root))
+      (Quiver.symmetrifyQuiver (graphCoverVertex root)) a b)
+    (f : @Quiver.Hom (Symmetrify (graphCoverVertex root))
+      (Quiver.symmetrifyQuiver (graphCoverVertex root)) a c)
+    (h : coverSymEdgeLetter e = coverSymEdgeLetter f) : HEq e f := by
+  have hstar := coverSymEdge_star_eq_of_letter_eq e f h
+  exact (Sigma.ext_iff.mp hstar).2
+
 theorem coverSymPathStar_eq_of_word_eq {root : V}
     {a b : Symmetrify (graphCoverVertex root)}
     (p : @Quiver.Path (Symmetrify (graphCoverVertex root))
@@ -562,14 +518,28 @@ theorem graphCoverSymmetric_rootedConnected {V : Type u} [Quiver.{u} V]
   rw [← hx]
   exact ⟨q⟩
 
+noncomputable instance graphCoverSymmetricRootedConnected
+    {V : Type u} [Quiver.{u} V] (root : V) :
+    @RootedConnected (Symmetrify (graphCoverVertex root))
+      (Quiver.symmetrifyQuiver (graphCoverVertex root))
+      (graphCoverRootVertex root) :=
+  graphCoverSymmetric_rootedConnected root
+
 /-- The canonical geodesic spanning tree of the symmetrified graph cover. -/
 noncomputable def graphCoverSymmetricTree {V : Type u} [Quiver.{u} V]
     (root : V) :
-    WideSubquiver (Symmetrify (graphCoverVertex root)) := by
-  have : @RootedConnected (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root))
-      (graphCoverRootVertex root) := graphCoverSymmetric_rootedConnected root
-  exact geodesicSubtree (graphCoverRootVertex root)
+    WideSubquiver (Symmetrify (graphCoverVertex root)) :=
+  geodesicSubtree (graphCoverRootVertex root)
+
+noncomputable instance graphCoverSymmetricTreeArborescence
+    {V : Type u} [Quiver.{u} V] (root : V) :
+    Quiver.Arborescence (graphCoverSymmetricTree root) := by
+  dsimp [graphCoverSymmetricTree]
+  exact @Quiver.geodesicArborescence
+    (Symmetrify (graphCoverVertex root))
+    (Quiver.symmetrifyQuiver (graphCoverVertex root))
+    (graphCoverRootVertex root)
+    (graphCoverSymmetricRootedConnected root)
 
 theorem graphCoverSymmetric_edge_or_reverse_mem_tree {V : Type u} [Quiver.{u} V]
     (root : V)
@@ -579,9 +549,6 @@ theorem graphCoverSymmetric_edge_or_reverse_mem_tree {V : Type u} [Quiver.{u} V]
     e ∈ graphCoverSymmetricTree root a b ∨
       Quiver.reverse e ∈ graphCoverSymmetricTree root b a := by
   classical
-  have : @RootedConnected (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root))
-      (graphCoverRootVertex root) := graphCoverSymmetric_rootedConnected root
   change e ∈ @geodesicSubtree (Symmetrify (graphCoverVertex root))
       (Quiver.symmetrifyQuiver (graphCoverVertex root))
       (graphCoverRootVertex root) _ a b ∨
@@ -1191,19 +1158,6 @@ theorem graphCoverTreeEdgeBase_injective
     (h : graphCoverTreeEdgeBase root d₁ =
       graphCoverTreeEdgeBase root d₂) : d₁ = d₂ := by
   classical
-  have : @RootedConnected (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root))
-      (graphCoverRootVertex root) := graphCoverSymmetric_rootedConnected root
-  have : @Quiver.Arborescence (graphCoverSymmetricTree root)
-      (graphCoverSymmetricTree root).quiver := by
-    dsimp [graphCoverSymmetricTree]
-    exact @Quiver.geodesicArborescence
-      (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root))
-      (graphCoverRootVertex root)
-      (inferInstance : @RootedConnected (Symmetrify (graphCoverVertex root))
-        (Quiver.symmetrifyQuiver (graphCoverVertex root))
-        (graphCoverRootVertex root))
   rcases d₁ with ⟨a, b, ⟨f, hf⟩⟩
   rcases d₂ with ⟨c, d, ⟨g, hg⟩⟩
   change graphCoverVertex root at a b c d
@@ -1315,19 +1269,6 @@ noncomputable def graphCoverRealizationHomotopyEquiv
     {V : Type u} [Quiver.{u} V] (root : V) :
     graphRealization (graphCoverVertex root) ≃ₕ
       graphRealization (graphCoverSymmetricTree root) := by
-  have : @RootedConnected (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root))
-      (graphCoverRootVertex root) := graphCoverSymmetric_rootedConnected root
-  have : @Quiver.Arborescence (graphCoverSymmetricTree root)
-      (graphCoverSymmetricTree root).quiver := by
-    dsimp [graphCoverSymmetricTree]
-    exact @Quiver.geodesicArborescence
-      (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root))
-      (graphCoverRootVertex root)
-      (inferInstance : @RootedConnected (Symmetrify (graphCoverVertex root))
-        (Quiver.symmetrifyQuiver (graphCoverVertex root))
-        (graphCoverRootVertex root))
   let f : C(graphRealization (graphCoverVertex root),
       graphRealization (graphCoverSymmetricTree root)) :=
     ⟨graphCoverToTree root, continuous_graphCoverToTree root⟩
@@ -1347,19 +1288,6 @@ noncomputable def graphCoverRealizationHomotopyEquiv
 noncomputable instance graphCoverRealization_contractible
     {V : Type u} [Quiver.{u} V] (root : V) :
     ContractibleSpace (graphRealization (graphCoverVertex root)) := by
-  have : @RootedConnected (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root))
-      (graphCoverRootVertex root) := graphCoverSymmetric_rootedConnected root
-  have : @Quiver.Arborescence (graphCoverSymmetricTree root)
-      (graphCoverSymmetricTree root).quiver := by
-    dsimp [graphCoverSymmetricTree]
-    exact @Quiver.geodesicArborescence
-      (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root))
-      (graphCoverRootVertex root)
-      (inferInstance : @RootedConnected (Symmetrify (graphCoverVertex root))
-        (Quiver.symmetrifyQuiver (graphCoverVertex root))
-        (graphCoverRootVertex root))
   exact (graphCoverRealizationHomotopyEquiv root).contractibleSpace
 
 /-- Evaluates a symmetric base-graph path in the free graph groupoid. -/
@@ -1493,18 +1421,6 @@ def graphCoverRootFiberPoint (root : V) :
       (graphCoverRootVertex root)) = graphVertex root
     rfl
   ⟩
-
-omit [WeaklyConnected V] in
-theorem graphCoverRealizationQuiverPath_is_lift
-    (root : V) {a b : graphCoverVertex root}
-    (p : @Quiver.Path (Symmetrify (graphCoverVertex root))
-      (Quiver.symmetrifyQuiver (graphCoverVertex root)) a b) :
-    (@graphRealizationQuiverPath (graphCoverVertex root)
-      (graphCoverQuiver root) a b p).map
-        (continuous_graphCoverRealizationProjection root) =
-      @graphRealizationQuiverPath V (inferInstance : Quiver V) _ _
-        ((graphCoverProjection root).symmetrify.mapPath p) := by
-  exact graphCoverRealizationQuiverPath_map root p
 
 theorem graphRealizationQuiverPath_cast
     {W : Type u} [Quiver.{u} W]
