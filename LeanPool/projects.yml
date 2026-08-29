@@ -4,7 +4,9 @@ projects:
     summary: >-
       Proves the finite-dimensional Hanson-Wright concentration inequality for
       quadratic forms of independent mean-zero sub-Gaussian real random variables
-      whose maximum psi-2 norm is positive.
+      whose maximum least global-MGF sub-Gaussian scale is positive. This is the
+      MGF normalization of the usual result; no formal identification with an
+      Orlicz psi-2 norm is claimed.
       The development derives the required moment-generating-function certificate
       instead of assuming it, and contributes reusable scalar Bernstein, Chernoff,
       cumulant, sub-Gaussian-process, and finite-maximum infrastructure.
@@ -30,10 +32,10 @@ projects:
     main_results:
       - declaration: LeanPool.HansonWright.hanson_wright_inequality_hdp
         informal: >-
-          For independent mean-zero real random variables with finite sub-Gaussian
-          psi-2 norms and positive maximum psi-2 norm, the centered quadratic form
-          satisfies the Hanson-Wright two-regime exponential tail bound in
-          Frobenius and operator norms.
+          For independent mean-zero real random variables with finite least
+          global-MGF sub-Gaussian scales and positive maximum coordinate MGF scale,
+          the centered quadratic form satisfies the Hanson-Wright two-regime
+          exponential tail bound in Frobenius and operator norms.
       - declaration: LeanPool.HansonWright.hasHansonWrightMGF_of_subgaussian
         informal: >-
           Independent sub-Gaussian coordinates satisfy the local quadratic

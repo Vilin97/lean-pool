@@ -46,7 +46,7 @@ two-scale Chernoff bound.
 * `HansonWright.hanson_wright_inequality`: Hanson-Wright tail bound after
   deriving the MGF certificate from independent sub-Gaussian coordinates.
 * `HansonWright.hanson_wright_inequality_hdp`: HDP-style Hanson-Wright tail bound
-  using the maximum coordinate ψ₂ scale.
+  using the maximum coordinate least global-MGF sub-Gaussian scale.
 -/
 
 namespace LeanPool
@@ -3059,18 +3059,6 @@ lemma centeredQuadraticForm_eq_diagonal_add_offDiagonal {μ : Measure Ω}
   · intro i _
     exact hdiag_term_int i
 
-lemma hasSubgaussianMGF_mono_param {μ : Measure Ω} {X : Ω → ℝ} {c d : ℝ≥0}
-    (h : HasSubgaussianMGF X c μ) (hcd : (c : ℝ) ≤ d) :
-    HasSubgaussianMGF X d μ where
-  integrable_exp_mul t := h.integrable_exp_mul t
-  mgf_le t := by
-    have hmul : (c : ℝ) * t ^ 2 ≤ (d : ℝ) * t ^ 2 :=
-      mul_le_mul_of_nonneg_right hcd (sq_nonneg t)
-    calc
-      mgf X μ t ≤ exp ((c : ℝ) * t ^ 2 / 2) := h.mgf_le t
-      _ ≤ exp ((d : ℝ) * t ^ 2 / 2) := by
-          exact exp_le_exp.mpr (by linarith)
-
 /-- A finite independent linear combination of sub-Gaussian variables is sub-Gaussian. -/
 lemma hasSubgaussianMGF_finset_sum_const_mul_of_iIndepFun {ι : Type*} {μ : Measure Ω}
     {X : ι → Ω → ℝ} (h_indep : iIndepFun X μ) {c : ι → ℝ≥0}
@@ -3133,7 +3121,7 @@ lemma inner_randomVector_hasSubgaussianMGF_of_iIndepFun {μ : Measure Ω}
     rw [Real.coe_toNNReal (v i ^ 2) (sq_nonneg (v i)),
       Real.coe_toNNReal (K ^ 2) (sq_nonneg K)]
     ring
-  exact hasSubgaussianMGF_mono_param hsum_inner hparam
+  exact LeanPool.hasSubgaussianMGF_mono_param hsum_inner hparam
 
 /-- Gaussian-comparison square-exponential bound for a linear image of an independent
 sub-Gaussian vector. -/
@@ -4300,65 +4288,11 @@ theorem hanson_wright_inequality {μ : Measure Ω} [IsProbabilityMeasure μ]
         ring
       exact hHW.2 l hl') ht
 
-private lemma hanson_wright_scaled_rhs_le {K C F O t : ℝ} (hK : 0 < K)
-    (hC : 0 < C) (hF : 0 < F) (hO : 0 < O) (ht : 0 ≤ t) :
-    2 * exp (-(1 / (4 * (C / 16))) *
-        min (t ^ 2 / ((2 * K) ^ 4 * F ^ 2))
-          (t / ((2 * K) ^ 2 * O))) ≤
-      2 * exp (-(1 / (4 * C)) *
-        min (t ^ 2 / (K ^ 4 * F ^ 2))
-          (t / (K ^ 2 * O))) := by
-  set q : ℝ := t ^ 2 / (K ^ 4 * F ^ 2) with hq_def
-  set r : ℝ := t / (K ^ 2 * O) with hr_def
-  have hq_nonneg : 0 ≤ q := by
-    rw [hq_def]
-    positivity
-  have hr_nonneg : 0 ≤ r := by
-    rw [hr_def]
-    positivity
-  have hq_scaled :
-      t ^ 2 / ((2 * K) ^ 4 * F ^ 2) = q / 16 := by
-    rw [hq_def]
-    field_simp [hK.ne', hF.ne']
-    ring
-  have hr_scaled :
-      t / ((2 * K) ^ 2 * O) = r / 4 := by
-    rw [hr_def]
-    field_simp [hK.ne', hO.ne']
-    ring
-  have hcoef : 1 / (4 * (C / 16)) = 4 / C := by
-    field_simp [hC.ne']
-    ring
-  have hmin_scaled : min q r / 16 ≤ min (q / 16) (r / 4) := by
-    apply le_min
-    · exact div_le_div_of_nonneg_right (min_le_left q r) (by norm_num)
-    · calc
-        min q r / 16 ≤ r / 16 :=
-          div_le_div_of_nonneg_right (min_le_right q r) (by norm_num)
-        _ ≤ r / 4 := by nlinarith [hr_nonneg]
-  have harg :
-      -(1 / (4 * (C / 16))) *
-        min (t ^ 2 / ((2 * K) ^ 4 * F ^ 2)) (t / ((2 * K) ^ 2 * O)) ≤
-      -(1 / (4 * C)) *
-        min (t ^ 2 / (K ^ 4 * F ^ 2)) (t / (K ^ 2 * O)) := by
-    rw [hq_scaled, hr_scaled, hcoef]
-    change -(4 / C) * min (q / 16) (r / 4) ≤ -(1 / (4 * C)) * min q r
-    have hneg : -(4 / C) ≤ 0 := by
-      have hpos : 0 ≤ 4 / C := by positivity
-      linarith
-    calc
-      -(4 / C) * min (q / 16) (r / 4)
-          ≤ -(4 / C) * (min q r / 16) :=
-            mul_le_mul_of_nonpos_left hmin_scaled hneg
-      _ = -(1 / (4 * C)) * min q r := by
-          field_simp [hC.ne']
-          ring
-  exact mul_le_mul_of_nonneg_left (exp_le_exp.mpr harg) (by norm_num)
-
 /-- Hanson-Wright inequality in the HDP normalization.
 
-The scale `K` is the maximum coordinate ψ₂ scale.  The proof expands this
-definition into the exact MGF bounds required by `hanson_wright_inequality`. -/
+The scale `K` is the maximum coordinate least global-MGF sub-Gaussian scale.
+The proof expands this definition into the exact MGF bounds required by
+`hanson_wright_inequality`. -/
 theorem hanson_wright_inequality_hdp_explicit {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K C t : ℝ} (hK_def : K = maxSubGaussianPsi2Norm X μ) (hK : 0 < K)
@@ -4390,9 +4324,9 @@ theorem hanson_wright_inequality_hdp_explicit {μ : Measure Ω} [IsProbabilityMe
 
 /-- Hanson-Wright inequality in the form of Theorem 6.2.2 of HDP.
 
-For independent mean-zero coordinates and `K = max_i ‖X_i‖_{ψ₂}`, there is an
-absolute positive constant `c` such that the usual Hanson-Wright tail bound
-holds for every `t ≥ 0`. -/
+For independent mean-zero coordinates and `K` equal to their maximum least
+global-MGF sub-Gaussian scale, there is an absolute positive constant `c` such
+that the usual Hanson-Wright tail bound holds for every `t ≥ 0`. -/
 theorem hanson_wright_inequality_hdp {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K : ℝ} (hK_def : K = maxSubGaussianPsi2Norm X μ) (hK : 0 < K)
