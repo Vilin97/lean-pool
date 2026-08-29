@@ -28,6 +28,8 @@ This module introduces no new definitions.
 * `chernoff_bound_subGaussian`: the optimized sub-Gaussian specialization.
 -/
 
+namespace LeanPool
+
 open MeasureTheory Set Real Filter Topology
 open scoped ENNReal NNReal BigOperators
 
@@ -68,3 +70,5 @@ theorem chernoff_bound_subGaussian {μ : Measure Ω} [IsProbabilityMeasure μ]
 
 
 end
+
+end LeanPool

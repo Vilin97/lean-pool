@@ -49,7 +49,11 @@ two-scale Chernoff bound.
   using the maximum coordinate ψ₂ scale.
 -/
 
-open MeasureTheory ProbabilityTheory Real
+namespace LeanPool
+
+open MeasureTheory Real
+open _root_.ProbabilityTheory
+open _root_.LeanPool.ProbabilityTheory
 open scoped BigOperators NNReal
 
 noncomputable section
@@ -4491,3 +4495,7 @@ theorem hanson_wright_inequality_hdp {μ : Measure Ω} [IsProbabilityMeasure μ]
           norm_num
 
 end HansonWright
+
+end
+
+end LeanPool

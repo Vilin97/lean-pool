@@ -43,7 +43,11 @@ entropy integral bound.
 
 -/
 
-open MeasureTheory ProbabilityTheory Real Set Metric Filter
+namespace LeanPool
+
+open MeasureTheory Real Set Metric Filter
+open _root_.ProbabilityTheory
+open _root_.LeanPool.ProbabilityTheory
 open scoped ENNReal BigOperators NNReal Topology
 
 noncomputable section
@@ -926,3 +930,5 @@ lemma subGaussian_process_centered {Ω : Type*} [MeasurableSpace Ω]
   exact IsLocalMax.hasDerivAt_eq_zero h_local_max h_g_deriv
 
 end
+
+end LeanPool

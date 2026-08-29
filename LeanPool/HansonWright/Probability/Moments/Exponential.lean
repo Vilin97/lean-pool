@@ -28,6 +28,8 @@ This module introduces no new definitions.
 * `mean_le_log_mgf`: an expectation bound through a positive exponential moment.
 -/
 
+namespace LeanPool
+
 open MeasureTheory Set Real Filter Topology
 open scoped ENNReal NNReal BigOperators
 
@@ -71,3 +73,5 @@ theorem mean_le_log_mgf {μ : Measure Ω} [IsProbabilityMeasure μ]
 
 
 end
+
+end LeanPool

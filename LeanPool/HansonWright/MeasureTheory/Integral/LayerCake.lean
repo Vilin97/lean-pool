@@ -19,6 +19,8 @@ This module introduces no new definitions.
 * `lintegral_eq_lintegral_tail`: a nonnegative function is the integral of its upper tails.
 -/
 
+namespace LeanPool
+
 open MeasureTheory Set Real Filter Topology
 open scoped ENNReal NNReal BigOperators
 
@@ -35,3 +37,5 @@ theorem lintegral_eq_lintegral_tail {μ : Measure Ω} {X : Ω → ℝ}
 
 
 end
+
+end LeanPool

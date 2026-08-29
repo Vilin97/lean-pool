@@ -26,7 +26,10 @@ This module extends Mathlib's existing moment-generating and tilted-measure defi
 * `ProbabilityTheory.cgf_deriv_two`: second derivative of the cumulant generating function.
 -/
 
+namespace LeanPool
+
 open MeasureTheory Filter Finset Real
+open _root_.ProbabilityTheory
 
 noncomputable section
 
@@ -386,3 +389,7 @@ theorem cgf_deriv_two [IsFiniteMeasure μ] [NeZero μ] (a b : ℝ)
 end GeneratingFunctionDerivatives
 
 end ProbabilityTheory
+
+end
+
+end LeanPool

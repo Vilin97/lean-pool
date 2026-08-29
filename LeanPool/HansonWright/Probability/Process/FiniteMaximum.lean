@@ -30,6 +30,8 @@ This module introduces no new definitions.
 * `expected_max_subGaussian`: expected maximum of a finite sub-Gaussian family.
 -/
 
+namespace LeanPool
+
 open MeasureTheory Set Real Filter Topology
 open scoped ENNReal NNReal BigOperators
 
@@ -210,3 +212,5 @@ theorem expected_max_subGaussian {ι : Type*}
 
 
 end
+
+end LeanPool

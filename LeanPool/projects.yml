@@ -14,12 +14,6 @@ projects:
       - Yuanhe Zhang
       - Jason D. Lee
       - Fanghui Liu
-      - Kazuki Uesugi
-      - Kei Tsukamoto
-      - Kazumi Kasaura
-      - Naoto Onda
-      - Yuma Mizuno
-      - Sho Sonoda
     source:
       title: High-Dimensional Probability (second edition)
       authors:
@@ -32,19 +26,19 @@ projects:
     status: verified
     provenance: human
     main_declarations:
-      - HansonWright.hanson_wright_inequality_hdp
+      - LeanPool.HansonWright.hanson_wright_inequality_hdp
     main_results:
-      - declaration: HansonWright.hanson_wright_inequality_hdp
+      - declaration: LeanPool.HansonWright.hanson_wright_inequality_hdp
         informal: >-
           For independent mean-zero real random variables with finite sub-Gaussian
           psi-2 norms and positive maximum psi-2 norm, the centered quadratic form
           satisfies the Hanson-Wright two-regime exponential tail bound in
           Frobenius and operator norms.
-      - declaration: HansonWright.hasHansonWrightMGF_of_subgaussian
+      - declaration: LeanPool.HansonWright.hasHansonWrightMGF_of_subgaussian
         informal: >-
           Independent sub-Gaussian coordinates satisfy the local quadratic
           cumulant-generating-function estimate needed for Hanson-Wright.
-      - declaration: bernstein_inequality
+      - declaration: LeanPool.bernstein_inequality
         informal: >-
           A finite family of independent, centered, uniformly bounded real random
           variables satisfies the classical scalar Bernstein tail inequality.
@@ -53,7 +47,6 @@ projects:
       - concentration-inequalities
       - high-dimensional-probability
       - random-matrices
-      - sub-gaussian
     msc:
       - "60E15"
       - "60B20"

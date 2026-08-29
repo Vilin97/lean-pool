@@ -29,7 +29,11 @@ real random variables.
 
 -/
 
-open MeasureTheory ProbabilityTheory Real Set Metric Filter
+namespace LeanPool
+
+open MeasureTheory Real Set Metric Filter
+open _root_.ProbabilityTheory
+open _root_.LeanPool.ProbabilityTheory
 open scoped ENNReal BigOperators NNReal Topology
 
 noncomputable section
@@ -590,3 +594,5 @@ theorem bernstein_inequality
       (by simpa using hvar))
 
 end
+
+end LeanPool
