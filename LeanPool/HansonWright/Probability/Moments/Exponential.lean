@@ -5,6 +5,7 @@ Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
 import Mathlib.Analysis.Convex.Integral
 import Mathlib.Probability.Moments.Basic
+import Mathlib.Probability.Moments.IntegrableExpMul
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
@@ -62,6 +63,19 @@ theorem mean_le_log_mgf {μ : Measure Ω} [IsProbabilityMeasure μ]
       _ ≤ log (∫ ω, exp (t * X ω) ∂μ) / t := by apply div_le_div_of_nonneg_right h2' (le_of_lt ht)
       _ = (1/t) * log (∫ ω, exp (t * X ω) ∂μ) := by ring
   exact h3
+
+/-- Integrability of all real exponential moments implies integrability of the variable. -/
+lemma integrable_of_integrable_exp_all {Y : Ω → ℝ} {μ : Measure Ω}
+    (h : ∀ t : ℝ, Integrable (fun ω => exp (t * Y ω)) μ) :
+    Integrable Y μ := by
+  have h_set_eq : ProbabilityTheory.integrableExpSet Y μ = Set.univ := by
+    ext t
+    simp only [ProbabilityTheory.integrableExpSet, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
+    exact h t
+  have h_interior : (0 : ℝ) ∈ interior (ProbabilityTheory.integrableExpSet Y μ) := by
+    rw [h_set_eq, interior_univ]
+    exact Set.mem_univ _
+  exact ProbabilityTheory.integrable_of_mem_interior_integrableExpSet h_interior
 
 
 end

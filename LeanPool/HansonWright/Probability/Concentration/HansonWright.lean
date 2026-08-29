@@ -1011,102 +1011,6 @@ lemma factorial_two_mul_div_factorial_le_succ_pow (m : ℕ) :
   rw [div_le_iff₀ hfac_pos]
   exact_mod_cast hnat
 
-/-- A geometric bound for each integrated square-exponential Taylor term. -/
-lemma integral_exp_sq_series_term_le_of_hasSubgaussianMGF {μ : Measure Ω}
-    {X : Ω → ℝ} {c : ℝ≥0}
-    (h : HasSubgaussianMGF X c μ) {θ : ℝ} (hθ : 0 ≤ θ) (m : ℕ) :
-    ∫ ω, θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ) ∂μ
-      ≤ exp 1 * (θ * ((c : ℝ) + 1) * exp 1) ^ m := by
-  let q : ℝ := ((2 * m + 1 : ℕ) : ℝ) / ((c : ℝ) + 1)
-  let s : ℝ := sqrt q
-  have hc1_pos : 0 < (c : ℝ) + 1 := by positivity
-  have hq_pos : 0 < q := by
-    dsimp [q]
-    positivity
-  have hq_nonneg : 0 ≤ q := hq_pos.le
-  have hs_pos : 0 < s := by
-    dsimp [s]
-    exact sqrt_pos.mpr hq_pos
-  have hs_pow : s ^ (2 * m) = q ^ m := by
-    dsimp [s]
-    rw [pow_mul, sq_sqrt hq_nonneg]
-  have hs_sq : s ^ 2 = q := by
-    dsimp [s]
-    rw [sq_sqrt hq_nonneg]
-  have hmoment := integral_even_power_le_of_hasSubgaussianMGF h hs_pos m
-  have hterm_eq :
-      ∫ ω, θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ) ∂μ =
-        (θ ^ m / (Nat.factorial m : ℝ)) * ∫ ω, X ω ^ (2 * m) ∂μ := by
-    calc ∫ ω, θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ) ∂μ
-        = ∫ ω, (θ ^ m / (Nat.factorial m : ℝ)) * X ω ^ (2 * m) ∂μ := by
-          apply integral_congr_ae
-          filter_upwards with ω
-          field_simp [Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero m)]
-      _ = (θ ^ m / (Nat.factorial m : ℝ)) * ∫ ω, X ω ^ (2 * m) ∂μ := by
-          rw [integral_const_mul]
-  rw [hterm_eq]
-  have hcoef_nonneg : 0 ≤ θ ^ m / (Nat.factorial m : ℝ) := by
-    positivity
-  calc (θ ^ m / (Nat.factorial m : ℝ)) * ∫ ω, X ω ^ (2 * m) ∂μ
-      ≤ (θ ^ m / (Nat.factorial m : ℝ)) *
-          ((Nat.factorial (2 * m) : ℝ) / s ^ (2 * m) *
-            exp ((c : ℝ) * s ^ 2 / 2)) := by
-        exact mul_le_mul_of_nonneg_left hmoment hcoef_nonneg
-    _ = θ ^ m *
-          (((Nat.factorial (2 * m) : ℝ) / (Nat.factorial m : ℝ)) / q ^ m) *
-            exp ((c : ℝ) * q / 2) := by
-        rw [hs_pow, hs_sq]
-        field_simp [Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero m)]
-    _ ≤ θ ^ m * (((c : ℝ) + 1) ^ m) * exp (m + 1 : ℝ) := by
-        have hfac := factorial_two_mul_div_factorial_le_succ_pow m
-        have hratio :
-            ((Nat.factorial (2 * m) : ℝ) / (Nat.factorial m : ℝ)) / q ^ m
-              ≤ ((c : ℝ) + 1) ^ m := by
-          have hnum_pos : 0 < (((2 * m + 1 : ℕ) : ℝ) ^ m) := by positivity
-          have hc1pow_nonneg : 0 ≤ ((c : ℝ) + 1) ^ m := by positivity
-          calc
-            ((Nat.factorial (2 * m) : ℝ) / (Nat.factorial m : ℝ)) / q ^ m
-                = ((Nat.factorial (2 * m) : ℝ) / (Nat.factorial m : ℝ)) *
-                  (((c : ℝ) + 1) ^ m / (((2 * m + 1 : ℕ) : ℝ) ^ m)) := by
-                    dsimp [q]
-                    rw [div_pow]
-                    field_simp [hc1_pos.ne']
-            _ ≤ (((2 * m + 1 : ℕ) : ℝ) ^ m) *
-                  (((c : ℝ) + 1) ^ m / (((2 * m + 1 : ℕ) : ℝ) ^ m)) := by
-                    exact mul_le_mul_of_nonneg_right hfac
-                      (div_nonneg hc1pow_nonneg hnum_pos.le)
-            _ = ((c : ℝ) + 1) ^ m := by
-                    field_simp [ne_of_gt hnum_pos]
-        have hexp_le : exp ((c : ℝ) * q / 2) ≤ exp (m + 1 : ℝ) := by
-          apply exp_le_exp.mpr
-          have hc_le : (c : ℝ) / ((c : ℝ) + 1) ≤ 1 := by
-            rw [div_le_one hc1_pos]
-            linarith
-          have hnon : 0 ≤ ((2 * m + 1 : ℕ) : ℝ) / 2 := by positivity
-          calc
-            (c : ℝ) * q / 2 =
-                ((c : ℝ) / ((c : ℝ) + 1)) * (((2 * m + 1 : ℕ) : ℝ) / 2) := by
-                  dsimp [q]
-                  field_simp [hc1_pos.ne']
-            _ ≤ 1 * (((2 * m + 1 : ℕ) : ℝ) / 2) :=
-                mul_le_mul_of_nonneg_right hc_le hnon
-            _ ≤ (m + 1 : ℝ) := by
-                norm_num
-                nlinarith
-        calc
-          θ ^ m * (((Nat.factorial (2 * m) : ℝ) / (Nat.factorial m : ℝ)) / q ^ m) *
-              exp ((c : ℝ) * q / 2)
-              ≤ θ ^ m * ((c : ℝ) + 1) ^ m * exp ((c : ℝ) * q / 2) := by
-                gcongr
-          _ ≤ θ ^ m * ((c : ℝ) + 1) ^ m * exp (m + 1 : ℝ) := by
-                gcongr
-    _ = exp 1 * (θ * ((c : ℝ) + 1) * exp 1) ^ m := by
-        rw [show (m + 1 : ℝ) = (m : ℝ) + 1 by norm_num, exp_add]
-        rw [show exp (m : ℝ) = exp 1 ^ m by
-          rw [show (m : ℝ) = (m : ℝ) * 1 by ring, Real.exp_nat_mul]]
-        rw [mul_pow, mul_pow]
-        ring
-
 /-- A geometric Taylor-term bound using any positive real proxy above the sub-Gaussian parameter. -/
 lemma integral_exp_sq_series_term_le_of_hasSubgaussianMGF_of_le {μ : Measure Ω}
     {X : Ω → ℝ} {c : ℝ≥0}
@@ -1203,28 +1107,14 @@ lemma integral_exp_sq_series_term_le_of_hasSubgaussianMGF_of_le {μ : Measure Ω
         rw [mul_pow, mul_pow]
         ring
 
-/-- The square-exponential Taylor integrals are summable below the explicit radius. -/
-lemma summable_integral_exp_sq_series_of_hasSubgaussianMGF {μ : Measure Ω}
+/-- A geometric bound for each integrated square-exponential Taylor term. -/
+lemma integral_exp_sq_series_term_le_of_hasSubgaussianMGF {μ : Measure Ω}
     {X : Ω → ℝ} {c : ℝ≥0}
-    (h : HasSubgaussianMGF X c μ) {θ : ℝ} (hθ : 0 ≤ θ)
-    (hθ_small : θ * ((c : ℝ) + 1) * exp 1 < 1) :
-    Summable fun m : ℕ =>
-      ∫ ω, θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ) ∂μ := by
-  set r : ℝ := θ * ((c : ℝ) + 1) * exp 1 with hr_def
-  have hr_nonneg : 0 ≤ r := by
-    rw [hr_def]
-    positivity
-  have hgeom : Summable fun m : ℕ => exp 1 * r ^ m :=
-    (summable_geometric_of_lt_one hr_nonneg (by simpa [r, hr_def] using hθ_small)).mul_left
-      (exp 1)
-  refine Summable.of_nonneg_of_le ?_ ?_ hgeom
-  · intro m
-    exact integral_nonneg_of_ae (ae_of_all _ fun ω => by
-      exact div_nonneg
-        (mul_nonneg (pow_nonneg hθ m) (Even.pow_nonneg (even_two.mul_right m) (X ω)))
-        (Nat.cast_nonneg (Nat.factorial m)))
-  · intro m
-    simpa [r, hr_def] using integral_exp_sq_series_term_le_of_hasSubgaussianMGF h hθ m
+    (h : HasSubgaussianMGF X c μ) {θ : ℝ} (hθ : 0 ≤ θ) (m : ℕ) :
+    ∫ ω, θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ) ∂μ
+      ≤ exp 1 * (θ * ((c : ℝ) + 1) * exp 1) ^ m := by
+  exact integral_exp_sq_series_term_le_of_hasSubgaussianMGF_of_le
+    (C0 := (c : ℝ) + 1) h hθ (by positivity) (by linarith) m
 
 /-- Summability of square-exponential Taylor integrals using a positive proxy `C0 ≥ c`. -/
 lemma summable_integral_exp_sq_series_of_hasSubgaussianMGF_of_le {μ : Measure Ω}
@@ -1250,6 +1140,16 @@ lemma summable_integral_exp_sq_series_of_hasSubgaussianMGF_of_le {μ : Measure �
   · intro m
     simpa [r, hr_def] using
       integral_exp_sq_series_term_le_of_hasSubgaussianMGF_of_le h hθ hC0 hc_le m
+
+/-- The square-exponential Taylor integrals are summable below the explicit radius. -/
+lemma summable_integral_exp_sq_series_of_hasSubgaussianMGF {μ : Measure Ω}
+    {X : Ω → ℝ} {c : ℝ≥0}
+    (h : HasSubgaussianMGF X c μ) {θ : ℝ} (hθ : 0 ≤ θ)
+    (hθ_small : θ * ((c : ℝ) + 1) * exp 1 < 1) :
+    Summable fun m : ℕ =>
+      ∫ ω, θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ) ∂μ := by
+  exact summable_integral_exp_sq_series_of_hasSubgaussianMGF_of_le
+    (C0 := (c : ℝ) + 1) h hθ (by positivity) (by linarith) hθ_small
 
 /-- Integral form of the square-exponential Taylor expansion. -/
 lemma integral_exp_mul_sq_eq_tsum_integrals {μ : Measure Ω}

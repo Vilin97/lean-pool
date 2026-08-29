@@ -348,9 +348,13 @@ theorem subGaussian_tail_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
     {X : A → Ω → ℝ} {σ : ℝ} (hσ : 0 < σ)
     (hX : IsSubGaussianProcess μ X σ)
     (s t : A) (u : ℝ) (hu : 0 < u) (hd : 0 < dist s t)
-    (h_int : ∀ l : ℝ, Integrable (fun ω => exp (l * (X s ω - X t ω))) μ)
-    (h_int' : ∀ l : ℝ, Integrable (fun ω => exp (l * (X t ω - X s ω))) μ) :
+    (h_int : ∀ l : ℝ, Integrable (fun ω => exp (l * (X s ω - X t ω))) μ) :
     (μ {ω | |X s ω - X t ω| ≥ u}).toReal ≤ 2 * exp (-u^2 / (2 * σ^2 * (dist s t)^2)) := by
+  have h_int' : ∀ l : ℝ, Integrable (fun ω => exp (l * (X t ω - X s ω))) μ := fun l => by
+    convert h_int (-l) using 2
+    simp only [show ∀ ω, l * (X t ω - X s ω) = -l * (X s ω - X t ω) by
+      intro ω
+      ring]
   -- Union bound over both tails: {|Y| ≥ u} ⊆ {Y ≥ u} ∪ {-Y ≥ u}
   have h_subset : {ω | |X s ω - X t ω| ≥ u} ⊆
       {ω | X s ω - X t ω ≥ u} ∪ {ω | X t ω - X s ω ≥ u} := by
@@ -579,10 +583,10 @@ theorem subGaussian_first_moment_bound {μ : Measure Ω} [IsProbabilityMeasure �
     {X : A → Ω → ℝ} {σ : ℝ} (hσ : 0 < σ)
     (hX : IsSubGaussianProcess μ X σ)
     (s t : A)
-    (h_int : Integrable (fun ω => X s ω - X t ω) μ)
     (h_int_exp : ∀ l : ℝ, Integrable (fun ω => exp (l * (X s ω - X t ω))) μ) :
     ∫ ω, |X s ω - X t ω| ∂μ ≤ Real.sqrt (2 * Real.pi) * σ * dist s t := by
   set Y : Ω → ℝ := fun ω => X s ω - X t ω
+  have h_int : Integrable Y μ := integrable_of_integrable_exp_all h_int_exp
   by_cases hd : dist s t = 0
   · simp only [hd, mul_zero]
     have hY_mgf_le_one : ∀ l : ℝ, μ[fun ω => exp (l * Y ω)] ≤ 1 := fun l => by
@@ -599,10 +603,7 @@ theorem subGaussian_first_moment_bound {μ : Measure Ω} [IsProbabilityMeasure �
           have h_int_abs : Integrable (fun ω => |Y ω|) μ := h_int.abs
           have h_tail : ∀ r : ℝ, 0 < r →
               (μ {ω | |Y ω| ≥ r}).toReal ≤ 2 * exp (-r^2 / (2 * τ^2)) := fun r hr => by
-            have h_int' : ∀ l : ℝ, Integrable (fun ω => exp (l * (X t ω - X s ω))) μ := fun l => by
-              convert h_int_exp (-l) using 2
-              simp only [show ∀ ω, l * (X t ω - X s ω) = -l * (X s ω - X t ω) by intro ω; ring]
-            have h := subGaussian_tail_bound hσ hX s t r hr hd_pos h_int_exp h_int'
+            have h := subGaussian_tail_bound hσ hX s t r hr hd_pos h_int_exp
             convert h using 3
             field_simp; ring
           have h_abs_nonneg : 0 ≤ᵐ[μ] (fun ω => |Y ω|) := ae_of_all μ (fun _ => abs_nonneg _)
@@ -690,8 +691,6 @@ theorem subGaussian_finite_max_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
     (hX : IsSubGaussianProcess μ X σ)
     (T : Finset A) (hT : T.Nonempty) (hT_card : 2 ≤ T.card)
     (t₀ : A) (ht₀ : t₀ ∈ T) (hcenter : ∀ ω, X t₀ ω = 0)
-    -- Additional hypotheses for the MGF method
-    (hX_int : ∀ t ∈ T, Integrable (X t) μ)
     (hX_int_exp : ∀ t ∈ T, ∀ l : ℝ, Integrable (fun ω => exp (l * X t ω)) μ)
     -- Non-degeneracy: diam > 0 (otherwise the bound is trivial but requires extra work)
     (hdiam_pos : 0 < Metric.diam (T : Set A)) :
@@ -727,7 +726,6 @@ theorem subGaussian_finite_max_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
       _ ≤ log (exp (l^2 * σ'^2 / 2)) := log_le_log h_mgf_pos h_mgf_bound
       _ = l^2 * σ'^2 / 2 := log_exp _
   have h_result := expected_max_subGaussian (ι := A) (s := T) hσ' hT hT_card
-    (fun t ht => hX_int t ht)
     (fun t ht l => h_cgf_bound t ht l)
     (fun t ht l => hX_int_exp t ht l)
   calc ∫ ω, ⨆ t ∈ T, X t ω ∂μ
@@ -740,7 +738,6 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
     (hX : IsSubGaussianProcess μ X σ)
     (T : Finset A) (hT : 2 ≤ T.card)
     (D : ℝ) (hD : 0 < D) (hdiam : Metric.diam (T : Set A) ≤ D)
-    (hX_int : ∀ t s : A, Integrable (fun ω => X t ω - X s ω) μ)
     (hX_int_exp : ∀ t s : A, ∀ l : ℝ, Integrable (fun ω => exp (l * (X t ω - X s ω))) μ) :
     ∃ C : ℝ, C > 0 ∧ C ≤ sqrt 2 ∧ ∀ t₀ ∈ T,
       μ[fun ω => ⨆ t ∈ T, (X t ω - X t₀ ω)] ≤ C * σ * D * sqrt (log T.card) := by
@@ -758,7 +755,6 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
             congr 1; ext ω; simp [hY_def, h_eq]
         _ ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := hX s t l
     have hY_center : ∀ ω, Y t₀ ω = 0 := fun ω => by simp [hY_def]
-    have hY_int : ∀ t ∈ T, Integrable (Y t) μ := fun t _ => hX_int t t₀
     have hY_int_exp : ∀ t ∈ T, ∀ l : ℝ, Integrable (fun ω => exp (l * Y t ω)) μ := by
       intro t _ l
       convert hX_int_exp t t₀ l using 1
@@ -804,7 +800,7 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
     · have hdiam_pos : 0 < Metric.diam (T : Set A) :=
         lt_of_le_of_ne Metric.diam_nonneg (fun h => hdiam_zero h.symm)
       have h_bound := subGaussian_finite_max_bound hσ hY_sg T hT_ne hT t₀ ht₀
-        hY_center hY_int hY_int_exp hdiam_pos
+        hY_center hY_int_exp hdiam_pos
       calc ∫ ω, ⨆ t ∈ T, (X t ω - X t₀ ω) ∂μ
         _ = ∫ ω, ⨆ t ∈ T, Y t ω ∂μ := by simp only [hY_def]
         _ ≤ σ * Metric.diam (T : Set A) * sqrt (2 * log T.card) := h_bound
@@ -821,24 +817,6 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
 These lemmas help derive integrability and centeredness from exponential integrability,
 allowing us to eliminate redundant hypotheses in the Dudley theorem.
 -/
-
-/-- If `exp(l * Y)` is integrable for all `l : ℝ`, then `Y` is integrable.
-
-This follows from the fact that when `integrableExpSet Y μ = univ`, we have
-`0 ∈ interior(integrableExpSet Y μ)`, and Mathlib provides that `Y^p` is
-integrable for any `p ≥ 0` in this case. -/
-lemma integrable_of_integrable_exp_all {Ω : Type*} [MeasurableSpace Ω]
-    {Y : Ω → ℝ} {μ : Measure Ω}
-    (h : ∀ l : ℝ, Integrable (fun ω => exp (l * Y ω)) μ) :
-    Integrable Y μ := by
-  have h_set_eq : integrableExpSet Y μ = Set.univ := by
-    ext t
-    simp only [integrableExpSet, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
-    exact h t
-  have h_interior : (0 : ℝ) ∈ interior (integrableExpSet Y μ) := by
-    rw [h_set_eq, interior_univ]
-    exact Set.mem_univ _
-  exact integrable_of_mem_interior_integrableExpSet h_interior
 
 /-- If a sub-Gaussian process satisfies the MGF bound and has exponential integrability,
 then the increment `X s - X t` has zero mean.

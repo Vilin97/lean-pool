@@ -93,10 +93,11 @@ theorem expected_max_subGaussian {ι : Type*}
     {μ : Measure Ω} [IsProbabilityMeasure μ]
     {X : ι → Ω → ℝ} {σ : ℝ} (hσ : 0 < σ)
     {s : Finset ι} (hs : s.Nonempty) (hs_card : 2 ≤ s.card)
-    (hX_int_basic : ∀ i ∈ s, Integrable (X i) μ)
     (hX_sgb : ∀ i ∈ s, ∀ t, ProbabilityTheory.cgf (X i) μ t ≤ t ^ 2 * σ ^ 2 / 2)
     (hX_int_exp : ∀ i ∈ s, ∀ t, Integrable (fun ω => exp (t * X i ω)) μ) :
     ∫ ω, s.sup' hs (fun i => X i ω) ∂μ ≤ σ * sqrt (2 * log s.card) := by
+  have hX_int_basic : ∀ i ∈ s, Integrable (X i) μ := fun i hi =>
+    integrable_of_integrable_exp_all (hX_int_exp i hi)
   -- Setup: n = |s|, t_opt = √(2 log n) / σ
   set n := s.card with hn_def
   have hn_pos : 0 < n := Nat.lt_of_lt_of_le (by norm_num : 0 < 2) hs_card
