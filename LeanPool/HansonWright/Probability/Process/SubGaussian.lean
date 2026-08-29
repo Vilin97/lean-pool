@@ -23,7 +23,6 @@ entropy integral bound.
   the HDP-style Hanson-Wright wrapper.
 * `IsSubGaussianProcess`: A stochastic process indexed by a pseudo-metric space
   satisfies the sub-Gaussian MGF bound for increments.
-* `IsSubGaussianProcess'`: Equivalent formulation using `mgf` directly.
 
 ## Main results
 
@@ -281,16 +280,6 @@ lemma integrable_ciSup_abs_of_fintype_subGaussian {Ω : Type*} [MeasurableSpace 
 def IsSubGaussianProcess (μ : Measure Ω) (X : A → Ω → ℝ) (σ : ℝ) : Prop :=
   ∀ s t : A, ∀ l : ℝ, μ[fun ω => exp (l * (X s ω - X t ω))] ≤
     exp (l^2 * σ^2 * (dist s t)^2 / 2)
-
-/-- Alternative formulation: X is sub-Gaussian if X_s - X_t is sub-Gaussian with
-    variance proxy σ² d(s,t)². -/
-def IsSubGaussianProcess' (μ : Measure Ω) (X : A → Ω → ℝ) (σ : ℝ) : Prop :=
-  ∀ s t : A, ∀ l : ℝ, mgf (fun ω => X s ω - X t ω) μ l ≤
-    exp (l^2 * σ^2 * (dist s t)^2 / 2)
-
-lemma IsSubGaussianProcess_iff_IsSubGaussianProcess' {μ : Measure Ω} {X : A → Ω → ℝ} {σ : ℝ} :
-    IsSubGaussianProcess μ X σ ↔ IsSubGaussianProcess' μ X σ :=
-  ⟨fun h s t l => h s t l, fun h s t l => h s t l⟩
 
 /-!
 ## Basic properties of sub-Gaussian processes

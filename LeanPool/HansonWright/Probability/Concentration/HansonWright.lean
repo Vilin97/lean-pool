@@ -2511,24 +2511,6 @@ lemma iIndepFun_centered_sq {μ : Measure Ω} {n : ℕ} {X : Fin n → Ω → �
       (fun i x => x ^ 2 - ∫ ω, X i ω ^ 2 ∂μ)
       (fun _ => by fun_prop)
 
-lemma iIndepFun.integrable_exp_mul_sum₀ {ι : Type*} {μ : Measure Ω} [IsFiniteMeasure μ]
-    {X : ι → Ω → ℝ}
-    (h_indep : iIndepFun X μ) (h_meas : ∀ i, AEMeasurable (X i) μ)
-    {s : Finset ι} {t : ℝ}
-    (h_int : ∀ i ∈ s, Integrable (fun ω => exp (t * X i ω)) μ) :
-    Integrable (fun ω => exp (t * (∑ i ∈ s, X i) ω)) μ := by
-  classical
-  induction s using Finset.induction_on with
-  | empty =>
-      simp
-  | insert i s hi_notin_s h_rec =>
-      have h_int_s : ∀ j ∈ s, Integrable (fun ω : Ω => exp (t * X j ω)) μ :=
-        fun j hj => h_int j (Finset.mem_insert_of_mem hj)
-      specialize h_rec h_int_s
-      rw [Finset.sum_insert hi_notin_s]
-      refine IndepFun.integrable_exp_mul_add ?_ (h_int i (Finset.mem_insert_self _ _)) h_rec
-      exact (h_indep.indepFun_finsetSum_of_notMem₀ h_meas hi_notin_s).symm
-
 lemma diagonalCenteredQuadraticForm_cgf_le {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K C θ : ℝ} (hK : 0 < K) (hC : 0 < C)
@@ -2732,7 +2714,7 @@ lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabil
     ring_nf
   have hsum_int :
       Integrable (fun ω => exp (θ * (∑ i, Z i) ω)) μ :=
-    iIndepFun.integrable_exp_mul_sum₀ hZ_indep hZ_meas (s := Finset.univ) hZ_int
+    iIndepFun.integrable_exp_mul_finsetSum hZ_indep hZ_meas (s := Finset.univ) hZ_int
   convert hsum_int using 1
   ext ω
   simp [diagonalCenteredQuadraticForm, Z, Y]
@@ -4302,14 +4284,12 @@ theorem hanson_wright_inequality_hdp_explicit {μ : Measure Ω} [IsProbabilityMe
     (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C)
     (hF : 0 < frobeniusNorm A) (hOp : 0 < operatorNorm A)
     (h_indep : iIndepFun X μ)
-    (hX_center : ∀ i, ∫ ω, X i ω ∂μ = 0)
     (hX_finite : ∀ i, HasFiniteSubGaussianPsi2Norm (X i) μ)
     (ht : 0 ≤ t) :
     (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤
       2 * exp (-(1 / (4 * C)) *
         min (t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2))
           (t / (K ^ 2 * operatorNorm A))) := by
-  have hX_center_used : ∀ i, ∫ ω, X i ω ∂μ = 0 := hX_center
   have hX_subG_K :
       ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ := by
     intro i
@@ -4322,20 +4302,22 @@ theorem hanson_wright_inequality_hdp_explicit {μ : Measure Ω} [IsProbabilityMe
       (t := t) hK hC hC_domain hC_diag_quad hC_offdiag_domain
       hC_offdiag_quad hF hOp h_indep hX_subG_K ht
 
-/-- Hanson-Wright inequality in the form of Theorem 6.2.2 of HDP.
+/-- Hanson-Wright inequality in the nondegenerate form of Theorem 6.2.2 of HDP.
 
-For independent mean-zero coordinates and `K` equal to their maximum least
-global-MGF sub-Gaussian scale, there is an absolute positive constant `c` such
-that the usual Hanson-Wright tail bound holds for every `t ≥ 0`. -/
+For independent coordinates and `K` equal to their positive maximum least
+global-MGF sub-Gaussian scale, this gives the usual two-regime tail bound with
+the fixed universal coefficient `1 / (256 * exp 1 ^ 2)`. The MGF hypothesis
+implied by finiteness of the coordinate scales also forces the coordinates to
+have mean zero. -/
 theorem hanson_wright_inequality_hdp {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K : ℝ} (hK_def : K = maxSubGaussianPsi2Norm X μ) (hK : 0 < K)
+    (hF : 0 < frobeniusNorm A) (hOp : 0 < operatorNorm A)
     (h_indep : iIndepFun X μ)
-    (hX_center : ∀ i, ∫ ω, X i ω ∂μ = 0)
     (hX_finite : ∀ i, HasFiniteSubGaussianPsi2Norm (X i) μ) :
-    ∃ c : ℝ, 0 < c ∧ ∀ t : ℝ, 0 ≤ t →
+    ∀ t : ℝ, 0 ≤ t →
       (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤
-        2 * exp (-c *
+        2 * exp (-(1 / (256 * exp 1 ^ 2)) *
           min (t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2))
             (t / (K ^ 2 * operatorNorm A))) := by
   let C0 : ℝ := 64 * exp 1 ^ 2
@@ -4373,60 +4355,17 @@ theorem hanson_wright_inequality_hdp {μ : Measure Ω} [IsProbabilityMeasure μ]
   have hC0_offdiag_quad : 64 * exp 1 ^ 2 ≤ C0 := by
     dsimp [C0]
     rfl
-  refine ⟨1 / (4 * C0), by positivity, ?_⟩
   intro t ht
-  by_cases hF : 0 < frobeniusNorm A
-  · by_cases hOp : 0 < operatorNorm A
-    · simpa [one_div] using
-        hanson_wright_inequality_hdp_explicit (μ := μ) (A := A) (X := X)
-          (K := K) (C := C0) (t := t) hK_def hK hC0_pos hC0_domain
-          hC0_diag_quad hC0_offdiag_domain hC0_offdiag_quad hF hOp
-          h_indep hX_center hX_finite ht
-    · have hOp_nonneg : 0 ≤ operatorNorm A := by
-        unfold operatorNorm
-        exact norm_nonneg _
-      have hOp_zero : operatorNorm A = 0 := le_antisymm (le_of_not_gt hOp) hOp_nonneg
-      have hfirst_nonneg :
-          0 ≤ t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2) := by positivity
-      have hsecond_zero : t / (K ^ 2 * operatorNorm A) = 0 := by
-        rw [hOp_zero, mul_zero, div_zero]
-      have hmin :
-          min (t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2))
-              (t / (K ^ 2 * operatorNorm A)) = 0 := by
-        rw [hsecond_zero, min_eq_right hfirst_nonneg]
-      calc
-        (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤ (1 : ℝ) :=
-          ENNReal.toReal_mono ENNReal.one_ne_top prob_le_one
-        _ ≤ 2 * exp (-(1 / (4 * C0)) *
-            min (t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2))
-              (t / (K ^ 2 * operatorNorm A))) := by
-            rw [hmin]
-            norm_num
-  · have hF_nonneg : 0 ≤ frobeniusNorm A := by
-      unfold frobeniusNorm
-      exact sqrt_nonneg _
-    have hF_zero : frobeniusNorm A = 0 := le_antisymm (le_of_not_gt hF) hF_nonneg
-    have hOp_nonneg : 0 ≤ operatorNorm A := by
-      unfold operatorNorm
-      exact norm_nonneg _
-    have hfirst_zero :
-        t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2) = 0 := by
-      rw [hF_zero]
-      simp
-    have hsecond_nonneg : 0 ≤ t / (K ^ 2 * operatorNorm A) :=
-      div_nonneg ht (mul_nonneg (sq_nonneg K) hOp_nonneg)
-    have hmin :
-        min (t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2))
-            (t / (K ^ 2 * operatorNorm A)) = 0 := by
-      rw [hfirst_zero, min_eq_left hsecond_nonneg]
-    calc
-      (μ {ω | t ≤ |centeredQuadraticForm μ A X ω|}).toReal ≤ (1 : ℝ) :=
-        ENNReal.toReal_mono ENNReal.one_ne_top prob_le_one
-      _ ≤ 2 * exp (-(1 / (4 * C0)) *
-          min (t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2))
-            (t / (K ^ 2 * operatorNorm A))) := by
-          rw [hmin]
-          norm_num
+  have htail :=
+    hanson_wright_inequality_hdp_explicit (μ := μ) (A := A) (X := X)
+      (K := K) (C := C0) (t := t) hK_def hK hC0_pos hC0_domain
+      hC0_diag_quad hC0_offdiag_domain hC0_offdiag_quad hF hOp
+      h_indep hX_finite ht
+  have hcoefficient : 1 / (4 * C0) = 1 / (256 * exp 1 ^ 2) := by
+    dsimp [C0]
+    ring
+  rw [hcoefficient] at htail
+  exact htail
 
 end HansonWright
 

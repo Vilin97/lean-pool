@@ -4,9 +4,10 @@ projects:
     summary: >-
       Proves the finite-dimensional Hanson-Wright concentration inequality for
       quadratic forms of independent mean-zero sub-Gaussian real random variables
-      whose maximum least global-MGF sub-Gaussian scale is positive. This is the
-      MGF normalization of the usual result; no formal identification with an
-      Orlicz psi-2 norm is claimed.
+      whose maximum least global-MGF sub-Gaussian scale is positive, for matrices
+      with positive Frobenius and operator norms. The bound uses the fixed universal
+      coefficient 1 / (256 * exp(1)^2). This is the MGF normalization of the usual
+      result; no formal identification with an Orlicz psi-2 norm is claimed.
       The development derives the required moment-generating-function certificate
       instead of assuming it, and contributes reusable scalar Bernstein, Chernoff,
       cumulant, sub-Gaussian-process, and finite-maximum infrastructure.
@@ -34,11 +35,14 @@ projects:
         informal: >-
           For independent mean-zero real random variables with finite least
           global-MGF sub-Gaussian scales and positive maximum coordinate MGF scale,
-          the centered quadratic form satisfies the Hanson-Wright two-regime
-          exponential tail bound in Frobenius and operator norms.
+          and a matrix with positive Frobenius and operator norms, the centered
+          quadratic form satisfies the Hanson-Wright two-regime exponential tail
+          bound with the fixed universal coefficient 1 / (256 * exp(1)^2).
       - declaration: LeanPool.HansonWright.hasHansonWrightMGF_of_subgaussian
         informal: >-
-          Independent sub-Gaussian coordinates satisfy the local quadratic
+          Given positive K and operator norm and a positive C satisfying four
+          explicit numerical lower bounds, independent coordinates with global-MGF
+          sub-Gaussian parameter K^2 satisfy the local quadratic
           cumulant-generating-function estimate needed for Hanson-Wright.
       - declaration: LeanPool.bernstein_inequality
         informal: >-

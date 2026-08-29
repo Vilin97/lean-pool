@@ -299,7 +299,7 @@ private lemma scalarBernstein_integrable_exp_mul_of_abs_le
     exact (abs_le.mp hω)
   exact integrable_expt_bound hX hIcc
 
-private theorem scalarBernstein_integrable_exp_mul_sum
+lemma iIndepFun.integrable_exp_mul_finsetSum
     {ι : Type*} {μ : Measure Ω} [IsFiniteMeasure μ]
     {X : ι → Ω → ℝ} (h_indep : iIndepFun X μ)
     (h_meas : ∀ i, AEMeasurable (X i) μ)
@@ -565,7 +565,7 @@ theorem bernstein_inequality_finset
         exact scalarBernstein_integrable_exp_mul_of_abs_le
           (hX i) (hbound i hi)
       simpa [S] using
-        (scalarBernstein_integrable_exp_mul_sum h_indep hX (s := s) hint)
+        (iIndepFun.integrable_exp_mul_finsetSum h_indep hX (s := s) hint)
   simpa [S] using htail
 
 /--
