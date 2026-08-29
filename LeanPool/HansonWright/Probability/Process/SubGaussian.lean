@@ -690,7 +690,6 @@ theorem subGaussian_finite_max_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
     (hX : IsSubGaussianProcess μ X σ)
     (T : Finset A) (hT : T.Nonempty) (hT_card : 2 ≤ T.card)
     (t₀ : A) (ht₀ : t₀ ∈ T) (hcenter : ∀ ω, X t₀ ω = 0)
-    (hX_meas : ∀ t, Measurable (X t))
     -- Additional hypotheses for the MGF method
     (hX_int : ∀ t ∈ T, Integrable (X t) μ)
     (hX_int_exp : ∀ t ∈ T, ∀ l : ℝ, Integrable (fun ω => exp (l * X t ω)) μ)
@@ -728,7 +727,6 @@ theorem subGaussian_finite_max_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
       _ ≤ log (exp (l^2 * σ'^2 / 2)) := log_le_log h_mgf_pos h_mgf_bound
       _ = l^2 * σ'^2 / 2 := log_exp _
   have h_result := expected_max_subGaussian (ι := A) (s := T) hσ' hT hT_card
-    (fun t ht => hX_meas t)
     (fun t ht => hX_int t ht)
     (fun t ht l => h_cgf_bound t ht l)
     (fun t ht l => hX_int_exp t ht l)
@@ -742,7 +740,6 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
     (hX : IsSubGaussianProcess μ X σ)
     (T : Finset A) (hT : 2 ≤ T.card)
     (D : ℝ) (hD : 0 < D) (hdiam : Metric.diam (T : Set A) ≤ D)
-    (hX_meas : ∀ t, Measurable (X t))
     (hX_int : ∀ t s : A, Integrable (fun ω => X t ω - X s ω) μ)
     (hX_int_exp : ∀ t s : A, ∀ l : ℝ, Integrable (fun ω => exp (l * (X t ω - X s ω))) μ) :
     ∃ C : ℝ, C > 0 ∧ C ≤ sqrt 2 ∧ ∀ t₀ ∈ T,
@@ -761,7 +758,6 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
             congr 1; ext ω; simp [hY_def, h_eq]
         _ ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := hX s t l
     have hY_center : ∀ ω, Y t₀ ω = 0 := fun ω => by simp [hY_def]
-    have hY_meas : ∀ t, Measurable (Y t) := fun t => (hX_meas t).sub (hX_meas t₀)
     have hY_int : ∀ t ∈ T, Integrable (Y t) μ := fun t _ => hX_int t t₀
     have hY_int_exp : ∀ t ∈ T, ∀ l : ℝ, Integrable (fun ω => exp (l * Y t ω)) μ := by
       intro t _ l
@@ -808,7 +804,7 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
     · have hdiam_pos : 0 < Metric.diam (T : Set A) :=
         lt_of_le_of_ne Metric.diam_nonneg (fun h => hdiam_zero h.symm)
       have h_bound := subGaussian_finite_max_bound hσ hY_sg T hT_ne hT t₀ ht₀
-        hY_center hY_meas hY_int hY_int_exp hdiam_pos
+        hY_center hY_int hY_int_exp hdiam_pos
       calc ∫ ω, ⨆ t ∈ T, (X t ω - X t₀ ω) ∂μ
         _ = ∫ ω, ⨆ t ∈ T, Y t ω ∂μ := by simp only [hY_def]
         _ ≤ σ * Metric.diam (T : Set A) * sqrt (2 * log T.card) := h_bound

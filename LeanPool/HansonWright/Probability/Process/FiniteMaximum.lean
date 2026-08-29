@@ -93,7 +93,6 @@ theorem expected_max_subGaussian {ι : Type*}
     {μ : Measure Ω} [IsProbabilityMeasure μ]
     {X : ι → Ω → ℝ} {σ : ℝ} (hσ : 0 < σ)
     {s : Finset ι} (hs : s.Nonempty) (hs_card : 2 ≤ s.card)
-    (hX_meas : ∀ i ∈ s, Measurable (X i))
     (hX_int_basic : ∀ i ∈ s, Integrable (X i) μ)
     (hX_sgb : ∀ i ∈ s, ∀ t, ProbabilityTheory.cgf (X i) μ t ≤ t ^ 2 * σ ^ 2 / 2)
     (hX_int_exp : ∀ i ∈ s, ∀ t, Integrable (fun ω => exp (t * X i ω)) μ) :
@@ -129,7 +128,11 @@ theorem expected_max_subGaussian {ι : Type*}
   -- Step 1: Integrability of sup'
   have hsup_int : Integrable (fun ω => s.sup' hs (fun i => X i ω)) μ := by
     refine Integrable.mono (integrable_finsetSum s (fun i hi => (hX_int_basic i hi).abs)) ?_ ?_
-    · convert (Finset.measurable_sup' hs (fun i hi => hX_meas i hi)).aestronglyMeasurable using 1
+    · rw [aestronglyMeasurable_iff_aemeasurable]
+      convert Finset.sup'_induction (p := fun f : Ω → ℝ => AEMeasurable f μ)
+        hs _ (fun _ hf _ hg => hf.sup hg)
+        (fun i hi => aestronglyMeasurable_iff_aemeasurable.mp
+          (hX_int_basic i hi).aestronglyMeasurable) using 1
       funext ω
       simp only [Finset.sup'_apply]
     · refine ae_of_all μ (fun ω => ?_)
@@ -166,12 +169,9 @@ theorem expected_max_subGaussian {ι : Type*}
   -- Step 4: Integrability of exp(t·sup')
   have hsup_exp_int : Integrable (fun ω => exp (t_opt * s.sup' hs (fun i => X i ω))) μ := by
     apply Integrable.mono' hsum_int
-    · apply Measurable.aestronglyMeasurable
-      apply Measurable.exp
-      apply Measurable.const_mul
-      convert Finset.measurable_sup' hs (fun i hi => hX_meas i hi) using 1
-      funext ω
-      simp only [Finset.sup'_apply]
+    · rw [aestronglyMeasurable_iff_aemeasurable]
+      exact (aestronglyMeasurable_iff_aemeasurable.mp
+        (hsup_int.const_mul t_opt).aestronglyMeasurable).exp
     · refine ae_of_all μ (fun ω => ?_)
       simp only [Real.norm_eq_abs]
       rw [abs_of_pos (exp_pos _)]

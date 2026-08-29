@@ -108,15 +108,14 @@ theorem tilt_first_deriv [IsFiniteMeasure μ] (t a b : ℝ)
     {X : Ω → ℝ} (hX : AEMeasurable X μ) (h : ∀ᵐ ω ∂μ, X ω ∈ Set.Icc a b) :
     let g := fun t ↦ mgf X μ t
     let g' := fun t ↦ μ[fun ω ↦ rexp (t * X ω) * X ω]
-    Integrable (fun ω ↦ rexp (t * X ω) * X ω) μ → HasDerivAt g (g' t) t := by
+    HasDerivAt g (g' t) t := by
   set c := max ‖a‖ ‖b‖
   set e := (fun t ↦ fun ω ↦ rexp (t * X ω))
   set e' := (fun t ↦ fun ω ↦ rexp (t * X ω) * X ω)
   suffices MeasureTheory.Integrable (e' t) μ ∧
     HasDerivAt (fun t ↦ μ[e t]) (μ[e' t]) t from by
     dsimp [mgf]
-    intro hint
-    apply this.2
+    exact this.2
   apply hasDerivAt_integral_of_dominated_loc_of_deriv_le
   · change Metric.ball t (|t| + 1) ∈ nhds t
     refine Metric.ball_mem_nhds t ?_
@@ -170,14 +169,13 @@ theorem tilt_second_deriv [IsFiniteMeasure μ] (t a b : ℝ)
     {X : Ω → ℝ} (hX : AEMeasurable X μ) (h : ∀ᵐ ω ∂μ, X ω ∈ Set.Icc a b) :
     let g := fun t ↦ μ[fun ω ↦ rexp (t * X ω) * X ω]
     let g' := fun t ↦ μ[fun ω ↦ rexp (t * X ω) * X ω ^ 2]
-    Integrable (fun ω ↦ rexp (t * X ω) * (X ω ^ 2)) μ → HasDerivAt g (g' t) t := by
+    HasDerivAt g (g' t) t := by
   set c := max ‖a‖ ‖b‖
   set e := (fun t ↦ fun ω ↦ rexp (t * X ω) * X ω)
   set e' := (fun t ↦ fun ω ↦ rexp (t * X ω) * (X ω ^ 2))
   suffices MeasureTheory.Integrable (e' t) μ ∧
     HasDerivAt (fun t ↦ μ[e t]) (μ[e' t]) t from by
-      intro _ _ hint
-      apply this.2
+      exact this.2
   apply hasDerivAt_integral_of_dominated_loc_of_deriv_le
   · change Metric.ball t (|t| + 1) ∈ nhds t
     refine Metric.ball_mem_nhds t ?_
@@ -321,7 +319,7 @@ theorem cgf_deriv_one [IsFiniteMeasure μ] [NeZero μ] (a b : ℝ)
   simp only [id_eq] at r0
   rw [r0]
   apply HasDerivAt.log
-    (tilt_first_deriv _ _ _ hX h (integrable_deriv_expt t a b hX h))
+    (tilt_first_deriv _ _ _ hX h)
     (mgf_pos' (NeZero.ne μ) (integrable_expt_bound hX h)).ne'
 
 /-- Second derivative of cumulant `cgf X μ f`. -/
@@ -364,26 +362,8 @@ theorem cgf_deriv_two [IsFiniteMeasure μ] [NeZero μ] (a b : ℝ)
         ((μ[fun ω ↦ rexp (t * X ω) * X ω]) ^ 2) ((μ[fun ω ↦ rexp (t * X ω)]) ^ 2)
   rw [div_pow, p'']
   apply HasDerivAt.div
-  · set c := max ‖a‖ ‖b‖
-    apply tilt_second_deriv _ _ _ hX h
-    apply MeasureTheory.Integrable.bdd_mul (c := rexp (|t| * |c|))
-    · rw [(by ext ω; ring : (fun ω ↦ X ω ^ 2) = (fun ω ↦ X ω * X ω))]
-      apply MeasureTheory.Integrable.bdd_mul
-        (integrable_bounded a b hX h) (aestronglyMeasurable_iff_aemeasurable.mpr hX)
-      · filter_upwards [h] with x h
-        simpa only [norm_eq_abs] using
-          le_trans' (le_abs_self (max ‖a‖ ‖b‖)) (abs_le_max_abs_abs h.1 h.2)
-    · exact aemeasurable_expt t hX
-    · simp only [norm_eq_abs, abs_exp]
-      filter_upwards [h] with ω h
-      simp only [exp_le_exp]
-      calc
-      _ ≤ |t * X ω| := le_abs_self (t * X ω)
-      _ = |t| * |X ω| := abs_mul t (X ω)
-      _ ≤ |t| * |c| := mul_le_mul_of_nonneg_left (le_trans' (le_abs_self (max ‖a‖ ‖b‖))
-                      (abs_le_max_abs_abs h.1 h.2)) (abs_nonneg t)
-  · apply (tilt_first_deriv _ _ _ hX h)
-          (integrable_deriv_expt t a b hX h)
+  · exact tilt_second_deriv _ _ _ hX h
+  · exact tilt_first_deriv _ _ _ hX h
   · exact (mgf_pos' (NeZero.ne μ) (integrable_expt_bound hX h)).ne'
 
 end GeneratingFunctionDerivatives
