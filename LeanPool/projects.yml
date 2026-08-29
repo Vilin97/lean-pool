@@ -1,4 +1,61 @@
 projects:
+  - slug: hanson-wright
+    title: The Hanson-Wright inequality for sub-Gaussian quadratic forms
+    summary: >-
+      Proves the finite-dimensional Hanson-Wright concentration inequality for
+      quadratic forms of independent mean-zero sub-Gaussian real random variables.
+      The development derives the required moment-generating-function certificate
+      instead of assuming it, and contributes reusable scalar Bernstein, Chernoff,
+      cumulant, sub-Gaussian-process, and finite-maximum infrastructure.
+    branch: high-dimensional probability and concentration inequalities
+    entry_module: LeanPool.HansonWright
+    authors:
+      - Yuanhe Zhang
+      - Jason D. Lee
+      - Fanghui Liu
+      - Kazuki Uesugi
+      - Kei Tsukamoto
+      - Kazumi Kasaura
+      - Naoto Onda
+      - Yuma Mizuno
+      - Sho Sonoda
+    source:
+      title: High-Dimensional Probability (second edition)
+      authors:
+        - Roman Vershynin
+      doi: 10.1017/9781009490672
+      url: https://www.math.uci.edu/~rvershyn/papers/HDP-book/HDP-book.html
+      github_repo: Lean-MoDS/StatsMLlib
+      commit: 37286c3d2c7e17642fbe26988be40f3ff982f944
+    license: Apache-2.0
+    status: verified
+    provenance: human
+    main_declarations:
+      - HansonWright.hanson_wright_inequality_hdp
+    main_results:
+      - declaration: HansonWright.hanson_wright_inequality_hdp
+        informal: >-
+          For independent mean-zero real random variables with finite sub-Gaussian
+          psi-2 norms, the centered quadratic form satisfies the Hanson-Wright
+          two-regime exponential tail bound in Frobenius and operator norms.
+      - declaration: HansonWright.hasHansonWrightMGF_of_subgaussian
+        informal: >-
+          Independent sub-Gaussian coordinates satisfy the local quadratic
+          cumulant-generating-function estimate needed for Hanson-Wright.
+      - declaration: bernstein_inequality
+        informal: >-
+          A finite family of independent, centered, uniformly bounded real random
+          variables satisfies the classical scalar Bernstein tail inequality.
+    tags:
+      - probability-theory
+      - concentration-inequalities
+      - high-dimensional-probability
+      - random-matrices
+      - sub-gaussian
+    msc:
+      - "60E15"
+      - "60B20"
+      - "62H12"
   - slug: multicolor-triangle-ramsey
     title: Superexponential lower bounds for multicolor triangle Ramsey numbers
     summary: >-
