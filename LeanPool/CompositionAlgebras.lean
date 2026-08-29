@@ -54,8 +54,9 @@ This copy is modified from upstream commit `e37e22b0571a170ba18a0d8db29fe2a85790
 for Lean Pool's Lean/Mathlib toolchain and repository rules. It keeps the complete Hurwitz
 dimension and classification chain, its Cayley--Dickson infrastructure, and the concrete
 octonion results used by the registered claims. The port omits the independent Palomar
-challenge/solution packets and audit harness, the unfinished Hermitian-matrix carrier, and
-three unused coordinate-expanded Moufang lemmas. Generic alternativity remains available
-through the octonion `CompositionAlgebra` instance. The octonion-nucleus proof was also
+challenge/solution packets and audit harness, the unfinished Hermitian-matrix carrier and
+its unused complex-subspace support tail, and three unused coordinate-expanded Moufang
+lemmas. Generic alternativity remains available through the octonion `CompositionAlgebra`
+instance. The octonion-nucleus proof was also
 refactored to use seven sufficient coordinate equations instead of generating all 56.
 -/

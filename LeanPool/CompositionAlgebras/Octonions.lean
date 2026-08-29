@@ -142,18 +142,6 @@ def normSq (a : Octonion) : ℝ := Finset.univ.sum fun i => (a.coords i) ^ 2
 /-- The 7 imaginary unit octonions e_1, ..., e_7. -/
 def imagUnit (i : Fin 7) : Octonion := basisVec ⟨i.val + 1, by omega⟩
 
-/-- A unit imaginary octonion: an element u with Re(u) = 0 and N(u) = 1.
-    The space of such elements is S^6 = G_2/SU(3). -/
-def IsUnitImag (u : Octonion) : Prop :=
-  re u = 0 ∧ normSq u = 1
-
-/-- A **complex structure** on O is a choice of unit imaginary octonion u.
-    This splits O = C_u + (C_u)^3 where C_u = span{1, u}. -/
-structure ComplexStructure where
-  /-- The chosen unit imaginary octonion. -/
-  u : Octonion
-  is_unit_imag : IsUnitImag u
-
 -- Fundamental properties
 
 /-- Octonionic multiplication has a two-sided identity. -/
@@ -222,13 +210,7 @@ theorem mul_conj (a : Octonion) :
     simp [mul, conj, normSq, one, HSMul.hSMul, SMul.smul, Fin.sum_univ_eight] <;>
       ring
 
-/-- A complex structure on O splits O = C_u + (C_u)^3.
-    The C_u factor is span{1, u} (2-dim). The complementary space is
-    a free rank-3 module over C_u (6-dim real = 3-dim complex). -/
-def complexSubspace (J : ComplexStructure) : Set Octonion :=
-  { a | ∃ (r s : ℝ), a = r • one + s • J.u }
-
--- Bilinearity of octonionic multiplication (needed for complexSubspace_mul)
+-- Bilinearity of octonionic multiplication, used to build the composition-algebra instance.
 
 theorem mul_add' (a b c : Octonion) : mul a (b + c) = mul a b + mul a c := by
   ext i; fin_cases i <;> simp [mul, add_coords, Fin.isValue] <;> ring
@@ -241,49 +223,5 @@ theorem smul_mul (r : ℝ) (a b : Octonion) : mul (r • a) b = r • mul a b :=
 
 theorem mul_smul' (r : ℝ) (a b : Octonion) : mul a (r • b) = r • mul a b := by
   ext i; fin_cases i <;> simp [mul, smul_coords, Fin.isValue] <;> ring
-
-theorem mul_unit_imag_sq (J : ComplexStructure) :
-    mul J.u J.u = -one := by
-  have hu0 : re J.u = 0 := J.is_unit_imag.1
-  have hunorm : normSq J.u = 1 := J.is_unit_imag.2
-  simp only [re] at hu0; simp only [normSq, Fin.sum_univ_eight, Fin.isValue] at hunorm
-  ext i
-  fin_cases i
-  · simp [mul, one, neg_coords, hu0, Fin.isValue]
-    nlinarith
-  all_goals (simp [mul, one, neg_coords, hu0, Fin.isValue]; ring)
-
--- Closure properties of complexSubspace (needed for h3C_closed_jordan)
-
-theorem complexSubspace_add (J : ComplexStructure) (a b : Octonion)
-    (ha : a ∈ complexSubspace J) (hb : b ∈ complexSubspace J) :
-    a + b ∈ complexSubspace J := by
-  obtain ⟨r₁, s₁, rfl⟩ := ha
-  obtain ⟨r₂, s₂, rfl⟩ := hb
-  exact ⟨r₁ + r₂, s₁ + s₂, by ext i; simp only [add_coords, smul_coords, one]; ring⟩
-
-theorem complexSubspace_smul (J : ComplexStructure) (r : ℝ) (a : Octonion)
-    (ha : a ∈ complexSubspace J) :
-    r • a ∈ complexSubspace J := by
-  obtain ⟨r₁, s₁, rfl⟩ := ha
-  exact ⟨r * r₁, r * s₁, by ext i; simp only [add_coords, smul_coords, one]; ring⟩
-
-theorem complexSubspace_conj (J : ComplexStructure) (a : Octonion)
-    (ha : a ∈ complexSubspace J) :
-    conj a ∈ complexSubspace J := by
-  obtain ⟨r, s, rfl⟩ := ha
-  have hu0 : J.u.coords 0 = 0 := J.is_unit_imag.1
-  exact ⟨r, -s, by
-    ext i; simp only [conj, add_coords, smul_coords, one, hu0]
-    split_ifs with h <;> first | (subst h; simp [hu0]) | ring⟩
-
-theorem complexSubspace_mul (J : ComplexStructure) (a b : Octonion)
-    (ha : a ∈ complexSubspace J) (hb : b ∈ complexSubspace J) :
-    mul a b ∈ complexSubspace J := by
-  obtain ⟨r₁, s₁, rfl⟩ := ha
-  obtain ⟨r₂, s₂, rfl⟩ := hb
-  simp only [mul_add', add_mul', smul_mul, mul_smul', mul_one', one_mul', mul_unit_imag_sq J]
-  exact ⟨r₁ * r₂ - s₁ * s₂, r₁ * s₂ + s₁ * r₂, by
-    ext i; simp only [add_coords, smul_coords, neg_coords, one]; ring⟩
 
 end Octonion
