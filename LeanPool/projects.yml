@@ -3,7 +3,8 @@ projects:
     title: The Hanson-Wright inequality for sub-Gaussian quadratic forms
     summary: >-
       Proves the finite-dimensional Hanson-Wright concentration inequality for
-      quadratic forms of independent mean-zero sub-Gaussian real random variables.
+      quadratic forms of independent mean-zero sub-Gaussian real random variables
+      whose maximum psi-2 norm is positive.
       The development derives the required moment-generating-function certificate
       instead of assuming it, and contributes reusable scalar Bernstein, Chernoff,
       cumulant, sub-Gaussian-process, and finite-maximum infrastructure.
@@ -36,8 +37,9 @@ projects:
       - declaration: HansonWright.hanson_wright_inequality_hdp
         informal: >-
           For independent mean-zero real random variables with finite sub-Gaussian
-          psi-2 norms, the centered quadratic form satisfies the Hanson-Wright
-          two-regime exponential tail bound in Frobenius and operator norms.
+          psi-2 norms and positive maximum psi-2 norm, the centered quadratic form
+          satisfies the Hanson-Wright two-regime exponential tail bound in
+          Frobenius and operator norms.
       - declaration: HansonWright.hasHansonWrightMGF_of_subgaussian
         informal: >-
           Independent sub-Gaussian coordinates satisfy the local quadratic
