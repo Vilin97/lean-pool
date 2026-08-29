@@ -53,24 +53,9 @@ theorem measure_finset_sup_ge_le_sum {ι : Type*} {μ : Measure Ω}
     _ ≤ μ (⋃ i ∈ s, {ω | u ≤ X i ω}) := measure_mono h_subset
     _ ≤ ∑ i ∈ s, μ {ω | u ≤ X i ω} := measure_biUnion_finset_le s _
 
-/-- Upper bound `sup' f ≤ ∑ |fᵢ|` for finite sets. -/
-lemma sup'_le_sum_abs {ι : Type*} {s : Finset ι} (hs : s.Nonempty)
-    {f : ι → ℝ} :
-    s.sup' hs f ≤ ∑ i ∈ s, |f i| := by
-  apply Finset.sup'_le
-  intro i hi
-  exact le_trans (le_abs_self _) (Finset.single_le_sum (fun j _ => abs_nonneg (f j)) hi)
-
 /-!
 ## MGF-Based Bounds for Expected Maximum
 -/
-
-/-- Soft-max bound: `exp(sup' f) ≤ ∑ exp(fᵢ)`. -/
-theorem exp_sup'_le_sum {ι : Type*} {s : Finset ι} (hs : s.Nonempty) (f : ι → ℝ) :
-    exp (s.sup' hs f) ≤ ∑ i ∈ s, exp (f i) := by
-  obtain ⟨j, hj, hmax⟩ := Finset.exists_mem_eq_sup' hs f
-  rw [hmax]
-  exact Finset.single_le_sum (fun i _ => (exp_pos (f i)).le) hj
 
 /-- Scaled soft-max: `exp(t · sup' f) ≤ ∑ exp(t · fᵢ)`. -/
 theorem exp_mul_sup'_le_sum {ι : Type*} {s : Finset ι} (hs : s.Nonempty)
@@ -82,6 +67,11 @@ theorem exp_mul_sup'_le_sum {ι : Type*} {s : Finset ι} (hs : s.Nonempty)
   intro i _
   exact (exp_pos _).le
 
+/-- Soft-max bound: `exp(sup' f) ≤ ∑ exp(fᵢ)`. -/
+theorem exp_sup'_le_sum {ι : Type*} {s : Finset ι} (hs : s.Nonempty) (f : ι → ℝ) :
+    exp (s.sup' hs f) ≤ ∑ i ∈ s, exp (f i) := by
+  simpa using exp_mul_sup'_le_sum hs f 1
+
 /-- Bound `|sup' f| ≤ ∑ |fᵢ|` for finite sets. -/
 theorem abs_sup'_le_sum {ι : Type*} {s : Finset ι} (hs : s.Nonempty) (f : ι → ℝ) :
     |s.sup' hs f| ≤ ∑ i ∈ s, |f i| := by
@@ -90,6 +80,12 @@ theorem abs_sup'_le_sum {ι : Type*} {s : Finset ι} (hs : s.Nonempty) (f : ι �
   apply Finset.single_le_sum _ hj
   intro i _
   exact abs_nonneg _
+
+/-- Upper bound `sup' f ≤ ∑ |fᵢ|` for finite sets. -/
+lemma sup'_le_sum_abs {ι : Type*} {s : Finset ι} (hs : s.Nonempty)
+    {f : ι → ℝ} :
+    s.sup' hs f ≤ ∑ i ∈ s, |f i| :=
+  (le_abs_self _).trans (abs_sup'_le_sum hs f)
 
 /-- Expected maximum over finset of sub-Gaussian random variables via MGF method.
     E[max_i X_i] ≤ σ · √(2 log n) where n = |s|. -/

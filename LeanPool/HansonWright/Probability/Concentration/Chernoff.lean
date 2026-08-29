@@ -3,15 +3,10 @@ Copyright (c) 2026 Yuanhe Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuanhe Zhang, Jason D. Lee, Fanghui Liu
 -/
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.MeasureTheory.Integral.Layercake
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
 import Mathlib.Analysis.Calculus.Monotone
-import Mathlib.Analysis.Convex.Integral
 import Mathlib.Probability.Moments.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 
 /-!
 # Chernoff Bounds
