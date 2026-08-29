@@ -6422,6 +6422,62 @@ projects:
       - "05C25"
       - "55Q05"
       - "20F65"
+  - slug: composition-algebras
+    title: Hurwitz's Classification of Euclidean Composition Algebras
+    summary: >-
+      Formalizes Hurwitz's classification of nontrivial finite-dimensional real
+      Euclidean composition algebras: every such algebra has dimension 1, 2, 4,
+      or 8 and is real-linearly equivalent to the real numbers, complex numbers,
+      quaternions, or octonions through a map preserving the unit, multiplication,
+      and norm form. The development also constructs the octonions from an explicit Fano multiplication table,
+      proves Degen's eight-square identity, and shows
+      that Cayley--Dickson doubling preserves the composition law for
+      associative inputs.
+    branch: nonassociative algebra
+    entry_module: LeanPool.CompositionAlgebras
+    authors:
+      - Bryan Ehrlich
+    source:
+      title: Über die Composition der quadratischen Formen von beliebig vielen Variablen
+      authors:
+        - Adolf Hurwitz
+      url: https://eudml.org/doc/58420
+      github_repo: ehrlich-b/composition-algebras
+      commit: e37e22b0571a170ba18a0d8db29fe2a857906b92
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - CompositionAlgebra.hurwitz_classification
+    main_results:
+      - declaration: CompositionAlgebra.hurwitz_classification
+        informal: >-
+          Every nontrivial finite-dimensional real Euclidean composition algebra
+          is linearly equivalent to the real numbers, complex numbers,
+          quaternions, or octonions through a map preserving the unit,
+          multiplication, and norm form.
+      - declaration: CompositionAlgebra.finrank_eq_one_or_two_or_four_or_eight
+        informal: >-
+          The real dimension of a nontrivial finite-dimensional Euclidean
+          composition algebra is exactly 1, 2, 4, or 8.
+      - declaration: CompositionAlgebra.CD.instCompositionAlgebra
+        informal: >-
+          The Cayley--Dickson double of a nontrivial associative Euclidean
+          composition algebra again satisfies the composition law.
+      - declaration: Octonion.nucleus_real
+        informal: >-
+          Any octonion that associates in the third slot with every pair has
+          zero imaginary coordinates and hence lies on the real line.
+    tags:
+      - nonassociative-algebra
+      - composition-algebras
+      - octonions
+      - hurwitz-theorem
+      - cayley-dickson
+    msc:
+      - "17A75"
+      - "17A35"
+      - "11E88"
   - slug: erdos81-paper-ii-chordal-heredity
     title: "Chordal graphs: minimal separators and Dirac's theorem"
     summary: >-
