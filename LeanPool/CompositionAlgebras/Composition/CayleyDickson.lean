@@ -29,7 +29,8 @@ counted. This file builds it.
 * `CD.instNonAssocRing`, `CD.instModule`, and the two bilinearity classes — `CD D` is a
   bilinear unital ring over `ℝ` whenever `D` is.
 * `CD.instCompositionAlgebra` — **`CD D` is a Euclidean composition algebra when `D` is
-  associative.** Associativity is used exactly once, in the cross term of the composition law:
+  nontrivial and associative.** Associativity is used exactly once, in the cross term of the
+  composition law:
   expanding `N((a,b)(c,d)) = N(a,b) N(c,d)` leaves the residue
   `⟪d a, b c*⟫ = ⟪a c, d* b⟫`, and the two adjoint identities turn each side into
   `⟪a, (d* b) c*⟫` and `⟪a, d* (b c*)⟫` respectively.

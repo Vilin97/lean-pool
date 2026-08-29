@@ -6462,12 +6462,8 @@ projects:
           composition algebra is exactly 1, 2, 4, or 8.
       - declaration: CompositionAlgebra.CD.instCompositionAlgebra
         informal: >-
-          The Cayley--Dickson double of an associative Euclidean composition
-          algebra again satisfies the composition law.
-      - declaration: Octonion.norm_multiplicative
-        informal: >-
-          The explicit Fano-table octonion multiplication satisfies Degen's
-          eight-square identity: the coordinate norm is multiplicative.
+          The Cayley--Dickson double of a nontrivial associative Euclidean
+          composition algebra again satisfies the composition law.
       - declaration: Octonion.nucleus_real
         informal: >-
           Any octonion that associates in the third slot with every pair has

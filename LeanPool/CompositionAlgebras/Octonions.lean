@@ -162,7 +162,7 @@ theorem non_associative : ∃ (a b c : Octonion),
 
 -- Eight-square identity (Degen) expanded component-wise
 /-- The norm is multiplicative: N(ab) = N(a) N(b).
-    This is the composition algebra property, equivalent to Hurwitz's theorem. -/
+    This supplies the concrete octonion example used in Hurwitz's classification. -/
 theorem norm_multiplicative (a b : Octonion) :
     normSq (mul a b) = normSq a * normSq b := by
   simp only [normSq, Fin.sum_univ_eight, mul, Fin.isValue, Fin.val_zero, Fin.val_one]

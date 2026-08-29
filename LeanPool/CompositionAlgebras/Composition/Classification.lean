@@ -330,27 +330,25 @@ theorem hurwitz_classification :
     (∃ f : C ≃ₗ[ℝ] ℝ, IsCompIso f) ∨ (∃ f : C ≃ₗ[ℝ] ℂ, IsCompIso f) ∨
       (∃ f : C ≃ₗ[ℝ] ℍ[ℝ], IsCompIso f) ∨ (∃ f : C ≃ₗ[ℝ] Octonion, IsCompIso f) := by
   -- `A₀ = ℝ ∙ 1`, named by `realCompEmb`.
-  set f0 : CompEmb ℝ C := realCompEmb with hf0
+  let f0 : CompEmb ℝ C := realCompEmb
   by_cases h0 : LinearMap.range f0.toLinearMap = ⊤
   · exact Or.inl ⟨(f0.toEquiv h0).symm, (f0.toEquiv_isCompIso h0).symm⟩
   obtain ⟨u1, hu1, hnu1⟩ := exists_unit_orthogonal h0
   -- `A₁ = double A₀ u₁`, named by `CD ℝ ≃ ℂ`.
-  set f1 : CompEmb ℂ C :=
-    (f0.double hu1 hnu1).congr cdRealEquiv.symm cdRealEquiv_isCompIso.symm with hf1
-  have hr1 : LinearMap.range f1.toLinearMap = double (LinearMap.range f0.toLinearMap) u1 := by
-    rw [hf1, CompEmb.range_congr, CompEmb.range_double]
+  let f1 : CompEmb ℂ C :=
+    (f0.double hu1 hnu1).congr cdRealEquiv.symm cdRealEquiv_isCompIso.symm
   by_cases h1 : LinearMap.range f1.toLinearMap = ⊤
   · exact Or.inr (Or.inl ⟨(f1.toEquiv h1).symm, (f1.toEquiv_isCompIso h1).symm⟩)
   obtain ⟨u2, hu2, hnu2⟩ := exists_unit_orthogonal h1
   -- `A₂ = double A₁ u₂`, named by `CD ℂ ≃ ℍ`.
-  set f2 : CompEmb ℍ[ℝ] C :=
-    (f1.double hu2 hnu2).congr cdComplexEquiv.symm cdComplexEquiv_isCompIso.symm with hf2
+  let f2 : CompEmb ℍ[ℝ] C :=
+    (f1.double hu2 hnu2).congr cdComplexEquiv.symm cdComplexEquiv_isCompIso.symm
   by_cases h2 : LinearMap.range f2.toLinearMap = ⊤
   · exact Or.inr (Or.inr (Or.inl ⟨(f2.toEquiv h2).symm, (f2.toEquiv_isCompIso h2).symm⟩))
   obtain ⟨u3, hu3, hnu3⟩ := exists_unit_orthogonal h2
   -- `A₃ = double A₂ u₃`, named by `CD ℍ ≃ 𝕆`.  This one cannot be proper.
-  set f3 : CompEmb Octonion C :=
-    (f2.double hu3 hnu3).congr cdQuaternionEquiv.symm cdQuaternionEquiv_isCompIso.symm with hf3
+  let f3 : CompEmb Octonion C :=
+    (f2.double hu3 hnu3).congr cdQuaternionEquiv.symm cdQuaternionEquiv_isCompIso.symm
   have h3 : LinearMap.range f3.toLinearMap = ⊤ := by
     have hdim : Module.finrank ℝ (LinearMap.range f3.toLinearMap) = 8 := by
       rw [CompEmb.finrank_range, Octonion.finrank_comp]

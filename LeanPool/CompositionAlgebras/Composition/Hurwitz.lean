@@ -342,7 +342,7 @@ theorem finrank_eq_one_or_two_or_four_or_eight :
     Module.finrank ℝ C = 1 ∨ Module.finrank ℝ C = 2 ∨ Module.finrank ℝ C = 4 ∨
       Module.finrank ℝ C = 8 := by
   have hone : (1 : C) ≠ 0 := one_ne_zero
-  set A0 : Submodule ℝ C := Submodule.span ℝ {(1 : C)} with hA0def
+  let A0 : Submodule ℝ C := Submodule.span ℝ {(1 : C)}
   have hA0 : IsCompSubalgebra A0 := isCompSubalgebra_spanOne
   have hr0 : Module.finrank ℝ A0 = 1 := finrank_span_singleton hone
   by_cases h0 : A0 = ⊤
