@@ -6536,3 +6536,57 @@ projects:
       - "17A75"
       - "17A35"
       - "11E88"
+  - slug: ulms-theorem
+    title: Ulm's theorem for countable reduced abelian p-groups
+    summary: >-
+      Formalizes Ulm's classification theorem for countable reduced abelian
+      p-groups in arbitrary Lean universes. The development constructs the
+      transfinite Ulm filtration and invariants, proves their invariance under
+      additive equivalence, establishes Kaplansky's one-generator extension
+      lemma, and completes the countable back-and-forth classification. A
+      finite-group regression distinguishes Z/4 x Z/4 from Z/2 x Z/8 at the
+      zeroth Ulm invariant.
+    branch: abelian group theory
+    entry_module: LeanPool.UlmsTheorem
+    authors:
+      - Elan Roth
+    source:
+      title: Ulm's theorem for countable reduced abelian p-groups
+      authors:
+        - Elan Roth
+      url: https://github.com/elanroth/UlmsTheorem
+      github_repo: elanroth/UlmsTheorem
+      commit: 3bb8a10ae12eb957a0f05db248d3becaf6a7e222
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - UlmsTheorem.ulm_theorem
+    main_results:
+      - declaration: UlmsTheorem.ulm_theorem
+        informal: >-
+          For any prime p and any two countable reduced abelian p-groups in the
+          same arbitrary Lean universe, the groups are additively isomorphic if
+          and only if all of their classical Ulm invariants, indexed by
+          universe-zero ordinals, agree.
+      - declaration: UlmsTheorem.iso_of_ulm_invariants
+        informal: >-
+          Equal Ulm invariants at every universe-zero ordinal imply an additive
+          equivalence between countable reduced abelian p-groups, via finite
+          height-preserving partial isomorphisms and a back-and-forth limit.
+      - declaration: UlmsTheorem.ulmInvariant_iso_invariant
+        informal: >-
+          An additive equivalence preserves every classical Ulm invariant.
+      - declaration: UlmsTheorem.UlmDifferentialRegression.no_iso_44_28
+        informal: >-
+          The groups Z/4 x Z/4 and Z/2 x Z/8 are not additively isomorphic; the
+          proof exercises the classification theorem and independently detects
+          their different zeroth Ulm invariants.
+    tags:
+      - abelian-groups
+      - p-groups
+      - classification-theorems
+      - ordinal-filtrations
+      - ulm-invariants
+    msc:
+      - "20K10"
