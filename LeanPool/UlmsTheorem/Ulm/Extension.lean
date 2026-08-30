@@ -6,6 +6,7 @@ Authors: Elan Roth
 
 import Mathlib.GroupTheory.FiniteAbelian.Basic
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import LeanPool.UlmsTheorem.PGroups.UlmInvariants
 import LeanPool.UlmsTheorem.Ulm.Pure
 
 /-!

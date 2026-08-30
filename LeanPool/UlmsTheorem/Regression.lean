@@ -52,7 +52,7 @@ namespace UlmsTheorem
 
 namespace UlmDifferentialRegression
 
-instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+local instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
 
 section Witnesses
 

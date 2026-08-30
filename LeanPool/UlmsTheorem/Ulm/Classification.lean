@@ -38,6 +38,18 @@ hypothesis, and applying it to the inverse stage supplies the back hypothesis.
 /-- A finite stage carrying a true partial isomorphism. -/
 abbrev BFIsoStep := UlmStage p (G := G) (H := H)
 
+/-- Policy for extending a finite stage so that it covers a chosen source element. -/
+private abbrev BFForthPolicy :=
+  ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
+    ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
+      g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a
+
+/-- Policy for extending a finite stage so that it covers a chosen target element. -/
+private abbrev BFBackPolicy :=
+  ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
+    ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
+      h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a
+
 /-- The initial empty stage. -/
 private def BFIsoStep.init : BFIsoStep p (G := G) (H := H) where
   A    := ⊥
@@ -63,12 +75,8 @@ private def BFIsoStep.init : BFIsoStep p (G := G) (H := H) where
 omit hp in
 /-- Combine one forth step and one back step into a single chain step. -/
 private lemma bf_forth_back
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (s : BFIsoStep p (G := G) (H := H)) (g : G) (h : H) :
     ∃ (s' : BFIsoStep p (G := G) (H := H)) (hle : s.A ≤ s'.A),
       s.B ≤ s'.B ∧ g ∈ s'.A ∧ h ∈ s'.B ∧
@@ -80,12 +88,8 @@ private lemma bf_forth_back
 
 /-- The ℕ-indexed chain of `BFIsoStep`s, covering one element of G and H at each stage. -/
 private noncomputable def bf_chain
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (enumH : ℕ → H) : ℕ → BFIsoStep p (G := G) (H := H)
   | 0     => BFIsoStep.init p
   | n + 1 => (bf_forth_back p hforth hback
@@ -94,12 +98,8 @@ private noncomputable def bf_chain
 omit hp in
 /-- Key monotonicity and coverage properties of consecutive chain steps. -/
 private lemma bf_chain_step_props
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (enumH : ℕ → H) (n : ℕ) :
     let c := bf_chain p hforth hback enumG enumH
     ∃ (hle : (c n).A ≤ (c (n+1)).A),
@@ -111,12 +111,8 @@ private lemma bf_chain_step_props
 omit hp in
 /-- The A-subgroups of the chain are monotone. -/
 private lemma bf_chain_A_le
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (enumH : ℕ → H) {m n : ℕ} (hmn : m ≤ n) :
     (bf_chain p hforth hback enumG enumH m).A ≤
       (bf_chain p hforth hback enumG enumH n).A := by
@@ -131,12 +127,8 @@ private lemma bf_chain_A_le
 omit hp in
 /-- The partial isomorphisms are compatible across chain stages. -/
 private lemma bf_chain_compat
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (enumH : ℕ → H) {m n : ℕ} (hmn : m ≤ n)
     (a : (bf_chain p hforth hback enumG enumH m).A) :
     ((bf_chain p hforth hback enumG enumH n).e
@@ -151,12 +143,8 @@ private lemma bf_chain_compat
 omit hp in
 /-- The B-subgroups of the chain are monotone. -/
 private lemma bf_chain_B_le
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (enumH : ℕ → H) {m n : ℕ} (hmn : m ≤ n) :
     (bf_chain p hforth hback enumG enumH m).B ≤
       (bf_chain p hforth hback enumG enumH n).B := by
@@ -167,12 +155,8 @@ private lemma bf_chain_B_le
 
 /-- The limit map: send g to its image under the first chain stage that covers it. -/
 private noncomputable def bf_limit_map
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (hG_surj : Function.Surjective enumG) (enumH : ℕ → H) (g : G) : H :=
   let n     := (hG_surj g).choose
   let c     := bf_chain p hforth hback enumG enumH
@@ -182,12 +166,8 @@ private noncomputable def bf_limit_map
 omit hp in
 /-- The limit map evaluates consistently at any stage that already covers g. -/
 private lemma bf_limit_map_eq_at
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (hG_surj : Function.Surjective enumG) (enumH : ℕ → H)
     (g : G) (n : ℕ) (hg : g ∈ (bf_chain p hforth hback enumG enumH n).A) :
     bf_limit_map p hforth hback enumG hG_surj enumH g =
@@ -205,12 +185,8 @@ private lemma bf_limit_map_eq_at
 omit hp in
 /-- The limit map is additive. -/
 private lemma bf_limit_map_add
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (hG_surj : Function.Surjective enumG) (enumH : ℕ → H)
     (g₁ g₂ : G) :
     bf_limit_map p hforth hback enumG hG_surj enumH (g₁ + g₂) =
@@ -241,12 +217,8 @@ private lemma bf_limit_map_add
 omit hp in
 /-- The limit map is injective. -/
 private lemma bf_limit_map_injective
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (hG_surj : Function.Surjective enumG) (enumH : ℕ → H) :
     Function.Injective (bf_limit_map p hforth hback enumG hG_surj enumH) := by
   intro g₁ g₂ h_eq
@@ -272,12 +244,8 @@ private lemma bf_limit_map_injective
 omit hp in
 /-- The limit map is surjective. -/
 private lemma bf_limit_map_surjective
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H))
     (enumG : ℕ → G) (hG_surj : Function.Surjective enumG)
     (enumH : ℕ → H) (hH_surj : Function.Surjective enumH) :
     Function.Surjective (bf_limit_map p hforth hback enumG hG_surj enumH) := by
@@ -297,12 +265,8 @@ omit hp in
 imply the two groups are isomorphic.  Proved in full; no open obligation within. -/
 lemma iso_of_ulmInvariant_eq_of_backAndForth
     [Countable G] [Countable H]
-    (hforth : ∀ s : BFIsoStep p (G := G) (H := H), ∀ g : G,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          g ∈ s'.A ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a)
-    (hback : ∀ s : BFIsoStep p (G := G) (H := H), ∀ h : H,
-        ∃ (s' : BFIsoStep p (G := G) (H := H)) (hAA : s.A ≤ s'.A) (_hBB : s.B ≤ s'.B),
-          h ∈ s'.B ∧ ∀ a : s.A, (s'.e ⟨a.val, hAA a.prop⟩ : H) = s.e a) :
+    (hforth : BFForthPolicy p (G := G) (H := H))
+    (hback : BFBackPolicy p (G := G) (H := H)) :
     Nonempty (G ≃+ H) := by
   obtain ⟨enumG, hG_surj⟩ := exists_surjective_nat G
   obtain ⟨enumH, hH_surj⟩ := exists_surjective_nat H

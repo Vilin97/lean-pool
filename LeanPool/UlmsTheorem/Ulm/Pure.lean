@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Elan Roth
 -/
 
-import LeanPool.UlmsTheorem.PGroups.Morphisms
+import Mathlib.RingTheory.Coprime.Lemmas
 import LeanPool.UlmsTheorem.PGroups.Socle
+import LeanPool.UlmsTheorem.PGroups.UlmSubgroups
 
 /-!
 # Pure subgroups and height-preserving partial maps
