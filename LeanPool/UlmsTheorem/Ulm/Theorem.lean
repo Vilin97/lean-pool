@@ -41,22 +41,6 @@ theorem iso_of_ulm_invariants {G H : Type u} [AddCommGroup G] [AddCommGroup H]
     Nonempty (G ≃+ H) := by
   exact iso_of_ulmInvariant_eq (p := p) hGred hHred hinv
 
-/-- Named forward direction for running the proof in two separate parts. -/
-theorem ulm_theorem_forward {G H : Type u} [AddCommGroup G] [AddCommGroup H]
-    (hiso : Nonempty (G ≃+ H)) :
-    ∀ α : Ordinal.{0},
-      ulmInvariant p α (G := G) = ulmInvariant p α (G := H) :=
-  ulm_invariants_of_iso (p := p) hiso
-
-/-- Named backward direction for running the proof in two separate parts. -/
-theorem ulm_theorem_backward {G H : Type u} [AddCommGroup G] [AddCommGroup H]
-    [Countable G] [Countable H]
-    (hGred : IsReducedPGroup p G) (hHred : IsReducedPGroup p H)
-    (hinv : ∀ α : Ordinal.{0},
-      ulmInvariant p α (G := G) = ulmInvariant p α (G := H)) :
-    Nonempty (G ≃+ H) :=
-  iso_of_ulm_invariants (p := p) hGred hHred hinv
-
 /-- Ulm's theorem: two countable reduced abelian p-groups are isomorphic iff
 their classical Ulm invariants agree. -/
 theorem ulm_theorem {G H : Type u} [AddCommGroup G] [AddCommGroup H]
@@ -66,7 +50,7 @@ theorem ulm_theorem {G H : Type u} [AddCommGroup G] [AddCommGroup H]
     ∀ α : Ordinal.{0},
       ulmInvariant p α (G := G) = ulmInvariant p α (G := H) := by
   constructor
-  · exact ulm_theorem_forward (p := p)
-  · exact ulm_theorem_backward (p := p) hGred hHred
+  · exact ulm_invariants_of_iso (p := p)
+  · exact iso_of_ulm_invariants (p := p) hGred hHred
 
 end UlmsTheorem

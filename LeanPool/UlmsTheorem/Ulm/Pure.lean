@@ -126,11 +126,11 @@ Reducedness supplies a stage missing the element.  The least such stage
 cannot be zero or a limit stage, so it is a successor `α+1`; minimality then
 puts the element in `G_α` but not in `G_(α+1)`. -/
 lemma exists_ulmHeight_eq_of_ne_zero
-    (hG : IsReducedPGroup p G) {x : G} (hx0 : x ≠ 0) :
+    (hG : IsPReduced p G) {x : G} (hx0 : x ≠ 0) :
     ∃ α : Ordinal.{0},
       x ∈ ulmSubgroup p α (G := G) ∧
       x ∉ ulmSubgroup p (Order.succ α) (G := G) := by
-  obtain ⟨γ, hγ⟩ := hG.reduced
+  obtain ⟨γ, hγ⟩ := hG
   have hxγ : x ∉ ulmSubgroup p γ (G := G) := by
     rw [hγ]
     simpa using hx0
@@ -287,22 +287,22 @@ lemma IsIsotype.ulmHeight_eq {A : AddSubgroup G} (hA : IsIsotype p A) (x : A) :
     (iSup₂_le fun α hx ↦ le_iSup_of_le α <| le_iSup_of_le ((hA x α).mp hx) le_rfl)
     (iSup₂_le fun α hx ↦ le_iSup_of_le α <| le_iSup_of_le ((hA x α).mpr hx) le_rfl)
 
-lemma IsHeightPreserving.injective (hred : IsReducedPGroup p G)
+lemma IsHeightPreserving.injective (hred : IsPReduced p G)
     {φ : G →+ H} (hφ : IsHeightPreserving p φ) :
     Function.Injective φ := by
   intro x y hxy
-  rcases hred.reduced with ⟨α, hα⟩
+  rcases hred with ⟨α, hα⟩
   have hmem : x - y ∈ ulmSubgroup p α (G := G) :=
     (hφ (x - y) α).mpr (by simp [hxy])
   rw [hα] at hmem
   exact sub_eq_zero.mp (AddSubgroup.mem_bot.mp hmem)
 
-lemma IsHeightPresOn.injective (hred : IsReducedPGroup p G)
+lemma IsHeightPresOn.injective (hred : IsPReduced p G)
     {A : AddSubgroup G} {B : AddSubgroup H} {φ : A →+ B} (hφ : IsHeightPresOn p φ) :
     Function.Injective φ := by
   intro x y hxy
   apply Subtype.ext
-  rcases hred.reduced with ⟨α, hα⟩
+  rcases hred with ⟨α, hα⟩
   have hmem : (((x - y : A) : A) : G) ∈ ulmSubgroup p α (G := G) :=
     (hφ (x - y) α).mpr (by simp [hxy])
   rw [hα] at hmem

@@ -1150,7 +1150,7 @@ lemma kaplansky_extend_one_of_target
   let A' : AddSubgroup G := adjoinElem s.A x
   let raw : A' →+ H := (⊤ : AddSubgroup H).subtype.comp f
   let B' : AddSubgroup H := AddMonoidHom.range raw
-  have hf_inj : Function.Injective f := IsHeightPresOn.injective (p := p) hG hfheight
+  have hf_inj : Function.Injective f := IsHeightPresOn.injective (p := p) hG.reduced hfheight
   have hrange_inj : Function.Injective raw.rangeRestrict := fun a b hab ↦
     hf_inj (Subtype.ext (by simpa [raw] using congrArg Subtype.val hab))
   have hA'finite : Set.Finite (A' : Set G) := adjoinElem_finite (p := p) hG.primary s.hAfinite x
@@ -1430,7 +1430,7 @@ lemma kaplansky_extend_one
     rw [hdecomp]
     exact s.A.add_mem hpgA (s.A.nsmul_mem hxgA p)
   obtain ⟨α, hxα, hxSucc⟩ :=
-    exists_ulmHeight_eq_of_ne_zero (p := p) hG hx0
+    exists_ulmHeight_eq_of_ne_zero (p := p) hG.reduced hx0
   have hpxMax :
       ∀ y : G, y - x ∈ s.A → IsProper p s.A y →
         ulmHeight p (p • y) ≤ ulmHeight p (p • x) := by

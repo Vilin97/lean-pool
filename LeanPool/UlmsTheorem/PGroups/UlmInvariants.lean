@@ -320,35 +320,36 @@ end RelativeInvariants
 
 /-! ### Ulm length -/
 
-/-- The Ulm length of a reduced p-group: the least ordinal α at which p^α·G = 0.
-    For countable reduced p-groups this is a countable ordinal. -/
-noncomputable def ulmLength {G : Type*} [AddCommGroup G] (_hred : IsReducedPGroup p G) :
-    Ordinal.{0} :=
+/-- The least ordinal α at which p^α·G = 0, or zero if no such ordinal exists.
+    Reducedness guarantees that this infimum is attained. -/
+noncomputable def ulmLength {G : Type*} [AddCommGroup G] : Ordinal.{0} :=
   sInf {α : Ordinal.{0} | ulmSubgroup p α (G := G) = ⊥}
 
 namespace ulmLength
 
-variable {G : Type*} [AddCommGroup G] (hred : IsReducedPGroup p G)
+variable {G : Type*} [AddCommGroup G]
 
 omit hp in
 /-- The set `{α | p^α·G = 0}` is nonempty for a reduced p-group. -/
-lemma exists_zero (hred' : IsReducedPGroup p G) :
+lemma exists_zero (hred' : IsPReduced p G) :
     ∃ α : Ordinal.{0}, ulmSubgroup p α (G := G) = ⊥ := by
-  exact hred'.reduced
+  exact hred'
 
 omit hp in
 /-- p^(ulmLength)·G = 0. -/
-lemma at_ulmLength : ulmSubgroup p (ulmLength p hred) (G := G) = ⊥ :=
+lemma at_ulmLength (hred : IsPReduced p G) :
+    ulmSubgroup p (ulmLength p (G := G)) (G := G) = ⊥ :=
   csInf_mem (exists_zero (p := p) (G := G) hred)
 
 /-- Ulm invariants vanish above the Ulm length. -/
-lemma inv_zero_of_ge (α : Ordinal) (hα : ulmLength p hred ≤ α) :
+lemma inv_zero_of_ge (hred : IsPReduced p G)
+    (α : Ordinal) (hα : ulmLength p (G := G) ≤ α) :
     ulmInvariant p α (G := G) = 0 := by
   have hzero : ulmSubgroup p α (G := G) = ⊥ := by
     apply le_bot_iff.mp
     simpa [at_ulmLength (p := p) (hred := hred)] using
       (ulmSubgroup_antitone p hα : ulmSubgroup p α (G := G) ≤
-        ulmSubgroup p (ulmLength p hred) (G := G))
+        ulmSubgroup p (ulmLength p (G := G)) (G := G))
   have hpzero : pSocleAt p α (G := G) = ⊥ := by
     rw [pSocleAt, hzero]
     simp
