@@ -32,7 +32,8 @@ projects:
     main_results:
       - declaration: KahnKalai.covering_theorem
         informal: >-
-          If an ℓ-bounded family H has cover cost at least
+          If ℓ is at most the finite ground-set cardinality N, p lies in
+          [0, 1], and an ℓ-bounded family H has cover cost at least
           1/2 - 2^(-(ℓ+2)), then its upset occupies at least a
           2/3 + 2^(-(ℓ+2)) fraction of level
           floor(1000 p N log₂(ℓ+1)).
