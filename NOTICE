@@ -100,6 +100,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/LeanQuantumAlg            https://github.com/QudeLeap/Lean-QuantumAlg
   LeanPool/LehmerE10                 https://github.com/dillon-11/lehmer-E10
   LeanPool/Lentil                    https://github.com/verse-lab/Lentil
+  LeanPool/LocalComplexGeometry      https://github.com/BochaoKong/nullstellensatz
   LeanPool/LowDimSolvClassification  https://github.com/LieLean/LowDimSolvClassification
   LeanPool/MRiscX                    https://github.com/JulsDE/MRiscX
   LeanPool/MatchingLogic             https://github.com/eveil-labs/matching-logic-lean
