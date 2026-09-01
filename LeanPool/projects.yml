@@ -1,4 +1,54 @@
 projects:
+  - slug: kahn-kalai
+    title: Kahn–Kalai expectation-threshold theorem
+    summary: >-
+      Formalizes Tran and Vu's short proof of the Park–Pham theorem resolving
+      the Kahn–Kalai expectation-threshold conjecture. For an ℓ-bounded
+      family of subsets of a finite ground set, it proves the strengthened
+      covering theorem with the explicit constant L = 1000 and derives the
+      threshold bound p_c(F) ≤ K q(F) log₂ ℓ with the explicit witness
+      K = 100000. The supporting library develops finite-set cover cost,
+      level-density, double-counting, binomial-tail, and numeric estimates.
+    branch: probabilistic combinatorics
+    entry_module: LeanPool.KahnKalai
+    authors:
+      - Dan Clemens Posch
+    source:
+      title: A Short Proof of Kahn-Kalai Conjecture
+      authors:
+        - Phuc Tran
+        - Van Vu
+      arxiv: 2303.02144
+      doi: 10.37236/12266
+      url: https://github.com/dcposch/kahn-kalai-lean
+      github_repo: dcposch/kahn-kalai-lean
+      commit: 641aa75f8e873d31442f2f7c317b2e7582a26d94
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - KahnKalai.covering_theorem
+      - KahnKalai.park_pham
+    main_results:
+      - declaration: KahnKalai.covering_theorem
+        informal: >-
+          If an ℓ-bounded family H has cover cost at least
+          1/2 - 2^(-(ℓ+2)), then its upset occupies at least a
+          2/3 + 2^(-(ℓ+2)) fraction of level
+          floor(1000 p N log₂(ℓ+1)).
+      - declaration: KahnKalai.park_pham
+        informal: >-
+          There is an absolute positive constant K such that every
+          ℓ-bounded finite family with ℓ at least two satisfies
+          p_c(F) ≤ K q(F) log₂ ℓ; the proof supplies K = 100000.
+    tags:
+      - probabilistic-combinatorics
+      - random-structures
+      - threshold-phenomena
+      - set-systems
+    msc:
+      - "05C80"
+      - "60C05"
   - slug: quadratic-iterates
     title: Galois groups of quadratic polynomial iterates
     summary: >-
