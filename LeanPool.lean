@@ -2066,6 +2066,13 @@ import LeanPool.JohnsonLindenstraussLean.QJLDistortion
 import LeanPool.JohnsonLindenstraussLean.Rotation
 import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
 import LeanPool.JohnsonLindenstraussLean.Verify
+import LeanPool.KahnKalai
+import LeanPool.KahnKalai.Basic
+import LeanPool.KahnKalai.Cost
+import LeanPool.KahnKalai.Covering
+import LeanPool.KahnKalai.DoubleCount
+import LeanPool.KahnKalai.Numeric
+import LeanPool.KahnKalai.ParkPham
 import LeanPool.KaltonRoberts
 import LeanPool.KaltonRoberts.Collections
 import LeanPool.KaltonRoberts.Defs
