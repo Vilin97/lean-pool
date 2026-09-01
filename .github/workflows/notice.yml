@@ -1,41 +1,47 @@
-name: NOTICE
+name: Generated metadata
 
-# NOTICE is generated from LeanPool/projects.yml + NOTICE.extra.yml, so it can
-# never drift out of step with the pool: every import PR that registers a
-# project makes this job rewrite the attribution list on merge.
-#
-# The refresh commit below touches NOTICE only, which is NOT in the paths
-# filter, so it cannot re-trigger this workflow (no commit loop). The same
-# reason it is not a PR gate: a content PR may not touch NOTICE (it is
-# non-content under content-pr-guard), so requiring an up-to-date NOTICE on
-# the PR itself would be unsatisfiable. Regenerating after merge avoids that
-# deadlock. Hand-edits to NOTICE in non-content PRs are still caught, by
-# test_notice.py::test_repository_notice_is_current in Python CI.
+# README.md and NOTICE are deterministic views of repository content. A
+# maintainer credential pushes their refresh directly to main so these small,
+# mechanical updates do not create a second PR for every content merge.
 
 on:
   push:
     branches:
       - main
+    # The generated commit changes only README.md and NOTICE, neither of which
+    # is an input below, so it cannot trigger a commit loop.
     paths:
-      - 'LeanPool/projects.yml'
+      - 'LeanPool/**'
+      - 'Challenge/challenges.yml'
       - 'NOTICE.extra.yml'
       - 'python/lean_pool/notice.py'
+      - 'python/lean_pool/stats.py'
       - '.github/workflows/notice.yml'
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # README and NOTICE share one writer. Runs queue rather than cancel so a
+  # newer merge cannot interrupt an older run while it is publishing.
+  group: generated-metadata-main
+  cancel-in-progress: false
 
+# The direct push uses REBASE_TOKEN. Keep the run's automatic GITHUB_TOKEN
+# read-only so it is not a second write credential.
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    name: Regenerate NOTICE
+    name: Refresh generated metadata
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          ref: main
+          # REBASE_TOKEN is a maintainer PAT. Main's protection allows the
+          # maintainer identity to publish these generated-only commits.
+          token: ${{ secrets.REBASE_TOKEN }}
 
       - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
         with:
@@ -44,17 +50,42 @@ jobs:
       - name: Install dependencies
         run: cd python && uv sync --locked
 
-      - name: Regenerate NOTICE
-        run: cd python && uv run python -m lean_pool.notice --repo ..
-
-      - name: Commit if changed
+      - name: Regenerate and publish
         run: |
-          if git diff --quiet -- NOTICE; then
-            echo "NOTICE already up to date."
-            exit 0
-          fi
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add NOTICE
-          git commit -m "chore: regenerate NOTICE [skip ci]"
-          git push
+
+          # A content merge can advance main after checkout. Each retry starts
+          # from the new tip and regenerates both files, so the eventual commit
+          # includes every merged project and never needs a force-push.
+          for attempt in 1 2 3 4 5; do
+            echo "Publish attempt $attempt of 5."
+            git fetch origin main
+            git checkout --detach origin/main
+
+            (cd python && uv run python -m lean_pool.stats --repo ..)
+            (cd python && uv run python -m lean_pool.notice --repo ..)
+
+            unexpected="$(git diff --name-only \
+              | { grep -vE '^(NOTICE|README\.md)$' || true; })"
+            if [ -n "$unexpected" ]; then
+              echo "::error::Generators changed files outside README.md and NOTICE."
+              printf '%s\n' "$unexpected"
+              exit 1
+            fi
+            if git diff --quiet -- README.md NOTICE; then
+              echo "Generated metadata is already up to date."
+              exit 0
+            fi
+
+            git add README.md NOTICE
+            git commit -m "chore: refresh generated metadata"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Main advanced during publish; regenerating from its new tip."
+          done
+
+          echo "::error::Could not publish generated metadata after five attempts."
+          exit 1
