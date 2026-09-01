@@ -6,9 +6,13 @@ Authors: BochaoKong
 
 import LeanPool.LocalComplexGeometry.Analytic.ConstantRank
 import LeanPool.LocalComplexGeometry.Analytic.LevelSet
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.Examples
+import LeanPool.LocalComplexGeometry.ClassicalComplexWPT.NormalSum
 import LeanPool.LocalComplexGeometry.FiniteProjection.Main
 import LeanPool.LocalComplexGeometry.Noetherian.Ruckert
+import LeanPool.LocalComplexGeometry.Nullstellensatz.FiberCancellation
 import LeanPool.LocalComplexGeometry.Nullstellensatz.Main
+import LeanPool.LocalComplexGeometry.Nullstellensatz.OneVariable
 import LeanPool.LocalComplexGeometry.Palomar
 
 /-!
@@ -25,8 +29,9 @@ MSC: 32A05, 32A10, 32B05, 32C25, 13E05
 /-!
 # Local complex-analytic geometry
 
-This root module exposes the four kernel-checked headline results together with
-their shared local complex-analytic geometry infrastructure.
+This root module exposes the seven kernel-checked headline results, the public
+examples and corollaries, and their shared local complex-analytic geometry
+infrastructure.
 -/
 
 
