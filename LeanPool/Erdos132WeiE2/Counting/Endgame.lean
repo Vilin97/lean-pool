@@ -5,7 +5,14 @@ Authors: Egor Lyfar
 -/
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Real.Basic
-import Mathlib.Tactic
+import Mathlib.Tactic.Linarith
+import Lean.Elab.Tactic.Omega
+
+/-!
+# Finite counting endgame for six distances
+
+This module turns the ordered distance values and exclusion cases into the final cardinality bound.
+-/
 
 namespace LeanPool.Erdos132WeiE2.Counting
 

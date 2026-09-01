@@ -1040,6 +1040,7 @@ import LeanPool.Erdos132WeiE2.Algebra.TanExpressions
 import LeanPool.Erdos132WeiE2.Algebra.TrigSigns
 import LeanPool.Erdos132WeiE2.Counting.Assembly
 import LeanPool.Erdos132WeiE2.Counting.Endgame
+import LeanPool.Erdos132WeiE2.Final
 import LeanPool.Erdos132WeiE2.Geometry.Basic
 import LeanPool.Erdos132WeiE2.Geometry.Parametrization
 import LeanPool.Erdos132WeiE2.Geometry.Star

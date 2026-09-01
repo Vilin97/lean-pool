@@ -4,24 +4,22 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos132WeiE2
+import LeanPool.Erdos132WeiE2.Geometry.Parametrization
+import LeanPool.Erdos132WeiE2.Counting.Assembly
 
 /-!
-# Solution: Six distances from the E2 diameter-heptagon pattern
+# Final E2 six-distance theorem
 
-Challenge: `diameter-heptagon-e2-six-distances` (`Challenge.WeiLiCongGao`)
-Proves: `Challenge.WeiLiCongGao.e2_pattern_six_distances`
-Solved by: Egor Lyfar
-Pool project: `LeanPool.Erdos132WeiE2`
-
-This module restates the challenge statement under its own name and proves it. It must not import
-the challenge module: comparator exports both environments separately and checks that the statements
-agree, which is what makes the verdict independent of the statement file.
+This module derives the repaired geometric E2 conclusion from the original hypotheses.
 -/
 
-namespace Challenge.WeiLiCongGao
+namespace LeanPool.Erdos132WeiE2
 
-/-- The E2 diameter-heptagon pattern realizes at least six distinct pairwise distances. -/
+/-- The E2 diameter-heptagon pattern realizes at least six distinct pairwise distances.
+
+This is the independently significant repaired E2 step of Wei–Li–Cong–Gao 2014
+(doi:10.11650/tjm.18.2014.4030, Theorem 4, Part III, Case 2); it does not completely solve
+Erdős problem 132. Exact-arithmetic companion: github.com/lyfar/erdos132-wei-certificates. -/
 theorem e2_pattern_six_distances
     (p : Fin 7 → EuclideanSpace ℝ (Fin 2))
     (hdiam : ∀ i : Fin 7, dist (p i) (p (i + 3)) = 1)
@@ -45,4 +43,4 @@ theorem e2_pattern_six_distances
     hBA hAC A B C hpar.B_pos hpar.B_lt_A hpar.A_lt_C hpar.C_lt_pi_div_three
     hpar.angle_sum hpar.closure hpar.edgeC hpar.edgeB hpar.edgeA hpar.q_sq hpar.ra_sq hpar.rb_sq
 
-end Challenge.WeiLiCongGao
+end LeanPool.Erdos132WeiE2

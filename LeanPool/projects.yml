@@ -6257,7 +6257,8 @@ projects:
       classes B < A < C realize at least six distinct pairwise distances. The
       proof extracts an angle parametrization from the geometry, derives exact
       trigonometric and polynomial identities, excludes every five-value
-      collapse, and finishes by finite counting.
+      collapse, and finishes by finite counting. This is the independently
+      significant repaired E2 step; it does not completely solve Erdős problem 132.
     branch: discrete geometry
     entry_module: LeanPool.Erdos132WeiE2
     authors:
@@ -6276,8 +6277,13 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - LeanPool.Erdos132WeiE2.Counting.six_distances_of_parametrization
+      - LeanPool.Erdos132WeiE2.e2_pattern_six_distances
     main_results:
+      - declaration: LeanPool.Erdos132WeiE2.e2_pattern_six_distances
+        informal: >-
+          Seven planar points whose unit-distance diameter graph is the step-three 7-cycle, with
+          boundary edge classes ordered B < A < C, realize at least six distinct pairwise distances —
+          the repaired E2 step of Wei, Li, Cong, and Gao (2014), from the original geometric hypotheses.
       - declaration: LeanPool.Erdos132WeiE2.Geometry.e2_angle_parametrization
         informal: >-
           The E2 diameter-heptagon hypotheses yield three ordered apex angles

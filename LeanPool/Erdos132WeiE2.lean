@@ -12,6 +12,7 @@ import LeanPool.Erdos132WeiE2.Algebra.TanExpressions
 import LeanPool.Erdos132WeiE2.Algebra.TrigSigns
 import LeanPool.Erdos132WeiE2.Counting.Assembly
 import LeanPool.Erdos132WeiE2.Counting.Endgame
+import LeanPool.Erdos132WeiE2.Final
 import LeanPool.Erdos132WeiE2.Geometry.Basic
 import LeanPool.Erdos132WeiE2.Geometry.Parametrization
 import LeanPool.Erdos132WeiE2.Geometry.Star
@@ -22,7 +23,7 @@ import LeanPool.Erdos132WeiE2.Geometry.Star
 Source: doi:10.11650/tjm.18.2014.4030, url:https://github.com/lyfar/erdos132-wei-certificates
 Authors: Egor Lyfar
 Status: verified
-Main declarations: `LeanPool.Erdos132WeiE2.Counting.six_distances_of_parametrization`
+Main declarations: `LeanPool.Erdos132WeiE2.e2_pattern_six_distances`
 Tags: discrete-geometry, distance-sets, diameter-graph, erdos-problems
 MSC: 52C10, 05C62
 -/

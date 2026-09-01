@@ -5,6 +5,12 @@ Authors: Egor Lyfar
 -/
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
+/-!
+# Angle ranges for the E2 parametrization
+
+This module derives the linear angle inequalities used by the E2 algebraic argument.
+-/
+
 namespace LeanPool.Erdos132WeiE2.Algebra
 
 /-- Linear angle consequences of the frozen E2 algebra interface. -/

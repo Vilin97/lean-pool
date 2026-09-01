@@ -5,6 +5,12 @@ Authors: Egor Lyfar
 -/
 import LeanPool.Erdos132WeiE2.Algebra.Ranges
 
+/-!
+# Trigonometric signs for the E2 parametrization
+
+This module proves the trigonometric identities and sign inequalities used in the exclusions.
+-/
+
 namespace LeanPool.Erdos132WeiE2.Algebra
 
 lemma ra_sq_sub_ea_sq_identity (A B : ℝ) :

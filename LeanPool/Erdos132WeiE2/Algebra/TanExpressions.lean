@@ -5,6 +5,12 @@ Authors: Egor Lyfar
 -/
 import LeanPool.Erdos132WeiE2.Algebra.TrigSigns
 
+/-!
+# Tangent expressions for the E2 parametrization
+
+This module rewrites the relevant angles into the half-angle forms used by the algebraic proof.
+-/
+
 namespace LeanPool.Erdos132WeiE2.Algebra
 
 lemma cos_A_as_half (A : ℝ) :
