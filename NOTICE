@@ -128,6 +128,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/PumpingCfg                https://github.com/AlexLoitzl/pumping_cfg
   LeanPool/PythagoreanPolynomialParametrization
                                      https://github.com/epfl-lara/AutoformalizedProjects
+  LeanPool/QuadraticIterates         https://github.com/MichaelStollBayreuth/QuadraticIterates
   LeanPool/RamanujanNagell           https://github.com/BarinderBanwait/ramanujan_nagell
   LeanPool/RellichKondrachov         https://github.com/abenenson/rellich-kondrachov
   LeanPool/RiemannMappingTheorem     https://github.com/vbeffara/RMT4
