@@ -152,7 +152,7 @@ lemma binom_left_tail (N m : ℕ) {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1)
   have := mul_le_mul_of_nonneg_left hbound (pow_nonneg (by positivity : (0 : ℝ) ≤ 2) m)
   rwa [hcancel] at this
 
-lemma one_sub_half_p_le_exp {p : ℝ} (_hp0 : 0 ≤ p) :
+lemma one_sub_half_p_le_exp {p : ℝ} :
     1 - p / 2 ≤ Real.exp (-(p / 2)) := by
   have h := Real.add_one_le_exp (-(p / 2))
   have hre : -(p / 2) + 1 = 1 - p / 2 := by ring
@@ -196,7 +196,7 @@ lemma binom_left_tail_of_mean {N m : ℕ} {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤
     (hmN : m ≤ N) (hmμ : (m : ℝ) ≤ (N * p) / 4) (hμ : (16 : ℝ) ≤ N * p) :
     ∑ k ∈ range m, binomProb N p k ≤ 1 / 5 := by
   have htail := binom_left_tail N m hp0 hp1 hmN
-  have hbase := one_sub_half_p_le_exp hp0
+  have hbase := one_sub_half_p_le_exp (p := p)
   have hnn : 0 ≤ 1 - p / 2 := by
     have : p / 2 ≤ 1 := by
       have : p ≤ 2 := hp1.trans (by norm_num)
@@ -412,7 +412,6 @@ lemma sdiff_range_binom (N m : ℕ) (p : ℝ) (hm : m ≤ N) :
 
 lemma measureFamily_ge_occupation {F : Finset (Finset α)} {p : ℝ} {m : ℕ}
     {α0 : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) (hm : m ≤ Fintype.card α)
-    (_hα0 : 0 ≤ α0)
     (hocc : α0 * ((Fintype.card α).choose m : ℝ) ≤
       (((generate F).filter (fun S => S.card = m)).card : ℝ)) :
     α0 * ∑ k ∈ range (Fintype.card α + 1) \ range m,
@@ -695,14 +694,13 @@ lemma park_pham_bound {α : Type} [DecidableEq α] [Fintype α]
   have htail : ∑ k ∈ range m, binomProb N p' k ≤ 1 / 5 :=
     binom_left_tail_of_mean (N := N) (m := m) (p := p') hp'0 (le_of_lt hp'1)
       hmN' hmμ hμ
-  have hα0 : (0 : ℝ) ≤ (2 : ℝ) / 3 + 1 / (2 : ℝ) ^ (ℓ' + 2) := by positivity
   have hocc :
       ((2 : ℝ) / 3 + 1 / (2 : ℝ) ^ (ℓ' + 2)) * (N.choose m : ℝ) ≤
         (((generate F).filter (fun S => S.card = m)).card : ℝ) := by
     simpa [m, N] using hcov
   have hge := measureFamily_ge_occupation (F := F) (p := p') (m := m)
       (α0 := (2 : ℝ) / 3 + 1 / (2 : ℝ) ^ (ℓ' + 2))
-      hp'0 (le_of_lt hp'1) hmN' hα0 hocc
+      hp'0 (le_of_lt hp'1) hmN' hocc
   have hmass :
       (4 : ℝ) / 5 ≤ ∑ k ∈ range (N + 1) \ range m, binomProb N p' k := by
     have := sdiff_range_binom N m p' hmN'

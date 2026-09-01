@@ -145,7 +145,7 @@ lemma log_ell1_add_le (ℓ : ℕ) (hℓ : 1 ≤ ℓ) :
   linarith [hlogprod, hle]
 
 lemma coveringLevel_lift {p : ℝ} {N w ℓ : ℕ} (hp0 : 0 ≤ p) (hℓ : 1 ≤ ℓ)
-    (hw : w = coveringWidth p N) (_hwN : w ≤ N) :
+    (hw : w = coveringWidth p N) :
     coveringLevel p (N - w) ⌊((9 : ℝ) / 10) * ℓ⌋₊ + w ≤
       coveringLevel p N ℓ := by
   set ℓ₁ := ⌊((9 : ℝ) / 10) * ℓ⌋₊
@@ -619,7 +619,7 @@ lemma covering_aux (ℓ : ℕ) :
     have hwN : w ≤ N := by
       simpa [w, N] using coveringWidth_le_card hp0 hℓ (by simpa [N] using hlev)
     have hℓ₁lt : ℓ₁ < ℓ := ell1_lt hℓ
-    have hlift := coveringLevel_lift (p := p) (N := N) (w := w) (ℓ := ℓ) hp0 hℓ rfl hwN
+    have hlift := coveringLevel_lift (p := p) (N := N) (w := w) (ℓ := ℓ) hp0 hℓ rfl
     have hℓ₁le : ℓ₁ ≤ N - w := by
       simpa [ℓ₁, w, N] using floor_nine_tenths_le_card_sub_width hp0 hℓ hℓN hN
         (by simpa [N] using hlev)

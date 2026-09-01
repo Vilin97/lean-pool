@@ -99,8 +99,7 @@ lemma coverCost_le_expectation {p : ℝ} (hp : 0 ≤ p) {G H : Finset (Finset α
     exact expectation_nonneg hp G'⟩
 
 /-- Fact 2.1, integer form: an upset’s level sizes satisfy the shadow inequality. -/
-lemma generate_card_mono (F : Finset (Finset α)) (t : ℕ)
-    (_ht : t < Fintype.card α) :
+lemma generate_card_mono (F : Finset (Finset α)) (t : ℕ) :
     #((generate F).filter (fun S => S.card = t)) * (Fintype.card α - t)
       ≤ #((generate F).filter (fun S => S.card = t + 1)) * (t + 1) := by
   classical
@@ -179,7 +178,7 @@ lemma generate_level_frac_mono (F : Finset (Finset α)) (t : ℕ)
   have hch1 : 0 < (N.choose (t + 1) : ℝ) :=
     Nat.cast_pos.mpr (Nat.choose_pos (Nat.succ_le_of_lt ht))
   have hmul : a * N.choose (t + 1) ≤ b * N.choose t := by
-    have h0 : a * (N - t) ≤ b * (t + 1) := generate_card_mono F t ht
+    have h0 : a * (N - t) ≤ b * (t + 1) := generate_card_mono F t
     have hC : N.choose (t + 1) * (t + 1) = N.choose t * (N - t) :=
       Nat.choose_succ_right_eq N t
     have h5 : a * (N.choose (t + 1) * (t + 1)) ≤ b * (N.choose t * (t + 1)) := by
