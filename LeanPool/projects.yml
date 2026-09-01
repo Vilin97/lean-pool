@@ -6663,6 +6663,61 @@ projects:
       - "32B05"
       - "32C25"
       - "13E05"
+  - slug: rado-theorem
+    title: Radó's theorem for Riemann surfaces
+    summary: >-
+      Proves that every connected Hausdorff one-dimensional complex manifold
+      is second countable. The development constructs a nonconstant harmonic
+      function by Perron's method, builds the étale space of its
+      harmonic-conjugate germs, and applies a formalized Poincaré-Volterra
+      lemma to its discrete-fiber evaluation map.
+    branch: Riemann surfaces and general topology
+    entry_module: LeanPool.Rado
+    authors:
+      - Rado Kirov
+    source:
+      title: Radó's theorem for Riemann surfaces
+      authors:
+        - Rado Kirov
+      url: https://github.com/rkirov/jordan_pick
+      github_repo: rkirov/jordan_pick
+      commit: b3c9b7cf7358bf81a077d78ad67e6e8247869ddd
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - rado_riemannSurface
+    main_results:
+      - declaration: rado_riemannSurface
+        informal: >-
+          Every connected Hausdorff topological space carrying the structure
+          of a one-dimensional complex manifold has a second-countable
+          topology.
+      - declaration: Rado.poincare_volterra
+        informal: >-
+          A connected Hausdorff, locally compact, locally connected and
+          locally second-countable space is second countable whenever it
+          admits a continuous, locally injective map into a
+          second-countable Hausdorff space.
+      - declaration: Rado.exists_harmonic_extension
+        informal: >-
+          Every continuous real-valued function on a Euclidean circle extends
+          continuously to its closed disk and harmonically to the open disk;
+          unlike the existing LeanComplexAnalysis Poisson theorems, this
+          constructs the harmonic function rather than assuming one.
+      - declaration: Rado.IsPerronFamily.surfaceHarmonicOn_perronSup
+        informal: >-
+          The pointwise upper envelope of a Perron family of surface
+          subharmonic functions is harmonic on its open domain.
+    tags:
+      - riemann-surfaces
+      - second-countability
+      - harmonic-functions
+      - perron-method
+    msc:
+      - "30F15"
+      - "30F20"
+      - "54D65"
   - slug: erdos132-wei-e2
     title: Six distances from the E2 diameter-heptagon pattern
     summary: >-
