@@ -32,11 +32,11 @@ projects:
     main_results:
       - declaration: KahnKalai.covering_theorem
         informal: >-
-          If ℓ is at most the finite ground-set cardinality N, p lies in
-          [0, 1], and an ℓ-bounded family H has cover cost at least
-          1/2 - 2^(-(ℓ+2)), then its upset occupies at least a
-          2/3 + 2^(-(ℓ+2)) fraction of level
-          floor(1000 p N log₂(ℓ+1)).
+          If ℓ ≤ N, p lies in [0, 1], and an ℓ-bounded family H has cover
+          cost at least 1/2 - 2^(-(ℓ+2)), then its upset has at least
+          (2/3 + 2^(-(ℓ+2))) choose(N, m) members of cardinality m, where
+          m = floor(1000 p N log₂(ℓ+1)). For m ≤ N this is the corresponding
+          level-density bound; for N < m both cardinalities are zero.
       - declaration: KahnKalai.park_pham
         informal: >-
           There is an absolute positive constant K such that every

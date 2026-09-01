@@ -20,8 +20,10 @@ MSC: 05C80, 60C05
 namespace KahnKalai
 
 /-- **Tran–Vu, Theorem 2.3.** If `ℓ` is at most the ground-set cardinality,
-`p ∈ [0, 1]`, `H` is `ℓ`-bounded, and `f(H) ≥ 1/2 - 2^{-(ℓ+2)}`, then
-`⟨H⟩` contains at least a `2/3 + 2^{-(ℓ+2)}` fraction of the `m_ℓ`-level. -/
+`p ∈ [0, 1]`, `H` is `ℓ`-bounded, and `f(H) ≥ 1/2 - 2^{-(ℓ+2)}`, then the
+cardinality of `⟨H⟩` at the selected level `m_ℓ` is at least
+`(2/3 + 2^{-(ℓ+2)}) * choose(N, m_ℓ)`. When `m_ℓ ≤ N`, this is the
+corresponding level-density bound; when `N < m_ℓ`, both cardinalities vanish. -/
 theorem covering_theorem {α : Type*} [DecidableEq α] [Fintype α]
     (H : Finset (Finset α)) (ℓ : ℕ) (p : ℝ)
     (hℓ : ℓ ≤ Fintype.card α)
