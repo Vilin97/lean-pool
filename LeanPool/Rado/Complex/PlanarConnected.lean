@@ -127,9 +127,29 @@ private lemma isPathConnected_annulus {c : ℂ} {r R : ℝ} (hr : 0 ≤ r) (hrR 
 
 /-! ### The pieces of the cover and their inclusion in the configuration set -/
 
+private def configTop : Set ℂ := ball (0 : ℂ) 8 ∩ {z : ℂ | 1 < z.im}
+private def configBottom : Set ℂ := ball (0 : ℂ) 8 ∩ {z : ℂ | z.im < -1}
+private def configLeft : Set ℂ := ball (0 : ℂ) 8 ∩ {z : ℂ | z.re < -5}
+private def configRight : Set ℂ := ball (0 : ℂ) 8 ∩ {z : ℂ | 5 < z.re}
+private def configMiddle : Set ℂ :=
+  ball (0 : ℂ) 8 ∩ ({z : ℂ | -3 < z.re} ∩ {z : ℂ | z.re < 3})
+private def configRightAnnulus : Set ℂ :=
+  {z : ℂ | 1 < dist z (4 : ℂ) ∧ dist z (4 : ℂ) < 3}
+private def configLeftAnnulus : Set ℂ :=
+  {z : ℂ | 1 < dist z (-4 : ℂ) ∧ dist z (-4 : ℂ) < 3}
+
+/-- The finite family of pieces in the configuration cover. -/
+private def configPieces : Set (Set ℂ) :=
+  {configMiddle, configTop, configBottom, configRightAnnulus,
+    configLeftAnnulus, configRight, configLeft}
+
+private def configCover : Set ℂ := ⋃₀ configPieces
+
+private lemma subset_configCover {s : Set ℂ} (hs : s ∈ configPieces) : s ⊆ configCover :=
+  fun _ hz ↦ mem_sUnion_of_mem hz hs
+
 private lemma P1_subset :
-    ball (0 : ℂ) 8 ∩ {z : ℂ | 1 < z.im}
-      ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
+    configTop ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
   rintro z ⟨hb, him⟩
   have him' : (1 : ℝ) < z.im := him
   have habs : (1 : ℝ) < |z.im| := lt_of_lt_of_le him' (le_abs_self _)
@@ -139,8 +159,7 @@ private lemma P1_subset :
   · exact not_mem_closedBall_of_im (by norm_num) habs h
 
 private lemma P2_subset :
-    ball (0 : ℂ) 8 ∩ {z : ℂ | z.im < -1}
-      ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
+    configBottom ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
   rintro z ⟨hb, him⟩
   have him' : z.im < -1 := him
   have habs : (1 : ℝ) < |z.im| :=
@@ -151,8 +170,7 @@ private lemma P2_subset :
   · exact not_mem_closedBall_of_im (by norm_num) habs h
 
 private lemma P3_subset :
-    ball (0 : ℂ) 8 ∩ {z : ℂ | z.re < -5}
-      ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
+    configLeft ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
   rintro z ⟨hb, hre⟩
   have hre' : z.re < -5 := hre
   refine ⟨hb, ?_⟩
@@ -165,8 +183,7 @@ private lemma P3_subset :
     linarith [neg_le_abs (z.re - 4)]
 
 private lemma P4_subset :
-    ball (0 : ℂ) 8 ∩ {z : ℂ | 5 < z.re}
-      ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
+    configRight ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
   rintro z ⟨hb, hre⟩
   have hre' : (5 : ℝ) < z.re := hre
   refine ⟨hb, ?_⟩
@@ -179,8 +196,7 @@ private lemma P4_subset :
     linarith [le_abs_self (z.re - 4)]
 
 private lemma P5_subset :
-    ball (0 : ℂ) 8 ∩ ({z : ℂ | -3 < z.re} ∩ {z : ℂ | z.re < 3})
-      ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
+    configMiddle ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
   rintro z ⟨hb, hre1, hre2⟩
   have hre1' : (-3 : ℝ) < z.re := hre1
   have hre2' : z.re < 3 := hre2
@@ -194,8 +210,8 @@ private lemma P5_subset :
     linarith [neg_le_abs (z.re - 4)]
 
 private lemma Ap_subset :
-    {z : ℂ | 1 < dist z (4 : ℂ) ∧ dist z (4 : ℂ) < 3}
-      ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
+    configRightAnnulus ⊆
+      ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
   rintro z ⟨h1, h2⟩
   have h40 : dist (4 : ℂ) 0 = 4 := by
     rw [dist_zero_right]
@@ -214,8 +230,8 @@ private lemma Ap_subset :
     linarith
 
 private lemma Am_subset :
-    {z : ℂ | 1 < dist z (-4 : ℂ) ∧ dist z (-4 : ℂ) < 3}
-      ⊆ ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
+    configLeftAnnulus ⊆
+      ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1) := by
   rintro z ⟨h1, h2⟩
   have h40 : dist (-4 : ℂ) 0 = 4 := by
     rw [dist_zero_right, norm_neg]
@@ -239,7 +255,6 @@ theorem isPathConnected_ball_diff_two_disks :
     IsPathConnected
       (ball (0 : ℂ) 8 \ (closedBall (-4 : ℂ) 1 ∪ closedBall (4 : ℂ) 1)) := by
   -- ball memberships of the witness points
-  have hb0 : (0 : ℂ) ∈ ball (0 : ℂ) 8 := mem_ball_self (by norm_num)
   have hb2I : (2 * I : ℂ) ∈ ball (0 : ℂ) 8 :=
     mem_ball.mpr (dist_lt_of_sq_lt (by norm_num) (by norm_num))
   have hbm2I : (-(2 * I) : ℂ) ∈ ball (0 : ℂ) 8 :=
@@ -253,51 +268,50 @@ theorem isPathConnected_ball_diff_two_disks :
   have hbm6 : (-6 : ℂ) ∈ ball (0 : ℂ) 8 :=
     mem_ball.mpr (dist_lt_of_sq_lt (by norm_num) (by norm_num))
   -- memberships of the witness points in the pieces
-  have hm5_2I : (2 * I : ℂ) ∈ ball (0 : ℂ) 8 ∩ ({z : ℂ | -3 < z.re} ∩ {z : ℂ | z.re < 3}) :=
+  have hm5_2I : (2 * I : ℂ) ∈ configMiddle :=
     ⟨hb2I, by norm_num [mem_ofPred_eq], by norm_num [mem_ofPred_eq]⟩
-  have hm5_m2I : (-(2 * I) : ℂ) ∈ ball (0 : ℂ) 8 ∩ ({z : ℂ | -3 < z.re} ∩ {z : ℂ | z.re < 3}) :=
+  have hm5_m2I : (-(2 * I) : ℂ) ∈ configMiddle :=
     ⟨hbm2I, by norm_num [mem_ofPred_eq], by norm_num [mem_ofPred_eq]⟩
-  have hm1_2I : (2 * I : ℂ) ∈ ball (0 : ℂ) 8 ∩ {z : ℂ | 1 < z.im} :=
+  have hm1_2I : (2 * I : ℂ) ∈ configTop :=
     ⟨hb2I, by norm_num [mem_ofPred_eq]⟩
-  have hm1_42I : (4 + 2 * I : ℂ) ∈ ball (0 : ℂ) 8 ∩ {z : ℂ | 1 < z.im} :=
+  have hm1_42I : (4 + 2 * I : ℂ) ∈ configTop :=
     ⟨hb42I, by norm_num [mem_ofPred_eq]⟩
-  have hm1_m42I : (-4 + 2 * I : ℂ) ∈ ball (0 : ℂ) 8 ∩ {z : ℂ | 1 < z.im} :=
+  have hm1_m42I : (-4 + 2 * I : ℂ) ∈ configTop :=
     ⟨hbm42I, by norm_num [mem_ofPred_eq]⟩
-  have hm2_m2I : (-(2 * I) : ℂ) ∈ ball (0 : ℂ) 8 ∩ {z : ℂ | z.im < -1} :=
+  have hm2_m2I : (-(2 * I) : ℂ) ∈ configBottom :=
     ⟨hbm2I, by norm_num [mem_ofPred_eq]⟩
-  have hm3_m6 : (-6 : ℂ) ∈ ball (0 : ℂ) 8 ∩ {z : ℂ | z.re < -5} :=
+  have hm3_m6 : (-6 : ℂ) ∈ configLeft :=
     ⟨hbm6, by norm_num [mem_ofPred_eq]⟩
-  have hm4_6 : (6 : ℂ) ∈ ball (0 : ℂ) 8 ∩ {z : ℂ | 5 < z.re} :=
+  have hm4_6 : (6 : ℂ) ∈ configRight :=
     ⟨hb6, by norm_num [mem_ofPred_eq]⟩
-  have hmAp_42I : (4 + 2 * I : ℂ) ∈ {z : ℂ | 1 < dist z (4 : ℂ) ∧ dist z (4 : ℂ) < 3} :=
+  have hmAp_42I : (4 + 2 * I : ℂ) ∈ configRightAnnulus :=
     ⟨lt_dist_of_sq_lt (by norm_num) (by norm_num),
       dist_lt_of_sq_lt (by norm_num) (by norm_num)⟩
-  have hmAp_6 : (6 : ℂ) ∈ {z : ℂ | 1 < dist z (4 : ℂ) ∧ dist z (4 : ℂ) < 3} :=
+  have hmAp_6 : (6 : ℂ) ∈ configRightAnnulus :=
     ⟨lt_dist_of_sq_lt (by norm_num) (by norm_num),
       dist_lt_of_sq_lt (by norm_num) (by norm_num)⟩
-  have hmAm_m42I : (-4 + 2 * I : ℂ) ∈ {z : ℂ | 1 < dist z (-4 : ℂ) ∧ dist z (-4 : ℂ) < 3} :=
+  have hmAm_m42I : (-4 + 2 * I : ℂ) ∈ configLeftAnnulus :=
     ⟨lt_dist_of_sq_lt (by norm_num) (by norm_num),
       dist_lt_of_sq_lt (by norm_num) (by norm_num)⟩
-  have hmAm_m6 : (-6 : ℂ) ∈ {z : ℂ | 1 < dist z (-4 : ℂ) ∧ dist z (-4 : ℂ) < 3} :=
+  have hmAm_m6 : (-6 : ℂ) ∈ configLeftAnnulus :=
     ⟨lt_dist_of_sq_lt (by norm_num) (by norm_num),
       dist_lt_of_sq_lt (by norm_num) (by norm_num)⟩
   -- path-connectivity of the pieces
-  have hcP1 : IsPathConnected (ball (0 : ℂ) 8 ∩ {z : ℂ | 1 < z.im}) :=
+  have hcP1 : IsPathConnected configTop :=
     ((convex_ball _ _).inter (convex_halfSpace_im_gt 1)).isPathConnected ⟨_, hm1_2I⟩
-  have hcP2 : IsPathConnected (ball (0 : ℂ) 8 ∩ {z : ℂ | z.im < -1}) :=
+  have hcP2 : IsPathConnected configBottom :=
     ((convex_ball _ _).inter (convex_halfSpace_im_lt (-1))).isPathConnected ⟨_, hm2_m2I⟩
-  have hcP3 : IsPathConnected (ball (0 : ℂ) 8 ∩ {z : ℂ | z.re < -5}) :=
+  have hcP3 : IsPathConnected configLeft :=
     ((convex_ball _ _).inter (convex_halfSpace_re_lt (-5))).isPathConnected ⟨_, hm3_m6⟩
-  have hcP4 : IsPathConnected (ball (0 : ℂ) 8 ∩ {z : ℂ | 5 < z.re}) :=
+  have hcP4 : IsPathConnected configRight :=
     ((convex_ball _ _).inter (convex_halfSpace_re_gt 5)).isPathConnected ⟨_, hm4_6⟩
-  have hcP5 : IsPathConnected
-      (ball (0 : ℂ) 8 ∩ ({z : ℂ | -3 < z.re} ∩ {z : ℂ | z.re < 3})) :=
+  have hcP5 : IsPathConnected configMiddle :=
     ((convex_ball _ _).inter
       ((convex_halfSpace_re_gt (-3)).inter (convex_halfSpace_re_lt 3))).isPathConnected
       ⟨_, hm5_2I⟩
-  have hcAp : IsPathConnected {z : ℂ | 1 < dist z (4 : ℂ) ∧ dist z (4 : ℂ) < 3} :=
+  have hcAp : IsPathConnected configRightAnnulus :=
     isPathConnected_annulus zero_le_one (by norm_num)
-  have hcAm : IsPathConnected {z : ℂ | 1 < dist z (-4 : ℂ) ∧ dist z (-4 : ℂ) < 3} :=
+  have hcAm : IsPathConnected configLeftAnnulus :=
     isPathConnected_annulus zero_le_one (by norm_num)
   -- chain the pieces into a path-connected union
   have h1 := hcP5.union hcP1 ⟨_, hm5_2I, hm1_2I⟩
@@ -310,8 +324,11 @@ theorem isPathConnected_ball_diff_two_disks :
     ⟨_, mem_union_left _ (mem_union_right _ hmAp_6), hm4_6⟩
   have h6 := h5.union hcP3
     ⟨_, mem_union_left _ (mem_union_right _ hmAm_m6), hm3_m6⟩
-  -- the union equals the configuration set
-  convert h6 using 1
+  have hcover : IsPathConnected configCover := by
+    rw [configCover, configPieces]
+    simpa only [sUnion_insert, sUnion_singleton, union_assoc] using h6
+  -- the named finite cover equals the configuration set
+  convert hcover using 1
   apply Subset.antisymm
   · -- coverage: every point of the configuration set lies in one of the pieces
     rintro z ⟨hb, hnot⟩
@@ -319,20 +336,21 @@ theorem isPathConnected_ball_diff_two_disks :
     obtain ⟨hm', hp'⟩ := hnot
     have hm : 1 < dist z (-4 : ℂ) := not_le.mp fun h ↦ hm' (mem_closedBall.mpr h)
     have hp : 1 < dist z (4 : ℂ) := not_le.mp fun h ↦ hp' (mem_closedBall.mpr h)
-    simp only [mem_union]
     rcases lt_or_ge 1 z.im with him | him1
-    · exact Or.inl (Or.inl (Or.inl (Or.inl (Or.inl (Or.inr ⟨hb, him⟩)))))
+    · exact subset_configCover (s := configTop) (by simp [configPieces]) ⟨hb, him⟩
     rcases lt_or_ge z.im (-1) with him | him2
-    · exact Or.inl (Or.inl (Or.inl (Or.inl (Or.inr ⟨hb, him⟩))))
+    · exact subset_configCover (s := configBottom) (by simp [configPieces]) ⟨hb, him⟩
     rcases lt_or_ge z.re (-5) with hre | hre1
-    · exact Or.inr ⟨hb, hre⟩
+    · exact subset_configCover (s := configLeft) (by simp [configPieces]) ⟨hb, hre⟩
     rcases lt_or_ge 5 z.re with hre | hre2
-    · exact Or.inl (Or.inr ⟨hb, hre⟩)
+    · exact subset_configCover (s := configRight) (by simp [configPieces]) ⟨hb, hre⟩
     rcases lt_or_ge z.re 3 with hre3 | hre3
     · rcases lt_or_ge (-3) z.re with hre4 | hre4
-      · exact Or.inl (Or.inl (Or.inl (Or.inl (Or.inl (Or.inl ⟨hb, hre4, hre3⟩)))))
+      · exact subset_configCover (s := configMiddle) (by simp [configPieces])
+          ⟨hb, hre4, hre3⟩
       · -- z.re ∈ [-5, -3]: the annulus around -4
-        refine Or.inl (Or.inl (Or.inr ⟨hm, ?_⟩))
+        apply subset_configCover (s := configLeftAnnulus) (by simp [configPieces])
+        refine ⟨hm, ?_⟩
         apply dist_lt_of_sq_lt (by norm_num : (0 : ℝ) < 3)
         simp only [Complex.neg_re, Complex.neg_im, Complex.re_ofNat, Complex.im_ofNat,
           neg_zero, sub_zero, sub_neg_eq_add]
@@ -341,7 +359,8 @@ theorem isPathConnected_ball_diff_two_disks :
           mul_nonneg (by linarith : (0 : ℝ) ≤ 1 - z.im)
             (by linarith : (0 : ℝ) ≤ 1 + z.im)]
     · -- z.re ∈ [3, 5]: the annulus around 4
-      refine Or.inl (Or.inl (Or.inl (Or.inr ⟨hp, ?_⟩)))
+      apply subset_configCover (s := configRightAnnulus) (by simp [configPieces])
+      refine ⟨hp, ?_⟩
       apply dist_lt_of_sq_lt (by norm_num : (0 : ℝ) < 3)
       simp only [Complex.re_ofNat, Complex.im_ofNat, sub_zero]
       nlinarith [mul_nonneg (by linarith : (0 : ℝ) ≤ z.re - 3)
@@ -349,9 +368,18 @@ theorem isPathConnected_ball_diff_two_disks :
         mul_nonneg (by linarith : (0 : ℝ) ≤ 1 - z.im)
           (by linarith : (0 : ℝ) ≤ 1 + z.im)]
   · -- every piece lies in the configuration set
-    exact union_subset (union_subset (union_subset (union_subset (union_subset
-      (union_subset P5_subset P1_subset) P2_subset) Ap_subset) Am_subset) P4_subset)
-      P3_subset
+    rw [configCover]
+    apply sUnion_subset
+    intro s hs
+    simp only [configPieces, mem_insert_iff, mem_singleton_iff] at hs
+    rcases hs with rfl | rfl | rfl | rfl | rfl | rfl | rfl
+    · exact P5_subset
+    · exact P1_subset
+    · exact P2_subset
+    · exact Ap_subset
+    · exact Am_subset
+    · exact P4_subset
+    · exact P3_subset
 
 /-- Non-crossing: the two closed configuration disks are disjoint. -/
 theorem config_disks_disjoint :

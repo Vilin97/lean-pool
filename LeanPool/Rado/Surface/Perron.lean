@@ -295,26 +295,6 @@ noncomputable def perronSup (𝓕 : Set (X → ℝ)) : X → ℝ := fun x ↦
 
 /-! ### Harnack's principle for monotone sequences of harmonic functions -/
 
-/-- The Poisson kernel is continuous on the boundary circle, for a fixed
-interior point. -/
-private theorem continuousOn_poissonKernel_sphere {z₀ w : ℂ} {R : ℝ}
-    (hw : w ∈ ball z₀ R) : ContinuousOn (poissonKernel z₀ w) (sphere z₀ R) := by
-  have hdR : ‖w - z₀‖ < R := mem_ball_iff_norm.mp hw
-  have hfun : poissonKernel z₀ w
-      = fun z ↦ (‖z - z₀‖ ^ 2 - ‖w - z₀‖ ^ 2) / ‖(z - z₀) - (w - z₀)‖ ^ 2 :=
-    funext fun z ↦ poissonKernel_def z₀ w z
-  intro z hz
-  have hzR : ‖z - z₀‖ = R := mem_sphere_iff_norm.mp hz
-  have hne : (z - z₀) - (w - z₀) ≠ 0 := by
-    intro hcon
-    rw [sub_eq_zero] at hcon
-    rw [hcon] at hzR
-    exact hdR.ne hzR
-  apply ContinuousAt.continuousWithinAt
-  rw [hfun]
-  exact ContinuousAt.div (by fun_prop) (by fun_prop)
-    (pow_ne_zero 2 (norm_ne_zero_iff.mpr hne))
-
 /-- **Harnack's inequality**, upper bound: a nonnegative harmonic function on a
 closed disk is controlled at interior points by its value at the center. -/
 private theorem harnack_le {h : ℂ → ℝ} {z₀ w : ℂ} {R : ℝ} (hR : 0 < R)
@@ -324,7 +304,7 @@ private theorem harnack_le {h : ℂ → ℝ} {z₀ w : ℂ} {R : ℝ} (hR : 0 < 
   have hcont : ContinuousOn h (sphere z₀ R) := fun z hz ↦
     ((hh z (sphere_subset_closedBall hz)).1.continuousAt).continuousWithinAt
   have hker : ContinuousOn (poissonKernel z₀ w) (sphere z₀ R) :=
-    continuousOn_poissonKernel_sphere hw
+    poissonKernel_continuousOn_sphere hw
   have hrep : Real.circleAverage (poissonKernel z₀ w • h) z₀ R = h w :=
     hh.circleAverage_poissonKernel_smul hw
   have hmv : Real.circleAverage h z₀ R = h z₀ := by

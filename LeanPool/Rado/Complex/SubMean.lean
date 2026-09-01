@@ -85,6 +85,16 @@ theorem SubMeanOn.add_meanEq {g h : ℂ → ℝ} {s : Set ℂ} (hg : SubMeanOn g
 theorem SubMeanOn.const {a : ℝ} {s : Set ℂ} : SubMeanOn (fun _ ↦ a) s :=
   ⟨continuousOn_const, fun c r _ _ ↦ (circleAverage_const a c r).ge⟩
 
+/-- Continuity plus the sub-mean-value inequality on all sufficiently small
+circles around each point. -/
+structure SubMeanLocalOn (g : ℂ → ℝ) (s : Set ℂ) : Prop where
+  continuousOn : ContinuousOn g s
+  submean_small : ∀ z ∈ s, ∀ᶠ r in 𝓝[>] (0 : ℝ), g z ≤ circleAverage g z r
+
+theorem SubMeanLocalOn.mono {g : ℂ → ℝ} {s t : Set ℂ} (hg : SubMeanLocalOn g s)
+    (hts : t ⊆ s) : SubMeanLocalOn g t :=
+  ⟨hg.continuousOn.mono hts, fun z hz ↦ hg.submean_small z (hts hz)⟩
+
 /-- If a continuous function is at most `M` on a sphere of positive radius while its
 circle average is at least `M`, then it equals `M` everywhere on the sphere. -/
 private lemma eqOn_sphere_of_le_of_circleAverage_ge {g : ℂ → ℝ} {a : ℂ} {r M : ℝ}
@@ -120,10 +130,9 @@ private lemma eqOn_sphere_of_le_of_circleAverage_ge {g : ℂ → ℝ} {a : ℂ} 
             inv_mul_cancel₀ two_pi_pos.ne', one_mul]
   exact absurd havg (not_le.mpr hlt)
 
-/-- **Strong maximum principle.** A sub-mean-value function on a connected open
-set that attains its supremum is constant. -/
-theorem SubMeanOn.eqOn_const_of_isMaxOn {g : ℂ → ℝ} {s : Set ℂ} (hs : IsOpen s)
-    (hsc : IsPreconnected s) (hg : SubMeanOn g s) {x₀ : ℂ} (hx₀ : x₀ ∈ s)
+/-- Small circles suffice for the strong maximum principle. -/
+theorem SubMeanLocalOn.eqOn_const_of_isMaxOn {g : ℂ → ℝ} {s : Set ℂ} (hs : IsOpen s)
+    (hsc : IsPreconnected s) (hg : SubMeanLocalOn g s) {x₀ : ℂ} (hx₀ : x₀ ∈ s)
     (hmax : IsMaxOn g s x₀) : EqOn g (fun _ ↦ g x₀) s := by
   set M := g x₀ with hM
   set A : Set ℂ := {x ∈ s | g x = M} with hA
@@ -133,19 +142,26 @@ theorem SubMeanOn.eqOn_const_of_isMaxOn {g : ℂ → ℝ} {s : Set ℂ} (hs : Is
     rw [Metric.isOpen_iff]
     rintro a ⟨has, hga⟩
     obtain ⟨ε, hε, hballs⟩ := Metric.isOpen_iff.mp hs a has
-    refine ⟨ε, hε, fun y hy ↦ ?_⟩
+    obtain ⟨ρ, hρ, hsmall⟩ : ∃ ρ > (0 : ℝ), ∀ r ∈ Ioo (0 : ℝ) ρ,
+        g a ≤ circleAverage g a r := by
+      obtain ⟨u, hu, huss⟩ := mem_nhdsGT_iff_exists_Ioo_subset.mp (hg.submean_small a has)
+      exact ⟨u, hu, fun r hr ↦ huss hr⟩
+    refine ⟨min ε ρ, lt_min hε hρ, fun y hy ↦ ?_⟩
+    have hylt : dist y a < min ε ρ := mem_ball.mp hy
     rcases eq_or_ne y a with rfl | hne
     · exact ⟨has, hga⟩
     · have hrpos : 0 < dist y a := dist_pos.mpr hne
-      have hrlt : dist y a < ε := mem_ball.mp hy
-      have hcb : closedBall a (dist y a) ⊆ s := (closedBall_subset_ball hrlt).trans hballs
+      have hcb : closedBall a (dist y a) ⊆ s :=
+        (closedBall_subset_ball (hylt.trans_le (min_le_left _ _))).trans hballs
       have hsph : sphere a (dist y a) ⊆ s := sphere_subset_closedBall.trans hcb
       have h1 : ∀ z ∈ sphere a (dist y a), g z ≤ M := fun z hz ↦ hmax (hsph hz)
       have h2 : M ≤ circleAverage g a (dist y a) := by
-        rw [← hga]; exact hg.submean a _ hrpos hcb
+        rw [← hga]
+        exact hsmall _ ⟨hrpos, hylt.trans_le (min_le_right _ _)⟩
       have heq := eqOn_sphere_of_le_of_circleAverage_ge hrpos
         (hg.continuousOn.mono hsph) h1 h2
-      exact ⟨hballs hy, heq y (mem_sphere.mpr rfl)⟩
+      exact ⟨hballs (mem_ball.mpr (hylt.trans_le (min_le_left _ _))),
+        heq y (mem_sphere.mpr rfl)⟩
   -- `B` is open by continuity
   have hBopen : IsOpen B := by
     have hBeq : B = s ∩ g ⁻¹' {M}ᶜ := by
@@ -166,12 +182,11 @@ theorem SubMeanOn.eqOn_const_of_isMaxOn {g : ℂ → ℝ} {s : Set ℂ} (hs : Is
     exact (hsA hx).2
   · exact absurd hM.symm (hsB hx₀).2
 
-/-- **Boundary comparison principle.** A sub-mean-value function on a bounded
-open set, continuous up to the closure and `≤ M` on the frontier, is `≤ M`
-everywhere on the closure. -/
-theorem SubMeanOn.le_of_frontier_le {g : ℂ → ℝ} {U : Set ℂ} (hU : IsOpen U)
-    (hUb : Bornology.IsBounded U) (hg : SubMeanOn g U) (hgc : ContinuousOn g (closure U))
-    {M : ℝ} (hbd : ∀ x ∈ frontier U, g x ≤ M) : ∀ x ∈ closure U, g x ≤ M := by
+/-- Small circles suffice for the boundary comparison principle. -/
+theorem SubMeanLocalOn.le_of_frontier_le {g : ℂ → ℝ} {U : Set ℂ} (hU : IsOpen U)
+    (hUb : Bornology.IsBounded U) (hg : SubMeanLocalOn g U)
+    (hgc : ContinuousOn g (closure U)) {M : ℝ} (hbd : ∀ x ∈ frontier U, g x ≤ M) :
+    ∀ x ∈ closure U, g x ≤ M := by
   intro x hx
   have hKc : IsCompact (closure U) := hUb.isCompact_closure
   obtain ⟨z, hzK, hzmax⟩ := hKc.exists_isMaxOn ⟨x, hx⟩ hgc
@@ -223,6 +238,29 @@ theorem SubMeanOn.le_of_frontier_le {g : ℂ → ℝ} {U : Set ℂ} (hU : IsOpen
     calc g z = g b := hgb.symm
       _ ≤ M := hbd b hbfr
   · exact hbd z (by rw [hU.frontier_eq]; exact ⟨hzK, hzU⟩)
+
+/-- On an open set, the global sub-mean property supplies its local variant. -/
+theorem SubMeanOn.localOn {g : ℂ → ℝ} {s : Set ℂ} (hg : SubMeanOn g s)
+    (hs : IsOpen s) : SubMeanLocalOn g s := by
+  refine ⟨hg.continuousOn, fun z hz ↦ ?_⟩
+  obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.mp hs z hz
+  filter_upwards [Ioo_mem_nhdsGT hε] with r hr
+  exact hg.submean z r hr.1 ((closedBall_subset_ball hr.2).trans hball)
+
+/-- **Strong maximum principle.** A sub-mean-value function on a connected open
+set that attains its supremum is constant. -/
+theorem SubMeanOn.eqOn_const_of_isMaxOn {g : ℂ → ℝ} {s : Set ℂ} (hs : IsOpen s)
+    (hsc : IsPreconnected s) (hg : SubMeanOn g s) {x₀ : ℂ} (hx₀ : x₀ ∈ s)
+    (hmax : IsMaxOn g s x₀) : EqOn g (fun _ ↦ g x₀) s :=
+  (hg.localOn hs).eqOn_const_of_isMaxOn hs hsc hx₀ hmax
+
+/-- **Boundary comparison principle.** A sub-mean-value function on a bounded
+open set, continuous up to the closure and `≤ M` on the frontier, is `≤ M`
+everywhere on the closure. -/
+theorem SubMeanOn.le_of_frontier_le {g : ℂ → ℝ} {U : Set ℂ} (hU : IsOpen U)
+    (hUb : Bornology.IsBounded U) (hg : SubMeanOn g U) (hgc : ContinuousOn g (closure U))
+    {M : ℝ} (hbd : ∀ x ∈ frontier U, g x ≤ M) : ∀ x ∈ closure U, g x ≤ M :=
+  (hg.localOn hU).le_of_frontier_le hU hUb hgc hbd
 
 /-- Uniqueness from boundary values: two mean-value functions on a bounded open
 set, continuous up to the closure and equal on the frontier, agree on the

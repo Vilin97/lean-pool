@@ -117,7 +117,7 @@ theorem witness_mem_configY :
   have hnorm : ‖t‖ = (2:ℝ) ^ ((1:ℝ)/4) := norm_two_cpow_quarter
   have h1 : 1 < ‖t‖ := by rw [hnorm]; exact one_lt_two_rpow_quarter
   have h2 : ‖t‖ < 2 := by rw [hnorm]; exact two_rpow_quarter_lt_two
-  have h8 : ‖(8:ℂ)‖ = 8 := by simp
+  have h8 : ‖(8 : ℂ)‖ = 8 := by simp
   have hb₁ : closedBall (-4 : ℂ) 1 ⊆ ball (0:ℂ) 8 :=
     closedBall_config_subset (by simp) (by norm_num)
   have hb₂ : closedBall (4 : ℂ) 1 ⊆ ball (0:ℂ) 8 :=
@@ -140,7 +140,7 @@ theorem witness_mem_configY :
     rw [hrw]
     have hlow := norm_sub_norm_le (8:ℂ) (-t)
     rw [sub_neg_eq_add, norm_neg] at hlow
-    linarith
+    linarith [h8]
   have hd₃ : 1 < dist (-4 + t) (-4) := by
     rw [dist_eq_norm]
     have hrw : (-4 + t) - (-4) = t := by ring
@@ -150,7 +150,7 @@ theorem witness_mem_configY :
     have hrw : (-4 + t) - 4 = t - 8 := by ring
     rw [hrw, norm_sub_rev]
     have hlow := norm_sub_norm_le (8:ℂ) t
-    linarith
+    linarith [h8]
   constructor
   · refine ⟨mem_univ _, ?_⟩
     rintro (hmem | hmem)
@@ -514,7 +514,6 @@ at `-4` (every family member is dominated on the annulus by
 `1 - log(2/|ζ+4|)/log 2`, by the boundary comparison principle). -/
 theorem perronSup_le_witness [T2Space X] :
     perronSup (configFamily e) (e.symm (-4 + (2 : ℂ) ^ ((1 : ℂ) / 4))) ≤ 1 / 4 := by
-  have hYo : IsOpen (configY e) := isOpen_configY hb
   set t := (2 : ℂ) ^ ((1 : ℂ) / 4) with ht
   have hnt : ‖t‖ = (2 : ℝ) ^ ((1 : ℝ) / 4) := norm_two_cpow_quarter
   have h1t : 1 < ‖t‖ := by rw [hnt]; exact one_lt_two_rpow_quarter

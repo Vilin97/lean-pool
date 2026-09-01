@@ -6702,7 +6702,9 @@ projects:
       - declaration: Rado.exists_harmonic_extension
         informal: >-
           Every continuous real-valued function on a Euclidean circle extends
-          continuously to its closed disk and harmonically to the open disk.
+          continuously to its closed disk and harmonically to the open disk;
+          unlike the existing LeanComplexAnalysis Poisson theorems, this
+          constructs the harmonic function rather than assuming one.
       - declaration: Rado.IsPerronFamily.surfaceHarmonicOn_perronSup
         informal: >-
           The pointwise upper envelope of a Perron family of surface

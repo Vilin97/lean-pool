@@ -75,7 +75,7 @@ theorem poissonKernel_pos (hw : w ∈ ball c R) (hz : z ∈ sphere c R) :
 
 /-- The Poisson kernel is continuous on the circle, for a fixed interior
 point. -/
-private theorem continuousOn_poissonKernel (hw : w ∈ ball c R) :
+theorem poissonKernel_continuousOn_sphere (hw : w ∈ ball c R) :
     ContinuousOn (poissonKernel c w) (sphere c R) := by
   intro z hz
   have hne : ‖(z - c) - (w - c)‖ ^ 2 ≠ 0 :=
@@ -90,7 +90,7 @@ theorem circleAverage_poissonKernel (hw : w ∈ ball c R) :
     Real.circleAverage (poissonKernel c w) c R = 1 := by
   have hR : 0 < R := pos_of_mem_ball hw
   have hint : CircleIntegrable (poissonKernel c w) c R :=
-    (continuousOn_poissonKernel hw).circleIntegrable hR.le
+    (poissonKernel_continuousOn_sphere hw).circleIntegrable hR.le
   have hconst : DiffContOnCl ℂ (fun _ : ℂ ↦ (1 : ℂ)) (ball c R) :=
     ⟨differentiableOn_const _, continuousOn_const⟩
   have h1 := hconst.circleAverage_poissonKernel_smul hw
@@ -217,8 +217,6 @@ theorem schwarzIntegral_differentiableOn (hR : 0 < R) (hf : ContinuousOn f (sphe
     have h : ContinuousAt (fun z : ℂ ↦ (z - c) / (z - w)) z :=
       ContinuousAt.div (by fun_prop) (by fun_prop) (hwz z hz)
     exact h.continuousWithinAt
-  have hA_int : CircleIntegrable (fun z ↦ (z - c) / (z - w) * ((f z : ℝ) : ℂ)) c R :=
-    hA_cont.circleIntegrable hR.le
   have hA2_int : CircleIntegrable
       (fun z ↦ (2 : ℂ) * ((z - c) / (z - w) * ((f z : ℝ) : ℂ))) c R :=
     (continuousOn_const.mul hA_cont).circleIntegrable hR.le
@@ -292,7 +290,8 @@ theorem tendsto_re_schwarzIntegral (hR : 0 < R) (hf : ContinuousOn f (sphere c R
   rw [Real.dist_eq, re_schwarzIntegral hR hf hw]
   simp only [smul_eq_mul]
   -- integrability of all integrands in sight
-  have hKcont : ContinuousOn (poissonKernel c w) (sphere c R) := continuousOn_poissonKernel hw
+  have hKcont : ContinuousOn (poissonKernel c w) (sphere c R) :=
+    poissonKernel_continuousOn_sphere hw
   have hKf_int : CircleIntegrable (fun z ↦ poissonKernel c w z * (f z - f ζ₀)) c R :=
     (hKcont.mul (hf.sub continuousOn_const)).circleIntegrable hR.le
   have hKf₁_int : CircleIntegrable (fun z ↦ poissonKernel c w z * f z) c R :=

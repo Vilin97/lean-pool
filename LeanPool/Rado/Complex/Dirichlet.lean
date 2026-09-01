@@ -18,8 +18,13 @@ with two-sided bounds) and the representation of an *already harmonic* function
 by its Poisson integral (`Mathlib/Analysis/Complex/Harmonic/Poisson.lean`); what
 is missing is the solution of the Dirichlet problem for *arbitrary* continuous
 boundary data: existence is proved in `Rado/Complex/Poisson.lean`
-(`exists_harmonic_extension`); this file packages it and derives the
-characterizations used by Perron's method:
+(`exists_harmonic_extension`). The pooled LeanComplexAnalysis results
+`poisson_integral_of_harmonicOn_unitDisc_continuousOn_closedUnitDisc` and
+`poisson_integral_of_harmonicOn_disc_continuousOn_closedDisc` likewise assume
+an existing harmonic function and prove its representation; they do not
+construct a harmonic extension from arbitrary boundary data. This file
+packages that complementary existence result and derives the characterizations
+used by Perron's method:
 
 * `poissonExtension` — a choice function packaging the solution, with API.
 * `harmonicOnNhd_iff_meanEqOn` — harmonic ↔ continuous + mean-value property,
