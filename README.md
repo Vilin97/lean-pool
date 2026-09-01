@@ -7,6 +7,7 @@
 [![Lean Action CI](https://github.com/Vilin97/lean-pool/actions/workflows/lean_action_ci.yml/badge.svg)](https://github.com/Vilin97/lean-pool/actions/workflows/lean_action_ci.yml)
 [![Documentation](https://img.shields.io/badge/docs-online-blue)](https://vilin97.github.io/lean-pool/)
 [![Exposition](https://img.shields.io/badge/exposition-online-8a4fff)](https://vilin97.github.io/lean-pool/exposition/)
+[![Semantic Search](https://img.shields.io/badge/semantic_search-Octo-2f80ed)](https://octo.axiomatic-ai.com/search?scopes=repo%3AVilin97%2Flean-pool)
 [![License](https://img.shields.io/github/license/Vilin97/lean-pool)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20513444.svg)](https://doi.org/10.5281/zenodo.20513444)
 
