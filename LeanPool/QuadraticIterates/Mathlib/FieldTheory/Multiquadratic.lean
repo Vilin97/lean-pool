@@ -4,12 +4,25 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
 import Mathlib.Algebra.Field.ZMod
+import Mathlib.Algebra.Module.ZMod
 import Mathlib.FieldTheory.Galois.Basic
 import Mathlib.FieldTheory.Perfect
 import Mathlib.FieldTheory.Relrank
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.GroupTheory.QuotientGroup.Basic
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.LinearAlgebra.Span.Defs
+import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
+import Mathlib.Tactic.ComputeDegree
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Order
+import Mathlib.Tactic.Push
+import Mathlib.Tactic.Ring
 
 import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
 import LeanPool.QuadraticIterates.Mathlib.GroupTheory.PGroup

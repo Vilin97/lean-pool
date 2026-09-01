@@ -5,9 +5,8 @@ Authors: Michael Stoll
 -/
 import Mathlib.Algebra.Field.ZMod
 import Mathlib.FieldTheory.Finiteness
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.GroupTheory.PGroup
+import Mathlib.GroupTheory.Perm.DomMulAct
 
 /-!
 # Fixed points of 2-groups on 𝔽₂-modules

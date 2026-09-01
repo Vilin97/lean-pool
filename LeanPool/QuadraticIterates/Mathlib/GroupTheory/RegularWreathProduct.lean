@@ -3,12 +3,12 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
+import Mathlib.Algebra.Group.TypeTags.Hom
+import Mathlib.Algebra.Module.ZMod
 import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.GroupTheory.RegularWreathProduct
-import Mathlib.LinearAlgebra.Matrix.FiniteDimensional
-import Mathlib.RingTheory.PicardGroup
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.LinearAlgebra.Dual.Lemmas
+import Mathlib.SetTheory.Cardinal.Finite
 
 /-!
 # Homomorphisms from wreath products to abelian groups

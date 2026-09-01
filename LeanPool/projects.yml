@@ -4,8 +4,8 @@ projects:
     summary: >-
       Formalizes Stoll's criterion for when the Galois group of the n-th iterate
       of X² + a over the rationals is the full n-fold iterated wreath product of
-      C₂. It proves the criterion in terms of two-independence of the critical
-      orbit and its pairwise-coprime Möbius factors, and derives the paper's
+      C₂. It proves the criterion in terms of two-independence of a signed
+      critical-orbit sequence and its pairwise-coprime Möbius factors, and derives the paper's
       congruence families for which maximality holds at every level. The
       supporting library develops reusable multiquadratic-extension, iterated
       wreath-product, Möbius-factor, and valuation results.
@@ -31,8 +31,9 @@ projects:
         informal: >-
           For each n, assuming -a is not a rational square, the Galois group of
           the n-th iterate of X² + a is the full n-fold iterated wreath product
-          of C₂ exactly when either the first n critical-orbit values or their
-          first n integer Möbius factors are independent modulo rational
+          of C₂ exactly when either the first n terms of the signed sequence
+          c₁ = -a, cₖ = fₖ(0) for k ≥ 2, or the first n integer Möbius
+          factors of that sequence are independent modulo rational
           squares.
       - declaration: QuadraticIterates.section1_squarefree
         informal: >-

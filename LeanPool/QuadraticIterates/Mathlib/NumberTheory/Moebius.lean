@@ -3,12 +3,14 @@ Copyright (c) 2026 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Analysis.Normed.Ring.Lemmas
-import Mathlib.Data.Int.Star
-import Mathlib.LinearAlgebra.LinearPMap
+import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Order
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
 
 /-!
 # Sums of the Möbius function over divisors

@@ -5,11 +5,13 @@ Authors: Michael Stoll
 -/
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Order.CompletePartialOrder
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.PicardGroup
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.Localization.FractionRing
+import Mathlib.RingTheory.Localization.Integer
 import Mathlib.RingTheory.UniqueFactorizationDomain.Finsupp
+import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
+import Mathlib.RingTheory.UniqueFactorizationDomain.NormalizedFactors
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Push
 
 import LeanPool.QuadraticIterates.Mathlib.Algebra.BigOperators
 import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
