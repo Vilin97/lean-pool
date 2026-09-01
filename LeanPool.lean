@@ -3253,7 +3253,6 @@ import LeanPool.QuadraticIterates.Mathlib.GroupTheory.Card
 import LeanPool.QuadraticIterates.Mathlib.GroupTheory.PGroup
 import LeanPool.QuadraticIterates.Mathlib.GroupTheory.RegularWreathProduct
 import LeanPool.QuadraticIterates.Mathlib.NumberTheory.Moebius
-import LeanPool.QuadraticIterates.Mathlib.NumberTheory.PadicVal
 import LeanPool.QuadraticIterates.Mathlib.RingTheory.MoebiusFactor
 import LeanPool.QuadraticIterates.Mathlib.RingTheory.UniqueFactorizationDomain
 import LeanPool.QuasiBorelSpaces
