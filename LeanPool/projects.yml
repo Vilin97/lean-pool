@@ -1,4 +1,103 @@
 projects:
+  - slug: quadratic-iterates
+    title: Galois groups of quadratic polynomial iterates
+    summary: >-
+      Formalizes Stoll's criterion for when the Galois group of the n-th iterate
+      of X² + a over the rationals is the full n-fold iterated wreath product of
+      C₂. It proves the criterion in terms of two-independence of a signed
+      critical-orbit sequence and its pairwise-coprime Möbius factors, and derives the paper's
+      congruence families for which maximality holds at every level. The
+      supporting library develops reusable multiquadratic-extension, iterated
+      wreath-product, Möbius-factor, and valuation results.
+    branch: arithmetic dynamics and Galois theory
+    entry_module: LeanPool.QuadraticIterates
+    authors:
+      - Michael Stoll
+    source:
+      title: Galois groups over ℚ of some iterated polynomials
+      authors:
+        - Michael Stoll
+      doi: 10.1007/BF01197321
+      url: https://github.com/MichaelStollBayreuth/QuadraticIterates
+      github_repo: MichaelStollBayreuth/QuadraticIterates
+      commit: b0413c173972ddf121cb4394cb06f9d2b83e501f
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - QuadraticIterates.section3_main
+    main_results:
+      - declaration: QuadraticIterates.section1_equiv
+        informal: >-
+          For each n, assuming -a is not a rational square, the Galois group of
+          the n-th iterate of X² + a is the full n-fold iterated wreath product
+          of C₂ exactly when either the first n terms of the signed sequence
+          c₁ = -a, cₖ = fₖ(0) for k ≥ 2, or the first n integer Möbius
+          factors of that sequence are independent modulo rational
+          squares.
+      - declaration: QuadraticIterates.section1_squarefree
+        informal: >-
+          If -a is not a rational square and none of the absolute Möbius factors
+          from levels 2 through n is a rational square, then the n-th iterate
+          has the full iterated-wreath-product Galois group.
+      - declaration: QuadraticIterates.section3_main
+        informal: >-
+          The Galois group is the full iterated wreath product at every positive
+          level when a is positive and congruent to 1 or 2 modulo 4, or when a
+          is negative and divisible by 4 with -a nonsquare.
+    tags:
+      - arithmetic-dynamics
+      - galois-theory
+      - iterated-polynomials
+    msc:
+      - "11R32"
+      - "12F10"
+      - "37P05"
+  - slug: multicolor-triangle-ramsey
+    title: Superexponential lower bounds for multicolor triangle Ramsey numbers
+    summary: >-
+      Resolves Erdős problem 183 by proving that the k-color triangle Ramsey
+      number has a k-th root tending to infinity. The development constructs
+      saturated palette families and recursive edge colorings, derives an
+      explicit superexponential lower bound, and proves matching order-of-growth
+      bounds for the logarithm of the Ramsey number.
+    branch: extremal combinatorics and Ramsey theory
+    entry_module: LeanPool.MulticolorTriangleRamsey
+    authors:
+      - OpenAI
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - ErdosProblems.MulticolourTriangleRamsey.erdos_problem_183_explicit
+    main_results:
+      - declaration: ErdosProblems.MulticolourTriangleRamsey.erdos_183
+        informal: >-
+          The k-th root of the k-color triangle Ramsey number tends to infinity,
+          resolving Erdős problem 183.
+      - declaration: ErdosProblems.MulticolourTriangleRamsey.erdos_problem_183_explicit
+        informal: >-
+          For every k at least two, the k-color triangle Ramsey number is at least
+          ((k^(1/3))/(6 exp(38) log k))^k, and its k-th root tends to infinity.
+      - declaration: ErdosProblems.MulticolourTriangleRamsey.triangleRamseyNumber_log_isTheta
+        informal: >-
+          The logarithm of the k-color triangle Ramsey number has order
+          k log k.
+    tags:
+      - extremal-combinatorics
+      - ramsey-theory
+      - graph-coloring
+      - erdos-problems
+    msc:
+      - "05D10"
+      - "05C55"
   - slug: connes-rigidity
     title: Conditional formalization of Zhou's Connes-rigidity counterexample
     summary: >-
@@ -6248,3 +6347,319 @@ projects:
     msc:
       - "05B07"
       - "05C70"
+  - slug: matching-logic-completeness
+    title: Global completeness of one-sorted definedness-free matching logic
+    summary: >-
+      Formalizes the one-sorted case of Chen and Roșu's global-completeness
+      argument and independently discharges its local-completeness oracle by
+      mechanizing the canonical-model construction from their 2019 Matching
+      μ-Logic technical report (Theorem 73, Lemmas 80–81, and strong local
+      completeness Theorem 83). The resulting theorem supplies both local
+      completeness and soundness for countably infinite variable types.
+    branch: mathematical logic and formal methods
+    entry_module: LeanPool.MatchingLogic
+    authors:
+      - Aurélien Eveil
+      - Anthropic
+      - OpenAI
+    source:
+      title: >-
+        Completeness and incompleteness of basic matching logic; Matching μ-Logic
+        (2019 technical report)
+      authors:
+        - Xiaohong Chen
+        - Grigore Roșu
+      arxiv: "2608.13306"
+      url: https://hdl.handle.net/2142/102281
+      github_repo: eveil-labs/matching-logic-lean
+      commit: 4628a26bb2db117de1a11cbedcb620db9124cdb8
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - MatchingLogic.global_completeness_entryIII
+    main_results:
+      - declaration: MatchingLogic.locality
+        informal: >-
+          For a backward-closed subset of a matching-logic model, two valuations
+          that agree inside the subset and both stay outside it otherwise give
+          identical denotations after restriction to that subset.
+      - declaration: MatchingLogic.two_copies
+        informal: >-
+          The double-cover model over a nonempty backward-closed proper subset has
+          exactly the denotation predicted by each of its two projections back to
+          the original model.
+      - declaration: MatchingLogic.semantic_localization
+        informal: >-
+          For a closed theory and closed conclusion, global semantic consequence
+          is equivalent to local consequence from the localized theory.
+      - declaration: MatchingLogic.strongLocalCompleteness
+        informal: >-
+          One-sorted basic matching logic has strong local completeness over an
+          arbitrary one-sorted finitary signature when the element-variable type
+          is countably infinite.
+      - declaration: MatchingLogic.global_completeness_entryIII
+        informal: >-
+          For a one-sorted finitary signature, closed premises and conclusion,
+          and a countably infinite element-variable type, global semantic
+          consequence is equivalent to derivability, with both soundness and
+          local completeness discharged.
+    tags:
+      - matching-logic
+      - mathematical-logic
+      - modal-logic
+      - completeness
+      - formal-methods
+    msc:
+      - "03B45"
+      - "03B70"
+  - slug: finite-graph-fundamental-group
+    title: Fundamental groups of finite connected graphs
+    summary: >-
+      Constructs the standard interval-cell realization of a finite connected directed
+      multigraph and proves that its topological fundamental group is a free group of rank
+      E - V + 1. The proof uses an explicit spanning-tree basis and develops a verified
+      path-lifting cover, a contraction of the covering tree, root-change equivalences, the
+      tree/triviality criterion, and the corresponding free-abelian result.
+    branch: algebraic topology and graph theory
+    entry_module: LeanPool.FiniteGraphFundamentalGroup
+    authors:
+      - Arthur Freitas Ramos
+      - David Hulak
+      - Ruy de Queiroz
+    source:
+      title: "Algebraic Topology, Additional Topic 1.A: Graphs and Free Groups"
+      authors:
+        - Allen Hatcher
+      url: https://pi.math.cornell.edu/~hatcher/AT/AT.pdf
+      github_repo: Arthur742Ramos/finite-graph-fundamental-group
+      commit: dd57e3ab8bc5a7042fcc5498e778b008d87ac032
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - FiniteGraphFreeGroup.graphTopologicalFundamentalGroupEquiv
+    main_results:
+      - declaration: FiniteGraphFreeGroup.graphTopologicalFundamentalGroupEquiv
+        informal: >-
+          For a finite weakly connected directed multigraph, the topological fundamental group
+          of its interval-cell quotient realization at any vertex is explicitly isomorphic to
+          the free group on E + 1 - V generators.
+      - declaration: FiniteGraphFreeGroup.graphCombinatorialToTopologicalEquiv
+        informal: >-
+          The endomorphism group at a vertex in the graph's free groupoid is explicitly
+          isomorphic to the topological fundamental group of the interval-cell realization.
+      - declaration: FiniteGraphFreeGroup.graphCoverProjection_isCovering
+        informal: >-
+          The canonical path-lifting projection from rooted free-groupoid paths to graph
+          vertices is a quiver covering, with bijective maps on every incoming and outgoing
+          edge star.
+      - declaration: FiniteGraphFreeGroup.graphRealization_tree_simplyConnected
+        informal: >-
+          The interval-cell realization of a directed arborescence is simply connected, via an
+          explicit continuous contraction to its root.
+      - declaration: FiniteGraphFreeGroup.graphFundamentalGroup_subsingleton_iff_cycleRank_zero
+        informal: >-
+          The combinatorial fundamental group is trivial exactly when the graph's cycle rank
+          E + 1 - V is zero.
+      - declaration: FiniteGraphFreeGroup.graphFundamentalGroupFreeAbelianizationEquiv
+        informal: >-
+          The additive abelianization of the graph fundamental group is the free abelian group
+          on E + 1 - V generators.
+    tags:
+      - algebraic-topology
+      - graph-theory
+      - fundamental-groups
+      - free-groups
+      - covering-spaces
+    msc:
+      - "05C25"
+      - "55Q05"
+      - "20F65"
+  - slug: composition-algebras
+    title: Hurwitz's Classification of Euclidean Composition Algebras
+    summary: >-
+      Formalizes Hurwitz's classification of nontrivial finite-dimensional real
+      Euclidean composition algebras: every such algebra has dimension 1, 2, 4,
+      or 8 and is real-linearly equivalent to the real numbers, complex numbers,
+      quaternions, or octonions through a map preserving the unit, multiplication,
+      and norm form. The development also constructs the octonions from an explicit Fano multiplication table,
+      proves Degen's eight-square identity, and shows
+      that Cayley--Dickson doubling preserves the composition law for
+      associative inputs.
+    branch: nonassociative algebra
+    entry_module: LeanPool.CompositionAlgebras
+    authors:
+      - Bryan Ehrlich
+    source:
+      title: Über die Composition der quadratischen Formen von beliebig vielen Variablen
+      authors:
+        - Adolf Hurwitz
+      url: https://eudml.org/doc/58420
+      github_repo: ehrlich-b/composition-algebras
+      commit: e37e22b0571a170ba18a0d8db29fe2a857906b92
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - CompositionAlgebra.hurwitz_classification
+    main_results:
+      - declaration: CompositionAlgebra.hurwitz_classification
+        informal: >-
+          Every nontrivial finite-dimensional real Euclidean composition algebra
+          is linearly equivalent to the real numbers, complex numbers,
+          quaternions, or octonions through a map preserving the unit,
+          multiplication, and norm form.
+      - declaration: CompositionAlgebra.finrank_eq_one_or_two_or_four_or_eight
+        informal: >-
+          The real dimension of a nontrivial finite-dimensional Euclidean
+          composition algebra is exactly 1, 2, 4, or 8.
+      - declaration: CompositionAlgebra.CD.instCompositionAlgebra
+        informal: >-
+          The Cayley--Dickson double of a nontrivial associative Euclidean
+          composition algebra again satisfies the composition law.
+      - declaration: Octonion.nucleus_real
+        informal: >-
+          Any octonion that associates in the third slot with every pair has
+          zero imaginary coordinates and hence lies on the real line.
+    tags:
+      - nonassociative-algebra
+      - composition-algebras
+      - octonions
+      - hurwitz-theorem
+      - cayley-dickson
+    msc:
+      - "17A75"
+      - "17A35"
+      - "11E88"
+  - slug: ulms-theorem
+    title: Ulm's theorem for countable reduced abelian p-groups
+    summary: >-
+      Formalizes Ulm's classification theorem for countable reduced abelian
+      p-groups in arbitrary Lean universes. The development constructs the
+      transfinite Ulm filtration and invariants, proves their invariance under
+      additive equivalence, establishes Kaplansky's one-generator extension
+      lemma, and completes the countable back-and-forth classification. A
+      finite-group regression distinguishes Z/4 x Z/4 from Z/2 x Z/8 at the
+      zeroth Ulm invariant.
+    branch: abelian group theory
+    entry_module: LeanPool.UlmsTheorem
+    authors:
+      - Elan Roth
+    source:
+      title: Ulm's theorem for countable reduced abelian p-groups
+      authors:
+        - Elan Roth
+      url: https://github.com/elanroth/UlmsTheorem
+      github_repo: elanroth/UlmsTheorem
+      commit: 3bb8a10ae12eb957a0f05db248d3becaf6a7e222
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - UlmsTheorem.ulm_theorem
+    main_results:
+      - declaration: UlmsTheorem.ulm_theorem
+        informal: >-
+          For any prime p and any two countable reduced abelian p-groups in the
+          same arbitrary Lean universe, the groups are additively isomorphic if
+          and only if all of their classical Ulm invariants, indexed by
+          universe-zero ordinals, agree.
+      - declaration: UlmsTheorem.iso_of_ulm_invariants
+        informal: >-
+          Equal Ulm invariants at every universe-zero ordinal imply an additive
+          equivalence between countable reduced abelian p-groups, via finite
+          height-preserving partial isomorphisms and a back-and-forth limit.
+      - declaration: UlmsTheorem.ulmInvariant_iso_invariant
+        informal: >-
+          An additive equivalence preserves every classical Ulm invariant.
+      - declaration: UlmsTheorem.UlmDifferentialRegression.no_iso_44_28
+        informal: >-
+          The groups Z/4 x Z/4 and Z/2 x Z/8 are not additively isomorphic; the
+          proof exercises the classification theorem and independently detects
+          their different zeroth Ulm invariants.
+    tags:
+      - abelian-groups
+      - p-groups
+      - classification-theorems
+      - ordinal-filtrations
+      - ulm-invariants
+    msc:
+      - "20K10"
+  - slug: local-complex-geometry
+    title: Foundational local complex-analytic geometry
+    summary: >-
+      Develops a common Lean foundation for several classical local theorems in
+      several complex variables: complex-analytic Weierstrass preparation with
+      full germ uniqueness, Noetherianity of holomorphic-germ rings, finite
+      projection for hypersurface germs, the holomorphic constant-rank normal
+      form, and the finite-family local analytic Nullstellensatz. The imported
+      development also exposes the arbitrary-ideal Nullstellensatz and regular
+      level-set, submersion, and immersion consequences.
+    branch: several complex variables and local analytic geometry
+    entry_module: LeanPool.LocalComplexGeometry
+    authors:
+      - BochaoKong
+    source:
+      title: Foundational theorems in local complex-analytic geometry
+      authors:
+        - BochaoKong
+      url: https://github.com/BochaoKong/nullstellensatz
+      github_repo: BochaoKong/nullstellensatz
+      commit: 029697242294aea7989bf5d391199696a43490df
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LocalComplexGeometry.localAnalyticNullstellensatz
+    main_results:
+      - declaration: LocalComplexGeometry.localAnalyticNullstellensatz
+        informal: >-
+          If a finite family of functions analytic at the origin has common
+          zero set locally contained in the zero set of another analytic
+          function, then a positive power of the latter is locally an analytic
+          linear combination of the family.
+      - declaration: LocalComplexGeometry.holomorphicGerm_isNoetherian
+        informal: >-
+          For every finite complex dimension, including dimension zero, the
+          local ring of holomorphic germs at the origin is Noetherian.
+      - declaration: LocalComplexGeometry.hypersurface_finiteProjection
+        informal: >-
+          A nonzero hypersurface germ vanishing at the origin admits a linear
+          coordinate change whose local quotient is finite free over the base
+          germ ring, together with an explicit prepared equation and a proper,
+          surjective finite-fiber projection of the local zero set.
+      - declaration: LocalComplexGeometry.holomorphic_constantRank_normalForm
+        informal: >-
+          An analytic map of locally constant complex rank is locally equivalent,
+          through analytic source and target coordinates, to the standard rank
+          projection.
+      - declaration: ClassicalComplexWPT.classicalComplexWeierstrassPreparation
+        informal: >-
+          A complex-analytic germ of exact order in one distinguished variable
+          factors uniquely into a nonvanishing analytic unit and a monic
+          Weierstrass polynomial whose analytic coefficient germs vanish at the
+          origin.
+        source_ref: >-
+          BochaoKong/classical-complex-wpt, commit
+          b4a7273fe5c9752753c52e10494097569089642d (2026-08-28).
+      - declaration: LocalComplexGeometry.analyticNullstellensatz_ideal
+        informal: >-
+          For every ideal of the local holomorphic-germ ring, the ideal of germs
+          vanishing on its local zero set equals its radical.
+      - declaration: LocalComplexGeometry.holomorphic_regularLevelSet_parametrization
+        informal: >-
+          Near a regular point, the level set of a holomorphic map admits an
+          analytic parametrization with an analytic local inverse on the level
+          set.
+    tags:
+      - complex-analysis
+      - analytic-geometry
+      - nullstellensatz
+      - weierstrass-preparation
+    msc:
+      - "32A05"
+      - "32A10"
+      - "32B05"
+      - "32C25"
+      - "13E05"
