@@ -96,12 +96,12 @@ abbrev SquareClasses (L : Type*) [Field L] : Type _ :=
 
 instance : Module (ZMod 2) (SquareClasses L) :=
   AddCommGroup.zmodModule (G := SquareClasses L) fun x ↦ by
-    apply Additive.toMul.injective
     have hsq : Additive.toMul x ^ 2 = 1 := by
       refine QuotientGroup.induction_on (Additive.toMul x) fun u ↦ ?_
       rw [← QuotientGroup.mk_pow]
       exact (QuotientGroup.eq_one_iff _).mpr ⟨u, rfl⟩
-    simpa [two_nsmul, pow_two] using hsq
+    change Additive.ofMul (Additive.toMul x ^ 2) = Additive.ofMul 1
+    exact congrArg Additive.ofMul hsq
 
 open Classical in
 /-- The class of a nonzero field element in `Lˣ/(Lˣ)²` (junk value `0` at `r = 0`). -/
