@@ -7,7 +7,9 @@ import Mathlib.Analysis.Normed.Module.Connected
 import Mathlib.Analysis.Complex.Convex
 import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import Mathlib.Topology.Instances.Complex
-import Mathlib.Tactic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 
 /-!
 # Planar connectivity for the standard configuration

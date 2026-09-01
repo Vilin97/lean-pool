@@ -7,7 +7,8 @@ import Mathlib.Analysis.Normed.Module.Connected
 import Mathlib.MeasureTheory.Integral.CircleAverage
 import Mathlib.Topology.MetricSpace.ProperSpace.Lemmas
 import Mathlib.Topology.Order.Compact
-import Mathlib.Tactic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Positivity
 
 /-!
 # Sub-mean-value functions on `ℂ` and maximum principles
