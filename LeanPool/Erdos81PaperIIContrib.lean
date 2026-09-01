@@ -7,9 +7,9 @@ Authors: Juan Pablo Traverso Gianini
 import LeanPool.Erdos81PaperIIContrib.Chordal
 
 /-!
-# Chordal graphs: minimal separators and Dirac's theorem
+# Chordal graphs: minimal separators and simplicial vertices
 
-Source: url:https://github.com/jtraverso/erdos-81-chordal-clique-partitions/blob/main/preprints/PAPER_II/05_formalization/lean_v1.2_freeze/Contrib/Submission/Chordal.lean
+Source: url:https://github.com/jtraverso/lean-pool/blob/822738f3089d92c5e65a6bfb8c88c992e4699167/LeanPool/Erdos81PaperIIContrib/Chordal.lean
 Authors: Juan Pablo Traverso Gianini
 Status: verified
 Main declarations: `SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial`
@@ -23,6 +23,6 @@ MSC: 05C75
 This reusable formalization byproduct accompanying *Complete-Split Extremizers for a Fractional
 Triangle-Cover Functional on Chordal Graphs* defines chordal graphs using the cycle-and-chord
 characterization, proves induced-subgraph heredity and the clique property for finite minimal
-separators of fixed vertex pairs, and formalizes both parts of Dirac's theorem on simplicial
-vertices.
+separators of fixed vertex pairs, proves Dirac's simplicial-vertex theorem, and proves the
+connected non-complete case of the two-vertex conclusion.
 -/

@@ -923,8 +923,8 @@ private theorem rreach_univ_of_reachable [Fintype V] {a b : V} (h : G.Reachable 
       exact Relation.ReflTransGen.trans
         (Relation.ReflTransGen.single ⟨Finset.mem_univ _, Finset.mem_univ _, hadj⟩) ih
 
-/-- **Dirac's theorem, second part (1961).** A connected non-complete finite chordal graph has
-two distinct non-adjacent simplicial vertices. -/
+/-- **Connected case of Dirac's two-vertex conclusion.** A connected non-complete finite chordal
+graph has two distinct non-adjacent simplicial vertices. -/
 theorem IsChordal.exists_two_nonadj_isSimplicial [Finite V]
     (hG : G.IsChordal) (hconn : G.Connected) (hnc : ¬ ∀ u v : V, u ≠ v → G.Adj u v) :
     ∃ x y : V, x ≠ y ∧ ¬ G.Adj x y ∧ G.IsSimplicial x ∧ G.IsSimplicial y := by
