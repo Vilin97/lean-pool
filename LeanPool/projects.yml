@@ -1,4 +1,58 @@
 projects:
+  - slug: quadratic-iterates
+    title: Galois groups of quadratic polynomial iterates
+    summary: >-
+      Formalizes Stoll's criterion for when the Galois group of the n-th iterate
+      of X² + a over the rationals is the full n-fold iterated wreath product of
+      C₂. It proves the criterion in terms of two-independence of a signed
+      critical-orbit sequence and its pairwise-coprime Möbius factors, and derives the paper's
+      congruence families for which maximality holds at every level. The
+      supporting library develops reusable multiquadratic-extension, iterated
+      wreath-product, Möbius-factor, and valuation results.
+    branch: arithmetic dynamics and Galois theory
+    entry_module: LeanPool.QuadraticIterates
+    authors:
+      - Michael Stoll
+    source:
+      title: Galois groups over ℚ of some iterated polynomials
+      authors:
+        - Michael Stoll
+      doi: 10.1007/BF01197321
+      url: https://github.com/MichaelStollBayreuth/QuadraticIterates
+      github_repo: MichaelStollBayreuth/QuadraticIterates
+      commit: b0413c173972ddf121cb4394cb06f9d2b83e501f
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - QuadraticIterates.section3_main
+    main_results:
+      - declaration: QuadraticIterates.section1_equiv
+        informal: >-
+          For each n, assuming -a is not a rational square, the Galois group of
+          the n-th iterate of X² + a is the full n-fold iterated wreath product
+          of C₂ exactly when either the first n terms of the signed sequence
+          c₁ = -a, cₖ = fₖ(0) for k ≥ 2, or the first n integer Möbius
+          factors of that sequence are independent modulo rational
+          squares.
+      - declaration: QuadraticIterates.section1_squarefree
+        informal: >-
+          If -a is not a rational square and none of the absolute Möbius factors
+          from levels 2 through n is a rational square, then the n-th iterate
+          has the full iterated-wreath-product Galois group.
+      - declaration: QuadraticIterates.section3_main
+        informal: >-
+          The Galois group is the full iterated wreath product at every positive
+          level when a is positive and congruent to 1 or 2 modulo 4, or when a
+          is negative and divisible by 4 with -a nonsquare.
+    tags:
+      - arithmetic-dynamics
+      - galois-theory
+      - iterated-polynomials
+    msc:
+      - "11R32"
+      - "12F10"
+      - "37P05"
   - slug: multicolor-triangle-ramsey
     title: Superexponential lower bounds for multicolor triangle Ramsey numbers
     summary: >-
