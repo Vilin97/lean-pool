@@ -6586,3 +6586,68 @@ projects:
       - ulm-invariants
     msc:
       - "20K10"
+  - slug: linear-model
+    title: Model-robust linear regression and heteroscedasticity-consistent inference
+    summary: >-
+      Develops fixed-design ordinary least squares without assuming a correctly
+      specified linear model. The formalization proves a Lindeberg central limit
+      theorem, asymptotic normality of scalar OLS projections, entrywise
+      consistency of HC0--HC3 sandwich estimators, conservative robust p-values
+      under heteroscedasticity and misspecification, and the exact identification
+      of the two-sample HC2 statistic with Welch's t-statistic.
+    branch: mathematical statistics and probability
+    entry_module: LeanPool.LinearModel
+    authors:
+      - Patrick Rubin-Delanchy
+      - Andrew Jones
+    source:
+      title: The Linear Model in Lean
+      authors:
+        - Patrick Rubin-Delanchy
+        - Andrew Jones
+      url: https://github.com/lean-statistics/linear-model-lean
+      github_repo: lean-statistics/linear-model-lean
+      commit: c83dad11e730efc190f97a89a6fcec52370ae76d
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - LeanPool.LinearModel.hcGram_pvalue_conservative_of_level
+    main_results:
+      - declaration: LeanPool.LinearModel.central_limit_Lindeberg
+        informal: >-
+          A sequence of independent, measurable, mean-zero, square-integrable
+          real random variables satisfying the Lindeberg condition and eventual
+          positivity of the cumulative second moment has normalized partial sums
+          converging in distribution to the standard Gaussian law.
+      - declaration: LeanPool.LinearModel.AssumptionBundle.central_limit_OLS_projection'
+        informal: >-
+          Under the bundled fixed-design assumptions, every nonzero scalar
+          projection of the centered OLS estimator, normalized by its true
+          standard deviation, converges in distribution to the standard Gaussian
+          law.
+      - declaration: LeanPool.LinearModel.hcGram_sandwich_consistent
+        informal: >-
+          For any residual multiplier family converging uniformly to one, every
+          entry of the corresponding heteroscedasticity-consistent sandwich
+          estimator converges in probability to the variance-plus-misspecification
+          sandwich target; the development derives HC0--HC3 as instances.
+      - declaration: LeanPool.LinearModel.hcGram_pvalue_conservative_of_level
+        informal: >-
+          For every significance level strictly between zero and one, the
+          asymptotic upper rejection probability of the two-sided robust p-value
+          is at most the nominal level for any admissible multiplier family.
+      - declaration: LeanPool.LinearModel.hc2_studentized_twoSample_eq_welch
+        informal: >-
+          For two samples of size at least two, the HC2-studentized OLS contrast
+          for the cell-means design is exactly Welch's two-sample t-statistic.
+    tags:
+      - linear-regression
+      - central-limit-theorem
+      - heteroscedasticity
+      - robust-inference
+    msc:
+      - "62J05"
+      - "62F03"
+      - "62E20"
+      - "60F05"
