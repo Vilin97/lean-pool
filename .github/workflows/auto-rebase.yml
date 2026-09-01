@@ -52,14 +52,11 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          # README stats owns and rebases its fixed branch whenever main moves.
-          # Letting both workflows update it would create a push race.
           pulls="$(gh pr list --repo "$REPO" --state open --limit 100 \
             --json number,headRefName,headRepository,headRepositoryOwner,isCrossRepository,labels \
             --jq '[.[]
                   | select([.labels[].name] | index("needs-manual-rebase") | not)
                   | select(.headRefName | startswith("bump/") | not)
-                  | select(.headRefName != "automation/readme-stats")
                   | {number, branch: .headRefName,
                      repo: "\(.headRepositoryOwner.login)/\(.headRepository.name)",
                      fork: .isCrossRepository}]')"

@@ -40,10 +40,13 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Chudnovsky                https://github.com/ldct/lean-eval-chudnovsky
   LeanPool/CircuitComplexity         https://github.com/SamuelSchlesinger/circuit-complexity
   LeanPool/Circuitlib                https://github.com/matthunz/circuitlib
+  LeanPool/ClassificationOfSurfaces  https://github.com/mccorvie/classification-of-surfaces
   LeanPool/CompactSpectral           https://github.com/abenenson/compact-spectral
+  LeanPool/CompositionAlgebras       https://github.com/ehrlich-b/composition-algebras
   LeanPool/Computability             https://github.com/tannerduve/computability
   LeanPool/ComputableReal            https://github.com/Timeroot/computableReal
   LeanPool/ConnesKreimer             https://github.com/karlesmarin/connes-kreimer-lean
+  LeanPool/ConnesRigidity            https://github.com/utensil/connes-rigidity
   LeanPool/CramerWold                https://github.com/Lemmy00/lean-pool
   LeanPool/CriticalPortraits         https://github.com/no-way-labs/lean-critical-portraits
   LeanPool/DemazureOperatorsLean     https://github.com/bolito2/DemazureOperatorsLean
@@ -55,17 +58,23 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/EcTateLean                https://github.com/KisaraBlue/ec-tate-lean
   LeanPool/Egrs75                    https://github.com/lyfar/egrs75-lean
   LeanPool/Erdos1196                 https://github.com/math-inc/Erdos1196
+  LeanPool/Erdos132ConvexK3          https://github.com/lyfar/erdos-132-convex-k3-lean
   LeanPool/Erdos132N14               https://github.com/lyfar/erdos-132-moment-obstruction-lean
+  LeanPool/Erdos132ThreeChain        https://github.com/lyfar/lean-pool
   LeanPool/Erdos137                  https://github.com/scottdhughes/erdos137
   LeanPool/Erdos346                  https://github.com/KitaKen1/erdos346-ratio-limit-lean
   LeanPool/Erdos367                  https://github.com/scottdhughes/erdos367
   LeanPool/Erdos403                  https://github.com/gotrevor/erdos-403
+  LeanPool/Erdos81PaperIContrib      https://github.com/jtraverso/erdos-81-chordal-clique-partitions
+  LeanPool/Erdos81PaperIIIContrib    https://github.com/jtraverso/erdos-81-chordal-clique-partitions
   LeanPool/Erdos865                  https://github.com/mrricky22/erdos-865-lean
   LeanPool/Erdos97ConvexOctagon      https://github.com/lyfar/erdos-97-octagon-lean
   LeanPool/ErdosMoser                https://github.com/lyfar/erdos-moser-distinct-subset-sums-lean
   LeanPool/ErdosTuzaValtr            https://github.com/jcpaik/erdos-tuza-valtr
   LeanPool/EventStructures           https://github.com/vikraman/event-structures
   LeanPool/Fineqs                    https://github.com/nasqret/fineqs
+  LeanPool/FiniteGraphFundamentalGroup
+                                     https://github.com/Arthur742Ramos/finite-graph-fundamental-group
   LeanPool/FiveEighthsTheorem        https://github.com/ldct/lean-monorepo
   LeanPool/Flean                     https://github.com/josephmckinsey/flean
   LeanPool/FoZfc                     https://github.com/ishiut/fo_zfc
@@ -93,12 +102,14 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/Lentil                    https://github.com/verse-lab/Lentil
   LeanPool/LowDimSolvClassification  https://github.com/LieLean/LowDimSolvClassification
   LeanPool/MRiscX                    https://github.com/JulsDE/MRiscX
+  LeanPool/MatchingLogic             https://github.com/eveil-labs/matching-logic-lean
   LeanPool/MinModulusUniqueMultisetSum
                                      https://github.com/jarfo/min-modulus
   LeanPool/MisereGames               https://github.com/t4ccer/misere-games
   LeanPool/Monlib4                   https://github.com/themathqueen/monlib4
   LeanPool/Monsky                    https://github.com/dhyan-aranha/Monsky
   LeanPool/MoserLatticeColorings     https://github.com/lyfar/moser-lattice-colorings-lean
+  LeanPool/MulticolorTriangleRamsey  https://github.com/openai/ten-proofs
   LeanPool/Neukirch                  https://github.com/jjdishere/neukirch
   LeanPool/OSforGFF                  https://github.com/mrdouglasny/OSforGFF
   LeanPool/OddPrimeValuationDistribution
@@ -136,6 +147,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/SyntheticEuclid4          https://github.com/ah1112/synthetic_euclid_4
   LeanPool/ThreeGap                  https://github.com/ElVec1o/five-distance-sharp
   LeanPool/Turan3                    https://github.com/ro-gut/turan3
+  LeanPool/UlmsTheorem               https://github.com/elanroth/UlmsTheorem
   LeanPool/UnconditionalSchauderBasis
                                      https://github.com/SmaniaD/UnconditionalSchauderBasis
   LeanPool/VirasoroProject           https://github.com/kkytola/VirasoroProject

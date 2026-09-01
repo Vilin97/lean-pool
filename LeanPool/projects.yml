@@ -1,62 +1,58 @@
 projects:
-  - slug: hanson-wright
-    title: The Hanson-Wright inequality for sub-Gaussian quadratic forms
+  - slug: quadratic-iterates
+    title: Galois groups of quadratic polynomial iterates
     summary: >-
-      Proves the finite-dimensional Hanson-Wright concentration inequality for
-      quadratic forms of independent mean-zero sub-Gaussian real random variables
-      whose maximum least global-MGF sub-Gaussian scale is positive, for matrices
-      with positive Frobenius and operator norms. The bound uses the fixed universal
-      coefficient 1 / (256 * exp(1)^2). This is the MGF normalization of the usual
-      result; no formal identification with an Orlicz psi-2 norm is claimed.
-      The development derives the required moment-generating-function certificate
-      instead of assuming it, and contributes reusable scalar Bernstein, Chernoff,
-      cumulant, sub-Gaussian-process, and finite-maximum infrastructure.
-    branch: high-dimensional probability and concentration inequalities
-    entry_module: LeanPool.HansonWright
+      Formalizes Stoll's criterion for when the Galois group of the n-th iterate
+      of X² + a over the rationals is the full n-fold iterated wreath product of
+      C₂. It proves the criterion in terms of two-independence of a signed
+      critical-orbit sequence and its pairwise-coprime Möbius factors, and derives the paper's
+      congruence families for which maximality holds at every level. The
+      supporting library develops reusable multiquadratic-extension, iterated
+      wreath-product, Möbius-factor, and valuation results.
+    branch: arithmetic dynamics and Galois theory
+    entry_module: LeanPool.QuadraticIterates
     authors:
-      - Yuanhe Zhang
-      - Jason D. Lee
-      - Fanghui Liu
+      - Michael Stoll
     source:
-      title: High-Dimensional Probability (second edition)
+      title: Galois groups over ℚ of some iterated polynomials
       authors:
-        - Roman Vershynin
-      doi: 10.1017/9781009490672
-      url: https://www.math.uci.edu/~rvershyn/papers/HDP-book/HDP-book.html
-      github_repo: Lean-MoDS/StatsMLlib
-      commit: 37286c3d2c7e17642fbe26988be40f3ff982f944
+        - Michael Stoll
+      doi: 10.1007/BF01197321
+      url: https://github.com/MichaelStollBayreuth/QuadraticIterates
+      github_repo: MichaelStollBayreuth/QuadraticIterates
+      commit: b0413c173972ddf121cb4394cb06f9d2b83e501f
     license: Apache-2.0
     status: verified
-    provenance: human
+    provenance: AI
     main_declarations:
-      - LeanPool.HansonWright.hanson_wright_inequality_hdp
+      - QuadraticIterates.section3_main
     main_results:
-      - declaration: LeanPool.HansonWright.hanson_wright_inequality_hdp
+      - declaration: QuadraticIterates.section1_equiv
         informal: >-
-          For independent mean-zero real random variables with finite least
-          global-MGF sub-Gaussian scales and positive maximum coordinate MGF scale,
-          and a matrix with positive Frobenius and operator norms, the centered
-          quadratic form satisfies the Hanson-Wright two-regime exponential tail
-          bound with the fixed universal coefficient 1 / (256 * exp(1)^2).
-      - declaration: LeanPool.HansonWright.hasHansonWrightMGF_of_subgaussian
+          For each n, assuming -a is not a rational square, the Galois group of
+          the n-th iterate of X² + a is the full n-fold iterated wreath product
+          of C₂ exactly when either the first n terms of the signed sequence
+          c₁ = -a, cₖ = fₖ(0) for k ≥ 2, or the first n integer Möbius
+          factors of that sequence are independent modulo rational
+          squares.
+      - declaration: QuadraticIterates.section1_squarefree
         informal: >-
-          Given positive K and operator norm and a positive C satisfying four
-          explicit numerical lower bounds, independent coordinates with global-MGF
-          sub-Gaussian parameter K^2 satisfy the local quadratic
-          cumulant-generating-function estimate needed for Hanson-Wright.
-      - declaration: LeanPool.bernstein_inequality
+          If -a is not a rational square and none of the absolute Möbius factors
+          from levels 2 through n is a rational square, then the n-th iterate
+          has the full iterated-wreath-product Galois group.
+      - declaration: QuadraticIterates.section3_main
         informal: >-
-          A finite family of independent, centered, uniformly bounded real random
-          variables satisfies the classical scalar Bernstein tail inequality.
+          The Galois group is the full iterated wreath product at every positive
+          level when a is positive and congruent to 1 or 2 modulo 4, or when a
+          is negative and divisible by 4 with -a nonsquare.
     tags:
-      - probability-theory
-      - concentration-inequalities
-      - high-dimensional-probability
-      - random-matrices
+      - arithmetic-dynamics
+      - galois-theory
+      - iterated-polynomials
     msc:
-      - "60E15"
-      - "60B20"
-      - "62H12"
+      - "11R32"
+      - "12F10"
+      - "37P05"
   - slug: multicolor-triangle-ramsey
     title: Superexponential lower bounds for multicolor triangle Ramsey numbers
     summary: >-
@@ -6590,3 +6586,61 @@ projects:
       - ulm-invariants
     msc:
       - "20K10"
+  - slug: hanson-wright
+    title: The Hanson-Wright inequality for sub-Gaussian quadratic forms
+    summary: >-
+      Proves the finite-dimensional Hanson-Wright concentration inequality for
+      quadratic forms of independent mean-zero sub-Gaussian real random variables
+      whose maximum least global-MGF sub-Gaussian scale is positive, for matrices
+      with positive Frobenius and operator norms. The bound uses the fixed universal
+      coefficient 1 / (256 * exp(1)^2). This is the MGF normalization of the usual
+      result; no formal identification with an Orlicz psi-2 norm is claimed.
+      The development derives the required moment-generating-function certificate
+      instead of assuming it, and contributes reusable scalar Bernstein, Chernoff,
+      cumulant, sub-Gaussian-process, and finite-maximum infrastructure.
+    branch: high-dimensional probability and concentration inequalities
+    entry_module: LeanPool.HansonWright
+    authors:
+      - Yuanhe Zhang
+      - Jason D. Lee
+      - Fanghui Liu
+    source:
+      title: High-Dimensional Probability (second edition)
+      authors:
+        - Roman Vershynin
+      doi: 10.1017/9781009490672
+      url: https://www.math.uci.edu/~rvershyn/papers/HDP-book/HDP-book.html
+      github_repo: Lean-MoDS/StatsMLlib
+      commit: 37286c3d2c7e17642fbe26988be40f3ff982f944
+    license: Apache-2.0
+    status: verified
+    provenance: human
+    main_declarations:
+      - LeanPool.HansonWright.hanson_wright_inequality_hdp
+    main_results:
+      - declaration: LeanPool.HansonWright.hanson_wright_inequality_hdp
+        informal: >-
+          For independent mean-zero real random variables with finite least
+          global-MGF sub-Gaussian scales and positive maximum coordinate MGF scale,
+          and a matrix with positive Frobenius and operator norms, the centered
+          quadratic form satisfies the Hanson-Wright two-regime exponential tail
+          bound with the fixed universal coefficient 1 / (256 * exp(1)^2).
+      - declaration: LeanPool.HansonWright.hasHansonWrightMGF_of_subgaussian
+        informal: >-
+          Given positive K and operator norm and a positive C satisfying four
+          explicit numerical lower bounds, independent coordinates with global-MGF
+          sub-Gaussian parameter K^2 satisfy the local quadratic
+          cumulant-generating-function estimate needed for Hanson-Wright.
+      - declaration: LeanPool.bernstein_inequality
+        informal: >-
+          A finite family of independent, centered, uniformly bounded real random
+          variables satisfies the classical scalar Bernstein tail inequality.
+    tags:
+      - probability-theory
+      - concentration-inequalities
+      - high-dimensional-probability
+      - random-matrices
+    msc:
+      - "60E15"
+      - "60B20"
+      - "62H12"
