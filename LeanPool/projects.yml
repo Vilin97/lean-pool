@@ -1,65 +1,55 @@
 projects:
-  - slug: nash-williams
-    title: Nash-Williams fronts and 2-better-quasi-orders
+  - slug: common-neighbour-conjecture
+    title: Common-neighbour counterexamples for Saxl graphs
     summary: >-
-      Formalizes Nash-Williams fronts through their well-founded prefix trees and ordinal ranks,
-      proves the finite-color Nash-Williams theorem, and derives the infinite Ramsey theorem for
-      arbitrary finite arity. The order-theoretic development proves that 2-better-quasi-orders
-      are well-quasi-orders and establishes closure under finite products, lexicographic sums,
-      domination of subsets, and pointwise embedding of sequences.
-    branch: infinitary combinatorics and order theory
-    entry_module: LeanPool.NashWilliams
+      Proves that for every base size B at least two and every prescribed
+      degree bound, there is a finite faithful primitive permutation group
+      of at least that degree and exact base size B whose generalized Saxl
+      graph contains two nonadjacent vertices with no common neighbor. The
+      supporting library constructs an explicit infinite family from binary
+      deleted permutation modules over finite fields and proves the required
+      base-size, irreducibility, primitivity, and graph-theoretic properties.
+    branch: permutation groups and algebraic graph theory
+    entry_module: LeanPool.CommonNeighbourConjecture
     authors:
-      - Yann Pequignot
+      - Aluna Rizzoli
+      - Adam R. Thomas
     source:
-      title: "Towards better: A motivated introduction to better-quasi-orders"
+      title: Common neighbour conjectures for Saxl graphs fail at every base size
       authors:
-        - Yann Pequignot
-      doi: 10.4171/EMSS/4-2-2
-      url: https://github.com/yannpequignot/TwoBQO
-      github_repo: yannpequignot/TwoBQO
-      commit: 8adea92d7fa41700372ba16b9ff816dc7500579b
-    license: Apache-2.0
+        - Aluna Rizzoli
+        - Adam R. Thomas
+      doi: 10.5281/zenodo.22231393
+      url: https://github.com/alunik/common-neighbour-conjecture
+      github_repo: alunik/common-neighbour-conjecture
+      commit: b2c0a8f95aa4dca76a034a0e769a8c8249f38ae2
+    license: MIT
     status: verified
-    provenance: mix
+    provenance: human
     main_declarations:
-      - Front.IsFront.nash_williams
-      - TwoBQO.wellQuasiOrdered
+      - SaxlCounterexamples.MainTheorems.mainTheorem
     main_results:
-      - declaration: Front.IsFront.nash_williams
+      - declaration: SaxlCounterexamples.MainTheorems.mainTheorem
         informal: >-
-          Every two-coloring of a Nash-Williams front on an infinite set has an infinite
-          restriction whose front is monochromatic.
-      - declaration: Front.IsFront.nash_williams_fin
+          For every natural number B at least two and every degree bound,
+          there exists a finite faithful primitive permutation group of
+          degree at least the bound and base size exactly B whose generalized
+          Saxl graph has two nonadjacent vertices with no common neighbor.
+      - declaration: SaxlCounterexamples.EveryBase.hq_coreFamily
         informal: >-
-          Every finite coloring of a Nash-Williams front has an infinite restriction whose
-          front is monochromatic.
-      - declaration: infinite_ramsey
-        informal: >-
-          Every finite coloring of the r-element subsets of an infinite set of natural numbers
-          is constant on all r-element subsets of some infinite subset.
-      - declaration: TwoBQO.wellQuasiOrdered
-        informal: >-
-          Every 2-better-quasi-order is a well-quasi-order.
-      - declaration: TwoBQO.lexSigmaQO
-        informal: >-
-          A lexicographic sum of 2-better-quasi-orders over a 2-better-quasi-ordered index is
-          itself a 2-better-quasi-order.
-      - declaration: TwoBQO.embedForAll_wqo
-        informal: >-
-          If a preorder is a 2-better-quasi-order, then its infinite sequences are
-          well-quasi-ordered by the relation admitting a strictly monotone reindexing along
-          which corresponding terms are related.
+          For every odd d with 3 ≤ d and every tail, the explicit affine
+          wreath-product family has exact base size tail + 2, acts
+          primitively, and its displayed pair has no common neighbor in the
+          corresponding generalized Saxl graph.
     tags:
-      - infinitary-combinatorics
-      - ramsey-theory
-      - better-quasi-orders
-      - well-quasi-orders
-      - ordinal-ranks
+      - permutation-groups
+      - group-actions
+      - algebraic-graph-theory
+      - saxl-graphs
+      - counterexamples
     msc:
-      - "03E05"
-      - "05D10"
-      - "06A07"
+      - "20B15"
+      - "05C25"
   - slug: kahn-kalai
     title: Kahn–Kalai expectation-threshold theorem
     summary: >-
@@ -6830,3 +6820,64 @@ projects:
       - "30F15"
       - "30F20"
       - "54D65"
+  - slug: nash-williams
+    title: Nash-Williams fronts and 2-better-quasi-orders
+    summary: >-
+      Formalizes Nash-Williams fronts through their well-founded prefix trees and ordinal ranks,
+      proves the finite-color Nash-Williams theorem, and derives the infinite Ramsey theorem for
+      arbitrary finite arity. The order-theoretic development proves that 2-better-quasi-orders
+      are well-quasi-orders and establishes closure under finite products, lexicographic sums,
+      domination of subsets, and pointwise embedding of sequences.
+    branch: infinitary combinatorics and order theory
+    entry_module: LeanPool.NashWilliams
+    authors:
+      - Yann Pequignot
+    source:
+      title: "Towards better: A motivated introduction to better-quasi-orders"
+      authors:
+        - Yann Pequignot
+      doi: 10.4171/EMSS/4-2-2
+      url: https://github.com/yannpequignot/TwoBQO
+      github_repo: yannpequignot/TwoBQO
+      commit: 8adea92d7fa41700372ba16b9ff816dc7500579b
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - Front.IsFront.nash_williams
+      - TwoBQO.wellQuasiOrdered
+    main_results:
+      - declaration: Front.IsFront.nash_williams
+        informal: >-
+          Every two-coloring of a Nash-Williams front on an infinite set has an infinite
+          restriction whose front is monochromatic.
+      - declaration: Front.IsFront.nash_williams_fin
+        informal: >-
+          Every finite coloring of a Nash-Williams front has an infinite restriction whose
+          front is monochromatic.
+      - declaration: infinite_ramsey
+        informal: >-
+          Every finite coloring of the r-element subsets of an infinite set of natural numbers
+          is constant on all r-element subsets of some infinite subset.
+      - declaration: TwoBQO.wellQuasiOrdered
+        informal: >-
+          Every 2-better-quasi-order is a well-quasi-order.
+      - declaration: TwoBQO.lexSigmaQO
+        informal: >-
+          A lexicographic sum of 2-better-quasi-orders over a 2-better-quasi-ordered index is
+          itself a 2-better-quasi-order.
+      - declaration: TwoBQO.embedForAll_wqo
+        informal: >-
+          If a preorder is a 2-better-quasi-order, then its infinite sequences are
+          well-quasi-ordered by the relation admitting a strictly monotone reindexing along
+          which corresponding terms are related.
+    tags:
+      - infinitary-combinatorics
+      - ramsey-theory
+      - better-quasi-orders
+      - well-quasi-orders
+      - ordinal-ranks
+    msc:
+      - "03E05"
+      - "05D10"
+      - "06A07"
