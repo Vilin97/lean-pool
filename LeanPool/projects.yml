@@ -6810,10 +6810,10 @@ projects:
           bound with the fixed universal coefficient 1 / (256 * exp(1)^2).
       - declaration: LeanPool.HansonWright.hasHansonWrightMGF_of_subgaussian
         informal: >-
-          Given positive K and operator norm and a positive C satisfying four
-          explicit numerical lower bounds, independent coordinates with global-MGF
-          sub-Gaussian parameter K^2 satisfy the local quadratic
-          cumulant-generating-function estimate needed for Hanson-Wright.
+          Given positive K and operator norm and C at least 64 * exp(1)^2,
+          independent coordinates with global-MGF sub-Gaussian parameter K^2
+          satisfy the local quadratic cumulant-generating-function estimate needed
+          for Hanson-Wright.
       - declaration: LeanPool.bernstein_inequality
         informal: >-
           A finite family of independent, centered, uniformly bounded real random

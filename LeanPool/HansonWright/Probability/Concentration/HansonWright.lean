@@ -2411,11 +2411,30 @@ lemma iIndepFun_centered_sq {μ : Measure Ω} {n : ℕ} {X : Fin n → Ω → �
       (fun i x => x ^ 2 - ∫ ω, X i ω ^ 2 ∂μ)
       (fun _ => by fun_prop)
 
+private lemma diagonalConstantDomain_of_quadratic {C : ℝ}
+    (hC_quad : 2 * exp 1 ^ 3 ≤ C) : exp 1 ≤ C := by
+  have hexp_ge_one : 1 ≤ exp 1 := one_le_exp (by norm_num : (0 : ℝ) ≤ 1)
+  have hexp_nonneg : 0 ≤ exp 1 := (exp_pos 1).le
+  have hsq : exp 1 ≤ exp 1 ^ 2 := by
+    calc
+      exp 1 = exp 1 * 1 := by ring
+      _ ≤ exp 1 * exp 1 := mul_le_mul_of_nonneg_left hexp_ge_one hexp_nonneg
+      _ = exp 1 ^ 2 := by ring
+  have hcube : exp 1 ^ 2 ≤ exp 1 ^ 3 := by
+    calc
+      exp 1 ^ 2 = exp 1 ^ 2 * 1 := by ring
+      _ ≤ exp 1 ^ 2 * exp 1 := mul_le_mul_of_nonneg_left hexp_ge_one (sq_nonneg _)
+      _ = exp 1 ^ 3 := by ring
+  calc
+    exp 1 ≤ exp 1 ^ 3 := hsq.trans hcube
+    _ ≤ 2 * exp 1 ^ 3 := by nlinarith [show 0 ≤ exp 1 ^ 3 by positivity]
+    _ ≤ C := hC_quad
+
 private lemma diagonalCenteredQuadraticForm_integrable_exp_and_cgf_le
     {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
-    {K C θ : ℝ} (hK : 0 < K) (hC : 0 < C)
-    (hC_domain : exp 1 ≤ C) (hOp : 0 < operatorNorm A)
+    {K C θ : ℝ} (hK : 0 < K) (hC_domain : exp 1 ≤ C)
+    (hOp : 0 < operatorNorm A)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hθ : |θ| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹) :
@@ -2423,6 +2442,7 @@ private lemma diagonalCenteredQuadraticForm_integrable_exp_and_cgf_le
       (2 * exp 1 ^ 3 ≤ C →
         cgf (diagonalCenteredQuadraticForm μ A X) μ θ ≤
           C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2) := by
+  have hC : 0 < C := (exp_pos 1).trans_le hC_domain
   let Y : Fin n → Ω → ℝ :=
     fun i ω => X i ω ^ 2 - ∫ ω, X i ω ^ 2 ∂μ
   let Z : Fin n → Ω → ℝ := fun i ω => A i i * Y i ω
@@ -2553,27 +2573,27 @@ private lemma diagonalCenteredQuadraticForm_integrable_exp_and_cgf_le
 
 lemma diagonalCenteredQuadraticForm_cgf_le {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
-    {K C θ : ℝ} (hK : 0 < K) (hC : 0 < C)
-    (hC_domain : exp 1 ≤ C) (hC_quad : 2 * exp 1 ^ 3 ≤ C)
+    {K C θ : ℝ} (hK : 0 < K) (hC_quad : 2 * exp 1 ^ 3 ≤ C)
     (hOp : 0 < operatorNorm A)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hθ : |θ| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹) :
     cgf (diagonalCenteredQuadraticForm μ A X) μ θ ≤
-      C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 :=
-  (diagonalCenteredQuadraticForm_integrable_exp_and_cgf_le
-    hK hC hC_domain hOp h_indep hX_subG hθ).2 hC_quad
+      C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 := by
+  have hC_domain := diagonalConstantDomain_of_quadratic hC_quad
+  exact (diagonalCenteredQuadraticForm_integrable_exp_and_cgf_le
+    hK hC_domain hOp h_indep hX_subG hθ).2 hC_quad
 
 lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
-    {K C θ : ℝ} (hK : 0 < K) (hC : 0 < C)
-    (hC_domain : exp 1 ≤ C) (hOp : 0 < operatorNorm A)
+    {K C θ : ℝ} (hK : 0 < K) (hC_domain : exp 1 ≤ C)
+    (hOp : 0 < operatorNorm A)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hθ : |θ| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹) :
     Integrable (fun ω => exp (θ * diagonalCenteredQuadraticForm μ A X ω)) μ :=
   (diagonalCenteredQuadraticForm_integrable_exp_and_cgf_le
-    hK hC hC_domain hOp h_indep hX_subG hθ).1
+    hK hC_domain hOp h_indep hX_subG hθ).1
 
 lemma quadraticForm_eq_sum_diag_of_offdiag_eq_zero {n : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {x : Fin n → ℝ}
@@ -2634,8 +2654,7 @@ lemma centeredQuadraticForm_eq_diagonalCentered_of_offdiag_eq_zero
 /-- Hanson-Wright MGF certificate for diagonal quadratic forms with sub-Gaussian coordinates. -/
 theorem hasHansonWrightMGF_diagonal_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
-    {K C : ℝ} (hK : 0 < K) (hC : 0 < C)
-    (hC_domain : exp 1 ≤ C) (hC_quad : 2 * exp 1 ^ 3 ≤ C)
+    {K C : ℝ} (hK : 0 < K) (hC_quad : 2 * exp 1 ^ 3 ≤ C)
     (hOp : 0 < operatorNorm A)
     (hA_diag : ∀ i j, i ≠ j → A i j = 0)
     (h_indep : iIndepFun X μ)
@@ -2644,13 +2663,15 @@ theorem hasHansonWrightMGF_diagonal_of_subgaussian {μ : Measure Ω} [IsProbabil
   have hcenter_eq :
       centeredQuadraticForm μ A X = diagonalCenteredQuadraticForm μ A X :=
     centeredQuadraticForm_eq_diagonalCentered_of_offdiag_eq_zero hA_diag hX_subG
+  have hC_domain := diagonalConstantDomain_of_quadratic hC_quad
   refine ⟨?_, ?_⟩
   · intro l hl
     rw [hcenter_eq]
-    exact diagonalCenteredQuadraticForm_cgf_le hK hC hC_domain hC_quad hOp h_indep hX_subG hl
+    exact diagonalCenteredQuadraticForm_cgf_le hK hC_quad hOp h_indep hX_subG hl
   · intro l hl
     rw [hcenter_eq]
-    exact diagonalCenteredQuadraticForm_integrable_exp hK hC hC_domain hOp h_indep hX_subG hl
+    exact diagonalCenteredQuadraticForm_integrable_exp
+      hK hC_domain hOp h_indep hX_subG hl
 
 private lemma hasSubgaussianMGF_integral_le_zero {μ : Measure Ω} [IsProbabilityMeasure μ]
     {X : Ω → ℝ} {c : ℝ≥0} (h : HasSubgaussianMGF X c μ) :
@@ -3730,26 +3751,61 @@ lemma offDiagonal_exponent_two_mul_le {K C F l : ℝ}
       mul_le_mul_of_nonneg_right hC_offdiag_quad hnonneg
     _ = C * l ^ 2 * K ^ 4 * F ^ 2 := by ring
 
+private structure HansonWrightConstantBounds (C : ℝ) : Prop where
+  positive : 0 < C
+  domain : 4 * exp 1 ≤ C
+  diagonalQuadratic : 8 * exp 1 ^ 3 ≤ C
+  offDiagonalDomain : 16 * exp 1 ≤ C ^ 2
+
+private lemma hansonWrightConstantBounds_of_offDiagonalQuadratic {C : ℝ}
+    (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C) : HansonWrightConstantBounds C := by
+  have hexp_ge_one : 1 ≤ exp 1 := one_le_exp (by norm_num : (0 : ℝ) ≤ 1)
+  have hexp_le_eight : exp 1 ≤ 8 := by
+    nlinarith [exp_one_lt_three.le]
+  have hC_pos : 0 < C :=
+    lt_of_lt_of_le (by positivity : 0 < 64 * exp 1 ^ 2) hC_offdiag_quad
+  have hC_domain : 4 * exp 1 ≤ C := by
+    have hmul := mul_le_mul_of_nonneg_left hexp_ge_one
+      (by positivity : 0 ≤ 4 * exp 1)
+    nlinarith [hC_offdiag_quad]
+  have hC_diag_quad : 8 * exp 1 ^ 3 ≤ C := by
+    calc
+      8 * exp 1 ^ 3 = (8 * exp 1 ^ 2) * exp 1 := by ring
+      _ ≤ (8 * exp 1 ^ 2) * 8 :=
+        mul_le_mul_of_nonneg_left hexp_le_eight (by positivity)
+      _ = 64 * exp 1 ^ 2 := by ring
+      _ ≤ C := hC_offdiag_quad
+  have hC_ge_offdiag : 16 * exp 1 ≤ C := by
+    have hmul := mul_le_mul_of_nonneg_left hexp_ge_one
+      (by positivity : 0 ≤ 16 * exp 1)
+    nlinarith [hC_offdiag_quad]
+  have hC_ge_one : 1 ≤ C := by
+    nlinarith [hexp_ge_one, hC_ge_offdiag]
+  have hC_sq_ge : C ≤ C ^ 2 := by
+    have hC_nonneg : 0 ≤ C := hC_pos.le
+    have hmul := mul_le_mul hC_ge_one (le_refl C) hC_nonneg hC_nonneg
+    simpa [pow_two] using hmul
+  exact ⟨hC_pos, hC_domain, hC_diag_quad, hC_ge_offdiag.trans hC_sq_ge⟩
+
 /-- Hanson-Wright MGF certificate from independent sub-Gaussian coordinates. -/
 theorem hasHansonWrightMGF_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
-    {K C : ℝ} (hK : 0 < K) (hC : 0 < C)
-    (hC_domain : 4 * exp 1 ≤ C)
-    (hC_diag_quad : 8 * exp 1 ^ 3 ≤ C)
-    (hC_offdiag_domain : 16 * exp 1 ≤ C ^ 2)
-    (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C)
+    {K C : ℝ} (hK : 0 < K) (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C)
     (hOp : 0 < operatorNorm A)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ) :
     HasHansonWrightMGF μ A X K C := by
+  have hC_bounds := hansonWrightConstantBounds_of_offDiagonalQuadratic hC_offdiag_quad
+  have hC := hC_bounds.positive
+  have hC_offdiag_domain := hC_bounds.offDiagonalDomain
   let D : Ω → ℝ := diagonalCenteredQuadraticForm μ A X
   let O : Ω → ℝ := fun ω => quadraticForm (offDiagonalMatrix A) (fun i => X i ω)
   let B : ℝ → ℝ := fun l => C * l ^ 2 * K ^ 4 * frobeniusNorm A ^ 2
   have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hX_subG i).aemeasurable
   have hKsq_op_pos : 0 < K ^ 2 * operatorNorm A := by positivity
-  have hCq_pos : 0 < C / 4 := by positivity
-  have hCq_domain : exp 1 ≤ C / 4 := by linarith
-  have hCq_quad : 2 * exp 1 ^ 3 ≤ C / 4 := by linarith
+  have hCq_domain : exp 1 ≤ C / 4 := by linarith [hC_bounds.domain]
+  have hCq_quad : 2 * exp 1 ^ 3 ≤ C / 4 := by
+    linarith [hC_bounds.diagonalQuadratic]
   have hcenter_eq :
       centeredQuadraticForm μ A X = fun ω => D ω + O ω := by
     dsimp [D, O]
@@ -3781,13 +3837,13 @@ theorem hasHansonWrightMGF_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasur
       dsimp [D]
       exact diagonalCenteredQuadraticForm_integrable_exp
         (A := A) (X := X) (K := K) (C := C / 4) (θ := 2 * l)
-        hK hCq_pos hCq_domain hOp h_indep hX_subG hdiag_domain
+        hK hCq_domain hOp h_indep hX_subG hdiag_domain
     have hD_cgf :
         cgf D μ (2 * l) ≤ B l := by
       have hbase :=
         diagonalCenteredQuadraticForm_cgf_le
           (A := A) (X := X) (K := K) (C := C / 4) (θ := 2 * l)
-          hK hCq_pos hCq_domain hCq_quad hOp h_indep hX_subG hdiag_domain
+          hK hCq_quad hOp h_indep hX_subG hdiag_domain
       dsimp [D, B] at hbase ⊢
       calc
         cgf (diagonalCenteredQuadraticForm μ A X) μ (2 * l)
@@ -3985,11 +4041,7 @@ that certificate from independence and coordinate sub-Gaussian MGF bounds, then
 optimizes the resulting Chernoff bound. -/
 theorem hanson_wright_inequality {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
-    {K C t : ℝ} (hK : 0 < K) (hC : 0 < C)
-    (hC_domain : 4 * exp 1 ≤ C)
-    (hC_diag_quad : 8 * exp 1 ^ 3 ≤ C)
-    (hC_offdiag_domain : 16 * exp 1 ≤ C ^ 2)
-    (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C)
+    {K C t : ℝ} (hK : 0 < K) (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C)
     (hF : 0 < frobeniusNorm A) (hOp : 0 < operatorNorm A)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
@@ -3998,9 +4050,10 @@ theorem hanson_wright_inequality {μ : Measure Ω} [IsProbabilityMeasure μ]
       2 * exp (-(1 / (4 * C)) *
         min (t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2))
           (t / (K ^ 2 * operatorNorm A))) := by
+  have hC :=
+    (hansonWrightConstantBounds_of_offDiagonalQuadratic hC_offdiag_quad).positive
   have hHW : HasHansonWrightMGF μ A X K C :=
-    hasHansonWrightMGF_of_subgaussian hK hC hC_domain hC_diag_quad
-      hC_offdiag_domain hC_offdiag_quad hOp h_indep hX_subG
+    hasHansonWrightMGF_of_subgaussian hK hC_offdiag_quad hOp h_indep hX_subG
   have hv : 0 < K ^ 4 * frobeniusNorm A ^ 2 := by positivity
   have hb : 0 < K ^ 2 * operatorNorm A := by positivity
   exact two_sided_tail_of_cgf_bound hC hv hb
@@ -4024,9 +4077,6 @@ The proof expands this definition into the exact MGF bounds required by
 theorem hanson_wright_inequality_hdp_explicit {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K C t : ℝ} (hK_def : K = maxSubGaussianPsi2Norm X μ) (hK : 0 < K)
-    (hC : 0 < C) (hC_domain : 4 * exp 1 ≤ C)
-    (hC_diag_quad : 8 * exp 1 ^ 3 ≤ C)
-    (hC_offdiag_domain : 16 * exp 1 ≤ C ^ 2)
     (hC_offdiag_quad : 64 * exp 1 ^ 2 ≤ C)
     (hF : 0 < frobeniusNorm A) (hOp : 0 < operatorNorm A)
     (h_indep : iIndepFun X μ)
@@ -4045,8 +4095,7 @@ theorem hanson_wright_inequality_hdp_explicit {μ : Measure Ω} [IsProbabilityMe
     exact hasSubgaussianMGF_of_subGaussianPsi2Norm_le (hX_finite i) hnorm_le
   exact
     hanson_wright_inequality (μ := μ) (A := A) (X := X) (K := K) (C := C)
-      (t := t) hK hC hC_domain hC_diag_quad hC_offdiag_domain
-      hC_offdiag_quad hF hOp h_indep hX_subG_K ht
+      (t := t) hK hC_offdiag_quad hF hOp h_indep hX_subG_K ht
 
 /-- Hanson-Wright inequality in the nondegenerate form of Theorem 6.2.2 of HDP.
 
@@ -4067,46 +4116,14 @@ theorem hanson_wright_inequality_hdp {μ : Measure Ω} [IsProbabilityMeasure μ]
           min (t ^ 2 / (K ^ 4 * frobeniusNorm A ^ 2))
             (t / (K ^ 2 * operatorNorm A))) := by
   let C0 : ℝ := 64 * exp 1 ^ 2
-  have hexp_pos : 0 < exp 1 := exp_pos 1
-  have hexp_ge_one : 1 ≤ exp 1 := one_le_exp (by norm_num : (0 : ℝ) ≤ 1)
-  have hexp_le_eight : exp 1 ≤ 8 := by
-    nlinarith [exp_one_lt_three.le]
-  have hC0_pos : 0 < C0 := by
-    dsimp [C0]
-    positivity
-  have hC0_domain : 4 * exp 1 ≤ C0 := by
-    dsimp [C0]
-    have hmul := mul_le_mul_of_nonneg_left hexp_ge_one
-      (by positivity : 0 ≤ 4 * exp 1)
-    nlinarith
-  have hC0_diag_quad : 8 * exp 1 ^ 3 ≤ C0 := by
-    dsimp [C0]
-    have hmul := mul_le_mul_of_nonneg_left hexp_le_eight
-      (by positivity : 0 ≤ 8 * exp 1 ^ 2)
-    nlinarith
-  have hC0_ge_offdiag : 16 * exp 1 ≤ C0 := by
-    dsimp [C0]
-    have hmul := mul_le_mul_of_nonneg_left hexp_ge_one
-      (by positivity : 0 ≤ 16 * exp 1)
-    nlinarith
-  have hC0_ge_one : 1 ≤ C0 := by
-    dsimp [C0]
-    nlinarith [hexp_ge_one, sq_nonneg (exp 1)]
-  have hC0_sq_ge : C0 ≤ C0 ^ 2 := by
-    have hC0_nonneg : 0 ≤ C0 := hC0_pos.le
-    have hmul := mul_le_mul hC0_ge_one (le_refl C0) hC0_nonneg hC0_nonneg
-    simpa [pow_two] using hmul
-  have hC0_offdiag_domain : 16 * exp 1 ≤ C0 ^ 2 :=
-    hC0_ge_offdiag.trans hC0_sq_ge
   have hC0_offdiag_quad : 64 * exp 1 ^ 2 ≤ C0 := by
     dsimp [C0]
     rfl
   intro t ht
   have htail :=
     hanson_wright_inequality_hdp_explicit (μ := μ) (A := A) (X := X)
-      (K := K) (C := C0) (t := t) hK_def hK hC0_pos hC0_domain
-      hC0_diag_quad hC0_offdiag_domain hC0_offdiag_quad hF hOp
-      h_indep hX_finite ht
+      (K := K) (C := C0) (t := t) hK_def hK hC0_offdiag_quad
+      hF hOp h_indep hX_finite ht
   have hcoefficient : 1 / (4 * C0) = 1 / (256 * exp 1 ^ 2) := by
     dsimp [C0]
     ring
