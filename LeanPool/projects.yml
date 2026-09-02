@@ -1,4 +1,55 @@
 projects:
+  - slug: common-neighbour-conjecture
+    title: Common-neighbour counterexamples for Saxl graphs
+    summary: >-
+      Proves that for every base size B at least two and every prescribed
+      degree bound, there is a finite faithful primitive permutation group
+      of at least that degree and exact base size B whose generalized Saxl
+      graph contains two nonadjacent vertices with no common neighbor. The
+      supporting library constructs an explicit infinite family from binary
+      deleted permutation modules over finite fields and proves the required
+      base-size, irreducibility, primitivity, and graph-theoretic properties.
+    branch: permutation groups and algebraic graph theory
+    entry_module: LeanPool.CommonNeighbourConjecture
+    authors:
+      - Aluna Rizzoli
+      - Adam R. Thomas
+    source:
+      title: Common neighbour conjectures for Saxl graphs fail at every base size
+      authors:
+        - Aluna Rizzoli
+        - Adam R. Thomas
+      doi: 10.5281/zenodo.22231393
+      url: https://github.com/alunik/common-neighbour-conjecture
+      github_repo: alunik/common-neighbour-conjecture
+      commit: b2c0a8f95aa4dca76a034a0e769a8c8249f38ae2
+    license: MIT
+    status: verified
+    provenance: human
+    main_declarations:
+      - SaxlCounterexamples.MainTheorems.mainTheorem
+    main_results:
+      - declaration: SaxlCounterexamples.MainTheorems.mainTheorem
+        informal: >-
+          For every natural number B at least two and every degree bound,
+          there exists a finite faithful primitive permutation group of
+          degree at least the bound and base size exactly B whose generalized
+          Saxl graph has two nonadjacent vertices with no common neighbor.
+      - declaration: SaxlCounterexamples.EveryBase.hq_coreFamily
+        informal: >-
+          For every odd d with 3 ≤ d and every tail, the explicit affine
+          wreath-product family has exact base size tail + 2, acts
+          primitively, and its displayed pair has no common neighbor in the
+          corresponding generalized Saxl graph.
+    tags:
+      - permutation-groups
+      - group-actions
+      - algebraic-graph-theory
+      - saxl-graphs
+      - counterexamples
+    msc:
+      - "20B15"
+      - "05C25"
   - slug: kahn-kalai
     title: Kahn–Kalai expectation-threshold theorem
     summary: >-
