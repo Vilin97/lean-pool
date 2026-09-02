@@ -41,7 +41,7 @@ theorem chernoff_bound_cgf {μ : Measure Ω} [IsFiniteMeasure μ]
 
 /-- Chernoff bound optimized for sub-Gaussian random variables.
     If cgf(X, t) ≤ t²σ²/2, then P(X ≥ u) ≤ exp(-u²/(2σ²)). -/
-theorem chernoff_bound_subGaussian {μ : Measure Ω} [IsProbabilityMeasure μ]
+theorem chernoff_bound_subGaussian {μ : Measure Ω} [IsFiniteMeasure μ]
     {X : Ω → ℝ} {σ u : ℝ} (hσ : 0 < σ) (hu : 0 < u)
     (h_sgb : ∀ t : ℝ, ProbabilityTheory.cgf X μ t ≤ t^2 * σ^2 / 2)
     (h_int : ∀ t : ℝ, Integrable (fun ω => exp (t * X ω)) μ) :

@@ -297,37 +297,47 @@ lemma integrable_ciSup_abs_of_fintype_subGaussian {Ω : Type*} [MeasurableSpace 
   integrable_ciSup_abs_of_fintype (fun i => (h_sg i).integrable)
 
 /-- A stochastic process {X_θ : θ ∈ A} indexed by a pseudo-metric space A is sub-Gaussian
-    with parameter σ if for all θ, θ' ∈ A and all t ∈ ℝ:
-    E[exp(t(X_θ - X_θ'))] ≤ exp(t² σ² d(θ,θ')² / 2)
-
-    This is the canonical sub-Gaussian condition for stochastic processes. -/
+with parameter σ if each increment has the corresponding sub-Gaussian MGF certificate. -/
 def IsSubGaussianProcess (μ : Measure Ω) (X : A → Ω → ℝ) (σ : ℝ) : Prop :=
-  ∀ s t : A, ∀ l : ℝ, μ[fun ω => exp (l * (X s ω - X t ω))] ≤
-    exp (l^2 * σ^2 * (dist s t)^2 / 2)
+  ∀ s t : A, HasSubgaussianMGF (fun ω => X s ω - X t ω)
+    ⟨σ ^ 2 * dist s t ^ 2, mul_nonneg (sq_nonneg _) (sq_nonneg _)⟩ μ
 
 /-!
 ## Basic properties of sub-Gaussian processes
 -/
 
-/-- Sub-Gaussian processes are symmetric in the parameter. -/
+/-- Swapping the two indices preserves the increment MGF certificate. -/
 lemma IsSubGaussianProcess.symm {μ : Measure Ω} {X : A → Ω → ℝ} {σ : ℝ}
+    (h : IsSubGaussianProcess μ X σ) (s t : A) :
+    HasSubgaussianMGF (fun ω => X t ω - X s ω)
+      ⟨σ ^ 2 * dist t s ^ 2, mul_nonneg (sq_nonneg _) (sq_nonneg _)⟩ μ :=
+  h t s
+
+/-- Exponential integrability of every sub-Gaussian process increment. -/
+lemma IsSubGaussianProcess.integrable_exp_mul {μ : Measure Ω} {X : A → Ω → ℝ} {σ : ℝ}
     (h : IsSubGaussianProcess μ X σ) (s t : A) (l : ℝ) :
-    μ[fun ω => exp (l * (X t ω - X s ω))] ≤ exp (l^2 * σ^2 * (dist t s)^2 / 2) :=
-  h t s l
+    Integrable (fun ω => exp (l * (X s ω - X t ω))) μ :=
+  (h s t).integrable_exp_mul l
+
+/-- Numerical MGF bound for a sub-Gaussian process increment. -/
+lemma IsSubGaussianProcess.mgf_le {μ : Measure Ω} {X : A → Ω → ℝ} {σ : ℝ}
+    (h : IsSubGaussianProcess μ X σ) (s t : A) (l : ℝ) :
+    μ[fun ω => exp (l * (X s ω - X t ω))] ≤
+      exp (l ^ 2 * σ ^ 2 * dist s t ^ 2 / 2) := by
+  calc
+    μ[fun ω => exp (l * (X s ω - X t ω))]
+        ≤ exp ((σ ^ 2 * dist s t ^ 2) * l ^ 2 / 2) := (h s t).mgf_le l
+    _ = exp (l ^ 2 * σ ^ 2 * dist s t ^ 2 / 2) := by congr 1; ring
 
 /-- If σ ≤ σ', then σ-sub-Gaussian implies σ'-sub-Gaussian. -/
 lemma IsSubGaussianProcess.mono {μ : Measure Ω} {X : A → Ω → ℝ} {σ σ' : ℝ}
     (h : IsSubGaussianProcess μ X σ) (hσ : 0 ≤ σ) (hσ' : σ ≤ σ') :
     IsSubGaussianProcess μ X σ' := by
-  intro s t l
-  calc μ[fun ω => exp (l * (X s ω - X t ω))]
-    _ ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := h s t l
-    _ ≤ exp (l^2 * σ'^2 * (dist s t)^2 / 2) := by
-        apply exp_le_exp.mpr
-        apply div_le_div_of_nonneg_right _ (by norm_num : (0 : ℝ) ≤ 2)
-        apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
-        apply mul_le_mul_of_nonneg_left _ (sq_nonneg _)
-        exact sq_le_sq' (by linarith) hσ'
+  intro s t
+  apply hasSubgaussianMGF_mono_param (h s t)
+  change σ ^ 2 * dist s t ^ 2 ≤ σ' ^ 2 * dist s t ^ 2
+  apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
+  exact sq_le_sq' (by linarith) hσ'
 
 /-!
 ## Tail bounds for sub-Gaussian processes
@@ -339,13 +349,16 @@ The key result is that sub-Gaussian increments have exponentially decaying tails
     This is the one-sided tail bound.
     Note: In a PseudoMetricSpace, we require dist s t > 0 explicitly (unlike MetricSpace
     where this follows from s ≠ t). -/
-theorem subGaussian_tail_bound_one_sided {μ : Measure Ω} [IsProbabilityMeasure μ]
+theorem subGaussian_tail_bound_one_sided {μ : Measure Ω} [IsFiniteMeasure μ]
     {X : A → Ω → ℝ} {σ : ℝ} (hσ : 0 < σ)
     (hX : IsSubGaussianProcess μ X σ)
-    (s t : A) (u : ℝ) (hu : 0 < u) (hd : 0 < dist s t)
-    (h_int : ∀ l : ℝ, Integrable (fun ω => exp (l * (X s ω - X t ω))) μ) :
+    (s t : A) (u : ℝ) (hu : 0 < u) (hd : 0 < dist s t) :
     (μ {ω | X s ω - X t ω ≥ u}).toReal ≤
       exp (-u ^ 2 / (2 * σ ^ 2 * dist s t ^ 2)) := by
+  by_cases hμ : μ = 0
+  · rw [hμ]
+    change 0 ≤ exp (-u ^ 2 / (2 * σ ^ 2 * dist s t ^ 2))
+    positivity
   have hσd : 0 < σ * dist s t := mul_pos hσ hd
   have h_sgb : ∀ l : ℝ, cgf (fun ω => X s ω - X t ω) μ l ≤
       l ^ 2 * (σ * dist s t) ^ 2 / 2 := by
@@ -354,30 +367,26 @@ theorem subGaussian_tail_bound_one_sided {μ : Measure Ω} [IsProbabilityMeasure
     have h_mgf_bound : μ[fun ω => exp (l * (X s ω - X t ω))] ≤
         exp (l ^ 2 * (σ * dist s t) ^ 2 / 2) := by
       calc μ[fun ω => exp (l * (X s ω - X t ω))]
-        _ ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := hX s t l
+        _ ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := hX.mgf_le s t l
         _ = exp (l^2 * (σ * dist s t)^2 / 2) := by ring_nf
-    have h_mgf_pos : 0 < mgf (fun ω => X s ω - X t ω) μ l := mgf_pos (h_int l)
+    have h_mgf_pos : 0 < mgf (fun ω => X s ω - X t ω) μ l :=
+      mgf_pos' hμ (hX.integrable_exp_mul s t l)
     calc log (μ[fun ω => exp (l * (X s ω - X t ω))])
       _ ≤ log (exp (l^2 * (σ * dist s t)^2 / 2)) := log_le_log h_mgf_pos h_mgf_bound
       _ = l^2 * (σ * dist s t)^2 / 2 := log_exp _
-  have h_result := chernoff_bound_subGaussian hσd hu h_sgb h_int
+  have h_result := chernoff_bound_subGaussian hσd hu h_sgb
+    (fun l => hX.integrable_exp_mul s t l)
   have h_eq : -u^2 / (2 * σ^2 * (dist s t)^2) = -u^2 / (2 * (σ * dist s t)^2) := by
     rw [mul_pow]; ring
   rw [h_eq]
   exact h_result
 
 /-- Two-sided tail bound for sub-Gaussian increments. -/
-theorem subGaussian_tail_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
+theorem subGaussian_tail_bound {μ : Measure Ω} [IsFiniteMeasure μ]
     {X : A → Ω → ℝ} {σ : ℝ} (hσ : 0 < σ)
     (hX : IsSubGaussianProcess μ X σ)
-    (s t : A) (u : ℝ) (hu : 0 < u) (hd : 0 < dist s t)
-    (h_int : ∀ l : ℝ, Integrable (fun ω => exp (l * (X s ω - X t ω))) μ) :
+    (s t : A) (u : ℝ) (hu : 0 < u) (hd : 0 < dist s t) :
     (μ {ω | |X s ω - X t ω| ≥ u}).toReal ≤ 2 * exp (-u^2 / (2 * σ^2 * (dist s t)^2)) := by
-  have h_int' : ∀ l : ℝ, Integrable (fun ω => exp (l * (X t ω - X s ω))) μ := fun l => by
-    convert h_int (-l) using 2
-    simp only [show ∀ ω, l * (X t ω - X s ω) = -l * (X s ω - X t ω) by
-      intro ω
-      ring]
   -- Union bound over both tails: {|Y| ≥ u} ⊆ {Y ≥ u} ∪ {-Y ≥ u}
   have h_subset : {ω | |X s ω - X t ω| ≥ u} ⊆
       {ω | X s ω - X t ω ≥ u} ∪ {ω | X t ω - X s ω ≥ u} := by
@@ -399,9 +408,9 @@ theorem subGaussian_tail_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
       rw [habs] at hω
       linarith
   -- Bound by sum of individual tails using measure_union_le
-  have h_bound1 := subGaussian_tail_bound_one_sided hσ hX s t u hu hd h_int
+  have h_bound1 := subGaussian_tail_bound_one_sided hσ hX s t u hu hd
   have hd' : 0 < dist t s := by rw [dist_comm]; exact hd
-  have h_bound2 := subGaussian_tail_bound_one_sided hσ hX t s u hu hd' h_int'
+  have h_bound2 := subGaussian_tail_bound_one_sided hσ hX t s u hu hd'
   calc (μ {ω | |X s ω - X t ω| ≥ u}).toReal
     _ ≤ (μ ({ω | X s ω - X t ω ≥ u} ∪ {ω | X t ω - X s ω ≥ u})).toReal := by
         apply ENNReal.toReal_mono (measure_ne_top μ _) (measure_mono h_subset)
@@ -571,16 +580,17 @@ lemma integral_abs_subGaussian_zero {μ : Measure Ω} [IsProbabilityMeasure μ]
 theorem subGaussian_first_moment_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
     {X : A → Ω → ℝ} {σ : ℝ} (hσ : 0 < σ)
     (hX : IsSubGaussianProcess μ X σ)
-    (s t : A)
-    (h_int_exp : ∀ l : ℝ, Integrable (fun ω => exp (l * (X s ω - X t ω))) μ) :
+    (s t : A) :
     ∫ ω, |X s ω - X t ω| ∂μ ≤ Real.sqrt (2 * Real.pi) * σ * dist s t := by
   set Y : Ω → ℝ := fun ω => X s ω - X t ω
+  have h_int_exp : ∀ l : ℝ, Integrable (fun ω => exp (l * Y ω)) μ :=
+    fun l => hX.integrable_exp_mul s t l
   have h_int : Integrable Y μ := integrable_of_integrable_exp_all h_int_exp
   by_cases hd : dist s t = 0
   · simp only [hd, mul_zero]
     have hY_mgf_le_one : ∀ l : ℝ, μ[fun ω => exp (l * Y ω)] ≤ 1 := fun l => by
       calc μ[fun ω => exp (l * Y ω)]
-        _ ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := hX s t l
+        _ ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := hX.mgf_le s t l
         _ = 1 := by simp [hd]
     have h_eq := integral_abs_subGaussian_zero hY_mgf_le_one h_int_exp
     linarith
@@ -592,7 +602,7 @@ theorem subGaussian_first_moment_bound {μ : Measure Ω} [IsProbabilityMeasure �
           have h_int_abs : Integrable (fun ω => |Y ω|) μ := h_int.abs
           have h_tail : ∀ r : ℝ, 0 < r →
               (μ {ω | |Y ω| ≥ r}).toReal ≤ 2 * exp (-r^2 / (2 * τ^2)) := fun r hr => by
-            have h := subGaussian_tail_bound hσ hX s t r hr hd_pos h_int_exp
+            have h := subGaussian_tail_bound hσ hX s t r hr hd_pos
             convert h using 3
             field_simp; ring
           have h_abs_nonneg : 0 ≤ᵐ[μ] (fun ω => |Y ω|) := ae_of_all μ (fun _ => abs_nonneg _)
@@ -680,7 +690,6 @@ theorem subGaussian_finite_max_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
     (hX : IsSubGaussianProcess μ X σ)
     (T : Finset A) (hT : T.Nonempty) (hT_card : 2 ≤ T.card)
     (t₀ : A) (ht₀ : t₀ ∈ T) (hcenter : ∀ ω, X t₀ ω = 0)
-    (hX_int_exp : ∀ t ∈ T, ∀ l : ℝ, Integrable (fun ω => exp (l * X t ω)) μ)
     -- Non-degeneracy: diam > 0 (otherwise the bound is trivial but requires extra work)
     (hdiam_pos : 0 < Metric.diam (T : Set A)) :
     μ[fun ω => ⨆ t ∈ T, X t ω] ≤ σ * Metric.diam (T : Set A) * sqrt (2 * log T.card) := by
@@ -688,6 +697,9 @@ theorem subGaussian_finite_max_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
     biSup_eq_sup'_of_finset hT (fun t => X t ω) ⟨t₀, ht₀, le_of_eq (hcenter ω).symm⟩
   set σ' := σ * Metric.diam (T : Set A) with hσ'_def
   have hσ' : 0 < σ' := mul_pos hσ hdiam_pos
+  have hX_int_exp : ∀ t ∈ T, ∀ l : ℝ, Integrable (fun ω => exp (l * X t ω)) μ := by
+    intro t _ l
+    simpa only [hcenter, sub_zero] using hX.integrable_exp_mul t t₀ l
   have h_cgf_bound : ∀ t ∈ T, ∀ l, cgf (X t) μ l ≤ l^2 * σ'^2 / 2 := by
     intro t ht l
     unfold cgf mgf
@@ -696,7 +708,7 @@ theorem subGaussian_finite_max_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
         congr 1; ext ω; simp only [hcenter ω, sub_zero]
       rw [h1]
       calc μ[fun ω => exp (l * (X t ω - X t₀ ω))]
-        _ ≤ exp (l^2 * σ^2 * (dist t t₀)^2 / 2) := hX t t₀ l
+        _ ≤ exp (l^2 * σ^2 * (dist t t₀)^2 / 2) := hX.mgf_le t t₀ l
         _ ≤ exp (l^2 * σ'^2 / 2) := by
             apply exp_le_exp.mpr
             apply div_le_div_of_nonneg_right _ (by norm_num : (0 : ℝ) ≤ 2)
@@ -726,9 +738,7 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
     {X : A → Ω → ℝ} {σ : ℝ} (hσ : 0 < σ)
     (hX : IsSubGaussianProcess μ X σ)
     (T : Finset A) (hT : 2 ≤ T.card)
-    (D : ℝ) (hD : 0 ≤ D) (hdiam : Metric.diam (T : Set A) ≤ D)
-    (hX_int_exp : ∀ t ∈ T, ∀ s ∈ T, ∀ l : ℝ,
-      Integrable (fun ω => exp (l * (X t ω - X s ω))) μ) :
+    (D : ℝ) (hD : 0 ≤ D) (hdiam : Metric.diam (T : Set A) ≤ D) :
     ∃ C : ℝ, C > 0 ∧ C ≤ sqrt 2 ∧ ∀ t₀ ∈ T,
       μ[fun ω => ⨆ t ∈ T, (X t ω - X t₀ ω)] ≤ C * σ * D * sqrt (log T.card) := by
   use sqrt 2
@@ -737,17 +747,15 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
     set Y : A → Ω → ℝ := fun t ω => X t ω - X t₀ ω with hY_def
     have hT_ne : T.Nonempty := Finset.card_pos.mp (Nat.lt_of_lt_of_le (by norm_num : 0 < 2) hT)
     have hY_sg : IsSubGaussianProcess μ Y σ := by
-      intro s t l
+      intro s t
+      apply (hX s t).congr
+      filter_upwards with ω
       simp only [hY_def]
-      have h_eq : ∀ ω, (X s ω - X t₀ ω) - (X t ω - X t₀ ω) = X s ω - X t ω := fun ω => by ring
-      calc μ[fun ω => exp (l * (Y s ω - Y t ω))]
-        _ = μ[fun ω => exp (l * (X s ω - X t ω))] := by
-            congr 1; ext ω; simp [hY_def, h_eq]
-        _ ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := hX s t l
+      ring
     have hY_center : ∀ ω, Y t₀ ω = 0 := fun ω => by simp [hY_def]
     have hY_int_exp : ∀ t ∈ T, ∀ l : ℝ, Integrable (fun ω => exp (l * Y t ω)) μ := by
-      intro t ht l
-      convert hX_int_exp t ht t₀ ht₀ l using 1
+      intro t _ l
+      simpa only [hY_center, sub_zero] using hY_sg.integrable_exp_mul t t₀ l
     by_cases hdiam_zero : Metric.diam (T : Set A) = 0
     · calc ∫ ω, ⨆ t ∈ T, (X t ω - X t₀ ω) ∂μ
         _ ≤ 0 := by
@@ -759,7 +767,7 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
               have h_mgf_le_one : ∀ l, μ[fun ω => exp (l * Y t ω)] ≤ 1 := fun l => by
                 simp only [hY_def]
                 calc μ[fun ω => exp (l * (X t ω - X t₀ ω))]
-                  _ ≤ exp (l^2 * σ^2 * (dist t t₀)^2 / 2) := hX t t₀ l
+                  _ ≤ exp (l^2 * σ^2 * (dist t t₀)^2 / 2) := hX.mgf_le t t₀ l
                   _ = 1 := by simp [h_dist_zero t ht]
               have h_int_exp_pos : ∀ l : ℝ, 0 < l → Integrable (fun ω => exp (l * Y t ω)) μ :=
                 fun l _ => hY_int_exp t ht l
@@ -790,7 +798,7 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
     · have hdiam_pos : 0 < Metric.diam (T : Set A) :=
         lt_of_le_of_ne Metric.diam_nonneg (fun h => hdiam_zero h.symm)
       have h_bound := subGaussian_finite_max_bound hσ hY_sg T hT_ne hT t₀ ht₀
-        hY_center hY_int_exp hdiam_pos
+        hY_center hdiam_pos
       calc ∫ ω, ⨆ t ∈ T, (X t ω - X t₀ ω) ∂μ
         _ = ∫ ω, ⨆ t ∈ T, Y t ω ∂μ := by simp only [hY_def]
         _ ≤ σ * Metric.diam (T : Set A) * sqrt (2 * log T.card) := h_bound
@@ -801,29 +809,13 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
             rw [sqrt_mul (by norm_num : (0 : ℝ) ≤ 2) (log T.card)]
             ring
 
-/-- If a sub-Gaussian process satisfies the MGF bound and has exponential integrability,
-then the increment `X s - X t` has zero mean. -/
+/-- Every increment of a sub-Gaussian process has zero mean. -/
 lemma subGaussian_process_centered {Ω : Type*} [MeasurableSpace Ω]
     {A : Type*} [PseudoMetricSpace A] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {X : A → Ω → ℝ} {σ : ℝ}
-    (hX : IsSubGaussianProcess μ X σ) (s t : A)
-    (hX_int_exp : ∀ l : ℝ, Integrable (fun ω => exp (l * (X s ω - X t ω))) μ) :
-    ∫ ω, (X s ω - X t ω) ∂μ = 0 := by
-  let c : ℝ≥0 := ⟨σ ^ 2 * dist s t ^ 2, mul_nonneg (sq_nonneg _) (sq_nonneg _)⟩
-  have hmgf : HasSubgaussianMGF (fun ω => X s ω - X t ω) c μ := {
-    integrable_exp_mul := hX_int_exp
-    mgf_le := fun l => by
-      change μ[fun ω => exp (l * (X s ω - X t ω))] ≤ exp ((c : ℝ) * l ^ 2 / 2)
-      calc
-        μ[fun ω => exp (l * (X s ω - X t ω))]
-            ≤ exp (l ^ 2 * σ ^ 2 * dist s t ^ 2 / 2) := hX s t l
-        _ = exp ((c : ℝ) * l ^ 2 / 2) := by
-          congr 1
-          change l ^ 2 * σ ^ 2 * dist s t ^ 2 / 2 =
-            (σ ^ 2 * dist s t ^ 2) * l ^ 2 / 2
-          ring
-  }
-  exact hasSubgaussianMGF_integral_eq_zero hmgf
+    (hX : IsSubGaussianProcess μ X σ) (s t : A) :
+    ∫ ω, (X s ω - X t ω) ∂μ = 0 :=
+  hasSubgaussianMGF_integral_eq_zero (hX s t)
 
 end
 
