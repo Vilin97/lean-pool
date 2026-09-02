@@ -183,6 +183,16 @@ lemma subGaussianPsi2Norm_le_maxSubGaussianPsi2Norm {Ω : Type*}
     ⟨i, Finset.mem_univ i⟩)]
   exact Finset.le_sup' (f := fun i => subGaussianPsi2Norm (X i) μ) (Finset.mem_univ i)
 
+/-- Every polynomial moment of a globally sub-Gaussian random variable is integrable. -/
+lemma integrable_pow_of_hasSubgaussianMGF {Ω : Type*} [MeasurableSpace Ω]
+    {X : Ω → ℝ} {c : ℝ≥0} {μ : Measure Ω}
+    (h : HasSubgaussianMGF X c μ) (m : ℕ) :
+    Integrable (fun ω => X ω ^ m) μ :=
+  integrable_pow_of_integrable_exp_mul
+    (X := X) (t := 1) one_ne_zero
+    (by simpa using h.integrable_exp_mul 1)
+    (by simpa using h.integrable_exp_mul (-1)) m
+
 /-- A sub-Gaussian random variable has integrable exponential tilts. -/
 lemma IsSubGaussian.integrable_exp_mul {Ω : Type*} [MeasurableSpace Ω]
     {X : Ω → ℝ} {σ_sq : ℝ} {μ : Measure Ω}

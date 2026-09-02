@@ -749,12 +749,12 @@ lemma bounded_hansonWright_cgf_constant_le {n : ℕ}
 For `Y = Xᵀ A X - E Xᵀ A X`, this records
 `cgf Y λ ≤ C λ² K⁴ ‖A‖_F²` for
 `|λ| ≤ (2 C K² ‖A‖)⁻¹`, together with local exponential integrability. -/
-def HasHansonWrightMGF {n : ℕ} (μ : Measure Ω) (A : Matrix (Fin n) (Fin n) ℝ)
-    (X : Fin n → Ω → ℝ) (K C : ℝ) : Prop :=
-  (∀ l : ℝ, |l| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹ →
+structure HasHansonWrightMGF {n : ℕ} (μ : Measure Ω) (A : Matrix (Fin n) (Fin n) ℝ)
+    (X : Fin n → Ω → ℝ) (K C : ℝ) : Prop where
+  cgf_le : ∀ l : ℝ, |l| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹ →
     cgf (centeredQuadraticForm μ A X) μ l ≤
-      C * l ^ 2 * K ^ 4 * frobeniusNorm A ^ 2) ∧
-  ∀ l : ℝ, |l| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹ →
+      C * l ^ 2 * K ^ 4 * frobeniusNorm A ^ 2
+  integrable_exp : ∀ l : ℝ, |l| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹ →
     Integrable (fun ω => exp (l * centeredQuadraticForm μ A X ω)) μ
 
 /-- Convexity of `exp` gives the chord bound on a compact interval. -/
@@ -921,19 +921,8 @@ lemma integral_even_taylor_term_le_of_hasSubgaussianMGF {μ : Measure Ω}
     ring_nf
   have hterm_int :
       Integrable (fun ω => (t * X ω) ^ (2 * m) / (Nat.factorial (2 * m) : ℝ)) μ := by
-    have hpow :
-        Integrable (fun ω => (t * X ω) ^ (2 * m)) μ := by
-      exact integrable_pow_of_integrable_exp_mul
-        (X := fun ω => t * X ω) (t := 1) one_ne_zero
-        (by
-          convert hint_pos using 1
-          ext ω
-          ring_nf)
-        (by
-          convert hint_neg using 1
-          ext ω
-          ring_nf)
-        (2 * m)
+    have hpow : Integrable (fun ω => (t * X ω) ^ (2 * m)) μ :=
+      integrable_pow_of_hasSubgaussianMGF (h.const_mul t) (2 * m)
     exact hpow.div_const _
   have hcosh_int : Integrable (fun ω => cosh (t * X ω)) μ := by
     have hsum : Integrable (fun ω => exp (t * X ω) + exp (-(t * X ω))) μ :=
@@ -1131,8 +1120,8 @@ lemma summable_integral_exp_sq_series_of_hasSubgaussianMGF_of_le {μ : Measure �
       (exp 1)
   refine Summable.of_nonneg_of_le ?_ ?_ hgeom
   · intro m
-    exact integral_nonneg_of_ae (ae_of_all _ fun ω => by
-      exact div_nonneg
+    exact integral_nonneg_of_ae (ae_of_all _ fun ω =>
+      div_nonneg
         (mul_nonneg (pow_nonneg hθ m) (Even.pow_nonneg (even_two.mul_right m) (X ω)))
         (Nat.cast_nonneg (Nat.factorial m)))
   · intro m
@@ -1149,6 +1138,22 @@ lemma summable_integral_exp_sq_series_of_hasSubgaussianMGF {μ : Measure Ω}
   exact summable_integral_exp_sq_series_of_hasSubgaussianMGF_of_le
     (C0 := (c : ℝ) + 1) h hθ (by positivity) (by linarith) hθ_small
 
+private lemma squareExpSeriesTerm_nonneg {μ : Measure Ω} {X : Ω → ℝ}
+    {θ : ℝ} (hθ : 0 ≤ θ) (m : ℕ) :
+    0 ≤ᵐ[μ] fun ω => θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ) :=
+  ae_of_all _ fun ω =>
+    div_nonneg
+      (mul_nonneg (pow_nonneg hθ m) (Even.pow_nonneg (even_two.mul_right m) (X ω)))
+      (Nat.cast_nonneg (Nat.factorial m))
+
+private lemma squareExpSeriesTerm_integrable {μ : Measure Ω} {X : Ω → ℝ} {c : ℝ≥0}
+    (h : HasSubgaussianMGF X c μ) (θ : ℝ) (m : ℕ) :
+    Integrable
+      (fun ω => θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ)) μ := by
+  have hpow : Integrable (fun ω => X ω ^ (2 * m)) μ :=
+    integrable_pow_of_hasSubgaussianMGF h (2 * m)
+  exact (hpow.const_mul (θ ^ m)).div_const _
+
 /-- Integral form of the square-exponential Taylor expansion. -/
 lemma integral_exp_mul_sq_eq_tsum_integrals {μ : Measure Ω}
     {X : Ω → ℝ} {c : ℝ≥0}
@@ -1159,23 +1164,10 @@ lemma integral_exp_mul_sq_eq_tsum_integrals {μ : Measure Ω}
       ∑' m : ℕ, ∫ ω, θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ) ∂μ := by
   let F : ℕ → Ω → ℝ :=
     fun m ω => θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ)
-  have hF_nonneg : ∀ m : ℕ, 0 ≤ᵐ[μ] F m := by
-    intro m
-    exact ae_of_all _ fun ω => by
-      dsimp [F]
-      exact div_nonneg
-        (mul_nonneg (pow_nonneg hθ m) (Even.pow_nonneg (even_two.mul_right m) (X ω)))
-        (Nat.cast_nonneg (Nat.factorial m))
-  have hF_int : ∀ m : ℕ, Integrable (F m) μ := by
-    intro m
-    have hpow : Integrable (fun ω => X ω ^ (2 * m)) μ := by
-      exact integrable_pow_of_integrable_exp_mul
-        (X := X) (t := 1) one_ne_zero
-        (by simpa using h.integrable_exp_mul 1)
-        (by simpa using h.integrable_exp_mul (-1))
-        (2 * m)
-    dsimp [F]
-    exact (hpow.const_mul (θ ^ m)).div_const _
+  have hF_nonneg : ∀ m : ℕ, 0 ≤ᵐ[μ] F m := fun m => by
+    simpa [F] using squareExpSeriesTerm_nonneg (μ := μ) (X := X) hθ m
+  have hF_int : ∀ m : ℕ, Integrable (F m) μ := fun m => by
+    simpa [F] using squareExpSeriesTerm_integrable h θ m
   have hF_sum_norm : Summable fun m : ℕ => ∫ ω, ‖F m ω‖ ∂μ := by
     convert hsum using 1
     ext m
@@ -1189,6 +1181,47 @@ lemma integral_exp_mul_sq_eq_tsum_integrals {μ : Measure Ω}
   filter_upwards with ω
   dsimp [F]
   rw [exp_mul_sq_eq_tsum θ (X ω)]
+
+/-- Uniform geometric bound for every tail of the square-exponential moment series. -/
+private lemma integral_exp_sq_series_tail_le_of_hasSubgaussianMGF_of_le
+    {μ : Measure Ω} {X : Ω → ℝ} {c : ℝ≥0}
+    (h : HasSubgaussianMGF X c μ) {θ C0 : ℝ} (hθ : 0 ≤ θ)
+    (hC0 : 0 < C0) (hc_le : (c : ℝ) ≤ C0)
+    (hθ_small : θ * C0 * exp 1 < 1) (k : ℕ) :
+    (∑' n : ℕ,
+      ∫ ω, θ ^ (n + k) * X ω ^ (2 * (n + k)) /
+        (Nat.factorial (n + k) : ℝ) ∂μ) ≤
+      exp 1 * ((θ * C0 * exp 1) ^ k * (1 - θ * C0 * exp 1)⁻¹) := by
+  let term : ℕ → ℝ :=
+    fun m => ∫ ω, θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ) ∂μ
+  set r : ℝ := θ * C0 * exp 1 with hr_def
+  have hr_nonneg : 0 ≤ r := by rw [hr_def]; positivity
+  have hr_lt : r < 1 := by simpa [r, hr_def] using hθ_small
+  have hsum : Summable term := by
+    simpa [term] using
+      summable_integral_exp_sq_series_of_hasSubgaussianMGF_of_le h hθ hC0 hc_le hθ_small
+  have htail_sum : Summable fun n : ℕ => term (n + k) :=
+    (summable_nat_add_iff (f := term) k).mpr hsum
+  have hgeom_base : Summable fun n : ℕ => r ^ n :=
+    summable_geometric_of_lt_one hr_nonneg hr_lt
+  have hgeom_tail : Summable fun n : ℕ => exp 1 * r ^ (n + k) :=
+    ((summable_nat_add_iff (f := fun n : ℕ => r ^ n) k).mpr hgeom_base).mul_left (exp 1)
+  change (∑' n : ℕ, term (n + k)) ≤ exp 1 * (r ^ k * (1 - r)⁻¹)
+  calc
+    (∑' n : ℕ, term (n + k)) ≤ ∑' n : ℕ, exp 1 * r ^ (n + k) := by
+      refine Summable.tsum_le_tsum ?_ htail_sum hgeom_tail
+      intro n
+      simpa [term, r, hr_def] using
+        integral_exp_sq_series_term_le_of_hasSubgaussianMGF_of_le
+          h hθ hC0 hc_le (n + k)
+    _ = exp 1 * ∑' n : ℕ, r ^ (n + k) := by rw [tsum_mul_left]
+    _ = exp 1 * ∑' n : ℕ, r ^ k * r ^ n := by
+      congr 2 with n
+      rw [pow_add]
+      ring
+    _ = exp 1 * (r ^ k * ∑' n : ℕ, r ^ n) := by rw [tsum_mul_left]
+    _ = exp 1 * (r ^ k * (1 - r)⁻¹) := by
+      rw [tsum_geometric_of_lt_one hr_nonneg hr_lt]
 
 /-- A quantitative square-exponential integral bound below the proxy radius. -/
 lemma integral_exp_mul_sq_le_inv_of_hasSubgaussianMGF_of_le {μ : Measure Ω}
@@ -1236,37 +1269,13 @@ lemma integral_exp_mul_sq_le_one_add_tail_of_hasSubgaussianMGF_of_le {μ : Measu
   have hterm0 : term 0 = 1 := by
     dsimp [term]
     simp
-  have htail_sum : Summable fun n : ℕ => term (n + 1) := by
-    exact (summable_nat_add_iff (f := term) 1).mpr hsum
-  have hgeom_tail : Summable fun n : ℕ => exp 1 * r ^ (n + 1) := by
-    have hgeom_base : Summable fun n : ℕ => r ^ n :=
-      summable_geometric_of_lt_one hr_nonneg hr_lt
-    have hgeom_shift : Summable fun n : ℕ => r ^ (n + 1) :=
-      (summable_nat_add_iff (f := fun n : ℕ => r ^ n) 1).mpr hgeom_base
-    exact hgeom_shift.mul_left (exp 1)
   rw [integral_exp_mul_sq_eq_tsum_integrals h hθ (by simpa [term] using hsum)]
   change (∑' m : ℕ, term m) ≤ 1 + exp 1 * (r * (1 - r)⁻¹)
   rw [hsum.tsum_eq_zero_add, hterm0]
   gcongr
-  calc
-    (∑' n : ℕ, term (n + 1)) ≤ ∑' n : ℕ, exp 1 * r ^ (n + 1) := by
-      refine Summable.tsum_le_tsum ?_ htail_sum hgeom_tail
-      intro n
-      simpa [term, r, hr_def] using
-        integral_exp_sq_series_term_le_of_hasSubgaussianMGF_of_le h hθ hC0 hc_le (n + 1)
-    _ = exp 1 * (r * (1 - r)⁻¹) := by
-      rw [tsum_mul_left]
-      rw [show (∑' n : ℕ, r ^ (n + 1)) = r * (1 - r)⁻¹ by
-        have hgeom_base : Summable fun n : ℕ => r ^ n :=
-          summable_geometric_of_lt_one hr_nonneg hr_lt
-        have hsplit := hgeom_base.sum_add_tsum_nat_add 1
-        rw [Finset.sum_range_one, tsum_geometric_of_lt_one hr_nonneg hr_lt] at hsplit
-        have hshift : (∑' n : ℕ, r ^ (n + 1)) = (1 - r)⁻¹ - 1 := by
-          linarith
-        rw [hshift]
-        have hden : 1 - r ≠ 0 := by linarith
-        field_simp [hden]
-        ring]
+  simpa [term, r, hr_def] using
+    integral_exp_sq_series_tail_le_of_hasSubgaussianMGF_of_le
+      h hθ hC0 hc_le hθ_small 1
 
 /-- A square-exponential bound with the zeroth and first Taylor terms isolated. -/
 lemma integral_exp_mul_sq_le_one_add_linear_add_tail_of_hasSubgaussianMGF_of_le
@@ -1292,14 +1301,6 @@ lemma integral_exp_mul_sq_le_one_add_linear_add_tail_of_hasSubgaussianMGF_of_le
     dsimp [term]
     simp only [pow_one, Nat.cast_one, div_one]
     rw [integral_const_mul]
-  have htail_sum : Summable fun n : ℕ => term (n + 2) := by
-    exact (summable_nat_add_iff (f := term) 2).mpr hsum
-  have hgeom_tail : Summable fun n : ℕ => exp 1 * r ^ (n + 2) := by
-    have hgeom_base : Summable fun n : ℕ => r ^ n :=
-      summable_geometric_of_lt_one hr_nonneg hr_lt
-    have hgeom_shift : Summable fun n : ℕ => r ^ (n + 2) :=
-      (summable_nat_add_iff (f := fun n : ℕ => r ^ n) 2).mpr hgeom_base
-    exact hgeom_shift.mul_left (exp 1)
   rw [integral_exp_mul_sq_eq_tsum_integrals h hθ (by simpa [term] using hsum)]
   change (∑' m : ℕ, term m) ≤
     1 + θ * ∫ ω, X ω ^ 2 ∂μ + exp 1 * (r ^ 2 * (1 - r)⁻¹)
@@ -1307,26 +1308,9 @@ lemma integral_exp_mul_sq_le_one_add_linear_add_tail_of_hasSubgaussianMGF_of_le
   rw [Finset.sum_range_succ, Finset.sum_range_one, hterm0, hterm1] at hsplit
   rw [← hsplit]
   gcongr
-  calc
-    (∑' n : ℕ, term (n + 2)) ≤ ∑' n : ℕ, exp 1 * r ^ (n + 2) := by
-      refine Summable.tsum_le_tsum ?_ htail_sum hgeom_tail
-      intro n
-      simpa [term, r, hr_def] using
-        integral_exp_sq_series_term_le_of_hasSubgaussianMGF_of_le h hθ hC0 hc_le (n + 2)
-    _ = exp 1 * (r ^ 2 * (1 - r)⁻¹) := by
-      rw [tsum_mul_left]
-      rw [show (∑' n : ℕ, r ^ (n + 2)) = r ^ 2 * (1 - r)⁻¹ by
-        have hgeom_base : Summable fun n : ℕ => r ^ n :=
-          summable_geometric_of_lt_one hr_nonneg hr_lt
-        have hsplit2 := hgeom_base.sum_add_tsum_nat_add 2
-        rw [Finset.sum_range_succ, Finset.sum_range_one,
-          tsum_geometric_of_lt_one hr_nonneg hr_lt] at hsplit2
-        have hshift : (∑' n : ℕ, r ^ (n + 2)) = (1 - r)⁻¹ - (1 + r) := by
-          linarith
-        rw [hshift]
-        have hden : 1 - r ≠ 0 := by linarith
-        field_simp [hden]
-        ring]
+  simpa [term, r, hr_def] using
+    integral_exp_sq_series_tail_le_of_hasSubgaussianMGF_of_le
+      h hθ hC0 hc_le hθ_small 2
 
 /-- A linear-in-`θ` square-exponential bound at half the explicit radius. -/
 lemma integral_exp_mul_sq_le_exp_linear_of_hasSubgaussianMGF_of_le {μ : Measure Ω}
@@ -1636,6 +1620,16 @@ lemma exp_neg_mul_one_add_le_one (u : ℝ) :
       ring_nf
       simp
 
+private lemma integrable_exp_neg_mul_sq {μ : Measure Ω} [IsFiniteMeasure μ]
+    {X : Ω → ℝ} {a : ℝ}
+    (ha : 0 ≤ a) (hX2_int : Integrable (fun ω => X ω ^ 2) μ) :
+    Integrable (fun ω => exp (-a * X ω ^ 2)) μ :=
+  Integrable.of_bound
+    ((hX2_int.aemeasurable.const_mul (-a)).exp.aestronglyMeasurable) 1 (by
+      filter_upwards with ω
+      rw [Real.norm_eq_abs, abs_of_nonneg (exp_nonneg _), Real.exp_le_one_iff]
+      exact mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr ha) (sq_nonneg (X ω)))
+
 /-- Positive-parameter MGF bound for a centered square of a sub-Gaussian variable. -/
 lemma integral_exp_centered_sq_le_exp_quadratic_nonneg {μ : Measure Ω}
     [IsProbabilityMeasure μ] {X : Ω → ℝ} {c : ℝ≥0}
@@ -1737,23 +1731,12 @@ lemma integral_exp_centered_sq_le_exp_quadratic_nonpos {μ : Measure Ω}
   set m : ℝ := ∫ ω, X ω ^ 2 ∂μ with hm_def
   set M4 : ℝ := ∫ ω, X ω ^ 4 ∂μ with hM4_def
   have ha_nonneg : 0 ≤ a := by rw [ha_def]; linarith
-  have hX2_int : Integrable (fun ω => X ω ^ 2) μ := by
-    exact integrable_pow_of_integrable_exp_mul
-      (X := X) (t := 1) one_ne_zero
-      (by simpa using h.integrable_exp_mul 1)
-      (by simpa using h.integrable_exp_mul (-1)) 2
-  have hX4_int : Integrable (fun ω => X ω ^ 4) μ := by
-    exact integrable_pow_of_integrable_exp_mul
-      (X := X) (t := 1) one_ne_zero
-      (by simpa using h.integrable_exp_mul 1)
-      (by simpa using h.integrable_exp_mul (-1)) 4
-  have hneg_int : Integrable (fun ω => exp (-a * X ω ^ 2)) μ := by
-    exact Integrable.of_bound
-      ((hX2_int.aemeasurable.const_mul (-a)).exp.aestronglyMeasurable) 1 (by
-        filter_upwards with ω
-        rw [Real.norm_eq_abs, abs_of_nonneg (exp_nonneg _)]
-        rw [Real.exp_le_one_iff]
-        exact mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr ha_nonneg) (sq_nonneg (X ω)))
+  have hX2_int : Integrable (fun ω => X ω ^ 2) μ :=
+    integrable_pow_of_hasSubgaussianMGF h 2
+  have hX4_int : Integrable (fun ω => X ω ^ 4) μ :=
+    integrable_pow_of_hasSubgaussianMGF h 4
+  have hneg_int : Integrable (fun ω => exp (-a * X ω ^ 2)) μ :=
+    integrable_exp_neg_mul_sq ha_nonneg hX2_int
   have hpoly_int :
       Integrable (fun ω => 1 - a * X ω ^ 2 + a ^ 2 * X ω ^ 4) μ :=
     ((integrable_const 1).sub (hX2_int.const_mul a)).add (hX4_int.const_mul (a ^ 2))
@@ -1841,23 +1824,10 @@ lemma integrable_exp_mul_sq_of_summable_integrals {μ : Measure Ω}
     Integrable (fun ω => exp (θ * X ω ^ 2)) μ := by
   let F : ℕ → Ω → ℝ :=
     fun m ω => θ ^ m * X ω ^ (2 * m) / (Nat.factorial m : ℝ)
-  have hF_nonneg : ∀ m : ℕ, 0 ≤ᵐ[μ] F m := by
-    intro m
-    exact ae_of_all _ fun ω => by
-      dsimp [F]
-      exact div_nonneg
-        (mul_nonneg (pow_nonneg hθ m) (Even.pow_nonneg (even_two.mul_right m) (X ω)))
-        (Nat.cast_nonneg (Nat.factorial m))
-  have hF_int : ∀ m : ℕ, Integrable (F m) μ := by
-    intro m
-    have hpow : Integrable (fun ω => X ω ^ (2 * m)) μ := by
-      exact integrable_pow_of_integrable_exp_mul
-        (X := X) (t := 1) one_ne_zero
-        (by simpa using h.integrable_exp_mul 1)
-        (by simpa using h.integrable_exp_mul (-1))
-        (2 * m)
-    dsimp [F]
-    exact (hpow.const_mul (θ ^ m)).div_const _
+  have hF_nonneg : ∀ m : ℕ, 0 ≤ᵐ[μ] F m := fun m => by
+    simpa [F] using squareExpSeriesTerm_nonneg (μ := μ) (X := X) hθ m
+  have hF_int : ∀ m : ℕ, Integrable (F m) μ := fun m => by
+    simpa [F] using squareExpSeriesTerm_integrable h θ m
   have hF_integral_nonneg : ∀ m : ℕ, 0 ≤ ∫ ω, F m ω ∂μ := by
     intro m
     exact integral_nonneg_of_ae (hF_nonneg m)
@@ -2096,18 +2066,10 @@ lemma integrable_exp_centered_sq_of_hasSubgaussianMGF_of_le {μ : Measure Ω}
     ring_nf
   · set a : ℝ := -θ with ha_def
     have ha_nonneg : 0 ≤ a := by rw [ha_def]; linarith
-    have hX2_int : Integrable (fun ω => X ω ^ 2) μ := by
-      exact integrable_pow_of_integrable_exp_mul
-        (X := X) (t := 1) one_ne_zero
-        (by simpa using h.integrable_exp_mul 1)
-        (by simpa using h.integrable_exp_mul (-1)) 2
-    have hneg_int : Integrable (fun ω => exp (-a * X ω ^ 2)) μ := by
-      exact Integrable.of_bound
-        ((hX2_int.aemeasurable.const_mul (-a)).exp.aestronglyMeasurable) 1 (by
-          filter_upwards with ω
-          rw [Real.norm_eq_abs, abs_of_nonneg (exp_nonneg _)]
-          rw [Real.exp_le_one_iff]
-          exact mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr ha_nonneg) (sq_nonneg (X ω)))
+    have hX2_int : Integrable (fun ω => X ω ^ 2) μ :=
+      integrable_pow_of_hasSubgaussianMGF h 2
+    have hneg_int : Integrable (fun ω => exp (-a * X ω ^ 2)) μ :=
+      integrable_exp_neg_mul_sq ha_nonneg hX2_int
     convert hneg_int.const_mul (exp (a * m)) using 1
     ext ω
     rw [← exp_add]
@@ -2585,10 +2547,7 @@ lemma centeredQuadraticForm_eq_diagonalCentered_of_offdiag_eq_zero
     centeredQuadraticForm μ A X = diagonalCenteredQuadraticForm μ A X := by
   have hterm_int : ∀ i, Integrable (fun ω => A i i * X i ω ^ 2) μ := by
     intro i
-    exact ((integrable_pow_of_integrable_exp_mul
-      (X := X i) (t := 1) one_ne_zero
-      (by simpa using (hX_subG i).integrable_exp_mul 1)
-      (by simpa using (hX_subG i).integrable_exp_mul (-1)) 2).const_mul (A i i))
+    exact (integrable_pow_of_hasSubgaussianMGF (hX_subG i) 2).const_mul (A i i)
   ext ω
   unfold centeredQuadraticForm randomQuadraticForm diagonalCenteredQuadraticForm
   have hqfun :
@@ -2679,6 +2638,24 @@ lemma quadraticForm_eq_diag_add_offDiagonal {n : ℕ}
           ∑ i, ∑ j, (if i = j then 0 else A i j) * x i * x j := by
           rw [Finset.sum_add_distrib]
 
+private lemma integrable_offDiagonal_term {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+    {X : Fin n → Ω → ℝ} {K : ℝ}
+    (h_indep : iIndepFun X μ)
+    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (i j : Fin n) :
+    Integrable (fun ω => offDiagonalMatrix A i j * X i ω * X j ω) μ := by
+  by_cases hij : i = j
+  · subst j
+    simp [offDiagonalMatrix]
+  · have hmul : Integrable ((X i) * (X j)) μ :=
+      (h_indep.indepFun hij).integrable_mul (hX_subG i).integrable
+        (hX_subG j).integrable
+    convert hmul.const_mul (A i j) using 1
+    ext ω
+    simp [offDiagonalMatrix, hij]
+    ring
+
 lemma integrable_randomQuadraticForm_offDiagonal_of_subgaussian {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K : ℝ}
@@ -2687,18 +2664,8 @@ lemma integrable_randomQuadraticForm_offDiagonal_of_subgaussian {μ : Measure Ω
     Integrable (randomQuadraticForm (offDiagonalMatrix A) X) μ := by
   classical
   have hterm : ∀ i j,
-      Integrable (fun ω => offDiagonalMatrix A i j * X i ω * X j ω) μ := by
-    intro i j
-    by_cases hij : i = j
-    · subst j
-      simp [offDiagonalMatrix]
-    · have hmul : Integrable ((X i) * (X j)) μ :=
-        (h_indep.indepFun hij).integrable_mul (hX_subG i).integrable
-          (hX_subG j).integrable
-      convert hmul.const_mul (A i j) using 1
-      ext ω
-      simp [offDiagonalMatrix, hij]
-      ring
+      Integrable (fun ω => offDiagonalMatrix A i j * X i ω * X j ω) μ :=
+    integrable_offDiagonal_term A h_indep hX_subG
   unfold randomQuadraticForm quadraticForm
   exact integrable_finsetSum _ fun i _ =>
     integrable_finsetSum _ fun j _ => hterm i j
@@ -2711,18 +2678,8 @@ lemma integral_randomQuadraticForm_offDiagonal_eq_zero {μ : Measure Ω}
     ∫ ω, randomQuadraticForm (offDiagonalMatrix A) X ω ∂μ = 0 := by
   classical
   have hterm_int : ∀ i j,
-      Integrable (fun ω => offDiagonalMatrix A i j * X i ω * X j ω) μ := by
-    intro i j
-    by_cases hij : i = j
-    · subst j
-      simp [offDiagonalMatrix]
-    · have hmul : Integrable ((X i) * (X j)) μ :=
-        (h_indep.indepFun hij).integrable_mul (hX_subG i).integrable
-          (hX_subG j).integrable
-      convert hmul.const_mul (A i j) using 1
-      ext ω
-      simp [offDiagonalMatrix, hij]
-      ring
+      Integrable (fun ω => offDiagonalMatrix A i j * X i ω * X j ω) μ :=
+    integrable_offDiagonal_term A h_indep hX_subG
   have hrow_int : ∀ i,
       Integrable (fun ω => ∑ j, offDiagonalMatrix A i j * X i ω * X j ω) μ := by
     intro i
@@ -2783,10 +2740,7 @@ lemma centeredQuadraticForm_eq_diagonal_add_offDiagonal {μ : Measure Ω}
   classical
   have hdiag_term_int : ∀ i, Integrable (fun ω => A i i * X i ω ^ 2) μ := by
     intro i
-    exact ((integrable_pow_of_integrable_exp_mul
-      (X := X i) (t := 1) one_ne_zero
-      (by simpa using (hX_subG i).integrable_exp_mul 1)
-      (by simpa using (hX_subG i).integrable_exp_mul (-1)) 2).const_mul (A i i))
+    exact (integrable_pow_of_hasSubgaussianMGF (hX_subG i) 2).const_mul (A i i)
   have hdiag_int :
       Integrable (fun ω => ∑ i, A i i * X i ω ^ 2) μ :=
     integrable_finsetSum _ fun i _ => hdiag_term_int i
@@ -3424,6 +3378,70 @@ lemma integral_exp_quadraticForm_cutMatrix_le {μ : Measure Ω}
   exact integral_exp_inner_toEuclideanCLM_randomVector_prod_le (cutMatrix A s)
     h_indep hX_subG hsmall
 
+/-- Restricting to a cut matrix can only decrease the small-parameter expression
+that controls off-diagonal exponential moments. -/
+private lemma cutMatrix_exponential_scale_le {n : ℕ}
+    (A : Matrix (Fin n) (Fin n) ℝ) (s : Finset (Fin n)) (K l : ℝ) :
+    (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 *
+        operatorNorm (cutMatrix A s) ^ 2 * exp 1 ≤
+      (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * operatorNorm A ^ 2 * exp 1 := by
+  have hop_sq : operatorNorm (cutMatrix A s) ^ 2 ≤ operatorNorm A ^ 2 := by
+    nlinarith [operatorNorm_cutMatrix_le A s, operatorNorm_nonneg (cutMatrix A s),
+      operatorNorm_nonneg A]
+  have hcoef_nonneg :
+      0 ≤ (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * exp 1 := by positivity
+  calc
+    (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 *
+        operatorNorm (cutMatrix A s) ^ 2 * exp 1
+        = ((K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * exp 1) *
+            operatorNorm (cutMatrix A s) ^ 2 := by ring
+    _ ≤ ((K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * exp 1) * operatorNorm A ^ 2 :=
+      mul_le_mul_of_nonneg_left hop_sq hcoef_nonneg
+    _ = (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * operatorNorm A ^ 2 * exp 1 := by ring
+
+/-- The uniform cut average that dominates the off-diagonal quadratic-form exponential. -/
+private def offDiagonalCutAverage {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+    (X : Fin n → Ω → ℝ) (l : ℝ) : Ω → ℝ :=
+  fun ω =>
+    (((Finset.univ : Finset (Fin n)).powerset.card : ℝ)⁻¹) *
+      ∑ s ∈ (Finset.univ : Finset (Fin n)).powerset,
+        exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω))
+
+omit [MeasurableSpace Ω] in
+private lemma exp_offDiagonal_le_cutAverage {n : ℕ}
+    (A : Matrix (Fin n) (Fin n) ℝ) (X : Fin n → Ω → ℝ) (l : ℝ) (ω : Ω) :
+    exp (l * quadraticForm (offDiagonalMatrix A) (fun i => X i ω)) ≤
+      offDiagonalCutAverage A X l ω := by
+  simpa [offDiagonalCutAverage] using
+    exp_mul_quadraticForm_offDiagonal_le_average_cut A (fun i => X i ω) l
+
+private lemma integrable_offDiagonalCutAverage {μ : Measure Ω} {n : ℕ}
+    (A : Matrix (Fin n) (Fin n) ℝ) (X : Fin n → Ω → ℝ) (l : ℝ)
+    (hcut : ∀ s : Finset (Fin n),
+      Integrable
+        (fun ω => exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω))) μ) :
+    Integrable (offDiagonalCutAverage A X l) μ := by
+  classical
+  unfold offDiagonalCutAverage
+  exact
+    (integrable_finsetSum (Finset.univ : Finset (Fin n)).powerset
+      fun s _ => hcut s).const_mul _
+
+private lemma integral_offDiagonalCutAverage {μ : Measure Ω} {n : ℕ}
+    (A : Matrix (Fin n) (Fin n) ℝ) (X : Fin n → Ω → ℝ) (l : ℝ)
+    (hcut : ∀ s : Finset (Fin n),
+      Integrable
+        (fun ω => exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω))) μ) :
+    ∫ ω, offDiagonalCutAverage A X l ω ∂μ =
+      (((Finset.univ : Finset (Fin n)).powerset.card : ℝ)⁻¹) *
+        ∑ s ∈ (Finset.univ : Finset (Fin n)).powerset,
+          ∫ ω, exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ := by
+  classical
+  unfold offDiagonalCutAverage
+  rw [integral_const_mul, integral_finsetSum]
+  intro s _
+  exact hcut s
+
 lemma integrable_exp_quadraticForm_offDiagonal {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K l : ℝ}
@@ -3434,35 +3452,18 @@ lemma integrable_exp_quadraticForm_offDiagonal {μ : Measure Ω}
     Integrable
       (fun ω => exp (l * quadraticForm (offDiagonalMatrix A) (fun i => X i ω))) μ := by
   classical
-  let P : Finset (Finset (Fin n)) := (Finset.univ : Finset (Fin n)).powerset
-  let R : Ω → ℝ := fun ω =>
-    (P.card : ℝ)⁻¹ *
-      ∑ s ∈ P, exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω))
   have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hX_subG i).aemeasurable
-  have hsmall_cut : ∀ s ∈ P,
+  have hsmall_cut : ∀ s : Finset (Fin n),
       (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 *
           operatorNorm (cutMatrix A s) ^ 2 * exp 1 < 1 := by
-    intro s hs
-    have hop_sq : operatorNorm (cutMatrix A s) ^ 2 ≤ operatorNorm A ^ 2 := by
-      nlinarith [operatorNorm_cutMatrix_le A s, operatorNorm_nonneg (cutMatrix A s),
-        operatorNorm_nonneg A]
-    have hcoef_nonneg :
-        0 ≤ (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * exp 1 := by positivity
-    calc
-      (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 *
-          operatorNorm (cutMatrix A s) ^ 2 * exp 1
-          = ((K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * exp 1) *
-              operatorNorm (cutMatrix A s) ^ 2 := by ring
-      _ ≤ ((K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * exp 1) *
-            operatorNorm A ^ 2 :=
-          mul_le_mul_of_nonneg_left hop_sq hcoef_nonneg
-      _ = (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * operatorNorm A ^ 2 * exp 1 := by
-          ring
-      _ < 1 := hsmall
-  have hR_int : Integrable R μ := by
-    dsimp [R]
-    refine (integrable_finsetSum P fun s hs => ?_).const_mul _
-    exact integrable_exp_quadraticForm_cutMatrix A s h_indep hX_subG (hsmall_cut s hs)
+    intro s
+    exact (cutMatrix_exponential_scale_le A s K l).trans_lt hsmall
+  have hcut_int : ∀ s : Finset (Fin n),
+      Integrable
+        (fun ω => exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω))) μ :=
+    fun s => integrable_exp_quadraticForm_cutMatrix A s h_indep hX_subG (hsmall_cut s)
+  have haverage_int : Integrable (offDiagonalCutAverage A X l) μ :=
+    integrable_offDiagonalCutAverage A X l hcut_int
   have hleft_aesm :
       AEStronglyMeasurable
         (fun ω => exp (l * quadraticForm (offDiagonalMatrix A) (fun i => X i ω))) μ := by
@@ -3473,11 +3474,9 @@ lemma integrable_exp_quadraticForm_offDiagonal {μ : Measure Ω}
     exact hleft_ae.aestronglyMeasurable
   have hpoint :
       (fun ω => exp (l * quadraticForm (offDiagonalMatrix A) (fun i => X i ω)))
-        ≤ᵐ[μ] R := by
-    filter_upwards with ω
-    simpa [R, P] using
-      exp_mul_quadraticForm_offDiagonal_le_average_cut A (fun i => X i ω) l
-  refine Integrable.mono' hR_int hleft_aesm ?_
+        ≤ᵐ[μ] offDiagonalCutAverage A X l :=
+    ae_of_all μ (exp_offDiagonal_le_cutAverage A X l)
+  refine Integrable.mono' haverage_int hleft_aesm ?_
   filter_upwards [hpoint] with ω hω
   rw [Real.norm_eq_abs, abs_of_nonneg (exp_nonneg _)]
   exact hω
@@ -3493,41 +3492,22 @@ lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
       exp (exp 1 ^ 2 * (4 * l) ^ 2 * K ^ 4 * frobeniusNorm A ^ 2) := by
   classical
   let P : Finset (Finset (Fin n)) := (Finset.univ : Finset (Fin n)).powerset
-  let R : Ω → ℝ := fun ω =>
-    (P.card : ℝ)⁻¹ *
-      ∑ s ∈ P, exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω))
   let B : ℝ := exp (exp 1 ^ 2 * (4 * l) ^ 2 * K ^ 4 * frobeniusNorm A ^ 2)
   have hP_pos : 0 < (P.card : ℝ) := by
     exact_mod_cast Finset.card_pos.mpr ⟨∅, Finset.empty_mem_powerset _⟩
-  have hsmall_cut : ∀ s ∈ P,
+  have hsmall_cut : ∀ s : Finset (Fin n),
       (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 *
           operatorNorm (cutMatrix A s) ^ 2 * exp 1 ≤ 1 / 2 := by
-    intro s hs
-    have hop_sq : operatorNorm (cutMatrix A s) ^ 2 ≤ operatorNorm A ^ 2 := by
-      nlinarith [operatorNorm_cutMatrix_le A s, operatorNorm_nonneg (cutMatrix A s),
-        operatorNorm_nonneg A]
-    have hcoef_nonneg :
-        0 ≤ (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * exp 1 := by positivity
-    calc
-      (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 *
-          operatorNorm (cutMatrix A s) ^ 2 * exp 1
-          = ((K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * exp 1) *
-              operatorNorm (cutMatrix A s) ^ 2 := by ring
-      _ ≤ ((K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * exp 1) *
-            operatorNorm A ^ 2 :=
-          mul_le_mul_of_nonneg_left hop_sq hcoef_nonneg
-      _ = (K ^ 2 * (4 * l) ^ 2 / 2) * K ^ 2 * operatorNorm A ^ 2 * exp 1 := by
-          ring
-      _ ≤ 1 / 2 := hsmall
-  have hcut_int : ∀ s ∈ P,
+    intro s
+    exact (cutMatrix_exponential_scale_le A s K l).trans hsmall
+  have hcut_int : ∀ s : Finset (Fin n),
       Integrable (fun ω =>
         exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω))) μ := by
-    intro s hs
+    intro s
     exact integrable_exp_quadraticForm_cutMatrix A s h_indep hX_subG
-      (lt_of_le_of_lt (hsmall_cut s hs) (by norm_num))
-  have hR_int : Integrable R μ := by
-    dsimp [R]
-    exact (integrable_finsetSum P hcut_int).const_mul _
+      (lt_of_le_of_lt (hsmall_cut s) (by norm_num))
+  have haverage_int : Integrable (offDiagonalCutAverage A X l) μ :=
+    integrable_offDiagonalCutAverage A X l hcut_int
   have hleft_int :
       Integrable
         (fun ω => exp (l * quadraticForm (offDiagonalMatrix A) (fun i => X i ω))) μ :=
@@ -3535,15 +3515,13 @@ lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
       (lt_of_le_of_lt hsmall (by norm_num))
   have hpoint :
       (fun ω => exp (l * quadraticForm (offDiagonalMatrix A) (fun i => X i ω)))
-        ≤ᵐ[μ] R := by
-    filter_upwards with ω
-    simpa [R, P] using
-      exp_mul_quadraticForm_offDiagonal_le_average_cut A (fun i => X i ω) l
-  have hcut_bound : ∀ s ∈ P,
+        ≤ᵐ[μ] offDiagonalCutAverage A X l :=
+    ae_of_all μ (exp_offDiagonal_le_cutAverage A X l)
+  have hcut_bound : ∀ s : Finset (Fin n),
       ∫ ω, exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ ≤ B := by
-    intro s hs
+    intro s
     have hbase :=
-      integral_exp_quadraticForm_cutMatrix_le A s h_indep hX_subG (hsmall_cut s hs)
+      integral_exp_quadraticForm_cutMatrix_le A s h_indep hX_subG (hsmall_cut s)
     have hfrob := frobeniusNorm_cutMatrix_sq_le A s
     have hcoef_nonneg : 0 ≤ exp 1 ^ 2 * (4 * l) ^ 2 * K ^ 4 := by positivity
     have hexp_le :
@@ -3561,35 +3539,18 @@ lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
     exact hbase.trans hexp_le
   calc
     ∫ ω, exp (l * quadraticForm (offDiagonalMatrix A) (fun i => X i ω)) ∂μ
-        ≤ ∫ ω, R ω ∂μ := integral_mono_ae hleft_int hR_int hpoint
+        ≤ ∫ ω, offDiagonalCutAverage A X l ω ∂μ :=
+      integral_mono_ae hleft_int haverage_int hpoint
     _ = (P.card : ℝ)⁻¹ *
           ∑ s ∈ P, ∫ ω,
             exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ := by
-          dsimp [R]
-          rw [integral_const_mul]
-          congr 1
-          rw [integral_finsetSum]
-          intro s hs
-          exact hcut_int s hs
+          simpa [P] using integral_offDiagonalCutAverage A X l hcut_int
     _ ≤ (P.card : ℝ)⁻¹ * ∑ s ∈ P, B := by
           exact mul_le_mul_of_nonneg_left
-            (Finset.sum_le_sum fun s hs => hcut_bound s hs) (inv_nonneg.mpr hP_pos.le)
+            (Finset.sum_le_sum fun s _ => hcut_bound s) (inv_nonneg.mpr hP_pos.le)
     _ = B := by
           simp
           field_simp [ne_of_gt hP_pos]
-
-lemma exp_add_le_average_exp_two (a b : ℝ) :
-    exp (a + b) ≤ (exp (2 * a) + exp (2 * b)) / 2 := by
-  have hconv := convexOn_exp.2 (Set.mem_univ (2 * a)) (Set.mem_univ (2 * b))
-    (by norm_num : (0 : ℝ) ≤ 1 / 2) (by norm_num : (0 : ℝ) ≤ 1 / 2)
-    (by norm_num : (1 / 2 : ℝ) + 1 / 2 = 1)
-  calc
-    exp (a + b) = exp ((1 / 2 : ℝ) • (2 * a) + (1 / 2 : ℝ) • (2 * b)) := by
-      congr 1
-      norm_num
-      ring
-    _ ≤ (1 / 2 : ℝ) * exp (2 * a) + (1 / 2 : ℝ) * exp (2 * b) := hconv
-    _ = (exp (2 * a) + exp (2 * b)) / 2 := by ring
 
 lemma abs_two_mul_le_inv_quarter_of_abs_le {a C l : ℝ}
     (ha : 0 < a) (hC : 0 < C)
@@ -3798,66 +3759,14 @@ theorem hasHansonWrightMGF_of_subgaussian {μ : Measure Ω} [IsProbabilityMeasur
           (K := K) (C := C) (F := frobeniusNorm A) (l := l) hC_offdiag_quad
       dsimp [O]
       exact hbase.trans hexp_le
-    let R : Ω → ℝ :=
-      fun ω => (exp ((2 * l) * D ω) + exp ((2 * l) * O ω)) / 2
-    have hR_int : Integrable R μ := by
-      dsimp [R]
-      exact (hD_int.add hO_int).div_const 2
-    have hleft_aesm :
-        AEStronglyMeasurable (fun ω => exp (l * (D ω + O ω))) μ :=
-      (((hD_ae.add hO_ae).const_mul l).exp).aestronglyMeasurable
-    have hpoint :
-        (fun ω => exp (l * (D ω + O ω))) ≤ᵐ[μ] R := by
-      filter_upwards with ω
-      dsimp [R]
-      have hconv := exp_add_le_average_exp_two (l * D ω) (l * O ω)
-      convert hconv using 1 <;> ring_nf
-    have hDO_int : Integrable (fun ω => exp (l * (D ω + O ω))) μ := by
-      refine Integrable.mono' hR_int hleft_aesm ?_
-      filter_upwards [hpoint] with ω hω
-      rw [Real.norm_eq_abs, abs_of_nonneg (exp_nonneg _)]
-      exact hω
-    have hcenter_int : Integrable (fun ω => exp (l * centeredQuadraticForm μ A X ω)) μ :=
-      hDO_int.congr (ae_of_all _ fun ω => by
-        change exp (l * (D ω + O ω)) = exp (l * centeredQuadraticForm μ A X ω)
-        rw [← congrFun hcenter_eq ω])
-    have hDO_integral_le :
-        ∫ ω, exp (l * (D ω + O ω)) ∂μ ≤ exp (B l) := by
-      have hmono : ∫ ω, exp (l * (D ω + O ω)) ∂μ ≤ ∫ ω, R ω ∂μ :=
-        integral_mono_ae hDO_int hR_int hpoint
-      have hR_integral :
-          ∫ ω, R ω ∂μ =
-            (∫ ω, exp ((2 * l) * D ω) ∂μ +
-              ∫ ω, exp ((2 * l) * O ω) ∂μ) / 2 := by
-        dsimp [R]
-        rw [integral_div]
-        rw [integral_add hD_int hO_int]
-      have hsum_le :
-          ∫ ω, exp ((2 * l) * D ω) ∂μ +
-              ∫ ω, exp ((2 * l) * O ω) ∂μ ≤
-            exp (B l) + exp (B l) :=
-        add_le_add hD_mgf_le hO_mgf_le
-      calc
-        ∫ ω, exp (l * (D ω + O ω)) ∂μ ≤ ∫ ω, R ω ∂μ := hmono
-        _ = (∫ ω, exp ((2 * l) * D ω) ∂μ +
-              ∫ ω, exp ((2 * l) * O ω) ∂μ) / 2 := hR_integral
-        _ ≤ (exp (B l) + exp (B l)) / 2 :=
-          div_le_div_of_nonneg_right hsum_le (by norm_num)
-        _ = exp (B l) := by ring
-    have hcenter_integral_le :
-        ∫ ω, exp (l * centeredQuadraticForm μ A X ω) ∂μ ≤ exp (B l) := by
-      calc
-        ∫ ω, exp (l * centeredQuadraticForm μ A X ω) ∂μ
-            = ∫ ω, exp (l * (D ω + O ω)) ∂μ := by
-              apply integral_congr_ae
-              filter_upwards with ω
-              rw [congrFun hcenter_eq ω]
-        _ ≤ exp (B l) := hDO_integral_le
-    exact ⟨hcenter_int, hcenter_integral_le⟩
+    rw [hcenter_eq]
+    exact integrable_exp_add_and_integral_le hD_ae hO_ae hD_int hO_int
+      hD_mgf_le hO_mgf_le
   refine ⟨?_, ?_⟩
   · intro l hl
     have hres := hmain l hl
-    have hmgf_pos : 0 < mgf (centeredQuadraticForm μ A X) μ l := mgf_pos hres.1
+    have hmgf_pos : 0 < mgf (centeredQuadraticForm μ A X) μ l :=
+      mgf_pos hres.1
     have hmgf_le : mgf (centeredQuadraticForm μ A X) μ l ≤ exp (B l) := by
       simpa [mgf] using hres.2
     calc
@@ -3974,12 +3883,12 @@ theorem hanson_wright_inequality {μ : Measure Ω} [IsProbabilityMeasure μ]
       have hl' : |l| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹ := by
         convert hl using 2
         ring
-      simpa [mul_assoc, mul_left_comm, mul_comm] using hHW.1 l hl')
+      simpa [mul_assoc, mul_left_comm, mul_comm] using hHW.cgf_le l hl')
     (fun l hl => by
       have hl' : |l| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹ := by
         convert hl using 2
         ring
-      exact hHW.2 l hl') ht
+      exact hHW.integrable_exp l hl') ht
 
 /-- Hanson-Wright inequality in the HDP normalization.
 
