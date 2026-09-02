@@ -2,8 +2,8 @@
 
 ``openai`` and ``lean_explore`` ship only in the ``review`` dependency
 group, which the test environment does not install, yet
-``lean_pool.review``, ``lean_pool.aggregator.triage``, and
-``lean_pool.prior_art`` import them. Register one stub each — with the
+``lean_pool.review`` and ``lean_pool.prior_art`` import them. Register
+one stub each — with the
 attributes the code under test actually inspects, such as ``openai``'s
 exception hierarchy and its ``status_code`` — before any test module
 imports those modules. Individual test files must not register competing
