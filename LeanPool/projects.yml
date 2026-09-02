@@ -47,8 +47,9 @@ projects:
           itself a 2-better-quasi-order.
       - declaration: TwoBQO.embedForAll_wqo
         informal: >-
-          If a relation is a 2-better-quasi-order, then its induced pointwise embedding relation
-          on infinite sequences is a well-quasi-order.
+          If a preorder is a 2-better-quasi-order, then its infinite sequences are
+          well-quasi-ordered by the relation admitting a strictly monotone reindexing along
+          which corresponding terms are related.
     tags:
       - infinitary-combinatorics
       - ramsey-theory
