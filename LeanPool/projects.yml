@@ -1,4 +1,55 @@
 projects:
+  - slug: kahn-kalai
+    title: Kahn–Kalai expectation-threshold theorem
+    summary: >-
+      Formalizes Tran and Vu's short proof of the Park–Pham theorem resolving
+      the Kahn–Kalai expectation-threshold conjecture. For an ℓ-bounded
+      family of subsets of a finite ground set, it proves the strengthened
+      covering theorem with the explicit constant L = 1000 and derives the
+      threshold bound p_c(F) ≤ K q(F) log₂ ℓ with the explicit witness
+      K = 100000. The supporting library develops finite-set cover cost,
+      level-density, double-counting, binomial-tail, and numeric estimates.
+    branch: probabilistic combinatorics
+    entry_module: LeanPool.KahnKalai
+    authors:
+      - Dan Clemens Posch
+    source:
+      title: A Short Proof of Kahn-Kalai Conjecture
+      authors:
+        - Phuc Tran
+        - Van Vu
+      arxiv: 2303.02144
+      doi: 10.37236/12266
+      url: https://github.com/dcposch/kahn-kalai-lean
+      github_repo: dcposch/kahn-kalai-lean
+      commit: 641aa75f8e873d31442f2f7c317b2e7582a26d94
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - KahnKalai.covering_theorem
+      - KahnKalai.park_pham
+    main_results:
+      - declaration: KahnKalai.covering_theorem
+        informal: >-
+          If ℓ ≤ N, p lies in [0, 1], and an ℓ-bounded family H has cover
+          cost at least 1/2 - 2^(-(ℓ+2)), then its upset has at least
+          (2/3 + 2^(-(ℓ+2))) choose(N, m) members of cardinality m, where
+          m = floor(1000 p N log₂(ℓ+1)). For m ≤ N this is the corresponding
+          level-density bound; for N < m both cardinalities are zero.
+      - declaration: KahnKalai.park_pham
+        informal: >-
+          There is an absolute positive constant K such that every
+          ℓ-bounded finite family with ℓ at least two satisfies
+          p_c(F) ≤ K q(F) log₂ ℓ; the proof supplies K = 100000.
+    tags:
+      - probabilistic-combinatorics
+      - random-structures
+      - threshold-phenomena
+      - set-systems
+    msc:
+      - "05C80"
+      - "60C05"
   - slug: quadratic-iterates
     title: Galois groups of quadratic polynomial iterates
     summary: >-
@@ -6586,6 +6637,138 @@ projects:
       - ulm-invariants
     msc:
       - "20K10"
+  - slug: local-complex-geometry
+    title: Foundational local complex-analytic geometry
+    summary: >-
+      Develops a common Lean foundation for several classical local theorems in
+      several complex variables: complex-analytic Weierstrass preparation with
+      full germ uniqueness, Noetherianity of holomorphic-germ rings, finite
+      projection for hypersurface germs, the holomorphic constant-rank normal
+      form, and the finite-family local analytic Nullstellensatz. The imported
+      development also exposes the arbitrary-ideal Nullstellensatz and regular
+      level-set, submersion, and immersion consequences.
+    branch: several complex variables and local analytic geometry
+    entry_module: LeanPool.LocalComplexGeometry
+    authors:
+      - BochaoKong
+    source:
+      title: Foundational theorems in local complex-analytic geometry
+      authors:
+        - BochaoKong
+      url: https://github.com/BochaoKong/nullstellensatz
+      github_repo: BochaoKong/nullstellensatz
+      commit: 029697242294aea7989bf5d391199696a43490df
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LocalComplexGeometry.localAnalyticNullstellensatz
+    main_results:
+      - declaration: LocalComplexGeometry.localAnalyticNullstellensatz
+        informal: >-
+          If a finite family of functions analytic at the origin has common
+          zero set locally contained in the zero set of another analytic
+          function, then a positive power of the latter is locally an analytic
+          linear combination of the family.
+      - declaration: LocalComplexGeometry.holomorphicGerm_isNoetherian
+        informal: >-
+          For every finite complex dimension, including dimension zero, the
+          local ring of holomorphic germs at the origin is Noetherian.
+      - declaration: LocalComplexGeometry.hypersurface_finiteProjection
+        informal: >-
+          A nonzero hypersurface germ vanishing at the origin admits a linear
+          coordinate change whose local quotient is finite free over the base
+          germ ring, together with an explicit prepared equation and a proper,
+          surjective finite-fiber projection of the local zero set.
+      - declaration: LocalComplexGeometry.holomorphic_constantRank_normalForm
+        informal: >-
+          An analytic map of locally constant complex rank is locally equivalent,
+          through analytic source and target coordinates, to the standard rank
+          projection.
+      - declaration: ClassicalComplexWPT.classicalComplexWeierstrassPreparation
+        informal: >-
+          A complex-analytic germ of exact order in one distinguished variable
+          factors uniquely into a nonvanishing analytic unit and a monic
+          Weierstrass polynomial whose analytic coefficient germs vanish at the
+          origin.
+        source_ref: >-
+          BochaoKong/classical-complex-wpt, commit
+          b4a7273fe5c9752753c52e10494097569089642d (2026-08-28).
+      - declaration: LocalComplexGeometry.analyticNullstellensatz_ideal
+        informal: >-
+          For every ideal of the local holomorphic-germ ring, the ideal of germs
+          vanishing on its local zero set equals its radical.
+      - declaration: LocalComplexGeometry.holomorphic_regularLevelSet_parametrization
+        informal: >-
+          Near a regular point, the level set of a holomorphic map admits an
+          analytic parametrization with an analytic local inverse on the level
+          set.
+    tags:
+      - complex-analysis
+      - analytic-geometry
+      - nullstellensatz
+      - weierstrass-preparation
+    msc:
+      - "32A05"
+      - "32A10"
+      - "32B05"
+      - "32C25"
+      - "13E05"
+  - slug: rado-theorem
+    title: Radó's theorem for Riemann surfaces
+    summary: >-
+      Proves that every connected Hausdorff one-dimensional complex manifold
+      is second countable. The development constructs a nonconstant harmonic
+      function by Perron's method, builds the étale space of its
+      harmonic-conjugate germs, and applies a formalized Poincaré-Volterra
+      lemma to its discrete-fiber evaluation map.
+    branch: Riemann surfaces and general topology
+    entry_module: LeanPool.Rado
+    authors:
+      - Rado Kirov
+    source:
+      title: Radó's theorem for Riemann surfaces
+      authors:
+        - Rado Kirov
+      url: https://github.com/rkirov/jordan_pick
+      github_repo: rkirov/jordan_pick
+      commit: b3c9b7cf7358bf81a077d78ad67e6e8247869ddd
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - rado_riemannSurface
+    main_results:
+      - declaration: rado_riemannSurface
+        informal: >-
+          Every connected Hausdorff topological space carrying the structure
+          of a one-dimensional complex manifold has a second-countable
+          topology.
+      - declaration: Rado.poincare_volterra
+        informal: >-
+          A connected Hausdorff, locally compact, locally connected and
+          locally second-countable space is second countable whenever it
+          admits a continuous, locally injective map into a
+          second-countable Hausdorff space.
+      - declaration: Rado.exists_harmonic_extension
+        informal: >-
+          Every continuous real-valued function on a Euclidean circle extends
+          continuously to its closed disk and harmonically to the open disk;
+          unlike the existing LeanComplexAnalysis Poisson theorems, this
+          constructs the harmonic function rather than assuming one.
+      - declaration: Rado.IsPerronFamily.surfaceHarmonicOn_perronSup
+        informal: >-
+          The pointwise upper envelope of a Perron family of surface
+          subharmonic functions is harmonic on its open domain.
+    tags:
+      - riemann-surfaces
+      - second-countability
+      - harmonic-functions
+      - perron-method
+    msc:
+      - "30F15"
+      - "30F20"
+      - "54D65"
   - slug: erdos132-wei-e2
     title: Six distances from the E2 diameter-heptagon pattern
     summary: >-
