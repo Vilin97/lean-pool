@@ -39,7 +39,6 @@ theorem e2_pattern_six_distances
     p (hdiam 0)
     (hshort 0 2 (by decide) (by decide) (by decide))
     (hshort 0 5 (by decide) (by decide) (by decide))
-    (hshort 1 3 (by decide) (by decide) (by decide))
     hBA hAC A B C hpar.B_pos hpar.B_lt_A hpar.A_lt_C hpar.C_lt_pi_div_three
     hpar.angle_sum hpar.closure hpar.edgeC hpar.edgeB hpar.edgeA hpar.q_sq hpar.ra_sq hpar.rb_sq
 

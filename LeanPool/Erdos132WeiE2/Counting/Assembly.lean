@@ -21,7 +21,6 @@ theorem six_distances_of_parametrization
     (p : Fin 7 → EuclideanSpace ℝ (Fin 2))
     (h03 : dist (p 0) (p 3) = 1)
     (hs02 : dist (p 0) (p 2) < 1) (hs05 : dist (p 0) (p 5) < 1)
-    (_hs13 : dist (p 1) (p 3) < 1)
     (hBAe : dist (p 1) (p 2) < dist (p 4) (p 5))
     (hACe : dist (p 4) (p 5) < dist (p 0) (p 1))
     (A B C : ℝ)
@@ -75,11 +74,11 @@ theorem six_distances_of_parametrization
   have hApos : 0 < A := lt_trans hB hBA
   have hApi : A < Real.pi := by linarith [Real.pi_pos]
   have hSpos : 0 < A + B := by linarith
-  have hSltTwo := add_lt_two_pi_div_three A B C hB hBA hAC hCpi hsum
+  have hSltTwo := add_lt_two_pi_div_three A B C hB hBA hAC hsum
   have hSpi : A + B < Real.pi := by linarith [Real.pi_pos]
-  have hTwoAlt := two_mul_add_lt_pi A B C hB hBA hAC hCpi hsum
-  have hAddTwoPos := add_two_mul_pos A B C hB hBA hAC hCpi hsum
-  have hAddTwoLt := add_two_mul_lt_two_mul_add A B C hB hBA hAC hCpi hsum
+  have hTwoAlt := two_mul_add_lt_pi A B C hB hBA hAC hsum
+  have hAddTwoPos := add_two_mul_pos A B C hB hBA hAC hsum
+  have hAddTwoLt := add_two_mul_lt_two_mul_add A B C hB hBA hAC hsum
   have hfactor : 0 < 1 + 2 * Real.cos (A + B) :=
     one_add_two_cos_pos hSpos hSltTwo
   have hsinA : 0 < Real.sin (A / 2) := sin_A_half_pos hApos hApi
@@ -120,23 +119,23 @@ theorem six_distances_of_parametrization
   have x1 : ¬(RA = Q ∧ RB = eC) := by
     rintro ⟨hRAQ, hRBeC⟩
     have hpRQ := ra_eq_q_implies_pRQ A B x y RA Q hApos hApi hSpos hSpi hx hy
-      hclosure hRAv hQv hRAQ
+      hRAv hQv hRAQ
     have hpBC := rb_eq_ec_implies_pBC A B C x y RB eC hsum hApos hApi hSpos hSpi
-      hx hy hclosure hRBv heCv hRBeC
+      hx hy hRBv heCv hRBeC
     exact exclude_ra_q_rb_ec x y hF hpRQ hpBC
   have x2 : ¬(RA = Q ∧ RB = eA) := by
     rintro ⟨hRAQ, hRBeA⟩
     have hpRQ := ra_eq_q_implies_pRQ A B x y RA Q hApos hApi hSpos hSpi hx hy
-      hclosure hRAv hQv hRAQ
+      hRAv hQv hRAQ
     have hpBA := rb_eq_ea_implies_pBA A B x y RB eA hApos hApi hSpos hSpi hx hy
-      hclosure hRBv heAv hRBeA
+      hRBv heAv hRBeA
     exact exclude_ra_q_rb_ea x y hF hpRQ hpBA
   have x3 : ¬(RA = eC ∧ RB = eA) := by
     rintro ⟨hRAeC, hRBeA⟩
     have hpRC := ra_eq_ec_implies_pRC A B C x y RA eC hsum hApos hApi hSpos hSpi
-      hx hy hclosure hRAv heCv hRAeC
+      hx hy hRAv heCv hRAeC
     have hpBA := rb_eq_ea_implies_pBA A B x y RB eA hApos hApi hSpos hSpi hx hy
-      hclosure hRBv heAv hRBeA
+      hRBv heAv hRBeA
     exact exclude_ra_ec_rb_ea x y hF hpRC hpBA
   exact six_le_card_of_values V eB eA eC Q RA RB hmemB hmemA hmemC hmemQ hmem1
     hmemRA hmemRB hBAe hACe o3 hs02 rA1 hs05 rB1 rB2 x1 x2 x3

@@ -35,7 +35,7 @@ lemma ec_lt_q_of_interface (A B C eC Q : ℝ)
   have hApiThird : A < Real.pi / 3 := lt_trans hAC hC
   have hApi : A < Real.pi := by linarith [Real.pi_pos]
   have hSpos : 0 < A + B := by linarith
-  have hSlt := add_lt_two_pi_div_three A B C hB hBA hAC hC hsum
+  have hSlt := add_lt_two_pi_div_three A B C hB hBA hAC hsum
   have hsinHalfLt : Real.sin (A / 2) < 1 / 2 := by
     rw [← Real.sin_pi_div_six]
     exact Real.sin_lt_sin_of_lt_of_le_pi_div_two

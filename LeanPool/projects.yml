@@ -6812,9 +6812,11 @@ projects:
           and squared-distance dictionary used by the algebraic argument.
       - declaration: LeanPool.Erdos132WeiE2.Counting.six_distances_of_parametrization
         informal: >-
-          Any seven planar points satisfying the E2 angle parametrization and
-          its three short-diagonal bounds realize at least six distinct
-          pairwise distances.
+          Any seven planar points with a unit 0–3 diagonal, short 0–2 and 0–5 diagonals,
+          boundary distances ordered 1–2 < 4–5 < 0–1, and parameters
+          0 < B < A < C < π/3 satisfying the E2 angle sum, closure equation,
+          three edge formulas, and three squared-diagonal formulas realize at least six
+          distinct pairwise distances.
     tags:
       - discrete-geometry
       - distance-sets

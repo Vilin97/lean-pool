@@ -138,7 +138,6 @@ lemma ra_eq_q_implies_pRQ (A B x y RA Q : ℝ)
     (hA : 0 < A) (hApi : A < Real.pi)
     (hS : 0 < A + B) (hSpi : A + B < Real.pi)
     (hx : x = Real.tan (A / 4)) (hy : y = Real.tan ((A + B) / 2))
-    (_hclosure : 2 * Real.sin (A / 2) * (1 + 2 * Real.cos (A + B)) = 1)
     (hRA : RA ^ 2 = 4 - 4 * Real.cos A - 2 * Real.cos B +
       4 * Real.cos (A + B) - 2 * Real.cos (2 * A + B))
     (hQ : Q ^ 2 = 3 - 2 * Real.cos A - 2 * Real.cos B + 2 * Real.cos (A + B))
@@ -161,7 +160,6 @@ lemma ra_eq_ec_implies_pRC (A B C x y RA eC : ℝ)
     (hA : 0 < A) (hApi : A < Real.pi)
     (hS : 0 < A + B) (hSpi : A + B < Real.pi)
     (hx : x = Real.tan (A / 4)) (hy : y = Real.tan ((A + B) / 2))
-    (_hclosure : 2 * Real.sin (A / 2) * (1 + 2 * Real.cos (A + B)) = 1)
     (hRA : RA ^ 2 = 4 - 4 * Real.cos A - 2 * Real.cos B +
       4 * Real.cos (A + B) - 2 * Real.cos (2 * A + B))
     (heC : eC = 2 * Real.sin (C / 2)) (heq : RA = eC) : pRC x y = 0 := by
@@ -185,7 +183,6 @@ lemma rb_eq_ec_implies_pBC (A B C x y RB eC : ℝ)
     (hA : 0 < A) (hApi : A < Real.pi)
     (hS : 0 < A + B) (hSpi : A + B < Real.pi)
     (hx : x = Real.tan (A / 4)) (hy : y = Real.tan ((A + B) / 2))
-    (_hclosure : 2 * Real.sin (A / 2) * (1 + 2 * Real.cos (A + B)) = 1)
     (hRB : RB ^ 2 = 4 - 2 * Real.cos A - 4 * Real.cos B +
       4 * Real.cos (A + B) - 2 * Real.cos (A + 2 * B))
     (heC : eC = 2 * Real.sin (C / 2)) (heq : RB = eC) : pBC x y = 0 := by
@@ -208,7 +205,6 @@ lemma rb_eq_ea_implies_pBA (A B x y RB eA : ℝ)
     (hA : 0 < A) (hApi : A < Real.pi)
     (hS : 0 < A + B) (hSpi : A + B < Real.pi)
     (hx : x = Real.tan (A / 4)) (hy : y = Real.tan ((A + B) / 2))
-    (_hclosure : 2 * Real.sin (A / 2) * (1 + 2 * Real.cos (A + B)) = 1)
     (hRB : RB ^ 2 = 4 - 2 * Real.cos A - 4 * Real.cos B +
       4 * Real.cos (A + B) - 2 * Real.cos (A + 2 * B))
     (heA : eA = 2 * Real.sin (A / 2)) (heq : RB = eA) : pBA x y = 0 := by

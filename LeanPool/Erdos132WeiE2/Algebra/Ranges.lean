@@ -15,7 +15,7 @@ namespace LeanPool.Erdos132WeiE2.Algebra
 
 /-- Linear angle consequences of the frozen E2 algebra interface. -/
 lemma angle_ranges (A B C : ℝ)
-    (hB : 0 < B) (hBA : B < A) (hAC : A < C) (_hC : C < Real.pi / 3)
+    (hB : 0 < B) (hBA : B < A) (hAC : A < C)
     (hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
     A + B < 2 * Real.pi / 3 ∧
       2 * A + B < Real.pi ∧
@@ -35,33 +35,33 @@ lemma angle_ranges (A B C : ℝ)
   · exact hthree
 
 lemma add_lt_two_pi_div_three (A B C : ℝ)
-    (hB : 0 < B) (hBA : B < A) (hAC : A < C) (hC : C < Real.pi / 3)
+    (hB : 0 < B) (hBA : B < A) (hAC : A < C)
     (hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
     A + B < 2 * Real.pi / 3 :=
-  (angle_ranges A B C hB hBA hAC hC hsum).1
+  (angle_ranges A B C hB hBA hAC hsum).1
 
 lemma two_mul_add_lt_pi (A B C : ℝ)
-    (hB : 0 < B) (hBA : B < A) (hAC : A < C) (hC : C < Real.pi / 3)
+    (hB : 0 < B) (hBA : B < A) (hAC : A < C)
     (hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
     2 * A + B < Real.pi :=
-  (angle_ranges A B C hB hBA hAC hC hsum).2.1
+  (angle_ranges A B C hB hBA hAC hsum).2.1
 
 lemma add_two_mul_pos (A B C : ℝ)
-    (hB : 0 < B) (hBA : B < A) (hAC : A < C) (hC : C < Real.pi / 3)
+    (hB : 0 < B) (hBA : B < A) (hAC : A < C)
     (hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
     0 < A + 2 * B :=
-  (angle_ranges A B C hB hBA hAC hC hsum).2.2.1
+  (angle_ranges A B C hB hBA hAC hsum).2.2.1
 
 lemma add_two_mul_lt_two_mul_add (A B C : ℝ)
-    (hB : 0 < B) (hBA : B < A) (hAC : A < C) (hC : C < Real.pi / 3)
+    (hB : 0 < B) (hBA : B < A) (hAC : A < C)
     (hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
     A + 2 * B < 2 * A + B :=
-  (angle_ranges A B C hB hBA hAC hC hsum).2.2.2.1
+  (angle_ranges A B C hB hBA hAC hsum).2.2.2.1
 
 lemma three_mul_add_lt_pi (A B C : ℝ)
-    (hB : 0 < B) (hBA : B < A) (hAC : A < C) (hC : C < Real.pi / 3)
+    (hB : 0 < B) (hBA : B < A) (hAC : A < C)
     (hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
     3 * A + 2 * B < Real.pi :=
-  (angle_ranges A B C hB hBA hAC hC hsum).2.2.2.2
+  (angle_ranges A B C hB hBA hAC hsum).2.2.2.2
 
 end LeanPool.Erdos132WeiE2.Algebra
