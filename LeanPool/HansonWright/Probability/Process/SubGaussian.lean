@@ -196,20 +196,50 @@ lemma IsSubGaussian.integrable {Ω : Type*} [MeasurableSpace Ω]
     {X : Ω → ℝ} {σ_sq : ℝ} {μ : Measure Ω}
     (h_sg : IsSubGaussian X σ_sq μ) :
     Integrable X μ := by
-  obtain ⟨_, h_mgf⟩ := h_sg
-  have h_exp_pos := h_mgf.integrable_exp_mul 1
-  have h_exp_neg := h_mgf.integrable_exp_mul (-1)
-  refine Integrable.mono' (g := fun ω => Real.exp (X ω) + Real.exp (-X ω)) ?_ ?_ ?_
-  · exact Integrable.add (by simpa using h_exp_pos) (by simpa using h_exp_neg)
-  · exact h_mgf.aestronglyMeasurable
-  · filter_upwards [] with ω using
-      abs_le.mpr
-        ⟨by
-          linarith [Real.add_one_le_exp (X ω), Real.add_one_le_exp (-X ω),
-            Real.exp_pos (X ω), Real.exp_pos (-X ω)],
-        by
-          linarith [Real.add_one_le_exp (X ω), Real.add_one_le_exp (-X ω),
-            Real.exp_pos (X ω), Real.exp_pos (-X ω)]⟩
+  exact integrable_of_integrable_exp_all h_sg.integrable_exp_mul
+
+private lemma hasSubgaussianMGF_integral_le_zero {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {X : Ω → ℝ} {c : ℝ≥0} (h : HasSubgaussianMGF X c μ) :
+    ∫ ω, X ω ∂μ ≤ 0 := by
+  refine le_of_forall_pos_le_add fun ε hε => ?_
+  set t : ℝ := ε / ((c : ℝ) + 1) with ht_def
+  have hden_pos : 0 < (c : ℝ) + 1 := by positivity
+  have ht_pos : 0 < t := by
+    rw [ht_def]
+    positivity
+  have hmean := mean_le_log_mgf h.integrable ht_pos (h.integrable_exp_mul t)
+  have hmgf_pos : 0 < mgf X μ t := mgf_pos (h.integrable_exp_mul t)
+  have hlog_le : log (mgf X μ t) ≤ (c : ℝ) * t ^ 2 / 2 := by
+    calc
+      log (mgf X μ t) ≤ log (exp ((c : ℝ) * t ^ 2 / 2)) :=
+        log_le_log hmgf_pos (h.mgf_le t)
+      _ = (c : ℝ) * t ^ 2 / 2 := log_exp _
+  have hmean_le : ∫ ω, X ω ∂μ ≤ (1 / t) * ((c : ℝ) * t ^ 2 / 2) :=
+    hmean.trans (mul_le_mul_of_nonneg_left hlog_le (by positivity))
+  calc
+    ∫ ω, X ω ∂μ ≤ (1 / t) * ((c : ℝ) * t ^ 2 / 2) := hmean_le
+    _ = (c : ℝ) * t / 2 := by field_simp [ht_pos.ne']
+    _ ≤ ε := by
+      rw [ht_def]
+      have hratio : (c : ℝ) / ((c : ℝ) + 1) ≤ 1 :=
+        (div_le_one hden_pos).mpr (by linarith)
+      calc
+        (c : ℝ) * (ε / ((c : ℝ) + 1)) / 2 =
+            (ε / 2) * ((c : ℝ) / ((c : ℝ) + 1)) := by ring
+        _ ≤ (ε / 2) * 1 := mul_le_mul_of_nonneg_left hratio (by positivity)
+        _ ≤ ε := by linarith
+    _ = 0 + ε := by ring
+
+/-- A random variable satisfying the global sub-Gaussian MGF bound is centered. -/
+lemma hasSubgaussianMGF_integral_eq_zero {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {X : Ω → ℝ} {c : ℝ≥0} (h : HasSubgaussianMGF X c μ) :
+    ∫ ω, X ω ∂μ = 0 := by
+  have hle : ∫ ω, X ω ∂μ ≤ 0 := hasSubgaussianMGF_integral_le_zero h
+  have hle_neg : ∫ ω, -X ω ∂μ ≤ 0 := hasSubgaussianMGF_integral_le_zero h.neg
+  have hge : 0 ≤ ∫ ω, X ω ∂μ := by
+    rw [integral_neg] at hle_neg
+    linarith
+  exact le_antisymm hle hge
 
 /-- A finite supremum of integrable real-valued functions is integrable. -/
 lemma integrable_ciSup_of_fintype {Ω : Type*} [MeasurableSpace Ω]
@@ -696,8 +726,9 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
     {X : A → Ω → ℝ} {σ : ℝ} (hσ : 0 < σ)
     (hX : IsSubGaussianProcess μ X σ)
     (T : Finset A) (hT : 2 ≤ T.card)
-    (D : ℝ) (hD : 0 < D) (hdiam : Metric.diam (T : Set A) ≤ D)
-    (hX_int_exp : ∀ t s : A, ∀ l : ℝ, Integrable (fun ω => exp (l * (X t ω - X s ω))) μ) :
+    (D : ℝ) (hD : 0 ≤ D) (hdiam : Metric.diam (T : Set A) ≤ D)
+    (hX_int_exp : ∀ t ∈ T, ∀ s ∈ T, ∀ l : ℝ,
+      Integrable (fun ω => exp (l * (X t ω - X s ω))) μ) :
     ∃ C : ℝ, C > 0 ∧ C ≤ sqrt 2 ∧ ∀ t₀ ∈ T,
       μ[fun ω => ⨆ t ∈ T, (X t ω - X t₀ ω)] ≤ C * σ * D * sqrt (log T.card) := by
   use sqrt 2
@@ -715,8 +746,8 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
         _ ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := hX s t l
     have hY_center : ∀ ω, Y t₀ ω = 0 := fun ω => by simp [hY_def]
     have hY_int_exp : ∀ t ∈ T, ∀ l : ℝ, Integrable (fun ω => exp (l * Y t ω)) μ := by
-      intro t _ l
-      convert hX_int_exp t t₀ l using 1
+      intro t ht l
+      convert hX_int_exp t ht t₀ ht₀ l using 1
     by_cases hdiam_zero : Metric.diam (T : Set A) = 0
     · calc ∫ ω, ⨆ t ∈ T, (X t ω - X t₀ ω) ∂μ
         _ ≤ 0 := by
@@ -770,87 +801,29 @@ theorem subGaussian_finite_max_bound' {μ : Measure Ω} [IsProbabilityMeasure μ
             rw [sqrt_mul (by norm_num : (0 : ℝ) ≤ 2) (log T.card)]
             ring
 
-/-!
-## Helper lemmas for hypothesis elimination
-
-These lemmas help derive integrability and centeredness from exponential integrability,
-allowing us to eliminate redundant hypotheses in the Dudley theorem.
--/
-
 /-- If a sub-Gaussian process satisfies the MGF bound and has exponential integrability,
-then the increment `X s - X t` has zero mean.
-
-**Proof idea:** The MGF `M(l) = E[exp(l * (X s - X t))]` satisfies:
-1. `M(l) ≤ exp(l² σ² d(s,t)² / 2)` for all `l` (sub-Gaussian bound)
-2. At `l = 0`: `M(0) = 1` and RHS = 1
-3. `M'(0) = E[X s - X t]` (by `deriv_mgf_zero`)
-4. Since `M(l) ≤ f(l)` where `f(l) = exp(l² σ² d² / 2)`, and `f'(0) = 0`,
-   we get `E[X s - X t] ≤ 0` by comparing derivatives at a touching point.
-5. By symmetry (swapping s and t), `E[X t - X s] ≤ 0`, i.e., `E[X s - X t] ≥ 0`.
-6. Therefore `E[X s - X t] = 0`. -/
+then the increment `X s - X t` has zero mean. -/
 lemma subGaussian_process_centered {Ω : Type*} [MeasurableSpace Ω]
     {A : Type*} [PseudoMetricSpace A] {μ : Measure Ω} [IsProbabilityMeasure μ]
     {X : A → Ω → ℝ} {σ : ℝ}
     (hX : IsSubGaussianProcess μ X σ) (s t : A)
     (hX_int_exp : ∀ l : ℝ, Integrable (fun ω => exp (l * (X s ω - X t ω))) μ) :
     ∫ ω, (X s ω - X t ω) ∂μ = 0 := by
-  set Y := fun ω => X s ω - X t ω
-  -- Establish that 0 is in interior of integrableExpSet
-  have h_set_eq : integrableExpSet Y μ = Set.univ := by
-    ext l
-    simp only [integrableExpSet, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
-    exact hX_int_exp l
-  have h_interior : (0 : ℝ) ∈ interior (integrableExpSet Y μ) := by
-    rw [h_set_eq, interior_univ]
-    exact Set.mem_univ _
-  -- The MGF is differentiable with derivative involving the integral
-  have h_hasderiv : HasDerivAt (mgf Y μ) (∫ ω, Y ω * exp (0 * Y ω) ∂μ) 0 :=
-    hasDerivAt_mgf h_interior
-  -- Simplify: Y * exp(0 * Y) = Y * 1 = Y
-  have h_deriv_simp : (∫ ω, Y ω * exp (0 * Y ω) ∂μ) = ∫ ω, Y ω ∂μ := by
-    congr 1; ext ω; simp
-  rw [h_deriv_simp] at h_hasderiv
-  -- The MGF bound gives us: mgf Y μ l ≤ exp(l² σ² d² / 2) for all l
-  have h_mgf_bound : ∀ l : ℝ, mgf Y μ l ≤ exp (l^2 * σ^2 * (dist s t)^2 / 2) := hX s t
-  set c := σ^2 * (dist s t)^2 / 2
-  -- The key: (mgf Y μ) - (fun l => exp(l² c)) has a LOCAL MAXIMUM at 0
-  -- because mgf Y μ l ≤ exp(l² c) for all l, and both equal 1 at l = 0
-  have h_mgf_zero : mgf Y μ 0 = 1 := mgf_zero
-  -- Define g(l) = mgf Y μ l - exp(l² c)
-  set g := fun l => mgf Y μ l - exp (l^2 * c) with hg_def
-  -- g has a local max at 0 because g(l) ≤ 0 for all l and g(0) = 0
-  have hg_nonpos : ∀ l, g l ≤ 0 := fun l => by
-    simp only [hg_def]
-    have h := h_mgf_bound l
-    have hc_eq : l^2 * σ^2 * dist s t ^ 2 / 2 = l^2 * c := by ring
-    rw [hc_eq] at h
-    linarith
-  have hg_zero : g 0 = 0 := by simp [hg_def, h_mgf_zero]
-  have h_local_max : IsLocalMax g 0 := by
-    rw [IsLocalMax, IsMaxFilter]
-    filter_upwards with l
-    rw [hg_zero]
-    exact hg_nonpos l
-  -- The bound function exp(l² c) has derivative 0 at l = 0
-  have h_bound_deriv : HasDerivAt (fun l => exp (l^2 * c)) 0 0 := by
-    -- d/dl[exp(l² c)] at l=0 = exp(0) · (2·0·c) = 1 · 0 = 0
-    have hinner : HasDerivAt (fun l : ℝ => l^2 * c) 0 0 := by
-      have h1 := hasDerivAt_pow 2 (0 : ℝ)
-      have h1' : HasDerivAt (fun l : ℝ => l^2) 0 0 := by simpa using h1
-      have h2 := h1'.mul_const c
-      simpa using h2
-    have hexp : HasDerivAt exp 1 0 := by simpa using Real.hasDerivAt_exp 0
-    have hinner_at_zero : (fun l : ℝ => l^2 * c) 0 = 0 := by simp
-    have h := HasDerivAt.scomp_of_eq (0 : ℝ) hexp hinner hinner_at_zero.symm
-    simp only [smul_eq_mul, mul_one] at h
-    exact h
-  -- g has derivative (∫ Y) - 0 = ∫ Y at 0
-  have h_g_deriv : HasDerivAt g (∫ ω, Y ω ∂μ) 0 := by
-    have := h_hasderiv.sub h_bound_deriv
-    simp only [sub_zero] at this
-    exact this
-  -- By local max at 0, g'(0) = 0, hence ∫ Y = 0
-  exact IsLocalMax.hasDerivAt_eq_zero h_local_max h_g_deriv
+  let c : ℝ≥0 := ⟨σ ^ 2 * dist s t ^ 2, mul_nonneg (sq_nonneg _) (sq_nonneg _)⟩
+  have hmgf : HasSubgaussianMGF (fun ω => X s ω - X t ω) c μ := {
+    integrable_exp_mul := hX_int_exp
+    mgf_le := fun l => by
+      change μ[fun ω => exp (l * (X s ω - X t ω))] ≤ exp ((c : ℝ) * l ^ 2 / 2)
+      calc
+        μ[fun ω => exp (l * (X s ω - X t ω))]
+            ≤ exp (l ^ 2 * σ ^ 2 * dist s t ^ 2 / 2) := hX s t l
+        _ = exp ((c : ℝ) * l ^ 2 / 2) := by
+          congr 1
+          change l ^ 2 * σ ^ 2 * dist s t ^ 2 / 2 =
+            (σ ^ 2 * dist s t ^ 2) * l ^ 2 / 2
+          ring
+  }
+  exact hasSubgaussianMGF_integral_eq_zero hmgf
 
 end
 

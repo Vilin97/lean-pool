@@ -2673,49 +2673,6 @@ theorem hasHansonWrightMGF_diagonal_of_subgaussian {μ : Measure Ω} [IsProbabil
     exact diagonalCenteredQuadraticForm_integrable_exp
       hK hC_domain hOp h_indep hX_subG hl
 
-private lemma hasSubgaussianMGF_integral_le_zero {μ : Measure Ω} [IsProbabilityMeasure μ]
-    {X : Ω → ℝ} {c : ℝ≥0} (h : HasSubgaussianMGF X c μ) :
-    ∫ ω, X ω ∂μ ≤ 0 := by
-  refine le_of_forall_pos_le_add fun ε hε => ?_
-  set t : ℝ := ε / ((c : ℝ) + 1) with ht_def
-  have hden_pos : 0 < (c : ℝ) + 1 := by positivity
-  have ht_pos : 0 < t := by
-    rw [ht_def]
-    positivity
-  have hmean := mean_le_log_mgf h.integrable ht_pos (h.integrable_exp_mul t)
-  have hmgf_pos : 0 < mgf X μ t := mgf_pos (h.integrable_exp_mul t)
-  have hlog_le : log (mgf X μ t) ≤ (c : ℝ) * t ^ 2 / 2 := by
-    calc
-      log (mgf X μ t) ≤ log (exp ((c : ℝ) * t ^ 2 / 2)) :=
-        log_le_log hmgf_pos (h.mgf_le t)
-      _ = (c : ℝ) * t ^ 2 / 2 := log_exp _
-  have hmean_le : ∫ ω, X ω ∂μ ≤ (1 / t) * ((c : ℝ) * t ^ 2 / 2) :=
-    hmean.trans (mul_le_mul_of_nonneg_left hlog_le (by positivity))
-  calc
-    ∫ ω, X ω ∂μ ≤ (1 / t) * ((c : ℝ) * t ^ 2 / 2) := hmean_le
-    _ = (c : ℝ) * t / 2 := by field_simp [ht_pos.ne']
-    _ ≤ ε := by
-      rw [ht_def]
-      have hratio : (c : ℝ) / ((c : ℝ) + 1) ≤ 1 :=
-        (div_le_one hden_pos).mpr (by linarith)
-      calc
-        (c : ℝ) * (ε / ((c : ℝ) + 1)) / 2 =
-            (ε / 2) * ((c : ℝ) / ((c : ℝ) + 1)) := by ring
-        _ ≤ (ε / 2) * 1 := mul_le_mul_of_nonneg_left hratio (by positivity)
-        _ ≤ ε := by linarith
-    _ = 0 + ε := by ring
-
-/-- A random variable satisfying the global sub-Gaussian MGF bound is centered. -/
-lemma hasSubgaussianMGF_integral_eq_zero {μ : Measure Ω} [IsProbabilityMeasure μ]
-    {X : Ω → ℝ} {c : ℝ≥0} (h : HasSubgaussianMGF X c μ) :
-    ∫ ω, X ω ∂μ = 0 := by
-  have hle : ∫ ω, X ω ∂μ ≤ 0 := hasSubgaussianMGF_integral_le_zero h
-  have hle_neg : ∫ ω, -X ω ∂μ ≤ 0 := hasSubgaussianMGF_integral_le_zero h.neg
-  have hge : 0 ≤ ∫ ω, X ω ∂μ := by
-    rw [integral_neg] at hle_neg
-    linarith
-  exact le_antisymm hle hge
-
 lemma quadraticForm_eq_diag_add_offDiagonal {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
     quadraticForm A x =
