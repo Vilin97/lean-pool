@@ -37,8 +37,6 @@ two-scale Chernoff bound.
 
 * `HansonWright.hasSubgaussianMGF_of_abs_le_of_integral_eq_zero`: local
   symmetric bounded-variable MGF estimate.
-* `HansonWright.two_sided_tail_of_cgf_bound`: Chernoff optimization for a
-  two-scale CGF bound.
 * `HansonWright.hasHansonWrightMGF_of_subgaussian`: a proved Hanson-Wright MGF
   certificate for independent sub-Gaussian coordinates.
 * `HansonWright.hasHansonWrightMGF_of_bounded`: a proved Hanson-Wright MGF
@@ -1365,6 +1363,57 @@ lemma integral_exp_mul_sq_le_exp_linear_of_hasSubgaussianMGF_of_le {μ : Measure
           simpa [add_comm] using Real.add_one_le_exp (2 * exp 1 * r)
     _ = exp (2 * exp 1 * (θ * C0 * exp 1)) := by rw [hr_def]
 
+private lemma quadraticStdGaussian_spectralRepresentation {E : Type*}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    [MeasurableSpace E] [BorelSpace E]
+    (T : E →L[ℝ] E) (hTpos : T.toLinearMap.IsPositive) (θ : ℝ) :
+    ∃ b : OrthonormalBasis (Fin (Module.finrank ℝ E)) ℝ E,
+      AEMeasurable (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
+          (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1) ∧
+        AEStronglyMeasurable (fun x : E => exp (θ * inner ℝ (T x) x))
+          (Measure.map (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
+            (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1)) ∧
+        (∀ i : Fin (Module.finrank ℝ E), 0 ≤ hTpos.isSymmetric.eigenvalues rfl i) ∧
+        ∀ z : Fin (Module.finrank ℝ E) → ℝ,
+          exp (θ * inner ℝ (T (∑ i, z i • b i)) (∑ i, z i • b i)) =
+            ∏ i : Fin (Module.finrank ℝ E),
+              exp ((θ * hTpos.isSymmetric.eigenvalues rfl i) * z i ^ 2) := by
+  let hsym := hTpos.isSymmetric
+  let b := hsym.eigenvectorBasis (by rfl : Module.finrank ℝ E = Module.finrank ℝ E)
+  refine ⟨b, ?_, ?_, ?_, ?_⟩
+  · exact (continuous_finsetSum _ fun i _ =>
+      (continuous_apply i).smul continuous_const).aemeasurable
+  · exact (Real.continuous_exp.comp
+      (continuous_const.mul (T.continuous.inner continuous_id))).aestronglyMeasurable
+  · intro i
+    simpa [hsym] using hTpos.nonneg_eigenvalues
+      (by rfl : Module.finrank ℝ E = Module.finrank ℝ E) i
+  · intro z
+    change exp (θ * inner ℝ (T.toLinearMap (∑ i, z i • b i)) (∑ i, z i • b i)) =
+      ∏ i : Fin (Module.finrank ℝ E),
+        exp ((θ * hsym.eigenvalues rfl i) * z i ^ 2)
+    have hquad :=
+      symmetric_inner_apply_eq_sum_eigenvalues_repr T.toLinearMap hsym (∑ i, z i • b i)
+    rw [hquad]
+    have hsum_eq :
+        (∑ i : Fin (Module.finrank ℝ E),
+            hsym.eigenvalues rfl i * (hsym.eigenvectorBasis rfl).repr
+              (∑ i, z i • b i) i ^ 2) =
+          ∑ i : Fin (Module.finrank ℝ E), hsym.eigenvalues rfl i * z i ^ 2 := by
+      apply Finset.sum_congr rfl
+      intro i _
+      have hcoord :
+          (hsym.eigenvectorBasis rfl).repr (∑ i, z i • b i) i = z i := by
+        change b.repr (∑ i, z i • b i) i = z i
+        exact orthonormalBasis_repr_sum_smul b z i
+      rw [hcoord]
+    rw [hsum_eq, ← Real.exp_sum]
+    congr 1
+    rw [Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    ring
+
 /-- Gaussian square-form bound for a positive symmetric operator, proved by spectral
 diagonalization and one-dimensional square-exponential estimates. -/
 lemma integral_exp_quadratic_stdGaussian_le {E : Type*} [NormedAddCommGroup E]
@@ -1375,84 +1424,45 @@ lemma integral_exp_quadratic_stdGaussian_le {E : Type*} [NormedAddCommGroup E]
     ∫ x : E, exp (θ * inner ℝ (T x) x) ∂(stdGaussian E) ≤
       exp (2 * exp 1 ^ 2 * θ *
         (∑ i : Fin (Module.finrank ℝ E), hTpos.isSymmetric.eigenvalues rfl i)) := by
-  let hsym := hTpos.isSymmetric
-  let b := hsym.eigenvectorBasis (by rfl : Module.finrank ℝ E = Module.finrank ℝ E)
-  let lam : Fin (Module.finrank ℝ E) → ℝ := fun i => hsym.eigenvalues rfl i
-  have hnonneg : ∀ i : Fin (Module.finrank ℝ E), 0 ≤ lam i := by
-    intro i
-    simpa [lam, hsym] using hTpos.nonneg_eigenvalues
-      (by rfl : Module.finrank ℝ E = Module.finrank ℝ E) i
-  have hsynth_aemeas :
-      AEMeasurable (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-        (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1) := by
-    exact (continuous_finsetSum _ fun i _ =>
-      (continuous_apply i).smul continuous_const).aemeasurable
-  have hf_aesm :
-      AEStronglyMeasurable (fun x : E => exp (θ * inner ℝ (T x) x))
-        (Measure.map (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-          (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1)) := by
-    exact (Real.continuous_exp.comp
-      (continuous_const.mul (T.continuous.inner continuous_id))).aestronglyMeasurable
+  obtain ⟨b, hsynth_aemeas, hf_aesm, hnonneg, hpoint⟩ :=
+    quadraticStdGaussian_spectralRepresentation T hTpos θ
   rw [stdGaussian_eq_map_pi_orthonormalBasis b]
   rw [integral_map hsynth_aemeas hf_aesm]
-  have hpoint : ∀ z : Fin (Module.finrank ℝ E) → ℝ,
-      exp (θ * inner ℝ (T (∑ i, z i • b i)) (∑ i, z i • b i)) =
-        ∏ i : Fin (Module.finrank ℝ E), exp ((θ * lam i) * z i ^ 2) := by
-    intro z
-    change exp (θ * inner ℝ (T.toLinearMap (∑ i, z i • b i)) (∑ i, z i • b i)) =
-      ∏ i : Fin (Module.finrank ℝ E), exp ((θ * lam i) * z i ^ 2)
-    have hquad :=
-      symmetric_inner_apply_eq_sum_eigenvalues_repr T.toLinearMap hsym (∑ i, z i • b i)
-    rw [hquad]
-    have hsum_eq :
-        (∑ i : Fin (Module.finrank ℝ E),
-            hsym.eigenvalues rfl i * (hsym.eigenvectorBasis rfl).repr
-              (∑ i, z i • b i) i ^ 2) =
-          ∑ i : Fin (Module.finrank ℝ E), lam i * z i ^ 2 := by
-      apply Finset.sum_congr rfl
-      intro i _
-      have hcoord :
-          (hsym.eigenvectorBasis rfl).repr (∑ i, z i • b i) i = z i := by
-        change b.repr (∑ i, z i • b i) i = z i
-        exact orthonormalBasis_repr_sum_smul b z i
-      rw [hcoord]
-    rw [hsum_eq]
-    rw [← Real.exp_sum]
-    congr 1
-    rw [Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro i _
-    ring
   calc
     ∫ (x : Fin (Module.finrank ℝ E) → ℝ),
         exp (θ * inner ℝ (T (∑ i, x i • b i)) (∑ i, x i • b i))
         ∂Measure.pi (fun x => gaussianReal 0 1)
         = ∫ (x : Fin (Module.finrank ℝ E) → ℝ),
-          ∏ i : Fin (Module.finrank ℝ E), exp ((θ * lam i) * x i ^ 2)
+          ∏ i : Fin (Module.finrank ℝ E),
+            exp ((θ * hTpos.isSymmetric.eigenvalues rfl i) * x i ^ 2)
         ∂Measure.pi (fun x => gaussianReal 0 1) := by
           apply integral_congr_ae
           filter_upwards with z
           exact hpoint z
     _ = ∏ i : Fin (Module.finrank ℝ E),
-          ∫ x : ℝ, exp ((θ * lam i) * x ^ 2) ∂gaussianReal 0 1 := by
+          ∫ x : ℝ, exp ((θ * hTpos.isSymmetric.eigenvalues rfl i) * x ^ 2)
+            ∂gaussianReal 0 1 := by
           simpa using (integral_fintype_prod_eq_prod (𝕜 := ℝ)
             (ι := Fin (Module.finrank ℝ E)) (E := fun _ => ℝ)
-            (f := fun i x => exp ((θ * lam i) * x ^ 2))
+            (f := fun i x => exp ((θ * hTpos.isSymmetric.eigenvalues rfl i) * x ^ 2))
             (μ := fun _ => gaussianReal 0 1))
     _ ≤ ∏ i : Fin (Module.finrank ℝ E),
-          exp (2 * exp 1 * ((θ * lam i) * 1 * exp 1)) := by
+          exp (2 * exp 1 *
+            ((θ * hTpos.isSymmetric.eigenvalues rfl i) * 1 * exp 1)) := by
           apply Finset.prod_le_prod
           · intro i _
             exact integral_nonneg_of_ae (ae_of_all _ fun x => exp_nonneg _)
           · intro i _
-            have hθi : 0 ≤ θ * lam i := mul_nonneg hθ (hnonneg i)
+            have hθi : 0 ≤ θ * hTpos.isSymmetric.eigenvalues rfl i :=
+              mul_nonneg hθ (hnonneg i)
             have hle := integral_exp_mul_sq_le_exp_linear_of_hasSubgaussianMGF_of_le
               (μ := gaussianReal 0 1) hasSubgaussianMGF_id_gaussianReal_zero_one
-              (θ := θ * lam i) (C0 := 1) hθi (by norm_num) (by norm_num) ?_
+              (θ := θ * hTpos.isSymmetric.eigenvalues rfl i) (C0 := 1)
+              hθi (by norm_num) (by norm_num) ?_
             · simpa [id_eq] using hle
             · simpa [mul_assoc] using hsmall i
     _ = exp (2 * exp 1 ^ 2 * θ *
-          (∑ i : Fin (Module.finrank ℝ E), lam i)) := by
+          (∑ i : Fin (Module.finrank ℝ E), hTpos.isSymmetric.eigenvalues rfl i)) := by
           rw [← Real.exp_sum]
           congr 1
           rw [Finset.mul_sum]
@@ -1920,63 +1930,21 @@ lemma integrable_exp_quadratic_stdGaussian {E : Type*} [NormedAddCommGroup E]
     (hsmall : ∀ i : Fin (Module.finrank ℝ E),
       θ * hTpos.isSymmetric.eigenvalues rfl i * exp 1 < 1) :
     Integrable (fun x : E => exp (θ * inner ℝ (T x) x)) (stdGaussian E) := by
-  let hsym := hTpos.isSymmetric
-  let b := hsym.eigenvectorBasis (by rfl : Module.finrank ℝ E = Module.finrank ℝ E)
-  let lam : Fin (Module.finrank ℝ E) → ℝ := fun i => hsym.eigenvalues rfl i
-  have hnonneg : ∀ i : Fin (Module.finrank ℝ E), 0 ≤ lam i := by
-    intro i
-    simpa [lam, hsym] using hTpos.nonneg_eigenvalues
-      (by rfl : Module.finrank ℝ E = Module.finrank ℝ E) i
-  have hsynth_aemeas :
-      AEMeasurable (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-        (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1) := by
-    exact (continuous_finsetSum _ fun i _ =>
-      (continuous_apply i).smul continuous_const).aemeasurable
-  have hf_aesm :
-      AEStronglyMeasurable (fun x : E => exp (θ * inner ℝ (T x) x))
-        (Measure.map (fun z : Fin (Module.finrank ℝ E) → ℝ => ∑ i, z i • b i)
-          (Measure.pi fun _ : Fin (Module.finrank ℝ E) => gaussianReal 0 1)) := by
-    exact (Real.continuous_exp.comp
-      (continuous_const.mul (T.continuous.inner continuous_id))).aestronglyMeasurable
-  have hpoint : ∀ z : Fin (Module.finrank ℝ E) → ℝ,
-      exp (θ * inner ℝ (T (∑ i, z i • b i)) (∑ i, z i • b i)) =
-        ∏ i : Fin (Module.finrank ℝ E), exp ((θ * lam i) * z i ^ 2) := by
-    intro z
-    change exp (θ * inner ℝ (T.toLinearMap (∑ i, z i • b i)) (∑ i, z i • b i)) =
-      ∏ i : Fin (Module.finrank ℝ E), exp ((θ * lam i) * z i ^ 2)
-    have hquad :=
-      symmetric_inner_apply_eq_sum_eigenvalues_repr T.toLinearMap hsym (∑ i, z i • b i)
-    rw [hquad]
-    have hsum_eq :
-        (∑ i : Fin (Module.finrank ℝ E),
-            hsym.eigenvalues rfl i * (hsym.eigenvectorBasis rfl).repr
-              (∑ i, z i • b i) i ^ 2) =
-          ∑ i : Fin (Module.finrank ℝ E), lam i * z i ^ 2 := by
-      apply Finset.sum_congr rfl
-      intro i _
-      have hcoord :
-          (hsym.eigenvectorBasis rfl).repr (∑ i, z i • b i) i = z i := by
-        change b.repr (∑ i, z i • b i) i = z i
-        exact orthonormalBasis_repr_sum_smul b z i
-      rw [hcoord]
-    rw [hsum_eq]
-    rw [← Real.exp_sum]
-    congr 1
-    rw [Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro i _
-    ring
+  obtain ⟨b, hsynth_aemeas, hf_aesm, hnonneg, hpoint⟩ :=
+    quadraticStdGaussian_spectralRepresentation T hTpos θ
   rw [stdGaussian_eq_map_pi_orthonormalBasis b]
   rw [integrable_map_measure hf_aesm hsynth_aemeas]
   refine (MeasureTheory.Integrable.fintype_prod (𝕜 := ℝ)
     (ι := Fin (Module.finrank ℝ E)) (E := ℝ)
-    (f := fun i x => exp ((θ * lam i) * x ^ 2))
+    (f := fun i x => exp ((θ * hTpos.isSymmetric.eigenvalues rfl i) * x ^ 2))
     (μ := fun _ => gaussianReal 0 1) ?_).congr ?_
   · intro i
-    have hθi : 0 ≤ θ * lam i := mul_nonneg hθ (hnonneg i)
+    have hθi : 0 ≤ θ * hTpos.isSymmetric.eigenvalues rfl i :=
+      mul_nonneg hθ (hnonneg i)
     exact integrable_exp_mul_sq_of_hasSubgaussianMGF_of_le
       (μ := gaussianReal 0 1) hasSubgaussianMGF_id_gaussianReal_zero_one
-      (θ := θ * lam i) (C0 := 1) hθi (by norm_num) (by norm_num) (by
+      (θ := θ * hTpos.isSymmetric.eigenvalues rfl i) (C0 := 1)
+      hθi (by norm_num) (by norm_num) (by
         simpa [mul_assoc] using hsmall i)
   · filter_upwards with z
     exact (hpoint z).symm
@@ -2283,6 +2251,19 @@ lemma integral_exp_mul_snd_fst_prod_le_of_hasSubgaussianMGF_of_le
           congr 1
           ring_nf
 
+private lemma independentPair_pushforward {μ : Measure Ω} [IsFiniteMeasure μ] {X Y : Ω → ℝ}
+    (h_indep : X ⟂ᵢ[μ] Y) (hX : AEMeasurable X μ) (hY : AEMeasurable Y μ) :
+    AEMeasurable (fun ω => (Y ω, X ω)) μ ∧
+      μ.map (fun ω => (Y ω, X ω)) = (μ.map Y).prod (μ.map X) := by
+  refine ⟨hY.prodMk hX, ?_⟩
+  simpa using h_indep.symm.map_prod_eq_prod_map_map hY hX
+
+private lemma exp_mul_snd_fst_aestronglyMeasurable (θ : ℝ) (ν : Measure (ℝ × ℝ)) :
+    AEStronglyMeasurable (fun p : ℝ × ℝ => exp (θ * p.2 * p.1)) ν :=
+  (Real.continuous_exp.comp
+    (((continuous_const : Continuous (fun _ : ℝ × ℝ => θ)).mul continuous_snd).mul
+      continuous_fst)).aestronglyMeasurable
+
 lemma integrable_exp_mul_prod_of_indepFun_hasSubgaussianMGF_of_le
     {μ : Measure Ω} [IsProbabilityMeasure μ] {X Y : Ω → ℝ}
     (h_indep : X ⟂ᵢ[μ] Y)
@@ -2291,34 +2272,25 @@ lemma integrable_exp_mul_prod_of_indepFun_hasSubgaussianMGF_of_le
     (hC0 : 0 < C0) (hcX : (cX : ℝ) ≤ C0) (hcY : (cY : ℝ) ≤ C0)
     (hθ_half : (C0 * θ ^ 2 / 2) * C0 * exp 1 ≤ 1 / 2) :
     Integrable (fun ω => exp (θ * X ω * Y ω)) μ := by
-  let φ : Ω → ℝ × ℝ := fun ω => (Y ω, X ω)
-  let g : ℝ × ℝ → ℝ := fun p => exp (θ * p.2 * p.1)
-  have hφ : AEMeasurable φ μ :=
-    (hY.aestronglyMeasurable.prodMk hX.aestronglyMeasurable).aemeasurable
-  have hg : AEStronglyMeasurable g (μ.map φ) := by
-    dsimp [g]
-    exact (Real.continuous_exp.comp
-      (((continuous_const : Continuous (fun _ : ℝ × ℝ => θ)).mul continuous_snd).mul
-        continuous_fst)).aestronglyMeasurable
+  obtain ⟨hpair_meas, hmap_eq⟩ :=
+    independentPair_pushforward h_indep hX.aemeasurable hY.aemeasurable
+  have hg := exp_mul_snd_fst_aestronglyMeasurable θ
+    (μ.map fun ω => (Y ω, X ω))
   have : IsProbabilityMeasure (μ.map X) :=
     MeasureTheory.Measure.isProbabilityMeasure_map hX.aemeasurable
   have : IsProbabilityMeasure (μ.map Y) :=
     MeasureTheory.Measure.isProbabilityMeasure_map hY.aemeasurable
   have hprod_int :
-      Integrable g ((μ.map Y).prod (μ.map X)) :=
+      Integrable (fun p : ℝ × ℝ => exp (θ * p.2 * p.1)) ((μ.map Y).prod (μ.map X)) :=
     integrable_exp_mul_snd_fst_prod_of_hasSubgaussianMGF_of_le
       (νX := μ.map X) (νY := μ.map Y)
       (hasSubgaussianMGF_id_map hX) (hasSubgaussianMGF_id_map hY)
       hC0 hcX hcY hθ_half
-  have hmap_eq :
-      μ.map φ = (μ.map Y).prod (μ.map X) := by
-    simpa [φ] using (h_indep.symm.map_prod_eq_prod_map_map hY.aemeasurable hX.aemeasurable)
-  have hmap_int : Integrable g (μ.map φ) := by
+  have hmap_int : Integrable (fun p : ℝ × ℝ => exp (θ * p.2 * p.1))
+      (μ.map fun ω => (Y ω, X ω)) := by
     rwa [hmap_eq]
-  have hcomp := (integrable_map_measure hg hφ).1 hmap_int
-  convert hcomp using 1
-  ext ω
-  dsimp [g, φ]
+  simpa [Function.comp_def, mul_assoc, mul_comm] using
+    (integrable_map_measure hg hpair_meas).1 hmap_int
 
 lemma integral_exp_mul_prod_le_of_indepFun_hasSubgaussianMGF_of_le
     {μ : Measure Ω} [IsProbabilityMeasure μ] {X Y : Ω → ℝ}
@@ -2328,24 +2300,16 @@ lemma integral_exp_mul_prod_le_of_indepFun_hasSubgaussianMGF_of_le
     (hC0 : 0 < C0) (hcX : (cX : ℝ) ≤ C0) (hcY : (cY : ℝ) ≤ C0)
     (hθ_half : (C0 * θ ^ 2 / 2) * C0 * exp 1 ≤ 1 / 2) :
     ∫ ω, exp (θ * X ω * Y ω) ∂μ ≤ exp (exp 1 ^ 2 * C0 ^ 2 * θ ^ 2) := by
-  let φ : Ω → ℝ × ℝ := fun ω => (Y ω, X ω)
-  let g : ℝ × ℝ → ℝ := fun p => exp (θ * p.2 * p.1)
-  have hφ : AEMeasurable φ μ :=
-    (hY.aestronglyMeasurable.prodMk hX.aestronglyMeasurable).aemeasurable
-  have hg : AEStronglyMeasurable g (μ.map φ) := by
-    dsimp [g]
-    exact (Real.continuous_exp.comp
-      (((continuous_const : Continuous (fun _ : ℝ × ℝ => θ)).mul continuous_snd).mul
-        continuous_fst)).aestronglyMeasurable
+  obtain ⟨hpair_meas, hmap_eq⟩ :=
+    independentPair_pushforward h_indep hX.aemeasurable hY.aemeasurable
+  have hg := exp_mul_snd_fst_aestronglyMeasurable θ
+    (μ.map fun ω => (Y ω, X ω))
   have : IsProbabilityMeasure (μ.map X) :=
     MeasureTheory.Measure.isProbabilityMeasure_map hX.aemeasurable
   have : IsProbabilityMeasure (μ.map Y) :=
     MeasureTheory.Measure.isProbabilityMeasure_map hY.aemeasurable
-  have hmap_eq :
-      μ.map φ = (μ.map Y).prod (μ.map X) := by
-    simpa [φ] using (h_indep.symm.map_prod_eq_prod_map_map hY.aemeasurable hX.aemeasurable)
   have hprod_bound :
-      ∫ p : ℝ × ℝ, g p ∂((μ.map Y).prod (μ.map X)) ≤
+      ∫ p : ℝ × ℝ, exp (θ * p.2 * p.1) ∂((μ.map Y).prod (μ.map X)) ≤
         exp (exp 1 ^ 2 * C0 ^ 2 * θ ^ 2) :=
     integral_exp_mul_snd_fst_prod_le_of_hasSubgaussianMGF_of_le
       (νX := μ.map X) (νY := μ.map Y)
@@ -2353,9 +2317,10 @@ lemma integral_exp_mul_prod_le_of_indepFun_hasSubgaussianMGF_of_le
       hC0 hcX hcY hθ_half
   calc
     ∫ ω, exp (θ * X ω * Y ω) ∂μ
-        = ∫ p : ℝ × ℝ, g p ∂(μ.map φ) := by
-          rw [integral_map hφ hg]
-    _ = ∫ p : ℝ × ℝ, g p ∂((μ.map Y).prod (μ.map X)) := by rw [hmap_eq]
+        = ∫ p : ℝ × ℝ, exp (θ * p.2 * p.1) ∂(μ.map fun ω => (Y ω, X ω)) := by
+          rw [integral_map hpair_meas hg]
+    _ = ∫ p : ℝ × ℝ, exp (θ * p.2 * p.1) ∂((μ.map Y).prod (μ.map X)) := by
+          rw [hmap_eq]
     _ ≤ exp (exp 1 ^ 2 * C0 ^ 2 * θ ^ 2) := hprod_bound
 
 /-- CGF bound for a centered square of a sub-Gaussian variable. -/
@@ -3981,16 +3946,6 @@ theorem hasHansonWrightMGF_of_bounded {μ : Measure Ω} [IsProbabilityMeasure μ
         rw [hB_def]
         exact bounded_hansonWright_cgf_constant_le A hC_bound l
 
-/-- Compatibility wrapper around the generic scalar Bernstein CGF-to-tail theorem. -/
-theorem two_sided_tail_of_cgf_bound {μ : Measure Ω} [IsProbabilityMeasure μ]
-    {Y : Ω → ℝ} {v b C t : ℝ} (hC : 0 < C) (hv : 0 < v) (hb : 0 < b)
-    (hcgf : ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ → cgf Y μ l ≤ C * l ^ 2 * v)
-    (hint : ∀ l : ℝ, |l| ≤ (2 * C * b)⁻¹ →
-      Integrable (fun ω => exp (l * Y ω)) μ) (ht : 0 ≤ t) :
-    (μ {ω | t ≤ |Y ω|}).toReal ≤
-      2 * exp (-(1 / (4 * C)) * min (t ^ 2 / v) (t / b)) := by
-  simpa using bernstein_two_sided_of_cgf_bound hC hv hb hcgf hint ht
-
 /-- Hanson-Wright tail bound with the MGF certificate proved from sub-Gaussian coordinates.
 
 This theorem does not take `HasHansonWrightMGF` as a hypothesis.  Instead it proves
@@ -4013,7 +3968,7 @@ theorem hanson_wright_inequality {μ : Measure Ω} [IsProbabilityMeasure μ]
     hasHansonWrightMGF_of_subgaussian hK hC_offdiag_quad hOp h_indep hX_subG
   have hv : 0 < K ^ 4 * frobeniusNorm A ^ 2 := by positivity
   have hb : 0 < K ^ 2 * operatorNorm A := by positivity
-  exact two_sided_tail_of_cgf_bound hC hv hb
+  exact bernstein_two_sided_of_cgf_bound hC hv hb
     (Y := centeredQuadraticForm μ A X)
     (fun l hl => by
       have hl' : |l| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹ := by
