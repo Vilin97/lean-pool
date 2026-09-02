@@ -155,7 +155,6 @@ structure AvoidingCycle
     (h : H) (omega0 : Ω) where
   /-- The finite carrier of the cycle. -/
   carrier : Finset Ω
-  nonempty : carrier.Nonempty
   avoids : omega0 ∉ carrier
   odd_card : Odd carrier.card
   invariant : ∀ ω, ω ∈ carrier ↔ h • ω ∈ carrier
@@ -171,7 +170,6 @@ structure EveryBaseSeed where
   /-- The seed module. -/
   V : Type*
   [fintypeOmega : Fintype Ω]
-  [fintypeH : Fintype H]
   [fintypeV : Fintype V]
   [decidableEqOmega : DecidableEq Ω]
   [groupH : Group H]
@@ -183,7 +181,6 @@ structure EveryBaseSeed where
   omega0 : Ω
   /-- The vector vanishing exactly at the distinguished coordinate. -/
   u : V
-  odd_card_H : Odd (Nat.card H)
   regular_exists : ∃ v : V, Saxl.IsRegularVector H V v
   /-- The equivariant coordinate map into the binary permutation module. -/
   coord : V →+ (Ω → ZMod 2)
@@ -194,7 +191,7 @@ structure EveryBaseSeed where
   avoidingCycle : ∀ h : H, AvoidingCycle H Ω h omega0
 
 attribute [instance] EveryBaseSeed.fintypeOmega
-  EveryBaseSeed.fintypeH EveryBaseSeed.fintypeV
+  EveryBaseSeed.fintypeV
   EveryBaseSeed.decidableEqOmega EveryBaseSeed.groupH
   EveryBaseSeed.addCommGroupV EveryBaseSeed.moduleV
   EveryBaseSeed.actionHOmega EveryBaseSeed.actionHV
@@ -291,7 +288,6 @@ structure BaseArrayColours (S : EveryBaseSeed) (tail : Nat) where
   D : Type*
   [fintypeC : Fintype C]
   [decidableEqC : DecidableEq C]
-  [decidableEqD : DecidableEq D]
   /-- The regular-tuple orbit code. -/
   tupleCode : TupleColourCode S.H S.V (tail + 1) C
   /-- The vector-orbit code. -/
@@ -303,7 +299,7 @@ structure BaseArrayColours (S : EveryBaseSeed) (tail : Nat) where
       vectorCode.colour (x 0) = firstColour (tupleCode.colour x)
 
 attribute [instance] BaseArrayColours.fintypeC
-  BaseArrayColours.decidableEqC BaseArrayColours.decidableEqD
+  BaseArrayColours.decidableEqC
 
 /-- Concrete finite types of all positive-length regular tuple orbits.  Index
 `t` records colours of tuples of length `t + 1`.  Positive indexing is
@@ -640,7 +636,6 @@ noncomputable def quotientBaseArrayColours (S : EveryBaseSeed) (tail : Nat) :
   D := VectorOrbitColour S
   fintypeC := regularTupleColourFintype S tail
   decidableEqC := regularTupleColourDecidableEq S tail
-  decidableEqD := vectorOrbitColourDecidableEq S
   tupleCode := regularTupleCode S tail
   vectorCode := quotientVectorOrbitCode S
   firstColour := firstVectorOrbitColour S tail

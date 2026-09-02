@@ -7,40 +7,8 @@ Authors: Aluna Rizzoli, Adam R. Thomas
 import LeanPool.CommonNeighbourConjecture.Examples.MainTheorems.Internal
 
 /-!
-# Proof alias for the public theorem statement
+# Compatibility import for the main-theorem proof
 
-These term macros hide the definitional transport from the internal proof
-bundle to the deliberately duplicated reader-facing definitions.
+The definitions and internal proof now share one API. This module remains as
+a compatibility import for downstream users of the original file layout.
 -/
-
-/-- Transport the internal construction to the reader-facing permutation-group bundle. -/
-macro "mainTheorem_from_internal" "(" B:term "," degreeBound:term ","
-    hB:term ")" : term => do
-  let publicGroup := Lean.mkIdent
-    `SaxlCounterexamples.MainTheorems.FinitePermutationGroup
-  let publicBaseSize := Lean.mkIdent
-    `SaxlCounterexamples.MainTheorems.FinitePermutationGroup.baseSize
-  let publicIsBase := Lean.mkIdent
-    `SaxlCounterexamples.MainTheorems.FinitePermutationGroup.IsBase
-  let publicSaxlGraph := Lean.mkIdent
-    `SaxlCounterexamples.MainTheorems.FinitePermutationGroup.saxlGraph
-  `(by
-    obtain ⟨Q, hQ⟩ :=
-      SaxlCounterexamples.MainTheorems.Internal.mainTheorem
-        $B $degreeBound $hB
-    let P : $publicGroup := {
-      G := Q.G
-      Point := Q.Point
-      group := Q.group
-      action := Q.action
-      finiteGroup := Q.finiteGroup
-      finitePoint := Q.finitePoint
-      faithful := Q.faithful }
-    refine ⟨P, ?_⟩
-    simpa only [P,
-      $(publicBaseSize):term, $(publicIsBase):term,
-      $(publicSaxlGraph):term,
-      SaxlCounterexamples.MainTheorems.Core.FinitePermutationGroup.baseSize,
-      SaxlCounterexamples.MainTheorems.Core.FinitePermutationGroup.IsBase,
-      SaxlCounterexamples.MainTheorems.Core.FinitePermutationGroup.saxlGraph]
-      using hQ)

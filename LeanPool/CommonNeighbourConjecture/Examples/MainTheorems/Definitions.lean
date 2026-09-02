@@ -16,7 +16,7 @@ The complete non-Mathlib vocabulary used in the public statement.
 
 noncomputable section
 
-namespace SaxlCounterexamples.MainTheorems.Core
+namespace SaxlCounterexamples.MainTheorems
 
 /-- A finite permutation group: a finite group acting faithfully on a finite
 set. -/
@@ -66,4 +66,4 @@ noncomputable def saxlGraph (P : FinitePermutationGroup) :
 
 end FinitePermutationGroup
 
-end SaxlCounterexamples.MainTheorems.Core
+end SaxlCounterexamples.MainTheorems

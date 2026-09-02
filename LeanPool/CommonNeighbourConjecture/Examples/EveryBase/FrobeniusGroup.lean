@@ -328,7 +328,6 @@ noncomputable def hqAvoidingCycle (d : Nat) (hd : Odd d) (hd3 : 3 ≤ d)
   · by_cases hleft : g.left.toAdd = 0
     · refine {
         carrier := {1}
-        nonempty := Finset.singleton_nonempty 1
         avoids := by simp
         odd_card := by simp
         invariant := ?_ }
@@ -412,7 +411,6 @@ noncomputable def hqAvoidingCycle (d : Nat) (hd : Odd d) (hd3 : 3 ≤ d)
         simpa using hbadd
       refine {
         carrier := {x, x + b, x - b}
-        nonempty := by simp
         avoids := ?_
         odd_card := ?_
         invariant := ?_ }
@@ -480,8 +478,6 @@ noncomputable def hqAvoidingCycle (d : Nat) (hd : Odd d) (hd3 : 3 ≤ d)
         simpa [x0, hden] using hx0
       refine {
         carrier := cqValueFinset d
-        nonempty := by
-          exact ⟨1, (mem_cqValueFinset_iff d 1).mpr ⟨(1 : Cq d), by simp⟩⟩
         avoids := zero_not_mem_cqValueFinset d
         odd_card := odd_card_cqValueFinset d hd
         invariant := ?_ }
@@ -490,7 +486,6 @@ noncomputable def hqAvoidingCycle (d : Nat) (hd : Odd d) (hd3 : 3 ≤ d)
       exact hb0
     · refine {
         carrier := {x0}
-        nonempty := Finset.singleton_nonempty x0
         avoids := by simpa [eq_comm] using hx0
         odd_card := by simp
         invariant := ?_ }

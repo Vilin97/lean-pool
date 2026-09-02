@@ -29,7 +29,6 @@ noncomputable def hqSeed (d : Nat) (hd : Odd d) (hd3 : 3 ≤ d) :
   V := Vq d
   omega0 := 0
   u := hqBadSeedVector d hd
-  odd_card_H := hq_odd_card d hd
   regular_exists := hq_regularOrbit_exists d hd
   coord := deletedCoord d
   coord_smul := by

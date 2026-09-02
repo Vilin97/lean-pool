@@ -28,15 +28,6 @@ abbrev LinearTop (S : EveryBaseSeed) (K : BaseArrayColours S tail) :=
 abbrev ProductModule (S : EveryBaseSeed) (K : BaseArrayColours S tail) :=
   K.C → S.V
 
-instance (S : EveryBaseSeed) (K : BaseArrayColours S tail) :
-    DistribMulAction (LinearTop S K) (ProductModule S K) where
-  smul_zero g := by
-    funext c
-    simp [Saxl.permWreath_smul_apply]
-  smul_add g x y := by
-    funext c
-    simp [Saxl.permWreath_smul_apply, smul_add]
-
 /-- The generalized affine neighborhood of zero. -/
 def neighbourSet (S : EveryBaseSeed) (K : BaseArrayColours S tail) :
     Set (ProductModule S K) :=

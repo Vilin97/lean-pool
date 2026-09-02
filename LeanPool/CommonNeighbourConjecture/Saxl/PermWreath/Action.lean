@@ -17,7 +17,11 @@ For `g = (f, q)` the action on `ι → Δ` is
 namespace Saxl
 
 variable (X Q ι Δ : Type*)
-variable [Group X] [Group Q] [MulAction Q ι] [MulAction X Δ]
+variable [Group X] [Group Q] [MulAction Q ι]
+
+section Action
+
+variable [MulAction X Δ]
 
 /-- The product action of an arbitrary permutation wreath product. -/
 instance permWreathMulAction : MulAction (PermWreath X Q ι) (ι → Δ) where
@@ -34,6 +38,47 @@ instance permWreathMulAction : MulAction (PermWreath X Q ι) (ι → Δ) where
         g.left i • (h.left (g.right⁻¹ • i) •
           x (h.right⁻¹ • (g.right⁻¹ • i)))
     simp only [mul_inv_rev, mul_smul]
+
+end Action
+
+section Additive
+
+variable [AddMonoid Δ] [DistribMulAction X Δ]
+
+/-- The product action is additive whenever the component action is additive. -/
+instance permWreathDistribMulAction :
+    DistribMulAction (PermWreath X Q ι) (ι → Δ) where
+  toMulAction := permWreathMulAction X Q ι Δ
+  smul_zero g := by
+    funext i
+    change g.left i • (0 : Δ) = 0
+    exact smul_zero _
+  smul_add g x y := by
+    funext i
+    change g.left i • (x (g.right⁻¹ • i) + y (g.right⁻¹ • i)) = _
+    exact smul_add _ _ _
+
+end Additive
+
+section Scalars
+
+variable {F : Type*} [MulAction X Δ] [SMul F Δ]
+variable [SMulCommClass X F Δ]
+
+/-- The product action commutes with scalars whenever the component action does. -/
+instance permWreathSMulCommClass :
+    SMulCommClass (PermWreath X Q ι) F (ι → Δ) where
+  smul_comm g a x := by
+    funext i
+    change g.left i • (a • x (g.right⁻¹ • i)) =
+      a • (g.left i • x (g.right⁻¹ • i))
+    exact smul_comm _ _ _
+
+end Scalars
+
+section CoordinateLemmas
+
+variable [MulAction X Δ]
 
 /-- The defining coordinate formula for the product action. -/
 @[simp]
@@ -61,5 +106,7 @@ theorem base_smul_coord (f : ι → X) (x : ι → Δ) (i : ι) :
 theorem top_smul_coord (q : Q) (x : ι → Δ) (i : ι) :
     (PermWreath.top X Q ι q • x) i = x (q⁻¹ • i) := by
   simp
+
+end CoordinateLemmas
 
 end Saxl

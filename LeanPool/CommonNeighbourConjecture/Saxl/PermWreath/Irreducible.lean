@@ -35,28 +35,6 @@ variable [Field F] [Group H] [Group Q] [MulAction Q ι]
 variable [AddCommGroup V] [Module F V]
 variable [DistribMulAction H V] [SMulCommClass H F V]
 
-/-- The existing product action is additive whenever the component action is
-additive. -/
-instance permWreathDistribMulAction :
-    DistribMulAction (PermWreath H Q ι) (ι → V) where
-  toMulAction := permWreathMulAction H Q ι V
-  smul_zero g := by
-    funext i
-    simp
-  smul_add g x y := by
-    funext i
-    simp
-
-/-- The existing product action commutes with the scalar action whenever the
-component action does. -/
-instance permWreathSMulCommClass :
-    SMulCommClass (PermWreath H Q ι) F (ι → V) where
-  smul_comm g a x := by
-    funext i
-    change g.left i • (a • x (g.right⁻¹ • i)) =
-      a • (g.left i • x (g.right⁻¹ • i))
-    exact smul_comm _ _ _
-
 /-- Every nonzero vector is moved by some group element.  This is the exact
 nontriviality condition used by the coordinate-isolation argument. -/
 def MovesNonzero (H V : Type*) [Zero V] [SMul H V] : Prop :=

@@ -97,9 +97,6 @@ structure RankThreeOrbitals (R : Ω → Ω → Prop) where
   otherX : Ω
   /-- The second point of a representative off-diagonal pair outside `R`. -/
   otherY : Ω
-  rel_mem : R relX relY
-  other_ne : otherX ≠ otherY
-  other_not_mem : ¬ R otherX otherY
   diag_transport : ∀ x, ∃ g : H, g • diag = x
   rel_transport : ∀ x y, x ≠ y → R x y →
     ∃ g : H, g • relX = x ∧ g • relY = y
@@ -339,15 +336,6 @@ noncomputable def hqRankThreeOrbitals (d : Nat) (hd : Odd d) :
   relY := 0
   otherX := -1
   otherY := 0
-  rel_mem := by
-    constructor
-    · exact one_ne_zero
-    · rw [sub_zero]
-      exact IsSquare.one
-  other_ne := neg_ne_zero.mpr one_ne_zero
-  other_not_mem := by
-    intro h
-    exact neg_one_not_square d hd (by simpa using h.2)
   diag_transport x := by
     let g : Hq d := ⟨Multiplicative.ofAdd x, 1⟩
     refine ⟨g, ?_⟩

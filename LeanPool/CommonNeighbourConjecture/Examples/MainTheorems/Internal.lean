@@ -19,7 +19,7 @@ noncomputable section
 
 namespace SaxlCounterexamples.MainTheorems.Internal
 
-open Core Core.FinitePermutationGroup
+open FinitePermutationGroup
 
 private theorem isBase_range_iff_isBaseTuple
     (P : FinitePermutationGroup) {n : Nat} (b : Fin n → P.Point) :

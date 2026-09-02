@@ -37,9 +37,10 @@ projects:
           Saxl graph has two nonadjacent vertices with no common neighbor.
       - declaration: SaxlCounterexamples.EveryBase.hq_coreFamily
         informal: >-
-          The explicit affine wreath-product family has exact base size
-          tail + 2, acts primitively, and its displayed pair has no common
-          neighbor in the corresponding generalized Saxl graph.
+          For every odd d with 3 ≤ d and every tail, the explicit affine
+          wreath-product family has exact base size tail + 2, acts
+          primitively, and its displayed pair has no common neighbor in the
+          corresponding generalized Saxl graph.
     tags:
       - permutation-groups
       - group-actions
