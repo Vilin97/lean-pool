@@ -191,13 +191,6 @@ lemma IsSubGaussian.integrable_exp_mul {Ω : Type*} [MeasurableSpace Ω]
   obtain ⟨_, h_mgf⟩ := h_sg
   exact h_mgf.integrable_exp_mul t
 
-/-- Compatibility name for exponential integrability of sub-Gaussian random variables. -/
-lemma sub_gaussian_integrable {Ω : Type*} [MeasurableSpace Ω]
-    {X : Ω → ℝ} {σ_sq : ℝ} {μ : Measure Ω}
-    (h_sg : IsSubGaussian X σ_sq μ) (t : ℝ) :
-    Integrable (fun x => Real.exp (t * X x)) μ :=
-  h_sg.integrable_exp_mul t
-
 /-- A sub-Gaussian real random variable is integrable. -/
 lemma IsSubGaussian.integrable {Ω : Type*} [MeasurableSpace Ω]
     {X : Ω → ℝ} {σ_sq : ℝ} {μ : Measure Ω}
@@ -416,6 +409,84 @@ lemma gaussian_tail_integral {τ : ℝ} (hτ : 0 < τ) :
         sqrt_mul (by positivity : 0 ≤ 2 * π), sqrt_sq (le_of_lt hτ), mul_comm]
   linarith [h3, sqrt_nonneg (2 * π), hτ]
 
+private lemma ae_le_zero_of_mgf_le_one {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {Y : Ω → ℝ} (hY_mgf : ∀ l : ℝ, μ[fun ω => exp (l * Y ω)] ≤ 1)
+    (hY_int_exp_pos : ∀ l : ℝ, 0 < l → Integrable (fun ω => exp (l * Y ω)) μ) :
+    ∀ᵐ ω ∂μ, Y ω ≤ 0 := by
+  rw [ae_iff]
+  have h_tail_zero : ∀ ε : ℝ, 0 < ε → μ {ω | Y ω > ε} = 0 := fun ε hε => by
+    have h_bound : ∀ k : ℕ,
+        μ {ω | Y ω > ε} ≤ ENNReal.ofReal (exp (-(k : ℝ) * ε)) := fun k => by
+      have hk1 : (0 : ℝ) < k + 1 := Nat.cast_add_one_pos k
+      have h_markov := mul_meas_ge_le_integral_of_nonneg
+        (μ := μ) (f := fun ω => exp ((k + 1 : ℝ) * Y ω))
+        (ae_of_all μ (fun _ => (exp_pos _).le))
+        (hY_int_exp_pos (k + 1) hk1) (exp ((k + 1 : ℝ) * ε))
+      have h_subset : {ω | Y ω > ε} ⊆
+          {ω | exp ((k + 1 : ℝ) * ε) ≤ exp ((k + 1 : ℝ) * Y ω)} := by
+        intro ω hω
+        simp only [mem_ofPred_eq] at hω ⊢
+        exact exp_le_exp.mpr (mul_lt_mul_of_pos_left hω hk1).le
+      have h_toReal_bound :
+          (μ {ω | exp ((k + 1 : ℝ) * ε) ≤ exp ((k + 1 : ℝ) * Y ω)}).toReal ≤
+            (exp ((k + 1 : ℝ) * ε))⁻¹ * ∫ ω, exp ((k + 1 : ℝ) * Y ω) ∂μ := by
+        rw [le_inv_mul_iff₀ (exp_pos _), mul_comm]
+        rw [mul_comm] at h_markov
+        exact h_markov
+      calc
+        μ {ω | Y ω > ε}
+            ≤ μ {ω | exp ((k + 1 : ℝ) * ε) ≤ exp ((k + 1 : ℝ) * Y ω)} :=
+              measure_mono h_subset
+        _ ≤ ENNReal.ofReal ((exp ((k + 1 : ℝ) * ε))⁻¹ *
+              ∫ ω, exp ((k + 1 : ℝ) * Y ω) ∂μ) := by
+            rw [← ENNReal.ofReal_toReal (measure_ne_top μ _)]
+            exact ENNReal.ofReal_le_ofReal h_toReal_bound
+        _ ≤ ENNReal.ofReal ((exp ((k + 1 : ℝ) * ε))⁻¹ * 1) := by
+            apply ENNReal.ofReal_le_ofReal
+            gcongr
+            exact hY_mgf (k + 1)
+        _ = ENNReal.ofReal (exp (-((k + 1 : ℝ) * ε))) := by
+            congr 1
+            rw [mul_one, exp_neg]
+        _ ≤ ENNReal.ofReal (exp (-(k : ℝ) * ε)) := by
+            apply ENNReal.ofReal_le_ofReal
+            apply exp_le_exp.mpr
+            simp only [neg_mul, neg_le_neg_iff]
+            have : (k : ℝ) ≤ (k : ℝ) + 1 := le_add_of_nonneg_right (by norm_num)
+            exact mul_le_mul_of_nonneg_right this hε.le
+    rw [← nonpos_iff_eq_zero]
+    have h_lim : Filter.Tendsto (fun n : ℕ => ENNReal.ofReal (exp (-(n : ℝ) * ε)))
+        Filter.atTop (nhds 0) := by
+      have h1 : Filter.Tendsto (fun n : ℕ => (n : ℝ) * ε) Filter.atTop Filter.atTop :=
+        Filter.Tendsto.atTop_mul_const hε tendsto_natCast_atTop_atTop
+      have h2 : Filter.Tendsto (fun n : ℕ => exp (-((n : ℝ) * ε)))
+          Filter.atTop (nhds 0) := by
+        change Filter.Tendsto (((fun x : ℝ => exp (-x)) ∘ fun n : ℕ => (n : ℝ) * ε))
+          Filter.atTop (nhds 0)
+        exact tendsto_exp_neg_atTop_nhds_zero.comp h1
+      have h3 := ENNReal.tendsto_ofReal h2
+      simp only [ENNReal.ofReal_zero] at h3
+      have h_eq : (fun n : ℕ => ENNReal.ofReal (exp (-(n : ℝ) * ε))) =
+          fun n : ℕ => ENNReal.ofReal (exp (-((n : ℝ) * ε))) := by
+        ext n
+        ring_nf
+      rwa [h_eq]
+    exact ge_of_tendsto' h_lim (fun n => h_bound n)
+  apply measure_mono_null (t := ⋃ n : ℕ, {ω | Y ω > 1 / ((n : ℝ) + 1)})
+  · intro ω hω
+    simp only [mem_iUnion, mem_ofPred_eq, not_le] at hω ⊢
+    obtain ⟨n, hn⟩ := exists_nat_gt (1 / Y ω)
+    use n
+    have hY_pos : 0 < Y ω := hω
+    calc
+      (1 : ℝ) / ((n : ℝ) + 1) < 1 / (1 / Y ω) := by
+        apply one_div_lt_one_div_of_lt (one_div_pos.mpr hY_pos)
+        linarith
+      _ = Y ω := one_div_one_div _
+  · rw [measure_iUnion_null_iff]
+    intro n
+    exact h_tail_zero (1 / ((n : ℝ) + 1)) (by positivity)
+
 /-- A random variable with MGF bounded by 1 for all λ is zero a.s.
 
     Key lemma for the degenerate case of sub-Gaussian processes with zero variance proxy. -/
@@ -425,131 +496,19 @@ lemma ae_eq_zero_of_mgf_le_one {μ : Measure Ω} [IsProbabilityMeasure μ]
     (hY_int_exp_pos : ∀ l : ℝ, 0 < l → Integrable (fun ω => exp (l * Y ω)) μ)
     (hY_int_exp_neg : ∀ l : ℝ, l < 0 → Integrable (fun ω => exp (l * Y ω)) μ) :
     Y =ᵐ[μ] (fun _ => 0) := by
-  have h_le_zero : ∀ᵐ ω ∂μ, Y ω ≤ 0 := by
-    rw [ae_iff]
-    have h_tail_zero : ∀ ε : ℝ, 0 < ε → μ {ω | Y ω > ε} = 0 := fun ε hε => by
-      have h_bound : ∀ k : ℕ, μ {ω | Y ω > ε} ≤ ENNReal.ofReal (exp (-(k : ℝ) * ε)) := fun k => by
-        have hk1 : (0 : ℝ) < k + 1 := Nat.cast_add_one_pos k
-        have h_markov := mul_meas_ge_le_integral_of_nonneg
-          (μ := μ) (f := fun ω => exp ((k + 1 : ℝ) * Y ω))
-          (ae_of_all μ (fun _ => (exp_pos _).le))
-          (hY_int_exp_pos (k + 1) hk1) (exp ((k + 1 : ℝ) * ε))
-        have h_subset : {ω | Y ω > ε} ⊆ {ω | exp ((k + 1 : ℝ) * ε) ≤ exp ((k + 1 : ℝ) * Y ω)} := by
-          intro ω hω
-          simp only [mem_ofPred_eq] at hω ⊢
-          exact exp_le_exp.mpr (mul_lt_mul_of_pos_left hω hk1).le
-        have h_toReal_bound : (μ {ω | exp ((k + 1 : ℝ) * ε) ≤ exp ((k + 1 : ℝ) * Y ω)}).toReal ≤
-            (exp ((k + 1 : ℝ) * ε))⁻¹ * ∫ ω, exp ((k + 1 : ℝ) * Y ω) ∂μ := by
-          rw [le_inv_mul_iff₀ (exp_pos _), mul_comm]
-          rw [mul_comm] at h_markov
-          exact h_markov
-        calc μ {ω | Y ω > ε}
-          _ ≤ μ {ω | exp ((k + 1 : ℝ) * ε) ≤ exp ((k + 1 : ℝ) * Y ω)} := measure_mono h_subset
-          _ ≤ ENNReal.ofReal ((exp ((k + 1 : ℝ) * ε))⁻¹ * ∫ ω, exp ((k + 1 : ℝ) * Y ω) ∂μ) := by
-              rw [← ENNReal.ofReal_toReal (measure_ne_top μ _)]
-              exact ENNReal.ofReal_le_ofReal h_toReal_bound
-          _ ≤ ENNReal.ofReal ((exp ((k + 1 : ℝ) * ε))⁻¹ * 1) := by
-              apply ENNReal.ofReal_le_ofReal
-              gcongr
-              exact hY_mgf (k + 1)
-          _ = ENNReal.ofReal (exp (-((k + 1 : ℝ) * ε))) := by
-              congr 1; rw [mul_one, exp_neg]
-          _ ≤ ENNReal.ofReal (exp (-(k : ℝ) * ε)) := by
-              apply ENNReal.ofReal_le_ofReal
-              apply exp_le_exp.mpr
-              simp only [neg_mul, neg_le_neg_iff]
-              have : (k : ℝ) ≤ (k : ℝ) + 1 := le_add_of_nonneg_right (by norm_num)
-              exact mul_le_mul_of_nonneg_right this hε.le
-      rw [← nonpos_iff_eq_zero]
-      have h_lim : Filter.Tendsto (fun n : ℕ => ENNReal.ofReal (exp (-(n : ℝ) * ε)))
-          Filter.atTop (nhds 0) := by
-        have h1 : Filter.Tendsto (fun n : ℕ => (n : ℝ) * ε) Filter.atTop Filter.atTop :=
-          Filter.Tendsto.atTop_mul_const hε tendsto_natCast_atTop_atTop
-        have h2 : Filter.Tendsto (fun n : ℕ => exp (-((n : ℝ) * ε))) Filter.atTop (nhds 0) := by
-          change Filter.Tendsto (((fun x : ℝ => exp (-x)) ∘ fun n : ℕ => (n : ℝ) * ε))
-            Filter.atTop (nhds 0)
-          exact tendsto_exp_neg_atTop_nhds_zero.comp h1
-        have h3' := ENNReal.tendsto_ofReal h2
-        simp only [ENNReal.ofReal_zero] at h3'
-        have h_eq : (fun n : ℕ => ENNReal.ofReal (exp (-(n : ℝ) * ε))) =
-            (fun n : ℕ => ENNReal.ofReal (exp (-((n : ℝ) * ε)))) := by ext n; ring_nf
-        rw [h_eq]; exact h3'
-      exact ge_of_tendsto' h_lim (fun n => h_bound n)
-    apply measure_mono_null (t := ⋃ n : ℕ, {ω | Y ω > 1/((n : ℝ)+1)})
-    · intro ω hω
-      simp only [mem_iUnion, mem_ofPred_eq, not_le] at hω ⊢
-      obtain ⟨n, hn⟩ := exists_nat_gt (1 / Y ω)
-      use n
-      have hY_pos : 0 < Y ω := hω
-      calc (1 : ℝ) / ((n : ℝ) + 1) < 1 / (1 / Y ω) := by
-            apply one_div_lt_one_div_of_lt (one_div_pos.mpr hY_pos); linarith
-        _ = Y ω := one_div_one_div _
-    · rw [measure_iUnion_null_iff]
-      intro n; exact h_tail_zero (1 / ((n : ℝ) + 1)) (by positivity)
-  have h_ge_zero : ∀ᵐ ω ∂μ, Y ω ≥ 0 := by
-    rw [ae_iff]
-    have h_neg_mgf : ∀ l : ℝ, μ[fun ω => exp (l * (-Y ω))] ≤ 1 := fun l => by
-      convert hY_mgf (-l) using 2; ext ω; ring_nf
-    have h_neg_int_exp_pos : ∀ l : ℝ, 0 < l →
-        Integrable (fun ω => exp (l * (-Y ω))) μ := fun l hl => by
-      have h_neg_l : -l < 0 := by linarith
-      convert hY_int_exp_neg (-l) h_neg_l using 1; ext ω; ring_nf
-    have h_tail_zero_neg : ∀ ε : ℝ, 0 < ε → μ {ω | -Y ω > ε} = 0 := fun ε hε => by
-      have h_bound : ∀ k : ℕ, μ {ω | -Y ω > ε} ≤ ENNReal.ofReal (exp (-(k : ℝ) * ε)) := fun k => by
-        have hk1 : (0 : ℝ) < k + 1 := Nat.cast_add_one_pos k
-        have h_markov := mul_meas_ge_le_integral_of_nonneg
-          (μ := μ) (f := fun ω => exp ((k + 1 : ℝ) * (-Y ω)))
-          (ae_of_all μ (fun _ => (exp_pos _).le))
-          (h_neg_int_exp_pos (k + 1) hk1) (exp ((k + 1 : ℝ) * ε))
-        have h_subset : {ω | -Y ω > ε} ⊆
-            {ω | exp ((k + 1 : ℝ) * ε) ≤ exp ((k + 1 : ℝ) * (-Y ω))} := by
-          intro ω hω
-          simp only [mem_ofPred_eq] at hω ⊢
-          exact exp_le_exp.mpr (mul_lt_mul_of_pos_left hω hk1).le
-        have h_toReal_bound : (μ {ω | exp ((k + 1 : ℝ) * ε) ≤ exp ((k + 1 : ℝ) * (-Y ω))}).toReal ≤
-            (exp ((k + 1 : ℝ) * ε))⁻¹ * ∫ ω, exp ((k + 1 : ℝ) * (-Y ω)) ∂μ := by
-          rw [le_inv_mul_iff₀ (exp_pos _), mul_comm]
-          rw [mul_comm] at h_markov; exact h_markov
-        calc μ {ω | -Y ω > ε}
-          _ ≤ μ {ω | exp ((k + 1 : ℝ) * ε) ≤ exp ((k + 1 : ℝ) * (-Y ω))} := measure_mono h_subset
-          _ ≤ ENNReal.ofReal ((exp ((k + 1 : ℝ) * ε))⁻¹ * ∫ ω, exp ((k + 1 : ℝ) * (-Y ω)) ∂μ) := by
-              rw [← ENNReal.ofReal_toReal (measure_ne_top μ _)]
-              exact ENNReal.ofReal_le_ofReal h_toReal_bound
-          _ ≤ ENNReal.ofReal ((exp ((k + 1 : ℝ) * ε))⁻¹ * 1) := by
-              apply ENNReal.ofReal_le_ofReal; gcongr; exact h_neg_mgf (k + 1)
-          _ = ENNReal.ofReal (exp (-((k + 1 : ℝ) * ε))) := by congr 1; rw [mul_one, exp_neg]
-          _ ≤ ENNReal.ofReal (exp (-(k : ℝ) * ε)) := by
-              apply ENNReal.ofReal_le_ofReal; apply exp_le_exp.mpr
-              simp only [neg_mul, neg_le_neg_iff]
-              have : (k : ℝ) ≤ (k : ℝ) + 1 := le_add_of_nonneg_right (by norm_num)
-              exact mul_le_mul_of_nonneg_right this hε.le
-      rw [← nonpos_iff_eq_zero]
-      have h_lim : Filter.Tendsto (fun n : ℕ => ENNReal.ofReal (exp (-(n : ℝ) * ε)))
-          Filter.atTop (nhds 0) := by
-        have h1 : Filter.Tendsto (fun n : ℕ => (n : ℝ) * ε) Filter.atTop Filter.atTop :=
-          Filter.Tendsto.atTop_mul_const hε tendsto_natCast_atTop_atTop
-        have h2 : Filter.Tendsto (fun n : ℕ => exp (-((n : ℝ) * ε))) Filter.atTop (nhds 0) := by
-          change Filter.Tendsto (((fun x : ℝ => exp (-x)) ∘ fun n : ℕ => (n : ℝ) * ε))
-            Filter.atTop (nhds 0)
-          exact tendsto_exp_neg_atTop_nhds_zero.comp h1
-        have h3' := ENNReal.tendsto_ofReal h2
-        simp only [ENNReal.ofReal_zero] at h3'
-        have h_eq : (fun n : ℕ => ENNReal.ofReal (exp (-(n : ℝ) * ε))) =
-            (fun n : ℕ => ENNReal.ofReal (exp (-((n : ℝ) * ε)))) := by ext n; ring_nf
-        rw [h_eq]; exact h3'
-      exact ge_of_tendsto' h_lim (fun n => h_bound n)
-    apply measure_mono_null (t := ⋃ n : ℕ, {ω | -Y ω > 1/((n : ℝ)+1)})
-    · intro ω hω
-      simp only [mem_iUnion, mem_ofPred_eq, ge_iff_le, not_le] at hω ⊢
-      have hY_neg' : 0 < -Y ω := by linarith
-      obtain ⟨n, hn⟩ := exists_nat_gt (1 / (-Y ω))
-      use n
-      calc (1 : ℝ) / ((n : ℝ) + 1) < 1 / (1 / (-Y ω)) := by
-            apply one_div_lt_one_div_of_lt (one_div_pos.mpr hY_neg'); linarith
-        _ = -Y ω := one_div_one_div _
-    · rw [measure_iUnion_null_iff]
-      intro n; exact h_tail_zero_neg (1 / ((n : ℝ) + 1)) (by positivity)
-  filter_upwards [h_le_zero, h_ge_zero] with ω h1 h2
+  have h_le_zero := ae_le_zero_of_mgf_le_one hY_mgf hY_int_exp_pos
+  have h_neg_mgf : ∀ l : ℝ, μ[fun ω => exp (l * (-Y ω))] ≤ 1 := fun l => by
+    convert hY_mgf (-l) using 2
+    ext ω
+    ring_nf
+  have h_neg_int_exp_pos : ∀ l : ℝ, 0 < l →
+      Integrable (fun ω => exp (l * (-Y ω))) μ := fun l hl => by
+    have h_neg_l : -l < 0 := by linarith
+    convert hY_int_exp_neg (-l) h_neg_l using 1
+    ext ω
+    ring_nf
+  have h_neg_le_zero := ae_le_zero_of_mgf_le_one h_neg_mgf h_neg_int_exp_pos
+  filter_upwards [h_le_zero, h_neg_le_zero] with ω hY_nonpos hnegY_nonpos
   linarith
 
 /-- If Y = 0 a.e., then ∫|Y| = 0. -/

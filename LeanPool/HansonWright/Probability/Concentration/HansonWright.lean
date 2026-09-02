@@ -2411,16 +2411,18 @@ lemma iIndepFun_centered_sq {μ : Measure Ω} {n : ℕ} {X : Fin n → Ω → �
       (fun i x => x ^ 2 - ∫ ω, X i ω ^ 2 ∂μ)
       (fun _ => by fun_prop)
 
-lemma diagonalCenteredQuadraticForm_cgf_le {μ : Measure Ω} [IsProbabilityMeasure μ]
+private lemma diagonalCenteredQuadraticForm_integrable_exp_and_cgf_le
+    {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
     {K C θ : ℝ} (hK : 0 < K) (hC : 0 < C)
-    (hC_domain : exp 1 ≤ C) (hC_quad : 2 * exp 1 ^ 3 ≤ C)
-    (hOp : 0 < operatorNorm A)
+    (hC_domain : exp 1 ≤ C) (hOp : 0 < operatorNorm A)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hθ : |θ| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹) :
-    cgf (diagonalCenteredQuadraticForm μ A X) μ θ ≤
-      C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 := by
+    Integrable (fun ω => exp (θ * diagonalCenteredQuadraticForm μ A X ω)) μ ∧
+      (2 * exp 1 ^ 3 ≤ C →
+        cgf (diagonalCenteredQuadraticForm μ A X) μ θ ≤
+          C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2) := by
   let Y : Fin n → Ω → ℝ :=
     fun i ω => X i ω ^ 2 - ∫ ω, X i ω ^ 2 ∂μ
   let Z : Fin n → Ω → ℝ := fun i ω => A i i * Y i ω
@@ -2516,29 +2518,51 @@ lemma diagonalCenteredQuadraticForm_cgf_le {μ : Measure Ω} [IsProbabilityMeasu
     apply Finset.sum_congr rfl
     intro i _
     ring_nf
-  have hconst_le :
-      (2 * exp 1 ^ 3) * θ ^ 2 * K ^ 4 * ∑ i, A i i ^ 2 ≤
-        C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 := by
-    have hnonneg : 0 ≤ θ ^ 2 * K ^ 4 := by positivity
-    have hdiag_le := sum_diag_sq_le_frobeniusNorm_sq A
+  constructor
+  · have hsum_int :
+        Integrable (fun ω => exp (θ * (∑ i, Z i) ω)) μ :=
+      iIndepFun.integrable_exp_mul_finsetSum hZ_indep hZ_meas
+        (s := Finset.univ) hZ_int
+    convert hsum_int using 1
+    ext ω
+    simp [diagonalCenteredQuadraticForm, Z, Y]
+  · intro hC_quad
+    have hconst_le :
+        (2 * exp 1 ^ 3) * θ ^ 2 * K ^ 4 * ∑ i, A i i ^ 2 ≤
+          C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 := by
+      have hnonneg : 0 ≤ θ ^ 2 * K ^ 4 := by positivity
+      have hdiag_le := sum_diag_sq_le_frobeniusNorm_sq A
+      calc
+        (2 * exp 1 ^ 3) * θ ^ 2 * K ^ 4 * ∑ i, A i i ^ 2
+            = (2 * exp 1 ^ 3) * (θ ^ 2 * K ^ 4) * ∑ i, A i i ^ 2 := by ring_nf
+        _ ≤ C * (θ ^ 2 * K ^ 4) * ∑ i, A i i ^ 2 := by
+            exact mul_le_mul_of_nonneg_right
+              (mul_le_mul_of_nonneg_right hC_quad hnonneg)
+              (Finset.sum_nonneg fun i _ => sq_nonneg (A i i))
+        _ ≤ C * (θ ^ 2 * K ^ 4) * frobeniusNorm A ^ 2 := by
+            exact mul_le_mul_of_nonneg_left hdiag_le
+              (mul_nonneg hC.le hnonneg)
+        _ = C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 := by ring_nf
     calc
-      (2 * exp 1 ^ 3) * θ ^ 2 * K ^ 4 * ∑ i, A i i ^ 2
-          = (2 * exp 1 ^ 3) * (θ ^ 2 * K ^ 4) * ∑ i, A i i ^ 2 := by ring_nf
-      _ ≤ C * (θ ^ 2 * K ^ 4) * ∑ i, A i i ^ 2 := by
-          exact mul_le_mul_of_nonneg_right
-            (mul_le_mul_of_nonneg_right hC_quad hnonneg)
-            (Finset.sum_nonneg fun i _ => sq_nonneg (A i i))
-      _ ≤ C * (θ ^ 2 * K ^ 4) * frobeniusNorm A ^ 2 := by
-          exact mul_le_mul_of_nonneg_left hdiag_le
-            (mul_nonneg hC.le hnonneg)
-      _ = C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 := by ring_nf
-  calc
-    cgf (diagonalCenteredQuadraticForm μ A X) μ θ
-        = cgf (fun ω => ∑ i, Z i ω) μ θ := by rfl
-    _ = ∑ i, cgf (Z i) μ θ := hcgf_sum
-    _ ≤ ∑ i, 2 * exp 1 * (A i i * θ * K ^ 2 * exp 1) ^ 2 := hsum_cgf_le
-    _ = (2 * exp 1 ^ 3) * θ ^ 2 * K ^ 4 * ∑ i, A i i ^ 2 := hsum_eq
-    _ ≤ C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 := hconst_le
+      cgf (diagonalCenteredQuadraticForm μ A X) μ θ
+          = cgf (fun ω => ∑ i, Z i ω) μ θ := by rfl
+      _ = ∑ i, cgf (Z i) μ θ := hcgf_sum
+      _ ≤ ∑ i, 2 * exp 1 * (A i i * θ * K ^ 2 * exp 1) ^ 2 := hsum_cgf_le
+      _ = (2 * exp 1 ^ 3) * θ ^ 2 * K ^ 4 * ∑ i, A i i ^ 2 := hsum_eq
+      _ ≤ C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 := hconst_le
+
+lemma diagonalCenteredQuadraticForm_cgf_le {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
+    {K C θ : ℝ} (hK : 0 < K) (hC : 0 < C)
+    (hC_domain : exp 1 ≤ C) (hC_quad : 2 * exp 1 ^ 3 ≤ C)
+    (hOp : 0 < operatorNorm A)
+    (h_indep : iIndepFun X μ)
+    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hθ : |θ| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹) :
+    cgf (diagonalCenteredQuadraticForm μ A X) μ θ ≤
+      C * θ ^ 2 * K ^ 4 * frobeniusNorm A ^ 2 :=
+  (diagonalCenteredQuadraticForm_integrable_exp_and_cgf_le
+    hK hC hC_domain hOp h_indep hX_subG hθ).2 hC_quad
 
 lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabilityMeasure μ]
     {n : ℕ} {A : Matrix (Fin n) (Fin n) ℝ} {X : Fin n → Ω → ℝ}
@@ -2547,77 +2571,9 @@ lemma diagonalCenteredQuadraticForm_integrable_exp {μ : Measure Ω} [IsProbabil
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
     (hθ : |θ| ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹) :
-    Integrable (fun ω => exp (θ * diagonalCenteredQuadraticForm μ A X ω)) μ := by
-  let Y : Fin n → Ω → ℝ :=
-    fun i ω => X i ω ^ 2 - ∫ ω, X i ω ^ 2 ∂μ
-  let Z : Fin n → Ω → ℝ := fun i ω => A i i * Y i ω
-  have hKsq_pos : 0 < K ^ 2 := sq_pos_of_pos hK
-  have hKsq_nonneg : 0 ≤ K ^ 2 := hKsq_pos.le
-  have hC0_le : ((⟨K ^ 2, sq_nonneg K⟩ : ℝ≥0) : ℝ) ≤ K ^ 2 := by simp
-  have hscale :
-      |θ| * K ^ 2 * operatorNorm A ≤ 1 / (2 * C) := by
-    have hfactor_nonneg : 0 ≤ K ^ 2 * operatorNorm A :=
-      mul_nonneg hKsq_nonneg (operatorNorm_nonneg A)
-    calc
-      |θ| * K ^ 2 * operatorNorm A
-          = |θ| * (K ^ 2 * operatorNorm A) := by ring_nf
-      _ ≤ (2 * C * K ^ 2 * operatorNorm A)⁻¹ * (K ^ 2 * operatorNorm A) :=
-          mul_le_mul_of_nonneg_right hθ hfactor_nonneg
-      _ = 1 / (2 * C) := by
-          field_simp [hC.ne', hKsq_pos.ne', hOp.ne']
-  have hhalf_i : ∀ i, |A i i * θ| * K ^ 2 * exp 1 ≤ 1 / 2 := by
-    intro i
-    have hdiag := abs_diag_le_operatorNorm A i
-    have hθ_abs_nonneg : 0 ≤ |θ| := abs_nonneg θ
-    have hle_op :
-        |θ| * |A i i| * K ^ 2 ≤ |θ| * operatorNorm A * K ^ 2 := by
-      exact mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_left hdiag hθ_abs_nonneg) hKsq_nonneg
-    calc
-      |A i i * θ| * K ^ 2 * exp 1
-          = (|θ| * |A i i| * K ^ 2) * exp 1 := by
-              rw [abs_mul]
-              ring_nf
-      _ ≤ (|θ| * operatorNorm A * K ^ 2) * exp 1 :=
-          mul_le_mul_of_nonneg_right hle_op (exp_nonneg 1)
-      _ = (|θ| * K ^ 2 * operatorNorm A) * exp 1 := by ring_nf
-      _ ≤ (1 / (2 * C)) * exp 1 :=
-          mul_le_mul_of_nonneg_right hscale (exp_nonneg 1)
-      _ ≤ 1 / 2 := by
-          have hdiv : exp 1 / C ≤ 1 := (div_le_one hC).mpr hC_domain
-          calc
-            (1 / (2 * C)) * exp 1 = (1 / 2) * (exp 1 / C) := by
-              field_simp [hC.ne']
-            _ ≤ (1 / 2) * 1 := mul_le_mul_of_nonneg_left hdiv (by norm_num)
-            _ = 1 / 2 := by norm_num
-  have hZ_indep : iIndepFun Z μ := by
-    have hY_indep : iIndepFun Y μ := by
-      simpa [Y] using iIndepFun_centered_sq (μ := μ) (X := X) h_indep
-    simpa [Z, Function.comp_def] using
-      hY_indep.comp (fun i x => A i i * x) (fun _ => by fun_prop)
-  have hZ_meas : ∀ i, AEMeasurable (Z i) μ := by
-    intro i
-    dsimp [Z, Y]
-    exact (((hX_subG i).aemeasurable.pow_const 2).sub_const _).const_mul _
-  have hZ_int :
-      ∀ i ∈ (Finset.univ : Finset (Fin n)),
-        Integrable (fun ω => exp (θ * Z i ω)) μ := by
-    intro i _
-    have hsmall_lt : |A i i * θ| * K ^ 2 * exp 1 < 1 := by
-      linarith [hhalf_i i]
-    have hint :=
-      integrable_exp_centered_sq_of_hasSubgaussianMGF_of_le
-        (hX_subG i) hKsq_pos hC0_le hsmall_lt
-    convert hint using 1
-    ext ω
-    dsimp [Z, Y]
-    ring_nf
-  have hsum_int :
-      Integrable (fun ω => exp (θ * (∑ i, Z i) ω)) μ :=
-    iIndepFun.integrable_exp_mul_finsetSum hZ_indep hZ_meas (s := Finset.univ) hZ_int
-  convert hsum_int using 1
-  ext ω
-  simp [diagonalCenteredQuadraticForm, Z, Y]
+    Integrable (fun ω => exp (θ * diagonalCenteredQuadraticForm μ A X ω)) μ :=
+  (diagonalCenteredQuadraticForm_integrable_exp_and_cgf_le
+    hK hC hC_domain hOp h_indep hX_subG hθ).1
 
 lemma quadraticForm_eq_sum_diag_of_offdiag_eq_zero {n : ℕ}
     {A : Matrix (Fin n) (Fin n) ℝ} {x : Fin n → ℝ}
@@ -3005,17 +2961,19 @@ lemma inner_randomVector_hasSubgaussianMGF_of_iIndepFun {μ : Measure Ω}
     ring
   exact LeanPool.hasSubgaussianMGF_mono_param hsum_inner hparam
 
-/-- Gaussian-comparison square-exponential bound for a linear image of an independent
-sub-Gaussian vector. -/
-lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
+private lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq_and_integral_le
+    {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     {X : Fin n → Ω → ℝ} {K θ : ℝ} (hθ : 0 ≤ θ)
     (h_indep : iIndepFun X μ)
     (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
-    (hsmall : θ * K ^ 2 * operatorNorm A ^ 2 * exp 1 ≤ 1 / 2) :
-    ∫ ω, exp (θ *
-        ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2) ∂μ ≤
-      exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobeniusNorm A ^ 2) := by
+    (hsmall_lt : θ * K ^ 2 * operatorNorm A ^ 2 * exp 1 < 1) :
+    Integrable (fun ω =>
+        exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2)) μ ∧
+      (θ * K ^ 2 * operatorNorm A ^ 2 * exp 1 ≤ 1 / 2 →
+        ∫ ω, exp (θ *
+            ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2) ∂μ ≤
+          exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobeniusNorm A ^ 2)) := by
   let E := EuclideanSpace ℝ (Fin n)
   let γ : Measure E := stdGaussian E
   let T : E →L[ℝ] E := Matrix.toEuclideanCLM (𝕜 := ℝ) A
@@ -3025,9 +2983,6 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
     (ContinuousLinearMap.isPositive_adjoint_comp_self U).toLinearMap
   let s : ℝ := sqrt (2 * θ)
   let f : E × Ω → ℝ := fun p => exp (s * inner ℝ (U p.1) (randomVector X p.2))
-  have hs_nonneg : 0 ≤ s := by
-    dsimp [s]
-    exact sqrt_nonneg _
   have hs_sq : s ^ 2 = 2 * θ := by
     dsimp [s]
     rw [sq_sqrt]
@@ -3036,9 +2991,9 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
   have hUnorm : ‖U‖ = operatorNorm A := by
     dsimp [U, T, operatorNorm]
     exact ContinuousLinearMap.adjoint.norm_map _
-  have hsmall_eig :
+  have hsmall_eig_lt :
       ∀ i : Fin (Module.finrank ℝ E),
-        (K ^ 2 * θ) * hSpos.isSymmetric.eigenvalues rfl i * exp 1 ≤ 1 / 2 := by
+        (K ^ 2 * θ) * hSpos.isSymmetric.eigenvalues rfl i * exp 1 < 1 := by
     intro i
     have heig_le : hSpos.isSymmetric.eigenvalues rfl i ≤ ‖U‖ ^ 2 := by
       simpa [S, hSpos] using eigenvalue_adjoint_comp_le_opNorm_sq U i
@@ -3047,14 +3002,9 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
           (K ^ 2 * θ) * ‖U‖ ^ 2 * exp 1 := by
       exact mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_left heig_le hKθ_nonneg) (exp_nonneg 1)
-    exact hstep.trans (by
+    exact lt_of_le_of_lt hstep (by
       rw [hUnorm]
-      nlinarith [hsmall])
-  have hsmall_eig_lt :
-      ∀ i : Fin (Module.finrank ℝ E),
-        (K ^ 2 * θ) * hSpos.isSymmetric.eigenvalues rfl i * exp 1 < 1 := by
-    intro i
-    linarith [hsmall_eig i]
+      nlinarith [hsmall_lt])
   have hquad_int :
       Integrable (fun g : E => exp ((K ^ 2 * θ) * inner ℝ (S g) g)) γ :=
     integrable_exp_quadratic_stdGaussian S hSpos hKθ_nonneg hsmall_eig_lt
@@ -3138,142 +3088,6 @@ lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
                 trace_adjoint_comp_toEuclideanCLM_eq_frobeniusNormSq A.conjTranspose
         _ = frobeniusNormSq A := frobeniusNormSq_conjTranspose A
     exact htrace_eigs.symm.trans htrace_frob
-  have hprod_bound :
-      ∫ p : E × Ω, f p ∂(γ.prod μ) ≤
-        exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobeniusNorm A ^ 2) := by
-    calc
-      ∫ p : E × Ω, f p ∂(γ.prod μ)
-          = ∫ g : E, ∫ ω, f (g, ω) ∂μ ∂γ := by
-              rw [integral_prod f hf_int]
-      _ ≤ ∫ g : E, exp ((K ^ 2 * θ) * inner ℝ (S g) g) ∂γ := by
-              exact integral_mono_ae hf_int.integral_prod_left hquad_int hinner_bound
-      _ ≤ exp (2 * exp 1 ^ 2 * (K ^ 2 * θ) *
-            (∑ i : Fin (Module.finrank ℝ E), hSpos.isSymmetric.eigenvalues rfl i)) :=
-              integral_exp_quadratic_stdGaussian_le S hSpos hKθ_nonneg hsmall_eig
-      _ = exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobeniusNorm A ^ 2) := by
-              rw [hsum_eq, frobeniusNorm_sq]
-              congr 1
-              ring
-  have hleft_eq :
-      ∫ ω, exp (θ * ‖T (randomVector X ω)‖ ^ 2) ∂μ =
-        ∫ ω, ∫ g : E, f (g, ω) ∂γ ∂μ := by
-    apply integral_congr_ae
-    filter_upwards with ω
-    have hfg : (fun g : E => f (g, ω)) =
-        fun g : E => exp (s * inner ℝ (T (randomVector X ω)) g) := by
-      ext g
-      dsimp [f, U]
-      rw [ContinuousLinearMap.adjoint_inner_left T (randomVector X ω) g]
-      rw [real_inner_comm]
-    rw [hfg, integral_exp_innerSL_stdGaussian (E := E) (T (randomVector X ω)) s]
-    rw [hs_sq]
-    congr 1
-    ring
-  calc
-      ∫ ω, exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2) ∂μ
-          = ∫ ω, exp (θ * ‖T (randomVector X ω)‖ ^ 2) ∂μ := by rfl
-      _ = ∫ ω, ∫ g : E, f (g, ω) ∂γ ∂μ := hleft_eq
-      _ = ∫ q : Ω × E, f q.swap ∂(μ.prod γ) := by
-          exact (integral_prod (fun q : Ω × E => f q.swap) hf_int.swap).symm
-      _ ≤ exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobeniusNorm A ^ 2) := by
-          rw [integral_prod_swap f]
-          exact hprod_bound
-
-lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
-    [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
-    {X : Fin n → Ω → ℝ} {K θ : ℝ} (hθ : 0 ≤ θ)
-    (h_indep : iIndepFun X μ)
-    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
-    (hsmall : θ * K ^ 2 * operatorNorm A ^ 2 * exp 1 < 1) :
-    Integrable (fun ω =>
-      exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2)) μ := by
-  let E := EuclideanSpace ℝ (Fin n)
-  let γ : Measure E := stdGaussian E
-  let T : E →L[ℝ] E := Matrix.toEuclideanCLM (𝕜 := ℝ) A
-  let U : E →L[ℝ] E := ContinuousLinearMap.adjoint T
-  let S : E →L[ℝ] E := ContinuousLinearMap.adjoint U ∘L U
-  let hSpos : S.toLinearMap.IsPositive :=
-    (ContinuousLinearMap.isPositive_adjoint_comp_self U).toLinearMap
-  let s : ℝ := sqrt (2 * θ)
-  let f : E × Ω → ℝ := fun p => exp (s * inner ℝ (U p.1) (randomVector X p.2))
-  have hs_sq : s ^ 2 = 2 * θ := by
-    dsimp [s]
-    rw [sq_sqrt]
-    nlinarith
-  have hKθ_nonneg : 0 ≤ K ^ 2 * θ := mul_nonneg (sq_nonneg K) hθ
-  have hUnorm : ‖U‖ = operatorNorm A := by
-    dsimp [U, T, operatorNorm]
-    exact ContinuousLinearMap.adjoint.norm_map _
-  have hsmall_eig_lt :
-      ∀ i : Fin (Module.finrank ℝ E),
-        (K ^ 2 * θ) * hSpos.isSymmetric.eigenvalues rfl i * exp 1 < 1 := by
-    intro i
-    have heig_le : hSpos.isSymmetric.eigenvalues rfl i ≤ ‖U‖ ^ 2 := by
-      simpa [S, hSpos] using eigenvalue_adjoint_comp_le_opNorm_sq U i
-    have hstep :
-        (K ^ 2 * θ) * hSpos.isSymmetric.eigenvalues rfl i * exp 1 ≤
-          (K ^ 2 * θ) * ‖U‖ ^ 2 * exp 1 := by
-      exact mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_left heig_le hKθ_nonneg) (exp_nonneg 1)
-    exact lt_of_le_of_lt hstep (by
-      rw [hUnorm]
-      nlinarith [hsmall])
-  have hquad_int :
-      Integrable (fun g : E => exp ((K ^ 2 * θ) * inner ℝ (S g) g)) γ :=
-    integrable_exp_quadratic_stdGaussian S hSpos hKθ_nonneg hsmall_eig_lt
-  have hf_aesm : AEStronglyMeasurable f (γ.prod μ) := by
-    have hX_aemeas : AEMeasurable (randomVector X) μ :=
-      randomVector_aemeasurable fun i => (hX_subG i).aemeasurable
-    have hU_aemeas :
-        AEMeasurable (fun p : E × Ω => U p.1) (γ.prod μ) :=
-      AEMeasurable.comp_fst (μ := γ) (ν := μ) U.continuous.aemeasurable
-    have hX_prod :
-        AEMeasurable (fun p : E × Ω => randomVector X p.2) (γ.prod μ) :=
-      AEMeasurable.comp_snd (μ := γ) (ν := μ) hX_aemeas
-    have hinner :
-        AEMeasurable
-          (fun p : E × Ω => inner ℝ (U p.1) (randomVector X p.2)) (γ.prod μ) := by
-      exact AEMeasurable.inner hU_aemeas hX_prod
-    exact ((hinner.const_mul s).exp).aestronglyMeasurable
-  have hinner_bound : (fun g : E => ∫ ω, f (g, ω) ∂μ) ≤ᵐ[γ]
-      fun g : E => exp ((K ^ 2 * θ) * inner ℝ (S g) g) := by
-    filter_upwards with g
-    have hlin := inner_randomVector_hasSubgaussianMGF_of_iIndepFun h_indep hX_subG (U g)
-    have hmgf := hlin.mgf_le s
-    have hnorm_sq : ‖U g‖ ^ 2 = inner ℝ (S g) g := by
-      simpa [S] using ContinuousLinearMap.apply_norm_sq_eq_inner_adjoint_left U g
-    calc
-      ∫ ω, f (g, ω) ∂μ
-          = mgf (fun ω => inner ℝ (U g) (randomVector X ω)) μ s := by
-            rfl
-      _ ≤ exp ((K ^ 2 * ‖U g‖ ^ 2) * s ^ 2 / 2) := hmgf
-      _ = exp ((K ^ 2 * θ) * inner ℝ (S g) g) := by
-            rw [hs_sq, hnorm_sq]
-            congr 1
-            ring
-  have hnorm_inner_bound : (fun g : E => ∫ ω, ‖f (g, ω)‖ ∂μ) ≤ᵐ[γ]
-      fun g : E => exp ((K ^ 2 * θ) * inner ℝ (S g) g) := by
-    filter_upwards [hinner_bound] with g hg
-    have hnorm_eq : ∫ ω, ‖f (g, ω)‖ ∂μ = ∫ ω, f (g, ω) ∂μ := by
-      apply integral_congr_ae
-      filter_upwards with ω
-      dsimp [f]
-      rw [abs_of_nonneg (exp_nonneg _)]
-    rwa [hnorm_eq]
-  have hf_int : Integrable f (γ.prod μ) := by
-    rw [integrable_prod_iff hf_aesm]
-    constructor
-    · filter_upwards with g
-      exact (inner_randomVector_hasSubgaussianMGF_of_iIndepFun h_indep hX_subG
-        (U g)).integrable_exp_mul s
-    · have hnorm_outer_bound :
-          (fun g : E => ‖∫ ω, ‖f (g, ω)‖ ∂μ‖) ≤ᵐ[γ]
-            fun g : E => exp ((K ^ 2 * θ) * inner ℝ (S g) g) := by
-        filter_upwards [hnorm_inner_bound] with g hg
-        rw [Real.norm_eq_abs, abs_of_nonneg]
-        · exact hg
-        · exact integral_nonneg fun ω => norm_nonneg _
-      exact Integrable.mono' hquad_int hf_aesm.norm.integral_prod_right' hnorm_outer_bound
   have hleft_eq :
       (fun ω => exp (θ * ‖T (randomVector X ω)‖ ^ 2)) =
         fun ω => ∫ g : E, f (g, ω) ∂γ := by
@@ -3288,10 +3102,75 @@ lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
     rw [hs_sq]
     congr 1
     ring
-  have hprod_inner_int :
-      Integrable (fun ω => ∫ g : E, f (g, ω) ∂γ) μ :=
-    (hf_int.swap).integral_prod_left
-  simpa [T, hleft_eq] using hprod_inner_int
+  constructor
+  · change Integrable (fun ω => exp (θ * ‖T (randomVector X ω)‖ ^ 2)) μ
+    rw [hleft_eq]
+    exact (hf_int.swap).integral_prod_left
+  · intro hsmall
+    have hsmall_eig :
+        ∀ i : Fin (Module.finrank ℝ E),
+          (K ^ 2 * θ) * hSpos.isSymmetric.eigenvalues rfl i * exp 1 ≤ 1 / 2 := by
+      intro i
+      have heig_le : hSpos.isSymmetric.eigenvalues rfl i ≤ ‖U‖ ^ 2 := by
+        simpa [S, hSpos] using eigenvalue_adjoint_comp_le_opNorm_sq U i
+      have hstep :
+          (K ^ 2 * θ) * hSpos.isSymmetric.eigenvalues rfl i * exp 1 ≤
+            (K ^ 2 * θ) * ‖U‖ ^ 2 * exp 1 := by
+        exact mul_le_mul_of_nonneg_right
+          (mul_le_mul_of_nonneg_left heig_le hKθ_nonneg) (exp_nonneg 1)
+      exact hstep.trans (by
+        rw [hUnorm]
+        nlinarith [hsmall])
+    have hprod_bound :
+        ∫ p : E × Ω, f p ∂(γ.prod μ) ≤
+          exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobeniusNorm A ^ 2) := by
+      calc
+        ∫ p : E × Ω, f p ∂(γ.prod μ)
+            = ∫ g : E, ∫ ω, f (g, ω) ∂μ ∂γ := by
+                rw [integral_prod f hf_int]
+        _ ≤ ∫ g : E, exp ((K ^ 2 * θ) * inner ℝ (S g) g) ∂γ := by
+                exact integral_mono_ae hf_int.integral_prod_left hquad_int hinner_bound
+        _ ≤ exp (2 * exp 1 ^ 2 * (K ^ 2 * θ) *
+              (∑ i : Fin (Module.finrank ℝ E), hSpos.isSymmetric.eigenvalues rfl i)) :=
+                integral_exp_quadratic_stdGaussian_le S hSpos hKθ_nonneg hsmall_eig
+        _ = exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobeniusNorm A ^ 2) := by
+                rw [hsum_eq, frobeniusNorm_sq]
+                congr 1
+                ring
+    calc
+      ∫ ω, exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2) ∂μ
+          = ∫ ω, exp (θ * ‖T (randomVector X ω)‖ ^ 2) ∂μ := by rfl
+      _ = ∫ ω, ∫ g : E, f (g, ω) ∂γ ∂μ := by rw [hleft_eq]
+      _ = ∫ q : Ω × E, f q.swap ∂(μ.prod γ) := by
+          exact (integral_prod (fun q : Ω × E => f q.swap) hf_int.swap).symm
+      _ ≤ exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobeniusNorm A ^ 2) := by
+          rw [integral_prod_swap f]
+          exact hprod_bound
+
+/-- Gaussian-comparison square-exponential bound for a linear image of an independent
+sub-Gaussian vector. -/
+lemma integral_exp_norm_toEuclideanCLM_randomVector_sq_le {μ : Measure Ω}
+    [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+    {X : Fin n → Ω → ℝ} {K θ : ℝ} (hθ : 0 ≤ θ)
+    (h_indep : iIndepFun X μ)
+    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hsmall : θ * K ^ 2 * operatorNorm A ^ 2 * exp 1 ≤ 1 / 2) :
+    ∫ ω, exp (θ *
+        ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2) ∂μ ≤
+      exp (2 * exp 1 ^ 2 * θ * K ^ 2 * frobeniusNorm A ^ 2) :=
+  (integrable_exp_norm_toEuclideanCLM_randomVector_sq_and_integral_le
+    A hθ h_indep hX_subG (lt_of_le_of_lt hsmall (by norm_num))).2 hsmall
+
+lemma integrable_exp_norm_toEuclideanCLM_randomVector_sq {μ : Measure Ω}
+    [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+    {X : Fin n → Ω → ℝ} {K θ : ℝ} (hθ : 0 ≤ θ)
+    (h_indep : iIndepFun X μ)
+    (hX_subG : ∀ i, HasSubgaussianMGF (X i) ⟨K ^ 2, sq_nonneg K⟩ μ)
+    (hsmall : θ * K ^ 2 * operatorNorm A ^ 2 * exp 1 < 1) :
+    Integrable (fun ω =>
+      exp (θ * ‖Matrix.toEuclideanCLM (𝕜 := ℝ) A (randomVector X ω)‖ ^ 2)) μ :=
+  (integrable_exp_norm_toEuclideanCLM_randomVector_sq_and_integral_le
+    A hθ h_indep hX_subG hsmall).1
 
 lemma integrable_exp_inner_toEuclideanCLM_randomVector_prod {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
@@ -3440,7 +3319,8 @@ lemma integral_exp_inner_toEuclideanCLM_randomVector_prod_le {μ : Measure Ω}
             dsimp [θ]
             ring
 
-lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
+private lemma integrable_exp_quadraticForm_cutMatrix_and_integral_eq_prod
+    {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     (s : Finset (Fin n)) {X : Fin n → Ω → ℝ} {l : ℝ}
     (h_indep : iIndepFun X μ) (hX_meas : ∀ i, AEMeasurable (X i) μ)
@@ -3450,11 +3330,13 @@ lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
           exp (l * inner ℝ
             (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
             (randomVector X p.2))) (μ.prod μ)) :
-    ∫ ω, exp (l * quadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ =
-      ∫ p : Ω × Ω,
-        exp (l * inner ℝ
-          (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
-          (randomVector X p.2)) ∂(μ.prod μ) := by
+    Integrable
+        (fun ω => exp (l * quadraticForm (cutMatrix A s) (fun i => X i ω))) μ ∧
+      ∫ ω, exp (l * quadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ =
+        ∫ p : Ω × Ω,
+          exp (l * inner ℝ
+            (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
+            (randomVector X p.2)) ∂(μ.prod μ) := by
   let E := EuclideanSpace ℝ (Fin n)
   let U : Ω → E :=
     fun ω => coordinateMask ((Finset.univ : Finset (Fin n)) \ s) (randomVector X ω)
@@ -3516,19 +3398,43 @@ lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
     rw [hq]
     rw [inner_toEuclideanCLM_cutMatrix_eq_inner_masks]
     rfl
-  calc
-    ∫ ω, exp (l * quadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ
-        = ∫ ω, H ω ∂μ := by rfl
-    _ = ∫ ω, (g ∘ ψ) ω ∂μ := by rw [hH_eq]
-    _ = ∫ ω, g (ψ ω) ∂μ := by rfl
-    _ = ∫ q, g q ∂(μ.map ψ) := by
-        rw [integral_map hψ_meas hg_aesm_same]
-    _ = ∫ q, g q ∂((μ.prod μ).map φ) := by
-        rw [hmap_same, hmap_prod]
-    _ = ∫ p : Ω × Ω, g (φ p) ∂(μ.prod μ) := by
-        rw [integral_map hφ_meas hg_aesm_prod]
-    _ = ∫ p : Ω × Ω, (g ∘ φ) p ∂(μ.prod μ) := by rfl
-    _ = ∫ p : Ω × Ω, F p ∂(μ.prod μ) := by rw [hF_eq]
+  have hcomp_same : Integrable (g ∘ ψ) μ :=
+    (integrable_map_measure hg_aesm_same hψ_meas).1 hg_int_same
+  constructor
+  · change Integrable H μ
+    rw [hH_eq]
+    exact hcomp_same
+  · calc
+      ∫ ω, exp (l * quadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ
+          = ∫ ω, H ω ∂μ := by rfl
+      _ = ∫ ω, (g ∘ ψ) ω ∂μ := by rw [hH_eq]
+      _ = ∫ ω, g (ψ ω) ∂μ := by rfl
+      _ = ∫ q, g q ∂(μ.map ψ) := by
+          rw [integral_map hψ_meas hg_aesm_same]
+      _ = ∫ q, g q ∂((μ.prod μ).map φ) := by
+          rw [hmap_same, hmap_prod]
+      _ = ∫ p : Ω × Ω, g (φ p) ∂(μ.prod μ) := by
+          rw [integral_map hφ_meas hg_aesm_prod]
+      _ = ∫ p : Ω × Ω, (g ∘ φ) p ∂(μ.prod μ) := by rfl
+      _ = ∫ p : Ω × Ω, F p ∂(μ.prod μ) := by rw [hF_eq]
+
+lemma integral_exp_quadraticForm_cutMatrix_eq_prod {μ : Measure Ω}
+    [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+    (s : Finset (Fin n)) {X : Fin n → Ω → ℝ} {l : ℝ}
+    (h_indep : iIndepFun X μ) (hX_meas : ∀ i, AEMeasurable (X i) μ)
+    (hprod_int :
+      Integrable
+        (fun p : Ω × Ω =>
+          exp (l * inner ℝ
+            (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
+            (randomVector X p.2))) (μ.prod μ)) :
+    ∫ ω, exp (l * quadraticForm (cutMatrix A s) (fun i => X i ω)) ∂μ =
+      ∫ p : Ω × Ω,
+        exp (l * inner ℝ
+          (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
+          (randomVector X p.2)) ∂(μ.prod μ) :=
+  (integrable_exp_quadraticForm_cutMatrix_and_integral_eq_prod
+    A s h_indep hX_meas hprod_int).2
 
 lemma integrable_exp_quadraticForm_cutMatrix {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
@@ -3539,76 +3445,17 @@ lemma integrable_exp_quadraticForm_cutMatrix {μ : Measure Ω}
       (K ^ 2 * l ^ 2 / 2) * K ^ 2 * operatorNorm (cutMatrix A s) ^ 2 * exp 1 < 1) :
     Integrable
       (fun ω => exp (l * quadraticForm (cutMatrix A s) (fun i => X i ω))) μ := by
-  let E := EuclideanSpace ℝ (Fin n)
-  let U : Ω → E :=
-    fun ω => coordinateMask ((Finset.univ : Finset (Fin n)) \ s) (randomVector X ω)
-  let V : Ω → E := fun ω => coordinateMask s (randomVector X ω)
-  let ψ : Ω → E × E := fun ω => (U ω, V ω)
-  let g : E × E → ℝ :=
-    fun p => exp (l * inner ℝ (Matrix.toEuclideanCLM (𝕜 := ℝ) A p.1) p.2)
-  let F : Ω × Ω → ℝ :=
-    fun p => exp (l * inner ℝ
-      (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
-      (randomVector X p.2))
-  let H : Ω → ℝ :=
-    fun ω => exp (l * quadraticForm (cutMatrix A s) (fun i => X i ω))
   have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hX_subG i).aemeasurable
-  have hprod_int : Integrable F (μ.prod μ) := by
-    dsimp [F]
-    exact integrable_exp_inner_toEuclideanCLM_randomVector_prod (cutMatrix A s)
+  have hprod_int :
+      Integrable
+        (fun p : Ω × Ω =>
+          exp (l * inner ℝ
+            (Matrix.toEuclideanCLM (𝕜 := ℝ) (cutMatrix A s) (randomVector X p.1))
+            (randomVector X p.2))) (μ.prod μ) :=
+    integrable_exp_inner_toEuclideanCLM_randomVector_prod (cutMatrix A s)
       h_indep hX_subG hsmall
-  have hU_meas : AEMeasurable U μ := by
-    dsimp [U]
-    exact coordinateMask_aemeasurable _ hX_meas
-  have hV_meas : AEMeasurable V μ := by
-    dsimp [V]
-    exact coordinateMask_aemeasurable _ hX_meas
-  have hψ_meas : AEMeasurable ψ μ := hU_meas.prodMk hV_meas
-  let φ : Ω × Ω → E × E := fun p => (U p.1, V p.2)
-  have hφ_meas : AEMeasurable φ (μ.prod μ) :=
-    (AEMeasurable.comp_fst (μ := μ) (ν := μ) hU_meas).prodMk
-      (AEMeasurable.comp_snd (μ := μ) (ν := μ) hV_meas)
-  have hUV_indep : U ⟂ᵢ[μ] V := by
-    dsimp [U, V]
-    exact coordinateMask_indepFun_compl h_indep hX_meas s
-  have hmap_same : μ.map ψ = (μ.map U).prod (μ.map V) := by
-    simpa [ψ] using hUV_indep.map_prod_eq_prod_map_map hU_meas hV_meas
-  have hmap_prod : (μ.map U).prod (μ.map V) = (μ.prod μ).map φ := by
-    simpa [φ] using measure_map_prod_map_of_aemeasurable (μ := μ) (ν := μ) hU_meas hV_meas
-  have hg_aesm : AEStronglyMeasurable g ((μ.map U).prod (μ.map V)) := by
-    dsimp [g]
-    exact (Real.continuous_exp.comp (continuous_const.mul
-      (((Matrix.toEuclideanCLM (𝕜 := ℝ) A).continuous.comp continuous_fst).inner
-        continuous_snd))).aestronglyMeasurable
-  have hg_aesm_prod : AEStronglyMeasurable g ((μ.prod μ).map φ) := by
-    rwa [← hmap_prod]
-  have hF_eq : F = g ∘ φ := by
-    ext p
-    dsimp [F, g, φ, U, V]
-    rw [inner_toEuclideanCLM_cutMatrix_eq_inner_masks]
-  have hcomp_int : Integrable (g ∘ φ) (μ.prod μ) := by
-    rw [← hF_eq]
-    exact hprod_int
-  have hg_int_prod : Integrable g ((μ.prod μ).map φ) :=
-    (integrable_map_measure hg_aesm_prod hφ_meas).2 hcomp_int
-  have hg_int_same : Integrable g (μ.map ψ) := by
-    rw [hmap_same, hmap_prod]
-    exact hg_int_prod
-  have hH_eq : H = g ∘ ψ := by
-    ext ω
-    dsimp [H, g, ψ, U, V]
-    have hq :=
-      quadraticForm_eq_inner_toEuclideanCLM (cutMatrix A s) (fun i => X i ω)
-    rw [hq]
-    rw [inner_toEuclideanCLM_cutMatrix_eq_inner_masks]
-    rfl
-  have hcomp_same : Integrable (g ∘ ψ) μ :=
-    (integrable_map_measure (by
-      rw [hmap_same]
-      exact hg_aesm) hψ_meas).1 hg_int_same
-  change Integrable H μ
-  rw [hH_eq]
-  exact hcomp_same
+  exact (integrable_exp_quadraticForm_cutMatrix_and_integral_eq_prod
+    A s h_indep hX_meas hprod_int).1
 
 lemma integral_exp_quadraticForm_cutMatrix_le {μ : Measure Ω}
     [IsProbabilityMeasure μ] {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
@@ -3707,7 +3554,6 @@ lemma integral_exp_quadraticForm_offDiagonal_le {μ : Measure Ω}
     (P.card : ℝ)⁻¹ *
       ∑ s ∈ P, exp (4 * l * quadraticForm (cutMatrix A s) (fun i => X i ω))
   let B : ℝ := exp (exp 1 ^ 2 * (4 * l) ^ 2 * K ^ 4 * frobeniusNorm A ^ 2)
-  have hX_meas : ∀ i, AEMeasurable (X i) μ := fun i => (hX_subG i).aemeasurable
   have hP_pos : 0 < (P.card : ℝ) := by
     exact_mod_cast Finset.card_pos.mpr ⟨∅, Finset.empty_mem_powerset _⟩
   have hsmall_cut : ∀ s ∈ P,
