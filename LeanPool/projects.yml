@@ -6820,6 +6820,64 @@ projects:
       - "30F15"
       - "30F20"
       - "54D65"
+  - slug: hanson-wright
+    title: The Hanson-Wright inequality for sub-Gaussian quadratic forms
+    summary: >-
+      Proves the finite-dimensional Hanson-Wright concentration inequality for
+      quadratic forms of independent mean-zero sub-Gaussian real random variables
+      whose maximum least global-MGF sub-Gaussian scale is positive, for matrices
+      with positive Frobenius and operator norms. The bound uses the fixed universal
+      coefficient 1 / (256 * exp(1)^2). This is the MGF normalization of the usual
+      result; no formal identification with an Orlicz psi-2 norm is claimed.
+      The development derives the required moment-generating-function certificate
+      instead of assuming it, and contributes reusable scalar Bernstein, Chernoff,
+      cumulant, sub-Gaussian-process, and finite-maximum infrastructure.
+    branch: high-dimensional probability and concentration inequalities
+    entry_module: LeanPool.HansonWright
+    authors:
+      - Yuanhe Zhang
+      - Jason D. Lee
+      - Fanghui Liu
+    source:
+      title: High-Dimensional Probability (second edition)
+      authors:
+        - Roman Vershynin
+      doi: 10.1017/9781009490672
+      url: https://www.math.uci.edu/~rvershyn/papers/HDP-book/HDP-book.html
+      github_repo: Lean-MoDS/StatsMLlib
+      commit: 37286c3d2c7e17642fbe26988be40f3ff982f944
+    license: Apache-2.0
+    status: verified
+    provenance: human
+    main_declarations:
+      - LeanPool.HansonWright.hanson_wright_inequality_hdp
+    main_results:
+      - declaration: LeanPool.HansonWright.hanson_wright_inequality_hdp
+        informal: >-
+          For independent mean-zero real random variables with finite least
+          global-MGF sub-Gaussian scales and positive maximum coordinate MGF scale,
+          and a matrix with positive Frobenius and operator norms, the centered
+          quadratic form satisfies the Hanson-Wright two-regime exponential tail
+          bound with the fixed universal coefficient 1 / (256 * exp(1)^2).
+      - declaration: LeanPool.HansonWright.hasHansonWrightMGF_of_subgaussian
+        informal: >-
+          Given positive K and operator norm and C at least 64 * exp(1)^2,
+          independent coordinates with global-MGF sub-Gaussian parameter K^2
+          satisfy the local quadratic cumulant-generating-function estimate needed
+          for Hanson-Wright.
+      - declaration: LeanPool.bernstein_inequality
+        informal: >-
+          A finite family of independent, centered, uniformly bounded real random
+          variables satisfies the classical scalar Bernstein tail inequality.
+    tags:
+      - probability-theory
+      - concentration-inequalities
+      - high-dimensional-probability
+      - random-matrices
+    msc:
+      - "60E15"
+      - "60B20"
+      - "62H12"
   - slug: erdos81-paper-ii-chordal-heredity
     title: "Chordal graphs: minimal separators and simplicial vertices"
     summary: >-
