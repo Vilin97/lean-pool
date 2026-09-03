@@ -887,7 +887,6 @@ theorem star_angle_sum
     {p : Fin 7 → Plane} (h : E2GeometryHypotheses p)
     {A B C : ℝ} (hclasses : AngleClasses p A B C) :
     2 * C + 3 * A + 2 * B = Real.pi := by
-  obtain ⟨ε, hε, hturn⟩ := diameter_star_structure h
   have hw0 : walkIndex ((0 : Fin 7) + 1) = 3 := by decide
   have hw1 : walkIndex ((1 : Fin 7) + 1) = 6 := by decide
   have hw2 : walkIndex ((2 : Fin 7) + 1) = 2 := by decide
@@ -896,19 +895,8 @@ theorem star_angle_sum
   have hw5 : walkIndex ((5 : Fin 7) + 1) = 4 := by decide
   have hw6 : walkIndex ((6 : Fin 7) + 1) = 0 := by decide
   have hmod : ((2 * C + 3 * A + 2 * B : ℝ) : Real.Angle) = Real.pi := by
-    rcases hε with rfl | rfl
-    · have hturnNeg (k : Fin 7) :
-          walkComplexTurn p k = -(apexAngle p (walkIndex (k + 1)) : Real.Angle) := by
-        have harea := hturn k
-        have hcross :
-            complexCross (-walkComplexEdge p k) (walkComplexEdge p (k + 1)) < 0 := by
-          rw [walkComplexCross_eq_neg_orientedArea]
-          norm_num at harea ⊢
-          linarith
-        have hoangle := complex_oangle_eq_neg_angle_of_cross_neg hcross
-        rw [walkComplexAngle_eq_apex] at hoangle
-        exact hoangle
-      have hsum := walkComplexTurn_sum h
+    rcases walkComplexTurn_cases h with hturnNeg | hturnPos
+    · have hsum := walkComplexTurn_sum h
       rw [hturnNeg 0, hturnNeg 1, hturnNeg 2, hturnNeg 3, hturnNeg 4,
         hturnNeg 5, hturnNeg 6] at hsum
       rw [hw0, hw1, hw2, hw3, hw4, hw5, hw6, hclasses.angle0,
@@ -931,18 +919,7 @@ theorem star_angle_sum
       have hreal : 2 * C + 3 * A + 2 * B = A + B + A + B + A + C + C := by ring
       rw [hreal]
       exact hpositive
-    · have hturnPos (k : Fin 7) :
-          walkComplexTurn p k = (apexAngle p (walkIndex (k + 1)) : Real.Angle) := by
-        have harea := hturn k
-        have hcross :
-            0 < complexCross (-walkComplexEdge p k) (walkComplexEdge p (k + 1)) := by
-          rw [walkComplexCross_eq_neg_orientedArea]
-          norm_num at harea ⊢
-          linarith
-        have hoangle := complex_oangle_eq_angle_of_cross_pos hcross
-        rw [walkComplexAngle_eq_apex] at hoangle
-        exact hoangle
-      have hsum := walkComplexTurn_sum h
+    · have hsum := walkComplexTurn_sum h
       rw [hturnPos 0, hturnPos 1, hturnPos 2, hturnPos 3, hturnPos 4,
         hturnPos 5, hturnPos 6] at hsum
       rw [hw0, hw1, hw2, hw3, hw4, hw5, hw6, hclasses.angle0,
@@ -1057,8 +1034,7 @@ theorem star_scalar_closure
 /-- Norm expansion of the normalized certificate walk gives required G6, G8, and G9. -/
 theorem distance_dictionary
     {p : Fin 7 → Plane} (h : E2GeometryHypotheses p)
-    {A B C : ℝ} (hclasses : AngleClasses p A B C)
-    (_hsum : 2 * C + 3 * A + 2 * B = Real.pi) :
+    {A B C : ℝ} (hclasses : AngleClasses p A B C) :
     DistanceDictionary p A B := by
   have hgram := walkGram h hclasses
   have hqdist : dist (p 0) (p 2) =
@@ -1115,7 +1091,7 @@ theorem e2_angle_parametrization
   have hsum := star_angle_sum h hclasses
   have hclosure := star_scalar_closure h hclasses hsum
   have hedges := edge_formulas h hclasses
-  have hdictionary := distance_dictionary h hclasses hsum
+  have hdictionary := distance_dictionary h hclasses
   exact ⟨A, B, C,
     { B_pos := hBpos
       B_lt_A := hBAngle

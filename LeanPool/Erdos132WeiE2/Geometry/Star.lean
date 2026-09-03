@@ -21,10 +21,6 @@ namespace LeanPool.Erdos132WeiE2.Geometry
 
 open Metric
 
-/-- Two closed line segments have a common point. -/
-def SegmentsMeet (a b c d : Plane) : Prop :=
-  ∃ x, x ∈ segment ℝ a b ∧ x ∈ segment ℝ c d
-
 /-- Two open line segments have a common point. -/
 def OpenSegmentsMeet (a b c d : Plane) : Prop :=
   ∃ x, x ∈ openSegment ℝ a b ∧ x ∈ openSegment ℝ c d
@@ -414,7 +410,7 @@ private theorem one_pairing_open_segments_meet
   have hIcNonempty : Iᶜ.Nonempty := by
     have : (f '' Iᶜ).Nonempty := convexHull_nonempty_iff.mp ⟨x, hxIc⟩
     exact Set.image_nonempty.mp this
-  have hother (S : Set (Fin 4)) (hS : S.Nonempty)
+  have hother (S : Set (Fin 4))
       (hxS : x ∈ convexHull ℝ (f '' S))
       (hxSc : x ∈ convexHull ℝ (f '' Sᶜ)) :
       ∀ i ∈ S, ∃ j ∈ S, j ≠ i := by
@@ -434,9 +430,9 @@ private theorem one_pairing_open_segments_meet
     have hiSc : i ∈ Sᶜ := hf Sᶜ i (by simpa [← hxi] using hxSc)
     exact (by simpa using hiSc : i ∉ S) hi
   obtain ⟨i, hi⟩ := hInonempty
-  obtain ⟨j, hj, hji⟩ := hother I ⟨i, hi⟩ hxI hxIc i hi
+  obtain ⟨j, hj, hji⟩ := hother I hxI hxIc i hi
   obtain ⟨k, hk⟩ := hIcNonempty
-  obtain ⟨l, hl, hlk⟩ := hother Iᶜ ⟨k, hk⟩ hxIc (by simpa using hxI) k hk
+  obtain ⟨l, hl, hlk⟩ := hother Iᶜ hxIc (by simpa using hxI) k hk
   let IF : Finset (Fin 4) := I.toFinite.toFinset
   have hiIF : i ∈ IF := by simpa [IF] using hi
   have hjIF : j ∈ IF := by simpa [IF] using hj

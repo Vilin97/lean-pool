@@ -20,7 +20,7 @@ import LeanPool.Erdos132WeiE2.Geometry.Star
 /-!
 # Six distances from the E2 diameter-heptagon pattern
 
-Source: doi:10.11650/tjm.18.2014.4030, url:https://github.com/lyfar/erdos132-wei-certificates
+Source: doi:10.11650/tjm.18.2014.4030, url:https://projecteuclid.org/journals/taiwanese-journal-of-mathematics/volume-18/issue-6/DISTANCE-SETS-WITH-DIAMETER-GRAPH-BEING-CYCLE/10.11650/tjm.18.2014.4030.pdf
 Authors: Egor Lyfar
 Status: verified
 Main declarations: `LeanPool.Erdos132WeiE2.e2_pattern_six_distances`

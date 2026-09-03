@@ -6901,7 +6901,7 @@ projects:
         - Yue Cong
         - Feixing Gao
       doi: "10.11650/tjm.18.2014.4030"
-      url: https://github.com/lyfar/erdos132-wei-certificates
+      url: https://projecteuclid.org/journals/taiwanese-journal-of-mathematics/volume-18/issue-6/DISTANCE-SETS-WITH-DIAMETER-GRAPH-BEING-CYCLE/10.11650/tjm.18.2014.4030.pdf
       github_repo: lyfar/erdos132-wei-certificates
     license: Apache-2.0
     status: verified
@@ -6916,9 +6916,9 @@ projects:
           the repaired E2 step of Wei, Li, Cong, and Gao (2014), from the original geometric hypotheses.
       - declaration: LeanPool.Erdos132WeiE2.Geometry.e2_angle_parametrization
         informal: >-
-          The E2 diameter-heptagon hypotheses yield three ordered apex angles
-          B < A < C satisfying the angle sum, closure equation, edge formulas,
-          and squared-distance dictionary used by the algebraic argument.
+          The E2 geometric hypotheses yield ordered real parameters B < A < C satisfying
+          the angle-sum, closure, edge-length, and diagonal identities used by the
+          six-distance argument.
       - declaration: LeanPool.Erdos132WeiE2.Counting.six_distances_of_parametrization
         informal: >-
           Any seven planar points with a unit 0–3 diagonal, short 0–2 and 0–5 diagonals,
