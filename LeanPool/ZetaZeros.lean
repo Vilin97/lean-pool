@@ -5,6 +5,7 @@ Authors: Axiom Math, Kenny Lau
 -/
 
 import LeanPool.ZetaZeros.Main
+import LeanPool.ZetaZeros.Hilbert.InnerReal
 
 /-!
 # Simple zeros of the Riemann zeta function
