@@ -1,4 +1,64 @@
 projects:
+  - slug: zeta-zeros
+    title: Simple zeros of the Riemann zeta function
+    summary: >-
+      Formalizes Lamzouri's Hilbert-space proof of lower bounds for simple
+      and distinct zeros of the Riemann zeta function. From explicit
+      Riemann--von Mangoldt and unconditional pair-correlation hypotheses,
+      the development proves that eventually more than 67.25% of nontrivial
+      zeros are simple and on the critical line and more than 83.625% are
+      distinct. It includes the finite-multiset Hilbert-space inequality,
+      zeta-zero multiplicity symmetries, an admissible cutoff construction,
+      and certified trigonometric estimates.
+    branch: analytic number theory
+    entry_module: LeanPool.ZetaZeros
+    authors:
+      - Kenny Lau
+    source:
+      title: >-
+        A new proof that more than 2/3 of the zeros of the Riemann zeta
+        function are simple and on the critical line
+      authors:
+        - Youness Lamzouri
+      arxiv: 2609.02882
+      doi: 10.48550/arXiv.2609.02882
+      url: https://github.com/AxiomMath/ZetaZeros
+      github_repo: AxiomMath/ZetaZeros
+      commit: 4bcaf70e544506c311d83a5a5b143a134b9fc5f7
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - ZetaZeros.simple_proportion_d4
+    main_results:
+      - declaration: ZetaZeros.simple_proportion_d4
+        informal: >-
+          Assuming the stated Riemann--von Mangoldt and unconditional
+          pair-correlation formulas, beyond some height more than 67.25% of
+          nontrivial zeta zeros are simple and lie on the critical line.
+      - declaration: ZetaZeros.distinct_proportion_d5
+        informal: >-
+          Under the same two explicit analytic hypotheses, beyond some height
+          more than 83.625% of nontrivial zeta zeros are distinct.
+      - declaration: ZetaZeros.card_simpleRealPart_lower
+        informal: >-
+          Bounds from below the number of multiplicity-one real points in a
+          finite nonempty conjugation-invariant multiset using the squared
+          test-kernel sum of any admissible function.
+      - declaration: ZetaZeros.card_lower
+        informal: >-
+          Bounds from below the number of distinct points in a finite nonempty
+          conjugation-invariant multiset using the same Hilbert-space kernel
+          method.
+    tags:
+      - analytic-number-theory
+      - riemann-zeta-function
+      - critical-line
+      - simple-zeros
+      - pair-correlation
+    msc:
+      - "11M06"
+      - "11M26"
   - slug: common-neighbour-conjecture
     title: Common-neighbour counterexamples for Saxl graphs
     summary: >-
