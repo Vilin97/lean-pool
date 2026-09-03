@@ -85,6 +85,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/FundamentalInequality     https://github.com/linzialessandro/FundamentalInequality
   LeanPool/GKPCarry                  https://github.com/lyfar/gkp-carry-lean
   LeanPool/HadwigerNelsonBounds      https://github.com/lyfar/hadwiger-nelson-bounds-lean
+  LeanPool/HansonWright              https://github.com/Lean-MoDS/StatsMLlib
   LeanPool/Incompleteness            https://github.com/FormalizedFormalLogic/Incompleteness
   LeanPool/IsTranscendentalPi        https://github.com/samuelborza/IsTranscendentalPi
   LeanPool/Isoperimetric             https://github.com/hojonathanho/isoperimetric
