@@ -137,11 +137,12 @@ theorem ofOracle_congr {n : Nat} {f f' : Nat → Nat → Bool}
     Graph.ofOracle n f = Graph.ofOracle n f' := by
   have hrow : ∀ v : Fin n, (fun w : Fin n => f v.1 w.1) = (fun w : Fin n => f' v.1 w.1) := by
     intro v; funext w; exact h v.1 v.2 w.1 w.2
-  rw [Graph.ofOracle, Graph.ofOracle]
-  simp only [Graph.mk.injEq, true_and]
-  constructor
-  · congr 1; funext v; rw [hrow v]
-  · congr 1
+  apply Graph.ext
+  · rfl
+  · simp only [Graph.ofOracle]
+    congr 1; funext v; rw [hrow v]
+  · simp only [Graph.ofOracle]
+    congr 1
     funext v
     refine Array.ext' ?_
     simp only [Array.toList_filter]

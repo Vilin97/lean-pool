@@ -63,9 +63,10 @@ namespace Canon
 /-- A finite graph on the vertex set `{0, …, n-1}`, stored both as a dense adjacency matrix (for
 `O(1)` adjacency queries) and as neighbour lists (for the refinement inner loop).
 
-The algorithm below never inspects `adj`/`nbr` beyond index `n`, and assumes they agree and are
-symmetric; `Graph.ofOracle` builds a well-formed value. -/
+The constructor is private so callers cannot supply arrays with inconsistent dimensions or
+contents. Use `Graph.ofOracle`, which builds both representations from the same oracle. -/
 structure Graph where
+  private mk ::
   /-- Number of vertices. -/
   n : Nat
   /-- `adj[v]![w]!` is `true` iff `v` and `w` are adjacent. -/
@@ -842,6 +843,14 @@ makes the returned array a permutation whatever the search does (`Spec.labelling
 def canonicalLabellingOfOracle (n : Nat) (f : Nat → Nat → Bool) : Array Nat :=
   let a := (canonical (Graph.ofOracle n f)).lab
   if isPermArray n a then a else Array.range n
+
+/-- Two graphs are equal when their stored representations are equal. -/
+@[ext]
+theorem Graph.ext {G H : Graph} (hn : G.n = H.n) (hadj : G.adj = H.adj)
+    (hnbr : G.nbr = H.nbr) : G = H := by
+  cases G
+  cases H
+  simp_all
 
 end SearchRecursion
 end Canon
