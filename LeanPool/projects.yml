@@ -6878,6 +6878,53 @@ projects:
       - "60E15"
       - "60B20"
       - "62H12"
+  - slug: isograph-canonical-labelling
+    title: Verified canonical labelling of finite graphs
+    summary: >-
+      Implements an individualisation-refinement canonical-labelling algorithm
+      in the style of nauty and proves that its canonical adjacency form is
+      invariant under vertex relabelling and classifies finite graphs up to
+      isomorphism. The imported core includes the executable search, refinement,
+      orbit-pruning and backjumping machinery together with its equivariance,
+      termination, soundness and optimality proofs.
+    branch: graph theory and verified algorithms
+    entry_module: LeanPool.IsoGraph
+    authors:
+      - Alex Meiburg
+    source:
+      title: IsoGraph
+      authors:
+        - Alex Meiburg
+      url: https://github.com/Timeroot/IsoGraph
+      github_repo: Timeroot/IsoGraph
+      commit: bbfcefd15087d1dcb63ebdad015a087e1d6890a1
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - IsoGraph.Canon.canonAdj_eq_iff
+      - IsoGraph.Canon.canonAdj_relabel
+    main_results:
+      - declaration: IsoGraph.Canon.canonAdj_eq_iff
+        informal: >-
+          Two Boolean adjacency functions on Fin n have equal canonical forms
+          exactly when one is a relabelling of the other by a vertex permutation.
+      - declaration: IsoGraph.Canon.canonAdj_relabel
+        informal: >-
+          Relabelling a finite graph by any permutation leaves its canonical
+          adjacency form unchanged.
+      - declaration: IsoGraph.Canon.exists_relabel_of_canonAdj_eq
+        informal: >-
+          Equality of canonical adjacency forms yields an explicit permutation
+          relating the original adjacency functions.
+    tags:
+      - graph-theory
+      - graph-isomorphism
+      - canonical-labelling
+      - verified-algorithms
+    msc:
+      - "05C60"
+      - "68R10"
   - slug: linear-model
     title: Model-robust linear regression and heteroscedasticity-consistent inference
     summary: >-
