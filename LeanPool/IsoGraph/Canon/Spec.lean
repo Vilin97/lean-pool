@@ -58,11 +58,7 @@ def permOfArrays (n : Nat) (a b : Array Nat) : Equiv.Perm (Fin n) :=
   else Equiv.refl _
 
 /-- The inverse of an array-encoded permutation of `{0, …, n-1}`. -/
-def invArray (n : Nat) (a : Array Nat) : Array Nat := Id.run do
-  let mut b := Array.replicate n 0
-  for i in [0:n] do
-    if a[i]! < n then b := b.set! a[i]! i
-  return b
+def invArray (n : Nat) (a : Array Nat) : Array Nat := invLab n a
 
 /-! ## Tabulating an adjacency function
 
@@ -330,222 +326,14 @@ theorem labellingInvariant : LabellingInvariant := by
 /-! ### `invArray` and `permOfArrays` on a genuine permutation -/
 
 theorem invArray_size (m : Nat) (a : Array Nat) : (invArray m a).size = m := by
-  unfold invArray
-  simp only [Id.run, Array.set!]
-  simp (config := { decide := true }) only [Std.Legacy.Range.forIn_eq_forIn_range',
-    Std.Legacy.Range.size, tsub_zero, add_tsub_cancel_right, Nat.div_one, bind_pure]
-  dsimp [ForIn.forIn]
-  -- Key: List.forIn' in Id with yielding steps preserves size
-  -- We prove a general lemma by structural induction on the list.
-  -- Even though List.forIn' is protected, we know its equations from the definition.
-  -- Step function preserves size
-  have step_size' : ∀ (i val : Nat) (st : Array Nat), Array.size st = m →
-      Array.size (if val < m then st.setIfInBounds val i else st) = m := by
-    intro i val st hr
-    simp only [Array.setIfInBounds]
-    split_ifs with h1 h2 <;> simp [Array.size_set, hr] at *
-  have loop_size : ∀ (xs : List Nat) (st : Array Nat) (w : ∃ bs, bs ++ xs = List.range' 0 m),
-      Array.size st = m →
-      Array.size ((List.forIn'.loop (List.range' 0 m)
-        (fun a_1 _ r => pure (ForInStep.yield
-          (if a[a_1]! < m then r.setIfInBounds (a[a_1]!) a_1 else r)))
-        xs st w : Id (Array Nat))) = m := by
-    intro xs
-    induction xs with
-    | nil =>
-      simp only [List.append_nil, exists_eq, forall_true_left]
-      intro st hr
-      simpa [List.forIn'.loop, pure] using hr
-    | cons head tail ih =>
-      simp only [forall_exists_index]
-      intro st x hx hst
-      have hhead_mem : head ∈ List.range' 0 m := by
-        rw [← hx]
-        exact List.mem_append_right _ List.mem_cons_self
-      let new_st := if a[head]! < m then st.setIfInBounds (a[head]!) head else st
-      have hnew_st : Array.size new_st = m := step_size' head (a[head]!) st hst
-      let w' : ∃ bs, bs ++ tail = List.range' 0 m := ⟨x ++ [head], by
-        show x ++ [head] ++ tail = List.range' 0 m
-        rw [List.append_assoc]; exact hx⟩
-      simp only [pure, forall_exists_index, List.mem_range'_1, zero_le, zero_add, true_and] at *
-      exact ih new_st (x ++ [head])
-        (by simp only [List.append_assoc, List.cons_append, List.nil_append]; exact hx) hnew_st
-  have heq : (forIn' (List.range' 0 m) (Array.replicate m 0)
-      (fun a_1 x r =>
-        if a[a_1]! < m then pure (ForInStep.yield (r.setIfInBounds a[a_1]! a_1))
-        else pure (ForInStep.yield r)) : Id (Array Nat))
-    = (List.forIn'.loop (List.range' 0 m)
-      (fun a_1 _ r => pure (ForInStep.yield
-        (if a[a_1]! < m then r.setIfInBounds (a[a_1]!) a_1 else r)))
-      (List.range' 0 m) (Array.replicate m 0) ⟨[], rfl⟩ : Id (Array Nat)) := by
-    dsimp [ForIn'.forIn', List.forIn']
-    congr 1
-    funext a_1 x r
-    by_cases h : a[a_1]! < m <;> simp [h]
-  rw [heq]
-  exact loop_size _ _ _ (Array.size_replicate)
+  rw [invArray, invLab, invLab_foldl_size]
+  simp
 
 /-- On a permutation array, `invArray` really is the inverse. -/
-theorem invArray_apply {m : Nat} {a : Array Nat} (_ha : a.size = m)
+theorem invArray_apply {m : Nat} {a : Array Nat}
     (h : Canon.IsPerm m fun v => a[v]!) (i : Nat) (hi : i < m) :
     (invArray m a)[a[i]!]! = i := by
-  -- The result of invArray m a does not depend on a[i] for i >= m (out of range reads are 0)
-  -- Key fact: invArray builds b such that b[a[k]!] = k for each k < m where a[k]! < m.
-  -- Since a is a permutation, a[i]! < m, and no other k < m, k ≠ i has a[k]! = a[i]!.
-  -- So after the loop, (invArray m a)[a[i]!]! = i.
-  have ha_lt : ∀ k, k < m → a[k]! < m := fun k hk => h.maps k hk
-  have forIn'_always_yield : ∀ (l : List Nat) (init : Array Nat),
-      Id.run (forIn' l init (fun k _ (x : Array Nat) => pure (ForInStep.yield
-        (if a[k]! < m then Array.setIfInBounds x (a[k]!) k else x)))) =
-      List.foldl (fun x k => if a[k]! < m then Array.setIfInBounds x (a[k]!) k else x) init l := by
-    intro l
-    induction l with
-    | nil =>
-      simp
-    | cons hd tl ih =>
-      intro init
-      simp only [List.foldl_cons]
-      simp (config := { decide := true }) only [List.forIn'_pure_yield_eq_foldl,
-        List.attach_cons, List.foldl_cons, Id.run_pure]
-      rw [List.foldl_map]
-      simp
-  -- Now prove the main goal
-  unfold invArray
-  simp (config := { decide := true }) only [Array.set!_eq_setIfInBounds,
-    Std.Legacy.Range.forIn_eq_forIn_range', Std.Legacy.Range.size, tsub_zero,
-    add_tsub_cancel_right, Nat.div_one, bind_pure]
-  have forIn_eq_foldl : ∀ (l : List Nat) (init : Array Nat),
-      Id.run (forIn l init (fun i (r : Array Nat) =>
-          if a[i]! < m then pure (ForInStep.yield (Array.setIfInBounds r (a[i]!) i))
-          else pure (ForInStep.yield r))) =
-      List.foldl (fun x k => if a[k]! < m then Array.setIfInBounds x (a[k]!) k else x) init l := by
-    intro l
-    induction l with
-    | nil =>
-      simp
-    | cons hd tl ih =>
-      intro init
-      simp only [List.foldl_cons, List.forIn_cons]
-      split <;> simp [ih]
-  rw [forIn_eq_foldl]
-  -- Key invariant: after folding over a list of indices all < m, position a[i]! contains i
-  -- for any i in that list (processed last among those with that a-value, but a is injective).
-  -- We prove by induction on the list that after folding, for any k in the list with k < m,
-  -- the result at position a[k]! equals k.
-  -- Then apply with l = range' 0 m and our specific i.
-  -- Helper: Array.getElem! after setIfInBounds at a different position
-  have arr_get_same : ∀ (x : Array Nat) (j : Nat) (v : Nat),
-      j < x.size → (x.setIfInBounds j v)[j]! = v := by
-    intro x j v hj
-    simp (config := { decide := true }) [Array.setIfInBounds, hj]
-  -- Main invariant: for any list l of naturals all < m, for any init array,
-  -- for any i ∈ l with i < m, (foldl fstep init l)[a[i]!]! = i.
-  set fstep : Array Nat → Nat → Array Nat := fun x k =>
-    if a[k]! < m then Array.setIfInBounds x (a[k]!) k else x
-  have arr_get_other : ∀ (x : Array Nat) (j k : Nat) (v : Nat),
-      j ≠ k → k < x.size → (x.setIfInBounds j v)[k]! = x[k]! := by
-    intro x j k v hjk hk
-    unfold Array.setIfInBounds
-    by_cases hj : j < x.size
-    · dsimp [getElem!]
-      simp [hj, hjk, hk]
-    · simp [hj]
-  have arr_size : ∀ (x : Array Nat) (k : Nat), k < m → (fstep x k).size = x.size := by
-    intro x k hk
-    simp [fstep, ha_lt k hk]
-  -- Main invariant: for any list l of naturals all < m, for any init array,
-  -- for any i ∈ l with i < m, (foldl fstep init l)[a[i]!]! = i.
-  -- Stronger loop invariant: for each position a[i]!, the fold either sets it to i (if i ∈ l)
-  -- or leaves it equal to init (if i ∉ l). This holds for arbitrary lists (possibly with
-  -- duplicates).
-  -- Key: if i ∈ l, the LAST occurrence of i in l determines the value, and subsequent steps
-  -- (processing j with j ≠ i) don't overwrite a[i]! (by injectivity of a).
-  -- For i ∉ l, no step writes to a[i]!, so it stays as init.
-  have inv : ∀ (l : List Nat) (init : Array Nat),
-      init.size = m →
-      (∀ k ∈ l, k < m) →
-      ∀ i < m, (i ∈ l → (List.foldl fstep init l)[a[i]!]! = i) ∧
-                (i ∉ l → (List.foldl fstep init l)[a[i]!]! = init[a[i]!]!) := by
-    intro l
-    induction l with
-    | nil =>
-      intro init hinit _ i hi
-      simp
-    | cons hd tl ihl =>
-      intro init hinit halt i hi
-      simp only [List.foldl_cons]
-      have halt_hd : hd < m := halt hd (List.mem_cons_self)
-      have hainj : ∀ x hx y hy, a[x]! = a[y]! → x = y := fun x hx y hy heq => h.inj x hx y hy heq
-      -- For any x of size m, if x[a[hd]!]! = hd, then folding over tl preserves this.
-      -- Because for each k ∈ tl: either a[k]! ≠ a[hd]! (position untouched), or a[k]! = a[hd]!
-      --   which by injectivity means k = hd, so fstep writes hd to a[hd]! (same value).
-      have preserve_any_list : ∀ (l : List Nat), (∀ k ∈ l, k < m) →
-          ∀ (x : Array Nat), x.size = m → x[a[hd]!]! = hd →
-          (List.foldl fstep x l)[a[hd]!]! = hd := by
-        intro l
-        induction l with
-        | nil => simp
-        | cons hd2 tl2 ih2 =>
-          intro hlt x hx hxval
-          simp only [List.foldl_cons]
-          have hhd2_lt : hd2 < m := hlt hd2 (List.mem_cons_self)
-          by_cases h_eq : a[hd2]! = a[hd]!
-          · have hkd : hd2 = hd := hainj hd2 hhd2_lt hd halt_hd h_eq
-            rw [hkd]
-            simp only [ha_lt hd halt_hd, ↓reduceIte, fstep]
-            have hfstep_size : (x.setIfInBounds a[hd]! hd).size = m := by
-              simp [Array.setIfInBounds, hx, ha_lt hd halt_hd]
-            have hfstep_val : (x.setIfInBounds a[hd]! hd)[a[hd]!]! = hd :=
-              arr_get_same x (a[hd]!) hd (hx ▸ ha_lt hd halt_hd)
-            exact ih2 (fun j hj => hlt j (List.mem_cons.mpr (Or.inr hj)))
-              (x.setIfInBounds a[hd]! hd) hfstep_size hfstep_val
-          · have hfstep_size : (fstep x hd2).size = m := by rw [arr_size x hd2 hhd2_lt, hx]
-            have hfstep_val_at_hd : (fstep x hd2)[a[hd]!]! = x[a[hd]!]! := by
-              simp only [ha_lt hd2 hhd2_lt, ↓reduceIte, fstep]
-              exact arr_get_other x (a[hd2]!) (a[hd]!) hd2 h_eq (hx ▸ ha_lt hd halt_hd)
-            exact ih2 (fun j hj => hlt j (List.mem_cons.mpr (Or.inr hj))) (fstep x hd2)
-              hfstep_size (hfstep_val_at_hd ▸ hxval)
-      have preserve_hd_val := fun (x : Array Nat) (hx : x.size = m) (hxval : x[a[hd]!]! = hd)
-          (htl_lt : ∀ k ∈ tl, k < m) => preserve_any_list tl htl_lt x hx hxval
-      by_cases hi_hd : i = hd
-      · rw [hi_hd]
-        have step_eq : fstep init hd = init.setIfInBounds (a[hd]!) hd := by
-          simp [fstep, ha_lt hd halt_hd]
-        rw [step_eq]
-        have step_val : (init.setIfInBounds (a[hd]!) hd)[a[hd]!]! = hd :=
-          arr_get_same init (a[hd]!) hd (hinit ▸ ha_lt hd halt_hd)
-        have hsize_step : (init.setIfInBounds (a[hd]!) hd).size = m := by
-          simp [Array.setIfInBounds, hinit, ha_lt hd halt_hd]
-        exact ⟨fun _ => preserve_hd_val _ hsize_step step_val
-          (fun k hk => halt k (List.mem_cons.mpr (Or.inr hk))),
-              fun hinil => False.elim (hinil List.mem_cons_self)⟩
-      · have hitl_or : i ∈ tl ∨ i ∉ tl := em _
-        obtain hitl | hitl := hitl_or
-        · have hsize_tl : ∀ k ∈ tl, k < m :=
-            fun k hk => halt k (List.mem_cons.mpr (Or.inr hk))
-          have ih_result :=
-            ihl (fstep init hd) (by rw [arr_size init hd halt_hd, hinit]) hsize_tl i hi
-          exact ⟨fun _ => ih_result.1 hitl, fun h => absurd (List.mem_cons.mpr (Or.inr hitl)) h⟩
-        · -- i ∉ tl and i ≠ hd, so i ∉ hd :: tl
-          have ih_result := ihl (fstep init hd) (by rw [arr_size init hd halt_hd, hinit])
-            (fun k hk => halt k (List.mem_cons.mpr (Or.inr hk))) i hi
-          have hnot_eq : a[i]! ≠ a[hd]! := by
-            intro heq; exact hi_hd (hainj i hi hd halt_hd heq)
-          have hstep_preserves_i : (fstep init hd)[a[i]!]! = init[a[i]!]! := by
-            simp only [ha_lt hd halt_hd, ↓reduceIte, fstep]
-            exact arr_get_other init (a[hd]!) (a[i]!) hd hnot_eq.symm (hinit ▸ ha_lt i hi)
-          have hinel : i ∈ hd :: tl → False := by
-            intro hinil; cases List.mem_cons.mp hinil with
-            | inl h => exact hi_hd h
-            | inr h => exact hitl h
-          exact ⟨fun hinil => False.elim (hinel hinil),
-                 fun _ => hstep_preserves_i ▸ ih_result.2 hitl⟩
-  -- Main goal: use inv with l = range' 0 m
-  have hmem : i ∈ List.range' 0 m := by
-    simp [List.mem_range', hi]
-  have hall : ∀ k ∈ List.range' 0 m, k < m := by
-    intro k hk; simpa [List.mem_range'] using hk
-  exact (inv (List.range' 0 m) (Array.replicate m 0) (by simp) hall i hi).1 hmem
+  exact invLab_get h.inj hi (h.maps i hi)
 
 /-- So the run-time check inside `permOfArrays` succeeds, and the permutation it returns is the
 array read literally. -/
@@ -603,7 +391,7 @@ theorem oracleOfFin_relabel (m : Nat) (σ : Equiv.Perm (Fin m)) (adj : Fin m →
 theorem canonPerm_val (hA : LabellingIsPerm) (adj : Fin n → Fin n → Bool) (i : Fin n) :
     (canonPerm n adj i).1 = (labelling n (oracleOfFin n adj))[i.1]! :=
   have h := hA n (oracleOfFin n adj)
-  permOfArrays_val h.2 (fun k hk => invArray_apply h.1 h.2 k hk) i
+  permOfArrays_val h.2 (fun k hk => invArray_apply h.2 k hk) i
 
 /-- The canonical form, evaluated: it is the oracle read at the labelling. -/
 theorem canonAdj_eq_oracle (hA : LabellingIsPerm) (adj : Fin n → Fin n → Bool) (i j : Fin n) :

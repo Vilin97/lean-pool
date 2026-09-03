@@ -2666,7 +2666,7 @@ theorem sizesSum_exists (sizes : Array Nat) : ∀ (K x : Nat), x < sizesSum size
     · exact ⟨K, by omega, by omega, hx⟩
 
 private theorem splitOk_general_passes {n : Nat} {cnt : Array Nat} {c : Nat} {st : SplitState}
-    (hp : Part.WF n st.part) (hc : c < n) (hcst : st.cst[c]! = c)
+    (hp : Part.WF n st.part) (_hc : c < n) (hcst : st.cst[c]! = c)
     (hbc : ∀ t, t < st.bc.size → st.bc[t]! = 0) (hcb : ∀ (v : Nat), cnt[v]! < st.bc.size)
     {bc0 ks0 : Array Nat}
     (hb : bucketFrom st.lab cnt st.cen[c]! (st.cen[c]! - c) c st.bc #[] = (bc0, ks0)) :
@@ -2688,22 +2688,6 @@ private theorem splitOk_general_passes {n : Nat} {cnt : Array Nat} {c : Nat} {st
       (∀ v : Nat, cnt[v]! < bc1.size) := by
   obtain ⟨lab, pos, cst, cen, inW, tr, bc⟩ := st
   dsimp only [SplitState.part] at hp hcst hbc hcb hb
-  -- the partition data, with the projections spelled out
-  have hlabn : lab.size = n := hp.labSize
-  have hposn : pos.size = n := hp.posSize
-  have hcstn : cst.size = n := hp.cstSize
-  have hcenn : cen.size = n := hp.cenSize
-  have hlabLt : ∀ i, i < n → lab[i]! < n := hp.labLt
-  have hposLt : ∀ v, v < n → pos[v]! < n := hp.posLt
-  have hposLab : ∀ i, i < n → pos[lab[i]!]! = i := hp.posLab
-  have hlabPos : ∀ v, v < n → lab[pos[v]!]! = v := hp.labPos
-  have hcstLe : ∀ i, i < n → cst[i]! ≤ i := hp.cstLe
-  have hltCen : ∀ i, i < n → i < cen[i]! := hp.ltCen
-  have hcenLe : ∀ i, i < n → cen[i]! ≤ n := hp.cenLe
-  have hcellCst : ∀ i, i < n → ∀ j, cst[i]! ≤ j → j < cen[i]! → cst[j]! = cst[i]! := hp.cellCst
-  have hcellCen : ∀ i, i < n → ∀ j, cst[i]! ≤ j → j < cen[i]! → cen[j]! = cen[i]! := hp.cellCen
-  have hcE : c < cen[c]! := hltCen c hc
-  have hEn : cen[c]! ≤ n := hcenLe c hc
   -- the counting pass
   have e1 : (bucketFrom lab cnt cen[c]! (cen[c]! - c) c bc #[]).1 = bc0 := by rw [hb]
   have e2 : (bucketFrom lab cnt cen[c]! (cen[c]! - c) c bc #[]).2 = ks0 := by rw [hb]
@@ -3137,7 +3121,7 @@ theorem splitCell_spec {n : Nat} {cnt : Array Nat} {c : Nat} {st : SplitState}
     (hp : Part.WF n st.part) (hc : c < n) (hcst : st.cst[c]! = c)
     (hbc : ∀ t, t < st.bc.size → st.bc[t]! = 0) (hcb : ∀ (v : Nat), cnt[v]! < st.bc.size) :
     SplitOk n st.part cnt c (splitCell cnt c st).part := by
-  have hce : st.part.cen[c]! = st.cen[c]! := rfl
+  have hcen : st.part.cen[c]! = st.cen[c]! := rfl
   have hcstp : st.part.cst[c]! = c := hcst
   obtain ⟨bc0, ks0, hb⟩ : ∃ bc0 ks0,
       bucketFrom st.lab cnt st.cen[c]! (st.cen[c]! - c) c st.bc #[] = (bc0, ks0) := ⟨_, _, rfl⟩
@@ -3149,6 +3133,7 @@ theorem splitCell_spec {n : Nat} {cnt : Array Nat} {c : Nat} {st : SplitState}
     intro v w hv hw hvc hwc
     have h2 := (hp.cst_eq_iff hc (hp.posLt v hv)).1 (by rw [hvc, hcstp])
     have h3 := (hp.cst_eq_iff hc (hp.posLt w hw)).1 (by rw [hwc, hcstp])
+    rw [hcen] at h2 h3
     rw [hcstp] at h2 h3
     rw [← hp.labPos v hv, ← hp.labPos w hw, show st.part.pos[v]! = st.part.pos[w]! by omega]
   · by_cases h2 : (ks0.size == 1) = true
@@ -3159,6 +3144,7 @@ theorem splitCell_spec {n : Nat} {cnt : Array Nat} {c : Nat} {st : SplitState}
       have key : ∀ v, v < n → st.part.cst[st.part.pos[v]!]! = c → cnt[v]! = ks0[0]! := by
         intro v hv hvc
         have h3 := (hp.cst_eq_iff hc (hp.posLt v hv)).1 (by rw [hvc, hcstp])
+        rw [hcen] at h3
         rw [hcstp] at h3
         have hpos : 0 < bucketSize st.lab cnt st.part.pos[v]! st.cen[c]! cnt[v]! :=
           bucketSize_pos st.lab cnt (by omega)
