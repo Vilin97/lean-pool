@@ -3,15 +3,11 @@ Copyright (c) 2026 Juan Pablo Traverso Gianini. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juan Pablo Traverso Gianini
 -/
-import Aesop
 import Mathlib.Combinatorics.SimpleGraph.Clique
 import Mathlib.Combinatorics.SimpleGraph.Metric
 import Mathlib.Combinatorics.SimpleGraph.Paths
 import Mathlib.Data.Set.Finite.Lemmas
-import Mathlib.Tactic.Cases
-import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Push
-import Mathlib.Tactic.Tauto
 
 /-!
 # Chordal graphs
