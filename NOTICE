@@ -88,6 +88,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/HansonWright              https://github.com/Lean-MoDS/StatsMLlib
   LeanPool/Incompleteness            https://github.com/FormalizedFormalLogic/Incompleteness
   LeanPool/IsTranscendentalPi        https://github.com/samuelborza/IsTranscendentalPi
+  LeanPool/IsoGraph                  https://github.com/Timeroot/IsoGraph
   LeanPool/Isoperimetric             https://github.com/hojonathanho/isoperimetric
   LeanPool/JacobianDiffgeo           https://github.com/rkirov/jacobian-fable
   LeanPool/JohnsonLindenstraussLean  https://github.com/claytomode/johnson-lindenstrauss-lean
