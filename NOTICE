@@ -123,6 +123,8 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/OrderPQ                   https://github.com/wupr/order-p-q
   LeanPool/PebblingLean              https://github.com/pachterlab/P_2026_2
   LeanPool/PentagonalNumberTheorem   https://github.com/wwylele/PentagonalNumberTheorem
+  LeanPool/PermanentFormulaLowerBound
+                                     https://github.com/openai/ten-proofs
   LeanPool/PhaseRetrieval            https://github.com/susannabertolini/PhaseRetrieval
   LeanPool/PoincareThreeBody         https://github.com/gersh/lean-pool
   LeanPool/PointwiseBirkhoff         https://github.com/lua-vr/pointwise-birkhoff
