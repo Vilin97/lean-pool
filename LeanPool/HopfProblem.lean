@@ -12,7 +12,7 @@ public import LeanPool.HopfProblem.MainTheorem.Core3
 # A complex structure on the six-sphere
 
 Source: url:https://github.com/plby/HopfProblem/tree/9ac8a456b526527837d7082ff775213ca8bc9809
-Authors: Boris Alexeev
+Authors: Boris Alexeev, Yury G. Kudryashov, Sebastian Kumar, The Formal Conjectures Authors
 Status: verified
 Main declarations: `Mathoverflow1973.mathoverflow_1973`
 Tags: complex-geometry, differential-topology, complex-manifolds, six-sphere, torus-fibrations

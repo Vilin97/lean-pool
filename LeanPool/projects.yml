@@ -7202,18 +7202,23 @@ projects:
   - slug: hopf-problem
     title: A complex structure on the six-sphere
     summary: >-
-      Formalizes a construction of a complex-analytic atlas on the standard
-      six-sphere. The development builds a compact complex threefold from
-      torus fibrations with cusp and elliptic fibres, computes its homology and
-      fundamental group, recognizes its underlying smooth manifold as the
-      six-sphere, and transports the complex atlas across the resulting
-      homeomorphism.
+      Formalizes Levent Alpöge's construction of a complex-analytic atlas on
+      the standard six-sphere. The development builds a compact complex
+      threefold from torus fibrations with cusp and elliptic fibres, computes
+      its homology and fundamental group, recognizes its underlying smooth
+      manifold as the six-sphere, and transports the complex atlas across the
+      resulting homeomorphism. It adapts Lean developments by Yury G.
+      Kudryashov and Sebastian Kumar, together with the statement from the
+      Formal Conjectures Authors.
     branch: complex geometry and differential topology
     entry_module: LeanPool.HopfProblem
     authors:
       - Boris Alexeev
+      - Yury G. Kudryashov
+      - Sebastian Kumar
+      - The Formal Conjectures Authors
     source:
-      title: HopfProblem
+      title: "HopfProblem: formalization of Alpöge's six-sphere construction"
       authors:
         - Boris Alexeev
       url: https://github.com/plby/HopfProblem/tree/9ac8a456b526527837d7082ff775213ca8bc9809
