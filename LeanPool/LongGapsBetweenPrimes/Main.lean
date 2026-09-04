@@ -4,24 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI
 -/
 
-/-
-Formalization of "Improved Long Gaps Between Primes" by OpenAI.
-
-We prove that, for all sufficiently large X,
-  G(X) >> log(X) * log(log(X))^2 * log(log(log(log(X))))
-          / log(log(log(X)))^2,
-where G(X) is the largest gap between consecutive primes not exceeding X.
-Here, log denotes the natural logarithm and >> denotes a lower bound up to
-a positive multiplicative constant independent of X.
-
-The main results are `short_translates` (Proposition 1.2) and
-`long_gap_theorem` (Theorem 1.1). The proof uses weak Mertens estimates,
-κ = 1/8, and a larger fixed constant in the auxiliary smoothness cutoff.
-
-Released under Apache 2.0 license as described in the file LICENSE.
-SPDX-License-Identifier: Apache-2.0
--/
-
 import Mathlib.Algebra.Field.ZMod
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
@@ -35,6 +17,21 @@ import Mathlib.NumberTheory.Bertrand
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.EulerProduct.Basic
 import Mathlib.NumberTheory.Harmonic.Bounds
+
+/-!
+# Improved Long Gaps Between Primes
+
+We prove that, for all sufficiently large X,
+  G(X) >> log(X) * log(log(X))^2 * log(log(log(log(X))))
+          / log(log(log(X)))^2,
+where G(X) is the largest gap between consecutive primes not exceeding X.
+Here, log denotes the natural logarithm and >> denotes a lower bound up to
+a positive multiplicative constant independent of X.
+
+The main results are `short_translates` (Proposition 1.2) and
+`long_gap_theorem` (Theorem 1.1). The proof uses weak Mertens estimates,
+κ = 1/8, and a larger fixed constant in the auxiliary smoothness cutoff.
+-/
 
 namespace LongGapsBetweenPrimes
 noncomputable section
