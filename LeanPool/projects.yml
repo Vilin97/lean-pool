@@ -7199,3 +7199,165 @@ projects:
     msc:
       - "60E15"
       - "52A20"
+  - slug: infinitary-logic
+    title: Infinitary logic and countable model theory
+    summary: >-
+      Formalizes the syntax and semantics of infinitary logic and a broad
+      collection of its classical theorems: Scott sentences and ranks, Karp's
+      theorem, model existence, the sharp Morley--Hanf bound, Craig, Lyndon,
+      and Malitz interpolation, López--Escobar definability, undefinability of
+      well-ordering, the Silver--Burgess and Morley counting dichotomies, and
+      an honest coded-fragment interface whose HF compactness theorem is
+      derived from first-order compactness.
+    branch: mathematical logic and model theory
+    entry_module: LeanPool.InfinitaryLogic
+    authors:
+      - Cameron Freer
+    source:
+      title: Infinitary Logic in Lean 4
+      authors:
+        - Cameron Freer
+      url: https://github.com/cameronfreer/infinitary-logic
+      github_repo: cameronfreer/infinitary-logic
+      commit: 4d0c43c5288952267e7d5478d79302cae17945a9
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - FirstOrder.Language.scottSentence_characterizes
+    main_results:
+      - declaration: FirstOrder.Language.scottSentence
+        informal: >-
+          Every countable structure in a countable relational language has an
+          associated infinitary sentence.
+      - declaration: FirstOrder.Language.scottSentence_characterizes
+        informal: >-
+          A countable structure satisfies the Scott sentence of another
+          countable structure exactly when the two structures are isomorphic.
+      - declaration: FirstOrder.Language.scottRank
+        informal: >-
+          The Scott rank of a countable structure is the supremum of its
+          element ranks plus one.
+      - declaration: FirstOrder.Language.scottRank_lt_omega1
+        informal: >-
+          The Scott rank of every countable structure in a countable
+          relational language is a countable ordinal.
+      - declaration: FirstOrder.Language.karp_theorem_w
+        informal: >-
+          Two relational structures admit a nonempty potential isomorphism
+          exactly when they agree on every infinitary sentence over every
+          branching carrier in their shared universe.
+      - declaration: FirstOrder.Language.model_existence
+        informal: >-
+          Every countable set of infinitary sentences in an equality-respecting
+          consistency property over a countable language has a countable model.
+      - declaration: FirstOrder.Language.morley_hanf
+        informal: >-
+          Beth omega-one is a Hanf bound for every infinitary sentence.
+      - declaration: FirstOrder.Language.Lomega1omegaHanfNumber_eq_beth_omega1
+        informal: >-
+          The Hanf number of countable-conjunction infinitary logic is exactly
+          beth omega-one.
+      - declaration: FirstOrder.Language.exists_small_model_of_hasArbLargeModels
+        informal: >-
+          A sentence with arbitrarily large models has, at every infinite
+          cardinality, a model realizing only countably many complete types.
+      - declaration: FirstOrder.Language.exists_complete_sentence_of_lomega1omegaSmall
+        informal: >-
+          Every infinitary-small model belongs to a complete infinitary
+          subclass contained in any prescribed sentence it satisfies.
+      - declaration: FirstOrder.Language.exists_complete_kCategorical_of_hasArbLargeModels
+        informal: >-
+          A categorical sentence with arbitrarily large models has a complete
+          categorical refinement at the same infinite cardinality.
+      - declaration: FirstOrder.Language.craig_interpolation
+        informal: >-
+          Every sentence entailment has an interpolant using only the function
+          and relation symbols shared by its two endpoints.
+      - declaration: FirstOrder.Language.craig_pcSeparation
+        informal: >-
+          Disjoint projective infinitary classes can be separated by a single
+          infinitary sentence.
+      - declaration: FirstOrder.Language.lyndon_interpolation
+        informal: >-
+          Every sentence entailment has an interpolant whose positive and
+          negative relation occurrences lie in the corresponding shared
+          occurrence sets.
+      - declaration: FirstOrder.Language.malitz_interpolation
+        informal: >-
+          An entailment with universal consequent in a relational language has
+          a universal interpolant over the shared vocabulary.
+      - declaration: FirstOrder.Language.exists_model_relPreserving
+        informal: >-
+          If a sentence has chains of every countable length, some model
+          carries a relation-preserving map from the rationals.
+      - declaration: FirstOrder.Language.wellOrder_type_boundedness
+        informal: >-
+          The order types of all well-ordered models of one infinitary sentence
+          are bounded below omega-one.
+      - declaration: FirstOrder.Language.wellOrdering_undefinable
+        informal: >-
+          No single infinitary sentence defines exactly the well-orders.
+      - declaration: FirstOrder.Language.lopezEscobar_iff
+        informal: >-
+          A class of coded countable structures is Borel and
+          isomorphism-invariant exactly when it is the model class of one
+          infinitary sentence.
+      - declaration: FirstOrder.Language.lopezEscobar_action_iff
+        informal: >-
+          The López--Escobar characterization equivalently uses invariance
+          under the natural permutation action on coded structures.
+      - declaration: FirstOrder.Language.wellOrderClass_not_measurableSet
+        informal: >-
+          The class of coded well-orders is not a Borel set in the logic space.
+      - declaration: gandy_harrington_for_relation
+        informal: >-
+          A Borel equivalence relation on a Polish space with uncountably many
+          classes has a continuous Cantor injection of pairwise inequivalent
+          points.
+      - declaration: FirstOrder.Language.silverBurgessDichotomy
+        informal: >-
+          A standard-Borel quotient has at most countably many classes or
+          exactly continuum many classes.
+      - declaration: FirstOrder.Language.morley_counting
+        informal: >-
+          Assuming the Silver--Burgess dichotomy, the number of isomorphism
+          classes of coded countable models of an infinitary sentence is at
+          most aleph-one or exactly the continuum.
+      - declaration: FirstOrder.Language.iso_borel_of_bounded_scottHeight
+        informal: >-
+          Isomorphism among models of an infinitary sentence is Borel whenever
+          their Scott heights have a common countable bound.
+      - declaration: FirstOrder.Language.FamilyPresentation
+        informal: >-
+          A coded-family presentation packages codes with their indexed
+          decoding and a certificate for admissible infinitary formation.
+      - declaration: FirstOrder.Language.CodedFamily
+        informal: >-
+          A coded family packages a certified family code with an explicitly
+          indexed decoding, made unique by the presentation's decoding law.
+      - declaration: FirstOrder.Language.AdmissibleFragment
+        informal: >-
+          An admissible fragment is closed under exactly the coded infinitary
+          families certified by its presentation.
+      - declaration: FirstOrder.Language.hfFragment
+        informal: >-
+          The hereditarily finite fragment consists of the infinitary formulas
+          whose syntax contains no infinitary connective.
+      - declaration: FirstOrder.Language.hfAdmissibleFragment
+        informal: >-
+          The hereditarily finite fragment forms an admissible coded fragment
+          without assuming compactness data.
+      - declaration: FirstOrder.Language.finitaryFragment_compact
+        informal: >-
+          Every finitely satisfiable theory contained in the first-order image
+          fragment has a model.
+    tags:
+      - mathematical-logic
+      - infinitary-logic
+      - model-theory
+      - descriptive-set-theory
+    msc:
+      - "03C75"
+      - "03E15"
+      - "03C30"

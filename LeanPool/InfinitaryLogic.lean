@@ -3,6 +3,7 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
+
 import LeanPool.InfinitaryLogic.Admissible.HF
 import LeanPool.InfinitaryLogic.Admissible.Family
 import LeanPool.InfinitaryLogic.Admissible.Fragment.Honest
@@ -26,8 +27,12 @@ import LeanPool.InfinitaryLogic.Scott.RefinementCount
 import LeanPool.InfinitaryLogic.Scott.Sentence
 
 /-!
-# Infinitary Logic
+# Infinitary logic and countable model theory
 
-The proved headline surface for infinitary logic, including Scott analysis, Karp's theorem,
-Morley–Hanf theory, interpolation, and descriptive-set-theoretic results about model classes.
+Source: url:https://github.com/cameronfreer/infinitary-logic
+Authors: Cameron Freer
+Status: verified
+Main declarations: `FirstOrder.Language.scottSentence_characterizes`
+Tags: mathematical-logic, infinitary-logic, model-theory, descriptive-set-theory
+MSC: 03C75, 03E15, 03C30
 -/
