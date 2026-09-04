@@ -34,25 +34,9 @@ namespace HighlyOrderTransitive
 
 variable {J J' : Type*} [LinearOrder J] [LinearOrder J']
 
-/-- High order-transitivity transports along order isomorphisms. -/
-theorem of_orderIso (f : J ≃o J') (hJ : HighlyOrderTransitive J) :
-    HighlyOrderTransitive J' := by
-  intro n s t
-  obtain ⟨e, he⟩ := hJ n (s.trans f.symm.toOrderEmbedding) (t.trans f.symm.toOrderEmbedding)
-  refine ⟨(f.symm.trans e).trans f, fun i => ?_⟩
-  have h := he i
-  show f (e (f.symm (s i))) = t i
-  rw [show e (f.symm (s i)) = f.symm (t i) from h]
-  exact f.apply_symm_apply (t i)
 
-/-- The two-point instance consumed most often: any point moves to any other point. -/
-theorem exists_map_point (hJ : HighlyOrderTransitive J) (x y : J) :
-    ∃ e : J ≃o J, e x = y := by
-  let emb : J → (Fin 1 ↪o J) := fun z =>
-    ⟨⟨fun _ => z, fun a b _ => Subsingleton.elim a b⟩,
-      fun {a b} => iff_of_true le_rfl (le_of_eq (Subsingleton.elim a b))⟩
-  obtain ⟨e, he⟩ := hJ 1 (emb x) (emb y)
-  exact ⟨e, he 0⟩
+
+
 
 end HighlyOrderTransitive
 

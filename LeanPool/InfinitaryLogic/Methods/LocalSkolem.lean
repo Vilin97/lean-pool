@@ -61,17 +61,7 @@ theorem localSkolem_funMap_spec {M : Type w} [L.Structure M] [Nonempty M]
     (Fin.snoc x (Classical.epsilon fun a => φ.1.Realize (Empty.elim : Empty → M) (Fin.snoc x a)))
   exact Classical.epsilon_spec h
 
-/-- The arity-`n` function symbols of `localSkolem L Γ` are countable when `Γ` is: each is a formula
-of `Γ`, so they inject into `↥Γ`. -/
-theorem localSkolem_functions_countable (Γ : Set (Σ n, L.BoundedFormulaω Empty n))
-    (hΓ : Γ.Countable) (n : ℕ) : Countable ((localSkolem L Γ).Functions n) := by
-  have : Countable ↥Γ := hΓ.to_subtype
-  have hinj : Function.Injective
-      (fun φ : (localSkolem L Γ).Functions n => (⟨⟨n + 1, φ.1⟩, φ.2⟩ : ↥Γ)) := by
-    rintro ⟨φa, ha⟩ ⟨φb, hb⟩ h
-    simp only [Subtype.mk.injEq, Sigma.mk.injEq, heq_eq_eq, true_and] at h
-    exact Subtype.ext h
-  exact hinj.countable
+
 
 /-- The full (all-arity) function-symbol type of `localSkolem L Γ` is countable when `Γ` is. -/
 theorem localSkolem_sigma_functions_countable (Γ : Set (Σ n, L.BoundedFormulaω Empty n))

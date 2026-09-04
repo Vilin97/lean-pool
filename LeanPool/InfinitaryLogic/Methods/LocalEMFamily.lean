@@ -63,7 +63,7 @@ def canonEqAtoms : Set (Σ n, Λ.BoundedFormulaω Empty n) :=
 
 /-- The canonical equality-atom seed is countable when `Λ`'s function symbols are: it is the
 range of a map from `Σ m, (Λ.Term (Fin m))²`, countable by Mathlib's term encoding. -/
-theorem canonEqAtoms_countable (hf : Countable (Σ n, Λ.Functions n)) :
+private theorem canonEqAtoms_countable (hf : Countable (Σ n, Λ.Functions n)) :
     (canonEqAtoms Λ).Countable := by
   have := hf
   have : ∀ m : ℕ, Countable (Λ.Term (Fin m)) := fun _ => inferInstance
@@ -82,7 +82,7 @@ def canonRelAtoms : Set (Σ n, Λ.BoundedFormulaω Empty n) :=
     (⟨q.1, canonRelAtom Λ q.2.2.1 q.2.2.2⟩ : Σ n, Λ.BoundedFormulaω Empty n)
 
 /-- The canonical relation-atom seed is countable when `Λ`'s symbol types are. -/
-theorem canonRelAtoms_countable (hf : Countable (Σ n, Λ.Functions n))
+private theorem canonRelAtoms_countable (hf : Countable (Σ n, Λ.Functions n))
     (hr : Countable (Σ n, Λ.Relations n)) : (canonRelAtoms Λ).Countable := by
   have := hf
   have := hr
@@ -106,7 +106,7 @@ def canonDeForms (Γc : Set (Σ n, Λ.BoundedFormulaω Empty n)) :
     (⟨r.1, canonDeForm Λ q.2 r.2⟩ : Σ n, Λ.BoundedFormulaω Empty n)
 
 /-- The canonical deForm closure of a countable family is countable. -/
-theorem canonDeForms_countable {Γc : Set (Σ n, Λ.BoundedFormulaω Empty n)}
+private theorem canonDeForms_countable {Γc : Set (Σ n, Λ.BoundedFormulaω Empty n)}
     (hΓc : Γc.Countable) (hf : Countable (Σ n, Λ.Functions n)) :
     (canonDeForms Λ Γc).Countable := by
   have := hf
@@ -196,7 +196,7 @@ def locDeEqAtom (S : Finset J) (t u : Λ[[J]].Term Empty)
   canonEqAtom Λ (locDeTermFin Λ J S t ht) (locDeTermFin Λ J S u hu)
 
 /-- **Factoring, equality case**: every local equality atom lies in the canonical (J-free) seed. -/
-theorem locDeEqAtom_mem_canonEqAtoms (S : Finset J) (t u : Λ[[J]].Term Empty)
+private theorem locDeEqAtom_mem_canonEqAtoms (S : Finset J) (t u : Λ[[J]].Term Empty)
     (ht : locJSupport Λ J t ⊆ S) (hu : locJSupport Λ J u ⊆ S) :
     (⟨S.card, locDeEqAtom Λ J S t u ht hu⟩ : Σ n, Λ.BoundedFormulaω Empty n)
       ∈ canonEqAtoms Λ :=
@@ -209,7 +209,7 @@ def locDeRelAtom (S : Finset J) {l : ℕ} (R : Λ.Relations l)
   canonRelAtom Λ R fun i => locDeTermFin Λ J S (ts i) (ht i)
 
 /-- **Factoring, relation case**: every local relation atom lies in the canonical seed. -/
-theorem locDeRelAtom_mem_canonRelAtoms (S : Finset J) {l : ℕ} (R : Λ.Relations l)
+private theorem locDeRelAtom_mem_canonRelAtoms (S : Finset J) {l : ℕ} (R : Λ.Relations l)
     (ts : Fin l → Λ[[J]].Term Empty) (ht : ∀ i, locJSupport Λ J (ts i) ⊆ S) :
     (⟨S.card, locDeRelAtom Λ J S R ts ht⟩ : Σ n, Λ.BoundedFormulaω Empty n)
       ∈ canonRelAtoms Λ :=
@@ -223,7 +223,7 @@ def locDeForm (S : Finset J) {n : ℕ} (φ : Λ.BoundedFormulaω Empty n)
 
 /-- **Factoring, deForm case**: the local deForm of any member of a base family lies in that
 family's canonical deForm closure. -/
-theorem locDeForm_mem_canonDeForms {Γc : Set (Σ n, Λ.BoundedFormulaω Empty n)}
+private theorem locDeForm_mem_canonDeForms {Γc : Set (Σ n, Λ.BoundedFormulaω Empty n)}
     (S : Finset J) {n : ℕ} {φ : Λ.BoundedFormulaω Empty n}
     (hφ : (⟨n, φ⟩ : Σ n, Λ.BoundedFormulaω Empty n) ∈ Γc)
     (ts : Fin n → Λ[[J]].Term Empty) (hsub : ∀ i, locJSupport Λ J (ts i) ⊆ S) :

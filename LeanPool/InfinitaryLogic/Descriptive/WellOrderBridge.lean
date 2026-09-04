@@ -90,7 +90,7 @@ Containment, not equality: the argument only ever pushes a *particular* code int
 `wellOrderClass lt`, so nothing is lost, and this is the form the analytic-PC sandwich of #64
 supplies — a `pcSentence` whose reduct class sits inside an invariant envelope, never exactly
 equals a prescribed set.  `isWellOrder_of_realize` is the equality-form corollary. -/
-theorem isWellOrder_of_realize_of_modelsOf_subset (lt : L.Relations 2) {φ : L.Sentenceω}
+private theorem isWellOrder_of_realize_of_modelsOf_subset (lt : L.Relations 2) {φ : L.Sentenceω}
     (hφ : ModelsOf φ ⊆ wellOrderClass lt) (M : Type) [instM : L.Structure M]
     (hM : Sentenceω.Realize (φ.and (infiniteAxiom L)) M) :
     IsWellOrder M fun x y : M => RelMap lt ![x, y] := by

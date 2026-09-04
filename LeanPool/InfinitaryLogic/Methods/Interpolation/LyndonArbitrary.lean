@@ -113,14 +113,6 @@ theorem lyndon_interpolation (r₁ r₂ : L.Sentenceω) (h : Sentenceω.Entails 
       ((BoundedFormulaω.realize_imp _ _).mp hB
         (graphExpansion_realizes_graphAxioms r₂.functionsIn M))
 
-/-- **Craig from Lyndon, arbitrary language.** The unsigned shared-vocabulary bound follows from the
-two signed ones; stated so the recovery is explicit without duplicating `craig_interpolation`. -/
-theorem craig_of_lyndon_interpolation (r₁ r₂ : L.Sentenceω) (h : Sentenceω.Entails r₁ r₂) :
-    ∃ θ : L.Sentenceω,
-      θ.functionsIn ⊆ r₁.functionsIn ∩ r₂.functionsIn ∧
-      θ.relationsIn ⊆ r₁.relationsIn ∩ r₂.relationsIn ∧
-      Sentenceω.Entails r₁ θ ∧ Sentenceω.Entails θ r₂ := by
-  obtain ⟨θ, hf, hp, hn, h1, h2⟩ := lyndon_interpolation r₁ r₂ h
-  exact ⟨θ, hf, lyndon_interpolant_is_craig hp hn, h1, h2⟩
+
 
 end FirstOrder.Language

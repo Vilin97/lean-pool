@@ -44,7 +44,7 @@ namespace G0Fusion
 
 /-! ### Finite-word API -/
 
-theorem snoc_apply_mk_of_lt {n : ℕ} (u : Fin n → Bool) (i : Bool) {j : ℕ} (hj : j < n)
+private theorem snoc_apply_mk_of_lt {n : ℕ} (u : Fin n → Bool) (i : Bool) {j : ℕ} (hj : j < n)
     (hj' : j < n + 1) : (Fin.snoc u i : Fin (n + 1) → Bool) ⟨j, hj'⟩ = u ⟨j, hj⟩ := by
   have h : (⟨j, hj'⟩ : Fin (n + 1)) = Fin.castSucc ⟨j, hj⟩ := by
     ext
@@ -52,21 +52,21 @@ theorem snoc_apply_mk_of_lt {n : ℕ} (u : Fin n → Bool) (i : Bool) {j : ℕ} 
   rw [h, Fin.snoc_castSucc]
 
 /-- Coercion-tame access below the last position. -/
-theorem snoc_apply_lt {n : ℕ} (u : Fin n → Bool) (i : Bool) (j : Fin (n + 1))
+private theorem snoc_apply_lt {n : ℕ} (u : Fin n → Bool) (i : Bool) (j : Fin (n + 1))
     (hj : (j : ℕ) < n) : (Fin.snoc u i : Fin (n + 1) → Bool) j = u ⟨j, hj⟩ := by
   rcases j with ⟨j, hj'⟩
   exact snoc_apply_mk_of_lt u i hj hj'
 
 /-- Coercion-tame access at the last position. -/
-theorem snoc_apply_eq {n : ℕ} (u : Fin n → Bool) (i : Bool) (j : Fin (n + 1))
+private theorem snoc_apply_eq {n : ℕ} (u : Fin n → Bool) (i : Bool) (j : Fin (n + 1))
     (hj : (j : ℕ) = n) : (Fin.snoc u i : Fin (n + 1) → Bool) j = i := by
   have h : j = Fin.last n := Fin.ext (by simpa using hj)
   rw [h, Fin.snoc_last]
 
 /-- The level-`n` restriction of an infinite branch. -/
-def restr (n : ℕ) (x : ℕ → Bool) : Fin n → Bool := fun j => x j
+private def restr (n : ℕ) (x : ℕ → Bool) : Fin n → Bool := fun j => x j
 
-theorem restr_succ (n : ℕ) (x : ℕ → Bool) :
+private theorem restr_succ (n : ℕ) (x : ℕ → Bool) :
     restr (n + 1) x = Fin.snoc (restr n x) (x n) := by
   funext j
   rcases lt_or_ge (j : ℕ) n with hj | hj
@@ -79,19 +79,19 @@ theorem restr_succ (n : ℕ) (x : ℕ → Bool) :
     show x (j : ℕ) = x n
     rw [hjn]
 
-theorem restr_eq_restr_of_mem_cylinder {x y : ℕ → Bool} {N : ℕ}
+private theorem restr_eq_restr_of_mem_cylinder {x y : ℕ → Bool} {N : ℕ}
     (h : y ∈ PiNat.cylinder x N) : restr N y = restr N x :=
   funext fun j => PiNat.mem_cylinder_iff.mp h j j.2
 
 /-- The canonical word `m` as a level-`n` vertex (positions beyond the word read `false`). -/
-def cvert (m n : ℕ) : Fin n → Bool := fun j => (canonicalWord m).getD j false
+private def cvert (m n : ℕ) : Fin n → Bool := fun j => (canonicalWord m).getD j false
 
 /-! ### Edge bookkeeping -/
 
 /-- The oriented level-`n` trace of the `GSGraph canonicalS` edge created by the canonical
 word `m`: both vertices extend the word, the cross position carries `false` on the left and
 `true` on the right, and the tails agree. -/
-def LvlEdgeAt (m n : ℕ) (u v : Fin n → Bool) : Prop :=
+private def LvlEdgeAt (m n : ℕ) (u v : Fin n → Bool) : Prop :=
   canonicalLen m + 1 ≤ n ∧
   (∀ j : Fin n, (j : ℕ) < canonicalLen m →
     u j = (canonicalWord m).getD j false ∧ v j = (canonicalWord m).getD j false) ∧
@@ -99,7 +99,7 @@ def LvlEdgeAt (m n : ℕ) (u v : Fin n → Bool) : Prop :=
   (∀ j : Fin n, canonicalLen m < (j : ℕ) → u j = v j)
 
 /-- The fresh cross pair at the level just past the canonical word. -/
-theorem lvlEdgeAt_fresh (m n : ℕ) (h : canonicalLen m = n) :
+private theorem lvlEdgeAt_fresh (m n : ℕ) (h : canonicalLen m = n) :
     LvlEdgeAt m (n + 1) (Fin.snoc (cvert m n) false) (Fin.snoc (cvert m n) true) := by
   refine ⟨by omega, ?_, ?_, ?_⟩
   · intro j hjm
@@ -116,7 +116,7 @@ theorem lvlEdgeAt_fresh (m n : ℕ) (h : canonicalLen m = n) :
 
 /-- Every level-`(n + 1)` edge is the fresh cross pair (when the word has length exactly
 `n`) or the `snoc` of a level-`n` edge by a common last bit. -/
-theorem lvlEdgeAt_succ_elim {m n : ℕ} {u v : Fin (n + 1) → Bool}
+private theorem lvlEdgeAt_succ_elim {m n : ℕ} {u v : Fin (n + 1) → Bool}
     (h : LvlEdgeAt m (n + 1) u v) :
     (canonicalLen m = n ∧ u = Fin.snoc (cvert m n) false ∧ v = Fin.snoc (cvert m n) true) ∨
     (canonicalLen m + 1 ≤ n ∧ u (Fin.last n) = v (Fin.last n) ∧
@@ -152,7 +152,7 @@ theorem lvlEdgeAt_succ_elim {m n : ℕ} {u v : Fin (n + 1) → Bool}
       exact htail (Fin.castSucc j) (by simpa using hjm)
 
 /-- The `snoc` of a level edge by a common last bit is a level edge. -/
-theorem lvlEdgeAt_snoc {m n : ℕ} {u v : Fin n → Bool} (h : LvlEdgeAt m n u v) (i : Bool) :
+private theorem lvlEdgeAt_snoc {m n : ℕ} {u v : Fin n → Bool} (h : LvlEdgeAt m n u v) (i : Bool) :
     LvlEdgeAt m (n + 1) (Fin.snoc u i) (Fin.snoc v i) := by
   obtain ⟨hle, hword, hcross, htail⟩ := h
   refine ⟨by omega, ?_, ?_, ?_⟩
@@ -174,7 +174,7 @@ theorem lvlEdgeAt_snoc {m n : ℕ} {u v : Fin n → Bool} (h : LvlEdgeAt m n u v
       rw [snoc_apply_eq _ _ j hjeq, snoc_apply_eq _ _ j hjeq]
 
 /-- The level restrictions of an oriented `GSGraph` edge pair are level edges. -/
-theorem lvlEdgeAt_restr {m n : ℕ} (h : canonicalLen m + 1 ≤ n) (x : ℕ → Bool) :
+private theorem lvlEdgeAt_restr {m n : ℕ} (h : canonicalLen m + 1 ≤ n) (x : ℕ → Bool) :
     LvlEdgeAt m n
       (restr n (prependWord (canonicalWord m ++ [false]) x))
       (restr n (prependWord (canonicalWord m ++ [true]) x)) := by
@@ -200,7 +200,7 @@ theorem lvlEdgeAt_restr {m n : ℕ} (h : canonicalLen m + 1 ≤ n) (x : ℕ → 
 
 /-- Every `GSGraph canonicalS` edge comes from a canonical word in one of the two
 orientations. -/
-theorem gsGraph_oriented {y z : ℕ → Bool} (h : GSGraph canonicalS y z) :
+private theorem gsGraph_oriented {y z : ℕ → Bool} (h : GSGraph canonicalS y z) :
     ∃ m, ∃ x : ℕ → Bool,
       (y = prependWord (canonicalWord m ++ [false]) x ∧
         z = prependWord (canonicalWord m ++ [true]) x) ∨
@@ -215,19 +215,19 @@ theorem gsGraph_oriented {y z : ℕ → Bool} (h : GSGraph canonicalS y z) :
 /-! ### Witness words in Baire space -/
 
 /-- Prepend a finite `ℕ`-word to a point of Baire space. -/
-def prepw (c : List ℕ) (w : ℕ → ℕ) : ℕ → ℕ := fun j =>
+private def prepw (c : List ℕ) (w : ℕ → ℕ) : ℕ → ℕ := fun j =>
   if j < c.length then c.getD j 0 else w (j - c.length)
 
-theorem prepw_apply_of_lt {c : List ℕ} {j : ℕ} (h : j < c.length) (w : ℕ → ℕ) :
+private theorem prepw_apply_of_lt {c : List ℕ} {j : ℕ} (h : j < c.length) (w : ℕ → ℕ) :
     prepw c w j = c.getD j 0 := ite_eq_left h
 
-theorem prepw_apply_of_le {c : List ℕ} {j : ℕ} (h : c.length ≤ j) (w : ℕ → ℕ) :
+private theorem prepw_apply_of_le {c : List ℕ} {j : ℕ} (h : c.length ≤ j) (w : ℕ → ℕ) :
     prepw c w j = w (j - c.length) := ite_eq_right (not_lt.mpr h)
 
-theorem prepw_nil (w : ℕ → ℕ) : prepw [] w = w :=
+private theorem prepw_nil (w : ℕ → ℕ) : prepw [] w = w :=
   funext fun j => by simp [prepw]
 
-theorem continuous_prepw (c : List ℕ) : Continuous (prepw c) := by
+private theorem continuous_prepw (c : List ℕ) : Continuous (prepw c) := by
   refine continuous_pi fun j => ?_
   rcases lt_or_ge j c.length with hj | hj
   · have h : (fun w : ℕ → ℕ => prepw c w j) = fun _ => c.getD j 0 :=
@@ -240,7 +240,7 @@ theorem continuous_prepw (c : List ℕ) : Continuous (prepw c) := by
     exact continuous_apply _
 
 /-- Splitting off the head of the tail extends the word. -/
-theorem prepw_append_head (c : List ℕ) (w : ℕ → ℕ) :
+private theorem prepw_append_head (c : List ℕ) (w : ℕ → ℕ) :
     prepw (c ++ [w 0]) (fun j => w (j + 1)) = prepw c w := by
   funext j
   rcases lt_trichotomy j c.length with h | h | h
@@ -255,7 +255,7 @@ theorem prepw_append_head (c : List ℕ) (w : ℕ → ℕ) :
     congr 1
     omega
 
-theorem getD_of_prefix {c d : List ℕ} (h : c <+: d) {j : ℕ} (hj : j < c.length) :
+private theorem getD_of_prefix {c d : List ℕ} (h : c <+: d) {j : ℕ} (hj : j < c.length) :
     d.getD j 0 = c.getD j 0 := by
   obtain ⟨t, rfl⟩ := h
   exact List.getD_append _ _ _ _ hj
@@ -269,10 +269,10 @@ variable {ι : Type*} [Countable ι]
 
 /-- The set of assignments whose `(u, v)`-value pair is `g`-witnessed through the cylinder
 of the word `c`. -/
-def WitSet (g : (ℕ → ℕ) → α × α) (u v : ι) (c : List ℕ) : Set (ι → α) :=
+private def WitSet (g : (ℕ → ℕ) → α × α) (u v : ι) (c : List ℕ) : Set (ι → α) :=
   {φ | ∃ w : ℕ → ℕ, g (prepw c w) = (φ u, φ v)}
 
-theorem analyticSet_witSet {g : (ℕ → ℕ) → α × α} (hg : Continuous g) (u v : ι)
+private theorem analyticSet_witSet {g : (ℕ → ℕ) → α × α} (hg : Continuous g) (u v : ι)
     (c : List ℕ) : AnalyticSet (WitSet g u v c) := by
   have hclosed : IsClosed {p : (ι → α) × (ℕ → ℕ) | g (prepw c p.2) = (p.1 u, p.1 v)} :=
     isClosed_eq (hg.comp ((continuous_prepw c).comp continuous_snd))
@@ -291,7 +291,7 @@ theorem analyticSet_witSet {g : (ℕ → ℕ) → α × α} (hg : Continuous g) 
 
 omit [TopologicalSpace α] [PolishSpace α] [Countable ι] in
 /-- Witnessed families are covered by the one-step extensions of the witness word. -/
-theorem witSet_cover {g : (ℕ → ℕ) → α × α} {u v : ι} {c : List ℕ} {Φ : Set (ι → α)}
+private theorem witSet_cover {g : (ℕ → ℕ) → α × α} {u v : ι} {c : List ℕ} {Φ : Set (ι → α)}
     (hwit : ∀ φ ∈ Φ, φ ∈ WitSet g u v c) :
     Φ ⊆ ⋃ k : ℕ, WitSet g u v (c ++ [k]) := by
   intro φ hφ
@@ -304,7 +304,7 @@ end WitSet
 
 /-! ### Pigeonhole over countable index types -/
 
-theorem exists_not_smallFam_inter' {α : Type*} [MeasurableSpace α] {G : Set (α × α)}
+private theorem exists_not_smallFam_inter' {α : Type*} [MeasurableSpace α] {G : Set (α × α)}
     {ι : Type*} {Φ : Set (ι → α)} (hΦ : ¬ SmallFam G Φ)
     {κ : Type*} [Countable κ] [Nonempty κ] {Ψ : κ → Set (ι → α)}
     (hcov : Φ ⊆ ⋃ c : κ, Ψ c) :
@@ -328,7 +328,7 @@ variable {α : Type*} [MetricSpace α] [SecondCountableTopology α] [CompleteSpa
 omit [CompleteSpace α] in
 /-- A countable cover of a separable metric space by measurable sets of diameter at most
 `(1/2)^n`. -/
-theorem exists_smallOpens [Nonempty α] (n : ℕ) :
+private theorem exists_smallOpens [Nonempty α] (n : ℕ) :
     ∃ O : ℕ → Set α, (∀ k, MeasurableSet (O k)) ∧ (∀ x : α, ∃ k, x ∈ O k) ∧
       ∀ k, ∀ a ∈ O k, ∀ b ∈ O k, dist a b ≤ (1 / 2) ^ n := by
   obtain ⟨D, hDc, hDd⟩ := TopologicalSpace.exists_countable_dense α
@@ -354,7 +354,7 @@ theorem exists_smallOpens [Nonempty α] (n : ℕ) :
 
 /-- **Vertex shrinking**: a positive analytic family can be refined to a positive analytic
 subfamily whose members are uniformly `(1/2)^n`-close at every vertex. -/
-theorem exists_shrink {G : Set (α × α)} {ι : Type*} [Finite ι] [Nonempty α]
+private theorem exists_shrink {G : Set (α × α)} {ι : Type*} [Finite ι] [Nonempty α]
     {Φ : Set (ι → α)} (hana : AnalyticSet Φ) (hpos : ¬ SmallFam G Φ) (n : ℕ) :
     ∃ Φ' : Set (ι → α), Φ' ⊆ Φ ∧ AnalyticSet Φ' ∧ ¬ SmallFam G Φ' ∧
       ∀ φ ∈ Φ', ∀ φ' ∈ Φ', ∀ u, dist (φ u) (φ' u) ≤ (1 / 2) ^ n := by
@@ -390,7 +390,7 @@ omit [BorelSpace α] in
 /-- **Witness extension**: given a positive analytic family whose tracked edge pairs are
 all witnessed at their current words, the family can be refined to a positive analytic
 subfamily with every tracked witness word properly extended. -/
-theorem exists_extend_witnesses {G : Set (α × α)}
+private theorem exists_extend_witnesses {G : Set (α × α)}
     {g : (ℕ → ℕ) → α × α} (hg : Continuous g)
     (L : List (ι × ι)) (hnodup : L.Nodup)
     {Φ : Set (ι → α)} (hana : AnalyticSet Φ) (hpos : ¬ SmallFam G Φ)
@@ -442,12 +442,12 @@ variable {G : Set (α × α)} {g : (ℕ → ℕ) → α × α}
 /-- The combination map: a pair of level-`n` assignments gives a level-`(n + 1)` assignment,
 sending each vertex to the value of the parent under the assignment selected by the last
 bit. -/
-def combFun (n : ℕ) (φ₀ φ₁ : (Fin n → Bool) → α) : (Fin (n + 1) → Bool) → α :=
+private def combFun (n : ℕ) (φ₀ φ₁ : (Fin n → Bool) → α) : (Fin (n + 1) → Bool) → α :=
   fun v => (if v (Fin.last n) then φ₁ else φ₀) (Fin.init v)
 
 omit [MetricSpace α] [CompleteSpace α] [SecondCountableTopology α] [MeasurableSpace α]
   [BorelSpace α] in
-theorem combFun_vals (n : ℕ) (φ₀ φ₁ : (Fin n → Bool) → α) (v : Fin (n + 1) → Bool) :
+private theorem combFun_vals (n : ℕ) (φ₀ φ₁ : (Fin n → Bool) → α) (v : Fin (n + 1) → Bool) :
     (∃ i, combFun n φ₀ φ₁ v = φ₀ i) ∨ (∃ i, combFun n φ₀ φ₁ v = φ₁ i) := by
   cases hv : v (Fin.last n)
   · exact Or.inl ⟨Fin.init v, by simp [combFun, hv]⟩
@@ -455,12 +455,12 @@ theorem combFun_vals (n : ℕ) (φ₀ φ₁ : (Fin n → Bool) → α) (v : Fin 
 
 omit [MetricSpace α] [CompleteSpace α] [SecondCountableTopology α] [MeasurableSpace α]
   [BorelSpace α] in
-theorem combFun_snoc (n : ℕ) (φ₀ φ₁ : (Fin n → Bool) → α) (u : Fin n → Bool) (i : Bool) :
+private theorem combFun_snoc (n : ℕ) (φ₀ φ₁ : (Fin n → Bool) → α) (u : Fin n → Bool) (i : Bool) :
     combFun n φ₀ φ₁ (Fin.snoc u i) = (if i then φ₁ else φ₀) u := by
   cases i <;> simp [combFun]
 
 omit [CompleteSpace α] [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α] in
-theorem continuous_combFun (n : ℕ) :
+private theorem continuous_combFun (n : ℕ) :
     Continuous fun p : ((Fin n → Bool) → α) × ((Fin n → Bool) → α) =>
       combFun n p.1 p.2 := by
   refine continuous_pi fun v => ?_
@@ -481,20 +481,20 @@ theorem continuous_combFun (n : ℕ) :
 /-- The inherited witness words: a level-`(n + 1)` pair with agreeing last bits inherits the
 word of its parent pair; the fresh cross pair (differing last bits) starts at the empty
 word. -/
-def precw (n : ℕ) (cw : (Fin n → Bool) × (Fin n → Bool) → List ℕ) :
+private def precw (n : ℕ) (cw : (Fin n → Bool) × (Fin n → Bool) → List ℕ) :
     (Fin (n + 1) → Bool) × (Fin (n + 1) → Bool) → List ℕ :=
   fun p => if p.1 (Fin.last n) = p.2 (Fin.last n) then cw (Fin.init p.1, Fin.init p.2)
     else []
 
-theorem precw_of_last_eq {n : ℕ} {cw : (Fin n → Bool) × (Fin n → Bool) → List ℕ}
+private theorem precw_of_last_eq {n : ℕ} {cw : (Fin n → Bool) × (Fin n → Bool) → List ℕ}
     {u v : Fin (n + 1) → Bool} (h : u (Fin.last n) = v (Fin.last n)) :
     precw n cw (u, v) = cw (Fin.init u, Fin.init v) := ite_eq_left h
 
-theorem precw_of_last_ne {n : ℕ} {cw : (Fin n → Bool) × (Fin n → Bool) → List ℕ}
+private theorem precw_of_last_ne {n : ℕ} {cw : (Fin n → Bool) × (Fin n → Bool) → List ℕ}
     {u v : Fin (n + 1) → Bool} (h : ¬ u (Fin.last n) = v (Fin.last n)) :
     precw n cw (u, v) = [] := ite_eq_right h
 
-theorem precw_snoc {n : ℕ} (cw : (Fin n → Bool) × (Fin n → Bool) → List ℕ)
+private theorem precw_snoc {n : ℕ} (cw : (Fin n → Bool) × (Fin n → Bool) → List ℕ)
     (u v : Fin n → Bool) (i : Bool) :
     precw n cw (Fin.snoc u i, Fin.snoc v i) = cw (u, v) := by
   have h : (Fin.snoc u i : Fin (n + 1) → Bool) (Fin.last n) =
@@ -517,7 +517,7 @@ structure FusionStage (G : Set (α × α)) (g : (ℕ → ℕ) → α × α) (n :
     n ≤ canonicalLen m + 1 + (cw (u, v)).length
 
 /-- The base stage: the full family, shrunk once for the level-`0` closeness control. -/
-theorem exists_fusionStage_zero [Nonempty α]
+private theorem exists_fusionStage_zero [Nonempty α]
     (hpos : ¬ SmallFam G (univ : Set ((Fin 0 → Bool) → α))) :
     Nonempty (FusionStage G g 0) := by
   have hana : AnalyticSet (univ : Set ((Fin 0 → Bool) → α)) := by
@@ -535,7 +535,7 @@ children's values among the parents' values and inherited witness words extendin
 parents' words. Combination (`not_smallFam_comb_cross` at fresh cross levels,
 `not_smallFam_comb_pairs` otherwise), then the witness-extension fold, then vertex
 shrinking. -/
-theorem exists_fusionStage_succ [Nonempty α] (hG : AnalyticSet G) (hg : Continuous g)
+private theorem exists_fusionStage_succ [Nonempty α] (hG : AnalyticSet G) (hg : Continuous g)
     (hrange : Set.range g = G) {n : ℕ} (S : FusionStage G g n) :
     ∃ T : FusionStage G g (n + 1),
       (∀ ψ ∈ T.fam, ∀ v : Fin (n + 1) → Bool, ∃ φ ∈ S.fam, ψ v = φ (Fin.init v)) ∧
@@ -655,14 +655,14 @@ theorem exists_fusionStage_succ [Nonempty α] (hG : AnalyticSet G) (hg : Continu
 
 variable (G g) in
 /-- The tower of fusion stages. -/
-noncomputable def fusionTower [Nonempty α] (hG : AnalyticSet G) (hg : Continuous g)
+private noncomputable def fusionTower [Nonempty α] (hG : AnalyticSet G) (hg : Continuous g)
     (hrange : Set.range g = G)
     (hpos : ¬ SmallFam G (univ : Set ((Fin 0 → Bool) → α))) : ∀ n, FusionStage G g n
   | 0 => (exists_fusionStage_zero hpos).some
   | n + 1 => (exists_fusionStage_succ hG hg hrange
       (fusionTower hG hg hrange hpos n)).choose
 
-theorem fusionTower_spec [Nonempty α] (hG : AnalyticSet G) (hg : Continuous g)
+private theorem fusionTower_spec [Nonempty α] (hG : AnalyticSet G) (hg : Continuous g)
     (hrange : Set.range g = G)
     (hpos : ¬ SmallFam G (univ : Set ((Fin 0 → Bool) → α))) (n : ℕ) :
     (∀ ψ ∈ (fusionTower G g hG hg hrange hpos (n + 1)).fam,

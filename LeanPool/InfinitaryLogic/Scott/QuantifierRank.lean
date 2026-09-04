@@ -48,7 +48,7 @@ private theorem atomicFormulaω_qrank (idx : L.AtomicIdx n) :
 
 omit [L.IsRelational] in
 /-- The atomic diagram has quantifier rank 0. -/
-theorem atomicDiagram_qrank_eq_zero {M : Type w} [L.Structure M]
+private theorem atomicDiagram_qrank_eq_zero {M : Type w} [L.Structure M]
     {n : ℕ} (a : Fin n → M) :
     (atomicDiagram (L := L) a).qrank = 0 := by
   classical
@@ -62,13 +62,13 @@ theorem atomicDiagram_qrank_eq_zero {M : Type w} [L.Structure M]
 
 omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
 /-- `existsLastVar` adds 1 to quantifier rank. -/
-theorem qrank_existsLastVar {n : ℕ} (φ : L.Formulaω (Fin (n + 1))) :
+private theorem qrank_existsLastVar {n : ℕ} (φ : L.Formulaω (Fin (n + 1))) :
     (existsLastVar φ).qrank = φ.qrank + 1 := by
   simp only [existsLastVar, BoundedFormulaω.qrank_ex, BoundedFormulaω.qrank_relabel]
 
 omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
 /-- `forallLastVar` adds 1 to quantifier rank. -/
-theorem qrank_forallLastVar {n : ℕ} (φ : L.Formulaω (Fin (n + 1))) :
+private theorem qrank_forallLastVar {n : ℕ} (φ : L.Formulaω (Fin (n + 1))) :
     (forallLastVar φ).qrank = φ.qrank + 1 := by
   simp only [forallLastVar, BoundedFormulaω.qrank_all, BoundedFormulaω.qrank_relabel]
 
@@ -120,60 +120,11 @@ theorem scottFormula_qrank_le {M : Type w} [L.Structure M] [Countable M]
     apply Ordinal.iSup_le; intro ⟨γ, hγ⟩
     exact le_trans (ih γ hγ a (lt_trans hγ hα)) (le_of_lt hγ)
 
-omit [Countable (Σ l, L.Relations l)] in
-/-- BF-equivalence at level α implies agreement on Lω₁ω formulas of quantifier rank ≤ α.
 
-This is the carrier-`ℕ` case of the forward direction of the Karp lemma
-(`BFEquiv_implies_agreeQR`). There is no embedding step: `L.Formulaω` *is*
-`L.BoundedFormulaInf ℕ` and the ω rank *is* the carrier-generic rank, so specializing the
-carrier is the whole proof. -/
-theorem BFEquiv_implies_agree_formulas_omega {M : Type w} [L.Structure M] [Countable M]
-    {N : Type w} [L.Structure N] [Countable N]
-    {n : ℕ} (a : Fin n → M) (b : Fin n → N)
-    (α : Ordinal) (_hα : α < Ordinal.omega 1) :
-    BFEquiv (L := L) α n a b →
-    ∀ (φ : L.Formulaω (Fin n)), φ.qrank ≤ α →
-      (Formulaω.Realize φ a ↔ Formulaω.Realize φ b) := by
-  intro hBF φ hφ
-  exact BFEquiv_implies_agreeQR α a b hBF φ hφ
 
-omit [L.IsRelational] in
-/-- Agreement on all Lω₁ω formulas of quantifier rank ≤ α implies BF-equivalence.
 
-This direction uses the Scott formula: if all rank-≤-α formulas agree, then in particular
-the Scott formula at level α agrees, which by `realize_scottFormula_iff_BFEquiv` gives
-BFEquiv at level α. -/
-theorem agree_formulas_omega_implies_BFEquiv {M : Type w} [L.Structure M] [Countable M]
-    {N : Type w} [L.Structure N] [Countable N]
-    {n : ℕ} (a : Fin n → M) (b : Fin n → N)
-    (α : Ordinal) (hα : α < Ordinal.omega 1) :
-    (∀ (φ : L.Formulaω (Fin n)), φ.qrank ≤ α →
-      (Formulaω.Realize φ a ↔ Formulaω.Realize φ b)) →
-    BFEquiv (L := L) α n a b := by
-  intro hAgree
-  -- The Scott formula at level α has qrank ≤ α
-  have hqr := scottFormula_qrank_le (L := L) a α hα
-  -- M satisfies its own Scott formula (by BFEquiv.refl)
-  have hRealize : Formulaω.Realize (scottFormula (L := L) a α) a :=
-    (realize_scottFormula_iff_BFEquiv a a α hα).mpr (BFEquiv.refl α a)
-  -- By hypothesis, b also satisfies the Scott formula
-  have hRealize' := (hAgree _ hqr).mp hRealize
-  -- By the fundamental correspondence, this gives BFEquiv
-  exact (realize_scottFormula_iff_BFEquiv a b α hα).mp hRealize'
 
-/-- BF-equivalence at level α between tuples is equivalent to agreement on all
-Lω₁ω formulas of quantifier rank ≤ α (for α < ω₁).
 
-This is the Lω₁ω version of the Karp lemma. -/
-theorem BFEquiv_iff_agree_formulas_omega {M : Type w} [L.Structure M] [Countable M]
-    {N : Type w} [L.Structure N] [Countable N]
-    {n : ℕ} (a : Fin n → M) (b : Fin n → N)
-    (α : Ordinal) (hα : α < Ordinal.omega 1) :
-    BFEquiv (L := L) α n a b ↔
-    ∀ (φ : L.Formulaω (Fin n)), φ.qrank ≤ α →
-      (Formulaω.Realize φ a ↔ Formulaω.Realize φ b) := by
-  exact ⟨BFEquiv_implies_agree_formulas_omega a b α hα,
-         agree_formulas_omega_implies_BFEquiv a b α hα⟩
 
 end Language
 

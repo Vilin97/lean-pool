@@ -67,14 +67,6 @@ section Equations
 theorem qrank_falsum : (falsum : L.BoundedFormulaInf ι α n).qrank = 0 := rfl
 
 @[simp]
-theorem qrank_equal {t₁ t₂ : L.Term (α ⊕ Fin n)} :
-    (equal t₁ t₂ : L.BoundedFormulaInf ι α n).qrank = 0 := rfl
-
-@[simp]
-theorem qrank_rel {l : ℕ} {R : L.Relations l} {ts : Fin l → L.Term (α ⊕ Fin n)} :
-    (rel R ts : L.BoundedFormulaInf ι α n).qrank = 0 := rfl
-
-@[simp]
 theorem qrank_imp {φ ψ : L.BoundedFormulaInf ι α n} :
     (φ.imp ψ).qrank = max φ.qrank ψ.qrank := rfl
 
@@ -117,14 +109,14 @@ private theorem add_succ_natCast (a : Ordinal) (n : ℕ) :
   rw [Nat.cast_add, Nat.cast_one, add_assoc, Nat.cast_add_one_comm]
 
 @[simp]
-theorem qrank_alls : ∀ {n} {φ : L.BoundedFormulaInf ι α n},
+private theorem qrank_alls : ∀ {n} {φ : L.BoundedFormulaInf ι α n},
     φ.alls.qrank = φ.qrank + n
   | 0, φ => by simp [alls]
   | n + 1, φ => by
     rw [alls, qrank_alls, qrank_all, Order.succ_eq_add_one, add_succ_natCast]
 
 @[simp]
-theorem qrank_exs : ∀ {n} {φ : L.BoundedFormulaInf ι α n},
+private theorem qrank_exs : ∀ {n} {φ : L.BoundedFormulaInf ι α n},
     φ.exs.qrank = φ.qrank + n
   | 0, φ => by simp [exs]
   | n + 1, φ => by
@@ -173,14 +165,14 @@ the common universe.
 Padding is invisible: the branches a coding cannot decode are `⊤`/`⊥`, both of rank `0`, so
 they never raise the supremum. In particular this holds when `ι` is empty, where every branch
 of the transported formula is padding. -/
-theorem qrank_reindex (c : IndexCoding ι κ) :
+private theorem qrank_reindex (c : IndexCoding ι κ) :
     ∀ {n} (φ : L.BoundedFormulaInf ι α n),
       Ordinal.lift.{uι} (reindex c φ).qrank = Ordinal.lift.{uκ} φ.qrank := by
   intro n φ
   induction φ with
-  | falsum => simp
-  | equal t₁ t₂ => simp
-  | rel R ts => simp
+  | falsum => simp only [reindex, qrank, Ordinal.lift_zero]
+  | equal t₁ t₂ => simp only [reindex, qrank, Ordinal.lift_zero]
+  | rel R ts => simp only [reindex, qrank, Ordinal.lift_zero]
   | imp φ ψ ihφ ihψ =>
     change Ordinal.lift.{uι} (max _ _) = Ordinal.lift.{uκ} (max _ _)
     rw [Monotone.map_max (fun _ _ h => Ordinal.lift_le.mpr h),
@@ -191,10 +183,7 @@ theorem qrank_reindex (c : IndexCoding ι κ) :
   | iSup φs ih => exact lift_iSup_qrank_pad c ⊥ qrank_bot φs _ ih
   | iInf φs ih => exact lift_iSup_qrank_pad c ⊤ qrank_top φs _ ih
 
-/-- Rank transport along an equivalence coding, where no padding occurs. -/
-theorem qrank_reindex_ofEquiv (e : ι ≃ κ) (φ : L.BoundedFormulaInf ι α n) :
-    Ordinal.lift.{uι} (reindex (.ofEquiv e) φ).qrank = Ordinal.lift.{uκ} φ.qrank :=
-  qrank_reindex _ φ
+
 
 end Transport
 
@@ -207,7 +196,7 @@ different ordinal universes, so the statement is up to `Ordinal.lift`, exactly a
 
 Unlike `qrank_reindex` this needs no coding between the carriers: there is nothing to
 transport. -/
-theorem qrank_toInf : ∀ {n} (φ : L.BoundedFormula α n),
+private theorem qrank_toInf : ∀ {n} (φ : L.BoundedFormula α n),
     Ordinal.lift.{uκ} (BoundedFormula.toInf (ι := ι) φ).qrank =
       Ordinal.lift.{uι} (BoundedFormula.toInf (ι := κ) φ).qrank := by
   intro n φ

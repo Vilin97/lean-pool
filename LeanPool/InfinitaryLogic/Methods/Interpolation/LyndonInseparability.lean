@@ -135,7 +135,7 @@ The swap is forced by the separator this gate builds, `σ.imp ρ`: since
 `Pos (σ → ρ) = Neg σ ∪ Pos ρ` and `Neg (σ → ρ) = Pos σ ∪ Neg ρ`, the shared hypothesis enters
 with reversed polarity.  Keeping that in the *signature* is deliberate: a future transfer of a
 non-equality shared sentence must supply these bounds rather than silently break the theorem. -/
-theorem lyndonInsepAt_insert_of_shared_entails {σ φ : L[[ℕ]].Sentenceω}
+private theorem lyndonInsepAt_insert_of_shared_entails {σ φ : L[[ℕ]].Sentenceω}
     (hσF : σ.baseFunctionsIn ⊆ F)
     (hσP : σ.basePositiveRelations ⊆ N)
     (hσN : σ.baseNegativeRelations ⊆ P)

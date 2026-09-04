@@ -68,7 +68,7 @@ variable {L : Language.{0, 0}}
 /-- Realization of a graph-language relation symbol in the graph expansion of an `L`-structure:
 base relations unchanged, and `G_f(x⃗, y)` reads `f(x⃗) = y` (the first `n` coordinates feed `f`,
 the last is its value). -/
-def graphRelMap (M : Type) [L.Structure M] :
+private def graphRelMap (M : Type) [L.Structure M] :
     ∀ {n : ℕ}, GraphRelation L n → (Fin n → M) → Prop
   | _, .base r, v => Structure.RelMap r v
   | _, .graph f, v => Structure.funMap f (Fin.init v) = v (Fin.last _)
@@ -161,7 +161,7 @@ def relSym (L : Language.{0, 0}) (F : Set (Σ n, L.Functions n)) (R : Set (Σ n,
     Set (Σ n, GraphRelation L n) :=
   baseRelSym L '' R ∪ graphRelSym L '' F
 
-theorem baseRelSym_image_inter_graphRelSym_image (R : Set (Σ n, L.Relations n))
+private theorem baseRelSym_image_inter_graphRelSym_image (R : Set (Σ n, L.Relations n))
     (F : Set (Σ n, L.Functions n)) : baseRelSym L '' R ∩ graphRelSym L '' F = ∅ := by
   rw [Set.eq_empty_iff_forall_notMem]
   rintro x ⟨⟨p, _, rfl⟩, ⟨q, _, hq⟩⟩

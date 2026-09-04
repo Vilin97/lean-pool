@@ -69,14 +69,14 @@ def holds (idx : L.AtomicIdx n) (a : Fin n → M) : Prop :=
 omit [L.IsRelational] in
 /-- Pushforward an atomic index through a function σ : Fin m → Fin n.
 This transforms an atomic index over m variables to one over n variables by composing indices. -/
-def pushforward {m : ℕ} (idx : L.AtomicIdx m) (σ : Fin m → Fin n) : L.AtomicIdx n :=
+private def pushforward {m : ℕ} (idx : L.AtomicIdx m) (σ : Fin m → Fin n) : L.AtomicIdx n :=
   match idx with
   | eq i j => eq (σ i) (σ j)
   | rel R f => rel R (σ ∘ f)
 
 omit [L.IsRelational] in
 /-- The key lemma: holds on composed tuple equals holds of pushforward on original tuple. -/
-theorem holds_comp_eq_holds_pushforward {m : ℕ} (idx : L.AtomicIdx m)
+private theorem holds_comp_eq_holds_pushforward {m : ℕ} (idx : L.AtomicIdx m)
     (a : Fin n → M) (σ : Fin m → Fin n) :
     idx.holds (a ∘ σ) = (idx.pushforward σ).holds a := by
   cases idx with
@@ -86,7 +86,7 @@ theorem holds_comp_eq_holds_pushforward {m : ℕ} (idx : L.AtomicIdx m)
 end AtomicIdx
 
 /-- Builds an atomic formula from an index. The formula uses free variables for the tuple. -/
-def atomicFormula (idx : L.AtomicIdx n) : L.BoundedFormula (Fin n) 0 :=
+private def atomicFormula (idx : L.AtomicIdx n) : L.BoundedFormula (Fin n) 0 :=
   match idx with
   | .eq i j => Term.equal (Term.var i) (Term.var j)
   | .rel R f => R.formula fun k => Term.var (f k)
@@ -97,7 +97,7 @@ def atomicFormulaω (idx : L.AtomicIdx n) : L.BoundedFormulaω (Fin n) 0 :=
 
 omit [L.IsRelational] in
 @[simp]
-theorem realize_atomicFormula (idx : L.AtomicIdx n) (a : Fin n → M) :
+private theorem realize_atomicFormula (idx : L.AtomicIdx n) (a : Fin n → M) :
     (atomicFormula idx).Realize a Fin.elim0 ↔ idx.holds a := by
   cases idx with
   | eq i j => simp [atomicFormula, AtomicIdx.holds, Term.equal, Term.realize]
@@ -109,7 +109,7 @@ theorem realize_atomicFormula (idx : L.AtomicIdx n) (a : Fin n → M) :
 
 omit [L.IsRelational] in
 @[simp]
-theorem realize_atomicFormulaω (idx : L.AtomicIdx n) (a : Fin n → M) :
+private theorem realize_atomicFormulaω (idx : L.AtomicIdx n) (a : Fin n → M) :
     (atomicFormulaω idx).Realize a Fin.elim0 ↔ idx.holds a := by
   simp [atomicFormulaω, BoundedFormula.realize_toLω, realize_atomicFormula]
 

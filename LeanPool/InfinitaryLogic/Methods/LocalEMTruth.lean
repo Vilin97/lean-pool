@@ -64,7 +64,7 @@ def LocalEMContext.eventualDeepTruth (ctx : LocalEMContext Λ J (M := M)) {n : �
 /-- **Carrier-side term substitution**: realizing a term in the local EM term model under the
 assignment `Sum.elim Empty.elim (mkClass ∘ ts)` gives the class of the substituted closed term. By
 induction on the term, using `funMap_mkClass`. Local analogue of `EMContext.realize_term_mkClass`. -/
-theorem LocalEMContext.realize_term_mkClass (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
+private theorem LocalEMContext.realize_term_mkClass (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (ts : Fin n → Λ[[J]].Term Empty)
     (t : Λ[[J]].Term (Empty ⊕ Fin n)) :
     @Term.realize (Λ[[J]]) ctx.Carrier ctx.structure (Empty ⊕ Fin n)
@@ -201,7 +201,7 @@ theorem LocalEMContext.eventualDeepTruth_decided (ctx : LocalEMContext Λ J (M :
 /-- An eventual implication splits as an implication of eventuals exactly when the antecedent's
 eventual truth is *decided*. The Filter fact behind the truth lemma's `imp` case — only the
 antecedent's decidedness is needed. -/
-theorem eventually_imp_iff_imp_eventually {α : Type*} {f : Filter α} {P Q : α → Prop}
+private theorem eventually_imp_iff_imp_eventually {α : Type*} {f : Filter α} {P Q : α → Prop}
     (hP : (∀ᶠ x in f, P x) ∨ (∀ᶠ x in f, ¬ P x)) :
     (∀ᶠ x in f, P x → Q x) ↔ ((∀ᶠ x in f, P x) → (∀ᶠ x in f, Q x)) := by
   constructor
@@ -299,7 +299,7 @@ on the deep interpretations of the arguments (read in the source model's stage-`
 `localColimStructure`/`localStageStructure`/`localSkolemStructure` funMap coherence is fully
 definitional, so this is `rfl` after the term/funMap unfolding. Local analogue of
 `deepInterp_skWitness`. -/
-theorem locDeepInterp_skWitness (d : ℕ) (S : Finset J) {k n : ℕ}
+private theorem locDeepInterp_skWitness (d : ℕ) (S : Finset J) {k n : ℕ}
     {ψ : (Llocal s₀ k).BoundedFormulaω Empty (n + 1)}
     (h : (⟨n, .all ψ⟩ : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) ∈ Γlocal s₀ k)
     (ts : Fin n → (localColim s₀)[[J]].Term Empty) :

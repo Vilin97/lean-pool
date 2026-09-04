@@ -85,7 +85,7 @@ general Borel case, it needs no descriptive-set-theory machinery beyond mathlib'
 Cantor–Bendixson theorem (`IsClosed.exists_nat_bool_injection_of_not_countable` applied to
 `Set.univ`). It is the *smooth* end of the dichotomy; the hard content of Silver lives
 entirely in the non-smooth relations (see the `E₀` note on `gandy_harrington_for_relation`). -/
-theorem gandy_harrington_for_eq {α : Type u}
+private theorem gandy_harrington_for_eq {α : Type u}
     [MetricSpace α] [CompleteSpace α] [SecondCountableTopology α]
     [MeasurableSpace α] [BorelSpace α]
     (hunc : ¬ Countable α) :

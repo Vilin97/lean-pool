@@ -105,7 +105,7 @@ theorem notMem_sentenceJConsts_substConst (b a : ℕ) (hne : b ≠ a) (ρ : L[[�
   · exact hne (Set.mem_singleton_iff.mp hk)
 
 /-- Constant abstraction does not move the signed quantifier occurrences. -/
-theorem hasQuantSigned_abstractConst (j : ℕ) (s : Bool) :
+private theorem hasQuantSigned_abstractConst (j : ℕ) (s : Bool) :
     ∀ {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n),
       hasQuantSigned s (BoundedFormulaω.abstractConst j φ) ↔ hasQuantSigned s φ := by
   intro n φ

@@ -56,7 +56,7 @@ variable {X : Type u} [TopologicalSpace X]
 
 /-- `A` carries a **perfect antichain** for `r`: a nonempty perfect subset of `A` whose points
 are pairwise `r`-inequivalent. -/
-def HasPerfectAntichainOn (r : Setoid X) (A : Set X) : Prop :=
+private def HasPerfectAntichainOn (r : Setoid X) (A : Set X) : Prop :=
   ∃ P, Perfect P ∧ P.Nonempty ∧ P ⊆ A ∧ ∀ x ∈ P, ∀ y ∈ P, r.r x y → x = y
 
 /-- `A` carries a **Cantor antichain** for `r`: a continuous map from Cantor space into `A`
@@ -82,50 +82,11 @@ theorem HasCantorAntichainOn.mono (h : HasCantorAntichainOn r A) (hAB : A ⊆ B)
   obtain ⟨f, hcont, hmem, hineq⟩ := h
   exact ⟨f, hcont, fun x => hAB (hmem x), hineq⟩
 
-/-- **A Cantor antichain for a coarser relation is one for a finer relation.**
 
-`hrs` says `r` **refines** `s`: being `r`-related implies being `s`-related, so `r` cuts the space
-into the finer classes.  Separating points for the coarser `s` is therefore the *stronger*
-requirement, and it survives the passage to `r`.
 
-The direction is easy to reverse mentally, so concretely: with `r := isoSetoid φ` and
-`s := bfEquivSetoid φ α`, isomorphic models are back-and-forth equivalent, so a family that is
-pairwise BF-**in**equivalent is in particular pairwise non-isomorphic. -/
-theorem HasCantorAntichainOn.mono_relation {r s : Setoid X} (hrs : ∀ x y, r.r x y → s.r x y)
-    (h : HasCantorAntichainOn s A) : HasCantorAntichainOn r A := by
-  obtain ⟨f, hcont, hmem, hineq⟩ := h
-  exact ⟨f, hcont, hmem, fun x y hxy hr => hineq x y hxy (hrs _ _ hr)⟩
 
-/-- **A Cantor antichain on a subtype is one on the underlying set.**
 
-The subtype carries `r` pulled back along the inclusion, and it *is* the ambient set seen from
-inside, so the containment clause is vacuous there and becomes membership in `A` here.  Only
-continuity has to move, and it moves by composing with the inclusion.
 
-This is the return leg for anything proved on the model subtype — where a Polish structure is
-available — when the statement to be established is about the ambient space. -/
-theorem HasCantorAntichainOn.of_subtype
-    (h : HasCantorAntichainOn (r.comap (Subtype.val : ↥A → X)) (Set.univ : Set ↥A)) :
-    HasCantorAntichainOn r A := by
-  obtain ⟨f, hcont, -, hineq⟩ := h
-  exact ⟨fun x => (f x).1, continuous_subtype_val.comp hcont, fun x => (f x).2, hineq⟩
-
-omit [TopologicalSpace X] in
-/-- **A Cantor antichain survives coarsening the topology.**
-
-Of the three clauses only continuity is topological, and continuity into a coarser topology is
-just composition with the identity.  This is the direction needed to carry a witness built in a
-Polish refinement — the kind `PolishSpace.IsClopenable` supplies — back to the ambient space.
-
-It is also why no theorem about *perfectness* surviving coarsening is required: coarsening is
-applied to the Cantor antichain, where it is cheap, and perfectness is recovered afterwards in
-the ambient space by `HasCantorAntichainOn.hasPerfectAntichainOn`. -/
-theorem HasCantorAntichainOn.mono_topology {t t' : TopologicalSpace X} (hle : t' ≤ t)
-    (h : @HasCantorAntichainOn X t' r A) : @HasCantorAntichainOn X t r A := by
-  obtain ⟨f, hcont, hmem, hineq⟩ := h
-  -- `continuous_le_rng` coarsens the codomain directly; going through `id` instead forces the
-  -- elaborator to synthesize one `TopologicalSpace X` where two different ones are meant
-  exact ⟨f, continuous_le_rng hle hcont, hmem, hineq⟩
 
 omit [TopologicalSpace X] in
 /-- Pairwise inequivalence forces injectivity — by *reflexivity*, not by an added hypothesis:
@@ -149,7 +110,7 @@ theorem HasCantorAntichainOn.injective (h : HasCantorAntichainOn r A) :
 
 /-- A Cantor antichain forces continuum-many classes.  No metric or completeness assumption:
 the argument is the quotient-map injection, and only `Continuous f` mentions the topology. -/
-theorem HasCantorAntichainOn.continuum_le_quotient (h : HasCantorAntichainOn r A) :
+private theorem HasCantorAntichainOn.continuum_le_quotient (h : HasCantorAntichainOn r A) :
     Cardinal.continuum ≤ #(Quotient r) := by
   -- unpack `h` directly: the inequivalence is its content, and `injective` is a separate job
   obtain ⟨f, -, -, hineq⟩ := h
@@ -167,54 +128,11 @@ theorem HasCantorAntichainOn.continuum_le_quotient (h : HasCantorAntichainOn r A
 The converse direction to `HasPerfectAntichainOn.hasCantorAntichainOn` below, and the one that
 needs no metric or completeness assumption — only that the ambient space is Hausdorff. -/
 
-/-- **Cantor space has no isolated points.**
 
-Stated as the bare accumulation-point fact rather than as a `PerfectSpace (ℕ → Bool)` instance:
-this Mathlib pin supplies no such instance (its only ones require `ConnectedSpace`, or a module
-over a field), and a global orphan instance here would be liable to collide with one added
-upstream later.
 
-A neighbourhood in the product topology constrains only finitely many coordinates, so some
-coordinate is left free; flipping it moves the point without leaving the neighbourhood. -/
-private theorem accPt_univ_natBool (x : ℕ → Bool) :
-    AccPt x (𝓟 (Set.univ : Set (ℕ → Bool))) := by
-  rw [accPt_iff_nhds]
-  intro U hU
-  rw [nhds_pi, Filter.mem_pi] at hU
-  obtain ⟨I, hIfin, V, hV, hVU⟩ := hU
-  obtain ⟨n, -, hn⟩ := Set.infinite_univ.exists_notMem_finite hIfin
-  refine ⟨Function.update x n (!x n), ⟨hVU fun i hi => ?_, trivial⟩, fun hEq => ?_⟩
-  · -- `i` is constrained by the neighbourhood, so it is not the flipped coordinate
-    rw [Function.update_of_ne (fun h : i = n => hn (h ▸ hi))]
-    exact mem_of_mem_nhds (hV i)
-  · exact Bool.not_ne_self (x n) (Function.update_self n (!x n) x ▸ congrFun hEq n)
 
-/-- **A Cantor antichain is a perfect antichain.**
 
-The range is closed because a continuous injection out of a compact space into a Hausdorff one is
-a closed embedding; and it inherits Cantor space's lack of isolated points by transporting
-accumulation points along that injection.  No metric, completeness, or second-countability
-assumption is needed — only `T2Space`. -/
-theorem HasCantorAntichainOn.hasPerfectAntichainOn [T2Space X]
-    (h : HasCantorAntichainOn r A) : HasPerfectAntichainOn r A := by
-  obtain ⟨f, hcont, hmem, hineq⟩ := h
-  have hinj : Function.Injective f := injective_of_pairwise_inequiv hineq
-  have hemb := hcont.isClosedEmbedding hinj
-  refine ⟨Set.range f, ⟨hemb.isClosed_range, ?_⟩, ⟨f (fun _ => false), ⟨_, rfl⟩⟩,
-    Set.range_subset_iff.mpr hmem, ?_⟩
-  · rintro _ ⟨x, rfl⟩
-    -- spelled out: dot notation on `AccPt` resolves to `Filter.NeBot.map`, which is not this
-    simpa [Filter.map_principal] using
-      AccPt.map (accPt_univ_natBool x) hcont.continuousAt hinj
-  · rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ hr
-    by_contra hne
-    exact hineq a b (fun hab => hne (congrArg f hab)) hr
 
-/-- Thinness rules out a Cantor antichain.  The converse of `IsThinOn.of_no_cantorAntichain`
-below, and much cheaper: that direction needs a complete metric space, this one only `T2Space`. -/
-theorem IsThinOn.no_cantorAntichain [T2Space X] (h : IsThinOn r A) :
-    ¬HasCantorAntichainOn r A :=
-  fun hc => h hc.hasPerfectAntichainOn
 
 /-! ### Adapters needing the Cantor injection
 
@@ -223,7 +141,7 @@ countability. -/
 
 /-- A perfect antichain yields a Cantor antichain: `Perfect.exists_nat_bool_injection` together
 with the observation that the injection's range lies in the perfect set, hence in `A`. -/
-theorem HasPerfectAntichainOn.hasCantorAntichainOn {α : Type u} [MetricSpace α]
+private theorem HasPerfectAntichainOn.hasCantorAntichainOn {α : Type u} [MetricSpace α]
     [CompleteSpace α] {r : Setoid α} {A : Set α}
     (h : HasPerfectAntichainOn r A) : HasCantorAntichainOn r A := by
   obtain ⟨P, hperf, hne, hsub, hanti⟩ := h
@@ -231,10 +149,7 @@ theorem HasPerfectAntichainOn.hasCantorAntichainOn {α : Type u} [MetricSpace α
   refine ⟨f, hcont, fun x => hsub (hrange (mem_range_self x)), fun x y hxy hr => ?_⟩
   exact hxy (hinj (hanti _ (hrange (mem_range_self x)) _ (hrange (mem_range_self y)) hr))
 
-/-- Refuting Cantor antichains suffices for thinness. -/
-theorem IsThinOn.of_no_cantorAntichain {α : Type u} [MetricSpace α] [CompleteSpace α]
-    {r : Setoid α} {A : Set α} (h : ¬HasCantorAntichainOn r A) : IsThinOn r A :=
-  fun hp => h hp.hasCantorAntichainOn
+
 
 /-! ### Perfect set cardinality
 
@@ -280,25 +195,12 @@ theorem continuum_classes_of_perfect_transversal {α : Type u}
   (HasPerfectAntichainOn.hasCantorAntichainOn
     (A := C) ⟨C, hperf, hne, subset_rfl, hinequiv⟩).continuum_le_quotient
 
-/-- If an equivalence relation has a perfect set of pairwise inequivalent elements, it has
-exactly continuum classes (assuming the ambient space has cardinality ≤ continuum).
 
-No second countability: the upper bound arrives explicitly as `hle`. -/
-theorem eq_continuum_classes_of_perfect_transversal {α : Type u}
-    [MetricSpace α] [CompleteSpace α]
-    (r : Setoid α) {C : Set α} (hperf : Perfect C) (hne : C.Nonempty)
-    (hinequiv : ∀ x ∈ C, ∀ y ∈ C, r.r x y → x = y)
-    (hle : #α ≤ Cardinal.continuum) :
-    #(Quotient r) = Cardinal.continuum := by
-  apply le_antisymm
-  · calc #(Quotient r) ≤ #α := Cardinal.mk_le_of_surjective (Quotient.mk_surjective)
-      _ ≤ Cardinal.continuum := hle
-  · exact continuum_classes_of_perfect_transversal r hperf hne hinequiv
 
 /-! ### Polish space cardinality upper bound -/
 
 /-- A Polish space has cardinality ≤ continuum. -/
-theorem mk_le_continuum_of_polish {α : Type u} [MetricSpace α] [CompleteSpace α]
+private theorem mk_le_continuum_of_polish {α : Type u} [MetricSpace α] [CompleteSpace α]
     [SecondCountableTopology α] [Nonempty α] :
     #α ≤ Cardinal.continuum := by
   obtain ⟨f, _, hf_surj⟩ := PolishSpace.exists_nat_nat_continuous_surjective α
@@ -320,7 +222,7 @@ above so that consumers need not unpack it.  Each concludes at the scheme's own 
 
 /-- `CantorScheme.exists_antichain_map` in antichain vocabulary, concluding at the scheme root
 `A []` via branch membership at level zero. -/
-theorem CantorScheme.hasCantorAntichainOn {α : Type u} [PseudoMetricSpace α]
+private theorem CantorScheme.hasCantorAntichainOn {α : Type u} [PseudoMetricSpace α]
     (r : Setoid α) {A : List Bool → Set α}
     (hlim : ∀ x : ℕ → Bool, (⋂ n, A (PiNat.res x n)).Nonempty)
     (hdiam : CantorScheme.VanishingDiam A)
@@ -329,16 +231,4 @@ theorem CantorScheme.hasCantorAntichainOn {α : Type u} [PseudoMetricSpace α]
   obtain ⟨f, hcont, -, hmem, hineq⟩ := CantorScheme.exists_antichain_map r hlim hdiam hcross
   exact ⟨f, hcont, fun a => by simpa using hmem a 0, hineq⟩
 
-/-- `CantorScheme.exists_antichain_map_of_splitting` in antichain vocabulary. -/
-theorem CantorScheme.hasCantorAntichainOn_of_splitting {α : Type u} [MetricSpace α]
-    [CompleteSpace α] (r : Setoid α) (P : Set α → Prop)
-    (hcl : ∀ F, P F → IsClosed F) (hne : ∀ F, P F → F.Nonempty)
-    {E : Set α} (hE : P E)
-    (hsplit : ∀ F, P F → ∀ ε : ENNReal, 0 < ε →
-      ∃ F₀ F₁ : Set α, P F₀ ∧ P F₁ ∧ F₀ ⊆ F ∧ F₁ ⊆ F ∧
-        Metric.ediam F₀ ≤ ε ∧ Metric.ediam F₁ ≤ ε ∧
-        ∀ x ∈ F₀, ∀ y ∈ F₁, ¬ r.r x y) :
-    HasCantorAntichainOn r E := by
-  obtain ⟨f, hcont, -, hmem, hineq⟩ :=
-    CantorScheme.exists_antichain_map_of_splitting r P hcl hne hE hsplit
-  exact ⟨f, hcont, hmem, hineq⟩
+

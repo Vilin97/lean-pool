@@ -59,21 +59,13 @@ variable (L) in
 target 7): the collection of Borel, action-invariant classes is the range of `ModelsOf`.  No
 closure operation is involved — this is the collection form of `lopezEscobar_action_iff`,
 with the two membership statements differing only in the orientation of the equality. -/
-theorem invariantMeasurableSets_eq_range_modelsOf :
+private theorem invariantMeasurableSets_eq_range_modelsOf :
     {B : Set (StructureSpace L) | MeasurableSet B ∧ ActionInvariant B} =
       Set.range (ModelsOf (L := L)) := by
   ext B
   rw [Set.mem_ofPred_eq, lopezEscobar_action_iff, Set.mem_range]
   exact ⟨fun ⟨φ, hφ⟩ => ⟨φ, hφ.symm⟩, fun ⟨φ, hφ⟩ => ⟨φ, hφ.symm⟩⟩
 
-variable (L) in
-/-- The same collection equality with isomorphism invariance in place of action invariance
-(the two invariant σ-algebras agree — `actionInvariantMeasurableSpace_eq_isoInvariantMeasurableSpace`). -/
-theorem isoInvariantMeasurableSets_eq_range_modelsOf :
-    {B : Set (StructureSpace L) | MeasurableSet B ∧ IsomorphismInvariant B} =
-      Set.range (ModelsOf (L := L)) := by
-  ext B
-  rw [Set.mem_ofPred_eq, lopezEscobar_iff, Set.mem_range]
-  exact ⟨fun ⟨φ, hφ⟩ => ⟨φ, hφ.symm⟩, fun ⟨φ, hφ⟩ => ⟨φ, hφ.symm⟩⟩
+
 
 end FirstOrder.Language

@@ -116,47 +116,29 @@ instance : SetLike (Fragment L) (Σ n, L.BoundedFormulaω Empty n) where
 
 @[ext] theorem ext {A B : Fragment L} (h : ∀ p, p ∈ A ↔ p ∈ B) : A = B := SetLike.ext h
 
-@[simp] theorem coe_toSet (A : Fragment L) : ((A : Set (Σ n, L.BoundedFormulaω Empty n))) = A.toSet :=
-  rfl
-
-instance : LE (Fragment L) := ⟨fun A B => A.toSet ⊆ B.toSet⟩
-
-theorem le_def {A B : Fragment L} : A ≤ B ↔ ∀ p, p ∈ A → p ∈ B := Iff.rfl
-
-instance : Top (Fragment L) := ⟨top⟩
-
-@[simp] theorem mem_top (p : Σ n, L.BoundedFormulaω Empty n) : p ∈ (⊤ : Fragment L) :=
-  Set.mem_univ p
-
-instance : Min (Fragment L) := ⟨inter⟩
-
-@[simp] theorem mem_inf {A B : Fragment L} {p : Σ n, L.BoundedFormulaω Empty n} :
-    p ∈ A ⊓ B ↔ p ∈ A ∧ p ∈ B := Iff.rfl
 
 
-/-- The generated fragment is the smallest one containing `S`. -/
-theorem generated_le {S : Set (Σ n, L.BoundedFormulaω Empty n)} {A : Fragment L}
-    (hSA : S ⊆ A.toSet) : (generated S).toSet ⊆ A.toSet := by
-  intro p hp
-  induction hp with
-  | base h => exact hSA h
-  | imp_left _ ih => exact A.imp_left_mem ih
-  | imp_right _ ih => exact A.imp_right_mem ih
-  | all_body _ ih => exact A.all_mem ih
-  | iInf_comp k _ ih => exact A.iInf_mem ih k
-  | iSup_comp k _ ih => exact A.iSup_mem ih k
 
-/-- **The Galois-style characterization**: `generated` is left adjoint to the forgetful map to sets.
-This is the form consumers want — it replaces `subset_generated`/`generated_le` pairs at call
-sites. -/
-theorem generated_le_iff {S : Set (Σ n, L.BoundedFormulaω Empty n)} {A : Fragment L} :
-    generated S ≤ A ↔ S ⊆ A :=
-  ⟨fun h _ hp => h (subset_generated S hp), fun h _ hp => generated_le h hp⟩
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /-! ### Countability of generated fragments: the component-path encoding -/
 
 /-- One component step, coded by a pair (tag, index). -/
-def componentStep : (Σ n, L.BoundedFormulaω Empty n) → ℕ × ℕ →
+private def componentStep : (Σ n, L.BoundedFormulaω Empty n) → ℕ × ℕ →
     Option (Σ n, L.BoundedFormulaω Empty n)
   | ⟨n, .imp φ _⟩, (0, _) => some ⟨n, φ⟩
   | ⟨n, .imp _ ψ⟩, (1, _) => some ⟨n, ψ⟩
@@ -166,12 +148,12 @@ def componentStep : (Σ n, L.BoundedFormulaω Empty n) → ℕ × ℕ →
   | _, _ => none
 
 /-- Iterated component steps along a list of codes. -/
-def componentPath (p : Σ n, L.BoundedFormulaω Empty n) :
+private def componentPath (p : Σ n, L.BoundedFormulaω Empty n) :
     List (ℕ × ℕ) → Option (Σ n, L.BoundedFormulaω Empty n)
   | [] => some p
   | c :: l => (componentStep p c).bind (componentPath · l)
 
-theorem componentPath_append (p : Σ n, L.BoundedFormulaω Empty n) (l₁ l₂ : List (ℕ × ℕ)) :
+private theorem componentPath_append (p : Σ n, L.BoundedFormulaω Empty n) (l₁ l₂ : List (ℕ × ℕ)) :
     componentPath p (l₁ ++ l₂) = (componentPath p l₁).bind (componentPath · l₂) := by
   induction l₁ generalizing p with
   | nil => rfl
@@ -183,7 +165,7 @@ theorem componentPath_append (p : Σ n, L.BoundedFormulaω Empty n) (l₁ l₂ :
     | some q => exact ih q
 
 /-- A single step lands inside the generated set. -/
-theorem GeneratedFrom.of_componentStep {S : Set (Σ n, L.BoundedFormulaω Empty n)}
+private theorem GeneratedFrom.of_componentStep {S : Set (Σ n, L.BoundedFormulaω Empty n)}
     {q p : Σ n, L.BoundedFormulaω Empty n} {c : ℕ × ℕ}
     (hq : GeneratedFrom S q) (h : componentStep q c = some p) : GeneratedFrom S p := by
   unfold componentStep at h
@@ -197,7 +179,7 @@ theorem GeneratedFrom.of_componentStep {S : Set (Σ n, L.BoundedFormulaω Empty 
 
 /-- **The path characterization**: the generated fragment is exactly what is reachable from
 `S` by finitely many coded component steps. -/
-theorem generatedFrom_iff_path {S : Set (Σ n, L.BoundedFormulaω Empty n)}
+private theorem generatedFrom_iff_path {S : Set (Σ n, L.BoundedFormulaω Empty n)}
     {p : Σ n, L.BoundedFormulaω Empty n} :
     GeneratedFrom S p ↔ ∃ s ∈ S, ∃ l : List (ℕ × ℕ), componentPath s l = some p := by
   constructor
@@ -264,18 +246,11 @@ theorem mem_generatedSentence (φ : L.Sentenceω) :
     (⟨0, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ (generatedSentence φ).toSet :=
   subset_generated _ rfl
 
-/-- The generated fragment of a COUNTABLE theory (the sentence case is automatic; theory
-countability is an assumption, per the audit). -/
-def generatedTheory (T : Set L.Sentenceω) : Fragment L :=
-  generated ((fun φ => (⟨0, φ⟩ : Σ n, L.BoundedFormulaω Empty n)) '' T)
 
-theorem generatedTheory_countable {T : Set L.Sentenceω} (hT : T.Countable) :
-    (generatedTheory T).toSet.Countable :=
-  generated_countable (hT.image _)
 
-theorem mem_generatedTheory {T : Set L.Sentenceω} {φ : L.Sentenceω} (h : φ ∈ T) :
-    (⟨0, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ (generatedTheory T).toSet :=
-  subset_generated _ ⟨φ, h, rfl⟩
+
+
+
 
 end Fragment
 

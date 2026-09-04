@@ -67,7 +67,7 @@ principle `MorleyHanfTransfer`.
 was discharged by the tail extraction (`morleyHanfExtractionTail_holds`) plus the schema-route
 seed-template realizability (`morleySeedTailTemplateRealizable_holds`). This form is retained as
 the historical statement shape. -/
-theorem morley_hanf_of_transfer [Countable (Σ l, L.Relations l)]
+private theorem morley_hanf_of_transfer [Countable (Σ l, L.Relations l)]
     (htransfer : MorleyHanfTransfer L) (φ : L.Sentenceω) :
     IsHanfBound φ (Cardinal.beth (Ordinal.omega 1)) := by
   intro ⟨M, hStr, hφ, hsize⟩
@@ -320,13 +320,7 @@ theorem morleyHanfExtractionTail_holds : MorleyHanfExtractionTail (L' := L') := 
          φ.Realize (Empty.elim : Empty → M) ((a ∘ g) ∘ v)
     exact decide_eq_decide.mp hbool
 
-omit [Countable (Σ l, L'.Relations l)] in
-/-- The original (full-indiscernibility) residual implies the tail residual. -/
-theorem morleyHanfExtractionTail_of_morleyHanfExtraction
-    (h : MorleyHanfExtraction (L' := L')) : MorleyHanfExtractionTail (L' := L') := by
-  intro s M _ hSize
-  obtain ⟨a, hPair, hInd⟩ := h s M hSize
-  exact ⟨a, hPair, hInd.isLomega1omegaIndiscernibleOnTail⟩
+
 
 /-- **The broad tail-template residual — WARNING: false-shaped over arbitrary sequences.**
 Quantifying over *every* formula sequence `s` makes this a genuine `L_{ω₁ω}` compactness
@@ -384,7 +378,7 @@ def MorleySeedTailTemplateRealizable : Prop :=
 omit [Countable (Σ l, L'.Relations l)] in
 /-- The broad (false-shaped) residual trivially implies the seed-restricted one — instantiation
 at `s := morleySeed φ`, dropping the extra source facts. Only the compact route uses this. -/
-theorem morleySeedTailTemplateRealizable_of_tailTemplateRealizable
+private theorem morleySeedTailTemplateRealizable_of_tailTemplateRealizable
     (h : TailTemplateRealizable (L' := L')) :
     MorleySeedTailTemplateRealizable (L' := L') :=
   fun φ M _ a J _ hSize _ _ hIndisc => h (morleySeed φ) M a J hSize hIndisc
@@ -393,7 +387,7 @@ omit [Countable (Σ l, L'.Relations l)] in
 /-- The broad per-target compactness oracle implies the honest tail-template realizability
 residual: apply compactness to the (finitely-satisfiable) tail-template theory itself. Witnesses
 that `TailTemplateRealizable` is genuinely weaker than full compactness. -/
-theorem tailTemplateRealizable_of_compact
+private theorem tailTemplateRealizable_of_compact
     (hCompact : ∀ (J : Type) [LinearOrder J], Theoryω.OrdinaryCompactness L'[[J]]) :
     TailTemplateRealizable (L' := L') := by
   intro s M instM a J instJ _hSize hIndisc
@@ -410,7 +404,7 @@ arity-`0` members ignore their tuples and the disequality is absolute for inject
 so `Infinite.natEmbedding` supplies the sequence directly. No countable Ramsey, no Erdős–Rado.
 The EM template theory of the seed is realized via `MorleySeedTailTemplateRealizable`, and the
 model-form stretching of `Methods/EM/TailAdapter.lean` reads off `φ`-preservation and size. -/
-theorem hasArbLargeModels_of_seed_realizability
+private theorem hasArbLargeModels_of_seed_realizability
     (hRealize : MorleySeedTailTemplateRealizable (L' := L'))
     (φ : L'.Sentenceω)
     (hφ : ∃ (M : Type) (_ : L'.Structure M), Sentenceω.Realize φ M ∧
@@ -502,7 +496,7 @@ extraction hypothesis is SUBSUMED: `morleySeed_indiscernibleOn` shows an injecti
 already fully indiscernible on the Morley seed, so the proof delegates to
 `hasArbLargeModels_of_seed_realizability` and does not consume `hExtract`. Kept as the
 historical statement shape from when the tail extraction was thought necessary. -/
-theorem hasArbLargeModels_of_tail_realizability
+private theorem hasArbLargeModels_of_tail_realizability
     (_hExtract : MorleyHanfExtractionTail (L' := L'))
     (hRealize : MorleySeedTailTemplateRealizable (L' := L'))
     (φ : L'.Sentenceω)
@@ -549,7 +543,7 @@ refutable statements: it is implied by `PureColoringHypothesis`
 (`indiscernibleSequence_of_pureColoring`) and implies the failed partition
 relation `ℶ_ω₁ → (ω)^{<ω}_2` by interpreting colorings as relation symbols.
 See the Erdős-cardinal argument on `PureColoringHypothesis` below. -/
-def IndiscernibleSequenceHypothesis : Prop :=
+private def IndiscernibleSequenceHypothesis : Prop :=
   ∀ (s : ℕ → Σ n, L'.BoundedFormulaω Empty n)
     (M : Type) [L'.Structure M] (_ : LinearOrder M) (_ : WellFoundedLT M),
     Cardinal.mk M ≥ Cardinal.beth (Ordinal.omega 1) →
@@ -567,7 +561,7 @@ hypothesis to obtain a strict-monotone `f : ℕ → M` whose range is
 pairwise distinctness (injectivity), and the sequence-level reduction
 `IsIndiscernibleOnSet.toLomega1omegaIndiscernibleOn` (Phase 2d0a) gives
 the restricted indiscernibility. -/
-theorem morleyHanfExtraction_of_indiscernibleSequence
+private theorem morleyHanfExtraction_of_indiscernibleSequence
     (hSeq : IndiscernibleSequenceHypothesis (L' := L')) :
     MorleyHanfExtraction (L' := L') := by
   intro s M _ hSize
@@ -647,7 +641,7 @@ def PureColoringHypothesis : Prop :=
 model-theoretic `IndiscernibleSequenceHypothesis`. The colorings are
 instantiated as "truth of the `i`-th formula in `s` on the tuple's
 underlying function". -/
-theorem indiscernibleSequence_of_pureColoring
+private theorem indiscernibleSequence_of_pureColoring
     {L' : Language.{0, 0}}
     (hPure : PureColoringHypothesis) :
     IndiscernibleSequenceHypothesis (L' := L') := by
@@ -737,42 +731,9 @@ from the ER-facing residual `FiniteArityErdosRadoOmega1 ℶ_1` (via
 `pureColoringHypothesis_of_finiteArityErdosRadoOmega1` above). Prefer those
 endpoints; the wrappers below are retained for compatibility. -/
 
-/-- **Morley–Hanf reduction**: assuming the pure combinatorial hypothesis
-`PureColoringHypothesis` and a per-target compactness oracle for every
-`L'[[J]]`, any sentence satisfied in a model of size ≥ ℶ_ω₁ has
-arbitrarily large models.
 
-Composes the proved chain:
-  `hPure → IndiscernibleSequenceHypothesis → MorleyHanfExtraction →
-   HasArbLargeModels φ`. -/
-theorem hasArbLargeModels_of_pureColoring_and_compact
-    {L' : Language.{0, 0}} [Countable (Σ l, L'.Relations l)]
-    (hPure : PureColoringHypothesis)
-    (hCompact : ∀ (J : Type) [LinearOrder J], Theoryω.OrdinaryCompactness L'[[J]])
-    (φ : L'.Sentenceω)
-    (hφ : ∃ (M : Type) (_ : L'.Structure M), Sentenceω.Realize φ M ∧
-      Cardinal.mk M ≥ Cardinal.beth (Ordinal.omega 1)) :
-    HasArbLargeModels φ :=
-  hasArbLargeModels_of_restricted_extraction
-    (morleyHanfExtraction_of_indiscernibleSequence
-      (indiscernibleSequence_of_pureColoring hPure))
-    hCompact φ hφ
 
-/-- **Morley–Hanf bound (compact + pure-coloring form)**: `ℶ_ω₁` is a
-Hanf bound for every Lω₁ω sentence, assuming the pure partition-calculus
-hypothesis and a compactness oracle.
 
-Specializes `hasArbLargeModels_of_pureColoring_and_compact` to the
-`IsHanfBound` shape used as the canonical Morley–Hanf endpoint. -/
-theorem morley_hanf_of_pureColoring_and_compact
-    {L' : Language.{0, 0}} [Countable (Σ l, L'.Relations l)]
-    (hPure : PureColoringHypothesis)
-    (hCompact : ∀ (J : Type) [LinearOrder J], Theoryω.OrdinaryCompactness L'[[J]])
-    (φ : L'.Sentenceω) :
-    IsHanfBound φ (Cardinal.beth (Ordinal.omega 1)) := by
-  intro ⟨M, hStr, hRealize, hSize⟩
-  exact hasArbLargeModels_of_pureColoring_and_compact hPure hCompact φ
-    ⟨M, hStr, hRealize, hSize⟩
 
 /-! ### Realizability-only Morley–Hanf via the proved tail extraction
 
@@ -789,19 +750,7 @@ unconditional endpoint `morley_hanf` there has no hypotheses at all. The `hReali
 forms below remain the transparent intermediates; the `*_compact` wrappers are retained as
 legacy — their oracle is strictly stronger than needed. -/
 
-/-- **Morley–Hanf reduction (realizability-only)**: assuming only the honest residual
-`MorleySeedTailTemplateRealizable`, any sentence satisfied in a model of size ≥ ℶ_ω₁ has
-arbitrarily large models. No combinatorial hypothesis at all — not even the (proved) tail
-extraction: an injective sequence is already seed-indiscernible
-(`hasArbLargeModels_of_seed_realizability`). -/
-theorem hasArbLargeModels_of_tail_realizable
-    {L' : Language.{0, 0}}
-    (hRealize : MorleySeedTailTemplateRealizable (L' := L'))
-    (φ : L'.Sentenceω)
-    (hφ : ∃ (M : Type) (_ : L'.Structure M), Sentenceω.Realize φ M ∧
-      Cardinal.mk M ≥ Cardinal.beth (Ordinal.omega 1)) :
-    HasArbLargeModels φ :=
-  hasArbLargeModels_of_seed_realizability hRealize φ hφ
+
 
 /-- **Morley–Hanf bound (realizability-only)**: `ℶ_ω₁` is a Hanf bound for every Lω₁ω sentence,
 assuming only `MorleySeedTailTemplateRealizable` — which is itself proved
@@ -825,30 +774,9 @@ theorem morley_hanf_of_tail_realizable
     IsHanfBound φ (Cardinal.beth (Ordinal.omega 1)) :=
   morley_hanf_of_seed_realizable hRealize φ
 
-/-- **Legacy (compact-only): Morley–Hanf reduction via a broad compactness oracle.** Retained for
-compatibility; the per-target compactness oracle is strictly stronger than the honest residual
-`TailTemplateRealizable` (see `tailTemplateRealizable_of_compact`) and asserts full `L_{ω₁ω}`
-compactness, which is false in general. Prefer `hasArbLargeModels_of_tail_realizable`. -/
-theorem hasArbLargeModels_of_tail_compact
-    {L' : Language.{0, 0}}
-    (hCompact : ∀ (J : Type) [LinearOrder J], Theoryω.OrdinaryCompactness L'[[J]])
-    (φ : L'.Sentenceω)
-    (hφ : ∃ (M : Type) (_ : L'.Structure M), Sentenceω.Realize φ M ∧
-      Cardinal.mk M ≥ Cardinal.beth (Ordinal.omega 1)) :
-    HasArbLargeModels φ :=
-  hasArbLargeModels_of_tail_realizable
-    (morleySeedTailTemplateRealizable_of_tailTemplateRealizable
-      (tailTemplateRealizable_of_compact hCompact)) φ hφ
 
-/-- **Legacy (compact-only): Morley–Hanf bound via a broad compactness oracle.** Prefer
-`morley_hanf_of_tail_realizable`. -/
-theorem morley_hanf_of_tail_compact
-    {L' : Language.{0, 0}}
-    (hCompact : ∀ (J : Type) [LinearOrder J], Theoryω.OrdinaryCompactness L'[[J]])
-    (φ : L'.Sentenceω) :
-    IsHanfBound φ (Cardinal.beth (Ordinal.omega 1)) := by
-  intro ⟨M, hStr, hRealize, hSize⟩
-  exact hasArbLargeModels_of_tail_compact hCompact φ ⟨M, hStr, hRealize, hSize⟩
+
+
 
 end Language
 
@@ -866,30 +794,26 @@ def Lang : Language.{0, 0} where
     | 1 => ℕ
     | _ => Empty
 
-instance : ∀ n, Countable (Lang.Relations n) := fun n =>
-  match n with
-  | 0 => inferInstanceAs (Countable Empty)
-  | 1 => inferInstanceAs (Countable ℕ)
-  | _ + 2 => inferInstanceAs (Countable Empty)
 
-instance : Countable (Σ l, Lang.Relations l) := inferInstance
+
+
 
 /-- The carrier: a set of size exactly `ℶ_{ω₁}`. -/
 def Carrier : Type := (Cardinal.beth (Ordinal.omega 1)).ord.ToType
 
-theorem mk_Carrier : Cardinal.mk Carrier = Cardinal.beth (Ordinal.omega 1) :=
+private theorem mk_Carrier : Cardinal.mk Carrier = Cardinal.beth (Ordinal.omega 1) :=
   Cardinal.mk_ord_toType _
 
 instance : Infinite Carrier :=
   Cardinal.infinite_iff.mpr (mk_Carrier ▸ Cardinal.aleph0_le_beth _)
 
 /-- A copy of `ℕ` inside the carrier, along which heights are unbounded. -/
-noncomputable def emb : ℕ ↪ Carrier := Infinite.natEmbedding Carrier
+private noncomputable def emb : ℕ ↪ Carrier := Infinite.natEmbedding Carrier
 
 /-- The height of a carrier element: the inverse of `emb` on its range, arbitrary elsewhere. -/
 noncomputable def hgt (x : Carrier) : ℕ := Function.invFun emb x
 
-theorem hgt_emb (n : ℕ) : hgt (emb n) = n := Function.leftInverse_invFun emb.injective n
+private theorem hgt_emb (n : ℕ) : hgt (emb n) = n := Function.leftInverse_invFun emb.injective n
 
 /-- The height structure: `Pᵢ x` holds iff `i ≤ hgt x`. -/
 noncomputable instance : Lang.Structure Carrier where
@@ -906,9 +830,9 @@ def P (i : ℕ) : Lang.BoundedFormulaω Empty 1 :=
     (fun _ => Term.var (Sum.inr (0 : Fin 1)))
 
 /-- The countable conjunction `⋀ᵢ Pᵢ x₀`. -/
-def conj : Lang.BoundedFormulaω Empty 1 := BoundedFormulaω.iInf P
+private def conj : Lang.BoundedFormulaω Empty 1 := BoundedFormulaω.iInf P
 
-theorem realize_P (i : ℕ) (v : Empty → Carrier) (xs : Fin 1 → Carrier) :
+private theorem realize_P (i : ℕ) (v : Empty → Carrier) (xs : Fin 1 → Carrier) :
     (P i).Realize v xs ↔ i ≤ hgt (xs 0) := by
   rw [P, BoundedFormulaω.realize_rel]
   exact Iff.rfl
@@ -923,11 +847,11 @@ def seed : ℕ → Σ n, Lang.BoundedFormulaω Empty n := fun k =>
 noncomputable def a : ℕ → Carrier := fun n => emb n
 
 /-- Every `Fin 1`-tuple is strictly monotone (vacuously). -/
-theorem strictMono_fin_one {β : Type*} [Preorder β] (w : Fin 1 → β) : StrictMono w :=
+private theorem strictMono_fin_one {β : Type*} [Preorder β] (w : Fin 1 → β) : StrictMono w :=
   fun p q hpq => absurd (Subsingleton.elim p q ▸ hpq) (lt_irrefl q)
 
 /-- `⋀ᵢ Pᵢ` fails at every carrier element (heights are finite). -/
-theorem not_realize_conj (v : Empty → Carrier) (xs : Fin 1 → Carrier) :
+private theorem not_realize_conj (v : Empty → Carrier) (xs : Fin 1 → Carrier) :
     ¬ conj.Realize v xs := by
   intro h
   rw [conj, BoundedFormulaω.realize_iInf] at h
@@ -936,7 +860,7 @@ theorem not_realize_conj (v : Empty → Carrier) (xs : Fin 1 → Carrier) :
 
 /-- `a` is tail-indiscernible on the seed: each `Pᵢ (a n)` is eventually true (cutoff `i`), and
 `⋀ᵢ Pᵢ (a n)` is constantly false (cutoff `0`). -/
-theorem tail_indisc : IsLomega1omegaIndiscernibleOnTail (L := Lang) a (Set.range seed) := by
+private theorem tail_indisc : IsLomega1omegaIndiscernibleOnTail (L := Lang) a (Set.range seed) := by
   rintro n φ ⟨k, hk⟩
   match k, hk with
   | 0, hk =>
@@ -952,7 +876,7 @@ theorem tail_indisc : IsLomega1omegaIndiscernibleOnTail (L := Lang) a (Set.range
     exact iff_of_true (hud 0) (hvd 0)
 
 /-- The tail template declares every `Pᵢ` true... -/
-theorem truth_P (i : ℕ) : (tailTemplateOfSeq (L := Lang) a).truth (P i) := by
+private theorem truth_P (i : ℕ) : (tailTemplateOfSeq (L := Lang) a).truth (P i) := by
   refine ⟨i, fun u _ hud => ?_⟩
   rw [realize_P]
   show i ≤ hgt (emb (u 0))
@@ -960,7 +884,7 @@ theorem truth_P (i : ℕ) : (tailTemplateOfSeq (L := Lang) a).truth (P i) := by
   exact hud 0
 
 /-- ... and `⋀ᵢ Pᵢ` false. -/
-theorem not_truth_conj : ¬ (tailTemplateOfSeq (L := Lang) a).truth conj := by
+private theorem not_truth_conj : ¬ (tailTemplateOfSeq (L := Lang) a).truth conj := by
   rintro ⟨N, hN⟩
   exact not_realize_conj _ _
     (hN (fun _ => N) (strictMono_fin_one _) (fun _ => le_refl N))
@@ -974,7 +898,7 @@ height model of size `ℶ_{ω₁}` with the seed `{⋀ᵢ Pᵢ} ∪ {Pᵢ}ᵢ` a
 `Pᵢ(c₀)` together with `¬⋀ᵢ Pᵢ(c₀)` — unsatisfiable. So the ∀-sequence residual is a genuine
 `L_{ω₁ω}` compactness failure; only the Morley-seed form (`MorleySeedTailTemplateRealizable`)
 can be the honest target. -/
-theorem T_counterexample : ¬ TailTemplateRealizable (L' := HeightCex.Lang) := by
+private theorem T_counterexample : ¬ TailTemplateRealizable (L' := HeightCex.Lang) := by
   intro h
   obtain ⟨N, instN, hModel⟩ := h HeightCex.seed HeightCex.Carrier HeightCex.a ℕ
     (ge_of_eq HeightCex.mk_Carrier) HeightCex.tail_indisc

@@ -23,7 +23,7 @@ variable {L L' : Language.{0, 0}} (g : L →ᴸ L')
 
 /-- `functionsIn` of a language-mapped term is the image of the term's `functionsIn` under the
 symbol map `⟨n, f⟩ ↦ ⟨n, g.onFunction f⟩`. -/
-theorem Term.functionsIn_onTerm {α : Type} (t : L.Term α) :
+private theorem Term.functionsIn_onTerm {α : Type} (t : L.Term α) :
     (g.onTerm t).functionsIn =
       (fun p : Σ n, L.Functions n => ⟨p.1, g.onFunction p.2⟩) '' t.functionsIn := by
   induction t with

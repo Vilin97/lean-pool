@@ -98,7 +98,7 @@ theorem sentBnd_relInst_congr {l : ℕ} (Rr : L.Relations l) {g : Fin l → ℕ}
 
 /-! ## Atomic constant-support facts -/
 
-theorem mem_constTermS_jConsts (c : ℕ) :
+private theorem mem_constTermS_jConsts (c : ℕ) :
     c ∈ Term.jConsts (L' := L) (constTermS (L := L) c) := by
   show (⟨0, Sum.inr c⟩ : Σ n, L[[ℕ]].Functions n) ∈ (constTermS (L := L) c).functionsIn
   simp only [constTermS, Term.functionsIn, Set.iUnion_of_empty, Set.mem_insert_iff,
@@ -212,7 +212,7 @@ theorem fresh_right {Γ Δ : Set L[[ℕ]].Sentenceω} {A : Finset ℕ} (c : ℕ)
 
 /-- Grow the `Δ`-coordinate by an entailed sentence (the right-coordinate twin of
 `insepAt_insert_of_entails`, obtained through `insepAt_swap`). -/
-theorem insepAt_insert_right_of_entails {F' : Set (Σ n, L.Functions n)}
+private theorem insepAt_insert_right_of_entails {F' : Set (Σ n, L.Functions n)}
     {R' : Set (Σ n, L.Relations n)} {A : Finset ℕ} {Γ Δ : Set L[[ℕ]].Sentenceω}
     {φ : L[[ℕ]].Sentenceω} (hcons : Theoryω.Entails Δ φ) (h : InsepAt F' R' A Γ Δ) :
     InsepAt F' R' A Γ (insert φ Δ) :=
@@ -221,7 +221,7 @@ theorem insepAt_insert_right_of_entails {F' : Set (Σ n, L.Functions n)}
 /-! ### The two coordinate-growth constructors -/
 
 /-- Add `φ` to the `Γ`-coordinate of a paired family member. -/
-theorem pairedInsep_insert_left {S Γ Δ : Set L[[ℕ]].Sentenceω} {A : Finset ℕ}
+private theorem pairedInsep_insert_left {S Γ Δ : Set L[[ℕ]].Sentenceω} {A : Finset ℕ}
     {φ : L[[ℕ]].Sentenceω} (hSeq : S = Γ ∪ Δ)
     (hΓfin : Γ.Finite) (hΔfin : Δ.Finite)
     (hΓU : Γ ⊆ GenU rL rR) (hΔU : Δ ⊆ GenU rL rR)
@@ -237,7 +237,7 @@ theorem pairedInsep_insert_left {S Γ Δ : Set L[[ℕ]].Sentenceω} {A : Finset 
     Set.insert_subset_iff.mpr ⟨hφS, hΓS⟩, hΔS, hsupp, rfl, hA⟩
 
 /-- Add `φ` to the `Δ`-coordinate of a paired family member. -/
-theorem pairedInsep_insert_right {S Γ Δ : Set L[[ℕ]].Sentenceω} {A : Finset ℕ}
+private theorem pairedInsep_insert_right {S Γ Δ : Set L[[ℕ]].Sentenceω} {A : Finset ℕ}
     {φ : L[[ℕ]].Sentenceω} (hSeq : S = Γ ∪ Δ)
     (hΓfin : Γ.Finite) (hΔfin : Δ.Finite)
     (hΓU : Γ ⊆ GenU rL rR) (hΔU : Δ ⊆ GenU rL rR)
@@ -259,7 +259,7 @@ generated universe `GenU rL rR`, with each `ConsistencyPropertyEqOn` closure fie
 `Γ`/`Δ` case split: the `Γ` case reuses the one-sided left closure, the `Δ` case dualizes it through
 `insepAt_swap`, and the cross cases use the `PairedInseparability` gates. The root finiteness
 hypotheses enter only in `neg_all_witness` (to choose a fresh witness). -/
-def pairedInsepConsistencyProperty (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
+private def pairedInsepConsistencyProperty (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
     (rL rR : L[[ℕ]].Sentenceω)
     (hrL : (sentenceJConsts (L' := L) (J := ℕ) rL).Finite)
@@ -653,7 +653,7 @@ def pairedInsepConsistencyProperty (F₁ : Set (Σ n, L.Functions n)) (R₁ : Se
 relational vocabulary, there is a single `L[[ℕ]]`-model realizing **both** roots. The fair
 enumeration produces a Henkin-complete `S* ⊇ {rL, rR}`; its quotient term model realizes every
 positive member, and both roots enter positively. -/
-theorem exists_paired_model [L.IsRelational] [Countable (Σ l, L.Relations l)]
+private theorem exists_paired_model [L.IsRelational] [Countable (Σ l, L.Relations l)]
     (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
     (rL rR : L[[ℕ]].Sentenceω)

@@ -48,58 +48,24 @@ L-isomorphic. -/
 def isoSetoid (φ : L.Sentenceω) : Setoid ↥(ModelsOf φ) :=
   (structureIsoSetoid L).comap Subtype.val
 
-omit [Countable ((l : ℕ) × L.Relations l)] in
-/-- `isoSetoid φ` is the ambient relation pulled back along the subtype inclusion.  True by
-definition; stated so consumers can rewrite with it without unfolding. -/
-theorem isoSetoid_eq_comap (φ : L.Sentenceω) :
-    isoSetoid φ = (structureIsoSetoid L).comap (Subtype.val : ↥(ModelsOf φ) → StructureSpace L) :=
-  rfl
 
-omit [Countable ((l : ℕ) × L.Relations l)] in
-/-- Membership in the pulled-back relation is membership in the ambient one. -/
-theorem isoSetoid_r_iff {φ : L.Sentenceω} {c₁ c₂ : ↥(ModelsOf φ)} :
-    (isoSetoid φ).r c₁ c₂ ↔ (structureIsoSetoid L).r c₁.1 c₂.1 := Iff.rfl
+
+
 
 /-! ### Sentence-level predicates
 
 Stated ambiently, so that no Polish refinement of the model subtype appears in the
 definitions. -/
 
-/-- `φ` has a perfect set of pairwise non-isomorphic countable models. -/
-def Sentenceω.HasPerfectSetOfPairwiseNonisomorphicNatModels (φ : L.Sentenceω) : Prop :=
-  HasPerfectAntichainOn (structureIsoSetoid L) (ModelsOf φ)
+
 
 /-- `φ` is thin on its countable models: no such perfect set. -/
-def Sentenceω.IsThinOnNatModels (φ : L.Sentenceω) : Prop :=
+private def Sentenceω.IsThinOnNatModels (φ : L.Sentenceω) : Prop :=
   IsThinOn (structureIsoSetoid L) (ModelsOf φ)
 
-omit [Countable ((l : ℕ) × L.Relations l)] in
-theorem Sentenceω.isThinOnNatModels_iff {φ : L.Sentenceω} :
-    φ.IsThinOnNatModels ↔ ¬φ.HasPerfectSetOfPairwiseNonisomorphicNatModels := Iff.rfl
 
-/-- **The bridge to the existing quotient**: a perfect set of pairwise non-isomorphic models
-gives continuum-many isomorphism classes.
 
-The antichain lives in the ambient space, while the quotient is over the subtype, so the
-transversal is transported through the inclusion — which is exactly what `isoSetoid_eq_comap`
-licenses. -/
-theorem Sentenceω.HasPerfectSetOfPairwiseNonisomorphicNatModels.continuum_le
-    {φ : L.Sentenceω} (h : φ.HasPerfectSetOfPairwiseNonisomorphicNatModels) :
-    Cardinal.continuum ≤ #(Quotient (isoSetoid φ)) := by
-  obtain ⟨P, hperf, hne, hsub, hanti⟩ := h
-  -- the ambient perfect set sits inside `ModelsOf φ`, so it maps into the subtype quotient
-  have hinj : Function.Injective
-      (fun x : P => (Quotient.mk (isoSetoid φ) ⟨x.1, hsub x.2⟩)) := by
-    intro x y hxy
-    have hq : Quotient.mk (isoSetoid φ) ⟨x.1, hsub x.2⟩
-        = Quotient.mk (isoSetoid φ) ⟨y.1, hsub y.2⟩ := hxy
-    have hr : (isoSetoid φ).r ⟨x.1, hsub x.2⟩ ⟨y.1, hsub y.2⟩ := Quotient.exact hq
-    exact Subtype.ext (hanti x.1 x.2 y.1 y.2 (isoSetoid_r_iff.mp hr))
-  -- `StructureSpace L` is metrizable but carries no chosen metric, so upgrade the Polish
-  -- structure here; the topology is unchanged, hence `hperf` still applies.
-  let := TopologicalSpace.upgradeIsCompletelyMetrizable (StructureSpace L)
-  calc Cardinal.continuum = #P := (hperf.mk_eq_continuum hne).symm
-    _ ≤ #(Quotient (isoSetoid φ)) := Cardinal.mk_le_of_injective hinj
+
 
 /-! ### From a Polish refinement back to the ambient space
 
@@ -113,43 +79,12 @@ The two steps are ordered so that the delicate one never arises: coarsening is a
 ambient space.  Nothing here asserts that perfectness survives coarsening — it does not in
 general. -/
 
-/-- The ambient topology on the structure space, bound by name so that statements quantifying
-over a refinement can compare against it explicitly. -/
-private abbrev ambientTop (L : Language.{u, v}) [L.IsRelational]
-    [Countable (Σ l, L.Relations l)] : TopologicalSpace (StructureSpace L) := inferInstance
 
-/-- The ambient half of the route: a Cantor antichain on the model class in the ambient topology
-gives a perfect set of pairwise non-isomorphic models.
 
-`StructureSpace L` is metrizable but carries no chosen metric, so the `T2Space` instance that
-`HasCantorAntichainOn.hasPerfectAntichainOn` needs is produced here rather than assumed. -/
-theorem Sentenceω.hasPerfectSet_of_ambient_cantorAntichain {φ : L.Sentenceω}
-    (h : HasCantorAntichainOn (structureIsoSetoid L) (ModelsOf φ)) :
-    φ.HasPerfectSetOfPairwiseNonisomorphicNatModels := by
-  -- upgrading supplies a metric, hence `T2Space`, without changing the topology
-  let := TopologicalSpace.upgradeIsCompletelyMetrizable (StructureSpace L)
-  exact h.hasPerfectAntichainOn
 
-/-- A Cantor antichain in any finer topology yields an **ambient** perfect set of pairwise
-non-isomorphic models. -/
-theorem Sentenceω.hasPerfectSet_of_refined_cantorAntichain {φ : L.Sentenceω}
-    {t' : TopologicalSpace (StructureSpace L)} (hle : t' ≤ ambientTop L)
-    (h : @HasCantorAntichainOn _ t' (structureIsoSetoid L) (ModelsOf φ)) :
-    φ.HasPerfectSetOfPairwiseNonisomorphicNatModels :=
-  Sentenceω.hasPerfectSet_of_ambient_cantorAntichain (h.mono_topology hle)
 
-/-- The refinement `modelsOf_isClopenable` produces is one the route above accepts, and it is
-still genuinely clopen: the conclusion keeps `IsClosed[t']` and `IsOpen[t']` alongside the
-implication, so a consumer needing the clopen structure — as the tiered counting theorem may —
-does not have to rebuild the refinement. -/
-theorem Sentenceω.exists_clopenable_refinement_forcing_perfectSet (φ : L.Sentenceω) :
-    ∃ t' : TopologicalSpace (StructureSpace L),
-      t' ≤ ambientTop L ∧ @PolishSpace _ t' ∧
-        @IsClosed _ t' (ModelsOf φ) ∧ @IsOpen _ t' (ModelsOf φ) ∧
-        (@HasCantorAntichainOn _ t' (structureIsoSetoid L) (ModelsOf φ) →
-          φ.HasPerfectSetOfPairwiseNonisomorphicNatModels) := by
-  obtain ⟨t', hle, hpolish, hclosed, hopen⟩ := modelsOf_isClopenable φ
-  exact ⟨t', hle, hpolish, hclosed, hopen,
-    fun h => Sentenceω.hasPerfectSet_of_refined_cantorAntichain hle h⟩
+
+
+
 
 end FirstOrder.Language

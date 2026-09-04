@@ -63,7 +63,7 @@ Conditional on `CountableRefinementHypothesis`.
 
 This uses `scottHeight` (which has a clean conditional relationship to
 `StabilizesCompletely`) rather than `scottRank`. -/
-theorem bounded_scottHeight_iso_eq_BFEquiv_of
+private theorem bounded_scottHeight_iso_eq_BFEquiv_of
     (hcount : CountableRefinementHypothesis.{u, v, w} L)
     {φ : L.Sentenceω} {α : Ordinal.{0}} (hα : α < Ordinal.omega 1)
     (hbound : ∀ (M : Type w) [L.Structure M] [Countable M],
@@ -100,7 +100,7 @@ classes of countable models of an Lω₁ω sentence is either at most ℵ₁ or 
 
 The conditional version is proved as `FirstOrder.Language.morley_counting`
 (in `ModelTheory/MorleyCounting.lean`). -/
-theorem morley_counting_dichotomy
+private theorem morley_counting_dichotomy
     (_φ : L.Sentenceω) :
     True := by  -- Schematic: see docstring for the actual mathematical content
   trivial

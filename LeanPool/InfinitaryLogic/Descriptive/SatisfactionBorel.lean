@@ -85,7 +85,7 @@ private theorem modelsOfBounded_iInf {α : Type u'} {n : ℕ}
 omit [Countable (Σ l, L.Relations l)] in
 /-- Satisfaction of any bounded Lω₁ω formula in a countable relational language
 is measurable on the structure space. -/
-theorem modelsOfBounded_measurableSet
+private theorem modelsOfBounded_measurableSet
     {α : Type u'} {n : ℕ}
     (φ : L.BoundedFormulaω α n) (v : α → ℕ) (xs : Fin n → ℕ) :
     MeasurableSet (ModelsOfBounded φ v xs) := by

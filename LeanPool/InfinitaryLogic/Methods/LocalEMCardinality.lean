@@ -33,7 +33,7 @@ variable (Λ : Language.{0, 0}) (J : Type) [LinearOrder J]
 
 /-- The located term code: compression arity, the support's increasing enumeration, and the
 compressed term. Unlike the orbit code, it remembers WHERE the support sits in `J`. -/
-def LocatedTermCode : Type :=
+private def LocatedTermCode : Type :=
   Σ k : ℕ, (Fin k ↪o J) × Λ[[Fin k]].Term Empty
 
 /-- Expansion of a located code — total, since the embedding travels with the code. -/
@@ -44,19 +44,19 @@ variable {Λ J} {M : Type} [Λ.Structure M]
 
 /-- The located code of a carrier element: enumerate its representative's support and
 compress. -/
-noncomputable def LocalEMContext.locatedCode (ctx : LocalEMContext Λ J (M := M))
+private noncomputable def LocalEMContext.locatedCode (ctx : LocalEMContext Λ J (M := M))
     (x : ctx.Carrier) : LocatedTermCode Λ J :=
   ⟨(locJSupport Λ J (Quotient.out x)).card,
     ((locJSupport Λ J (Quotient.out x)).orderEmbOfFin rfl,
       locJCompress Λ J (locJSupport Λ J (Quotient.out x)) (Quotient.out x) (subset_refl _))⟩
 
-theorem LocalEMContext.expand_locatedCode (ctx : LocalEMContext Λ J (M := M))
+private theorem LocalEMContext.expand_locatedCode (ctx : LocalEMContext Λ J (M := M))
     (x : ctx.Carrier) : (ctx.locatedCode x).expand = Quotient.out x :=
   locJExpand_compress Λ J _ (Quotient.out x) (subset_refl _)
 
 /-- **The located code is injective**: equal codes expand to equal representatives, hence equal
 classes. -/
-theorem LocalEMContext.locatedCode_injective (ctx : LocalEMContext Λ J (M := M)) :
+private theorem LocalEMContext.locatedCode_injective (ctx : LocalEMContext Λ J (M := M)) :
     Function.Injective ctx.locatedCode := by
   intro x y hxy
   have h := (ctx.expand_locatedCode x).symm.trans
@@ -66,7 +66,7 @@ theorem LocalEMContext.locatedCode_injective (ctx : LocalEMContext Λ J (M := M)
 /-! ## The upper bound -/
 
 /-- The located-code type has size at most `max ℵ₀ #J` for a countable base language. -/
-theorem mk_locatedTermCode_le [Countable (Σ l, Λ.Functions l)] :
+private theorem mk_locatedTermCode_le [Countable (Σ l, Λ.Functions l)] :
     Cardinal.mk (LocatedTermCode Λ J) ≤ max Cardinal.aleph0 (Cardinal.mk J) := by
   have hcnt : ∀ k, Countable (Λ[[Fin k]].Term Empty) := fun k =>
     haveI := countable_sigma_functions_withFin Λ k
@@ -98,7 +98,7 @@ theorem mk_locatedTermCode_le [Countable (Σ l, Λ.Functions l)] :
         Cardinal.mul_eq_self (le_max_left _ _)
 
 /-- **The upper bound**: the carrier has size at most `max ℵ₀ #J`. -/
-theorem LocalEMContext.mk_carrier_le (ctx : LocalEMContext Λ J (M := M))
+private theorem LocalEMContext.mk_carrier_le (ctx : LocalEMContext Λ J (M := M))
     [Countable (Σ l, Λ.Functions l)] :
     Cardinal.mk ctx.Carrier ≤ max Cardinal.aleph0 (Cardinal.mk J) :=
   (Cardinal.mk_le_of_injective ctx.locatedCode_injective).trans mk_locatedTermCode_le
@@ -107,7 +107,7 @@ theorem LocalEMContext.mk_carrier_le (ctx : LocalEMContext Λ J (M := M))
 
 /-- **Distinct skeleton constants have distinct classes** for an injective deep sequence:
 `LocalEMEq c_j c_{j'}` would force `a (d + r) = a (d + r')` at distinct ranks. -/
-theorem LocalEMContext.mkClass_const_injective (ctx : LocalEMContext Λ J (M := M))
+private theorem LocalEMContext.mkClass_const_injective (ctx : LocalEMContext Λ J (M := M))
     (hinj : Function.Injective ctx.a) :
     Function.Injective fun j : J =>
       ctx.mkClass (t := Term.func (Sum.inr j : Λ[[J]].Functions 0) Fin.elim0) := by
@@ -133,7 +133,7 @@ theorem LocalEMContext.mkClass_const_injective (ctx : LocalEMContext Λ J (M := 
   · exact absurd hrank.symm (ne_of_lt (deepRank_lt_of_lt J hj'S hlt))
 
 /-- **The lower bound**: the skeleton injects into the carrier. -/
-theorem LocalEMContext.mk_le_mk_carrier (ctx : LocalEMContext Λ J (M := M))
+private theorem LocalEMContext.mk_le_mk_carrier (ctx : LocalEMContext Λ J (M := M))
     (hinj : Function.Injective ctx.a) :
     Cardinal.mk J ≤ Cardinal.mk ctx.Carrier :=
   Cardinal.mk_le_of_injective (ctx.mkClass_const_injective hinj)

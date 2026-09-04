@@ -68,14 +68,14 @@ attribute [local instance] cantorCompleteSpace
 /-! ### Cylinder prerequisites -/
 
 /-- Cylinders are closed (they are in fact clopen). -/
-lemma isClosed_cylinder (x : ℕ → Bool) (n : ℕ) : IsClosed (cylinder x n) := by
+private lemma isClosed_cylinder (x : ℕ → Bool) (n : ℕ) : IsClosed (cylinder x n) := by
   have h : cylinder x n = ⋂ i ∈ Finset.range n, {y : ℕ → Bool | y i = x i} := by
     ext y
     simp [PiNat.mem_cylinder_iff]
   rw [h]
   exact isClosed_biInter fun i _ => isClosed_eq (continuous_apply i) continuous_const
 
-lemma ediam_cylinder_le (x : ℕ → Bool) (n : ℕ) :
+private lemma ediam_cylinder_le (x : ℕ → Bool) (n : ℕ) :
     Metric.ediam (cylinder x n) ≤ ENNReal.ofReal ((1 / 2) ^ n) := by
   apply Metric.ediam_le
   intro y hy z hz
@@ -85,7 +85,7 @@ lemma ediam_cylinder_le (x : ℕ → Bool) (n : ℕ) :
   exact mem_cylinder_iff_dist_le.mp hyz
 
 /-- Every open neighborhood contains a cylinder around the point. -/
-lemma exists_cylinder_subset {V : Set (ℕ → Bool)} (hV : IsOpen V) {x : ℕ → Bool} (hx : x ∈ V) :
+private lemma exists_cylinder_subset {V : Set (ℕ → Bool)} (hV : IsOpen V) {x : ℕ → Bool} (hx : x ∈ V) :
     ∃ n, cylinder x n ⊆ V := by
   obtain ⟨s, ⟨z, n, rfl⟩, hxs, hsV⟩ :=
     (isTopologicalBasis_cylinders (fun _ : ℕ => Bool)).exists_subset_of_mem_open hx hV
@@ -106,7 +106,7 @@ lemma Refines.trans {r q p : (ℕ → Bool) × ℕ} (h₁ : Refines r q) (h₂ :
 
 /-- **Single pair-killing move**: two pointed cylinders can be refined so that the product of
 their cylinders lands inside a given dense open subset of the square. -/
-lemma exists_refines_box_subset {U : Set ((ℕ → Bool) × (ℕ → Bool))}
+private lemma exists_refines_box_subset {U : Set ((ℕ → Bool) × (ℕ → Bool))}
     (hUo : IsOpen U) (hUd : Dense U) (p q : (ℕ → Bool) × ℕ) :
     ∃ p' q' : (ℕ → Bool) × ℕ, Refines p' p ∧ Refines q' q ∧
       cylinder p'.1 p'.2 ×ˢ cylinder q'.1 q'.2 ⊆ U := by
@@ -136,7 +136,7 @@ lemma exists_refines_box_subset {U : Set ((ℕ → Bool) × (ℕ → Bool))}
 /-- **Pair-killing fold**: a family of pointed cylinders can be refined so that all pairs of
 distinct indices from a given finite set of pairs have cylinder products inside a dense open
 subset of the square. -/
-lemma exists_refines_forall_pairs {ι : Type*} [DecidableEq ι]
+private lemma exists_refines_forall_pairs {ι : Type*} [DecidableEq ι]
     {U : Set ((ℕ → Bool) × (ℕ → Bool))} (hUo : IsOpen U) (hUd : Dense U)
     (s : Finset (ι × ι)) (P : ι → (ℕ → Bool) × ℕ) :
     ∃ Q : ι → (ℕ → Bool) × ℕ, (∀ i, Refines (Q i) (P i)) ∧
@@ -174,11 +174,11 @@ lemma exists_refines_forall_pairs {ι : Type*} [DecidableEq ι]
 /-! ### Level-indexed stages -/
 
 /-- All binary lists of a given length, as a finset. -/
-def boolLists : ℕ → Finset (List Bool)
+private def boolLists : ℕ → Finset (List Bool)
   | 0 => {[]}
   | n + 1 => (boolLists n).biUnion fun l => {false :: l, true :: l}
 
-lemma mem_boolLists_of_length : ∀ {n : ℕ} {l : List Bool}, l.length = n → l ∈ boolLists n
+private lemma mem_boolLists_of_length : ∀ {n : ℕ} {l : List Bool}, l.length = n → l ∈ boolLists n
   | 0, [], _ => by simp [boolLists]
   | 0, _ :: _, h => by simp at h
   | _ + 1, [], h => by simp at h
@@ -211,11 +211,11 @@ variable {m : ℕ}
 
 /-- The split step: each child `b :: l` refines its parent `l` by fixing the coordinate at
 the parent's depth to `b`. -/
-def presplit (S : Stage U m) : List Bool → (ℕ → Bool) × ℕ
+private def presplit (S : Stage U m) : List Bool → (ℕ → Bool) × ℕ
   | [] => S.f []
   | b :: l => (Function.update (S.f l).1 (S.f l).2 b, (S.f l).2 + 1)
 
-lemma presplit_refines (S : Stage U m) (b : Bool) (l : List Bool) :
+private lemma presplit_refines (S : Stage U m) (b : Bool) (l : List Bool) :
     Refines (presplit S (b :: l)) (S.f l) := by
   refine ⟨Nat.le_succ _, fun z hz => mem_cylinder_iff.mpr fun i hi => ?_⟩
   have hz' := mem_cylinder_iff.mp hz i (hi.trans (Nat.lt_succ_self _))
@@ -224,7 +224,7 @@ lemma presplit_refines (S : Stage U m) (b : Bool) (l : List Bool) :
 
 /-- The inductive step: split every node, then run the pair-killing fold against the
 (dense open) intersection of the first `m + 1` dense open sets. -/
-lemma exists_step (hUo : ∀ k, IsOpen (U k)) (hUd : ∀ k, Dense (U k)) (S : Stage U m) :
+private lemma exists_step (hUo : ∀ k, IsOpen (U k)) (hUd : ∀ k, Dense (U k)) (S : Stage U m) :
     ∃ T : Stage U (m + 1), ∀ l : List Bool, ∀ b : Bool, l.length = m →
       Refines (T.f (b :: l)) (S.f l) := by
   classical
@@ -260,7 +260,7 @@ noncomputable def stages (hUo : ∀ k, IsOpen (U k)) (hUd : ∀ k, Dense (U k)) 
   | 0 => base U
   | m + 1 => Classical.choose (exists_step hUo hUd (stages hUo hUd m))
 
-lemma stages_refines (hUo : ∀ k, IsOpen (U k)) (hUd : ∀ k, Dense (U k))
+private lemma stages_refines (hUo : ∀ k, IsOpen (U k)) (hUd : ∀ k, Dense (U k))
     (m : ℕ) (l : List Bool) (b : Bool) (hl : l.length = m) :
     Refines ((stages U hUo hUd (m + 1)).f (b :: l)) ((stages U hUo hUd m).f l) :=
   Classical.choose_spec (exists_step hUo hUd (stages U hUo hUd m)) l b hl

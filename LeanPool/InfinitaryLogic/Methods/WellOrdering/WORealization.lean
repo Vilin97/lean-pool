@@ -77,7 +77,7 @@ theorem BoundedFormulaω.not_ne_self {L' : Language.{0, 0}} {α : Type} {n : ℕ
   cases φ <;> simp_all <;> omega
 
 /-- A negation in the base diagram is the lifted root (atoms are relation-shaped). -/
-theorem not_mem_baseDiagram_elim {φ : L.Sentenceω} {lt : L.Relations 2}
+private theorem not_mem_baseDiagram_elim {φ : L.Sentenceω} {lt : L.Relations 2}
     {χ : L[[ℕ]].Sentenceω} (h : χ.not ∈ baseDiagram φ lt) :
     χ.not = φ.mapLanguage (L.lhomWithConstants ℕ) := by
   rcases mem_baseDiagram_elim h with heq | ⟨q, r, _, heq⟩

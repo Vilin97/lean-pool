@@ -99,7 +99,7 @@ theorem relationsInSigned_mapLanguage {L' : Language.{0, 0}} (g : L →ᴸ L') (
     simp only [mapLanguage, relationsInSigned_iInf, Set.image_iUnion]
     exact Set.iUnion_congr fun i => relationsInSigned_mapLanguage g s (φs i)
 
-theorem relationsInSigned_castLE (s : Bool) :
+private theorem relationsInSigned_castLE (s : Bool) :
     ∀ {m n : ℕ} (h : m ≤ n) (φ : L.BoundedFormulaω α m),
       relationsInSigned s (φ.castLE h) = relationsInSigned s φ
   | _, _, _, .falsum => rfl
@@ -117,7 +117,7 @@ theorem relationsInSigned_castLE (s : Bool) :
     simp only [castLE, relationsInSigned_iInf]
     exact Set.iUnion_congr fun i => relationsInSigned_castLE s h (φs i)
 
-theorem relationsInSigned_relabel (g : α → β ⊕ Fin n) (s : Bool) :
+private theorem relationsInSigned_relabel (g : α → β ⊕ Fin n) (s : Bool) :
     ∀ {k : ℕ} (φ : L.BoundedFormulaω α k),
       relationsInSigned s (φ.relabel g) = relationsInSigned s φ := by
   intro k φ
@@ -134,7 +134,7 @@ theorem relationsInSigned_relabel (g : α → β ⊕ Fin n) (s : Bool) :
     simp only [relabel, relationsInSigned_iInf]
     exact Set.iUnion_congr fun i => ih i s
 
-theorem relationsInSigned_subst (s : Bool) :
+private theorem relationsInSigned_subst (s : Bool) :
     ∀ {n : ℕ} (φ : L.BoundedFormulaω α n) (tf : α → L.Term β),
       relationsInSigned s (φ.subst tf) = relationsInSigned s φ
   | _, .falsum, _ => rfl
@@ -152,7 +152,7 @@ theorem relationsInSigned_subst (s : Bool) :
     simp only [subst, relationsInSigned_iInf]
     exact Set.iUnion_congr fun i => relationsInSigned_subst s (φs i) tf
 
-theorem relationsInSigned_openBounds (s : Bool) :
+private theorem relationsInSigned_openBounds (s : Bool) :
     ∀ {n : ℕ} (φ : L.BoundedFormulaω Empty n),
       relationsInSigned s (φ.openBounds) = relationsInSigned s φ
   | _, .falsum => rfl
@@ -180,11 +180,7 @@ theorem relationsInSigned_existsBlock (s : Bool) {n : ℕ} :
   | _ + 1, φ =>
     (relationsInSigned_existsBlock s φ.ex).trans (relationsInSigned_ex s φ)
 
-theorem relationsInSigned_forallBlock (s : Bool) {n : ℕ} :
-    ∀ {k : ℕ} (φ : L.BoundedFormulaω α (n + k)),
-      relationsInSigned s (φ.forallBlock) = relationsInSigned s φ
-  | 0, _ => rfl
-  | _ + 1, φ => relationsInSigned_forallBlock s φ.all
+
 
 end BoundedFormulaω
 
@@ -195,7 +191,7 @@ section Consts
 variable {L : Language.{0, 0}}
 
 /-- Constant abstraction does not move the signed occurrence sets. -/
-theorem BoundedFormulaω.relationsInSigned_abstractConst (j : ℕ) (s : Bool) :
+private theorem BoundedFormulaω.relationsInSigned_abstractConst (j : ℕ) (s : Bool) :
     ∀ {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n),
       relationsInSigned s (φ.abstractConst j) = relationsInSigned s φ := by
   intro n φ
@@ -214,13 +210,13 @@ theorem BoundedFormulaω.relationsInSigned_abstractConst (j : ℕ) (s : Bool) :
     exact Set.iUnion_congr fun i => ih i s
 
 /-- The existential generalization of a constant does not move the signed occurrence sets. -/
-theorem relationsInSigned_genEx (j : ℕ) (s : Bool) (ρ : L[[ℕ]].Sentenceω) :
+private theorem relationsInSigned_genEx (j : ℕ) (s : Bool) (ρ : L[[ℕ]].Sentenceω) :
     BoundedFormulaω.relationsInSigned s (genEx j ρ) = BoundedFormulaω.relationsInSigned s ρ := by
   rw [genEx, BoundedFormulaω.relationsInSigned_ex, BoundedFormulaω.relationsInSigned_relabel,
     BoundedFormulaω.relationsInSigned_abstractConst]
 
 /-- Instantiating a universal at a constant does not move the signed occurrence sets. -/
-theorem relationsInSigned_instConst (c : ℕ) (s : Bool) (φ : L[[ℕ]].BoundedFormulaω Empty 1) :
+private theorem relationsInSigned_instConst (c : ℕ) (s : Bool) (φ : L[[ℕ]].BoundedFormulaω Empty 1) :
     BoundedFormulaω.relationsInSigned s (instConst c φ) =
       BoundedFormulaω.relationsInSigned s φ := by
   rw [instConst, BoundedFormulaω.relationsInSigned_subst,
@@ -264,17 +260,9 @@ private theorem relationsInSigned_rel_inl {n l : ℕ} (s : Bool) (R : L'.Relatio
     relationsInSigned s (BoundedFormulaω.rel (Sum.inl R : L'[[J]].Relations l) ts)
       = if s then {(⟨l, Sum.inl R⟩ : Σ n, L'[[J]].Relations n)} else ∅ := rfl
 
-theorem baseRelationsInSigned_subset {n : ℕ} (s : Bool) (φ : L'[[J]].BoundedFormulaω α n) :
-    baseRelationsInSigned s φ ⊆ φ.baseRelationsIn :=
-  fun _ hp => relationsInSigned_subset_relationsIn s φ hp
 
-/-- The base occurrence set splits by sign, exactly as the ambient one does. -/
-theorem baseRelationsIn_eq_signed_union {n : ℕ} (φ : L'[[J]].BoundedFormulaω α n) :
-    φ.baseRelationsIn = basePositiveRelations φ ∪ baseNegativeRelations φ := by
-  ext p
-  simp only [baseRelationsIn, baseRelationsInSigned, Set.mem_ofPred_eq, Set.mem_union]
-  rw [relationsIn_eq_signed_union]
-  exact Set.mem_union _ _ _
+
+
 
 @[simp] theorem baseRelationsInSigned_falsum {n : ℕ} (s : Bool) :
     baseRelationsInSigned s (BoundedFormulaω.falsum : L'[[J]].BoundedFormulaω α n) = ∅ := by
@@ -358,10 +346,7 @@ open BoundedFormulaω
     baseRelationsInSigned s (constEq (L := L) a b) = ∅ := by
   ext p; simp [baseRelationsInSigned, constEq]
 
-/-- An atomic relation instance occurs **positively** only, and its base positive set does not
-depend on the constant tuple. -/
-theorem basePositiveRelations_relInst {l : ℕ} (R : L.Relations l) (g g' : Fin l → ℕ) :
-    basePositiveRelations (relInst R g) = basePositiveRelations (relInst R g') := rfl
+
 
 /-- An atomic relation instance's base **positive** set is exactly its own symbol. -/
 theorem basePositiveRelations_relInst_eq {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) :

@@ -115,7 +115,7 @@ extension family to produce formula-level agreement.  These produce the `Potenti
 The family is literally `{p | R p.1 p.2.1 p.2.2}`.  Tuples are arbitrary functions `Fin n → M`, so
 repeated coordinates are supported and no injectivity is assumed; atomic compatibility is exactly
 `SameAtomicType`.  Carrier universes stay independent. -/
-def ofExtensionFamily
+private def ofExtensionFamily
     (R : ∀ n : ℕ, (Fin n → M) → (Fin n → N) → Prop)
     (empty : R 0 Fin.elim0 Fin.elim0)
     (compatible : ∀ {n a b}, R n a b → SameAtomicType (L := L) a b)
@@ -132,31 +132,9 @@ def ofExtensionFamily
   back := fun _ hp n' => by
     simpa only [Set.mem_ofPred_eq] using back (by simpa only [Set.mem_ofPred_eq] using hp) n'
 
-/-- Every finite `N`-tuple is matched to an `M`-tuple through a potential isomorphism, by
-iterating `back` along the tuple. -/
-theorem exists_left (P : PotentialIso L M N) :
-    ∀ {n : ℕ} (b : Fin n → N),
-      ∃ a : Fin n → M, (⟨n, a, b⟩ : Σ n : ℕ, (Fin n → M) × (Fin n → N)) ∈ P.family := by
-  intro n
-  induction n with
-  | zero =>
-    intro b
-    refine ⟨Fin.elim0, ?_⟩
-    have hb : b = Fin.elim0 := funext fun i => i.elim0
-    rw [hb]
-    exact P.empty_mem
-  | succ n ih =>
-    intro b
-    obtain ⟨a', ha'⟩ := ih (Fin.init b)
-    obtain ⟨m, hm⟩ := P.back _ ha' (b (Fin.last n))
-    refine ⟨Fin.snoc a' m, ?_⟩
-    rwa [Fin.snoc_init_self] at hm
 
-/-- Every finite `M`-tuple is matched to an `N`-tuple through a potential isomorphism, by
-iterating `forth` along the tuple. -/
-theorem exists_right (P : PotentialIso L M N) {n : ℕ} (a : Fin n → M) :
-    ∃ b : Fin n → N, (⟨n, a, b⟩ : Σ n : ℕ, (Fin n → M) × (Fin n → N)) ∈ P.family :=
-  P.symm.exists_left a
+
+
 
 end PotentialIso
 
@@ -381,7 +359,7 @@ follows from the induction hypothesis.
 The structures may live in different universes, and no countability of the language is
 required: the induction consumes only the family's atomic-type compatibility and its two
 extension properties. -/
-theorem PotentialIso.family_bfEquiv
+private theorem PotentialIso.family_bfEquiv
     {M : Type w} [L.Structure M]
     {N : Type w'} [L.Structure N]
     (P : PotentialIso L M N) (α : Ordinal)
@@ -403,16 +381,7 @@ theorem PotentialIso.family_bfEquiv
     rw [BFEquiv.limit β hβ]
     exact fun γ hγ => ih γ hγ hab
 
-/-- Compatibility alias for `PotentialIso.family_bfEquiv`, which is stated without the
-countable-language hypothesis and for structures in different universes. -/
-@[deprecated PotentialIso.family_bfEquiv (since := "2026-08-14")]
-theorem potentialIso_family_BFEquiv [Countable (Σ l, L.Relations l)]
-    {M : Type w} [L.Structure M]
-    {N : Type w} [L.Structure N]
-    (P : PotentialIso L M N) (α : Ordinal)
-    {n : ℕ} {a : Fin n → M} {b : Fin n → N}
-    (hab : ⟨n, a, b⟩ ∈ P.family) : BFEquiv (L := L) α n a b :=
-  P.family_bfEquiv α hab
+
 
 /-- A potential isomorphism implies BF-equivalence at all ordinals for the empty tuple. -/
 theorem PotentialIso.implies_BFEquiv_all
@@ -479,7 +448,7 @@ for the empty tuple. This is the main characterization theorem for potential iso
 **Universe note**: The ordinal universe is constrained to match the type universe `w`
 by `BFEquiv_all_implies_potentialIso` (which uses a supremum over `N : Type w`).
 The forward direction is universe-polymorphic; the backward direction requires this match. -/
-theorem potentialIso_iff_BFEquiv_all
+private theorem potentialIso_iff_BFEquiv_all
     {M : Type w} [L.Structure M]
     {N : Type w} [L.Structure N] :
     Nonempty (PotentialIso L M N) ↔
@@ -525,15 +494,13 @@ variable (P : ExtensionPresentation L M N)
 
 /-- The family a presentation induces: the **existential image** of its states.  Two distinct
 states presenting the same pair collapse here and nowhere earlier. -/
-def Rel (n : ℕ) (a : Fin n → M) (b : Fin n → N) : Prop :=
+private def Rel (n : ℕ) (a : Fin n → M) (b : Fin n → N) : Prop :=
   ∃ s : P.State n, P.left s = a ∧ P.right s = b
 
-/-- Every state lands in the induced family. -/
-theorem rel_of_state {n : ℕ} (s : P.State n) : P.Rel n (P.left s) (P.right s) :=
-  ⟨s, rfl, rfl⟩
+
 
 /-- The standard object a presentation produces. -/
-def toPotentialIso : PotentialIso L M N :=
+private def toPotentialIso : PotentialIso L M N :=
   PotentialIso.ofExtensionFamily P.Rel
     ⟨P.empty, funext fun i => i.elim0, funext fun i => i.elim0⟩
     (fun ⟨s, hl, hr⟩ => hl ▸ hr ▸ P.compatible s)

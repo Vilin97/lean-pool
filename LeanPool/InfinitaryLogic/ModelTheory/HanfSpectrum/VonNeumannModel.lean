@@ -36,21 +36,21 @@ open Ordinal Cardinal
 noncomputable def ladderLevel (β : Ordinal.{0}) : ZFSet.{0} :=
   ZFSet.vonNeumann (ω + β)
 
-theorem card_ladderLevel (β : Ordinal.{0}) : (ladderLevel β).card = Cardinal.beth β := by
+private theorem card_ladderLevel (β : Ordinal.{0}) : (ladderLevel β).card = Cardinal.beth β := by
   rw [ladderLevel, ZFSet.card_vonNeumann, ← Cardinal.beth_eq_preBeth]
 
 theorem ladderLevel_subset {β γ : Ordinal.{0}} (h : β ≤ γ) : ladderLevel β ⊆ ladderLevel γ :=
   ZFSet.vonNeumann_subset_of_le (add_le_add_right h ω)
 
-theorem isTransitive_ladderLevel (β : Ordinal.{0}) : (ladderLevel β).IsTransitive :=
+private theorem isTransitive_ladderLevel (β : Ordinal.{0}) : (ladderLevel β).IsTransitive :=
   ZFSet.isTransitive_vonNeumann _
 
-theorem ladderLevel_add_one (β : Ordinal.{0}) :
+private theorem ladderLevel_add_one (β : Ordinal.{0}) :
     ladderLevel (β + 1) = ZFSet.powerset (ladderLevel β) := by
   rw [ladderLevel, ladderLevel, ← add_assoc, ZFSet.vonNeumann_add_one]
 
 /-- The countable enumeration of the base level `V_ω`. -/
-noncomputable def omegaEnum : ℕ ≃ Shrink.{0} ↥(ladderLevel 0) :=
+private noncomputable def omegaEnum : ℕ ≃ Shrink.{0} ↥(ladderLevel 0) :=
   Classical.choice (Cardinal.eq.mp (by
     rw [Cardinal.mk_nat]
     exact (show (ladderLevel 0).card = Cardinal.aleph0 by
@@ -63,7 +63,7 @@ noncomputable def omegaEnumZ (n : ℕ) : ZFSet.{0} :=
 theorem omegaEnumZ_mem (n : ℕ) : omegaEnumZ n ∈ ladderLevel 0 :=
   ((equivShrink ↥(ladderLevel 0)).symm (omegaEnum n)).2
 
-theorem omegaEnumZ_surjective {z : ZFSet.{0}} (hz : z ∈ ladderLevel 0) :
+private theorem omegaEnumZ_surjective {z : ZFSet.{0}} (hz : z ∈ ladderLevel 0) :
     ∃ n, omegaEnumZ n = z := by
   obtain ⟨n, hn⟩ := omegaEnum.surjective (equivShrink ↥(ladderLevel 0) ⟨z, hz⟩)
   refine ⟨n, ?_⟩
@@ -80,13 +80,13 @@ noncomputable def VCarrier : Type := Shrink.{0} ↥(ladderLevel (α + 1))
 noncomputable def toZ (x : VCarrier α) : ZFSet.{0} :=
   ((equivShrink ↥(ladderLevel (α + 1))).symm x).1
 
-theorem toZ_mem (x : VCarrier α) : toZ α x ∈ ladderLevel (α + 1) :=
+private theorem toZ_mem (x : VCarrier α) : toZ α x ∈ ladderLevel (α + 1) :=
   ((equivShrink ↥(ladderLevel (α + 1))).symm x).2
 
-theorem toZ_injective : Function.Injective (toZ α) := fun _ _ hxy =>
+private theorem toZ_injective : Function.Injective (toZ α) := fun _ _ hxy =>
   (equivShrink ↥(ladderLevel (α + 1))).symm.injective (Subtype.ext hxy)
 
-theorem toZ_surjective {z : ZFSet.{0}} (hz : z ∈ ladderLevel (α + 1)) :
+private theorem toZ_surjective {z : ZFSet.{0}} (hz : z ∈ ladderLevel (α + 1)) :
     ∃ x : VCarrier α, toZ α x = z := by
   refine ⟨equivShrink ↥(ladderLevel (α + 1)) ⟨z, hz⟩, ?_⟩
   simp only [toZ]
@@ -103,7 +103,7 @@ theorem toZ_surjective {z : ZFSet.{0}} (hz : z ∈ ladderLevel (α + 1)) :
     | 1, i => toZ α (v 0) ∈ ladderLevel (idxVal (i : Index α))
     | 2, _ => toZ α (v 0) ∈ toZ α (v 1)
 
-theorem toZ_constVal (n : ℕ) :
+private theorem toZ_constVal (n : ℕ) :
     letI := vStructure α
     toZ α (constVal α n : VCarrier α) = omegaEnumZ n := by
   let := vStructure α

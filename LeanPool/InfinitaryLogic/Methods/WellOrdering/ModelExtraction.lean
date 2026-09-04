@@ -29,7 +29,7 @@ hypothesis, some nonempty `L[[ℕ]]`-structure realizes every member of the base
 the lifted root and the full positive rational diagram.  Composition of the completion
 endpoint with the forward-truth-lemma model existence theorem; the Henkin-complete set is
 consumed opaquely. -/
-theorem exists_model_baseDiagram [L.IsRelational] [Countable (Σ l, L.Relations l)]
+private theorem exists_model_baseDiagram [L.IsRelational] [Countable (Σ l, L.Relations l)]
     (h : HasWellOrderedChains φ lt) :
     ∃ (M : Type) (_ : L[[ℕ]].Structure M) (_ : Nonempty M),
       ∀ χ ∈ baseDiagram φ lt, Sentenceω.Realize χ M := by
@@ -41,12 +41,12 @@ theorem exists_model_baseDiagram [L.IsRelational] [Countable (Σ l, L.Relations 
 
 /-- **The rational map** of an `L[[ℕ]]`-structure: `q ↦ d_q^M`, the interpretation of the
 rational constant.  Step 5's `f : ℚ → M`. -/
-def ratConstMap (M : Type) [L[[ℕ]].Structure M] (q : ℚ) : M :=
+private def ratConstMap (M : Type) [L[[ℕ]].Structure M] (q : ℚ) : M :=
   (ratConstTerm (L := L) q).realize (Empty.elim : Empty → M)
 
 /-- The sentence-context constant term realizes to the interpretation of the closed
 constant, under any (vacuous) assignment. -/
-theorem realize_constTermS_eq_constTerm {M : Type} [L[[ℕ]].Structure M] (c : ℕ)
+private theorem realize_constTermS_eq_constTerm {M : Type} [L[[ℕ]].Structure M] (c : ℕ)
     (v : Empty ⊕ Fin 0 → M) :
     Term.realize v (constTermS (L := L) c) =
       Term.realize (Empty.elim : Empty → M) (constTerm (L' := L) (J := ℕ) c) := by
@@ -55,7 +55,7 @@ theorem realize_constTermS_eq_constTerm {M : Type} [L[[ℕ]].Structure M] (c : �
   exact congrArg _ (funext fun i => i.elim0)
 
 /-- A positive diagram atom realizes as the expansion relation at the mapped rationals. -/
-theorem realize_ratLtAtom {M : Type} [inst : L[[ℕ]].Structure M] (q r : ℚ) :
+private theorem realize_ratLtAtom {M : Type} [inst : L[[ℕ]].Structure M] (q r : ℚ) :
     Sentenceω.Realize (ratLtAtom lt q r) M ↔
       @RelMap L[[ℕ]] M inst 2 (Sum.inl lt)
         ![ratConstMap (L := L) M q, ratConstMap (L := L) M r] := by

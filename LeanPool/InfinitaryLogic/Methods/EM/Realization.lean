@@ -47,7 +47,7 @@ variable {L : Language.{u, v}}
 /-- Any infinite linear order admits a strictly-increasing tuple of every
 finite length. Constructed by sorting `n` distinct elements obtained from
 `Infinite.natEmbedding`. -/
-theorem Fin.exists_orderEmbedding_of_infinite
+private theorem Fin.exists_orderEmbedding_of_infinite
     {I : Type*} [LinearOrder I] [Infinite I] (n : ℕ) :
     Nonempty (Fin n ↪o I) := by
   classical
@@ -61,7 +61,7 @@ theorem Fin.exists_orderEmbedding_of_infinite
 `Fin n ↪o J` to `Fin n → J` via `DFunLike.coe` is injective (by
 `DFunLike.coe_injective`), and `Fin n → J` is countable when `J` is countable
 because `Fin n` is finite. -/
-theorem Fin.countable_orderEmbedding (n : ℕ) {J : Type*} [LinearOrder J]
+private theorem Fin.countable_orderEmbedding (n : ℕ) {J : Type*} [LinearOrder J]
     [Countable J] : Countable (Fin n ↪o J) :=
   Function.Injective.countable
     (f := fun e : Fin n ↪o J => (⇑e : Fin n → J))
@@ -127,7 +127,7 @@ tuple `t : Fin n ↪o J`, the theory contains either `templateSentence φ t` (if
 `T.truth φ`) or its negation (if `¬ T.truth φ`). Both directions are needed:
 without the negative sentences, a model could realize formulas the template
 declares false. -/
-def templateTheory (T : Lomega1omegaTemplate L) (J : Type u) [LinearOrder J] :
+private def templateTheory (T : Lomega1omegaTemplate L) (J : Type u) [LinearOrder J] :
     Set L[[J]].Sentenceω :=
   { σ : L[[J]].Sentenceω |
       ∃ (n : ℕ) (φ : L.BoundedFormulaω Empty n) (t : Fin n ↪o J),
@@ -152,7 +152,7 @@ def templateTheoryOn
 
 /-- Monotonicity: the restricted template theory is a subset of the full
 template theory. -/
-theorem templateTheoryOn_subset_templateTheory
+private theorem templateTheoryOn_subset_templateTheory
     (T : Lomega1omegaTemplate L)
     (Γ : Set (Σ n, L.BoundedFormulaω Empty n))
     (J : Type u) [LinearOrder J] :
@@ -160,22 +160,14 @@ theorem templateTheoryOn_subset_templateTheory
   rintro σ ⟨n, φ, t, _hΓ, hcase⟩
   exact ⟨n, φ, t, hcase⟩
 
-/-- Monotonicity of `templateTheoryOn` in the formula family `Γ`: enlarging
-`Γ` can only enlarge the restricted template theory. -/
-theorem templateTheoryOn_mono
-    (T : Lomega1omegaTemplate L)
-    {Γ Γ' : Set (Σ n, L.BoundedFormulaω Empty n)} (hΓ : Γ ⊆ Γ')
-    (J : Type u) [LinearOrder J] :
-    T.templateTheoryOn Γ J ⊆ T.templateTheoryOn Γ' J := by
-  rintro σ ⟨n, φ, t, hΓφ, hcase⟩
-  exact ⟨n, φ, t, hΓ hΓφ, hcase⟩
+
 
 /-- When the family `Γ` and the index type `J` are both countable, the
 restricted template theory is countable. This is the point of `templateTheoryOn`:
 the full `templateTheory T J` is always continuum-sized (Lω₁ω formulas form a
 continuum), but the restricted theory can be countable and thus a candidate
 input to `model_existence`. -/
-theorem templateTheoryOn_countable
+private theorem templateTheoryOn_countable
     {T : Lomega1omegaTemplate L}
     {Γ : Set (Σ n, L.BoundedFormulaω Empty n)} (hΓ : Γ.Countable)
     {J : Type u} [LinearOrder J] [Countable J] :
@@ -205,7 +197,7 @@ satisfiable in the source model `M`, expanded to an `L[[J]]`-structure via an
 appropriate interpretation `σ : J → M`. The interpretation is built by sorting
 the finitely many J-indices appearing in the finite fragment, embedding them
 into `I` via `[Infinite I]`, and pulling them through `a`. -/
-theorem IsLomega1omegaIndiscernible.templateTheory_finitelySatisfiable
+private theorem IsLomega1omegaIndiscernible.templateTheory_finitelySatisfiable
     {I : Type w} [LinearOrder I] [Infinite I]
     {M : Type*} [L.Structure M] {a : I → M}
     (h : IsLomega1omegaIndiscernible (L := L) a)
@@ -431,7 +423,7 @@ def templateTheoryOfSeq
 /-- `templateTheoryOfSeq` is countable whenever `J` is countable. Follows from
 `templateTheoryOn_countable` via `Set.countable_range`; the countability of the
 family comes for free from the sequence structure. -/
-theorem templateTheoryOfSeq_countable
+private theorem templateTheoryOfSeq_countable
     {T : Lomega1omegaTemplate L}
     (s : ℕ → Σ n, L.BoundedFormulaω Empty n)
     [Countable J] :

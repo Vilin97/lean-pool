@@ -54,7 +54,7 @@ left, whose *negation* is bounded on the right, lies in the maintained separator
 * `Pos φ ⊆ P₁` (left bound) and `Pos φ ⊆ N₂` (right bound, after the negation exchange);
 * `Neg φ ⊆ N₁` (left bound) and `Neg φ ⊆ P₂` (right bound, after the exchange).
 -/
-theorem sentBndPol_flip_inter {φ : L[[ℕ]].Sentenceω}
+private theorem sentBndPol_flip_inter {φ : L[[ℕ]].Sentenceω}
     (h₁ : φ ∈ SentBndPol F₁ P₁ N₁) (h₂ : φ.not ∈ SentBndPol F₂ P₂ N₂) :
     φ ∈ SentBndPol (F₁ ∩ F₂) (P₁ ∩ N₂) (N₁ ∩ P₂) := by
   rw [sentBndPol_not_iff] at h₂
@@ -96,41 +96,15 @@ theorem lyndonInsepAt_insert_right_of_shared_constEq_entails {φ : L[[ℕ]].Sent
   lyndonInsepAt_swap
     (lyndonInsepAt_insert_of_shared_constEq_entails a b hσA hΓσ hcons (lyndonInsepAt_swap h))
 
-/-- The right twin of the `iSup` component selection. -/
-theorem lyndonInsepAt_iSup_component_right (φs : ℕ → L[[ℕ]].Sentenceω)
-    (hmem : BoundedFormulaω.iSup φs ∈ Δ) (h : LyndonInsepAt F P N A Γ Δ) :
-    ∃ k, LyndonInsepAt F P N A Γ (insert (φs k) Δ) := by
-  obtain ⟨k, hk⟩ := lyndonInsepAt_iSup_component φs hmem (lyndonInsepAt_swap h)
-  exact ⟨k, lyndonInsepAt_swap hk⟩
 
-/-- The right twin of the negated-`iInf` component selection. -/
-theorem lyndonInsepAt_neg_iInf_component_right (φs : ℕ → L[[ℕ]].Sentenceω)
-    (hmem : (BoundedFormulaω.iInf φs).not ∈ Δ) (h : LyndonInsepAt F P N A Γ Δ) :
-    ∃ k, LyndonInsepAt F P N A Γ (insert (φs k).not Δ) := by
-  obtain ⟨k, hk⟩ := lyndonInsepAt_neg_iInf_component φs hmem (lyndonInsepAt_swap h)
-  exact ⟨k, lyndonInsepAt_swap hk⟩
 
-/-- The right twin of the implication dichotomy. -/
-theorem lyndonInsepAt_imp_dichotomy_right {φ ψ : L[[ℕ]].Sentenceω} (hmem : φ.imp ψ ∈ Δ)
-    (h : LyndonInsepAt F P N A Γ Δ) :
-    LyndonInsepAt F P N A Γ (insert φ.not Δ) ∨ LyndonInsepAt F P N A Γ (insert ψ Δ) := by
-  rcases lyndonInsepAt_imp_dichotomy hmem (lyndonInsepAt_swap h) with hk | hk
-  · exact Or.inl (lyndonInsepAt_swap hk)
-  · exact Or.inr (lyndonInsepAt_swap hk)
 
-/-- The right twin of fresh-support growth. -/
-theorem lyndonInsepAt_grow_fresh_right (c : ℕ)
-    (hcΓ : ∀ γ ∈ Γ, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ)
-    (h : LyndonInsepAt F P N A Γ Δ) : LyndonInsepAt F P N (insert c A) Γ Δ :=
-  lyndonInsepAt_swap (lyndonInsepAt_grow_fresh c hcΓ (lyndonInsepAt_swap h))
 
-/-- The right twin of the quantifier round trip. -/
-theorem lyndonInsepAt_witness_of_genEx_right (c : ℕ) (φc : L[[ℕ]].Sentenceω)
-    (hcΓ : ∀ γ ∈ Γ, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ)
-    (hcΔ : ∀ δ ∈ Δ, c ∉ sentenceJConsts (L' := L) (J := ℕ) δ)
-    (h : LyndonInsepAt F P N A Γ (insert (genEx c φc) Δ)) :
-    LyndonInsepAt F P N (insert c A) Γ (insert φc Δ) :=
-  lyndonInsepAt_swap (lyndonInsepAt_witness_of_genEx c φc hcΔ hcΓ (lyndonInsepAt_swap h))
+
+
+
+
+
 
 /-! ## The paired family -/
 
@@ -149,12 +123,7 @@ def LyndonPairedMem (F₁ : Set (Σ n, L.Functions n)) (P₁ N₁ : Set (Σ n, L
 
 variable {rL rR : L[[ℕ]].Sentenceω}
 
-/-- Every family member lies in the enumeration universe. -/
-theorem lyndonPairedMem_subset_genU {S : Set L[[ℕ]].Sentenceω}
-    (hS : LyndonPairedMem F₁ P₁ N₁ F₂ P₂ N₂ rL rR S) : S ⊆ GenU rL rR := by
-  obtain ⟨Γ, Δ, A, -, -, hΓU, hΔU, -, -, -, hSeq, -⟩ := hS
-  rw [hSeq]
-  exact Set.union_subset hΓU hΔU
+
 
 /-! ### The two coordinate-growth constructors -/
 

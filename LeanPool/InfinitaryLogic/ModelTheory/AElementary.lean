@@ -46,18 +46,7 @@ theorem comp {A : Fragment L} {f : N ↪[L] M} {g : P ↪[L] N}
   exact (Iff.of_eq (congrArg (φ.Realize Empty.elim)
     (funext fun i => rfl))).trans (h1.trans h2)
 
-/-- **Two-out-of-three**: if the composite and the outer embedding are A-elementary, so is the
-inner one — the form the chain development consumes. -/
-theorem of_comp {A : Fragment L} {f : N ↪[L] M} {g : P ↪[L] N}
-    (hf : AElementary A f) (hfg : AElementary A (f.comp g)) : AElementary A g := by
-  intro n φ hφ a
-  have h1 := hf φ hφ (⇑g ∘ a)
-  have h2 := hfg φ hφ a
-  refine ⟨fun h => ?_, fun h => ?_⟩
-  · exact (h1.symm.trans ((Iff.of_eq (congrArg (φ.Realize Empty.elim)
-      (funext fun i => rfl))).symm.trans h2)).mp h
-  · exact (h1.symm.trans ((Iff.of_eq (congrArg (φ.Realize Empty.elim)
-      (funext fun i => rfl))).symm.trans h2)).mpr h
+
 
 /-- Sentence transport: for a fragment sentence, truth agrees between the two structures. -/
 theorem realize_sentence_iff {A : Fragment L} {f : N ↪[L] M} (h : AElementary A f)
@@ -66,17 +55,7 @@ theorem realize_sentence_iff {A : Fragment L} {f : N ↪[L] M} (h : AElementary 
   have := h φ hφ Fin.elim0
   rwa [show (⇑f ∘ Fin.elim0 : Fin 0 → M) = Fin.elim0 from funext fun i => i.elim0] at this
 
-/-- Theory transport: a fragment theory true in the ambient model is true in the A-elementary
-substructure, and conversely. -/
-theorem theoryModel_iff {A : Fragment L} {f : N ↪[L] M} (h : AElementary A f)
-    {T : Set L.Sentenceω}
-    (hT : ∀ φ ∈ T, (⟨0, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ A.toSet) :
-    Theoryω.Model T M ↔ Theoryω.Model T N := by
-  constructor
-  · intro hM
-    exact fun φ hφ => (h.realize_sentence_iff (hT φ hφ)).mp (hM φ hφ)
-  · intro hN
-    exact fun φ hφ => (h.realize_sentence_iff (hT φ hφ)).mpr (hN φ hφ)
+
 
 end AElementary
 

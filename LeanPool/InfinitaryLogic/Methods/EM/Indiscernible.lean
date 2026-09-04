@@ -52,13 +52,7 @@ def IsLomega1omegaIndiscernibleOn (a : I → M)
       φ.Realize (Empty.elim : Empty → M) (a ∘ s) ↔
       φ.Realize (Empty.elim : Empty → M) (a ∘ t)
 
-/-- Full indiscernibility implies restricted indiscernibility on any family. -/
-theorem IsLomega1omegaIndiscernible.toOn {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) :
-    IsLomega1omegaIndiscernibleOn (L := L) a Γ := by
-  intro n φ _ s t hs ht
-  exact h n φ s hs t ht
+
 
 /-- Restricting an `On`-indiscernible sequence to a sub-order preserves
 restricted indiscernibility on the same family. -/
@@ -107,15 +101,7 @@ theorem IsLomega1omegaIndiscernible.restrict {a : I → M}
     IsLomega1omegaIndiscernible (L := L) (a ∘ e) :=
   fun n φ s hs t ht => h n φ (e ∘ s) (e.strictMono.comp hs) (e ∘ t) (e.strictMono.comp ht)
 
-/-- For a 1-variable formula, truth is the same at any two indices. -/
-theorem IsLomega1omegaIndiscernible.unary_const {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    (φ : L.BoundedFormulaω Empty 1) (i j : I) :
-    letI := ‹L.Structure M›
-    φ.Realize (Empty.elim : Empty → M) (fun _ => a i) ↔
-    φ.Realize (Empty.elim : Empty → M) (fun _ => a j) :=
-  h 1 φ (fun _ => i) (fun x y h => absurd h (by omega))
-       (fun _ => j) (fun x y h => absurd h (by omega))
+
 
 /-- The indiscernibility hypothesis, restated with the formula `φ` preceding the
 tuples (a more natural calling convention than the universal form used by the
@@ -129,16 +115,7 @@ theorem IsLomega1omegaIndiscernible.iff_realize {a : I → M}
     φ.Realize (Empty.elim : Empty → M) (a ∘ t) :=
   h n φ s hs t ht
 
-/-- The indiscernibility hypothesis, stated for bundled increasing tuples
-`s t : Fin n ↪o I`. This is the natural form for working with order embeddings
-of `Fin n` into the index set. -/
-theorem IsLomega1omegaIndiscernible.iff_realize_of_orderEmbedding {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    {n : ℕ} (φ : L.BoundedFormulaω Empty n) (s t : Fin n ↪o I) :
-    letI := ‹L.Structure M›
-    φ.Realize (Empty.elim : Empty → M) (a ∘ s) ↔
-    φ.Realize (Empty.elim : Empty → M) (a ∘ t) :=
-  h n φ s s.strictMono t t.strictMono
+
 
 /-- Pre-composing an indiscernible sequence by an order isomorphism yields an
 indiscernible sequence. A direct corollary of `restrict` via
@@ -149,23 +126,7 @@ theorem IsLomega1omegaIndiscernible.reindex {a : I → M}
     IsLomega1omegaIndiscernible (L := L) (a ∘ e) :=
   h.restrict e.toOrderEmbedding
 
-/-- For a 2-variable formula, truth is the same on any two strictly increasing
-pairs from the indiscernible sequence. The binary analogue of `unary_const`. -/
-theorem IsLomega1omegaIndiscernible.pair_const {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    (φ : L.BoundedFormulaω Empty 2) {i₁ i₂ j₁ j₂ : I}
-    (hi : i₁ < i₂) (hj : j₁ < j₂) :
-    letI := ‹L.Structure M›
-    φ.Realize (Empty.elim : Empty → M) (a ∘ ![i₁, i₂]) ↔
-    φ.Realize (Empty.elim : Empty → M) (a ∘ ![j₁, j₂]) := by
-  have aux : ∀ {p q : I}, p < q → StrictMono (![p, q] : Fin 2 → I) := by
-    intro p q hpq x y hxy
-    match x, y with
-    | 0, 0 => exact absurd hxy (by decide)
-    | 0, 1 => simpa using hpq
-    | 1, 0 => exact absurd hxy (by decide)
-    | 1, 1 => exact absurd hxy (by decide)
-  exact h 2 φ ![i₁, i₂] (aux hi) ![j₁, j₂] (aux hj)
+
 
 end Indiscernible
 

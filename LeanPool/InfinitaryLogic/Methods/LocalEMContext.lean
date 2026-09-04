@@ -113,7 +113,7 @@ theorem locDeepInterp_eq_realize (d : ℕ) (S : Finset J) (t : Λ[[J]].Term Empt
 realization (in `M`'s `[[J]]`-structure at depth `d`) of the body on the deep interpretations of
 the substituted terms. Mostly `Term.realize_subst` (deep interpretation *is* realization in the
 depth-`d` structure). -/
-theorem locDeepInterp_subst (d : ℕ) (S : Finset J) {n : ℕ}
+private theorem locDeepInterp_subst (d : ℕ) (S : Finset J) {n : ℕ}
     (t : Λ[[J]].Term (Empty ⊕ Fin n)) (ts : Fin n → Λ[[J]].Term Empty) :
     letI : (constantsOn J).Structure M := constantsOn.structure fun j => a (d + deepRank J S j)
     locDeepInterp Λ J a d S (t.subst (Sum.elim (fun e => e.elim) ts)) =
@@ -144,7 +144,7 @@ theorem locDeepInterp_onTerm_subst (d : ℕ) (S : Finset J) {n : ℕ}
 /-- **Ordered-position realize bridge**: the deep interpretation is the realize of the
 ordered-position de-substituted term on the *consecutive* deep tuple `n ↦ a (d + n)` — exactly
 the shape tail indiscernibility consumes (a strictly-increasing deep tuple). -/
-theorem locDeepInterp_eq_realize_pos (d : ℕ) (S : Finset J) (t : Λ[[J]].Term Empty) :
+private theorem locDeepInterp_eq_realize_pos (d : ℕ) (S : Finset J) (t : Λ[[J]].Term Empty) :
     locDeepInterp Λ J a d S t = (locDeTermPos Λ J S t).realize (fun n => a (d + n)) := by
   rw [locDeepInterp_eq_realize, locDeTermPos, Term.realize_relabel]
   congr 1
@@ -200,7 +200,7 @@ theorem locDeTermFin_realize_superset (d : ℕ) (S T : Finset J) (w : Λ[[J]].Te
 /-- **Equality-atom realize bridge**: the local de-substituted equality atom holds on the
 consecutive deep tuple `i ↦ a (d + i)` iff `t` and `u` have equal deep interpretations at depth
 `d` over `S`. -/
-theorem realize_locDeEqAtom (d : ℕ) (S : Finset J) (t u : Λ[[J]].Term Empty)
+private theorem realize_locDeEqAtom (d : ℕ) (S : Finset J) (t u : Λ[[J]].Term Empty)
     (ht : locJSupport Λ J t ⊆ S) (hu : locJSupport Λ J u ⊆ S) :
     (locDeEqAtom Λ J S t u ht hu).Realize Empty.elim (fun i : Fin S.card => a (d + i)) ↔
       locDeepInterp Λ J a d S t = locDeepInterp Λ J a d S u := by
@@ -212,7 +212,7 @@ theorem realize_locDeEqAtom (d : ℕ) (S : Finset J) (t u : Λ[[J]].Term Empty)
 tuple (`S ⊆ T`), holds iff `t` and `u` have equal deep interpretations over `T`. One
 arity-`S.card` formula carries both the `S`-truth (consecutive tuple) and the `T`-truth (this
 strictly-increasing tuple) — the input to tail indiscernibility. -/
-theorem realize_locDeEqAtom_superset (d : ℕ) {S T : Finset J} (_hST : S ⊆ T)
+private theorem realize_locDeEqAtom_superset (d : ℕ) {S T : Finset J} (_hST : S ⊆ T)
     (t u : Λ[[J]].Term Empty)
     (ht : locJSupport Λ J t ⊆ S) (hu : locJSupport Λ J u ⊆ S) :
     (locDeEqAtom Λ J S t u ht hu).Realize Empty.elim
@@ -225,7 +225,7 @@ theorem realize_locDeEqAtom_superset (d : ℕ) {S T : Finset J} (_hST : S ⊆ T)
 
 /-- **Relation-atom realize bridge**: the local de-substituted relation atom holds on the
 consecutive deep tuple iff `R` holds in `M` on the deep interpretations over `S`. -/
-theorem realize_locDeRelAtom (d : ℕ) (S : Finset J) {l : ℕ} (R : Λ.Relations l)
+private theorem realize_locDeRelAtom (d : ℕ) (S : Finset J) {l : ℕ} (R : Λ.Relations l)
     (ts : Fin l → Λ[[J]].Term Empty) (ht : ∀ i, locJSupport Λ J (ts i) ⊆ S) :
     (locDeRelAtom Λ J S R ts ht).Realize Empty.elim (fun i : Fin S.card => a (d + i)) ↔
       Structure.RelMap R fun i => locDeepInterp Λ J a d S (ts i) := by
@@ -238,7 +238,7 @@ theorem realize_locDeRelAtom (d : ℕ) (S : Finset J) {l : ℕ} (R : Λ.Relation
 /-- **Superset relation-atom bridge**: the same relation atom over `S`, realized on the
 `T`-induced deep tuple (`S ⊆ T`), holds iff `R` holds in `M` on the deep interpretations over
 `T`. Via `locDeTermFin_realize_superset`. -/
-theorem realize_locDeRelAtom_superset (d : ℕ) {S T : Finset J} (_hST : S ⊆ T) {l : ℕ}
+private theorem realize_locDeRelAtom_superset (d : ℕ) {S T : Finset J} (_hST : S ⊆ T) {l : ℕ}
     (R : Λ.Relations l) (ts : Fin l → Λ[[J]].Term Empty)
     (ht : ∀ i, locJSupport Λ J (ts i) ⊆ S) :
     (locDeRelAtom Λ J S R ts ht).Realize Empty.elim
@@ -305,7 +305,7 @@ lies in a tail-indiscernible family `Γ`, then they are eventually deep-equal on
 `S ⊇ S₀`. Tail indiscernibility identifies the truth of the one arity-`S₀.card` atom on the
 consecutive `S₀`-tuple and on the strictly-increasing `S`-tuple; the two atom bridges convert those
 to the `S₀`- and `S`-deep equalities. The unlock for `LocalEMContext.trans` and congruence. -/
-theorem LocalEMEq_eventually_on_superset
+private theorem LocalEMEq_eventually_on_superset
     {Γ : Set (Σ n, Λ.BoundedFormulaω Empty n)}
     (hind : IsLomega1omegaIndiscernibleOnTail (L := Λ) a Γ)
     {t u : Λ[[J]].Term Empty}
@@ -375,7 +375,7 @@ theorem eventually_locDeepInterp_superset_iff
 tail, the truth of `R` on the deep interpretations over the combined support `S₀` of the arguments is
 equivalent to its truth over any larger support `S ⊇ S₀`. Makes the quotient `RelMap` independent of
 the chosen common support. -/
-theorem eventually_locRelMap_superset_iff
+private theorem eventually_locRelMap_superset_iff
     {Γ : Set (Σ n, Λ.BoundedFormulaω Empty n)}
     (hind : IsLomega1omegaIndiscernibleOnTail (L := Λ) a Γ)
     {l : ℕ} (R : Λ.Relations l) {ts : Fin l → Λ[[J]].Term Empty}
@@ -516,7 +516,7 @@ def LocalEMContext.mkClass (ctx : LocalEMContext Λ J (M := M)) (t : Λ[[J]].Ter
 
 /-- A common support covering all argument representatives — the support over which a relation's deep
 truth is read. -/
-noncomputable def LocalEMContext.commonSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
+private noncomputable def LocalEMContext.commonSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (xs : Fin n → ctx.Carrier) : Finset J :=
   Finset.univ.biUnion fun i => locJSupport Λ J (Quotient.out (xs i))
 
@@ -558,7 +558,7 @@ theorem LocalEMContext.constMap_mkClass (ctx : LocalEMContext Λ J (M := M))
 /-- **Relation congruence on terms** (helper): changing a finite tuple of argument terms by
 `LocalEMEq`, all over a fixed covering support `T`, preserves the eventual deep truth of a relation.
 Combines the per-term equality invariance over `T` with `Filter.eventually_all`. -/
-theorem LocalEMContext.eventually_relMap_congr_terms (ctx : LocalEMContext Λ J (M := M)) {l : ℕ}
+private theorem LocalEMContext.eventually_relMap_congr_terms (ctx : LocalEMContext Λ J (M := M)) {l : ℕ}
     (R : Λ.Relations l) {ts ts' : Fin l → Λ[[J]].Term Empty}
     (h : ∀ i, LocalEMEq Λ J ctx.a (ts i) (ts' i)) {T : Finset J}
     (hts : ∀ i, locJSupport Λ J (ts i) ⊆ T) (hts' : ∀ i, locJSupport Λ J (ts' i) ⊆ T) :

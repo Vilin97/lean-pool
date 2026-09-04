@@ -32,7 +32,7 @@ interprets `lt` as a well-founded relation, then some countable ordinal `α` adm
 `lt`-chain in no model of `φ`.  Contrapositive of the step-5 theorem: were every `α < ω₁`
 realized by a chain, some model of `φ` would carry a relation-preserving map from `ℚ`,
 contradicting well-foundedness through the descending negative rationals. -/
-theorem wellFounded_boundedness_relational [L.IsRelational]
+private theorem wellFounded_boundedness_relational [L.IsRelational]
     [Countable (Σ l, L.Relations l)]
     (hwf : ∀ (M : Type) (_ : L.Structure M), Sentenceω.Realize φ M →
       WellFounded fun x y : M => RelMap lt ![x, y]) :

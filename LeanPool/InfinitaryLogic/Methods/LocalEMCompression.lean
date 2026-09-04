@@ -53,26 +53,22 @@ def locJExpand {k : ℕ} (s : Fin k ↪o J) {α : Type} (u : Λ[[Fin k]].Term α
     Λ[[J]].Term α :=
   (Λ.lhomWithConstantsMap (s : Fin k → J)).onTerm u
 
-theorem locJExpand_func_inl {k : ℕ} (s : Fin k ↪o J) {α : Type} {l : ℕ}
+private theorem locJExpand_func_inl {k : ℕ} (s : Fin k ↪o J) {α : Type} {l : ℕ}
     (f' : Λ.Functions l) (ts : Fin l → Λ[[Fin k]].Term α) :
     locJExpand Λ J s (Term.func (Sum.inl f' : Λ[[Fin k]].Functions l) ts)
       = Term.func (Sum.inl f' : Λ[[J]].Functions l) (fun i => locJExpand Λ J s (ts i)) :=
   rfl
 
-theorem locJExpand_func_inr {k : ℕ} (s : Fin k ↪o J) {α : Type} (i₀ : Fin k)
+private theorem locJExpand_func_inr {k : ℕ} (s : Fin k ↪o J) {α : Type} (i₀ : Fin k)
     (ts : Fin 0 → Λ[[Fin k]].Term α) :
     locJExpand Λ J s (Term.func (Sum.inr i₀ : Λ[[Fin k]].Functions 0) ts)
       = Term.func (Sum.inr (s i₀) : Λ[[J]].Functions 0) (fun i => locJExpand Λ J s (ts i)) :=
   rfl
 
-theorem locJRename_func_inr (e : J ≃o J) {α : Type} (j : J)
-    (ts : Fin 0 → Λ[[J]].Term α) :
-    locJRename Λ J e (Term.func (Sum.inr j : Λ[[J]].Functions 0) ts)
-      = Term.func (Sum.inr (e j) : Λ[[J]].Functions 0) (fun i => locJRename Λ J e (ts i)) :=
-  rfl
+
 
 /-- The support of an expansion is the image of the code's support. -/
-theorem locJSupport_locJExpand {k : ℕ} (s : Fin k ↪o J) {α : Type}
+private theorem locJSupport_locJExpand {k : ℕ} (s : Fin k ↪o J) {α : Type}
     (u : Λ[[Fin k]].Term α) :
     locJSupport Λ J (locJExpand Λ J s u) = (locJSupport Λ (Fin k) u).image s := by
   induction u with
@@ -123,7 +119,7 @@ theorem locJExpand_compress (S : Finset J) (t : Λ[[J]].Term Empty)
       · exact c.elim
 
 /-- **Round trip 2**: compressing an expansion along `S`'s enumeration recovers the code. -/
-theorem locJCompress_expand (S : Finset J) (u : Λ[[Fin S.card]].Term Empty)
+private theorem locJCompress_expand (S : Finset J) (u : Λ[[Fin S.card]].Term Empty)
     (h : locJSupport Λ J (locJExpand Λ J (S.orderEmbOfFin rfl) u) ⊆ S) :
     locJCompress Λ J S (locJExpand Λ J (S.orderEmbOfFin rfl) u) h = u := by
   induction u with

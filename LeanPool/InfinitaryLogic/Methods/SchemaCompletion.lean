@@ -52,14 +52,14 @@ the constants `d_{t 0}, …, d_{t (m-1)}`" — as `⟨m, φ⟩` ranges over the 
 family `ΓEMlocal s₀` and `t` over the increasing `ℕ`-tuples of length `m`. This is the countable
 decision list of the ω-stage completion; its `iSup`/`iInf` witnesses stay inside it because
 `ΓEMlocal ⊇ ΓlocalColim` is component-closed. -/
-def schemaSentenceUniverse (s₀ : LocalStage) : Set ((localColim s₀)[[ℕ]].Sentenceω) :=
+private def schemaSentenceUniverse (s₀ : LocalStage) : Set ((localColim s₀)[[ℕ]].Sentenceω) :=
   ⋃ (mφ ∈ ΓEMlocal s₀), Set.range fun t : Fin mφ.1 ↪o ℕ =>
     Lomega1omegaTemplate.templateSentence mφ.2 t
 
 /-- **Checkpoint 1.** The schema sentence universe is countable — a countable union (over the
 countable seed family `ΓEMlocal s₀`) of ranges of maps out of the countable tuple types. This is
 what makes the ω-enumeration of the completion possible. -/
-theorem schemaSentenceUniverse_countable : (schemaSentenceUniverse s₀).Countable :=
+private theorem schemaSentenceUniverse_countable : (schemaSentenceUniverse s₀).Countable :=
   (ΓEMlocal_countable s₀).biUnion fun _ _ => Set.countable_range _
 
 /-- A canonical length-`m` increasing `ℕ`-tuple: the inclusion `Fin m ↪ ℕ` by value, which is
@@ -70,7 +70,7 @@ def stdTuple (m : ℕ) : Fin m ↪o ℕ :=
 /-- The schema sentence universe is nonempty: the seed family is nonempty
 (`ΓEMlocal_nonempty`) and every arity admits the standard tuple, so the corresponding
 `templateSentence` is a member. Supplies the base point the enumeration in checkpoint 3 needs. -/
-theorem schemaSentenceUniverse_nonempty : (schemaSentenceUniverse s₀).Nonempty := by
+private theorem schemaSentenceUniverse_nonempty : (schemaSentenceUniverse s₀).Nonempty := by
   obtain ⟨mφ, hmφ⟩ := ΓEMlocal_nonempty s₀
   exact ⟨Lomega1omegaTemplate.templateSentence mφ.2 (stdTuple mφ.1),
     Set.mem_biUnion hmφ ⟨stdTuple mφ.1, rfl⟩⟩
@@ -132,7 +132,7 @@ variable {L'' : Language.{0, 0}} {J : Type} [LinearOrder J]
 `≥ ℶ_ω₁`: at every level `β < ω₁` the body is the trivial certificate over the `(ℶ_β)⁺`-suborder
 `e` supplied by `markerStage_homogeneous` at empty arity, with no members to realize. This is the
 starting point the ω-stage `extension`/`iSup_choice` chain builds on. -/
-theorem markerHenkinConsistent_empty
+private theorem markerHenkinConsistent_empty
     (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M) :
     MarkerHenkinConsistent M (∅ : Finset (((L''[[J]])[[ℕ]]).Sentenceω)) := by
   have : Nonempty M := Cardinal.mk_ne_zero_iff.mp
@@ -169,7 +169,7 @@ variable {L'' : Language.{0, 0}} {J : Type}
 
 /-- The Henkin inclusion `(L''[[J]]) →ᴸ ((L''[[J]])[[ℕ]])` sends every function symbol to its
 `Sum.inl` image; hence a lifted formula has **no** Henkin constants. -/
-theorem henkinConstsIn_mapLanguage {α : Type} {n : ℕ} (τ : (L''[[J]]).BoundedFormulaω α n) :
+private theorem henkinConstsIn_mapLanguage {α : Type} {n : ℕ} (τ : (L''[[J]]).BoundedFormulaω α n) :
     henkinConstsIn (L'' := L'') (τ.mapLanguage ((L''[[J]]).lhomWithConstants ℕ)) = ∅ := by
   ext m
   simp only [henkinConstsIn, sentenceJConsts, Set.mem_ofPred_eq,
@@ -184,7 +184,7 @@ theorem henkinConstsIn_mapLanguage {α : Type} {n : ℕ} (τ : (L''[[J]]).Bounde
 
 /-- The Henkin inclusion preserves the skeleton (`J`) constant support: the expansion `J`-constants
 of a lifted formula are exactly the `J`-constants of the original. -/
-theorem expJConstsIn_mapLanguage {α : Type} {n : ℕ} (τ : (L''[[J]]).BoundedFormulaω α n) :
+private theorem expJConstsIn_mapLanguage {α : Type} {n : ℕ} (τ : (L''[[J]]).BoundedFormulaω α n) :
     expJConstsIn (L'' := L'') (τ.mapLanguage ((L''[[J]]).lhomWithConstants ℕ)) =
       sentenceJConsts (L' := L'') (J := J) τ := by
   ext j
@@ -209,7 +209,7 @@ variable {L'' : Language.{0, 0}} {J : Type} [LinearOrder J]
 /-- The only `J`-constants of a `templateSentence ψ t` are the tuple's constants: substitution
 introduces exactly `{t 0, …, t (n-1)}` and the `mapLanguage`d body contributes only base
 (`Sum.inl`) symbols. -/
-theorem sentenceJConsts_templateSentence {n : ℕ} (ψ : L''.BoundedFormulaω Empty n)
+private theorem sentenceJConsts_templateSentence {n : ℕ} (ψ : L''.BoundedFormulaω Empty n)
     (t : Fin n ↪o J) :
     sentenceJConsts (L' := L'') (J := J) (Lomega1omegaTemplate.templateSentence ψ t)
       ⊆ Set.range (⇑t) := by
@@ -266,11 +266,11 @@ def schemaFSentenceUniverse (s₀ : LocalStage) :
 
 /-- **Checkpoint 3a.** The lifted schema `FSentence` universe is countable — the enumeration the
 completion needs exists. -/
-theorem schemaFSentenceUniverse_countable : (schemaFSentenceUniverse s₀).Countable :=
+private theorem schemaFSentenceUniverse_countable : (schemaFSentenceUniverse s₀).Countable :=
   (ΓEMlocal_countable s₀).biUnion fun _ _ => Set.countable_range _
 
 /-- The lifted schema `FSentence` universe is nonempty (base point for the enumeration). -/
-theorem schemaFSentenceUniverse_nonempty : (schemaFSentenceUniverse s₀).Nonempty := by
+private theorem schemaFSentenceUniverse_nonempty : (schemaFSentenceUniverse s₀).Nonempty := by
   obtain ⟨mφ, hmφ⟩ := ΓEMlocal_nonempty s₀
   exact ⟨_, Set.mem_biUnion hmφ ⟨stdTuple mφ.1, rfl⟩⟩
 
@@ -298,7 +298,7 @@ variable {s₀ : LocalStage} {M : Type} [(localColim s₀).Structure M] [LinearO
 the decided sign's connective: a positive `iSup` gets a disjunct, a negative `iInf` a refuted
 conjunct. Returns the next stage with consistency, monotonicity, and the balanced decision record
 `(positive ∧ iSup-witnessed) ∨ (negative ∧ neg-iInf-witnessed)`. -/
-noncomputable def stageStep
+private noncomputable def stageStep
     (Fp : {F : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω) // MarkerHenkinConsistent M F})
     (n : ℕ) :
     {G : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω) //
@@ -346,7 +346,7 @@ noncomputable def stageStep
       exact absurd ⟨φs', hφs'⟩ hInf
 
 /-- **The completion stages.** `T 0 = ∅`; `T (n+1)` is the `stageStep` of `T n`. -/
-noncomputable def schemaCompletionStage
+private noncomputable def schemaCompletionStage
     (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M) :
     ℕ → {F : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω) // MarkerHenkinConsistent M F}
   | 0 => ⟨∅, markerHenkinConsistent_empty hM⟩
@@ -371,17 +371,17 @@ theorem markerHenkinConsistent_not_mem_and_not_mem
 variable (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M)
 
 /-- Each stage is `MarkerHenkinConsistent` (built into the subtype). -/
-theorem schemaCompletionStage_consistent (n : ℕ) :
+private theorem schemaCompletionStage_consistent (n : ℕ) :
     MarkerHenkinConsistent M (schemaCompletionStage ρ hM n).1 :=
   (schemaCompletionStage ρ hM n).2
 
 /-- One-step monotonicity: a stage is contained in its successor. -/
-theorem schemaCompletionStage_subset_succ (n : ℕ) :
+private theorem schemaCompletionStage_subset_succ (n : ℕ) :
     (schemaCompletionStage ρ hM n).1 ⊆ (schemaCompletionStage ρ hM (n + 1)).1 :=
   (stageStep ρ (schemaCompletionStage ρ hM n) n).2.2.1
 
 /-- Monotonicity of the completion chain. -/
-theorem schemaCompletionStage_mono {m n : ℕ} (h : m ≤ n) :
+private theorem schemaCompletionStage_mono {m n : ℕ} (h : m ≤ n) :
     (schemaCompletionStage ρ hM m).1 ⊆ (schemaCompletionStage ρ hM n).1 := by
   induction n with
   | zero => rw [Nat.le_zero.mp h]
@@ -391,7 +391,7 @@ theorem schemaCompletionStage_mono {m n : ℕ} (h : m ≤ n) :
     · exact subset_rfl
 
 /-- **Stage `n` decides `ρ n`**: after stage `n+1`, either `(ρ n).1` or its negation is present. -/
-theorem schemaCompletionStage_decides (n : ℕ) :
+private theorem schemaCompletionStage_decides (n : ℕ) :
     (ρ n).1 ∈ (schemaCompletionStage ρ hM (n + 1)).1 ∨
       (ρ n).1.not ∈ (schemaCompletionStage ρ hM (n + 1)).1 := by
   rcases (stageStep ρ (schemaCompletionStage ρ hM n) n).2.2.2 with ⟨hmem, -⟩ | ⟨hneg, -⟩
@@ -400,7 +400,7 @@ theorem schemaCompletionStage_decides (n : ℕ) :
 
 /-- **Stage `n` witnesses a positive `iSup`**: if `(ρ n).1` is `iSup φs` and lands positively in
 stage `n+1`, some component `φs k` is present too. -/
-theorem schemaCompletionStage_witness (n : ℕ) {φs : ℕ → ((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω}
+private theorem schemaCompletionStage_witness (n : ℕ) {φs : ℕ → ((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω}
     (hiSup : (ρ n).1 = BoundedFormulaω.iSup φs)
     (hpos : (ρ n).1 ∈ (schemaCompletionStage ρ hM (n + 1)).1) :
     ∃ k, φs k ∈ (schemaCompletionStage ρ hM (n + 1)).1 := by
@@ -413,7 +413,7 @@ theorem schemaCompletionStage_witness (n : ℕ) {φs : ℕ → ((localColim s₀
 /-- **Stage `n` witnesses a negative `iInf`**: if `(ρ n).1` is `iInf φs` and its negation lands in
 stage `n+1`, some refuted component `(φs k).not` is present too. The mirror of
 `schemaCompletionStage_witness`, projecting the negative half of the balanced decision record. -/
-theorem schemaCompletionStage_neg_iInf_witness (n : ℕ)
+private theorem schemaCompletionStage_neg_iInf_witness (n : ℕ)
     {φs : ℕ → ((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω}
     (hiInf : (ρ n).1 = BoundedFormulaω.iInf φs)
     (hneg : (ρ n).1.not ∈ (schemaCompletionStage ρ hM (n + 1)).1) :
@@ -444,7 +444,7 @@ noncomputable def schemaEnumeration (s₀ : LocalStage) :
   ((schemaFSentenceUniverse_countable (s₀ := s₀)).exists_eq_range
     schemaFSentenceUniverse_nonempty).choose
 
-theorem schemaEnumeration_range :
+private theorem schemaEnumeration_range :
     Set.range (schemaEnumeration s₀) = schemaFSentenceUniverse s₀ :=
   (((schemaFSentenceUniverse_countable (s₀ := s₀)).exists_eq_range
     schemaFSentenceUniverse_nonempty).choose_spec).symm
@@ -457,7 +457,7 @@ def schemaCompletionTheory : Set (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω) 
   {τ | ∃ n, τ ∈ (schemaCompletionStage ρ hM n).1}
 
 /-- **Step 2.** A finite subset of the completed theory lands in a single stage. -/
-theorem finite_subset_stage (F : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω)) :
+private theorem finite_subset_stage (F : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω)) :
     (∀ τ ∈ F, τ ∈ schemaCompletionTheory ρ hM) →
       ∃ N, F ⊆ (schemaCompletionStage ρ hM N).1 := by
   classical
@@ -473,7 +473,7 @@ theorem finite_subset_stage (F : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sente
 
 /-- **Finite-character consistency**: every finite subset of the completed theory is
 `MarkerHenkinConsistent`. -/
-theorem schemaCompletionTheory_finite_consistent
+private theorem schemaCompletionTheory_finite_consistent
     (F : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω))
     (hF : ∀ τ ∈ F, τ ∈ schemaCompletionTheory ρ hM) : MarkerHenkinConsistent M F :=
   (schemaCompletionStage_consistent ρ hM (finite_subset_stage ρ hM F hF).choose).mono
@@ -481,7 +481,7 @@ theorem schemaCompletionTheory_finite_consistent
 
 /-- **Step 3 — completeness on the universe**: every schema-universe sentence is decided by the
 completed theory (using `range ρ = universe`). -/
-theorem schemaCompletionTheory_complete
+private theorem schemaCompletionTheory_complete
     (hρrange : Set.range ρ = schemaFSentenceUniverse s₀)
     (τ : FSentence (L'' := localColim s₀) (J := ℕ)) (hτ : τ ∈ schemaFSentenceUniverse s₀) :
     τ.1 ∈ schemaCompletionTheory ρ hM ∨ τ.1.not ∈ schemaCompletionTheory ρ hM := by
@@ -500,7 +500,7 @@ the sentence is a universe member (via `ΓlocalColim ⊆ ΓEMlocal`), so it is s
 stage `j` — positively (a negative decision would put both it and its negation in a common later
 stage, contradicting `markerHenkinConsistent_not_mem_and_not_mem`); `schemaCompletionStage_witness`
 then supplies the component. -/
-theorem schemaCompletionTheory_iSup_witness_localColim
+private theorem schemaCompletionTheory_iSup_witness_localColim
     {m : ℕ} {φs : ℕ → (localColim s₀).BoundedFormulaω Empty m}
     (hmem : (⟨m, BoundedFormulaω.iSup φs⟩ : Σ n, (localColim s₀).BoundedFormulaω Empty n)
       ∈ ΓlocalColim s₀)
@@ -547,7 +547,7 @@ theorem schemaCompletionTheory_iSup_witness_localColim
 present in the completed theory (over the canonical enumeration), some component is present too —
 read off the stage that decided `τ`, as in `schemaCompletionTheory_iSup_witness_localColim` but
 generic in the universe member (the canonical-deForm closure in 5b-2 instantiates it). -/
-theorem schemaCompletionTheory_iSup_witness_of_universe
+private theorem schemaCompletionTheory_iSup_witness_of_universe
     (τ : FSentence (L'' := localColim s₀) (J := ℕ)) (hτ : τ ∈ schemaFSentenceUniverse s₀)
     {φs : ℕ → ((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω}
     (hiSup : τ.1 = BoundedFormulaω.iSup φs)
@@ -576,7 +576,7 @@ component `(φs k).not` is in the theory too. This is the direction the restrict
 finite consistency after the theory is formed — the failing component would drift with the
 certificate body. It is read off the stage that decided `τ`, exactly as in
 `schemaCompletionTheory_iSup_witness_localColim`. -/
-theorem schemaCompletionTheory_neg_iInf_witness_of_universe
+private theorem schemaCompletionTheory_neg_iInf_witness_of_universe
     (τ : FSentence (L'' := localColim s₀) (J := ℕ)) (hτ : τ ∈ schemaFSentenceUniverse s₀)
     {φs : ℕ → ((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω}
     (hiInf : τ.1 = BoundedFormulaω.iInf φs)
@@ -675,7 +675,7 @@ private theorem equalizerShift_anchor {m : ℕ} {p p' : Fin m → ℕ}
 
 /-- **The global equalizer.** Two strictly monotone tuples `p p' : Fin m → ℕ` are equalized by
 strictly monotone `q q' : ℕ → ℕ`: `q (p i) = q' (p' i)` (both anchors land at `p i + p' i`). -/
-theorem exists_strictMono_equalizer {m : ℕ} (p p' : Fin m → ℕ)
+private theorem exists_strictMono_equalizer {m : ℕ} (p p' : Fin m → ℕ)
     (hp : StrictMono p) (hp' : StrictMono p') :
     ∃ q q' : ℕ → ℕ, StrictMono q ∧ StrictMono q' ∧
       ∀ i, q (p i) = q' (p' i) := by
@@ -698,7 +698,7 @@ domain, and two increasing tuples `t t' : Fin m ↪o ℕ`, there are skeleton in
 `σ₁ σ₂ : ℕ → M` — each strictly monotone on `S` with `S`-values in `range e` (the
 `MarkerHenkinBody` admissibility) — whose tuple images agree: `σ₁ ∘ t = σ₂ ∘ t'`. This is what
 lets ONE certificate body be applied twice, once per tuple, in tuple uniformity. -/
-theorem exists_admissible_pair
+private theorem exists_admissible_pair
     {M D : Type} [LinearOrder M] [LinearOrder D] [Infinite D]
     {m : ℕ} (S : Finset ℕ) (e : D ↪o M)
     (t t' : Fin m ↪o ℕ) (dflt : M) :

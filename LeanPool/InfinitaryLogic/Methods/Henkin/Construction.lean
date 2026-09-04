@@ -82,7 +82,7 @@ theorem ConsistencyProperty.MaximalConsistent.consistent
   hmax.prop
 
 /-- If S ∪ {φ} is consistent and S is maximal, then φ ∈ S. -/
-theorem ConsistencyProperty.MaximalConsistent.mem_of_union_consistent
+private theorem ConsistencyProperty.MaximalConsistent.mem_of_union_consistent
     {C : ConsistencyProperty L} {S : Set L.Sentenceω}
     (hmax : C.MaximalConsistent S) {φ : L.Sentenceω} (h : S ∪ {φ} ∈ C.sets) :
     φ ∈ S := by
@@ -91,7 +91,7 @@ theorem ConsistencyProperty.MaximalConsistent.mem_of_union_consistent
 
 /-- In a maximal consistent set, for every implication φ → ψ in S,
 either ¬φ ∈ S or ψ ∈ S. -/
-theorem ConsistencyProperty.MaximalConsistent.imp_mem
+private theorem ConsistencyProperty.MaximalConsistent.imp_mem
     {C : ConsistencyProperty L} {S : Set L.Sentenceω}
     (hmax : C.MaximalConsistent S)
     {φ ψ : L.Sentenceω} (h : BoundedFormulaω.imp φ ψ ∈ S) :
@@ -102,7 +102,7 @@ theorem ConsistencyProperty.MaximalConsistent.imp_mem
 
 /-- In a maximal consistent set, negated implication gives both components:
 if ¬(φ → ψ) ∈ S, then φ ∈ S and ¬ψ ∈ S. -/
-theorem ConsistencyProperty.MaximalConsistent.neg_imp_mem
+private theorem ConsistencyProperty.MaximalConsistent.neg_imp_mem
     {C : ConsistencyProperty L} {S : Set L.Sentenceω}
     (hmax : C.MaximalConsistent S)
     {φ ψ : L.Sentenceω} (h : (BoundedFormulaω.imp φ ψ).not ∈ S) :
@@ -110,13 +110,7 @@ theorem ConsistencyProperty.MaximalConsistent.neg_imp_mem
   obtain ⟨h1, h2⟩ := C.C1_neg_imp S hmax.consistent φ ψ h
   exact ⟨hmax.mem_of_union_consistent h1, hmax.mem_of_union_consistent h2⟩
 
-/-- In a maximal consistent set, double negation elimination holds. -/
-theorem ConsistencyProperty.MaximalConsistent.not_not_mem
-    {C : ConsistencyProperty L} {S : Set L.Sentenceω}
-    (hmax : C.MaximalConsistent S)
-    {φ : L.Sentenceω} (h : φ.not.not ∈ S) :
-    φ ∈ S :=
-  hmax.mem_of_union_consistent (C.C2_not_not S hmax.consistent φ h)
+
 
 /-- In a maximal consistent set, if ⋀ᵢ φᵢ ∈ S, then φₖ ∈ S for all k. -/
 theorem ConsistencyProperty.MaximalConsistent.iInf_mem
@@ -127,7 +121,7 @@ theorem ConsistencyProperty.MaximalConsistent.iInf_mem
   hmax.mem_of_union_consistent (C.C3_iInf S hmax.consistent φs h k)
 
 /-- In a maximal consistent set, if ¬(⋀ᵢ φᵢ) ∈ S, then ¬φₖ ∈ S for some k. -/
-theorem ConsistencyProperty.MaximalConsistent.neg_iInf_mem
+private theorem ConsistencyProperty.MaximalConsistent.neg_iInf_mem
     {C : ConsistencyProperty L} {S : Set L.Sentenceω}
     (hmax : C.MaximalConsistent S)
     {φs : ℕ → L.Sentenceω} (h : (BoundedFormulaω.iInf φs).not ∈ S) :
@@ -145,7 +139,7 @@ theorem ConsistencyProperty.MaximalConsistent.iSup_mem
   exact ⟨k, hmax.mem_of_union_consistent hk⟩
 
 /-- In a maximal consistent set, if ¬(⋁ᵢ φᵢ) ∈ S, then ¬φₖ ∈ S for all k. -/
-theorem ConsistencyProperty.MaximalConsistent.neg_iSup_mem
+private theorem ConsistencyProperty.MaximalConsistent.neg_iSup_mem
     {C : ConsistencyProperty L} {S : Set L.Sentenceω}
     (hmax : C.MaximalConsistent S)
     {φs : ℕ → L.Sentenceω} (h : (BoundedFormulaω.iSup φs).not ∈ S) (k : ℕ) :
@@ -162,7 +156,7 @@ theorem ConsistencyProperty.MaximalConsistent.decide
   · exact Or.inr (hmax.mem_of_union_consistent h)
 
 /-- In a maximal consistent set, ¬φ ∈ S ↔ φ ∉ S. -/
-theorem ConsistencyProperty.MaximalConsistent.not_mem_iff
+private theorem ConsistencyProperty.MaximalConsistent.not_mem_iff
     {C : ConsistencyProperty L} {S : Set L.Sentenceω}
     (hmax : C.MaximalConsistent S) (φ : L.Sentenceω) :
     φ.not ∈ S ↔ φ ∉ S := by
@@ -184,30 +178,13 @@ theorem ConsistencyPropertyEq.MaximalConsistent.all_mem
     (t : L.Term Empty) : φ.subst (fun _ => t) ∈ S :=
   hmax.mem_of_union_consistent (C.C7_all S hmax.consistent φ h t)
 
-/-- In a maximal consistent set with ConsistencyPropertyEq, existential quantification:
-    if `(∃x.φ) ∈ S*` then there exists a closed term t with `φ[x/t] ∈ S*`. -/
-theorem ConsistencyPropertyEq.MaximalConsistent.ex_mem
-    {C : ConsistencyPropertyEq L} {S : Set L.Sentenceω}
-    (hmax : C.toConsistencyProperty.MaximalConsistent S)
-    {φ : L.Formulaω (Fin 1)}
-    (h : (φ.relabel (Sum.inr : Fin 1 → Empty ⊕ Fin 1)).ex ∈ S) :
-    ∃ t : L.Term Empty, φ.subst (fun _ => t) ∈ S := by
-  obtain ⟨t, ht⟩ := C.C7_quantifier S hmax.consistent φ h
-  exact ⟨t, hmax.mem_of_union_consistent ht⟩
 
-/-- In a maximal consistent set, if ¬(∀x.φ(x)) ∈ S, then ∃t, ¬φ(t) ∈ S. -/
-theorem ConsistencyPropertyEq.MaximalConsistent.neg_all_mem
-    {C : ConsistencyPropertyEq L} {S : Set L.Sentenceω}
-    (hmax : C.toConsistencyProperty.MaximalConsistent S)
-    {φ : L.Formulaω (Fin 1)}
-    (h : ((φ.relabel (Sum.inr : Fin 1 → Empty ⊕ Fin 1)).all).not ∈ S) :
-    ∃ t : L.Term Empty, (φ.subst (fun _ => t)).not ∈ S := by
-  obtain ⟨t, ht⟩ := C.C7_neg_all S hmax.consistent φ h
-  exact ⟨t, hmax.mem_of_union_consistent ht⟩
+
+
 
 /-- Direct universal instantiation: if `∀x.φ ∈ S*`, then `φ(t) ∈ S*` for all closed terms t.
 Uses `openBounds` to convert the bound variable to a free variable for substitution. -/
-theorem ConsistencyPropertyEq.MaximalConsistent.all_bound_mem
+private theorem ConsistencyPropertyEq.MaximalConsistent.all_bound_mem
     {C : ConsistencyPropertyEq L} {S : Set L.Sentenceω}
     (hmax : C.toConsistencyProperty.MaximalConsistent S)
     {φ : L.BoundedFormulaω Empty 1}
@@ -215,7 +192,7 @@ theorem ConsistencyPropertyEq.MaximalConsistent.all_bound_mem
   hmax.mem_of_union_consistent (C.C7_all_bound S hmax.consistent φ h t)
 
 /-- Direct negated universal: if `¬(∀x.φ) ∈ S*`, then `∃t, ¬φ(t) ∈ S*`. -/
-theorem ConsistencyPropertyEq.MaximalConsistent.neg_all_bound_mem
+private theorem ConsistencyPropertyEq.MaximalConsistent.neg_all_bound_mem
     {C : ConsistencyPropertyEq L} {S : Set L.Sentenceω}
     (hmax : C.toConsistencyProperty.MaximalConsistent S)
     {φ : L.BoundedFormulaω Empty 1}
@@ -231,7 +208,7 @@ language L. Two terms are equivalent if the maximal consistent set contains
 the equation `t₁ = t₂`. The quotient model satisfies all sentences in S. -/
 
 /-- Equivalence relation on closed terms induced by a maximal consistent set. -/
-def termEquiv (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
+private def termEquiv (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (_hmax : C.toConsistencyProperty.MaximalConsistent S) :
     L.Term Empty → L.Term Empty → Prop :=
   fun t₁ t₂ => BoundedFormulaω.equal
@@ -239,7 +216,7 @@ def termEquiv (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (t₂.relabel (Sum.inl : Empty → Empty ⊕ Fin 0)) ∈ S
 
 /-- The term equivalence is an equivalence relation. -/
-theorem termEquiv_equivalence (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
+private theorem termEquiv_equivalence (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (hmax : C.toConsistencyProperty.MaximalConsistent S) :
     Equivalence (termEquiv C S hmax) := by
   refine ⟨fun t => ?_, fun h => ?_, fun h₁ h₂ => ?_⟩
@@ -330,7 +307,7 @@ theorem termEquiv_equivalence (C : ConsistencyPropertyEq L) (S : Set L.Sentence�
 /-! ### Term Setoid and Quotient -/
 
 /-- The Setoid on closed terms induced by the equivalence relation from S*. -/
-def termSetoid (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
+private def termSetoid (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (hmax : C.toConsistencyProperty.MaximalConsistent S) : Setoid (L.Term Empty) where
   r := termEquiv C S hmax
   iseqv := termEquiv_equivalence C S hmax
@@ -636,7 +613,7 @@ noncomputable instance termModelStructure :
 /-! ### Truth Lemma Infrastructure -/
 
 /-- In the term model, evaluating a closed term gives its equivalence class. -/
-theorem term_realize_eq_mk (t : L.Term Empty) :
+private theorem term_realize_eq_mk (t : L.Term Empty) :
     t.realize (Empty.elim : Empty → TermModel C S hmax) = TermModel.mk t := by
   induction t with
   | var e => exact Empty.elim e
@@ -908,11 +885,7 @@ decreasing_by
 
 /-! ### Model Existence from Truth Lemma -/
 
-/-- The term model satisfies every sentence in S*. -/
-theorem termModel_models_maximal :
-    Theoryω.Model S (TermModel C S hmax) := by
-  intro φ hφ
-  exact (truthLemma φ).mp hφ
+
 
 end Language
 

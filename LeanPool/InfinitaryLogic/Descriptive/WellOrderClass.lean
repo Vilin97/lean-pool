@@ -36,14 +36,11 @@ variable {L : Language.{0, 0}} [L.IsRelational]
 def wellOrderClass (lt : L.Relations 2) : Set (StructureSpace L) :=
   {c | IsWellOrder ℕ fun x y : ℕ => @Structure.RelMap L ℕ c.toStructure 2 lt ![x, y]}
 
-theorem mem_wellOrderClass_iff (lt : L.Relations 2) (c : StructureSpace L) :
-    c ∈ wellOrderClass lt ↔
-      IsWellOrder ℕ fun x y : ℕ => @Structure.RelMap L ℕ c.toStructure 2 lt ![x, y] :=
-  Iff.rfl
+
 
 /-- An `L`-isomorphism of decoded structures is an order isomorphism of the distinguished
 relations. -/
-def relIsoOfEquiv (lt : L.Relations 2) {c d : StructureSpace L}
+private def relIsoOfEquiv (lt : L.Relations 2) {c d : StructureSpace L}
     (f : @Language.Equiv L ℕ ℕ c.toStructure d.toStructure) :
     (fun x y : ℕ => @Structure.RelMap L ℕ c.toStructure 2 lt ![x, y]) ≃r
       fun x y : ℕ => @Structure.RelMap L ℕ d.toStructure 2 lt ![x, y] where
@@ -67,7 +64,7 @@ theorem wellOrderClass_isomorphismInvariant (lt : L.Relations 2) :
 /-! ## Every countably infinite order type occurs -/
 
 /-- Below `ω₁` the ordinal's type is countable. -/
-theorem countable_toType_of_lt_omega1 {β : Ordinal.{0}} (hβ : β < (Cardinal.aleph 1).ord) :
+private theorem countable_toType_of_lt_omega1 {β : Ordinal.{0}} (hβ : β < (Cardinal.aleph 1).ord) :
     Countable β.ToType := by
   have hcard : β.card < Cardinal.aleph 1 := Cardinal.lt_ord.mp hβ
   rw [show Cardinal.aleph 1 = Order.succ (Cardinal.aleph 0) from by
@@ -76,7 +73,7 @@ theorem countable_toType_of_lt_omega1 {β : Ordinal.{0}} (hβ : β < (Cardinal.a
   exact Order.lt_succ_iff.mp hcard
 
 /-- From `ω` on, the ordinal's type is infinite. -/
-theorem infinite_toType_of_omega0_le {β : Ordinal.{0}} (hβ : Ordinal.omega0 ≤ β) :
+private theorem infinite_toType_of_omega0_le {β : Ordinal.{0}} (hβ : Ordinal.omega0 ≤ β) :
     Infinite β.ToType := by
   rw [Cardinal.infinite_iff, Cardinal.mk_toType]
   simpa using Ordinal.card_le_card hβ

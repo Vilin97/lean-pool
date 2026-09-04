@@ -68,62 +68,48 @@ section ReindexEqs
 
 variable (c : IndexCoding ι κ)
 
-@[simp]
-theorem reindex_falsum : reindex c (.falsum : L.BoundedFormulaInf ι α n) = .falsum :=
-  rfl
+
+
+
+
+
 
 @[simp]
-theorem reindex_equal (t₁ t₂ : L.Term (α ⊕ Fin n)) :
-    reindex c (.equal t₁ t₂ : L.BoundedFormulaInf ι α n) = .equal t₁ t₂ :=
-  rfl
-
-@[simp]
-theorem reindex_rel {l : ℕ} (R : L.Relations l) (ts : Fin l → L.Term (α ⊕ Fin n)) :
-    reindex c (.rel R ts : L.BoundedFormulaInf ι α n) = .rel R ts :=
-  rfl
-
-@[simp]
-theorem reindex_imp (φ ψ : L.BoundedFormulaInf ι α n) :
+private theorem reindex_imp (φ ψ : L.BoundedFormulaInf ι α n) :
     reindex c (φ.imp ψ) = (reindex c φ).imp (reindex c ψ) :=
   rfl
 
 @[simp]
-theorem reindex_all (φ : L.BoundedFormulaInf ι α (n + 1)) :
+private theorem reindex_all (φ : L.BoundedFormulaInf ι α (n + 1)) :
     reindex c φ.all = (reindex c φ).all :=
   rfl
 
 @[simp]
-theorem reindex_iSup (φs : ι → L.BoundedFormulaInf ι α n) :
+private theorem reindex_iSup (φs : ι → L.BoundedFormulaInf ι α n) :
     reindex c (.iSup φs) = iSupAlong c fun i ↦ reindex c (φs i) :=
   rfl
 
 @[simp]
-theorem reindex_iInf (φs : ι → L.BoundedFormulaInf ι α n) :
+private theorem reindex_iInf (φs : ι → L.BoundedFormulaInf ι α n) :
     reindex c (.iInf φs) = iInfAlong c fun i ↦ reindex c (φs i) :=
   rfl
 
+
+
+
+
 @[simp]
-theorem reindex_not (φ : L.BoundedFormulaInf ι α n) :
-    reindex c φ.not = (reindex c φ).not :=
+private theorem reindex_top : reindex c (⊤ : L.BoundedFormulaInf ι α n) = ⊤ :=
   rfl
 
 @[simp]
-theorem reindex_ex (φ : L.BoundedFormulaInf ι α (n + 1)) :
-    reindex c φ.ex = (reindex c φ).ex :=
-  rfl
-
-@[simp]
-theorem reindex_top : reindex c (⊤ : L.BoundedFormulaInf ι α n) = ⊤ :=
-  rfl
-
-@[simp]
-theorem reindex_bot : reindex c (⊥ : L.BoundedFormulaInf ι α n) = ⊥ :=
+private theorem reindex_bot : reindex c (⊥ : L.BoundedFormulaInf ι α n) = ⊥ :=
   rfl
 
 end ReindexEqs
 
 /-- Reindexing along the identity coding is syntactically the identity. -/
-theorem reindex_id : ∀ {n} (φ : L.BoundedFormulaInf ι α n), reindex (.id ι) φ = φ := by
+private theorem reindex_id : ∀ {n} (φ : L.BoundedFormulaInf ι α n), reindex (.id ι) φ = φ := by
   intro n φ
   induction φ with
   | falsum => rfl
@@ -134,30 +120,15 @@ theorem reindex_id : ∀ {n} (φ : L.BoundedFormulaInf ι α n), reindex (.id ι
   | iSup φs ih => exact congrArg BoundedFormulaInf.iSup (funext fun i ↦ ih i)
   | iInf φs ih => exact congrArg BoundedFormulaInf.iInf (funext fun i ↦ ih i)
 
-/-- The universal bound-variable closure commutes with carrier transport, syntactically. -/
-@[simp]
-theorem reindex_alls (c : IndexCoding ι κ) :
-    ∀ {n} (φ : L.BoundedFormulaInf ι α n), reindex c φ.alls = (reindex c φ).alls
-  | 0, _ => rfl
-  | _ + 1, φ => by
-    rw [show (φ.alls : L.FormulaInf ι α) = φ.all.alls from rfl, reindex_alls c φ.all,
-      reindex_all]
-    rfl
 
-/-- The existential bound-variable closure commutes with carrier transport, syntactically. -/
-@[simp]
-theorem reindex_exs (c : IndexCoding ι κ) :
-    ∀ {n} (φ : L.BoundedFormulaInf ι α n), reindex c φ.exs = (reindex c φ).exs
-  | 0, _ => rfl
-  | _ + 1, φ => by
-    rw [show (φ.exs : L.FormulaInf ι α) = φ.ex.exs from rfl, reindex_exs c φ.ex, reindex_ex]
-    rfl
+
+
 
 /-- Reindexing along a composite coding is the composite of the reindexings — syntactically,
 not merely up to semantic equivalence. This is the coherence law that lets carrier transports
 be chained; it follows from the generic pad laws `IndexCoding.pad_trans` and
 `IndexCoding.comp_pad`, with no decoder analysis. -/
-theorem reindex_trans (c₁ : IndexCoding ι κ) (c₂ : IndexCoding κ μ) :
+private theorem reindex_trans (c₁ : IndexCoding ι κ) (c₂ : IndexCoding κ μ) :
     ∀ {n} (φ : L.BoundedFormulaInf ι α n),
       reindex (c₁.trans c₂) φ = reindex c₂ (reindex c₁ φ) := by
   intro n φ
@@ -195,14 +166,14 @@ and back is the identity, syntactically. Instantiated at `Equiv.ulift`, this is 
 universe-lift operation on formulas together with its exact inverse — an arbitrary coding
 preserves semantics but pads; an equivalence coding round-trips. -/
 @[simp]
-theorem reindex_ofEquiv_symm_reindex_ofEquiv (e : ι ≃ κ) (φ : L.BoundedFormulaInf ι α n) :
+private theorem reindex_ofEquiv_symm_reindex_ofEquiv (e : ι ≃ κ) (φ : L.BoundedFormulaInf ι α n) :
     reindex (.ofEquiv e.symm) (reindex (.ofEquiv e) φ) = φ := by
   rw [← reindex_trans, IndexCoding.ofEquiv_trans_ofEquiv_symm, reindex_id]
 
 /-- Carrier equivalences are actual syntax equivalences. In particular
 `reindexEquiv Equiv.ulift.symm` is the universe-lift operation on formulas, packaged with its
 exact syntactic inverse. -/
-def reindexEquiv (e : ι ≃ κ) : L.BoundedFormulaInf ι α n ≃ L.BoundedFormulaInf κ α n where
+private def reindexEquiv (e : ι ≃ κ) : L.BoundedFormulaInf ι α n ≃ L.BoundedFormulaInf κ α n where
   toFun := reindex (.ofEquiv e)
   invFun := reindex (.ofEquiv e.symm)
   left_inv φ := reindex_ofEquiv_symm_reindex_ofEquiv e φ
@@ -255,7 +226,7 @@ theorem realize_iSupAlong {c : IndexCoding ι κ} {φs : ι → L.BoundedFormula
 /-- Carrier transport preserves realization. Being an iff, this transports semantic
 equivalence in both directions as well. -/
 @[simp]
-theorem realize_reindex (c : IndexCoding ι κ) :
+private theorem realize_reindex (c : IndexCoding ι κ) :
     ∀ {n} (φ : L.BoundedFormulaInf ι α n) (v : α → M) (xs : Fin n → M),
       (reindex c φ).Realize v xs ↔ φ.Realize v xs := by
   intro n φ
@@ -280,11 +251,7 @@ theorem realize_reindex (c : IndexCoding ι κ) :
     simp only [reindex_iInf, realize_iInfAlong]
     exact forall_congr' fun i ↦ ih i v xs
 
-/-- Recoding an encodable-carrier formula into `L_{ω₁ω}` preserves realization. -/
-@[simp]
-theorem realize_toOmega [Encodable ι] (φ : L.BoundedFormulaInf ι α n) (v : α → M)
-    (xs : Fin n → M) : (toOmega φ).Realize v xs ↔ φ.Realize v xs :=
-  realize_reindex _ φ v xs
+
 
 end Realize
 
@@ -294,7 +261,7 @@ end BoundedFormulaInf
 `κ` factors through ANY coding into `κ`. This replaces the embedding-triangle lemma of a
 two-inductive design, and is syntactic. -/
 @[simp]
-theorem BoundedFormulaInf.reindex_toInf (c : IndexCoding ι κ) :
+private theorem BoundedFormulaInf.reindex_toInf (c : IndexCoding ι κ) :
     ∀ {n} (φ : L.BoundedFormula α n),
       BoundedFormulaInf.reindex c (BoundedFormula.toInf φ) = BoundedFormula.toInf φ := by
   intro n φ

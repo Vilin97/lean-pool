@@ -65,13 +65,13 @@ theorem notMem_sentenceJConsts_genEx (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
 /-! ## Occurrence facts for `genEx` -/
 
 /-- `genEx` preserves the relation symbols. -/
-theorem relationsIn_genEx (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
+private theorem relationsIn_genEx (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
     (genEx j ρ).relationsIn = ρ.relationsIn := by
   rw [genEx, BoundedFormulaω.relationsIn_ex, BoundedFormulaω.relationsIn_relabel,
     BoundedFormulaω.relationsIn_abstractConst]
 
 /-- `genEx` adds no function symbols. -/
-theorem functionsIn_genEx_subset (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
+private theorem functionsIn_genEx_subset (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
     (genEx j ρ).functionsIn ⊆ ρ.functionsIn := by
   rw [genEx, BoundedFormulaω.functionsIn_ex, BoundedFormulaω.functionsIn_relabel]
   exact BoundedFormulaω.functionsIn_abstractConst_subset j ρ

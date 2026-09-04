@@ -57,8 +57,7 @@ abbrev IsExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := universa
 @[simp] theorem universalSigned_falsum {n : ℕ} (s : Bool) :
     universalSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α n) := trivial
 
-@[simp] theorem universalSigned_bot {n : ℕ} (s : Bool) :
-    universalSigned s (⊥ : L.BoundedFormulaω α n) := trivial
+
 
 @[simp] theorem universalSigned_equal {n : ℕ} (s : Bool) (t₁ t₂ : L.Term (α ⊕ Fin n)) :
     universalSigned s (BoundedFormulaω.equal t₁ t₂) := trivial
@@ -88,31 +87,19 @@ abbrev IsExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := universa
     (BoundedFormulaω.falsum : L.BoundedFormulaω α n) ↔ _
   simp
 
-theorem isUniversal_imp {n : ℕ} (φ ψ : L.BoundedFormulaω α n) :
-    IsUniversal (φ.imp ψ) ↔ IsExistential φ ∧ IsUniversal ψ := Iff.rfl
 
-theorem isExistential_imp {n : ℕ} (φ ψ : L.BoundedFormulaω α n) :
-    IsExistential (φ.imp ψ) ↔ IsUniversal φ ∧ IsExistential ψ := Iff.rfl
 
-theorem isUniversal_not {n : ℕ} (φ : L.BoundedFormulaω α n) :
-    IsUniversal φ.not ↔ IsExistential φ := universalSigned_not true φ
 
-theorem isExistential_not {n : ℕ} (φ : L.BoundedFormulaω α n) :
-    IsExistential φ.not ↔ IsUniversal φ := universalSigned_not false φ
 
-theorem isUniversal_all {n : ℕ} (φ : L.BoundedFormulaω α (n + 1)) :
-    IsUniversal φ.all ↔ IsUniversal φ := by simp
 
-theorem not_isExistential_all {n : ℕ} (φ : L.BoundedFormulaω α (n + 1)) :
-    ¬ IsExistential φ.all := by simp
 
-/-- Dually to `not_isExistential_all`: an existential quantifier is a *negative* `all`, so `∃x φ` is
-existential exactly when `φ` is, and never universal (unless it is vacuous, which this syntax does
-not distinguish). -/
-theorem isExistential_ex {n : ℕ} (φ : L.BoundedFormulaω α (n + 1)) :
-    IsExistential φ.ex ↔ IsExistential φ := by
-  show universalSigned false (φ.not.all).not ↔ _
-  simp
+
+
+
+
+
+
+
 
 theorem not_isUniversal_ex {n : ℕ} (φ : L.BoundedFormulaω α (n + 1)) :
     ¬ IsUniversal φ.ex := by
@@ -121,40 +108,19 @@ theorem not_isUniversal_ex {n : ℕ} (φ : L.BoundedFormulaω α (n + 1)) :
 
 /-! ## The derived connectives -/
 
-@[simp] theorem universalSigned_top {n : ℕ} (s : Bool) :
-    universalSigned s (⊤ : L.BoundedFormulaω α n) := ⟨trivial, trivial⟩
 
-@[simp] theorem universalSigned_and {n : ℕ} (s : Bool) (φ ψ : L.BoundedFormulaω α n) :
-    universalSigned s (φ.and ψ) ↔ universalSigned s φ ∧ universalSigned s ψ := by
-  show universalSigned s ((φ.imp ψ.not).not) ↔ _
-  simp
 
-@[simp] theorem universalSigned_or {n : ℕ} (s : Bool) (φ ψ : L.BoundedFormulaω α n) :
-    universalSigned s (φ.or ψ) ↔ universalSigned s φ ∧ universalSigned s ψ := by
-  show universalSigned s (φ.not.imp ψ) ↔ _
-  simp
 
-theorem universalSigned_einf {ι : Type*} [Encodable ι] {n : ℕ} (s : Bool)
-    (φs : ι → L.BoundedFormulaω α n) (h : ∀ i, universalSigned s (φs i)) :
-    universalSigned s (BoundedFormulaω.einf φs) := by
-  rw [BoundedFormulaω.einf, universalSigned_iInf]
-  intro k
-  cases hd : Encodable.decode (α := ι) k with
-  | none => exact universalSigned_top s
-  | some i => exact h i
 
-theorem universalSigned_esup {ι : Type*} [Encodable ι] {n : ℕ} (s : Bool)
-    (φs : ι → L.BoundedFormulaω α n) (h : ∀ i, universalSigned s (φs i)) :
-    universalSigned s (BoundedFormulaω.esup φs) := by
-  rw [BoundedFormulaω.esup, universalSigned_iSup]
-  intro k
-  cases hd : Encodable.decode (α := ι) k with
-  | none => exact universalSigned_bot s
-  | some i => exact h i
+
+
+
+
+
 
 /-! ## Stability under the variable operations -/
 
-theorem universalSigned_castLE (s : Bool) :
+private theorem universalSigned_castLE (s : Bool) :
     ∀ {m n : ℕ} (h : m ≤ n) (φ : L.BoundedFormulaω α m),
       universalSigned s (φ.castLE h) ↔ universalSigned s φ
   | _, _, _, .falsum => Iff.rfl

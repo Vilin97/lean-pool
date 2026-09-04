@@ -69,7 +69,7 @@ inequivalent. Classical content: Kechris, CDST 19.1 (specialized); provable by a
 of basic clopen boxes avoiding, at level `n`, the first `n` nowhere dense closed sets covering
 the relation. Injectivity is omitted: it follows from the antichain property and reflexivity
 (see `gandy_harrington_of_category_route`). -/
-def MycielskiCantorHypothesis : Prop :=
+private def MycielskiCantorHypothesis : Prop :=
   ∀ E : Setoid (ℕ → Bool),
     IsMeagre {p : (ℕ → Bool) × (ℕ → Bool) | E.r p.1 p.2} →
     ∃ ψ : (ℕ → Bool) → (ℕ → Bool), Continuous ψ ∧
@@ -92,7 +92,7 @@ def CategoryReductionHypothesis : Prop :=
 exactly the statement of `gandy_harrington_for_relation`. Pull `r` back along `φ` to a meager
 equivalence relation on Cantor space, apply Mycielski to get `ψ`, and take `f = φ ∘ ψ`;
 injectivity follows from the antichain property and reflexivity of `r`. -/
-theorem gandy_harrington_of_category_route
+private theorem gandy_harrington_of_category_route
     (hred : CategoryReductionHypothesis.{u}) (hmyc : MycielskiCantorHypothesis)
     {α : Type u} [MetricSpace α] [CompleteSpace α] [SecondCountableTopology α]
     [MeasurableSpace α] [BorelSpace α]
@@ -118,7 +118,7 @@ theorem gandy_harrington_of_category_route
 
 /-- `MycielskiCantorHypothesis` holds: proved by the level-scheduled Cantor scheme in
 `InfinitaryLogic/Descriptive/Mycielski.lean`. -/
-theorem mycielskiCantorHypothesis_holds : MycielskiCantorHypothesis := by
+private theorem mycielskiCantorHypothesis_holds : MycielskiCantorHypothesis := by
   intro E hE
   obtain ⟨ψ, hψ_cont, hψ_anti⟩ := mycielski_cantor hE
   exact ⟨ψ, hψ_cont, fun a b hab => hψ_anti a b hab⟩
@@ -126,7 +126,7 @@ theorem mycielskiCantorHypothesis_holds : MycielskiCantorHypothesis := by
 /-- **Assembly, Mycielski discharged**: the category route to
 `gandy_harrington_for_relation` now reduces to `CategoryReductionHypothesis` alone
 (`G₀`-dichotomy + `G_S`-independence + Kuratowski–Ulam). -/
-theorem gandy_harrington_of_categoryReduction
+private theorem gandy_harrington_of_categoryReduction
     (hred : CategoryReductionHypothesis.{u})
     {α : Type u} [MetricSpace α] [CompleteSpace α] [SecondCountableTopology α]
     [MeasurableSpace α] [BorelSpace α]
@@ -157,7 +157,7 @@ def GSGraphHomHypothesis : Prop :=
 (`isMeagre_pullback_class_of_gSGraph_hom`, density of `canonicalS`), the pullback relation
 is Baire measurable (Borel, as a continuous preimage), and Kuratowski–Ulam
 (`isMeagre_of_isMeagre_sections`) makes it meager. -/
-theorem categoryReductionHypothesis_of_gSGraphHom (h : GSGraphHomHypothesis.{u}) :
+private theorem categoryReductionHypothesis_of_gSGraphHom (h : GSGraphHomHypothesis.{u}) :
     CategoryReductionHypothesis.{u} := by
   intro α _ _ _ _ _ r hr hunc
   obtain ⟨φ, hφ_cont, hhom⟩ := h r hr hunc

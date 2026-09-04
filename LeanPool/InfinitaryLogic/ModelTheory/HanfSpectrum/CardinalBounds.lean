@@ -38,7 +38,7 @@ universe u
 
 /-- The countable-sum core: a countable sum of cardinals each `≤ κ` is `≤ κ`, for infinite
 `κ`. -/
-theorem sum_le_of_countable {ι : Type u} [Countable ι] {f : ι → Cardinal.{u}} {κ : Cardinal.{u}}
+private theorem sum_le_of_countable {ι : Type u} [Countable ι] {f : ι → Cardinal.{u}} {κ : Cardinal.{u}}
     (hκ : Cardinal.aleph0 ≤ κ) (hf : ∀ i, f i ≤ κ) : Cardinal.sum f ≤ κ := by
   calc Cardinal.sum f ≤ Cardinal.sum (fun _ : ι => κ) := Cardinal.sum_le_sum _ _ hf
     _ = Cardinal.mk ι * κ := Cardinal.sum_const' _ _
@@ -53,7 +53,7 @@ universe v
 A bound assembled from both language data and structure data does not live in the structure's
 universe, so the same-universe form cannot state it. The index type still has to be countable
 in its own universe; only the summands move. -/
-theorem sum_le_of_countable_lift {ι : Type u} [Countable ι] {f : ι → Cardinal.{v}}
+private theorem sum_le_of_countable_lift {ι : Type u} [Countable ι] {f : ι → Cardinal.{v}}
     {κ : Cardinal.{max u v}} (hκ : Cardinal.aleph0 ≤ κ)
     (hf : ∀ i, Cardinal.lift.{u} (f i) ≤ κ) : Cardinal.sum f ≤ κ := by
   have hι : Cardinal.lift.{max u v} (Cardinal.mk ι) ≤ Cardinal.aleph0 := by

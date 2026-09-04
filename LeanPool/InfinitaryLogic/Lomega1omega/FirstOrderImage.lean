@@ -32,17 +32,11 @@ def BoundedFormulaω.IsFirstOrder (φ : L.BoundedFormulaω α n) : Prop :=
 
 namespace BoundedFormulaω
 
-@[simp] theorem isFirstOrder_falsum :
-    (BoundedFormulaω.falsum : L.BoundedFormulaω α n).IsFirstOrder :=
-  ⟨BoundedFormula.falsum, rfl⟩
 
-@[simp] theorem isFirstOrder_equal (t₁ t₂ : L.Term (α ⊕ Fin n)) :
-    (BoundedFormulaω.equal t₁ t₂).IsFirstOrder :=
-  ⟨BoundedFormula.equal t₁ t₂, rfl⟩
 
-@[simp] theorem isFirstOrder_rel {l : ℕ} (R : L.Relations l) (ts : Fin l → L.Term (α ⊕ Fin n)) :
-    (BoundedFormulaω.rel R ts).IsFirstOrder :=
-  ⟨BoundedFormula.rel R ts, rfl⟩
+
+
+
 
 @[simp] theorem isFirstOrder_imp_iff {φ ψ : L.BoundedFormulaω α n} :
     (φ.imp ψ).IsFirstOrder ↔ φ.IsFirstOrder ∧ ψ.IsFirstOrder := by

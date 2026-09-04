@@ -193,7 +193,7 @@ abbrev Source (κ : Cardinal.{0}) : Type :=
   (Order.succ ((2 : Cardinal.{0}) ^ κ)).ord.ToType
 
 /-- Cardinality of the source: `#(Source κ) = succ (2 ^ κ)`. -/
-lemma mk_source (κ : Cardinal.{0}) :
+private lemma mk_source (κ : Cardinal.{0}) :
     Cardinal.mk (Source κ) = Order.succ ((2 : Cardinal.{0}) ^ κ) :=
   Cardinal.mk_ord_toType _
 
@@ -213,7 +213,7 @@ lemma succ_le_two_power (κ : Cardinal.{0}) :
 variable {κ : Cardinal.{0}}
 
 /-- `ℵ_0 ≤ 2 ^ κ` for infinite `κ` (via Cantor). -/
-lemma aleph0_le_two_power (hκ : Cardinal.aleph0 ≤ κ) :
+private lemma aleph0_le_two_power (hκ : Cardinal.aleph0 ≤ κ) :
     Cardinal.aleph0 ≤ (2 : Cardinal.{0}) ^ κ :=
   hκ.trans (Cardinal.cantor κ).le
 
@@ -223,7 +223,7 @@ lemma aleph0_le_succ_two_power (hκ : Cardinal.aleph0 ≤ κ) :
   (aleph0_le_two_power hκ).trans (Order.le_succ _)
 
 /-- `ℵ_0 ≤ succ κ` for infinite `κ`. -/
-lemma aleph0_le_succ_self (hκ : Cardinal.aleph0 ≤ κ) :
+private lemma aleph0_le_succ_self (hκ : Cardinal.aleph0 ≤ κ) :
     Cardinal.aleph0 ≤ Order.succ κ :=
   hκ.trans (Order.le_succ κ)
 
@@ -245,7 +245,7 @@ theorem succ_lt_ord_of_lt (hκ : Cardinal.aleph0 ≤ κ) {δ : Ordinal.{0}}
 /-- **Node-count bound.** For `β < (succ κ).ord` and `#C ≤ κ`, the level of
 recorded-color sequences has at most `2 ^ κ` nodes:
 `#(β.ToType → C) = #C ^ #β.ToType ≤ (2 ^ κ) ^ κ = 2 ^ (κ * κ) = 2 ^ κ`. -/
-theorem mk_node_le {C : Type} (hκ : Cardinal.aleph0 ≤ κ)
+private theorem mk_node_le {C : Type} (hκ : Cardinal.aleph0 ≤ κ)
     (hC : Cardinal.mk C ≤ κ) {β : Ordinal.{0}}
     (hβ : β < (Order.succ κ).ord) :
     Cardinal.mk (β.ToType → C) ≤ 2 ^ κ :=
@@ -269,7 +269,7 @@ theorem succ_mul_two_power (hκ : Cardinal.aleph0 ≤ κ) :
 /-- Any coloring on `Source κ` witnesses `Nonempty C`: the source is nontrivial
 (`#(Source κ) = succ (2 ^ κ) ≥ 2`), so it contains a strict pair, whose color inhabits
 `C`. Supplies the junk value the coverage `y`-path needs. -/
-theorem nonempty_color {C : Type} (cR : (Fin 2 ↪o Source κ) → C) :
+private theorem nonempty_color {C : Type} (cR : (Fin 2 ↪o Source κ) → C) :
     Nonempty C := by
   have hnontriv : Nontrivial (Source κ) := by
     rw [← Cardinal.one_lt_iff_nontrivial, mk_source]
@@ -291,7 +291,7 @@ variable {κ : Cardinal.{0}} {C : Type}
 every `p β`, whose pair color with each `p β` matches `τ β`. Kept in quantifier form so
 that successor rewriting and restriction lemmas do not have to commute big intersections
 through the recursion. -/
-def validFiber (cR : (Fin 2 ↪o Source κ) → C) {α : Ordinal.{0}}
+private def validFiber (cR : (Fin 2 ↪o Source κ) → C) {α : Ordinal.{0}}
     (p : α.ToType ↪o Source κ) (τ : α.ToType → C) : Set (Source κ) :=
   { y | ∀ β : α.ToType, ∃ h : p β < y, cR (pairEmbed h) = τ β }
 
@@ -393,7 +393,7 @@ theorem ehmr_partitionTree_card_lower
 
 /-- The successor set `S(h)`: points above all the reps respecting the recorded
 colors. (`β.ToType`-indexed `validFiber` shape, with a plain-function `rep`.) -/
-def ehmrFiber (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private def ehmrFiber (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (rep : β.ToType → Source κ) (col : EHMRNodeAt C β) : Set (Source κ) :=
   { y | ∀ x : β.ToType, ∃ h : rep x < y, cR (pairEmbed h) = col x }
 
@@ -422,7 +422,7 @@ decreasing_by
     rwa [Ordinal.type_toType] at hh
 
 /-- The reps along a node: the chosen rep of the restriction to each position. -/
-noncomputable def ehmrRep (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private noncomputable def ehmrRep (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (h : EHMRNodeAt C β) : β.ToType → Source κ := by
   haveI : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
   exact fun x => ehmrChosen cR (Ordinal.typein (· < ·) x)
@@ -445,7 +445,7 @@ noncomputable def ehmrR (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
   exact if ehmrLive cR h then {ehmrChosen cR β h} else ∅
 
 /-- `R(h)` is a subsingleton (it is `{s(h)}` or `∅`). -/
-theorem ehmrR_subsingleton (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private theorem ehmrR_subsingleton (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (h : EHMRNodeAt C β) : (ehmrR cR h).Subsingleton := by
   classical
   rw [ehmrR]
@@ -454,7 +454,7 @@ theorem ehmrR_subsingleton (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}
   · exact Set.subsingleton_empty
 
 /-- On a live node, the chosen rep lies in the successor set. -/
-theorem ehmrChosen_mem (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private theorem ehmrChosen_mem (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (h : EHMRNodeAt C β) (hlive : ehmrLive cR h) :
     ehmrChosen cR β h ∈ ehmrS cR h := by
   classical
@@ -468,7 +468,7 @@ theorem ehmrChosen_mem (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
 
 /-- On a live node, `ehmrChosen` is exactly the well-order minimum of the successor set
 (the defining unfold). -/
-theorem ehmrChosen_eq_min (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private theorem ehmrChosen_eq_min (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (h : EHMRNodeAt C β) (hlive : ehmrLive cR h) :
     ehmrChosen cR β h =
       (IsWellFounded.wf : WellFounded (· < · : Source κ → Source κ → Prop)).min
@@ -486,7 +486,7 @@ theorem ehmrChosen_eq_min (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
 
 /-- The chosen min is `≤` every successor (the `<`-least element of `S(h)` in the
 linear well-order). -/
-theorem ehmrChosen_le_of_mem (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private theorem ehmrChosen_le_of_mem (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (h : EHMRNodeAt C β) {y : Source κ} (hy : y ∈ ehmrS cR h) :
     ehmrChosen cR β h ≤ y := by
   have hlive : ehmrLive cR h := ⟨y, hy⟩
@@ -495,14 +495,14 @@ theorem ehmrChosen_le_of_mem (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{
 
 /-- Level cardinality: for `β < (succ κ).ord` the level (all length-`β` nodes) has
 cardinality `≤ 2 ^ κ` — `β.ToType` of size `≤ κ`, `C`-valued with `#C ≤ κ`. -/
-theorem ehmr_level_card_le (hκ : Cardinal.aleph0 ≤ κ) (hC : Cardinal.mk C ≤ κ)
+private theorem ehmr_level_card_le (hκ : Cardinal.aleph0 ≤ κ) (hC : Cardinal.mk C ≤ κ)
     {β : Ordinal.{0}} (hβ : β < (Order.succ κ).ord) :
     Cardinal.mk (EHMRNodeAt C β) ≤ (2 : Cardinal.{0}) ^ κ :=
   mk_node_le hκ hC hβ
 
 /-- `ehmrChosen` transported along a level equality: equal levels plus
 heterogeneously-equal nodes give equal chosen reps. -/
-theorem ehmrChosen_congr (cR : (Fin 2 ↪o Source κ) → C) {δ₁ δ₂ : Ordinal.{0}}
+private theorem ehmrChosen_congr (cR : (Fin 2 ↪o Source κ) → C) {δ₁ δ₂ : Ordinal.{0}}
     (hδ : δ₁ = δ₂) {n₁ : EHMRNodeAt C δ₁} {n₂ : EHMRNodeAt C δ₂} (hn : HEq n₁ n₂) :
     ehmrChosen cR δ₁ n₁ = ehmrChosen cR δ₂ n₂ := by
   subst hδ
@@ -510,7 +510,7 @@ theorem ehmrChosen_congr (cR : (Fin 2 ↪o Source κ) → C) {δ₁ δ₂ : Ordi
 
 /-- Level smallness: for `β < (succ κ).ord` there are `≤ 2 ^ κ` live length-`β` nodes
 (a fortiori `≤ 2 ^ κ` nodes, by `ehmr_level_card_le`). -/
-theorem ehmr_live_level_small (hκ : Cardinal.aleph0 ≤ κ) (hC : Cardinal.mk C ≤ κ)
+private theorem ehmr_live_level_small (hκ : Cardinal.aleph0 ≤ κ) (hC : Cardinal.mk C ≤ κ)
     (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (hβ : β < (Order.succ κ).ord) :
     Cardinal.mk {h : EHMRNodeAt C β // ehmrLive cR h} ≤ (2 : Cardinal.{0}) ^ κ :=
@@ -584,7 +584,7 @@ theorem yNode_restrict (cR : (Fin 2 ↪o Source κ) → C) (y : Source κ)
 /-- The reps of `yNode cR y β` are exactly `yRep cR y (typein x)`. (The `IsWellOrder`
 binder lets `typein` appear in the signature; call sites discharge it with
 `isWellOrder_lt`.) -/
-theorem ehmrRep_yNode (cR : (Fin 2 ↪o Source κ) → C) (y : Source κ)
+private theorem ehmrRep_yNode (cR : (Fin 2 ↪o Source κ) → C) (y : Source κ)
     {β : Ordinal.{0}} [IsWellOrder β.ToType (· < ·)] (x : β.ToType) :
     ehmrRep cR (yNode cR y β) x = yRep cR y (Ordinal.typein (· < ·) x) := by
   classical
@@ -710,7 +710,7 @@ theorem EHMRNodeAt.restrict_heq {β : Ordinal.{0}} (h : EHMRNodeAt C β)
   subst hδ; exact heq_of_eq rfl
 
 /-- The reps of a restriction agree with the parent's reps at the lifted positions. -/
-theorem ehmrRep_restrict (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private theorem ehmrRep_restrict (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     (h : EHMRNodeAt C β) {δ : Ordinal.{0}} (hδ : δ ≤ β) (x : δ.ToType) :
     ehmrRep cR (h.restrict hδ) x =
       ehmrRep cR h ((initialSegOfLe hδ).toOrderEmbedding x) := by
@@ -732,7 +732,7 @@ theorem ehmrRep_restrict (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
 
 /-- A restriction of a live node is live (the same witness `y` serves, since the reps
 and recorded colors only shrink). -/
-theorem ehmrLive_restrict (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private theorem ehmrLive_restrict (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     {h : EHMRNodeAt C β} (hlive : ehmrLive cR h) {δ : Ordinal.{0}} (hδ : δ ≤ β) :
     ehmrLive cR (h.restrict hδ) := by
   classical
@@ -747,7 +747,7 @@ theorem ehmrLive_restrict (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
 
 /-- `cR ∘ pairEmbed` depends only on the two endpoints, not on the `<`-proof: equal
 endpoints give equal colors. -/
-theorem cR_pairEmbed_congr (cR : (Fin 2 ↪o Source κ) → C)
+private theorem cR_pairEmbed_congr (cR : (Fin 2 ↪o Source κ) → C)
     {a a' b b' : Source κ} (ha : a = a') (hb : b = b') (p : a < b) (q : a' < b') :
     cR (pairEmbed p) = cR (pairEmbed q) := by
   subst ha; subst hb; rfl
@@ -755,7 +755,7 @@ theorem cR_pairEmbed_congr (cR : (Fin 2 ↪o Source κ) → C)
 /-- **End-homogeneity, strict monotonicity.** On a live node the chosen reps strictly
 increase: the rep at `x₁` is the rep of the restriction-to-`x₂` at the position of `x₁`,
 hence strictly below that restriction's chosen min `= rep x₂`. -/
-theorem ehmrRep_strictMono (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private theorem ehmrRep_strictMono (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     {h : EHMRNodeAt C β} (hlive : ehmrLive cR h) {x₁ x₂ : β.ToType} (hx : x₁ < x₂) :
     ehmrRep cR h x₁ < ehmrRep cR h x₂ := by
   classical
@@ -786,7 +786,7 @@ theorem ehmrRep_strictMono (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}
 
 /-- **End-homogeneity, EHMR fact (8).** On a live node, the recorded color at `x₁` is
 the pair-color of the reps `{rep x₁, rep x₂}` for any `x₁ < x₂`. -/
-theorem ehmr_fact8 (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
+private theorem ehmr_fact8 (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
     {h : EHMRNodeAt C β} (hlive : ehmrLive cR h) {x₁ x₂ : β.ToType} (hx : x₁ < x₂) :
     cR (pairEmbed (ehmrRep_strictMono cR hlive hx)) = h x₁ := by
   classical
@@ -834,13 +834,13 @@ section BranchExtraction
 variable {κ : Cardinal.{0}} {C : Type}
 
 /-- The position `enum β'` of a length-`β` node, for `β' < (succ κ).ord ≤ β`. -/
-noncomputable def ehmrBranchPos {β : Ordinal.{0}} (hβ : (Order.succ κ).ord ≤ β)
+private noncomputable def ehmrBranchPos {β : Ordinal.{0}} (hβ : (Order.succ κ).ord ≤ β)
     (β' : Ordinal.{0}) (hβ' : β' < (Order.succ κ).ord) : β.ToType := by
   haveI : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
   exact Ordinal.enum (· < ·) ⟨β', by rw [Ordinal.type_toType]; exact hβ'.trans_le hβ⟩
 
 /-- Positions are strictly monotone in the level. -/
-theorem ehmrBranchPos_strictMono {β : Ordinal.{0}} (hβ : (Order.succ κ).ord ≤ β)
+private theorem ehmrBranchPos_strictMono {β : Ordinal.{0}} (hβ : (Order.succ κ).ord ≤ β)
     {β' γ' : Ordinal.{0}} (hβ' : β' < (Order.succ κ).ord)
     (hγ' : γ' < (Order.succ κ).ord) (h' : β' < γ') :
     ehmrBranchPos hβ β' hβ' < ehmrBranchPos hβ γ' hγ' := by
@@ -851,7 +851,7 @@ theorem ehmrBranchPos_strictMono {β : Ordinal.{0}} (hβ : (Order.succ κ).ord �
 /-- A live node of length `≥ (succ κ).ord` *is* an `EHMRBranch`: its reps (read off at
 the positions `enum β'`) strictly increase (`ehmrRep_strictMono`) and satisfy fact (8)
 (`ehmr_fact8`). -/
-noncomputable def ehmrBranch_of_live {β : Ordinal.{0}}
+private noncomputable def ehmrBranch_of_live {β : Ordinal.{0}}
     (cR : (Fin 2 ↪o Source κ) → C) (h : EHMRNodeAt C β)
     (hβ : (Order.succ κ).ord ≤ β) (hlive : ehmrLive cR h) : EHMRBranch cR where
   rep β' hβ' := ehmrRep cR h (ehmrBranchPos hβ β' hβ')
@@ -929,7 +929,7 @@ theorem exists_live_node_ge [Nonempty C] (hκ : Cardinal.aleph0 ≤ κ)
 partition tree for `cR` has a branch of length `(succ κ).ord`: a live node of length
 `≥ (succ κ).ord` (`exists_live_node_ge`) restricts to the sought `EHMRBranch`
 (`ehmrBranch_of_live`). -/
-theorem ehmr_tree_has_branch [Nonempty C] (hκ : Cardinal.aleph0 ≤ κ)
+private theorem ehmr_tree_has_branch [Nonempty C] (hκ : Cardinal.aleph0 ≤ κ)
     (hC : Cardinal.mk C ≤ κ) (cR : (Fin 2 ↪o Source κ) → C) :
     Nonempty (EHMRBranch cR) := by
   obtain ⟨β, h, hβ, hlive⟩ := exists_live_node_ge hκ hC cR
@@ -947,7 +947,7 @@ variable {κ : Cardinal.{0}} {C : Type}
 embedding `α.ToType ↪o Source κ` sending position `β < α` to `rep β`; `branch α` reads
 off `bit`; `prefix_restrict`/`branch_restrict` are immediate from the assembly;
 `top_in_validFiber` is EHMR fact (8) (`coloring`). -/
-theorem exists_coherentMajorityBranch_of_ehmrBranch
+private theorem exists_coherentMajorityBranch_of_ehmrBranch
     {cR : (Fin 2 ↪o Source κ) → C} (b : EHMRBranch cR) :
     Nonempty (CoherentMajorityBranch cR) := by
   classical
@@ -1041,7 +1041,7 @@ theorem exists_coherentMajorityBranch_of_ehmrBranch
 restriction coherence + `top_in_validFiber`) of length `(succ κ).ord`, the object the
 pair Erdős–Rado endgame consumes. Derived directly from the EHMR canonical partition
 tree. -/
-theorem exists_coherentMajorityBranch (hκ : Cardinal.aleph0 ≤ κ)
+private theorem exists_coherentMajorityBranch (hκ : Cardinal.aleph0 ≤ κ)
     (hC : Cardinal.mk C ≤ κ) (cR : (Fin 2 ↪o Source κ) → C) :
     Nonempty (CoherentMajorityBranch cR) := by
   have : Nonempty C := nonempty_color cR
@@ -1058,7 +1058,7 @@ variable {κ : Cardinal.{0}} {C : Type}
 
 /-- **`treeCommitOfBranch`**: canonical commit at position `δ` using B. Reads off
 `B.prefixAt (succ δ) ⊤` (the top of the succ δ chain). -/
-noncomputable def treeCommitOfBranch
+private noncomputable def treeCommitOfBranch
     {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
     (B : CoherentMajorityBranch cR) (δ : Ordinal.{0})
     (hδ : δ < (Order.succ κ).ord) : Source κ :=
@@ -1068,7 +1068,7 @@ noncomputable def treeCommitOfBranch
 
 /-- **`treeCommitColorOfBranch`**: canonical color at position `δ` using B. Reads off
 `B.branch (succ δ) ⊤`. -/
-noncomputable def treeCommitColorOfBranch
+private noncomputable def treeCommitColorOfBranch
     {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
     (B : CoherentMajorityBranch cR) (δ : Ordinal.{0})
     (hδ : δ < (Order.succ κ).ord) : C :=
@@ -1079,7 +1079,7 @@ noncomputable def treeCommitColorOfBranch
 /-- **`treeCommitOfBranch_strictMono`**: strict monotonicity of the branch-driven chain
 values, inherited from `B.prefixAt`'s order embedding structure + `prefix_restrict` to
 identify levels. -/
-lemma treeCommitOfBranch_strictMono
+private lemma treeCommitOfBranch_strictMono
     {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
     (B : CoherentMajorityBranch cR) {δ₁ δ₂ : Ordinal.{0}}
     (hδ₁ : δ₁ < (Order.succ κ).ord) (hδ₂ : δ₂ < (Order.succ κ).ord)
@@ -1132,7 +1132,7 @@ lemma treeCommitOfBranch_strictMono
 
 /-- **`treeCommitColorFnOfBranch`**: indexed color function on `(succ κ).ord.ToType`
 using B. -/
-noncomputable def treeCommitColorFnOfBranch
+private noncomputable def treeCommitColorFnOfBranch
     {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
     (B : CoherentMajorityBranch cR) :
     (Order.succ κ).ord.ToType → C := fun x =>
@@ -1145,7 +1145,7 @@ noncomputable def treeCommitColorFnOfBranch
 
 /-- **`treeChainEmbeddingOfBranch`**: `(succ κ).ord.ToType ↪o Source κ` embedding
 driven by B. -/
-noncomputable def treeChainEmbeddingOfBranch
+private noncomputable def treeChainEmbeddingOfBranch
     {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
     (B : CoherentMajorityBranch cR) :
     (Order.succ κ).ord.ToType ↪o Source κ := by
@@ -1180,7 +1180,7 @@ Proof: by `B.top_in_validFiber η`, `commit η = B.prefixAt (succ η) ⊤` is in
 `validFiber cR (B.prefixAt η hη) (B.branch η hη)`. Apply at position `enum δ : η.ToType`;
 use `B.prefix_restrict` / `B.branch_restrict` to identify the constraint values with
 `commit δ` and `commit color δ`. -/
-theorem treeChain_pair_homogeneous_ofBranch
+private theorem treeChain_pair_homogeneous_ofBranch
     {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
     (B : CoherentMajorityBranch cR) {δ η : Ordinal.{0}}
     (hδη : δ < η) (hη : η < (Order.succ κ).ord) :
@@ -1260,7 +1260,7 @@ theorem treeChain_pair_homogeneous_ofBranch
 /-- **[THE FINAL PIGEONHOLE]** Color pigeonhole on `treeCommitColorFnOfBranch B`: some
 color has a `succ κ`-sized preimage (domain of size `succ κ`, codomain of size
 `≤ κ`). -/
-theorem exists_large_treeCommitColorFn_fiber_ofBranch
+private theorem exists_large_treeCommitColorFn_fiber_ofBranch
     {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
     (hC : Cardinal.mk C ≤ κ) (B : CoherentMajorityBranch cR) :
     ∃ b : C,
@@ -1281,7 +1281,7 @@ Proof: color pigeonhole (`exists_large_treeCommitColorFn_fiber_ofBranch`) gives 
 preimage ≃ `(succ κ).ord.ToType`. Compose with `treeChainEmbeddingOfBranch B` to get the
 embedding; pair-homogeneity comes from `treeChain_pair_homogeneous_ofBranch` + constancy
 of `treeCommitColorFnOfBranch B` on the preimage. -/
-theorem pairErdosRado_general_of_coherentMajorityBranch
+private theorem pairErdosRado_general_of_coherentMajorityBranch
     {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
     (hC : Cardinal.mk C ≤ κ) (B : CoherentMajorityBranch cR) :
     ∃ (f : (Order.succ κ).ord.ToType ↪o Source κ) (b : C),
@@ -1352,7 +1352,7 @@ end Endgame
 `C` with `#C ≤ κ`, every pair coloring of `Source κ = (succ (2 ^ κ)).ord.ToType` is
 constant on a `(succ κ).ord`-indexed strict-mono suborder: `(2 ^ κ)⁺ → (κ⁺)²_κ`.
 The `κ = ℵ₀`, `C = Bool` case is the legacy `erdos_rado_pair_omega1`. -/
-theorem pairErdosRado_general (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ)
+private theorem pairErdosRado_general (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ)
     {C : Type} (hC : Cardinal.mk C ≤ κ) (cR : (Fin 2 ↪o Source κ) → C) :
     ∃ (f : (Order.succ κ).ord.ToType ↪o Source κ) (b : C),
       ∀ {x y : (Order.succ κ).ord.ToType} (hxy : x < y),
@@ -1364,7 +1364,7 @@ theorem pairErdosRado_general (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ)
 `κ = ℵ₀` via `succ ℵ₀ = ℵ_1` and `(ℵ_1).ord = ω_1` (stated with this file's own
 `Source`/`pairEmbed`; `Source ℵ₀ = (succ (2 ^ ℵ₀)).ord.ToType` matches the legacy
 `PairERSource = (succ ℶ_1).ord.ToType` up to `2 ^ ℵ₀ = ℶ_1`). -/
-theorem erdos_rado_pair_omega1_from_general
+private theorem erdos_rado_pair_omega1_from_general
     (cR : (Fin 2 ↪o Source Cardinal.aleph0) → Bool) :
     ∃ (f : (Ordinal.omega.{0} 1).ToType ↪o Source Cardinal.aleph0) (b : Bool),
       ∀ {x y : (Ordinal.omega.{0} 1).ToType} (hxy : x < y),

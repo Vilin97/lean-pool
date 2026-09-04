@@ -62,9 +62,9 @@ theorem prependWord_apply_of_le {w : List Bool} {n : ℕ} (h : w.length ≤ n) (
     prependWord w x n = x (n - w.length) := ite_eq_right (not_lt.mpr h)
 
 /-- The basic clopen set of sequences extending the word `w`. -/
-def wordCylinder (w : List Bool) : Set (ℕ → Bool) := Set.range (prependWord w)
+private def wordCylinder (w : List Bool) : Set (ℕ → Bool) := Set.range (prependWord w)
 
-theorem mem_wordCylinder_iff {w : List Bool} {y : ℕ → Bool} :
+private theorem mem_wordCylinder_iff {w : List Bool} {y : ℕ → Bool} :
     y ∈ wordCylinder w ↔ ∀ n < w.length, y n = w.getD n false := by
   constructor
   · rintro ⟨x, rfl⟩ n hn
@@ -78,10 +78,10 @@ theorem mem_wordCylinder_iff {w : List Bool} {y : ℕ → Bool} :
       congr 1
       omega
 
-theorem prependWord_mem_wordCylinder (w : List Bool) (x : ℕ → Bool) :
+private theorem prependWord_mem_wordCylinder (w : List Bool) (x : ℕ → Bool) :
     prependWord w x ∈ wordCylinder w := ⟨x, rfl⟩
 
-theorem wordCylinder_subset_of_prefix {r s : List Bool} (h : r <+: s) :
+private theorem wordCylinder_subset_of_prefix {r s : List Bool} (h : r <+: s) :
     wordCylinder s ⊆ wordCylinder r := by
   obtain ⟨t, rfl⟩ := h
   intro y hy
@@ -90,19 +90,9 @@ theorem wordCylinder_subset_of_prefix {r s : List Bool} (h : r <+: s) :
   rw [← List.getD_append r t false n hn]
   exact hy n (by rw [List.length_append]; omega)
 
-theorem isOpen_wordCylinder (w : List Bool) : IsOpen (wordCylinder w) := by
-  have h : wordCylinder w =
-      ⋂ n ∈ Finset.range w.length, {y : ℕ → Bool | y n = w.getD n false} := by
-    ext y
-    simp [mem_wordCylinder_iff]
-  rw [h]
-  refine isOpen_biInter_finset fun n _ => ?_
-  have hpre : {y : ℕ → Bool | y n = w.getD n false} =
-      (fun y : ℕ → Bool => y n) ⁻¹' {w.getD n false} := rfl
-  rw [hpre]
-  exact IsOpen.preimage (continuous_apply n) (isOpen_discrete _)
 
-theorem continuous_prependWord (w : List Bool) : Continuous (prependWord w) := by
+
+private theorem continuous_prependWord (w : List Bool) : Continuous (prependWord w) := by
   refine continuous_pi fun n => ?_
   rcases lt_or_ge n w.length with hn | hn
   · have h : (fun x : ℕ → Bool => prependWord w x n) = fun _ => w.getD n false :=
@@ -114,7 +104,7 @@ theorem continuous_prependWord (w : List Bool) : Continuous (prependWord w) := b
     rw [h]
     exact continuous_apply _
 
-theorem image_prependWord_cylinder (w : List Bool) (x : ℕ → Bool) (n : ℕ) :
+private theorem image_prependWord_cylinder (w : List Bool) (x : ℕ → Bool) (n : ℕ) :
     prependWord w '' PiNat.cylinder x n = PiNat.cylinder (prependWord w x) (w.length + n) := by
   ext z
   constructor
@@ -141,7 +131,7 @@ theorem image_prependWord_cylinder (w : List Bool) (x : ℕ → Bool) (n : ℕ) 
         congr 1
         omega
 
-theorem isOpenMap_prependWord (w : List Bool) : IsOpenMap (prependWord w) := by
+private theorem isOpenMap_prependWord (w : List Bool) : IsOpenMap (prependWord w) := by
   rw [(PiNat.isTopologicalBasis_cylinders (fun _ : ℕ => Bool)).isOpenMap_iff]
   rintro s ⟨x, n, rfl⟩
   rw [image_prependWord_cylinder]
@@ -153,12 +143,12 @@ def wordOf (x : ℕ → Bool) (n : ℕ) : List Bool := List.ofFn fun i : Fin n =
 @[simp] theorem length_wordOf (x : ℕ → Bool) (n : ℕ) : (wordOf x n).length = n :=
   List.length_ofFn
 
-theorem getD_wordOf {x : ℕ → Bool} {n i : ℕ} (h : i < n) :
+private theorem getD_wordOf {x : ℕ → Bool} {n i : ℕ} (h : i < n) :
     (wordOf x n).getD i false = x i := by
   rw [List.getD_eq_getElem _ _ (by simpa using h)]
   simp [wordOf]
 
-theorem wordCylinder_wordOf (x : ℕ → Bool) (n : ℕ) :
+private theorem wordCylinder_wordOf (x : ℕ → Bool) (n : ℕ) :
     wordCylinder (wordOf x n) = PiNat.cylinder x n := by
   ext y
   rw [mem_wordCylinder_iff, PiNat.mem_cylinder_iff]
@@ -190,26 +180,26 @@ def SparseWords (S : Set (List Bool)) : Prop :=
 /-! ### A canonical dense and sparse set of words -/
 
 /-- An enumeration of all finite binary words. -/
-def wordEnum (n : ℕ) : List Bool := (Encodable.decode (α := List Bool) n).getD []
+private def wordEnum (n : ℕ) : List Bool := (Encodable.decode (α := List Bool) n).getD []
 
-theorem wordEnum_encode (w : List Bool) : wordEnum (Encodable.encode w) = w := by
+private theorem wordEnum_encode (w : List Bool) : wordEnum (Encodable.encode w) = w := by
   simp [wordEnum, Encodable.encodek]
 
 /-- Pad a word with `false` up to length `n`. -/
-def padTo (w : List Bool) (n : ℕ) : List Bool := w ++ List.replicate (n - w.length) false
+private def padTo (w : List Bool) (n : ℕ) : List Bool := w ++ List.replicate (n - w.length) false
 
-theorem length_padTo {w : List Bool} {n : ℕ} (h : w.length ≤ n) : (padTo w n).length = n := by
+private theorem length_padTo {w : List Bool} {n : ℕ} (h : w.length ≤ n) : (padTo w n).length = n := by
   simp only [padTo, List.length_append, List.length_replicate]
   omega
 
-theorem prefix_padTo (w : List Bool) (n : ℕ) : w <+: padTo w n := ⟨_, rfl⟩
+private theorem prefix_padTo (w : List Bool) (n : ℕ) : w <+: padTo w n := ⟨_, rfl⟩
 
 /-- A strictly increasing length schedule dominating the word enumeration. -/
 def canonicalLen : ℕ → ℕ
   | 0 => (wordEnum 0).length
   | n + 1 => max (wordEnum (n + 1)).length (canonicalLen n + 1)
 
-theorem le_canonicalLen (n : ℕ) : (wordEnum n).length ≤ canonicalLen n := by
+private theorem le_canonicalLen (n : ℕ) : (wordEnum n).length ≤ canonicalLen n := by
   cases n with
   | zero => exact le_rfl
   | succ _ => exact le_max_left _ _
@@ -302,7 +292,7 @@ theorem exists_gSGraph_edge_of_not_isMeagre
 
 /-- For dense `S`, every class of an equivalence relation disjoint from `G_S` (with Baire
 measurable classes) is meager. -/
-theorem isMeagre_class_of_gSGraph_disjoint
+private theorem isMeagre_class_of_gSGraph_disjoint
     {S : Set (List Bool)} (hS : DenseWords S) (E : Setoid (ℕ → Bool))
     (hBP : ∀ a : ℕ → Bool, BaireMeasurableSet {b : ℕ → Bool | E.r a b})
     (hhom : ∀ y z : ℕ → Bool, GSGraph S y z → ¬ E.r y z) (a : ℕ → Bool) :

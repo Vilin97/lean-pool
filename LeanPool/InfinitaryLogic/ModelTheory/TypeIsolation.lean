@@ -33,13 +33,13 @@ universe u v w
 
 variable {L : Language.{u, v}} {M : Type w} [L.Structure M] {n : ℕ}
 
-theorem mem_infinitaryType_iff {φ : L.BoundedFormulaω Empty n} {a : Fin n → M} :
+private theorem mem_infinitaryType_iff {φ : L.BoundedFormulaω Empty n} {a : Fin n → M} :
     φ ∈ infinitaryType M a ↔ φ.Realize Empty.elim a :=
   Iff.rfl
 
 /-- **Oriented separators exist** between distinct realized types: a formula true at every
 realizer of `p` and false at every realizer of `q`. -/
-theorem exists_separator {p q : Set (L.BoundedFormulaω Empty n)} (hne : p ≠ q) :
+private theorem exists_separator {p q : Set (L.BoundedFormulaω Empty n)} (hne : p ≠ q) :
     ∃ θ : L.BoundedFormulaω Empty n,
       (∀ a : Fin n → M, infinitaryType M a = p → θ.Realize Empty.elim a) ∧
       (∀ b : Fin n → M, infinitaryType M b = q → ¬θ.Realize Empty.elim b) := by
@@ -99,13 +99,7 @@ theorem realize_isolatingFormula_iff
     · rw [dite_eq_right h]
       exact (exists_separator (M := M) fun he => h he.symm).choose_spec.1 a htp
 
-/-- Realizers exist: `χ_p` is satisfiable in `M` (by any tuple realizing `p`). -/
-theorem exists_realize_isolatingFormula
-    (hcount : (RealizedInfinitaryTypes (L := L) M n).Countable)
-    {p : Set (L.BoundedFormulaω Empty n)} (hp : p ∈ RealizedInfinitaryTypes (L := L) M n) :
-    ∃ a : Fin n → M, (isolatingFormula hcount p).Realize Empty.elim a := by
-  obtain ⟨a, ha⟩ := hp
-  exact ⟨a, (realize_isolatingFormula_iff hcount p a).mpr ha⟩
+
 
 /-! ## Universe regression
 

@@ -41,7 +41,7 @@ variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
 
 /-- For a nowhere dense subset of a product (second factor second countable), residually
 many vertical sections are nowhere dense. -/
-theorem residual_isNowhereDense_section [SecondCountableTopology Y]
+private theorem residual_isNowhereDense_section [SecondCountableTopology Y]
     {F : Set (X × Y)} (hF : IsNowhereDense F) :
     {x : X | IsNowhereDense {y : Y | (x, y) ∈ F}} ∈ residual X := by
   classical
@@ -93,7 +93,7 @@ theorem residual_isNowhereDense_section [SecondCountableTopology Y]
 
 /-- For a meager subset of a product (second factor second countable), residually many
 vertical sections are meager. -/
-theorem residual_isMeagre_section [SecondCountableTopology Y]
+private theorem residual_isMeagre_section [SecondCountableTopology Y]
     {M : Set (X × Y)} (hM : IsMeagre M) :
     {x : X | IsMeagre {y : Y | (x, y) ∈ M}} ∈ residual X := by
   obtain ⟨S, hS_nwd, hS_count, hS_sub⟩ := isMeagre_iff_countable_union_isNowhereDense.mp hM

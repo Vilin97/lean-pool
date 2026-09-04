@@ -38,7 +38,7 @@ variable {L : Language.{0, 0}} {M : Type} {α β : Type}
 
 /-- Term realization depends only on the `funMap` values: two `L`-structure instances agreeing
 on every `funMap` realize every term identically. -/
-theorem Term.realize_congr_instances (S S' : L.Structure M)
+private theorem Term.realize_congr_instances (S S' : L.Structure M)
     (hf : ∀ {l} (f : L.Functions l) (x : Fin l → M),
       @Structure.funMap L M S l f x = @Structure.funMap L M S' l f x)
     (v : α → M) (t : L.Term α) :
@@ -52,7 +52,7 @@ theorem Term.realize_congr_instances (S S' : L.Structure M)
 
 /-- Realization depends only on the `funMap`/`RelMap` values: two `L`-structure instances
 agreeing on all interpretations realize every formula identically. -/
-theorem BoundedFormulaω.realize_congr_instances (S S' : L.Structure M)
+private theorem BoundedFormulaω.realize_congr_instances (S S' : L.Structure M)
     (hf : ∀ {l} (f : L.Functions l) (x : Fin l → M),
       @Structure.funMap L M S l f x = @Structure.funMap L M S' l f x)
     (hr : ∀ {l} (R : L.Relations l) (x : Fin l → M),
@@ -104,10 +104,7 @@ theorem BoundedFormulaω.realize_congr_instances (S S' : L.Structure M)
     @Structure.funMap L[[ℕ]] M (wc base h) 0 (Sum.inr k) x = h k :=
   rfl
 
-@[simp] theorem wc_relMap_inl (base : L.Structure M) (h : ℕ → M) {l : ℕ}
-    (R : L.Relations l) (x : Fin l → M) :
-    @Structure.RelMap L[[ℕ]] M (wc base h) l (Sum.inl R) x = @Structure.RelMap L M base l R x :=
-  rfl
+
 
 /-- The interpretation of the constant `c_k` by an ambient `L[[ℕ]]`-structure. -/
 def ambientConstMap (M : Type) [S : L[[ℕ]].Structure M] (k : ℕ) : M :=
@@ -359,7 +356,7 @@ theorem Term.functionsIn_abstractConst_subset (j : ℕ) {n : ℕ} :
       | (l + 1), k => exact nomatch k
 
 /-- The constant `c_j` does not occur in the abstracted term. -/
-theorem Term.notMem_functionsIn_abstractConst (j : ℕ) {n : ℕ} :
+private theorem Term.notMem_functionsIn_abstractConst (j : ℕ) {n : ℕ} :
     ∀ (t : L[[ℕ]].Term (Empty ⊕ Fin n)),
       (⟨0, (Sum.inr j : L[[ℕ]].Functions 0)⟩ : Σ l, L[[ℕ]].Functions l)
         ∉ (t.abstractConst j).functionsIn := by
@@ -410,7 +407,7 @@ theorem BoundedFormulaω.functionsIn_abstractConst_subset (j : ℕ) :
   | iInf φs ih => exact Set.iUnion_mono ih
 
 /-- The constant `c_j` does not occur in the abstracted formula. -/
-theorem BoundedFormulaω.notMem_functionsIn_abstractConst (j : ℕ) :
+private theorem BoundedFormulaω.notMem_functionsIn_abstractConst (j : ℕ) :
     ∀ {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n),
       (⟨0, (Sum.inr j : L[[ℕ]].Functions 0)⟩ : Σ l, L[[ℕ]].Functions l)
         ∉ (φ.abstractConst j).functionsIn := by
@@ -466,12 +463,7 @@ theorem BoundedFormulaω.notMem_sentenceJConsts_abstractConst (j : ℕ) {n : ℕ
     j ∉ sentenceJConsts (L' := L) (J := ℕ) (φ.abstractConst j) :=
   BoundedFormulaω.notMem_functionsIn_abstractConst j φ
 
-/-- The constant support of the abstracted formula is contained in that of the original. -/
-theorem BoundedFormulaω.sentenceJConsts_abstractConst_subset (j : ℕ) {n : ℕ}
-    (φ : L[[ℕ]].BoundedFormulaω Empty n) :
-    sentenceJConsts (L' := L) (J := ℕ) (φ.abstractConst j)
-      ⊆ sentenceJConsts (L' := L) (J := ℕ) φ :=
-  fun _ hm => BoundedFormulaω.functionsIn_abstractConst_subset j φ hm
+
 
 end FirstOrder.Language
 

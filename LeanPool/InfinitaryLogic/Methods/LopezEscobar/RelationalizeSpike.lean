@@ -41,12 +41,12 @@ instance {L' : Language.{0, 0}} {α : Type} {n : ℕ} (ψ : L'.BoundedFormulaω 
 
 instance : Countable ↥(leftFuns L) := (Set.countable_range _).to_subtype
 
-instance : Countable ↥(rightFuns L) := (Set.countable_range _).to_subtype
+
 
 /-! ## The micro-pilot -/
 
 /-- The pilot formula `f(s(c)) = s(c)` — Marker's bullet-2 shape, with a nested numeral. -/
-def pilotFormula : WitnessLang.Sentenceω :=
+private def pilotFormula : WitnessLang.Sentenceω :=
   BoundedFormulaω.equal
     (Term.func WitnessFun.f ![numTerm (Empty ⊕ Fin 0) 1])
     (numTerm (Empty ⊕ Fin 0) 1)
@@ -54,7 +54,7 @@ def pilotFormula : WitnessLang.Sentenceω :=
 /-- **Micro-pilot, realization**: the relationalized image of the mapped pilot formula
 realizes through the graph expansion exactly as the pilot formula realizes through the
 left-witness reduct. -/
-theorem pilot_realize {M : Type} [instM : (KLang L).Structure M] :
+private theorem pilot_realize {M : Type} [instM : (KLang L).Structure M] :
     (@BoundedFormulaω.Realize (graphLanguage (KLang L)) M (graphExpansion (KLang L) M)
         Empty 0 (relationalizeFormula ((pilotFormula).mapLanguage (leftWitnessEmb L)))
         Empty.elim Fin.elim0) ↔
@@ -67,7 +67,7 @@ theorem pilot_realize {M : Type} [instM : (KLang L).Structure M] :
 
 /-- **Micro-pilot, side-specific graph axioms**: the graph expansion of any tagged
 structure realizes the left-witness graph axioms. -/
-theorem pilot_graphAxioms {M : Type} [Nonempty M] [(KLang L).Structure M] :
+private theorem pilot_graphAxioms {M : Type} [Nonempty M] [(KLang L).Structure M] :
     letI := graphExpansion (KLang L) M
     Sentenceω.Realize (graphAxioms (leftFuns L)) M :=
   graphExpansion_realizes_graphAxioms (leftFuns L) M

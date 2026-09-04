@@ -32,11 +32,11 @@ namespace Language
 variable {Λ : Language.{0, 0}} {J : Type} [LinearOrder J] {M : Type} [Λ.Structure M]
 
 /-- The common finite skeleton support of a tuple's chosen representatives. -/
-noncomputable def LocalEMContext.tupleSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
+private noncomputable def LocalEMContext.tupleSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (a : Fin n → ctx.Carrier) : Finset J :=
   Finset.univ.biUnion fun i => locJSupport Λ J (Quotient.out (a i))
 
-theorem LocalEMContext.locJSupport_out_subset_tupleSupport
+private theorem LocalEMContext.locJSupport_out_subset_tupleSupport
     (ctx : LocalEMContext Λ J (M := M)) {n : ℕ} (a : Fin n → ctx.Carrier) (i : Fin n) :
     locJSupport Λ J (Quotient.out (a i)) ⊆ ctx.tupleSupport a :=
   Finset.subset_biUnion_of_mem (fun i => locJSupport Λ J (Quotient.out (a i)))

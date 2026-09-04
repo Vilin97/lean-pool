@@ -38,12 +38,12 @@ open FirstOrder Structure Ordinal
 
 This is denoted `sr(M)` in some references (e.g., Marker). Compare with `scottRank`
 which is `⨆ m, elementRank m + 1` (denoted `SR(M)` or `α(M)`). -/
-noncomputable def sr (M : Type w) [L.Structure M] [Countable M] : Ordinal.{0} :=
+private noncomputable def sr (M : Type w) [L.Structure M] [Countable M] : Ordinal.{0} :=
   ⨆ (m : M), elementRank (L := L) m
 
 omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
 /-- sr ≤ scottRank always holds, since scottRank = ⨆ m, elementRank m + 1 ≥ ⨆ m, elementRank m. -/
-theorem sr_le_scottRank (M : Type w) [L.Structure M] [Countable M] :
+private theorem sr_le_scottRank (M : Type w) [L.Structure M] [Countable M] :
     sr (L := L) M ≤ scottRank (L := L) M := by
   unfold sr scottRank
   have : Small.{0} M := Countable.toSmall M
@@ -58,7 +58,7 @@ theorem sr_le_scottRank (M : Type w) [L.Structure M] [Countable M] :
 Since `scottHeight M` is a complete stabilization ordinal (conditional on
 `CountableRefinementHypothesis`), every `elementRank m ≤ scottHeight M`, so
 the supremum `sr M = ⨆ m, elementRank m ≤ scottHeight M`. -/
-theorem sr_le_scottHeight_of
+private theorem sr_le_scottHeight_of
     (hcount : CountableRefinementHypothesis.{u, v, w} L)
     (M : Type w) [L.Structure M] [Countable M] :
     sr (L := L) M ≤ scottHeight (L := L) M := by
@@ -74,7 +74,7 @@ Since `scottRank M = ⨆ m, elementRank m + 1` and each `elementRank m ≤ scott
 (via `elementRank_le_completeStab` at the complete stabilization ordinal `scottHeight M`),
 we get `scottRank M ≤ scottHeight M + 1`. Conditional on
 `CountableRefinementHypothesis`. -/
-theorem scottRank_le_scottHeight_succ_of
+private theorem scottRank_le_scottHeight_succ_of
     (hcount : CountableRefinementHypothesis.{u, v, w} L)
     (M : Type w) [L.Structure M] [Countable M] :
     scottRank (L := L) M ≤ scottHeight (L := L) M + 1 := by
@@ -90,7 +90,7 @@ theorem scottRank_le_scottHeight_succ_of
 
 This is an important distinction in the theory of Scott rank: when the rank is
 attained, the structure has a "witness" element of maximal complexity. -/
-def AttainedScottRank (M : Type w) [L.Structure M] [Countable M] : Prop :=
+private def AttainedScottRank (M : Type w) [L.Structure M] [Countable M] : Prop :=
   ∃ (m : M), elementRank (L := L) m = sr (L := L) M
 
 end Language

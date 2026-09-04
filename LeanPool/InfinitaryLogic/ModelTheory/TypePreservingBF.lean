@@ -39,7 +39,7 @@ variable {L : Language.{u, v}} {M : Type w} [L.Structure M]
 def TypeAgree (N : L.Substructure M) {n : ℕ} (a : Fin n → M) (b : Fin n → N) : Prop :=
   infinitaryType (L := L) M a = infinitaryType (L := L) M (fun i => (b i : M))
 
-theorem typeAgree_elim0 (N : L.Substructure M) :
+private theorem typeAgree_elim0 (N : L.Substructure M) :
     TypeAgree N (Fin.elim0 : Fin 0 → M) (Fin.elim0 : Fin 0 → N) :=
   congrArg (infinitaryType (L := L) M) (funext fun i => i.elim0)
 
@@ -98,7 +98,7 @@ theorem TypeAgree.back (hsmall : Lomega1omegaSmall (L := L) M) {N : L.Substructu
 
 /-- **The zero stage**: type agreement gives atomic agreement — atomic indices are
 realizations of atomic `L_{ω₁ω}`-formulas, and the inclusion reflects them. -/
-theorem TypeAgree.sameAtomicType {N : L.Substructure M} {n : ℕ} {a : Fin n → M}
+private theorem TypeAgree.sameAtomicType {N : L.Substructure M} {n : ℕ} {a : Fin n → M}
     {b : Fin n → N} (hab : TypeAgree N a b) :
     SameAtomicType (L := L) (M := M) (N := N) a b := by
   intro idx
@@ -119,7 +119,7 @@ theorem TypeAgree.sameAtomicType {N : L.Substructure M} {n : ℕ} {a : Fin n →
 
 /-- **The audited thin bridge**: a type-agreeing relation with the forth and back extensions
 is back-and-forth equivalent at EVERY ordinal. -/
-theorem bfEquiv_all_of_typeAgree {N : L.Substructure M}
+private theorem bfEquiv_all_of_typeAgree {N : L.Substructure M}
     (hforth : ∀ {n : ℕ} (a : Fin n → M) (b : Fin n → N), TypeAgree N a b →
       ∀ a' : M, ∃ b' : N, TypeAgree N (Fin.snoc a a') (Fin.snoc b b'))
     (hback : ∀ {n : ℕ} (a : Fin n → M) (b : Fin n → N), TypeAgree N a b →
@@ -157,26 +157,9 @@ theorem bfEquiv_all_of_companion {hsmall : Lomega1omegaSmall (L := L) M}
   bfEquiv_all_of_typeAgree (fun _ _ hab a' => hab.forth hAe a')
     (fun _ _ hab b' => hab.back hsmall b') α Fin.elim0 Fin.elim0 (typeAgree_elim0 N)
 
-/-- **The semantic countable-companion theorem** (issue #17 chunk 4 endpoint): a small
-structure over countably many function symbols has a countable model back-and-forth
-equivalent to it at every ordinal. -/
-theorem exists_countable_bfEquiv_of_lomega1omegaSmall [Countable (Σ n, L.Functions n)]
-    (hsmall : Lomega1omegaSmall (L := L) M) :
-    ∃ (N : Type w) (_ : L.Structure N), Countable N ∧
-      ∀ α : Ordinal, BFEquiv (L := L) α 0 (Fin.elim0 : Fin 0 → M) (Fin.elim0 : Fin 0 → N) := by
-  obtain ⟨N, hcnt, hAe⟩ := exists_countable_companion hsmall
-  exact ⟨N, inferInstance, hcnt, bfEquiv_all_of_companion hAe⟩
 
-/-- **All-`L_∞ω`-formula agreement** with a companion — the relational packaging boundary
-(`BFEquiv_implies_agreeQR`). -/
-theorem realize_inf_iff_of_companion [L.IsRelational] {ι : Type uι}
-    {hsmall : Lomega1omegaSmall (L := L) M} {N : L.Substructure M}
-    (hAe : AElementary (isolatorFragment hsmall) N.subtype)
-    (φ : L.BoundedFormulaInf ι (Fin 0) 0) :
-    FormulaInf.Realize φ (Fin.elim0 : Fin 0 → M)
-      ↔ FormulaInf.Realize φ (Fin.elim0 : Fin 0 → N) :=
-  BFEquiv_implies_agreeQR φ.qrank Fin.elim0 Fin.elim0
-    (bfEquiv_all_of_companion hAe φ.qrank) φ le_rfl
+
+
 
 end Language
 

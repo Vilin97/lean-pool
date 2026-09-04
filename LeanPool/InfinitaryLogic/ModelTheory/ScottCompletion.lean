@@ -49,7 +49,7 @@ variable {N : Type} [L.Structure N] [Countable N]
 /-- **Arbitrary models of the canonical Scott sentence** are back-and-forth equivalent to the
 source at every ordinal — `scottHeight` supplies complete stabilization, and the
 arbitrary-target kernel upgrades it. -/
-theorem realize_canonicalScottSentence_iff_bfEquiv_all {P : Type} [L.Structure P] :
+private theorem realize_canonicalScottSentence_iff_bfEquiv_all {P : Type} [L.Structure P] :
     (canonicalScottSentence (L := L) N).realize_as_sentence P ↔
       ∀ β : Ordinal.{0},
         BFEquiv (L := L) β 0 (Fin.elim0 : Fin 0 → N) (Fin.elim0 : Fin 0 → P) := by
@@ -63,12 +63,12 @@ theorem realize_canonicalScottSentence_iff_bfEquiv_all {P : Type} [L.Structure P
     exact h _
 
 /-- The canonical Scott sentence in `Sentenceω` form. -/
-noncomputable def canonicalScottSentenceω (N : Type) [L.Structure N] [Countable N] :
+private noncomputable def canonicalScottSentenceω (N : Type) [L.Structure N] [Countable N] :
     L.Sentenceω :=
   (canonicalScottSentence (L := L) N).relabel (Sum.inr : Fin 0 → Empty ⊕ Fin 0)
 
 omit [L.IsRelational] in
-theorem realize_canonicalScottSentenceω_iff {P : Type} [L.Structure P] :
+private theorem realize_canonicalScottSentenceω_iff {P : Type} [L.Structure P] :
     Sentenceω.Realize (canonicalScottSentenceω (L := L) N) P ↔
       (canonicalScottSentence (L := L) N).realize_as_sentence P := by
   have h := BoundedFormulaω.realize_relabel_sumInr (M := P)
@@ -79,14 +79,14 @@ theorem realize_canonicalScottSentenceω_iff {P : Type} [L.Structure P] :
     show ((Fin.elim0 : Fin 0 → P) ∘ Fin.natAdd 0 : Fin 0 → P) = Fin.elim0 from
       funext fun i => i.elim0] at h
 
-theorem realize_canonicalScottSentenceω_iff_bfEquiv_all {P : Type} [L.Structure P] :
+private theorem realize_canonicalScottSentenceω_iff_bfEquiv_all {P : Type} [L.Structure P] :
     Sentenceω.Realize (canonicalScottSentenceω (L := L) N) P ↔
       ∀ β : Ordinal.{0},
         BFEquiv (L := L) β 0 (Fin.elim0 : Fin 0 → N) (Fin.elim0 : Fin 0 → P) :=
   realize_canonicalScottSentenceω_iff.trans realize_canonicalScottSentence_iff_bfEquiv_all
 
 /-- The source satisfies its own canonical Scott sentence. -/
-theorem realize_canonicalScottSentenceω_self :
+private theorem realize_canonicalScottSentenceω_self :
     Sentenceω.Realize (canonicalScottSentenceω (L := L) N) N :=
   realize_canonicalScottSentenceω_iff_bfEquiv_all.mpr fun β =>
     BFEquiv.refl (L := L) β (Fin.elim0 : Fin 0 → N)
@@ -95,7 +95,7 @@ theorem realize_canonicalScottSentenceω_self :
 
 /-- **Pairwise equivalence**: any two models of the canonical Scott sentence are back-and-forth
 equivalent at every ordinal, by transitivity through the countable source. -/
-theorem bfEquiv_all_of_realize_canonicalScottSentenceω_pair {P Q : Type}
+private theorem bfEquiv_all_of_realize_canonicalScottSentenceω_pair {P Q : Type}
     [L.Structure P] [L.Structure Q]
     (hP : Sentenceω.Realize (canonicalScottSentenceω (L := L) N) P)
     (hQ : Sentenceω.Realize (canonicalScottSentenceω (L := L) N) Q) (β : Ordinal.{0}) :
@@ -106,7 +106,7 @@ theorem bfEquiv_all_of_realize_canonicalScottSentenceω_pair {P Q : Type}
 
 /-- **Semantic `L_∞ω`-completeness**: any two models of the canonical Scott sentence are
 `L_∞ω`-equivalent, at every branching carrier. -/
-theorem infEquivW_of_realize_canonicalScottSentenceω_pair {P Q : Type}
+private theorem infEquivW_of_realize_canonicalScottSentenceω_pair {P Q : Type}
     [L.Structure P] [L.Structure Q]
     (hP : Sentenceω.Realize (canonicalScottSentenceω (L := L) N) P)
     (hQ : Sentenceω.Realize (canonicalScottSentenceω (L := L) N) Q) :
@@ -120,7 +120,7 @@ theorem infEquivW_of_realize_canonicalScottSentenceω_pair {P Q : Type}
 There is no embedding step. `L.Sentenceω` *is* `L.SentenceInf ℕ`, and `LomegaEquiv L P Q` is
 `InfEquivAt L ℕ P Q` — the same proposition, accepted by `rfl` — so specializing the carrier
 is the whole proof. -/
-theorem lomegaEquiv_of_realize_canonicalScottSentenceω_pair {P Q : Type}
+private theorem lomegaEquiv_of_realize_canonicalScottSentenceω_pair {P Q : Type}
     [L.Structure P] [L.Structure Q]
     (hP : Sentenceω.Realize (canonicalScottSentenceω (L := L) N) P)
     (hQ : Sentenceω.Realize (canonicalScottSentenceω (L := L) N) Q) :
@@ -136,7 +136,7 @@ def Lomega1omegaComplete (ψ : L.Sentenceω) : Prop :=
 
 /-- **The canonical Scott sentence is complete** — derived from the semantic equivalence of
 its models, anchored at the source. -/
-theorem lomega1omegaComplete_canonicalScottSentenceω :
+private theorem lomega1omegaComplete_canonicalScottSentenceω :
     Lomega1omegaComplete (canonicalScottSentenceω (L := L) N) := by
   intro φ
   by_cases hN : Sentenceω.Realize φ N
@@ -148,7 +148,7 @@ theorem lomega1omegaComplete_canonicalScottSentenceω :
         realize_canonicalScottSentenceω_self hP φ).mpr hφP)
 
 /-- **Entailment**: the canonical Scott sentence entails every sentence its source satisfies. -/
-theorem canonicalScottSentenceω_entails {φ : L.Sentenceω}
+private theorem canonicalScottSentenceω_entails {φ : L.Sentenceω}
     (hφ : Sentenceω.Realize φ N) {P : Type} [L.Structure P]
     (hP : Sentenceω.Realize (canonicalScottSentenceω (L := L) N) P) :
     Sentenceω.Realize φ P :=

@@ -44,14 +44,14 @@ relation symbol is the ordinal order, everything else is empty. -/
   RelMap {n} _ v := ordRel α n v
 
 /-- Any binary relation symbol of the comparison structure is the ordinal order. -/
-theorem ordinalStructure_relMap (L : Language.{0, 0}) [L.IsRelational] (α : Ordinal.{0})
+private theorem ordinalStructure_relMap (L : Language.{0, 0}) [L.IsRelational] (α : Ordinal.{0})
     (lt : L.Relations 2) (x y : α.ToType) :
     @RelMap L α.ToType (ordinalStructure L α) 2 lt ![x, y] ↔ x < y := by
   show ordRel α 2 ![x, y] ↔ x < y
   simp [ordRel, Matrix.cons_val_zero, Matrix.cons_val_one]
 
 /-- The comparison structure interprets any binary relation symbol as a well-order. -/
-theorem ordinalStructure_isWellOrder (L : Language.{0, 0}) [L.IsRelational] (α : Ordinal.{0})
+private theorem ordinalStructure_isWellOrder (L : Language.{0, 0}) [L.IsRelational] (α : Ordinal.{0})
     (lt : L.Relations 2) :
     IsWellOrder α.ToType fun x y => @RelMap L α.ToType (ordinalStructure L α) 2 lt ![x, y] := by
   have h : (fun x y : α.ToType => @RelMap L α.ToType (ordinalStructure L α) 2 lt ![x, y])
@@ -63,7 +63,7 @@ theorem ordinalStructure_isWellOrder (L : Language.{0, 0}) [L.IsRelational] (α 
 as models exactly the structures whose interpreted relation is a well-order.  From the
 uniform order-type bound: the bounding ordinal `α`, as a comparison structure, would be a
 model of order type `α < α`. -/
-theorem wellOrdering_undefinable_relational {L : Language.{0, 0}} [L.IsRelational]
+private theorem wellOrdering_undefinable_relational {L : Language.{0, 0}} [L.IsRelational]
     [Countable (Σ l, L.Relations l)] (lt : L.Relations 2) :
     ¬ ∃ φ : L.Sentenceω, ∀ (M : Type) (_ : L.Structure M),
         (Sentenceω.Realize φ M ↔ IsWellOrder M fun x y : M => RelMap lt ![x, y]) := by

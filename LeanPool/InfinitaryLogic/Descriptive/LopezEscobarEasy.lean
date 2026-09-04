@@ -38,7 +38,7 @@ def IsomorphismInvariant (B : Set (StructureSpace L)) : Prop :=
 
 /-- Membership in a sentence's model class is isomorphism-invariant: an `L`-isomorphism of the
 decoded structures transports satisfaction. -/
-theorem modelsOf_mem_iff_of_equiv (φ : L.Sentenceω) {c d : StructureSpace L}
+private theorem modelsOf_mem_iff_of_equiv (φ : L.Sentenceω) {c d : StructureSpace L}
     (e : @Language.Equiv L ℕ ℕ c.toStructure d.toStructure) :
     c ∈ ModelsOf φ ↔ d ∈ ModelsOf φ := by
   let : L.Structure ℕ := c.toStructure
@@ -49,13 +49,13 @@ theorem modelsOf_mem_iff_of_equiv (φ : L.Sentenceω) {c d : StructureSpace L}
   rwa [show (⇑e ∘ Empty.elim : Empty → ℕ) = Empty.elim from funext fun x => x.elim,
     show (⇑e ∘ Fin.elim0 : Fin 0 → ℕ) = Fin.elim0 from funext fun i => i.elim0] at h
 
-theorem isomorphismInvariant_modelsOf (φ : L.Sentenceω) :
+private theorem isomorphismInvariant_modelsOf (φ : L.Sentenceω) :
     IsomorphismInvariant (ModelsOf φ) :=
   fun _ _ ⟨e⟩ => modelsOf_mem_iff_of_equiv φ e
 
 /-- **The general form** (arbitrary relational vocabularies): the model class of a sentence is
 product-measurable and isomorphism-invariant. -/
-theorem modelsOf_measurable_invariant (φ : L.Sentenceω) :
+private theorem modelsOf_measurable_invariant (φ : L.Sentenceω) :
     MeasurableSet (ModelsOf φ) ∧ IsomorphismInvariant (ModelsOf φ) :=
   ⟨modelsOf_measurableSet φ, isomorphismInvariant_modelsOf φ⟩
 

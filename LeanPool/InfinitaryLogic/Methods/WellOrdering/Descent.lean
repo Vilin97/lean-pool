@@ -51,7 +51,7 @@ theorem RelPreserving.descending {f : ℚ → M} (hf : RelPreserving lt f) (n : 
 
 /-- A well-founded relation admits no infinite descending sequence (direct, via
 `WellFounded.has_min` — no strict-order hypotheses on the relation). -/
-theorem not_descending_of_wellFounded {α : Type*} {r : α → α → Prop} (hwf : WellFounded r)
+private theorem not_descending_of_wellFounded {α : Type*} {r : α → α → Prop} (hwf : WellFounded r)
     (g : ℕ → α) : ¬ ∀ n, r (g (n + 1)) (g n) := by
   intro hg
   obtain ⟨x, hx, hmin⟩ := hwf.has_min (Set.range g) ⟨g 0, 0, rfl⟩

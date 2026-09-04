@@ -137,7 +137,7 @@ theorem BFEquiv.zero (a : Fin n → M) (b : Fin n → N) :
   simp only [BFEquiv, Ordinal.limitRecOn_zero]
 
 omit [L.IsRelational] in
-theorem BFEquiv.zero_iff_sameAtomicType (a : Fin n → M) (b : Fin n → N) :
+private theorem BFEquiv.zero_iff_sameAtomicType (a : Fin n → M) (b : Fin n → N) :
     BFEquiv (L := L) 0 n a b ↔ SameAtomicType (L := L) (M := M) (N := N) a b :=
   BFEquiv.zero a b
 
@@ -195,11 +195,7 @@ theorem BFEquiv.back {α : Ordinal} {a : Fin n → M} {b : Fin n → N}
     ∃ m : M, BFEquiv (L := L) α (n + 1) (snoc a m) (snoc b n') :=
   ((BFEquiv.succ α a b).mp h).2.2 n'
 
-omit [L.IsRelational] in
-/-- BF-equivalence at level 0 is reflexive. -/
-theorem BFEquiv.refl_zero (a : Fin n → M) :
-    BFEquiv (L := L) (M := M) (N := M) (0 : Ordinal) n a a :=
-  (BFEquiv.zero a a).mpr (SameAtomicType.refl a)
+
 
 omit [L.IsRelational] in
 /-- BF-equivalence is reflexive at all levels. -/
@@ -277,7 +273,7 @@ existence proofs. The converse `BFEquiv k → BFStrategyT k` requires Choice and
 We use a recursive `def` (not `inductive`) to avoid Lean's nested-inductive restrictions.
 The base case uses `{ _ : Unit // SameAtomicType a b }` to lift Prop to Type in a universe-
 polymorphic way (Subtype lives in the same universe as the carrier type). -/
-def BFStrategyT (L : Language.{u, v}) [L.IsRelational] (M : Type w) (N : Type w')
+private def BFStrategyT (L : Language.{u, v}) [L.IsRelational] (M : Type w) (N : Type w')
     [L.Structure M] [L.Structure N] : ℕ → (n : ℕ) → (Fin n → M) → (Fin n → N) → Type (max w w') :=
   fun k => match k with
   | 0 => fun _n a b => Subtype (fun _ : PUnit.{max w w' + 1} => SameAtomicType (L := L) a b)
@@ -286,46 +282,11 @@ def BFStrategyT (L : Language.{u, v}) [L.IsRelational] (M : Type w) (N : Type w'
     (∀ m : M, (n' : N) × BFStrategyT L M N k (n + 1) (Fin.snoc a m) (Fin.snoc b n')) ×
     (∀ n' : N, (m : M) × BFStrategyT L M N k (n + 1) (Fin.snoc a m) (Fin.snoc b n'))
 
-/-- A coherent family of Type-valued strategies at all finite levels.
-This is the "winning strategy in the ω-round EF game" with actual witnesses.
 
-This is STRONGER than `BFEquiv ω`. The existence of `BFStrategyOmegaT` implies isomorphism
-(provable by standard back-and-forth), but `BFEquiv ω` alone does not. -/
-def BFStrategyOmegaT (n : ℕ) (a : Fin n → M) (b : Fin n → N) : Type _ :=
-  ∀ k : ℕ, BFStrategyT L M N k n a b
 
-/-- A Type-valued strategy at level k implies BF-equivalence at level k.
-This direction is straightforward: just forget the witnesses. -/
-theorem BFStrategyT_implies_BFEquiv {n : ℕ} {a : Fin n → M} {b : Fin n → N}
-    (k : ℕ) (strat : BFStrategyT L M N k n a b) :
-    BFEquiv (L := L) (k : Ordinal.{0}) n a b := by
-  induction k generalizing n a b with
-  | zero =>
-    simp only [Nat.cast_zero]
-    rw [BFEquiv.zero]
-    exact strat.property
-  | succ k ih =>
-    have hsucc : ((k + 1 : ℕ) : Ordinal.{0}) = Order.succ (k : Ordinal.{0}) := by
-      rw [Order.succ_eq_add_one]; norm_cast
-    rw [hsucc, BFEquiv.succ]
-    obtain ⟨strat_k, forth, back⟩ := strat
-    refine ⟨ih strat_k, ?_, ?_⟩
-    · intro m
-      obtain ⟨n', strat_ext⟩ := forth m
-      exact ⟨n', ih strat_ext⟩
-    · intro n'
-      obtain ⟨m, strat_ext⟩ := back n'
-      exact ⟨m, ih strat_ext⟩
 
-/-- A coherent ω-strategy implies BF-equivalence at level ω. -/
-theorem BFStrategyOmegaT_implies_BFEquiv_omega {n : ℕ} {a : Fin n → M} {b : Fin n → N}
-    (hstrat : BFStrategyOmegaT (L := L) n a b) :
-    BFEquiv (L := L) (ω : Ordinal.{0}) n a b := by
-  rw [BFEquiv.limit ω Ordinal.isSuccLimit_omega0]
-  intro γ hγ
-  have ⟨k, hk⟩ := Ordinal.lt_omega0.mp hγ
-  subst hk
-  exact BFStrategyT_implies_BFEquiv k (hstrat k)
+
+
 
 /-! ### Universe Lifting for BFEquiv
 

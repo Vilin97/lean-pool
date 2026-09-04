@@ -91,12 +91,9 @@ theorem qrank_falsum : (falsum : L.BoundedFormulaω α n).qrank = 0 := rfl
 @[simp]
 theorem qrank_bot : (⊥ : L.BoundedFormulaω α n).qrank = 0 := rfl
 
-@[simp]
-theorem qrank_equal (t₁ t₂ : L.Term (α ⊕ Fin n)) : (equal t₁ t₂).qrank = 0 := rfl
 
-@[simp]
-theorem qrank_rel {l : ℕ} (R : L.Relations l) (ts : Fin l → L.Term (α ⊕ Fin n)) :
-    (rel R ts).qrank = 0 := rfl
+
+
 
 @[simp]
 theorem qrank_imp (φ ψ : L.BoundedFormulaω α n) :
@@ -133,10 +130,7 @@ theorem qrank_and (φ ψ : L.BoundedFormulaω α n) :
     (φ.and ψ).qrank = max φ.qrank ψ.qrank := by
   simp only [BoundedFormulaω.and, qrank_not, qrank_imp, max_comm φ.qrank ψ.qrank]
 
-/-- Disjunction takes max of ranks. -/
-theorem qrank_or (φ ψ : L.BoundedFormulaω α n) :
-    (φ.or ψ).qrank = max φ.qrank ψ.qrank := by
-  simp only [BoundedFormulaω.or, qrank_not, qrank_imp]
+
 
 /-- Existential quantification adds 1 to rank. Kept in `+ 1` form, as for `qrank_all`. -/
 theorem qrank_ex (φ : L.BoundedFormulaω α (n + 1)) :
@@ -180,7 +174,7 @@ theorem qrank_esup {ι : Type*} [Encodable ι] (φs : ι → L.BoundedFormulaω 
     simp [Encodable.encodek]
 
 /-- `castLE` preserves quantifier rank. -/
-theorem qrank_castLE {m n : ℕ} (h : m ≤ n) (φ : L.BoundedFormulaω α m) :
+private theorem qrank_castLE {m n : ℕ} (h : m ≤ n) (φ : L.BoundedFormulaω α m) :
     (φ.castLE h).qrank = φ.qrank := by
   induction φ generalizing n with
   | falsum => rfl
@@ -251,13 +245,7 @@ theorem trans (h₁ : EquivQRω L α M N) (h₂ : EquivQRω L α N P) : EquivQR�
 theorem monotone {α β : Ordinal} (hαβ : α ≤ β) (h : EquivQRω L β M N) :
     EquivQRω L α M N := fun φ hφ => h φ (le_trans hφ hαβ)
 
-/-- Equivalence at rank 0 means agreement on all quantifier-free sentences. -/
-theorem zero_iff_agree_atomic : EquivQRω L 0 M N ↔
-    ∀ φ : L.Sentenceω, φ.qrank = 0 →
-      (Sentenceω.Realize φ M ↔ Sentenceω.Realize φ N) := by
-  constructor
-  · intro h φ hφ; exact h φ (le_of_eq hφ)
-  · intro h φ hφ; exact h φ (nonpos_iff_eq_zero.mp hφ)
+
 
 end EquivQRω
 

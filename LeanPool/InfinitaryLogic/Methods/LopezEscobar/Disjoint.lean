@@ -35,7 +35,7 @@ instance : Countable (Σ n, (graphLanguage (KLang L)).Functions n) := by
 /-- **Projective-class disjointness** (the sole `IsomorphismInvariant` × downward-LS consumer):
 if `B`'s tree is `T₀` and `Bᶜ`'s is `T₁`, no base model is simultaneously in the projective
 classes of the two side sentences. -/
-theorem pcMem_disjoint {B : Set (StructureSpace L)}
+private theorem pcMem_disjoint {B : Set (StructureSpace L)}
     (T₀ T₁ : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ)))
     (hT₀ : ∀ c : StructureSpace L, c ∈ B ↔ ∃ g : ℕ → ℕ,
       ∀ n, ((fun i : Fin n => queryCode c (i : ℕ)), (fun i : Fin n => g i)) ∈ T₀ n)

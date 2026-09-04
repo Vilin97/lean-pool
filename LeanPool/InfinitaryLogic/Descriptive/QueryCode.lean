@@ -47,7 +47,7 @@ noncomputable def queryCode (c : StructureSpace L) (n : ℕ) : Bool :=
   if h : ∃ q, queryEmbedding (L := L) q = n then c h.choose else false
 
 /-- The continuous retraction: read the structure code back off the embedded coordinates. -/
-noncomputable def decodeCode (x : ℕ → Bool) : StructureSpace L :=
+private noncomputable def decodeCode (x : ℕ → Bool) : StructureSpace L :=
   fun q => x (queryEmbedding (L := L) q)
 
 /-- **Gate 1**: every query is recovered at its encoded coordinate. -/
@@ -63,7 +63,7 @@ theorem queryCode_of_notMem_range (c : StructureSpace L) {n : ℕ}
   unfold queryCode
   exact dite_eq_right h
 
-theorem decodeCode_queryCode : Function.LeftInverse (decodeCode (L := L)) queryCode := by
+private theorem decodeCode_queryCode : Function.LeftInverse (decodeCode (L := L)) queryCode := by
   intro c
   funext q
   exact queryCode_embedding c q
@@ -80,13 +80,13 @@ theorem continuous_queryCode : Continuous (queryCode (L := L)) := by
   · simp only [dite_eq_right h]
     exact continuous_const
 
-theorem continuous_decodeCode : Continuous (decodeCode (L := L)) := by
+private theorem continuous_decodeCode : Continuous (decodeCode (L := L)) := by
   show Continuous fun (x : ℕ → Bool) (q : RelQueryOn L ℕ) => x (queryEmbedding (L := L) q)
   exact continuous_pi fun q => continuous_apply _
 
 /-- **Gate 3 (range characterization)**: the range of `queryCode` is exactly the default
 condition — `false` at every coordinate outside the embedding's range. -/
-theorem range_queryCode :
+private theorem range_queryCode :
     Set.range (queryCode (L := L)) =
       {x | ∀ n ∉ Set.range (queryEmbedding (L := L)), x n = false} := by
   ext x
@@ -103,7 +103,7 @@ theorem range_queryCode :
       exact (hx n h).symm
 
 /-- **Gate 4**: the range is closed — an intersection of clopen coordinate conditions. -/
-theorem isClosed_range_queryCode : IsClosed (Set.range (queryCode (L := L))) := by
+private theorem isClosed_range_queryCode : IsClosed (Set.range (queryCode (L := L))) := by
   rw [range_queryCode]
   have heq : {x : ℕ → Bool | ∀ n ∉ Set.range (queryEmbedding (L := L)), x n = false}
       = ⋂ n, {x : ℕ → Bool | n ∈ Set.range (queryEmbedding (L := L)) ∨ x n = false} := by
@@ -130,7 +130,7 @@ theorem isClosed_range_queryCode : IsClosed (Set.range (queryCode (L := L))) := 
     exact isClosed_eq (continuous_apply n) continuous_const
 
 /-- **The capstone**: `queryCode` is a closed embedding. -/
-theorem queryCode_isClosedEmbedding :
+private theorem queryCode_isClosedEmbedding :
     Topology.IsClosedEmbedding (queryCode (L := L)) :=
   decodeCode_queryCode.isClosedEmbedding continuous_decodeCode continuous_queryCode
 

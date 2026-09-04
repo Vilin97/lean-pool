@@ -55,17 +55,17 @@ def decodeBit (m : ℕ) : Bool := decide (m = 1)
   cases b <;> rfl
 
 /-- The first-half `Fin (2n)` index of `i : Fin n`. -/
-def firstIdx (n : ℕ) (i : Fin n) : Fin (2 * n) := ⟨(i : ℕ), by omega⟩
+private def firstIdx (n : ℕ) (i : Fin n) : Fin (2 * n) := ⟨(i : ℕ), by omega⟩
 
 /-- The second-half `Fin (2n)` index of `i : Fin n`. -/
-def secondIdx (n : ℕ) (i : Fin n) : Fin (2 * n) := ⟨n + (i : ℕ), by omega⟩
+private def secondIdx (n : ℕ) (i : Fin n) : Fin (2 * n) := ⟨n + (i : ℕ), by omega⟩
 
 variable (c : StructureSpace L) (g : ℕ → ℕ)
   (T : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ)))
 
 /-- The witness function interpretation on `ℕ`: `c ↦ 0`, `s ↦ succ`, `f ↦` the query bit,
 `g ↦` the branch. -/
-noncomputable def wFun : {k : ℕ} → WitnessFun k → (Fin k → ℕ) → ℕ
+private noncomputable def wFun : {k : ℕ} → WitnessFun k → (Fin k → ℕ) → ℕ
   | _, .c, _ => 0
   | _, .s, a => a 0 + 1
   | _, .f, a => cond (queryCode c (a 0)) 1 0
@@ -73,7 +73,7 @@ noncomputable def wFun : {k : ℕ} → WitnessFun k → (Fin k → ℕ) → ℕ
 
 /-- The witness (tree) relation interpretation on `ℕ`: `tree n` decodes the first half as
 bits, the second half as `τ`, and asks membership in `T n`. -/
-def wRel : {k : ℕ} → WitnessRel k → (Fin k → ℕ) → Prop
+private def wRel : {k : ℕ} → WitnessRel k → (Fin k → ℕ) → Prop
   | _, .tree n, u =>
       ((fun i : Fin n => decodeBit (u (firstIdx n i))), (fun i : Fin n => u (secondIdx n i)))
         ∈ T n
@@ -105,21 +105,21 @@ so its reduct along either side's embedding is `standardMid`. -/
 
 /-! ### Reductions of the semantic maps in the standard model -/
 
-theorem sMap_std (x : ℕ) : @sMap L ℕ (standardMid c g T) x = x + 1 := rfl
+private theorem sMap_std (x : ℕ) : @sMap L ℕ (standardMid c g T) x = x + 1 := rfl
 
-theorem numMap_std (m : ℕ) : @numMap L ℕ (standardMid c g T) m = m := by
+private theorem numMap_std (m : ℕ) : @numMap L ℕ (standardMid c g T) m = m := by
   induction m with
   | zero => rfl
   | succ m ih => exact congrArg (· + 1) ih
 
-theorem fMap_std (x : ℕ) :
+private theorem fMap_std (x : ℕ) :
     @fMap L ℕ (standardMid c g T) x = cond (queryCode c x) 1 0 := rfl
 
-theorem gMap_std (x : ℕ) : @gMap L ℕ (standardMid c g T) x = g x := rfl
+private theorem gMap_std (x : ℕ) : @gMap L ℕ (standardMid c g T) x = g x := rfl
 
 /-! ### The tree tuple / path tuple extractions -/
 
-theorem treeTuple_firstIdx (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) (i : Fin n) :
+private theorem treeTuple_firstIdx (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) (i : Fin n) :
     @treeTuple L ℕ (standardMid c g T) n σ τ (firstIdx n i) = cond (σ i) 1 0 := by
   have h : ((firstIdx n i : Fin (2 * n)) : ℕ) < n := i.2
   show (if h : ((firstIdx n i : Fin (2 * n)) : ℕ) < n
@@ -128,7 +128,7 @@ theorem treeTuple_firstIdx (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) 
   rw [dite_eq_left h, numMap_std]
   congr 1
 
-theorem treeTuple_secondIdx (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) (i : Fin n) :
+private theorem treeTuple_secondIdx (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) (i : Fin n) :
     @treeTuple L ℕ (standardMid c g T) n σ τ (secondIdx n i) = τ i := by
   have h : ¬ ((secondIdx n i : Fin (2 * n)) : ℕ) < n := by
     show ¬ n + (i : ℕ) < n; omega
@@ -141,7 +141,7 @@ theorem treeTuple_secondIdx (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ)
   show n + (i : ℕ) - n = (i : ℕ)
   omega
 
-theorem pathTuple_firstIdx (n : ℕ) (i : Fin n) :
+private theorem pathTuple_firstIdx (n : ℕ) (i : Fin n) :
     @pathTuple L ℕ (standardMid c g T) n (firstIdx n i) = cond (queryCode c (i : ℕ)) 1 0 := by
   have h : ((firstIdx n i : Fin (2 * n)) : ℕ) < n := i.2
   show (if ((firstIdx n i : Fin (2 * n)) : ℕ) < n
@@ -150,7 +150,7 @@ theorem pathTuple_firstIdx (n : ℕ) (i : Fin n) :
   rw [ite_eq_left h, numMap_std, fMap_std]
   rfl
 
-theorem pathTuple_secondIdx (n : ℕ) (i : Fin n) :
+private theorem pathTuple_secondIdx (n : ℕ) (i : Fin n) :
     @pathTuple L ℕ (standardMid c g T) n (secondIdx n i) = g (i : ℕ) := by
   have h : ¬ ((secondIdx n i : Fin (2 * n)) : ℕ) < n := by
     show ¬ n + (i : ℕ) < n; omega
@@ -164,7 +164,7 @@ theorem pathTuple_secondIdx (n : ℕ) (i : Fin n) :
 
 /-! ### The standard model satisfies Θ -/
 
-theorem standardMid_models
+private theorem standardMid_models
     (hbranch : ∀ n : ℕ,
       ((fun i : Fin n => queryCode c (i : ℕ)), (fun i : Fin n => g (i : ℕ))) ∈ T n) :
     @Sentenceω.Realize (MidLang L) (functionalTheta L T) ℕ (standardMid c g T) := by
@@ -221,7 +221,7 @@ theorem standardMid_models
 /-! ### Lifting to `KLang` and graph-expanding -/
 
 /-- `sideEmb` is an expansion of `standardK` onto `standardMid`. -/
-theorem sideEmb_isExpansionOn (side : PCSide) :
+private theorem sideEmb_isExpansionOn (side : PCSide) :
     @LHom.IsExpansionOn (MidLang L) (KLang L) (sideEmb L side) ℕ (standardMid c g T)
       (standardK c g T) := by
   let := standardMid c g T
@@ -236,7 +236,7 @@ theorem sideEmb_isExpansionOn (side : PCSide) :
     | inl R => rfl
     | inr w => rfl
 
-theorem standardK_models_pc (side : PCSide)
+private theorem standardK_models_pc (side : PCSide)
     (hbranch : ∀ n : ℕ,
       ((fun i : Fin n => queryCode c (i : ℕ)), (fun i : Fin n => g (i : ℕ))) ∈ T n) :
     @Sentenceω.Realize (KLang L) (functionalPCSentence L side T) ℕ (standardK c g T) := by
@@ -251,11 +251,11 @@ theorem standardK_models_pc (side : PCSide)
 
 /-- The forward code: the encoded graph expansion of the standard `KLang` model (independent
 of the side). -/
-noncomputable def forwardCode : StructureSpace (graphLanguage (KLang L)) :=
+private noncomputable def forwardCode : StructureSpace (graphLanguage (KLang L)) :=
   letI := standardK c g T
   StructureSpaceOn.ofStructure (graphExpansion (KLang L) ℕ)
 
-theorem forwardCode_toStructure :
+private theorem forwardCode_toStructure :
     (forwardCode c g T).toStructure = @graphExpansion (KLang L) ℕ (standardK c g T) := by
   apply Structure.ext
   · funext k f a; exact isEmptyElim f
@@ -263,7 +263,7 @@ theorem forwardCode_toStructure :
     exact propext (StructureSpaceOn.toStructure_ofStructure
       (@graphExpansion (KLang L) ℕ (standardK c g T)) r a)
 
-theorem forwardCode_mem_modelsOf (side : PCSide)
+private theorem forwardCode_mem_modelsOf (side : PCSide)
     (hbranch : ∀ n : ℕ,
       ((fun i : Fin n => queryCode c (i : ℕ)), (fun i : Fin n => g (i : ℕ))) ∈ T n) :
     forwardCode c g T ∈ ModelsOf (pcSentence L side T) := by
@@ -273,7 +273,7 @@ theorem forwardCode_mem_modelsOf (side : PCSide)
   rw [forwardCode_toStructure]
   exact graphExpansion_realizes_pcSentence side T (standardK_models_pc c g T side hbranch)
 
-theorem codeReduct_forwardCode :
+private theorem codeReduct_forwardCode :
     codeReduct (forwardCode c g T) = c := by
   let := standardK c g T
   funext q

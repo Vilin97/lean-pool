@@ -133,7 +133,7 @@ theorem realize_inf (φ ψ : L.BoundedFormulaω α n) :
   realize_and φ ψ
 
 @[simp]
-theorem realize_or (φ ψ : L.BoundedFormulaω α n) :
+private theorem realize_or (φ ψ : L.BoundedFormulaω α n) :
     (φ.or ψ).Realize v xs ↔ φ.Realize v xs ∨ ψ.Realize v xs := by
   simp only [BoundedFormulaω.or, realize_not, realize_imp]
   tauto
@@ -174,15 +174,9 @@ theorem realize_esup {ι : Type*} [Encodable ι] (φs : ι → L.BoundedFormula�
     use Encodable.encode i
     simp only [Encodable.encodek, hi]
 
-/-- Realization of `einfWith`: the supplied encoding does not affect the semantics. -/
-@[simp] theorem realize_einfWith {ι : Type*} (e : Encodable ι) (φs : ι → L.BoundedFormulaω α n) :
-    (einfWith e φs).Realize v xs ↔ ∀ i, (φs i).Realize v xs :=
-  @realize_einf L M _ α n v xs ι e φs
 
-/-- Realization of `esupWith`. -/
-@[simp] theorem realize_esupWith {ι : Type*} (e : Encodable ι) (φs : ι → L.BoundedFormulaω α n) :
-    (esupWith e φs).Realize v xs ↔ ∃ i, (φs i).Realize v xs :=
-  @realize_esup L M _ α n v xs ι e φs
+
+
 
 end BoundedFormulaω
 

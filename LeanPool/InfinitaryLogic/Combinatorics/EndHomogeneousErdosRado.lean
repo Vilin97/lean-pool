@@ -112,7 +112,7 @@ theorem appendLastOE_congr {s s' : Fin (n + 1) ↪o I} {x x' : I}
 
 /-- `appendLastOE` commutes with postcomposition by an order embedding
 (`Fin.snoc` naturality). -/
-theorem appendLastOE_trans {J : Type*} [LinearOrder J]
+private theorem appendLastOE_trans {J : Type*} [LinearOrder J]
     (s : Fin (n + 1) ↪o I) (x : I) (hx : ∀ k, s k < x) (e : I ↪o J) :
     (appendLastOE s x hx).trans e =
       appendLastOE (s.trans e) (e x) (fun k => e.strictMono (hx k)) := by
@@ -121,19 +121,15 @@ theorem appendLastOE_trans {J : Type*} [LinearOrder J]
   exact congrFun (Fin.comp_snoc (⇑e) (⇑s) x) i
 
 /-- The one-point order embedding `Fin 1 ↪o I` at `x` (strict monotonicity is vacuous). -/
-def oneTupleOE (x : I) : Fin 1 ↪o I :=
+private def oneTupleOE (x : I) : Fin 1 ↪o I :=
   OrderEmbedding.ofStrictMono (fun _ => x) fun a b hab =>
     absurd (Subsingleton.elim a b) (ne_of_lt hab)
 
-/-- Every `Fin 1 ↪o I` is the one-point embedding at its value. -/
-theorem orderEmbedding_fin_one_eq' (t : Fin 1 ↪o I) : t = oneTupleOE (t 0) := by
-  refine DFunLike.ext t _ fun k => ?_
-  rw [Fin.eq_zero k]
-  rfl
+
 
 /-- Arity-1 bridge: appending `b` above the one-point tuple at `a` is exactly the pair
 embedding of `a < b`. -/
-theorem appendLastOE_oneTupleOE {a b : I} (h : a < b)
+private theorem appendLastOE_oneTupleOE {a b : I} (h : a < b)
     (hab : ∀ k, oneTupleOE a k < b) :
     appendLastOE (oneTupleOE a) b hab = pairEmbed h := by
   refine DFunLike.ext _ _ fun i => ?_
@@ -151,7 +147,7 @@ variable {lam : Cardinal.{0}}
 
 /-- Finite tuple-embedding count: `#(Fin m ↪o α) ≤ lam` for `#α ≤ lam` and infinite `lam`
 (inject into `Fin m → α` and collapse the finite power). -/
-theorem mk_finTupleEmb_le (m : ℕ) {α : Type} [LinearOrder α]
+private theorem mk_finTupleEmb_le (m : ℕ) {α : Type} [LinearOrder α]
     (hα : Cardinal.mk α ≤ lam) (hlam : Cardinal.aleph0 ≤ lam) :
     Cardinal.mk (Fin m ↪o α) ≤ lam := by
   have h1 : Cardinal.mk (Fin m ↪o α) ≤ Cardinal.mk (Fin m → α) :=
@@ -167,7 +163,7 @@ theorem mk_finTupleEmb_le (m : ℕ) {α : Type} [LinearOrder α]
 /-- **Tuple-node count bound.** For `β < (succ lam).ord` and `#C ≤ lam`, the level of
 recorded-color tuple nodes has at most `2 ^ lam` members:
 `#((Fin (n+1) ↪o β.ToType) → C) ≤ (2 ^ lam) ^ lam = 2 ^ lam`. -/
-theorem mk_tupleNode_le {C : Type} (hC : Cardinal.mk C ≤ lam)
+private theorem mk_tupleNode_le {C : Type} (hC : Cardinal.mk C ≤ lam)
     (hlam : Cardinal.aleph0 ≤ lam) (n : ℕ) {β : Ordinal.{0}}
     (hβ : β < (Order.succ lam).ord) :
     Cardinal.mk ((Fin (n + 1) ↪o β.ToType) → C) ≤ (2 : Cardinal.{0}) ^ lam :=
@@ -184,7 +180,7 @@ theorem mk_tupleNode_le {C : Type} (hC : Cardinal.mk C ≤ lam)
 
 /-- Any `(n+2)`-tuple coloring on `Source lam` witnesses `Nonempty C`: the source's order
 type is at least `ω`, so it contains an increasing `(n+2)`-tuple. -/
-theorem nonempty_color_tuple (hlam : Cardinal.aleph0 ≤ lam) {C : Type} {n : ℕ}
+private theorem nonempty_color_tuple (hlam : Cardinal.aleph0 ≤ lam) {C : Type} {n : ℕ}
     (G : (Fin (n + 2) ↪o Source lam) → C) : Nonempty C := by
   have homega : Ordinal.omega0 ≤ (Order.succ ((2 : Cardinal.{0}) ^ lam)).ord := by
     rw [← Cardinal.ord_aleph0]
@@ -244,7 +240,7 @@ theorem NodeAt.restrict_heq {β : Ordinal.{0}} (h : NodeAt C n β)
 
 /-- Level cardinality: for `β < (succ lam).ord` and `#C ≤ lam` the level (all length-`β`
 tuple nodes) has cardinality `≤ 2 ^ lam`. -/
-theorem level_card_le (hlam : Cardinal.aleph0 ≤ lam) (hC : Cardinal.mk C ≤ lam)
+private theorem level_card_le (hlam : Cardinal.aleph0 ≤ lam) (hC : Cardinal.mk C ≤ lam)
     {β : Ordinal.{0}} (hβ : β < (Order.succ lam).ord) :
     Cardinal.mk (NodeAt C n β) ≤ (2 : Cardinal.{0}) ^ lam :=
   mk_tupleNode_le hC hlam n hβ
@@ -254,7 +250,7 @@ variable [Nonempty C]
 /-- The color of the tuple `r ⌢ y` when `r` is strictly monotone and bounded by `y`
 (junk otherwise). Factoring the tree's recorded colors through `colorAbove` makes every
 "the color depends only on the underlying points" step a `congrArg`. -/
-noncomputable def colorAbove (G : (Fin (n + 2) ↪o Source lam) → C) (y : Source lam)
+private noncomputable def colorAbove (G : (Fin (n + 2) ↪o Source lam) → C) (y : Source lam)
     (r : Fin (n + 1) → Source lam) : C := by
   classical
   exact if h : StrictMono r ∧ ∀ k, r k < y then
@@ -262,7 +258,7 @@ noncomputable def colorAbove (G : (Fin (n + 2) ↪o Source lam) → C) (y : Sour
   else Classical.arbitrary C
 
 /-- On an actual bounded order embedding, `colorAbove` computes the appended color. -/
-theorem colorAbove_eq (G : (Fin (n + 2) ↪o Source lam) → C) {y : Source lam}
+private theorem colorAbove_eq (G : (Fin (n + 2) ↪o Source lam) → C) {y : Source lam}
     (remb : Fin (n + 1) ↪o Source lam) (hlt : ∀ k, remb k < y) :
     colorAbove G y ⇑remb = G (appendLastOE remb y hlt) := by
   classical
@@ -272,7 +268,7 @@ theorem colorAbove_eq (G : (Fin (n + 2) ↪o Source lam) → C) {y : Source lam}
 
 /-- The successor set `S(h)` of a node with reps `rep`: points `y` strictly above every
 rep whose appended tuple colors all match the recorded ones. -/
-def nodeFiber (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private def nodeFiber (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (rep : β.ToType → Source lam) (col : NodeAt C n β) : Set (Source lam) :=
   { y | (∀ x : β.ToType, rep x < y) ∧
         ∀ τ : Fin (n + 1) ↪o β.ToType, colorAbove G y (fun k => rep (τ k)) = col τ }
@@ -301,7 +297,7 @@ decreasing_by
     rwa [Ordinal.type_toType] at hh
 
 /-- The reps along a node: the chosen rep of the restriction to each position. -/
-noncomputable def nodeRep (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private noncomputable def nodeRep (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (h : NodeAt C n β) : β.ToType → Source lam := by
   haveI : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
   exact fun x => nodeChosen G (Ordinal.typein (· < ·) x)
@@ -324,7 +320,7 @@ noncomputable def nodeR (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.
   exact if nodeLive G h then {nodeChosen G β h} else ∅
 
 /-- `R(h)` is a subsingleton (it is `{s(h)}` or `∅`). -/
-theorem nodeR_subsingleton (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private theorem nodeR_subsingleton (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (h : NodeAt C n β) : (nodeR G h).Subsingleton := by
   classical
   rw [nodeR]
@@ -333,7 +329,7 @@ theorem nodeR_subsingleton (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordin
   · exact Set.subsingleton_empty
 
 /-- On a live node, the chosen rep lies in the successor set. -/
-theorem nodeChosen_mem (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private theorem nodeChosen_mem (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (h : NodeAt C n β) (hlive : nodeLive G h) :
     nodeChosen G β h ∈ nodeS G h := by
   classical
@@ -347,7 +343,7 @@ theorem nodeChosen_mem (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{
   exact WellFounded.min_mem _ _ hcond
 
 /-- On a live node, `nodeChosen` is exactly the well-order minimum of the successor set. -/
-theorem nodeChosen_eq_min (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private theorem nodeChosen_eq_min (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (h : NodeAt C n β) (hlive : nodeLive G h) :
     nodeChosen G β h =
       (IsWellFounded.wf : WellFounded (· < · : Source lam → Source lam → Prop)).min
@@ -363,7 +359,7 @@ theorem nodeChosen_eq_min (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordina
   rfl
 
 /-- The chosen min is `≤` every successor. -/
-theorem nodeChosen_le_of_mem (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private theorem nodeChosen_le_of_mem (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (h : NodeAt C n β) {y : Source lam} (hy : y ∈ nodeS G h) :
     nodeChosen G β h ≤ y := by
   have hlive : nodeLive G h := ⟨y, hy⟩
@@ -371,7 +367,7 @@ theorem nodeChosen_le_of_mem (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ord
   exact not_lt.mp (WellFounded.not_lt_min _ _ hy)
 
 /-- `nodeChosen` transported along a level equality. -/
-theorem nodeChosen_congr (G : (Fin (n + 2) ↪o Source lam) → C) {δ₁ δ₂ : Ordinal.{0}}
+private theorem nodeChosen_congr (G : (Fin (n + 2) ↪o Source lam) → C) {δ₁ δ₂ : Ordinal.{0}}
     (hδ : δ₁ = δ₂) {n₁ : NodeAt C n δ₁} {n₂ : NodeAt C n δ₂} (hn : HEq n₁ n₂) :
     nodeChosen G δ₁ n₁ = nodeChosen G δ₂ n₂ := by
   subst hδ
@@ -379,7 +375,7 @@ theorem nodeChosen_congr (G : (Fin (n + 2) ↪o Source lam) → C) {δ₁ δ₂ 
 
 /-- Level smallness: for `β < (succ lam).ord` there are `≤ 2 ^ lam` live length-`β`
 tuple nodes. -/
-theorem live_level_small (hlam : Cardinal.aleph0 ≤ lam) (hC : Cardinal.mk C ≤ lam)
+private theorem live_level_small (hlam : Cardinal.aleph0 ≤ lam) (hC : Cardinal.mk C ≤ lam)
     (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (hβ : β < (Order.succ lam).ord) :
     Cardinal.mk {h : NodeAt C n β // nodeLive G h} ≤ (2 : Cardinal.{0}) ^ lam :=
@@ -443,7 +439,7 @@ theorem yNode_restrict (G : (Fin (n + 2) ↪o Source lam) → C) (y : Source lam
   exact congrArg (yRep G y) (Ordinal.typein_apply (initialSegOfLe hδ) (τ k))
 
 /-- The reps of `yNode G y β` are exactly `yRep G y (typein x)`. -/
-theorem nodeRep_yNode (G : (Fin (n + 2) ↪o Source lam) → C) (y : Source lam)
+private theorem nodeRep_yNode (G : (Fin (n + 2) ↪o Source lam) → C) (y : Source lam)
     {β : Ordinal.{0}} [IsWellOrder β.ToType (· < ·)] (x : β.ToType) :
     nodeRep G (yNode G y β) x = yRep G y (Ordinal.typein (· < ·) x) := by
   classical
@@ -541,7 +537,7 @@ section EndHomogeneity
 variable {lam : Cardinal.{0}} {C : Type} {n : ℕ} [Nonempty C]
 
 /-- The reps of a restriction agree with the parent's reps at the lifted positions. -/
-theorem nodeRep_restrict (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private theorem nodeRep_restrict (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (h : NodeAt C n β) {δ : Ordinal.{0}} (hδ : δ ≤ β) (x : δ.ToType) :
     nodeRep G (h.restrict hδ) x =
       nodeRep G h ((initialSegOfLe hδ).toOrderEmbedding x) := by
@@ -563,7 +559,7 @@ theorem nodeRep_restrict (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal
 
 /-- A restriction of a live node is live (the same witness serves: the constraints of the
 restriction are a subset of the parent's, transported along `nodeRep_restrict`). -/
-theorem nodeLive_restrict (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private theorem nodeLive_restrict (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     {h : NodeAt C n β} (hlive : nodeLive G h) {δ : Ordinal.{0}} (hδ : δ ≤ β) :
     nodeLive G (h.restrict hδ) := by
   classical
@@ -620,7 +616,7 @@ private lemma exists_seg_tuple {β : Ordinal.{0}} [IsWellOrder β.ToType (· < �
 
 /-- **End-homogeneity, strict monotonicity.** On a live node the chosen reps strictly
 increase. -/
-theorem nodeRep_strictMono (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private theorem nodeRep_strictMono (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     {h : NodeAt C n β} (hlive : nodeLive G h) {x₁ x₂ : β.ToType} (hx : x₁ < x₂) :
     nodeRep G h x₁ < nodeRep G h x₂ := by
   classical
@@ -637,7 +633,7 @@ theorem nodeRep_strictMono (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordin
 /-- **End-homogeneity, EHMR fact (8) in tuple form.** On a live node, the recorded color
 at the prefix tuple `τ` is the actual appended color of `{rep ∘ τ, rep x₂}` for any
 position `x₂` strictly above all of `τ`. -/
-theorem node_fact8 (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private theorem node_fact8 (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     {h : NodeAt C n β} (hlive : nodeLive G h) {τ : Fin (n + 1) ↪o β.ToType}
     {x₂ : β.ToType} (hx : ∀ k, τ k < x₂) :
     colorAbove G (nodeRep G h x₂) (fun k => nodeRep G h (τ k)) = h τ := by
@@ -691,7 +687,7 @@ structure Branch (G : (Fin (n + 2) ↪o Source lam) → C) where
 /-- A live node of length `≥ (succ lam).ord` *is* a `Branch`: its reps (read off along
 the initial-segment embedding) strictly increase (`nodeRep_strictMono`) and satisfy fact
 (8) (`node_fact8`). -/
-noncomputable def branchOfLive (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
+private noncomputable def branchOfLive (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordinal.{0}}
     (h : NodeAt C n β) (hβ : (Order.succ lam).ord ≤ β) (hlive : nodeLive G h) :
     Branch G :=
   haveI : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
@@ -761,7 +757,7 @@ theorem exists_live_node_ge (hlam : Cardinal.aleph0 ≤ lam)
 
 /-- **Branch-length.** The canonical tuple partition tree for `G` has a branch of length
 `(succ lam).ord`. -/
-theorem tree_has_branch (hlam : Cardinal.aleph0 ≤ lam) (hC : Cardinal.mk C ≤ lam)
+private theorem tree_has_branch (hlam : Cardinal.aleph0 ≤ lam) (hC : Cardinal.mk C ≤ lam)
     (G : (Fin (n + 2) ↪o Source lam) → C) :
     Nonempty (Branch G) := by
   obtain ⟨β, h, hβ, hlive⟩ := exists_live_node_ge hlam hC G
@@ -779,7 +775,7 @@ variable {lam : Cardinal.{0}} {C : Type} {n : ℕ}
 `(succ lam).ord`-indexed suborder on which the color of `s ⌢ x` depends only on the
 prefix tuple `s` — both branch-coherence instances at the position tuple of `s` give the
 recorded `nodeFn` value. -/
-theorem exists_endHomogeneous (lam : Cardinal.{0}) (hlam : Cardinal.aleph0 ≤ lam)
+private theorem exists_endHomogeneous (lam : Cardinal.{0}) (hlam : Cardinal.aleph0 ≤ lam)
     {C : Type} (hC : Cardinal.mk C ≤ lam) (n : ℕ)
     (G : (Fin (n + 2) ↪o Source lam) → C) :
     ∃ f : (Order.succ lam).ord.ToType ↪o Source lam,
@@ -905,7 +901,7 @@ re-derived from `exists_endHomogeneous_of_large` at `n = 0` plus the point pigeo
 end-homogenize the pair coloring, pigeonhole the induced point color
 `p ↦ cR {f₀ p, f₀ (canonical point above p)}` (well-defined up to the choice of
 above-point by end-homogeneity), and re-well-order the large monochromatic fiber. -/
-theorem pairER_from_endHomogeneous (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ)
+private theorem pairER_from_endHomogeneous (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ)
     {C : Type} (hC : Cardinal.mk C ≤ κ)
     {I : Type} [LinearOrder I] [WellFoundedLT I]
     (hI : Order.succ ((2 : Cardinal.{0}) ^ κ) ≤ Cardinal.mk I)

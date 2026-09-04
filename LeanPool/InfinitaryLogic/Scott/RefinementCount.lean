@@ -184,14 +184,7 @@ theorem countableRefinementHypothesis : CountableRefinementHypothesis.{u, v, w} 
 Each theorem below is a one-liner applying `countableRefinementHypothesis` to the
 corresponding `_of` variant in Sentence.lean. -/
 
-/-- The set of refinement ordinals for any tuple is countable. -/
-theorem countable_refinement_steps
-    {M : Type w} [L.Structure M] [Countable M]
-    (n : ℕ) (a : Fin n → M) :
-    Set.Countable {α : Ordinal.{0} | α < Ordinal.omega 1 ∧
-      ∃ (N : Type w) (_ : L.Structure N) (_ : Countable N) (b : Fin n → N),
-        BFEquiv (L := L) α n a b ∧ ¬BFEquiv (L := L) (Order.succ α) n a b} :=
-  countableRefinementHypothesis M n a
+
 
 /-- Per-tuple stabilization below ω₁. -/
 theorem per_tuple_stabilization_below_omega1
@@ -223,11 +216,7 @@ theorem stabilizationOrdinal_stabilizes (M : Type w) [L.Structure M] [Countable 
     StabilizesAt (L := L) M (stabilizationOrdinal (L := L) M) :=
   stabilizationOrdinal_stabilizes_of countableRefinementHypothesis M
 
-/-- BFEquiv0 at stabilizationOrdinal characterizes isomorphism. -/
-theorem stabilizationOrdinal_spec (M : Type w) [L.Structure M] [Countable M]
-    (N : Type w) [L.Structure N] [Countable N] :
-    BFEquiv0 (L := L) M N (stabilizationOrdinal (L := L) M) ↔ Nonempty (M ≃[L] N) :=
-  stabilizationOrdinal_stabilizes M N
+
 
 /-- The Scott sentence of M characterizes M up to isomorphism among countable structures. -/
 theorem scottSentence_characterizes (M : Type w) [L.Structure M] [Countable M]
@@ -235,22 +224,11 @@ theorem scottSentence_characterizes (M : Type w) [L.Structure M] [Countable M]
     (scottSentence (L := L) M).realize_as_sentence N ↔ Nonempty (M ≃[L] N) :=
   scottSentence_characterizes_of countableRefinementHypothesis M N
 
-/-- If N realizes the Scott sentence of M, then M ≃[L] N. -/
-theorem scottSentence_realizes_implies_equiv (M : Type w) [L.Structure M] [Countable M]
-    (N : Type w) [L.Structure N] [Countable N]
-    (h : (scottSentence (L := L) M).realize_as_sentence N) : Nonempty (M ≃[L] N) :=
-  (scottSentence_characterizes M N).mp h
 
-/-- M itself satisfies its own Scott sentence. -/
-theorem scottSentence_self (M : Type w) [L.Structure M] [Countable M] :
-    (scottSentence (L := L) M).realize_as_sentence M :=
-  (scottSentence_characterizes M M).mpr ⟨Equiv.refl L M⟩
 
-/-- Isomorphic structures satisfy each other's Scott sentences. -/
-theorem scottSentence_of_equiv (M N : Type w) [L.Structure M] [L.Structure N]
-    [Countable M] [Countable N] (e : M ≃[L] N) :
-    (scottSentence (L := L) M).realize_as_sentence N :=
-  (scottSentence_characterizes M N).mpr ⟨e⟩
+
+
+
 
 end Language
 

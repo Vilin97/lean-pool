@@ -84,21 +84,21 @@ def ladderLang (α : Ordinal.{0}) : Language.{0, 0} :=
 variable {α : Ordinal.{0}}
 
 /-- The `n`-th constant, as a term over any variable type. -/
-def const (n : ℕ) {γ : Type} : (ladderLang α).Term γ :=
+private def const (n : ℕ) {γ : Type} : (ladderLang α).Term γ :=
   Term.func (show (ladderLang α).Functions 0 from n) Fin.elim0
 
 /-- The level atom `U_i t`. -/
-def levelAtom (i : Index α) {γ : Type} {n : ℕ} (t : (ladderLang α).Term (γ ⊕ Fin n)) :
+private def levelAtom (i : Index α) {γ : Type} {n : ℕ} (t : (ladderLang α).Term (γ ⊕ Fin n)) :
     (ladderLang α).BoundedFormulaω γ n :=
   BoundedFormulaω.rel (show (ladderLang α).Relations 1 from i) (fun _ => t)
 
 /-- The edge atom `E t u`. -/
-def eAtom {γ : Type} {n : ℕ} (t u : (ladderLang α).Term (γ ⊕ Fin n)) :
+private def eAtom {γ : Type} {n : ℕ} (t u : (ladderLang α).Term (γ ⊕ Fin n)) :
     (ladderLang α).BoundedFormulaω γ n :=
   BoundedFormulaω.rel (show (ladderLang α).Relations 2 from ()) ![t, u]
 
 /-- Variable `i` at arity `n`, over `Empty` free variables. -/
-abbrev bvar {n : ℕ} (i : Fin n) : (ladderLang α).Term (Empty ⊕ Fin n) :=
+private abbrev bvar {n : ℕ} (i : Fin n) : (ladderLang α).Term (Empty ⊕ Fin n) :=
   Term.var (Sum.inr i)
 
 section Clauses
@@ -107,32 +107,32 @@ variable (α)
 variable [Countable (Index α)]
 
 /-- Base, `⊇`: every constant is in the bottom level. -/
-noncomputable def baseInC : (ladderLang α).Sentenceω :=
+private noncomputable def baseInC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.iInf fun n => levelAtom ⊥ (const n)
 
 /-- Base, `⊆`: every bottom-level element is a constant. -/
-noncomputable def baseOutC : (ladderLang α).Sentenceω :=
+private noncomputable def baseOutC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.all ((levelAtom ⊥ (bvar 0)).imp
     (BoundedFormulaω.iSup fun n => BoundedFormulaω.equal (bvar 0) (const n)))
 
 /-- Top: every element is in the top level. -/
-noncomputable def topC : (ladderLang α).Sentenceω :=
+private noncomputable def topC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.all (levelAtom ⊤ (bvar 0))
 
 /-- Nesting: `U_i ⊆ U_j` for `i < j`. -/
-noncomputable def nestedC : (ladderLang α).Sentenceω :=
+private noncomputable def nestedC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.ciInf fun p : {p : Index α × Index α // p.1 < p.2} =>
     BoundedFormulaω.all ((levelAtom p.1.1 (bvar 0)).imp (levelAtom p.1.2 (bvar 0)))
 
 /-- Limit covering: at an order-limit level `j`, `U_j x → ⋁_{i<j} U_i x`. -/
-noncomputable def limitC : (ladderLang α).Sentenceω :=
+private noncomputable def limitC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.ciInf fun j : {j : Index α // Order.IsSuccLimit j} =>
     BoundedFormulaω.all ((levelAtom j.1 (bvar 0)).imp
       (BoundedFormulaω.ciSup fun i : {i : Index α // i < j.1} => levelAtom i.1 (bvar 0)))
 
 /-- Predecessor descent: for adjacent `i ⋖ j`, `U_j x → E y x → U_i y`
 (`x` = bound variable `0`, `y` = bound variable `1`). -/
-noncomputable def predC : (ladderLang α).Sentenceω :=
+private noncomputable def predC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.ciInf fun p : {p : Index α × Index α // p.1 ⋖ p.2} =>
     BoundedFormulaω.all (BoundedFormulaω.all
       ((levelAtom p.1.2 (bvar 0)).imp
@@ -140,7 +140,7 @@ noncomputable def predC : (ladderLang α).Sentenceω :=
 
 /-- Extensionality, curried: `(∀x, E x y → E x z) → (∀x, E x z → E x y) → y = z`
 (`y` = bound variable `0`, `z` = bound variable `1`, `x` = bound variable `2`). -/
-def extC : (ladderLang α).Sentenceω :=
+private def extC : (ladderLang α).Sentenceω :=
   BoundedFormulaω.all (BoundedFormulaω.all
     ((BoundedFormulaω.all ((eAtom (bvar 2) (bvar 0)).imp (eAtom (bvar 2) (bvar 1)))).imp
       ((BoundedFormulaω.all ((eAtom (bvar 2) (bvar 1)).imp (eAtom (bvar 2) (bvar 0)))).imp
@@ -194,18 +194,18 @@ variable {α}
 section RealizeHelpers
 
 /-- Constant terms realize to their values, at any valuation. -/
-theorem realize_const {γ : Type} (v : γ → M) (n : ℕ) :
+private theorem realize_const {γ : Type} (v : γ → M) (n : ℕ) :
     (const n : (ladderLang α).Term γ).realize v = constVal α n := by
   show Structure.funMap _ _ = _
   congr 1
   exact funext fun i => i.elim0
 
-theorem realize_levelAtom {γ : Type} {n : ℕ} (i : Index α)
+private theorem realize_levelAtom {γ : Type} {n : ℕ} (i : Index α)
     (t : (ladderLang α).Term (γ ⊕ Fin n)) (v : γ → M) (xs : Fin n → M) :
     (levelAtom i t).Realize v xs ↔ Level α i (t.realize (Sum.elim v xs)) := by
   rw [levelAtom, BoundedFormulaω.realize_rel, Level]
 
-theorem realize_eAtom {γ : Type} {n : ℕ}
+private theorem realize_eAtom {γ : Type} {n : ℕ}
     (t u : (ladderLang α).Term (γ ⊕ Fin n)) (v : γ → M) (xs : Fin n → M) :
     (eAtom t u).Realize v xs ↔
       Edge α (t.realize (Sum.elim v xs)) (u.realize (Sum.elim v xs)) := by
@@ -217,7 +217,7 @@ theorem realize_eAtom {γ : Type} {n : ℕ}
   | 1 => rfl
 
 /-- The bound variable at arity `1` realizes to the snoc value. -/
-theorem realize_bvar1 (x : M) :
+private theorem realize_bvar1 (x : M) :
     (bvar 0 : (ladderLang α).Term (Empty ⊕ Fin 1)).realize
       (Sum.elim (Empty.elim : Empty → M) (Fin.snoc Fin.elim0 x)) = x := by
   show (Fin.snoc (Fin.elim0 : Fin 0 → M) x : Fin 1 → M) (Fin.last 0) = x

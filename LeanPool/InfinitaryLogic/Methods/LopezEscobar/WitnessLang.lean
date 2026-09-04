@@ -53,13 +53,7 @@ instance : Countable (Σ n, WitnessLang.Functions n) := by
   rintro ⟨_, x⟩ ⟨_, y⟩ h
   cases x <;> cases y <;> simp_all
 
-instance : Countable (Σ n, WitnessLang.Relations n) := by
-  refine Function.Injective.countable (f := fun p : Σ n, WitnessLang.Relations n =>
-    (match p with | ⟨_, .tree n⟩ => n : ℕ)) ?_
-  rintro ⟨_, ⟨m⟩⟩ ⟨_, ⟨n⟩⟩ h
-  simp only at h
-  subst h
-  rfl
+
 
 /-! ## Numeral terms -/
 
@@ -70,59 +64,13 @@ def numTerm (α : Type) : ℕ → WitnessLang.Term α
   | 0 => Term.func WitnessFun.c Fin.elim0
   | n + 1 => Term.func WitnessFun.s ![numTerm α n]
 
-/-- The numeral terms mention only `c` and `s`. -/
-theorem functionsIn_numTerm (n : ℕ) :
-    (numTerm α n).functionsIn ⊆
-      {(⟨0, WitnessFun.c⟩ : Σ k, WitnessLang.Functions k), ⟨1, WitnessFun.s⟩} := by
-  induction n with
-  | zero =>
-    intro p hp
-    rcases hp with rfl | hp
-    · exact Set.mem_insert _ _
-    · exact absurd hp (by simp)
-  | succ n ih =>
-    intro p hp
-    rcases hp with rfl | hp
-    · exact Set.mem_insert_of_mem _ rfl
-    · obtain ⟨i, hi⟩ := Set.mem_iUnion.mp hp
-      rw [Fin.eq_zero i] at hi
-      exact ih hi
 
-/-- Map-language commutation, zero case. -/
-theorem onTerm_numTerm_zero {L' : Language.{0, 0}} (φ : WitnessLang →ᴸ L') :
-    φ.onTerm (numTerm α 0) = Term.func (φ.onFunction WitnessFun.c) Fin.elim0 := by
-  simp only [numTerm, LHom.onTerm]
-  congr 1
-  funext i
-  exact i.elim0
 
-/-- Map-language commutation, successor case. -/
-theorem onTerm_numTerm_succ {L' : Language.{0, 0}} (φ : WitnessLang →ᴸ L') (n : ℕ) :
-    φ.onTerm (numTerm α (n + 1)) =
-      Term.func (φ.onFunction WitnessFun.s) ![φ.onTerm (numTerm α n)] := by
-  simp only [numTerm, LHom.onTerm]
-  congr 1
-  funext i
-  rw [Fin.eq_zero i]
-  simp only [Matrix.cons_val_zero]
 
-/-- Realization of the numeral terms: the `n`-fold `s`-iterate of `c`. -/
-theorem realize_numTerm {M : Type*} [inst : WitnessLang.Structure M] (v : α → M) (n : ℕ) :
-    (numTerm α n).realize v =
-      (fun x => @Structure.funMap WitnessLang M inst 1 WitnessFun.s ![x])^[n]
-        (@Structure.funMap WitnessLang M inst 0 WitnessFun.c (Fin.elim0 : Fin 0 → M)) := by
-  induction n with
-  | zero =>
-    simp only [numTerm, Term.realize, Function.iterate_zero, id_eq]
-    congr 1
-    funext i
-    exact i.elim0
-  | succ n ih =>
-    simp only [numTerm, Term.realize, Function.iterate_succ_apply', ← ih]
-    congr 1
-    funext i
-    rw [Fin.eq_zero i]
-    simp only [Matrix.cons_val_zero]
+
+
+
+
 
 /-! ## The common tagged language and its named embeddings -/
 
@@ -188,18 +136,12 @@ theorem leftFuns_inter_rightFuns : leftFuns L ∩ rightFuns L = ∅ :=
 theorem leftRels_inter_rightRels : leftRels L ∩ rightRels L = ∅ :=
   range_tag_disjoint fun _ _ _ h => Sum.inl_ne_inr (Sum.inr_injective h)
 
-/-- Base and left-witness function symbols are disjoint (likewise below for the right copy,
-by the same `Sum.inl`/`Sum.inr` clash). -/
-theorem baseFuns_inter_leftFuns : baseFuns L ∩ leftFuns L = ∅ :=
-  range_tag_disjoint fun _ _ _ h => Sum.inl_ne_inr h
 
-theorem baseRels_inter_leftRels : baseRels L ∩ leftRels L = ∅ :=
-  range_tag_disjoint fun _ _ _ h => Sum.inl_ne_inr h
 
-theorem baseFuns_inter_rightFuns : baseFuns L ∩ rightFuns L = ∅ :=
-  range_tag_disjoint fun _ _ _ h => Sum.inl_ne_inr h
 
-theorem baseRels_inter_rightRels : baseRels L ∩ rightRels L = ∅ :=
-  range_tag_disjoint fun _ _ _ h => Sum.inl_ne_inr h
+
+
+
+
 
 end FirstOrder.Language

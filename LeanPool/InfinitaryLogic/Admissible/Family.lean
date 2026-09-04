@@ -105,15 +105,9 @@ section Gates
 
 variable {M : Type} [L.Structure M] {v : Empty → M} {xs : Fin n → M}
 
-/-- **Gate 1a.**  `codedIInf` realizes as a conjunction over `P.Index code`. -/
-theorem realize_codedIInf (F : CodedFamily P n) :
-    (codedIInf F).Realize v xs ↔ ∀ i, (F.decode i).Realize v xs :=
-  BoundedFormulaω.realize_einfWith _ F.decode
 
-/-- **Gate 1b.**  …and `codedISup` as a disjunction. -/
-theorem realize_codedISup (F : CodedFamily P n) :
-    (codedISup F).Realize v xs ↔ ∃ i, (F.decode i).Realize v xs :=
-  BoundedFormulaω.realize_esupWith _ F.decode
+
+
 
 end Gates
 
@@ -121,27 +115,14 @@ end Gates
 type ascription that would not elaborate if the arity could drift. -/
 example (F : CodedFamily P n) : L.BoundedFormulaω Empty n := codedIInf F
 
-/-- **Gate 3.**  An alternative ambient `Encodable` on the index type cannot change the syntax.
 
-The hypothesis `_e` is deliberately **unused**: it puts a competing instance in scope, and the
-statement still holds by `rfl`, which is exactly the claim — `codedIInf` never consults instance
-search, it reads `P.indexEncodable`. -/
-theorem codedIInf_uses_presentation_encoding (F : CodedFamily P n)
-    (_e : Encodable (P.Index F.code)) :
-    codedIInf F = BoundedFormulaω.einfWith (P.indexEncodable F.code) F.decode := rfl
 
 /-! ### Extensionality
 
 Functionality (`decodes_unique`) is what makes a coded family *determined by its code*.  Everything
 below is a consequence. -/
 
-/-- Equal codes force equal decodings. -/
-theorem decode_eq_of_code_eq {F G : CodedFamily P n} (h : F.code = G.code) :
-    F.decode = h ▸ G.decode := by
-  cases F with | mk c f hf =>
-  cases G with | mk c' g hg =>
-  cases h
-  exact P.decodes_unique hf hg
+
 
 /-- **Extensionality**: a coded family is its code.  The decoding law is a `Prop`, and the decoding
 is determined by the code, so nothing else can differ. -/
@@ -152,14 +133,9 @@ is determined by the code, so nothing else can differ. -/
   cases P.decodes_unique hf hg
   rfl
 
-/-- **Gate 5 (functionality).**  The conjunction built from a coded family is determined by the
-code. -/
-theorem codedIInf_eq_of_code_eq {F G : CodedFamily P n} (h : F.code = G.code) :
-    codedIInf F = codedIInf G := by rw [CodedFamily.ext h]
 
-/-- …and the disjunction likewise. -/
-theorem codedISup_eq_of_code_eq {F G : CodedFamily P n} (h : F.code = G.code) :
-    codedISup F = codedISup G := by rw [CodedFamily.ext h]
+
+
 
 /-! ## The HF family view
 
@@ -181,18 +157,8 @@ def hfFamily (L : Language.{u, v}) : FamilyPresentation.{u, v, 0, 0} L where
   DecodesFamily _ c _ := c.2.elim
   decodes_unique {_} {c} {_} {_} _ _ := c.2.elim
 
-/-- **`CodedFamily` over HF is uninhabited** — the whole content of "HF has no primitive coded
-families", and it depends on the family layer alone. -/
-theorem isEmpty_codedFamily_hfFamily {L : Language.{u, v}} {n : ℕ} :
-    IsEmpty (CodedFamily (hfFamily L) n) :=
-  ⟨fun F => F.infinitary⟩
 
-/-- Consequently every upward-closure obligation over HF is vacuous, for **any** target set. -/
-theorem hfFamily_coded_closure_vacuous {L : Language.{u, v}} {n : ℕ}
-    (S : Set (Σ n, L.BoundedFormulaω Empty n)) :
-    ∀ F : CodedFamily (hfFamily L) n,
-      (∀ i, (⟨n, F.decode i⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ S) →
-        (⟨n, codedIInf F⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ S :=
-  fun F => absurd F.infinitary not_false
+
+
 
 end FirstOrder.Language

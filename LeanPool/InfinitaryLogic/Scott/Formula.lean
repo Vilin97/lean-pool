@@ -78,7 +78,7 @@ Uses `realize_relabel_insertLastBound_zero` to show that:
 - `existsLastVar φ = (φ.relabel insertLastBound).ex`
 - This quantifies existentially over the last (n-th) free variable
 -/
-theorem realize_existsLastVar {n : ℕ} (φ : L.Formulaω (Fin (n + 1))) (v : Fin n → N) :
+private theorem realize_existsLastVar {n : ℕ} (φ : L.Formulaω (Fin (n + 1))) (v : Fin n → N) :
     (existsLastVar φ).Realize v ↔ ∃ x : N, φ.Realize (snoc v x) := by
   -- keep the formula-level interface intact: apply the quantifier lemma at the empty tuple the
   -- sentence semantics actually supplies (`default`), rather than unfolding `Formulaω.Realize`
@@ -90,7 +90,7 @@ theorem realize_existsLastVar {n : ℕ} (φ : L.Formulaω (Fin (n + 1))) (v : Fi
 
 omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
 /-- Semantics of forallLastVar: universally quantifies over the last variable. -/
-theorem realize_forallLastVar {n : ℕ} (φ : L.Formulaω (Fin (n + 1))) (v : Fin n → N) :
+private theorem realize_forallLastVar {n : ℕ} (φ : L.Formulaω (Fin (n + 1))) (v : Fin n → N) :
     (forallLastVar φ).Realize v ↔ ∀ x : N, φ.Realize (snoc v x) := by
   have h := BoundedFormulaω.realize_all (M := N) (v := v) (xs := (default : Fin 0 → N))
     (φ.relabel insertLastBound)

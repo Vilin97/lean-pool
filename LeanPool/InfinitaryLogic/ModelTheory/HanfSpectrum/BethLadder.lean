@@ -30,7 +30,7 @@ open _root_.FirstOrder.Language.HanfLadder
 
 /-- **The per-stage sharpness step**: for every `α < ω₁`, the ladder sentence has maximal
 model size exactly `ℶ_{α+1}`, so `ℶ_{α+1} < Lomega1omegaHanfNumber`. -/
-theorem beth_add_one_lt_Lomega1omegaHanfNumber {α : Ordinal.{0}}
+private theorem beth_add_one_lt_Lomega1omegaHanfNumber {α : Ordinal.{0}}
     (hα : α < Ordinal.omega 1) :
     Cardinal.beth (α + 1) < Lomega1omegaHanfNumber := by
   have : Countable (Index α) := countable_index_of_lt_omega1 hα
@@ -42,7 +42,7 @@ theorem beth_add_one_lt_Lomega1omegaHanfNumber {α : Ordinal.{0}}
 
 /-- The lower half of the Hanf-number computation: `ℶ_{ω₁} ≤ Lomega1omegaHanfNumber`, by the
 successor-cofinal supremum over the ladder stages. -/
-theorem beth_omega1_le_Lomega1omegaHanfNumber :
+private theorem beth_omega1_le_Lomega1omegaHanfNumber :
     Cardinal.beth (Ordinal.omega 1) ≤ Lomega1omegaHanfNumber := by
   rw [← FirstOrder.HanfLadder.iSup_beth_add_one_omega1]
   exact ciSup_le' fun α => (beth_add_one_lt_Lomega1omegaHanfNumber α.2).le

@@ -29,7 +29,7 @@ variable {L : Language.{0, 0}} {φ : L.Sentenceω} {lt : L.Relations 2}
 /-! ## The split and extension steps -/
 
 /-- Adding a base member changes nothing. -/
-theorem WOMem.union_of_mem_base {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
+private theorem WOMem.union_of_mem_base {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
     {χ : L[[ℕ]].Sentenceω} (hχ : χ ∈ baseDiagram φ lt) : WOMem φ lt (S ∪ {χ}) := by
   have heq : S ∪ {χ} = S := by
     rw [Set.union_singleton, Set.insert_eq_self.mpr (hS.base_subset hχ)]
@@ -78,7 +78,7 @@ theorem WOMem.extend {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
 
 /-- The support of any member sentence is finite (base: the lift is constant-free, atoms have
 two constants; remainder: the member's finite-support field). -/
-theorem WOMem.jConsts_finite_of_mem {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
+private theorem WOMem.jConsts_finite_of_mem {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
     {χ : L[[ℕ]].Sentenceω} (hχ : χ ∈ S) :
     (sentenceJConsts (L' := L) (J := ℕ) χ).Finite := by
   by_cases hb : χ ∈ baseDiagram φ lt
@@ -91,7 +91,7 @@ theorem WOMem.jConsts_finite_of_mem {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ
     exact Set.subset_biUnion_of_mem (⟨hχ, hb⟩ : χ ∈ S \ baseDiagram φ lt)
 
 /-- A remainder-or-root sentence is realized by every star witness. -/
-theorem StarWitness.realize_source {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal.{0}}
+private theorem StarWitness.realize_source {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal.{0}}
     (W : StarWitness φ lt Γ α) {χ : L[[ℕ]].Sentenceω}
     (hχ : χ ∈ Γ ∨ χ = φ.mapLanguage (L.lhomWithConstants ℕ)) :
     @Sentenceω.Realize L[[ℕ]] χ W.M (wc W.inst W.h) := by
@@ -101,7 +101,7 @@ theorem StarWitness.realize_source {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal.
 
 /-- Rationals mentioned by a sentence with support inside a remainder member's support are
 marked. -/
-theorem StarWitness.hsupp_of_subset {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal.{0}}
+private theorem StarWitness.hsupp_of_subset {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal.{0}}
     (W : StarWitness φ lt Γ α) {χ ψ : L[[ℕ]].Sentenceω} (hψ : ψ ∈ Γ)
     (hsub : sentenceJConsts (L' := L) (J := ℕ) χ ⊆ sentenceJConsts (L' := L) (J := ℕ) ψ) :
     ∀ q : ℚ, ratConstIdx q ∈ sentenceJConsts (L' := L) (J := ℕ) χ →
@@ -110,7 +110,7 @@ theorem StarWitness.hsupp_of_subset {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal
 
 /-- Locating a member of `S` for the (*) argument: it lies in the remainder, or it is the
 lifted root, or it is a positive diagram atom. -/
-theorem WOMem.mem_cases {S : Set L[[ℕ]].Sentenceω} (_ : WOMem φ lt S)
+private theorem WOMem.mem_cases {S : Set L[[ℕ]].Sentenceω} (_ : WOMem φ lt S)
     {χ : L[[ℕ]].Sentenceω} (hχ : χ ∈ S) :
     χ ∈ (S \ baseDiagram φ lt) ∨ χ = φ.mapLanguage (L.lhomWithConstants ℕ) ∨
       ∃ q r : ℚ, q < r ∧ χ = ratLtAtom lt q r := by
@@ -121,7 +121,7 @@ theorem WOMem.mem_cases {S : Set L[[ℕ]].Sentenceω} (_ : WOMem φ lt S)
   · exact Or.inl ⟨hχ, hb⟩
 
 /-- `1 < ω₁`. -/
-theorem one_lt_omega1 : (1 : Ordinal.{0}) < (Cardinal.aleph 1).ord := by
+private theorem one_lt_omega1 : (1 : Ordinal.{0}) < (Cardinal.aleph 1).ord := by
   rw [Cardinal.lt_ord, Ordinal.card_one]
   exact lt_trans Cardinal.one_lt_aleph0 Cardinal.aleph0_lt_aleph_one
 
@@ -130,7 +130,7 @@ theorem one_lt_omega1 : (1 : Ordinal.{0}) < (Cardinal.aleph 1).ord := by
 /-- **Deterministic extension**: a target whose support lies inside a non-atomic source
 member's support, and which is semantically forced by the source at every controlled
 expansion, extends the member. -/
-theorem WOMem.extend_det {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
+private theorem WOMem.extend_det {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
     {σ χ : L[[ℕ]].Sentenceω} (hσ : σ ∈ S)
     (hσnotatom : ∀ q r : ℚ, σ ≠ ratLtAtom lt q r)
     (hχnb : χ ∉ baseDiagram φ lt)
@@ -276,7 +276,7 @@ theorem WOMem.C4_neg_iSup {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
 /-! ## The branching driver -/
 
 /-- Upgrading (*) from an unbounded set of levels to every level (downward closure). -/
-theorem star_all_of_unbounded {Γ : Set L[[ℕ]].Sentenceω}
+private theorem star_all_of_unbounded {Γ : Set L[[ℕ]].Sentenceω}
     (h : ∀ β : Ordinal.{0}, β < (Cardinal.aleph 1).ord →
       ∃ α, β ≤ α ∧ α < (Cardinal.aleph 1).ord ∧ StarCondition φ lt Γ α) :
     ∀ α : Ordinal.{0}, α < (Cardinal.aleph 1).ord → StarCondition φ lt Γ α := by
@@ -440,7 +440,7 @@ theorem WOMem.C3_neg_iInf {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
 
 /-- A constant equality in a member lies in the remainder (its support is nonempty, and it is
 not relation-shaped). -/
-theorem WOMem.constEq_mem_rem {S : Set L[[ℕ]].Sentenceω} (_ : WOMem φ lt S) {a b : ℕ}
+private theorem WOMem.constEq_mem_rem {S : Set L[[ℕ]].Sentenceω} (_ : WOMem φ lt S) {a b : ℕ}
     (h : constEq a b ∈ S) : constEq a b ∈ S \ baseDiagram φ lt := by
   refine ⟨h, fun hb => ?_⟩
   rcases mem_baseDiagram_elim hb with heq | ⟨q, r, _, heq⟩
@@ -452,7 +452,7 @@ theorem WOMem.constEq_mem_rem {S : Set L[[ℕ]].Sentenceω} (_ : WOMem φ lt S) 
   · exact absurd heq (by simp [constEq, ratLtAtom, relInst])
 
 /-- Equality congruence targets: realized and covered from remainder equalities. -/
-theorem WOMem.extend_constEq {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S) {a b : ℕ}
+private theorem WOMem.extend_constEq {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S) {a b : ℕ}
     (hab : constEq a b ∉ baseDiagram φ lt)
     (hsupp : sentenceJConsts (L' := L) (J := ℕ) (constEq a b) ⊆
       ⋃ χ ∈ (S \ baseDiagram φ lt), sentenceJConsts (L' := L) (J := ℕ) χ)
@@ -506,7 +506,7 @@ theorem WOMem.eq_trans {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S) (a b d
 
 /-- Updating the constant map at a non-rational-range index outside the remainder's support
 preserves the star witness (the marking is untouched). -/
-def StarWitness.update_nonrat {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal.{0}}
+private def StarWitness.update_nonrat {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal.{0}}
     (W : StarWitness φ lt Γ α) {c : ℕ} (hcr : c ∉ Set.range ratConstIdx)
     (hcΓ : ∀ χ ∈ Γ, c ∉ sentenceJConsts (L' := L) (J := ℕ) χ) (v : W.M) :
     StarWitness φ lt Γ α where
@@ -530,7 +530,7 @@ def StarWitness.update_nonrat {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal.{0}}
     exact W.witness
 
 /-- A fresh Henkin index avoiding any finite set exists. -/
-theorem exists_fresh_henkin {F : Set ℕ} (hF : F.Finite) :
+private theorem exists_fresh_henkin {F : Set ℕ} (hF : F.Finite) :
     ∃ n : ℕ, henkinConstIdx n ∉ F := by
   by_contra h
   push Not at h
@@ -538,7 +538,7 @@ theorem exists_fresh_henkin {F : Set ℕ} (hF : F.Finite) :
     (hF.subset (Set.range_subset_iff.mpr h))
 
 /-- The one-variable constant environment is the snoc environment. -/
-theorem snoc_elim0_eq_const {M : Type} (v : M) :
+private theorem snoc_elim0_eq_const {M : Type} (v : M) :
     (Fin.snoc Fin.elim0 v : Fin 1 → M) = fun _ => v := by
   funext i
   induction i using Fin.lastCases with
@@ -712,7 +712,7 @@ theorem WOMem.neg_all_witness {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
 /-- A relation instance with an inhabited coordinate that lies in the base diagram is a
 positive diagram atom: the lifted-root alternative is eliminated by constant support (the
 instance mentions `g i`, the root mentions nothing). -/
-theorem relInst_mem_baseDiagram_of_nonempty {l : ℕ} {R : L.Relations l} {g : Fin l → ℕ}
+private theorem relInst_mem_baseDiagram_of_nonempty {l : ℕ} {R : L.Relations l} {g : Fin l → ℕ}
     (i : Fin l) (hb : relInst R g ∈ baseDiagram φ lt) :
     ∃ q r : ℚ, q < r ∧ relInst R g = ratLtAtom lt q r := by
   rcases mem_baseDiagram_elim hb with heq | h

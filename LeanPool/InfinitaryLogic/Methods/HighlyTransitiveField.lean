@@ -28,10 +28,10 @@ namespace FirstOrder
 variable {K : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
 
 /-- The cut-dilation function: identity up to `a`, positive dilation with factor `c` above. -/
-def dilateFun (a c : K) (z : K) : K :=
+private def dilateFun (a c : K) (z : K) : K :=
   if z ≤ a then z else a + c * (z - a)
 
-theorem dilateFun_strictMono {a c : K} (hc : 0 < c) : StrictMono (dilateFun a c) := by
+private theorem dilateFun_strictMono {a c : K} (hc : 0 < c) : StrictMono (dilateFun a c) := by
   intro z w hzw
   unfold dilateFun
   rcases le_or_gt w a with hw | hw
@@ -46,7 +46,7 @@ theorem dilateFun_strictMono {a c : K} (hc : 0 < c) : StrictMono (dilateFun a c)
       have := mul_lt_mul_of_pos_left (sub_lt_sub_right hzw a) hc
       linarith
 
-theorem dilateFun_surjective {a c : K} (hc : 0 < c) : Function.Surjective (dilateFun a c) := by
+private theorem dilateFun_surjective {a c : K} (hc : 0 < c) : Function.Surjective (dilateFun a c) := by
   intro w
   rcases le_or_gt w a with hw | hw
   · exact ⟨w, by rw [dilateFun, ite_eq_left hw]⟩
@@ -59,17 +59,17 @@ theorem dilateFun_surjective {a c : K} (hc : 0 < c) : Function.Surjective (dilat
 
 /-- **The cut dilation**: the order automorphism that is the identity on `(-∞, a]` and carries
 `x` to `y` above `a`. -/
-noncomputable def dilateAbove (a x y : K) (hx : a < x) (hy : a < y) : K ≃o K :=
+private noncomputable def dilateAbove (a x y : K) (hx : a < x) (hy : a < y) : K ≃o K :=
   StrictMono.orderIsoOfSurjective (dilateFun a ((y - a) / (x - a)))
     (dilateFun_strictMono (div_pos (sub_pos.mpr hy) (sub_pos.mpr hx)))
     (dilateFun_surjective (div_pos (sub_pos.mpr hy) (sub_pos.mpr hx)))
 
-theorem dilateAbove_apply_of_le {a x y : K} (hx : a < x) (hy : a < y) {z : K} (hz : z ≤ a) :
+private theorem dilateAbove_apply_of_le {a x y : K} (hx : a < x) (hy : a < y) {z : K} (hz : z ≤ a) :
     dilateAbove a x y hx hy z = z := by
   show dilateFun a _ z = z
   rw [dilateFun, ite_eq_left hz]
 
-theorem dilateAbove_apply_point {a x y : K} (hx : a < x) (hy : a < y) :
+private theorem dilateAbove_apply_point {a x y : K} (hx : a < x) (hy : a < y) :
     dilateAbove a x y hx hy x = y := by
   show dilateFun a _ x = y
   rw [dilateFun, ite_eq_right (not_le.mpr hx), div_mul_cancel₀ _ (sub_ne_zero.mpr hx.ne')]

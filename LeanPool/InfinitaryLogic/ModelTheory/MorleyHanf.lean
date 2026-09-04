@@ -34,7 +34,7 @@ open Cardinal
 
 /-- **The Hanf number of every `L_{ω₁ω}` sentence is at most `ℶ_{ω₁}`** — `morley_hanf` through
 the universal property of `HanfNumber`. -/
-theorem hanfNumber_le_beth_omega1 {L' : Language.{0, 0}} (φ : L'.Sentenceω) :
+private theorem hanfNumber_le_beth_omega1 {L' : Language.{0, 0}} (φ : L'.Sentenceω) :
     HanfNumber φ ≤ Cardinal.beth (Ordinal.omega 1) :=
   hanfNumber_le_of_isHanfBound (morley_hanf φ)
 
@@ -48,7 +48,7 @@ noncomputable def Lomega1omegaHanfNumber : Cardinal :=
   sInf {κ : Cardinal | IsLomega1omegaHanfBound κ}
 
 /-- `ℶ_{ω₁}` is a global Hanf bound for `L_{ω₁ω}` — the Morley–Hanf theorem in global form. -/
-theorem beth_omega1_isLomega1omegaHanfBound :
+private theorem beth_omega1_isLomega1omegaHanfBound :
     IsLomega1omegaHanfBound (Cardinal.beth (Ordinal.omega 1)) :=
   fun _ φ => morley_hanf φ
 
@@ -59,27 +59,27 @@ theorem IsLomega1omegaHanfBound.mono {κ μ : Cardinal}
 
 /-- **The global Hanf number is itself a global Hanf bound**: the set of bounds is nonempty
 (`beth_omega1_isLomega1omegaHanfBound`), and an infimum of cardinals is attained. -/
-theorem Lomega1omegaHanfNumber_isHanfBound :
+private theorem Lomega1omegaHanfNumber_isHanfBound :
     IsLomega1omegaHanfBound Lomega1omegaHanfNumber :=
   show Lomega1omegaHanfNumber ∈ {κ : Cardinal | IsLomega1omegaHanfBound κ} from
     csInf_mem ⟨_, beth_omega1_isLomega1omegaHanfBound⟩
 
 /-- The global Hanf number is the least global Hanf bound. -/
-theorem Lomega1omegaHanfNumber_le_of_isHanfBound {κ : Cardinal}
+private theorem Lomega1omegaHanfNumber_le_of_isHanfBound {κ : Cardinal}
     (hκ : IsLomega1omegaHanfBound κ) : Lomega1omegaHanfNumber ≤ κ :=
   csInf_le' hκ
 
 /-- The universal property of the global Hanf number: `Lomega1omegaHanfNumber ≤ κ` exactly when
 `κ` is a global Hanf bound. The strict dual `κ < H ↔ ¬IsBound κ` below is the bounded-spectrum
 witness-consumption interface. -/
-theorem Lomega1omegaHanfNumber_le_iff_isHanfBound {κ : Cardinal} :
+private theorem Lomega1omegaHanfNumber_le_iff_isHanfBound {κ : Cardinal} :
     Lomega1omegaHanfNumber ≤ κ ↔ IsLomega1omegaHanfBound κ :=
   ⟨fun h => Lomega1omegaHanfNumber_isHanfBound.mono h, Lomega1omegaHanfNumber_le_of_isHanfBound⟩
 
 /-- The strict dual of the universal property — the bounded-spectrum witness-consumption
 interface: refuting the global bound at `κ` is exactly the strict lower bound
 `κ < Lomega1omegaHanfNumber`. -/
-theorem lt_Lomega1omegaHanfNumber_iff_not_isHanfBound {κ : Cardinal} :
+private theorem lt_Lomega1omegaHanfNumber_iff_not_isHanfBound {κ : Cardinal} :
     κ < Lomega1omegaHanfNumber ↔ ¬IsLomega1omegaHanfBound κ := by
   rw [← not_le, Lomega1omegaHanfNumber_le_iff_isHanfBound]
 
@@ -110,7 +110,7 @@ theorem Lomega1omegaHanfNumber_le_beth_omega1 :
 /-- **The Morley–Hanf theorem for countable theories**: every countable `L_{ω₁ω}`-theory with a
 model of size at least `ℶ_{ω₁}` has models of arbitrarily large cardinality — apply
 `morley_hanf` to the theory's conjunction (`Theoryω.conjunction`). -/
-theorem morley_hanf_theory {L' : Language.{0, 0}} (T : L'.Theoryω) (hT : T.Countable)
+private theorem morley_hanf_theory {L' : Language.{0, 0}} (T : L'.Theoryω) (hT : T.Countable)
     (hM : ∃ (M : Type) (_ : L'.Structure M), T.Model M ∧
       Cardinal.mk M ≥ Cardinal.beth (Ordinal.omega 1)) :
     ∀ κ : Cardinal, ∃ (N : Type) (_ : L'.Structure N), T.Model N ∧ Cardinal.mk N ≥ κ := by

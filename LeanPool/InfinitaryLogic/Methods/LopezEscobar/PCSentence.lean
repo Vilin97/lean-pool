@@ -69,7 +69,7 @@ instance [Countable (Σ n, L.Functions n)] (side : PCSide) :
     exact ((Set.countable_range _).union (Set.countable_range _)).to_subtype
 
 /-- Every mid-language function symbol lands in base-or-side. -/
-theorem sideEmb_onFunction_mem (side : PCSide) (p : Σ n, (MidLang L).Functions n) :
+private theorem sideEmb_onFunction_mem (side : PCSide) (p : Σ n, (MidLang L).Functions n) :
     (⟨p.1, (sideEmb L side).onFunction p.2⟩ : Σ n, (KLang L).Functions n) ∈
       baseFuns L ∪ sideWitnessFuns L side := by
   obtain ⟨n, f⟩ := p
@@ -78,7 +78,7 @@ theorem sideEmb_onFunction_mem (side : PCSide) (p : Σ n, (MidLang L).Functions 
   | inr w => exact Or.inr ⟨⟨n, w⟩, rfl⟩
 
 /-- Every mid-language relation symbol lands in base-or-side. -/
-theorem sideEmb_onRelation_mem (side : PCSide) (p : Σ n, (MidLang L).Relations n) :
+private theorem sideEmb_onRelation_mem (side : PCSide) (p : Σ n, (MidLang L).Relations n) :
     (⟨p.1, (sideEmb L side).onRelation p.2⟩ : Σ n, (KLang L).Relations n) ∈
       baseRels L ∪ sideWitnessRels L side := by
   obtain ⟨n, r⟩ := p
@@ -95,14 +95,14 @@ noncomputable def functionalPCSentence [Countable (Σ l, L.Relations l)] (side :
     (T : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ))) : (KLang L).Sentenceω :=
   (functionalTheta L T).mapLanguage (sideEmb L side)
 
-theorem functionsIn_functionalPCSentence [Countable (Σ l, L.Relations l)] (side : PCSide)
+private theorem functionsIn_functionalPCSentence [Countable (Σ l, L.Relations l)] (side : PCSide)
     (T : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ))) :
     (functionalPCSentence L side T).functionsIn ⊆ baseFuns L ∪ sideWitnessFuns L side := by
   rw [functionalPCSentence, BoundedFormulaω.functionsIn_mapLanguage]
   rintro p ⟨q, -, rfl⟩
   exact sideEmb_onFunction_mem side q
 
-theorem relationsIn_functionalPCSentence [Countable (Σ l, L.Relations l)] (side : PCSide)
+private theorem relationsIn_functionalPCSentence [Countable (Σ l, L.Relations l)] (side : PCSide)
     (T : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ))) :
     (functionalPCSentence L side T).relationsIn ⊆ baseRels L ∪ sideWitnessRels L side := by
   rw [functionalPCSentence, BoundedFormulaω.relationsIn_mapLanguage]

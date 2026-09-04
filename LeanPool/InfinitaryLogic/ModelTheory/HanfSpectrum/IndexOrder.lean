@@ -46,12 +46,7 @@ noncomputable def idxOf (β : Ordinal.{0}) (h : β < α + 2) : Index α :=
 theorem idxVal_idxOf (β : Ordinal.{0}) (h : β < α + 2) : idxVal (idxOf (α := α) β h) = β := by
   rw [idxVal, idxOf, OrderIso.symm_apply_apply]
 
-@[simp]
-theorem idxOf_idxVal (i : Index α) : idxOf (idxVal i) (idxVal_lt i) = i := by
-  rw [idxOf]
-  -- `eq_symm_apply` states the iff in the opposite direction from the lemma it replaces, and
-  -- takes the two points implicitly, so this is `.mp` of one argument rather than `.mpr` of three
-  exact (OrderIso.eq_symm_apply _).mp (Subtype.ext rfl)
+
 
 theorem idxVal_lt_idxVal_iff {i j : Index α} : idxVal i < idxVal j ↔ i < j := by
   rw [idxVal, idxVal, show ((ToType.mk.symm i : Set.Iio (α + 2)) : Ordinal)
@@ -63,9 +58,7 @@ theorem idxVal_le_idxVal_iff {i j : Index α} : idxVal i ≤ idxVal j ↔ i ≤ 
   rw [← not_lt, ← not_lt, not_iff_not]
   exact idxVal_lt_idxVal_iff
 
-theorem idxVal_injective : Function.Injective (idxVal (α := α)) := by
-  intro i j hij
-  exact le_antisymm (idxVal_le_idxVal_iff.mp hij.le) (idxVal_le_idxVal_iff.mp hij.ge)
+
 
 @[simp]
 theorem idxVal_bot : idxVal (⊥ : Index α) = 0 := by

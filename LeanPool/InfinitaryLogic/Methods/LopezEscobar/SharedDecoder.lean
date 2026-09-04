@@ -49,7 +49,7 @@ omit [Countable (Σ l, L.Relations l)] in
 /-- Under `L.IsRelational` the base-generated graph symbols are exactly the base images: the
 `graphRelSym '' baseFuns` branch of `relSym` is empty, so every member is
 `GraphRelation.base (Sum.inl R)` at the same arity. -/
-theorem exists_base_of_mem_relSym {n : ℕ} {r : (graphLanguage (KLang L)).Relations n}
+private theorem exists_base_of_mem_relSym {n : ℕ} {r : (graphLanguage (KLang L)).Relations n}
     (h : (⟨n, r⟩ : Σ k, (graphLanguage (KLang L)).Relations k) ∈
       relSym (KLang L) (baseFuns L) (baseRels L)) :
     ∃ R : L.Relations n, r = GraphRelation.base (Sum.inl R) := by
@@ -72,7 +72,7 @@ noncomputable def sharedToBase (T₀ T₁ : (n : ℕ) → Set ((Fin n → Bool) 
     Classical.choose (exists_base_of_mem_relSym (pcSentence_relationsIn_inter T₀ T₁ r.2))
 
 /-- The decoder recovers the shared symbol: its base image is the symbol itself. -/
-theorem sharedToBase_onRelation_spec
+private theorem sharedToBase_onRelation_spec
     (T₀ T₁ : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ)))
     {n : ℕ} (r : (sharedLang L T₀ T₁).Relations n) :
     (r.1 : (graphLanguage (KLang L)).Relations n) =
@@ -83,7 +83,7 @@ theorem sharedToBase_onRelation_spec
 
 /-- The decoder is an expansion from the sublanguage reduct of a graph code onto its base
 code reduct: shared relations are read the same way on both sides. -/
-theorem sharedToBase_isExpansionOn
+private theorem sharedToBase_isExpansionOn
     (T₀ T₁ : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ)))
     (d : StructureSpace (graphLanguage (KLang L))) :
     @LHom.IsExpansionOn (sharedLang L T₀ T₁) L (sharedToBase L T₀ T₁) ℕ

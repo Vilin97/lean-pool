@@ -49,7 +49,7 @@ def schemaEqSentence (t u : (localColim s₀)[[ℕ]].Term Empty) :
     (((localColim s₀)[[ℕ]]).lhomWithConstants ℕ)
 
 /-- `schemaEqSentence t u` is a schema-universe member (its de-substituted atom is in `ΓEMlocal`). -/
-theorem schemaEqSentence_mem_universe (t u : (localColim s₀)[[ℕ]].Term Empty) :
+private theorem schemaEqSentence_mem_universe (t u : (localColim s₀)[[ℕ]].Term Empty) :
     (⟨schemaEqSentence t u, hasFiniteConstSupport_mapLanguage_templateSentence _ _⟩ :
       FSentence (L'' := localColim s₀) (J := ℕ)) ∈ schemaFSentenceUniverse s₀ :=
   Set.mem_biUnion
@@ -79,7 +79,7 @@ theorem exists_body_of_subset (F : Finset (((localColim s₀)[[ℕ]])[[ℕ]].Sen
 omit [LinearOrder M] [WellFoundedLT M] in
 /-- The de-substituted equality atom of a term with itself realizes to `True` (reflexivity of the
 underlying `=`), on any valuation. -/
-theorem locDeEqAtom_self_realize {S : Finset ℕ} (t : (localColim s₀)[[ℕ]].Term Empty)
+private theorem locDeEqAtom_self_realize {S : Finset ℕ} (t : (localColim s₀)[[ℕ]].Term Empty)
     (ht : locJSupport (localColim s₀) ℕ t ⊆ S) (w : Fin S.card → M) :
     (locDeEqAtom (localColim s₀) ℕ S t t ht ht).Realize (Empty.elim : Empty → M) w := by
   rw [locDeEqAtom, canonEqAtom, BoundedFormulaω.realize_equal]
@@ -91,7 +91,7 @@ term, realized on the tuple of `σ`-values of its support, equals the closed ter
 a deep `a`-tuple) — exactly what the body from `exists_body_of_subset` supplies. Adapts the
 `locDeTermFin_realize_superset` pattern (`restrictVar` + `constantsToVars` +
 `realize_eq_of_eq_on_varFinset` + `orderEmbOfFin_deepRank`). -/
-theorem locDeTermFin_realize_constInterp_nat (σ : ℕ → M) {S : Finset ℕ}
+private theorem locDeTermFin_realize_constInterp_nat (σ : ℕ → M) {S : Finset ℕ}
     (t : (localColim s₀)[[ℕ]].Term Empty) (hsub : locJSupport (localColim s₀) ℕ t ⊆ S) :
     (locDeTermFin (localColim s₀) ℕ S t hsub).realize
         (fun i : Fin S.card => σ (S.orderEmbOfFin rfl i))
@@ -128,7 +128,7 @@ theorem locDeTermFin_realize_constInterp_nat (σ : ℕ → M) {S : Finset ℕ}
 
 /-- **Reflexivity.** `t ≈ t`: the theory decides `schemaEqSentence t t`; the negative sign is
 impossible because any source body would have to realize `¬(t = t)`. -/
-theorem schemaTermEq_refl (t : (localColim s₀)[[ℕ]].Term Empty) : SchemaTermEq hM t t := by
+private theorem schemaTermEq_refl (t : (localColim s₀)[[ℕ]].Term Empty) : SchemaTermEq hM t t := by
   rcases (schemaCompletionTheorySpec hM).complete_on_universe _ (schemaEqSentence_mem_universe t t)
     with hpos | hneg
   · exact hpos
@@ -161,7 +161,7 @@ theorem realize_schemaEqSentence_iff (σ h : ℕ → M) (t u : (localColim s₀)
     (locDeTermFin_realize_constInterp_nat (S := schemaSupport t u) σ u Finset.subset_union_right))
 
 /-- **Symmetry.** `t ≈ u → u ≈ t`: a body realizing `t = u` and `¬(u = t)` contradicts `Eq.symm`. -/
-theorem schemaTermEq_symm {t u : (localColim s₀)[[ℕ]].Term Empty} (h : SchemaTermEq hM t u) :
+private theorem schemaTermEq_symm {t u : (localColim s₀)[[ℕ]].Term Empty} (h : SchemaTermEq hM t u) :
     SchemaTermEq hM u t := by
   rcases (schemaCompletionTheorySpec hM).complete_on_universe _ (schemaEqSentence_mem_universe u t)
     with hpos | hneg
@@ -183,7 +183,7 @@ theorem schemaTermEq_symm {t u : (localColim s₀)[[ℕ]].Term Empty} (h : Schem
 
 /-- **Transitivity.** `t ≈ u → u ≈ v → t ≈ v`: a body realizing `t = u`, `u = v`, `¬(t = v)`
 contradicts `Eq.trans`. -/
-theorem schemaTermEq_trans {t u v : (localColim s₀)[[ℕ]].Term Empty}
+private theorem schemaTermEq_trans {t u v : (localColim s₀)[[ℕ]].Term Empty}
     (h1 : SchemaTermEq hM t u) (h2 : SchemaTermEq hM u v) : SchemaTermEq hM t v := by
   rcases (schemaCompletionTheorySpec hM).complete_on_universe _ (schemaEqSentence_mem_universe t v)
     with hpos | hneg
@@ -209,7 +209,7 @@ theorem schemaTermEq_trans {t u v : (localColim s₀)[[ℕ]].Term Empty}
 /-- **Function congruence.** If `ts i ≈ us i` for every argument, then `f ts ≈ f us`: a body
 realizing all the argument equalities and `¬(f ts = f us)` contradicts the function interpretation
 respecting equal arguments. This makes the quotient's `funMap` well-defined. -/
-theorem schemaTermEq_func {n : ℕ} (f : (localColim s₀)[[ℕ]].Functions n)
+private theorem schemaTermEq_func {n : ℕ} (f : (localColim s₀)[[ℕ]].Functions n)
     (ts us : Fin n → (localColim s₀)[[ℕ]].Term Empty)
     (h : ∀ i, SchemaTermEq hM (ts i) (us i)) :
     SchemaTermEq hM (Term.func f ts) (Term.func f us) := by
@@ -262,7 +262,7 @@ def schemaRelSentence {l : ℕ} (R : (localColim s₀).Relations l)
     (((localColim s₀)[[ℕ]]).lhomWithConstants ℕ)
 
 /-- `schemaRelSentence R ts` is a schema-universe member. -/
-theorem schemaRelSentence_mem_universe {l : ℕ} (R : (localColim s₀).Relations l)
+private theorem schemaRelSentence_mem_universe {l : ℕ} (R : (localColim s₀).Relations l)
     (ts : Fin l → (localColim s₀)[[ℕ]].Term Empty) :
     (⟨schemaRelSentence R ts, hasFiniteConstSupport_mapLanguage_templateSentence _ _⟩ :
       FSentence (L'' := localColim s₀) (J := ℕ)) ∈ schemaFSentenceUniverse s₀ :=
@@ -295,7 +295,7 @@ def SchemaTermRel {l : ℕ} (R : (localColim s₀).Relations l)
 /-- **Relation well-definedness.** Argument-wise `SchemaTermEq` preserves `SchemaTermRel`: a body
 realizing `R ts`, all argument equalities, and `¬(R us)` contradicts `M`'s `RelMap` respecting
 equal arguments. This makes the quotient's `RelMap` well-defined. -/
-theorem schemaTermRel_congr {l : ℕ} (R : (localColim s₀).Relations l)
+private theorem schemaTermRel_congr {l : ℕ} (R : (localColim s₀).Relations l)
     {ts us : Fin l → (localColim s₀)[[ℕ]].Term Empty}
     (h : ∀ i, SchemaTermEq hM (ts i) (us i)) (hR : SchemaTermRel hM R ts) :
     SchemaTermRel hM R us := by
@@ -347,9 +347,7 @@ abbrev SchemaTermCarrier.mk (t : (localColim s₀)[[ℕ]].Term Empty) :
     SchemaTermCarrier (s₀ := s₀) (M := M) hM :=
   Quotient.mk (schemaTermSetoid hM) t
 
-/-- The carrier is inhabited (class of the first sequence constant `d₀`). -/
-instance : Nonempty (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=
-  ⟨SchemaTermCarrier.mk hM (henkinConst (L := localColim s₀) 0)⟩
+
 
 /-- Two terms have the same class iff the completed theory contains their equality sentence. -/
 theorem SchemaTermCarrier.mk_eq_mk_iff {t u : (localColim s₀)[[ℕ]].Term Empty} :
@@ -358,7 +356,7 @@ theorem SchemaTermCarrier.mk_eq_mk_iff {t u : (localColim s₀)[[ℕ]].Term Empt
   rfl
 
 /-- The representative of a class is equivalent to the term that formed it. -/
-theorem SchemaTermCarrier.mk_out_eq (t : (localColim s₀)[[ℕ]].Term Empty) :
+private theorem SchemaTermCarrier.mk_out_eq (t : (localColim s₀)[[ℕ]].Term Empty) :
     SchemaTermEq hM (SchemaTermCarrier.mk hM t).out t :=
   Quotient.exact (Quotient.out_eq (SchemaTermCarrier.mk hM t))
 
@@ -482,7 +480,7 @@ theorem realize_schemaFormulaSentence_iff (σ h : ℕ → M) {n : ℕ}
 `schemaLift ψ t` also realizes `schemaLift χ u`, then theory membership transfers — only the
 TARGET's universe membership is needed (to ask for its sign). If the target were negative, one
 body would realize the source and the negated target, contradicting the implication. -/
-theorem schemaLift_mem_of_semantic_imp {m : ℕ}
+private theorem schemaLift_mem_of_semantic_imp {m : ℕ}
     {ψ : (localColim s₀).BoundedFormulaω Empty m} (t : Fin m ↪o ℕ)
     {n : ℕ} {χ : (localColim s₀).BoundedFormulaω Empty n}
     (hχ : (⟨n, χ⟩ : Σ n, (localColim s₀).BoundedFormulaω Empty n) ∈ ΓEMlocal s₀)

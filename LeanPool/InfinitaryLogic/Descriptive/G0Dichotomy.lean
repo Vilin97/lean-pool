@@ -64,14 +64,12 @@ theorem RelIndependent.mono {G : Set (α × α)} {A B : Set α} (hBA : B ⊆ A)
   fun _ ha _ hb => hA (hBA ha) (hBA hb)
 
 /-- The set of points `G`-adjacent (in either orientation) to some point of `C`. -/
-def relNbhd (G : Set (α × α)) (C : Set α) : Set α :=
+private def relNbhd (G : Set (α × α)) (C : Set α) : Set α :=
   {x | ∃ y ∈ C, (x, y) ∈ G ∨ (y, x) ∈ G}
 
-theorem relNbhd_mono {G : Set (α × α)} {C D : Set α} (h : C ⊆ D) :
-    relNbhd G C ⊆ relNbhd G D :=
-  fun _ ⟨y, hy, he⟩ => ⟨y, h hy, he⟩
 
-theorem RelIndependent.disjoint_relNbhd {G : Set (α × α)} {A : Set α}
+
+private theorem RelIndependent.disjoint_relNbhd {G : Set (α × α)} {A : Set α}
     (hA : RelIndependent G A) : Disjoint A (relNbhd G A) := by
   rw [Set.disjoint_left]
   rintro x hxA ⟨y, hyA, he | he⟩
@@ -84,7 +82,7 @@ section Separation
 
 variable {α : Type*} [TopologicalSpace α] [PolishSpace α]
 
-theorem analyticSet_relNbhd {G : Set (α × α)} (hG : AnalyticSet G)
+private theorem analyticSet_relNbhd {G : Set (α × α)} (hG : AnalyticSet G)
     {C : Set α} (hC : AnalyticSet C) : AnalyticSet (relNbhd G C) := by
   have hswap : AnalyticSet (Prod.swap ⁻¹' G : Set (α × α)) :=
     hG.preimage continuous_swap
@@ -110,7 +108,7 @@ variable [MeasurableSpace α] [BorelSpace α]
 /-- **The KST independent-superset lemma**: every analytic independent set for an analytic
 relation on a Polish space is contained in a Borel independent set. Proved by an
 ω-recursion of Lusin separations. -/
-theorem exists_measurableSet_relIndependent_superset
+private theorem exists_measurableSet_relIndependent_superset
     {G : Set (α × α)} (hG : AnalyticSet G)
     {A : Set α} (hA : AnalyticSet A) (hAind : RelIndependent G A) :
     ∃ B : Set α, MeasurableSet B ∧ A ⊆ B ∧ RelIndependent G B := by
@@ -174,7 +172,7 @@ theorem SmallFam.empty {G : Set (α × α)} {ι : Type*} :
   ⟨fun _ => ∅, fun _ => ⟨MeasurableSet.empty, fun _ h => h.elim⟩, fun _ h => h.elim⟩
 
 /-- Smallness is countably additive. -/
-theorem SmallFam.iUnion_of_forall {G : Set (α × α)} {ι : Type*} {Ψ : ℕ → Set (ι → α)}
+private theorem SmallFam.iUnion_of_forall {G : Set (α × α)} {ι : Type*} {Ψ : ℕ → Set (ι → α)}
     (h : ∀ n, SmallFam G (Ψ n)) : SmallFam G (⋃ n, Ψ n) := by
   choose C hC hcap using h
   refine ⟨fun k => C (Nat.unpair k).1 (Nat.unpair k).2, fun k => hC _ _, ?_⟩
@@ -212,7 +210,7 @@ theorem nonempty_of_not_smallFam {G : Set (α × α)} {ι : Type*} {Φ : Set (ι
 omit [MeasurableSpace α] in
 /-- For the complement graph of an equivalence relation, independent sets lie in a single
 class. -/
-theorem rel_of_relIndependent_compl (r : Setoid α) {C : Set α}
+private theorem rel_of_relIndependent_compl (r : Setoid α) {C : Set α}
     (hC : RelIndependent {p : α × α | ¬ r.r p.1 p.2} C) :
     ∀ ⦃a⦄, a ∈ C → ∀ ⦃b⦄, b ∈ C → r.r a b := by
   intro a ha b hb

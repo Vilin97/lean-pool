@@ -68,7 +68,7 @@ theorem encode_injective (c : IndexCoding ι κ) : Function.Injective c.encode :
   Option.some_injective ι (by rw [← c.decode_encode i, h, c.decode_encode])
 
 /-- The underlying embedding of a coding. -/
-def toEmbedding (c : IndexCoding ι κ) : ι ↪ κ :=
+private def toEmbedding (c : IndexCoding ι κ) : ι ↪ κ :=
   ⟨c.encode, c.encode_injective⟩
 
 /-- The identity coding. -/
@@ -83,16 +83,16 @@ def trans (c₁ : IndexCoding ι κ) (c₂ : IndexCoding κ μ) : IndexCoding ι
   decode_encode i := by simp [Function.comp, c₂.decode_encode, c₁.decode_encode]
 
 @[simp]
-theorem id_trans (c : IndexCoding ι κ) : (IndexCoding.id ι).trans c = c := by
+private theorem id_trans (c : IndexCoding ι κ) : (IndexCoding.id ι).trans c = c := by
   refine ext rfl (funext fun k ↦ ?_)
   simp only [trans, IndexCoding.id]
   rcases c.decode k with _ | i <;> rfl
 
 @[simp]
-theorem trans_id (c : IndexCoding ι κ) : c.trans (IndexCoding.id κ) = c :=
+private theorem trans_id (c : IndexCoding ι κ) : c.trans (IndexCoding.id κ) = c :=
   rfl
 
-theorem trans_assoc (c₁ : IndexCoding ι κ) (c₂ : IndexCoding κ μ) (c₃ : IndexCoding μ ν) :
+private theorem trans_assoc (c₁ : IndexCoding ι κ) (c₂ : IndexCoding κ μ) (c₃ : IndexCoding μ ν) :
     (c₁.trans c₂).trans c₃ = c₁.trans (c₂.trans c₃) := by
   refine ext rfl (funext fun m ↦ ?_)
   simp only [trans]
@@ -127,12 +127,12 @@ def ofEquiv (e : ι ≃ κ) : IndexCoding ι κ :=
   ⟨e, fun k ↦ some (e.symm k), fun i ↦ by simp⟩
 
 @[simp]
-theorem ofEquiv_refl : ofEquiv (Equiv.refl ι) = IndexCoding.id ι := by
+private theorem ofEquiv_refl : ofEquiv (Equiv.refl ι) = IndexCoding.id ι := by
   refine ext rfl (funext fun i ↦ ?_)
   simp [ofEquiv, IndexCoding.id]
 
 /-- `ofEquiv` turns equivalence composition into coding composition. -/
-theorem ofEquiv_trans (e₁ : ι ≃ κ) (e₂ : κ ≃ μ) :
+private theorem ofEquiv_trans (e₁ : ι ≃ κ) (e₂ : κ ≃ μ) :
     ofEquiv (e₁.trans e₂) = (ofEquiv e₁).trans (ofEquiv e₂) := by
   refine ext rfl (funext fun m ↦ ?_)
   simp [ofEquiv, trans]
@@ -161,9 +161,7 @@ theorem pad_of_decode_some {β : Sort*} (c : IndexCoding ι κ) {default : β} {
     {i : ι} (h : c.decode k = some i) : c.pad default f k = f i := by
   rw [pad, h]; rfl
 
-@[simp]
-theorem id_pad {β : Sort*} (default : β) (f : ι → β) : (IndexCoding.id ι).pad default f = f :=
-  rfl
+
 
 /-- Padding along a composite coding is iterated padding: the decode analysis for a chain of
 codings happens HERE, once, not at every consumer. -/

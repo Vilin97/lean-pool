@@ -130,7 +130,7 @@ theorem realize_backTranslateFormula :
 
 /-- **Acceptance corollary**: back-translating a relationalization is semantically the original
 formula, in every `L`-structure (no syntactic identity claimed). -/
-theorem realize_backTranslate_relationalize {n : ℕ} (φ : L.BoundedFormulaω α n)
+private theorem realize_backTranslate_relationalize {n : ℕ} (φ : L.BoundedFormulaω α n)
     (v : α → M) (xs : Fin n → M) :
     (backTranslateFormula (relationalizeFormula φ)).Realize v xs ↔ φ.Realize v xs :=
   (realize_backTranslateFormula (relationalizeFormula φ) v xs).trans
@@ -143,7 +143,7 @@ end Semantics
 /-- The back-translation's function symbols are exactly the `graphRelSym`-preimage of the
 formula's relation symbols (native equality contributes nothing — term erasure is
 function-free). -/
-theorem functionsIn_backTranslateFormula :
+private theorem functionsIn_backTranslateFormula :
     ∀ {n : ℕ} (θ : (graphLanguage L).BoundedFormulaω α n),
       (backTranslateFormula θ).functionsIn = graphRelSym L ⁻¹' θ.relationsIn
   | _, .falsum => (Set.preimage_empty).symm
@@ -180,7 +180,7 @@ theorem functionsIn_backTranslateFormula :
 
 /-- The back-translation's relation symbols are exactly the `baseRelSym`-preimage of the
 formula's relation symbols. -/
-theorem relationsIn_backTranslateFormula :
+private theorem relationsIn_backTranslateFormula :
     ∀ {n : ℕ} (θ : (graphLanguage L).BoundedFormulaω α n),
       (backTranslateFormula θ).relationsIn = baseRelSym L ⁻¹' θ.relationsIn
   | _, .falsum => (Set.preimage_empty).symm

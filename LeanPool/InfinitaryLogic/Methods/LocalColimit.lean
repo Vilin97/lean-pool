@@ -68,12 +68,12 @@ variable (s₀ : LocalStage)
 
 /-- Per-arity function-symbol countability at each stage (the fibre of the stagewise all-arity
 certificate `Llocal_fun_countable`). -/
-theorem Llocal_functions_countable (k m : ℕ) : Countable ((Llocal s₀ k).Functions m) := by
+private theorem Llocal_functions_countable (k m : ℕ) : Countable ((Llocal s₀ k).Functions m) := by
   have := Llocal_fun_countable s₀ k
   exact (sigma_mk_injective (i := m)).countable
 
 /-- Per-arity relation-symbol countability at each stage. -/
-theorem Llocal_relations_countable (k m : ℕ) : Countable ((Llocal s₀ k).Relations m) := by
+private theorem Llocal_relations_countable (k m : ℕ) : Countable ((Llocal s₀ k).Relations m) := by
   have := Llocal_rel_countable s₀ k
   exact (sigma_mk_injective (i := m)).countable
 
@@ -103,14 +103,14 @@ def LlocalInclusion (k : ℕ) : Llocal s₀ k →ᴸ localColim s₀ where
 
 /-- Cocone compatibility on function symbols: pushing a stage-`k` symbol one stage up and then
 into the colimit is the same as including it directly. -/
-theorem LlocalInclusion_onFunction_step {k m : ℕ} (f : (Llocal s₀ k).Functions m) :
+private theorem LlocalInclusion_onFunction_step {k m : ℕ} (f : (Llocal s₀ k).Functions m) :
     (LlocalInclusion s₀ (k + 1)).onFunction ((LlocalHom s₀ k).onFunction f)
       = (LlocalInclusion s₀ k).onFunction f :=
   DirectedColim.incl_step (F := fun j => (Llocal s₀ j).Functions m)
     (φ := fun j x => (LlocalHom s₀ j).onFunction x) k f
 
 /-- Cocone compatibility on relation symbols. -/
-theorem LlocalInclusion_onRelation_step {k m : ℕ} (r : (Llocal s₀ k).Relations m) :
+private theorem LlocalInclusion_onRelation_step {k m : ℕ} (r : (Llocal s₀ k).Relations m) :
     (LlocalInclusion s₀ (k + 1)).onRelation ((LlocalHom s₀ k).onRelation r)
       = (LlocalInclusion s₀ k).onRelation r :=
   DirectedColim.incl_step (F := fun j => (Llocal s₀ j).Relations m)
@@ -128,13 +128,13 @@ theorem LlocalInclusion_comp_LlocalHom (k : ℕ) :
 /-! ### Countability of the colimit language — the payoff of the pivot -/
 
 /-- Per-arity: the colimit function symbols are countable. -/
-theorem localColim_functions_countable (m : ℕ) : Countable ((localColim s₀).Functions m) :=
+private theorem localColim_functions_countable (m : ℕ) : Countable ((localColim s₀).Functions m) :=
   DirectedColim.countable (F := fun k => (Llocal s₀ k).Functions m)
     (φ := fun k x => (LlocalHom s₀ k).onFunction x)
     (fun k => Llocal_functions_countable s₀ k m)
 
 /-- Per-arity: the colimit relation symbols are countable. -/
-theorem localColim_relations_countable (m : ℕ) : Countable ((localColim s₀).Relations m) :=
+private theorem localColim_relations_countable (m : ℕ) : Countable ((localColim s₀).Relations m) :=
   DirectedColim.countable (F := fun k => (Llocal s₀ k).Relations m)
     (φ := fun k x => (LlocalHom s₀ k).onRelation x)
     (fun k => Llocal_relations_countable s₀ k m)
@@ -170,7 +170,7 @@ and each successor stage adds the Hilbert-choice interpretation of the new *loca
 
 /-- Stage coherence (functions): a stage-`k` symbol pushed to stage `k+1` interprets the same
 way. This is the cocone-compatibility witnessing the colimit interpretation is well-defined. -/
-theorem localStageStructure_funMap_succ {k m : ℕ}
+private theorem localStageStructure_funMap_succ {k m : ℕ}
     (f : (Llocal s₀ k).Functions m) (x : Fin m → M) :
     @Structure.funMap (Llocal s₀ (k + 1)) M (localStageStructure s₀ (k + 1)) m
         ((LlocalHom s₀ k).onFunction f) x
@@ -178,7 +178,7 @@ theorem localStageStructure_funMap_succ {k m : ℕ}
   rfl
 
 /-- Stage coherence (relations). -/
-theorem localStageStructure_relMap_succ {k m : ℕ}
+private theorem localStageStructure_relMap_succ {k m : ℕ}
     (r : (Llocal s₀ k).Relations m) (x : Fin m → M) :
     @Structure.RelMap (Llocal s₀ (k + 1)) M (localStageStructure s₀ (k + 1)) m
         ((LlocalHom s₀ k).onRelation r) x
@@ -200,7 +200,7 @@ well-defined by the (definitional) stage coherence above. -/
 /-- The stage inclusion is an **expansion**: the colimit structure restricts to the stage
 structure along `LlocalInclusion` (the colimit `funMap`/`RelMap` on an included symbol computes —
 by `rfl` — to the stage interpretation). -/
-theorem LlocalInclusion_isExpansionOn (k : ℕ) :
+private theorem LlocalInclusion_isExpansionOn (k : ℕ) :
     letI : (Llocal s₀ k).Structure M := localStageStructure s₀ k
     letI : (localColim s₀).Structure M := localColimStructure s₀
     (LlocalInclusion s₀ k).IsExpansionOn M :=
@@ -267,7 +267,7 @@ theorem toLocalColimFormula_step (k : ℕ) (p : Σ n, (Llocal s₀ k).BoundedFor
 /-- **Lifted membership**: the stage-`(k+1)` lift of a stage-`k` family member has its colimit
 image in `ΓlocalColim` — and by `toLocalColimFormula_step` that image coincides with the direct
 stage-`k` image, so the two membership routes agree. -/
-theorem toLocalColimFormula_lift_mem_ΓlocalColim {k : ℕ}
+private theorem toLocalColimFormula_lift_mem_ΓlocalColim {k : ℕ}
     {p : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n} (hp : p ∈ Γlocal s₀ k) :
     toLocalColimFormula s₀ (k + 1) ⟨p.1, p.2.mapLanguage (LlocalHom s₀ k)⟩ ∈ ΓlocalColim s₀ :=
   toLocalColimFormula_mem_ΓlocalColim s₀ (liftGamma_mem_Γlocal_succ s₀ hp)
@@ -276,7 +276,7 @@ theorem toLocalColimFormula_lift_mem_ΓlocalColim {k : ℕ}
 family, the local Skolem witness body of `¬ψ` (available at the next stage thanks to `skolemNeed`)
 has its colimit image in `ΓlocalColim` — the closure fact the rebased truth lemma's `all`-case
 readiness will cite. -/
-theorem localSkolemWitnessFormula_mem_ΓlocalColim {k n : ℕ}
+private theorem localSkolemWitnessFormula_mem_ΓlocalColim {k n : ℕ}
     {ψ : (Llocal s₀ k).BoundedFormulaω Empty (n + 1)}
     (h : (⟨n, .all ψ⟩ : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) ∈ Γlocal s₀ k) :
     toLocalColimFormula s₀ (k + 1)

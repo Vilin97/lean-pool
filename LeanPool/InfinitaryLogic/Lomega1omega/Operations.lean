@@ -58,7 +58,7 @@ def castLE : ∀ {m n : ℕ} (_h : m ≤ n), L.BoundedFormulaω α m → L.Bound
   | _, _, h, iInf φs => iInf fun i => (φs i).castLE h
 
 /-- `castLE (le_refl n)` is the identity on formulas. -/
-theorem castLE_refl : (φ : L.BoundedFormulaω α n) → φ.castLE (le_refl n) = φ := by
+private theorem castLE_refl : (φ : L.BoundedFormulaω α n) → φ.castLE (le_refl n) = φ := by
   intro φ
   induction φ with
   | falsum => rfl
@@ -96,7 +96,7 @@ variable {M : Type*} [L.Structure M]
 /-- `castLE` over a proof of `m ≤ m` preserves semantics.
 This is more general than matching on `le_refl` directly, as it works for any
 proof `h : m ≤ m` regardless of how it was constructed. -/
-theorem realize_castLE_of_eq {m n : ℕ} (φ : L.BoundedFormulaω α m) (h : m ≤ n) (heq : m = n)
+private theorem realize_castLE_of_eq {m n : ℕ} (φ : L.BoundedFormulaω α m) (h : m ≤ n) (heq : m = n)
     (v : α → M) (xs : Fin n → M) :
     (φ.castLE h).Realize v xs ↔ φ.Realize v (xs ∘ Fin.cast heq) := by
   subst heq
@@ -105,11 +105,7 @@ theorem realize_castLE_of_eq {m n : ℕ} (φ : L.BoundedFormulaω α m) (h : m �
   have : h = le_refl m := rfl
   rw [this, castLE_refl]
 
-/-- `castLE (le_refl n)` preserves semantics. -/
-theorem realize_castLE_refl {n : ℕ} (φ : L.BoundedFormulaω α n)
-    (v : α → M) (xs : Fin n → M) :
-    (φ.castLE (le_refl n)).Realize v xs ↔ φ.Realize v xs := by
-  rw [castLE_refl]
+
 
 /-- `castLE` over any proof `h : n ≤ n` preserves semantics.
 This handles the case where the proof term is not definitionally `le_refl`
@@ -267,43 +263,9 @@ def subst : ∀ {n : ℕ}, L.BoundedFormulaω α n → (α → L.Term β) → L.
   | _, iSup φs, tf => iSup fun i => (φs i).subst tf
   | _, iInf φs, tf => iInf fun i => (φs i).subst tf
 
-/-- Renames free variables in a bounded formula using a function f : α → β.
 
-Unlike `relabel`, which can move free variables into bound positions, `mapFreeVars`
-simply renames free variables while preserving the bound variable structure. -/
-def mapFreeVars (f : α → β) : ∀ {n}, L.BoundedFormulaω α n → L.BoundedFormulaω β n
-  | _, .falsum => .falsum
-  | _, .equal t₁ t₂ => .equal (t₁.relabel (Sum.map f id)) (t₂.relabel (Sum.map f id))
-  | _, .rel R ts => .rel R (fun i => (ts i).relabel (Sum.map f id))
-  | _, .imp φ ψ => .imp (φ.mapFreeVars f) (ψ.mapFreeVars f)
-  | _, .all φ => .all (φ.mapFreeVars f)
-  | _, .iSup φs => .iSup (fun k => (φs k).mapFreeVars f)
-  | _, .iInf φs => .iInf (fun k => (φs k).mapFreeVars f)
 
-/-- Realization commutes with free variable renaming. -/
-theorem realize_mapFreeVars {M : Type*} [L.Structure M]
-    (f : α → β) (φ : L.BoundedFormulaω α n) (v : β → M) (xs : Fin n → M) :
-    (φ.mapFreeVars f).Realize v xs ↔ φ.Realize (v ∘ f) xs := by
-  induction φ with
-  | falsum => simp [mapFreeVars, Realize]
-  | equal t₁ t₂ =>
-    simp only [mapFreeVars, realize_equal, Term.realize_relabel, Sum.elim_comp_map,
-      Function.comp_id]
-  | rel R ts =>
-    simp only [mapFreeVars, realize_rel]
-    constructor <;> intro h <;> convert h using 1 <;> ext i <;>
-      simp [Term.realize_relabel, Sum.elim_comp_map]
-  | imp φ ψ ihφ ihψ =>
-    simp only [mapFreeVars, realize_imp, ihφ xs, ihψ xs]
-  | all φ ih =>
-    simp only [mapFreeVars, realize_all]
-    exact forall_congr' fun x => ih (Fin.snoc xs x)
-  | iSup φs ih =>
-    simp only [mapFreeVars, realize_iSup]
-    exact exists_congr fun k => ih k xs
-  | iInf φs ih =>
-    simp only [mapFreeVars, realize_iInf]
-    exact forall_congr' fun k => ih k xs
+
 
 private theorem sum_elim_subst_tf {M : Type*} [L.Structure M]
     (tf : α → L.Term β) (v : β → M) (xs : Fin n → M) :
@@ -369,10 +331,7 @@ theorem castLE_self (φ : L.BoundedFormulaω α n) (h : n ≤ n) :
   have : h = le_refl n := Subsingleton.elim h _
   subst this; exact castLE_refl φ
 
-/-- `castLE` with a proof of `m = n` is transport. -/
-theorem castLE_eq_cast (φ : L.BoundedFormulaω α m) (h : m ≤ n) (heq : m = n) :
-    φ.castLE h = heq ▸ φ := by
-  subst heq; exact castLE_self φ h
+
 
 /-- `insertLastBound` is the inverse of `finSumFinEquiv` restricted to splitting
 the last element of `Fin (n+1)` into `Fin n ⊕ Fin 1`. -/
@@ -436,26 +395,13 @@ private theorem term_roundtrip_full (n k : ℕ) (t : L.Term (Fin n ⊕ Fin k)) :
         Sum.map_inr, finSumFinEquiv_apply_left, Fin.castAdd, Fin.castLE]
   rw [this, Term.relabel_id]
 
-/-- Composition identity at the term level for `insertLastBound` followed by
-`finSumFinEquiv.symm`: the composition through `relabelAux` equals the direct
-`relabelAux finSumFinEquiv.symm` up to a `Fin.cast` on bound variables. -/
--- Helper: relabelAux applied to Sum.inl where g returns Sum.inl
-private lemma relabelAux_inl_inl'.{w} {α' β' : Type w} {n' : ℕ} (g : α' → β' ⊕ Fin n') (k : ℕ)
-    (a : α') (b : β') (hg : g a = Sum.inl b) :
-    relabelAux g k (Sum.inl a) = Sum.inl b := by
-  simp [relabelAux, hg, Function.comp, Equiv.sumAssoc]
+
 
 -- Helper: relabelAux applied to Sum.inl where g returns Sum.inr
-private lemma relabelAux_inl_inr'.{w} {α' β' : Type w} {n' : ℕ} (g : α' → β' ⊕ Fin n') (k : ℕ)
-    (a : α') (c : Fin n') (hg : g a = Sum.inr c) :
-    relabelAux g k (Sum.inl a) = Sum.inr (Fin.castAdd k c) := by
-  simp [relabelAux, hg, Function.comp, Equiv.sumAssoc, finSumFinEquiv, Sum.elim, Fin.castAdd]
+
 
 -- Helper: relabelAux applied to Sum.inr
-private lemma relabelAux_inr'.{w} {α' β' : Type w} {n' : ℕ} (g : α' → β' ⊕ Fin n') (k : ℕ)
-    (j : Fin k) :
-    relabelAux g k (Sum.inr j) = Sum.inr (Fin.natAdd n' j) := by
-  simp [relabelAux, Function.comp, Equiv.sumAssoc, finSumFinEquiv, Sum.elim, Fin.natAdd]
+
 
 private theorem relabelAux_insertLastBound_finSumFinEquiv (n k l : ℕ) (x : Fin (n+k+1) ⊕ Fin l) :
     relabelAux (fun i => finSumFinEquiv.symm i : Fin (n+k) → Fin n ⊕ Fin k) (1+l)
@@ -670,112 +616,25 @@ theorem mapLanguage_imp {L' : Language.{u, v}} (g : L →ᴸ L')
     (φ.imp ψ).mapLanguage g = (φ.mapLanguage g).imp (ψ.mapLanguage g) := by
   simp only [mapLanguage]
 
-/-- `mapLanguage` commutes with `ex`. -/
-@[simp]
-theorem mapLanguage_ex {L' : Language.{u, v}} (g : L →ᴸ L')
-    (φ : L.BoundedFormulaω α (n + 1)) :
-    (φ.ex).mapLanguage g = (φ.mapLanguage g).ex := by
-  show (φ.not.all.not).mapLanguage g = (φ.mapLanguage g).not.all.not
-  rw [mapLanguage_not, mapLanguage, mapLanguage_not]
 
-/-- `LHom.onTerm` commutes with `Term.relabel`. -/
-theorem LHom.onTerm_relabel {L' : Language.{u, v}} (g : L →ᴸ L')
-    {γ δ : Type*} (f : γ → δ) (t : L.Term γ) :
-    g.onTerm (t.relabel f) = (g.onTerm t).relabel f := by
-  induction t with
-  | var => simp [Term.relabel, LHom.onTerm]
-  | func fn ts ih =>
-    simp only [Term.relabel, LHom.onTerm]
-    congr 1; funext i; exact ih i
 
-/-- `LHom.onTerm` commutes with `Term.subst`. -/
-theorem LHom.onTerm_subst {L' : Language.{u, v}} (g : L →ᴸ L')
-    {γ δ : Type*} (tf : γ → L.Term δ) (t : L.Term γ) :
-    g.onTerm (t.subst tf) = (g.onTerm t).subst (fun a => g.onTerm (tf a)) := by
-  induction t with
-  | var => simp [Term.subst, LHom.onTerm]
-  | func fn ts ih =>
-    simp only [Term.subst, LHom.onTerm]
-    congr 1; funext i; exact ih i
 
-/-- `mapLanguage` commutes with `castLE`. -/
-theorem mapLanguage_castLE {L' : Language.{u, v}} (g : L →ᴸ L')
-    (h : m ≤ n) (φ : L.BoundedFormulaω α m) :
-    (φ.castLE h).mapLanguage g = (φ.mapLanguage g).castLE h := by
-  induction φ generalizing n with
-  | falsum => rfl
-  | equal t₁ t₂ =>
-    simp only [castLE, mapLanguage, LHom.onTerm_relabel]
-  | rel R ts =>
-    simp only [castLE, mapLanguage]
-    congr 1; funext i; exact LHom.onTerm_relabel g _ (ts i)
-  | imp _ _ ih₁ ih₂ => simp only [castLE, mapLanguage, ih₁ h, ih₂ h]
-  | all _ ih =>
-    simp only [castLE, mapLanguage, ih (Nat.succ_le_succ h)]
-  | iSup _ ih => simp only [castLE, mapLanguage]; congr 1; funext i; exact ih i h
-  | iInf _ ih => simp only [castLE, mapLanguage]; congr 1; funext i; exact ih i h
 
-/-- `mapLanguage` commutes with `relabel`. -/
-theorem mapLanguage_relabel {L' : Language.{u, v}} (g : L →ᴸ L')
-    {γ : Type u'} (f : α → γ ⊕ Fin n) (φ : L.BoundedFormulaω α m) :
-    (φ.relabel f).mapLanguage g = (φ.mapLanguage g).relabel f := by
-  induction φ with
-  | falsum => rfl
-  | equal t₁ t₂ =>
-    simp only [BoundedFormulaω.relabel, mapLanguage, LHom.onTerm_relabel]
-  | rel R ts =>
-    simp only [BoundedFormulaω.relabel, mapLanguage]
-    congr 1; funext i; exact LHom.onTerm_relabel g _ (ts i)
-  | imp _ _ ih₁ ih₂ => simp only [BoundedFormulaω.relabel, mapLanguage, ih₁, ih₂]
-  | all _ ih =>
-    simp only [BoundedFormulaω.relabel, mapLanguage]
-    rw [mapLanguage_castLE, ih]
-  | iSup _ ih => simp only [BoundedFormulaω.relabel, mapLanguage]; congr 1; funext i; exact ih i
-  | iInf _ ih => simp only [BoundedFormulaω.relabel, mapLanguage]; congr 1; funext i; exact ih i
 
-/-- `mapLanguage` commutes with `subst`. -/
-theorem mapLanguage_subst {L' : Language.{u, v}} (g : L →ᴸ L')
-    (tf : α → L.Term β) (φ : L.BoundedFormulaω α n) :
-    (φ.subst tf).mapLanguage g = (φ.mapLanguage g).subst (fun a => g.onTerm (tf a)) := by
-  induction φ with
-  | falsum => rfl
-  | equal t₁ t₂ =>
-    simp only [subst, mapLanguage, LHom.onTerm_subst]
-    congr 1 <;> congr 1 <;> funext x <;> cases x with
-    | inl a => simp [LHom.onTerm_relabel]
-    | inr j => simp [LHom.onTerm]
-  | rel R ts =>
-    simp only [subst, mapLanguage]
-    congr 1; funext i
-    rw [LHom.onTerm_subst]
-    congr 1; funext x; cases x with
-    | inl a => simp [LHom.onTerm_relabel]
-    | inr j => simp [LHom.onTerm]
-  | imp _ _ ih₁ ih₂ => simp only [subst, mapLanguage, ih₁, ih₂]
-  | all _ ih => simp only [subst, mapLanguage, ih]
-  | iSup _ ih => simp only [subst, mapLanguage]; congr 1; funext i; exact ih i
-  | iInf _ ih => simp only [subst, mapLanguage]; congr 1; funext i; exact ih i
+
+
+
+
+
+
 
 end BoundedFormulaω
 
 namespace Formulaω
 
-/-- Converts a formula with `Fin 0` free variables to a sentence (with `Empty` free variables).
 
-Since both `Fin 0` and `Empty` are empty types, this is a purely type-theoretic conversion
-that does not change the semantics of the formula. -/
-def toSentenceω (φ : L.Formulaω (Fin 0)) : L.Sentenceω :=
-  φ.mapFreeVars Fin.elim0
 
-/-- `toSentenceω` preserves semantics: the sentence realizes in M iff the original
-formula realizes with the `Fin.elim0` assignment. -/
-theorem realize_toSentenceω {M : Type*} [L.Structure M]
-    (φ : L.Formulaω (Fin 0)) :
-    Sentenceω.Realize φ.toSentenceω M ↔ Formulaω.Realize φ (Fin.elim0 : Fin 0 → M) := by
-  have h := BoundedFormulaω.realize_mapFreeVars (Fin.elim0 : Fin 0 → Empty) φ
-    (Empty.elim : Empty → M) (Fin.elim0 : Fin 0 → M)
-  rw [comp_fin_elim0] at h
-  exact h
+
 
 end Formulaω
 

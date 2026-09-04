@@ -38,7 +38,7 @@ variable {L : Language.{0, 0}} [L.IsRelational] [Countable (Σ l, L.Relations l)
 
 omit [Countable (Σ l, L.Relations l)] instL in
 /-- On base-`L` and left-witness symbols the glue is `Sl` (definitionally). -/
-theorem gluedStructure_agree_left (Sl Sr : (graphLanguage (KLang L)).Structure M)
+private theorem gluedStructure_agree_left (Sl Sr : (graphLanguage (KLang L)).Structure M)
     {p : Σ n, GraphRelation (KLang L) n}
     (hp : p ∈ relSym (KLang L) (sideFunsSet L .left) (baseRels L ∪ leftRels L))
     (x : Fin p.1 → M) :
@@ -53,7 +53,7 @@ theorem gluedStructure_agree_left (Sl Sr : (graphLanguage (KLang L)).Structure M
 omit [Countable (Σ l, L.Relations l)] in
 /-- On base-`L` and right-witness symbols the glue is `Sr` — using the shared base for the
 `L`-relations (both `Sl` and `Sr` expand the same base). -/
-theorem gluedStructure_agree_right (Sl Sr : (graphLanguage (KLang L)).Structure M)
+private theorem gluedStructure_agree_right (Sl Sr : (graphLanguage (KLang L)).Structure M)
     (hSlExp : @LHom.IsExpansionOn L (graphLanguage (KLang L)) baseGraphEmb M instL Sl)
     (hSrExp : @LHom.IsExpansionOn L (graphLanguage (KLang L)) baseGraphEmb M instL Sr)
     {p : Σ n, GraphRelation (KLang L) n}

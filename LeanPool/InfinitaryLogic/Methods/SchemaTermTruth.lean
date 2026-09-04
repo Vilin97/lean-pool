@@ -106,7 +106,7 @@ theorem schemaCompletionTheory_not_mem_iff
 
 /-- **The carrier term bridge**: an open `(localColim s₀)[[ℕ]]`-term realized in the schema term
 model at class-valued variables is the class of its closed substitution instance. -/
-theorem schemaTerm_realize_sumElim_mk {n : ℕ}
+private theorem schemaTerm_realize_sumElim_mk {n : ℕ}
     (u : (localColim s₀)[[ℕ]].Term (Empty ⊕ Fin n))
     (ts : Fin n → (localColim s₀)[[ℕ]].Term Empty) :
     letI := schemaTermStructure (s₀ := s₀) (M := M) hM
@@ -127,7 +127,7 @@ theorem schemaTerm_realize_sumElim_mk {n : ℕ}
 omit [(localColim s₀).Structure M] [LinearOrder M] [WellFoundedLT M] in
 /-- **Substitution/valuation exchange**: a closed substitution instance realizes (in any
 structure) to the open term realized at the values of the substituted terms. -/
-theorem realize_subst_sumElim {N : Type} [(localColim s₀)[[ℕ]].Structure N] {n : ℕ}
+private theorem realize_subst_sumElim {N : Type} [(localColim s₀)[[ℕ]].Structure N] {n : ℕ}
     (u : (localColim s₀)[[ℕ]].Term (Empty ⊕ Fin n))
     (ts : Fin n → (localColim s₀)[[ℕ]].Term Empty) :
     (u.subst (Sum.elim (fun e => e.elim) ts)).realize (Empty.elim : Empty → N)
@@ -653,7 +653,7 @@ section ClosingTerms
 /-- Realization of a canonical deForm in any structure: substituting the `Fin p`-variable terms
 `g` for the bound variables and rebinding realizes as `φ` on the term values. Neutral twin of the
 residual-file `realize_canonDeForm`. -/
-theorem canonDeForm_realize_iff {Λ : Language.{0, 0}} {N : Type} [Λ.Structure N] {n p : ℕ}
+private theorem canonDeForm_realize_iff {Λ : Language.{0, 0}} {N : Type} [Λ.Structure N] {n p : ℕ}
     (φ : Λ.BoundedFormulaω Empty n) (g : Fin n → Λ.Term (Fin p)) (xs : Fin p → N) :
     (canonDeForm Λ φ g).Realize (Empty.elim : Empty → N) xs ↔
       φ.Realize (Empty.elim : Empty → N) (fun i => (g i).realize xs) := by
@@ -665,24 +665,19 @@ variable {s₀ : LocalStage}
 
 /-- **Closing a term along the sequence**: an open `Fin m`-variable base-language term, mapped
 into the constant expansion and its variables substituted by the sequence constants `d_{t i}`. -/
-def schemaCloseTerm {m : ℕ} (u : (localColim s₀).Term (Fin m)) (t : Fin m ↪o ℕ) :
+private def schemaCloseTerm {m : ℕ} (u : (localColim s₀).Term (Fin m)) (t : Fin m ↪o ℕ) :
     (localColim s₀)[[ℕ]].Term Empty :=
   ((lhomWithConstants (localColim s₀) ℕ).onTerm u).subst fun i => henkinConst (t i)
 
 variable {M : Type} [(localColim s₀).Structure M] [LinearOrder M] [WellFoundedLT M]
   (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M)
 
-omit [LinearOrder M] [WellFoundedLT M] in
-/-- A sequence constant realizes to its interpretation. -/
-theorem realize_henkinConst (σ : ℕ → M) (j : ℕ) :
-    letI : (constantsOn ℕ).Structure M := constantsOn.structure σ
-    (henkinConst (L := localColim s₀) j).realize (Empty.elim : Empty → M) = σ j :=
-  rfl
+
 
 omit [LinearOrder M] [WellFoundedLT M] in
 /-- **The body value of a closed instance**: under a certificate-body interpretation `σ`, the
 closed instance realizes to the open term realized at the `σ`-values of the tuple. -/
-theorem realize_schemaCloseTerm (σ : ℕ → M) {m : ℕ}
+private theorem realize_schemaCloseTerm (σ : ℕ → M) {m : ℕ}
     (u : (localColim s₀).Term (Fin m)) (t : Fin m ↪o ℕ) :
     letI : (constantsOn ℕ).Structure M := constantsOn.structure σ
     (schemaCloseTerm u t).realize (Empty.elim : Empty → M)
@@ -694,7 +689,7 @@ theorem realize_schemaCloseTerm (σ : ℕ → M) {m : ℕ}
 
 /-- **The class of a closed instance**: in the schema term model, the expansion image of an open
 term realized on the sequence classes `schemaSeq ∘ t` is the class of its closed instance. -/
-theorem schemaCloseTerm_realize_mk {m : ℕ}
+private theorem schemaCloseTerm_realize_mk {m : ℕ}
     (u : (localColim s₀).Term (Fin m)) (t : Fin m ↪o ℕ) :
     letI := schemaTermStructure (s₀ := s₀) (M := M) hM
     ((lhomWithConstants (localColim s₀) ℕ).onTerm u).realize
@@ -710,7 +705,7 @@ theorem schemaCloseTerm_realize_mk {m : ℕ}
 
 /-- **The reduct value of a closed instance**: in the base-language reduct of the schema term
 model, an open term realized on the sequence classes is the class of its closed instance. -/
-theorem schemaCloseTerm_reduct_realize {m : ℕ}
+private theorem schemaCloseTerm_reduct_realize {m : ℕ}
     (u : (localColim s₀).Term (Fin m)) (t : Fin m ↪o ℕ) :
     letI : (localColim s₀)[[ℕ]].Structure (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=
       schemaTermStructure hM
@@ -732,7 +727,7 @@ theorem schemaCloseTerm_reduct_realize {m : ℕ}
 /-- **Colimit-member transport**: the formula sentence at the sequence constants and the lifted
 template sentence at the tuple receive the same sign — under every body interpretation both say
 "`φ` on `σ ∘ t`". -/
-theorem schemaFormulaSentence_henkin_mem_iff_schemaLift {m : ℕ}
+private theorem schemaFormulaSentence_henkin_mem_iff_schemaLift {m : ℕ}
     {φ : (localColim s₀).BoundedFormulaω Empty m}
     (hφ : (⟨m, φ⟩ : Σ n, (localColim s₀).BoundedFormulaω Empty n) ∈ ΓlocalColim s₀)
     (t : Fin m ↪o ℕ) :
@@ -750,7 +745,7 @@ theorem schemaFormulaSentence_henkin_mem_iff_schemaLift {m : ℕ}
 
 /-- **Equality-atom transport**: the closed-instance equality sentence and the lifted canonical
 equality atom receive the same sign. -/
-theorem schemaEqSentence_close_mem_iff_schemaLift {m : ℕ}
+private theorem schemaEqSentence_close_mem_iff_schemaLift {m : ℕ}
     (u₁ u₂ : (localColim s₀).Term (Fin m)) (t : Fin m ↪o ℕ) :
     schemaEqSentence (schemaCloseTerm u₁ t) (schemaCloseTerm u₂ t)
         ∈ schemaCompletionTheory (schemaEnumeration s₀) hM ↔
@@ -777,7 +772,7 @@ theorem schemaEqSentence_close_mem_iff_schemaLift {m : ℕ}
 
 /-- **Relation-atom transport**: the closed-instance relation sentence and the lifted canonical
 relation atom receive the same sign. -/
-theorem schemaRelSentence_close_mem_iff_schemaLift {m l : ℕ}
+private theorem schemaRelSentence_close_mem_iff_schemaLift {m l : ℕ}
     (R : (localColim s₀).Relations l) (us : Fin l → (localColim s₀).Term (Fin m))
     (t : Fin m ↪o ℕ) :
     schemaRelSentence R (fun i => schemaCloseTerm (us i) t)
@@ -808,7 +803,7 @@ theorem schemaRelSentence_close_mem_iff_schemaLift {m l : ℕ}
 
 /-- **Canonical-deForm transport**: the formula sentence of the base member at the closed
 instances of `g` and the lifted template of the deForm receive the same sign. -/
-theorem schemaFormulaSentence_close_mem_iff_schemaLift_canonDeForm {q m : ℕ}
+private theorem schemaFormulaSentence_close_mem_iff_schemaLift_canonDeForm {q m : ℕ}
     {φ : (localColim s₀).BoundedFormulaω Empty q}
     (hφ : (⟨q, φ⟩ : Σ n, (localColim s₀).BoundedFormulaω Empty n) ∈ ΓlocalColim s₀)
     (g : Fin q → (localColim s₀).Term (Fin m)) (t : Fin m ↪o ℕ) :
@@ -847,7 +842,7 @@ variable {s₀ : LocalStage} {M : Type} [s₀.Lang.Structure M] [Nonempty M] [Li
 
 /-- **The colimit-family truth lemma**: the staged truth lemma at the colimit level, unpacking a
 `ΓlocalColim` membership into its stage representation. -/
-theorem schemaTruthLemma_colim :
+private theorem schemaTruthLemma_colim :
     letI : (localColim s₀).Structure M := localColimStructure s₀
     ∀ (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M)
       {m : ℕ} {φ : (localColim s₀).BoundedFormulaω Empty m},
@@ -984,7 +979,7 @@ theorem schemaSeq_indiscernibleOn :
 /-- **The tail-template truth collapse to the standard tuple**: by full indiscernibility, the
 eventually-form template truth of a `ΓEMlocal` member equals theory membership of its lifted
 template at the standard tuple. -/
-theorem tailTemplate_schemaSeq_truth_iff :
+private theorem tailTemplate_schemaSeq_truth_iff :
     letI : (localColim s₀).Structure M := localColimStructure s₀
     ∀ hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M,
       letI : (localColim s₀)[[ℕ]].Structure (SchemaTermCarrier (s₀ := s₀) (M := M) hM) :=

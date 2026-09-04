@@ -324,7 +324,7 @@ theorem realize_defaultAxiom [Countable (Σ l, L.Relations l)]
 variable (L) in
 /-- The tree atom at level `n`: `tree n` applied to the bit-numerals of `σ` followed by the
 numerals of `τ`. -/
-def treeAtom (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) : (MidLang L).Sentenceω :=
+private def treeAtom (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) : (MidLang L).Sentenceω :=
   BoundedFormulaω.rel (Sum.inr (WitnessRel.tree n) : (MidLang L).Relations (2 * n))
     (fun i : Fin (2 * n) =>
       if h : (i : ℕ) < n then mNum L _ (cond (σ ⟨i, h⟩) 1 0)
@@ -338,7 +338,7 @@ def treeTuple (M : Type) [inst : (MidLang L).Structure M] (n : ℕ)
     if h : (i : ℕ) < n then numMap L M (cond (σ ⟨i, h⟩) 1 0)
     else numMap L M (τ ⟨(i : ℕ) - n, by omega⟩)
 
-theorem realize_treeAtom {M : Type} [inst : (MidLang L).Structure M] (n : ℕ)
+private theorem realize_treeAtom {M : Type} [inst : (MidLang L).Structure M] (n : ℕ)
     (σ : Fin n → Bool) (τ : Fin n → ℕ) :
     Sentenceω.Realize (treeAtom L n σ τ) M ↔
       @Structure.RelMap (MidLang L) M inst (2 * n) (Sum.inr (WitnessRel.tree n))

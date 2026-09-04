@@ -48,7 +48,7 @@ variable {F : Set (Σ n, L.Functions n)} {P N : Set (Σ n, L.Relations n)}
 
 /-- Replacing a hypothesis by a semantically equivalent one does not change inseparability (the
 separator is untouched, so the polarity classes are irrelevant). -/
-theorem lyndonInsepAt_insert_congr {σ₁ σ₂ : L[[ℕ]].Sentenceω}
+private theorem lyndonInsepAt_insert_congr {σ₁ σ₂ : L[[ℕ]].Sentenceω}
     (hequiv : ∀ (M : Type) [L[[ℕ]].Structure M] [Nonempty M],
       Sentenceω.Realize σ₁ M ↔ Sentenceω.Realize σ₂ M) :
     LyndonInsepAt F P N A (insert σ₁ Γ) Δ ↔ LyndonInsepAt F P N A (insert σ₂ Γ) Δ := by
@@ -58,7 +58,7 @@ theorem lyndonInsepAt_insert_congr {σ₁ σ₂ : L[[ℕ]].Sentenceω}
   · exact ⟨σ, hbf, hbp, hbn, hsupp, (entails_insert_congr hequiv).mp hΓσ, hΔσ⟩
 
 /-- **C7 consumer (existential)**, signed. -/
-theorem lyndonInsepAt_instConst_of_ex (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1)
+private theorem lyndonInsepAt_instConst_of_ex (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1)
     (hcψ : c ∉ sentenceJConsts (L' := L) (J := ℕ) ψ)
     (hcΓ : ∀ γ ∈ Γ, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ)
     (hcΔ : ∀ δ ∈ Δ, c ∉ sentenceJConsts (L' := L) (J := ℕ) δ)
@@ -69,7 +69,7 @@ theorem lyndonInsepAt_instConst_of_ex (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω 
   exact lyndonInsepAt_witness_of_genEx c (instConst c ψ) hcΓ hcΔ h'
 
 /-- **C7 consumer (negated universal)**, signed: `¬∀x ψ` is `∃x ¬ψ`, witnessed by `¬ψ(c)`. -/
-theorem lyndonInsepAt_not_instConst_of_not_all (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1)
+private theorem lyndonInsepAt_not_instConst_of_not_all (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1)
     (hcψ : c ∉ sentenceJConsts (L' := L) (J := ℕ) ψ.not)
     (hcΓ : ∀ γ ∈ Γ, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ)
     (hcΔ : ∀ δ ∈ Δ, c ∉ sentenceJConsts (L' := L) (J := ℕ) δ)
@@ -85,7 +85,7 @@ theorem lyndonInsepAt_not_instConst_of_not_all (c : ℕ) (ψ : L[[ℕ]].BoundedF
   exact lyndonInsepAt_instConst_of_ex c ψ.not hcψ hcΓ hcΔ h'
 
 /-- The right twin of the negated-universal `C7` consumer, again by conjugation. -/
-theorem lyndonInsepAt_not_instConst_of_not_all_right (c : ℕ)
+private theorem lyndonInsepAt_not_instConst_of_not_all_right (c : ℕ)
     (ψ : L[[ℕ]].BoundedFormulaω Empty 1)
     (hcψ : c ∉ sentenceJConsts (L' := L) (J := ℕ) ψ.not)
     (hcΓ : ∀ γ ∈ Γ, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ)
@@ -97,7 +97,7 @@ theorem lyndonInsepAt_not_instConst_of_not_all_right (c : ℕ)
 
 /-! ## The consistency property -/
 
-def lyndonPairedConsistencyProperty (F₁ : Set (Σ n, L.Functions n))
+private def lyndonPairedConsistencyProperty (F₁ : Set (Σ n, L.Functions n))
     (P₁ N₁ : Set (Σ n, L.Relations n)) (F₂ : Set (Σ n, L.Functions n))
     (P₂ N₂ : Set (Σ n, L.Relations n))
     (rL rR : L[[ℕ]].Sentenceω)
@@ -486,7 +486,7 @@ def lyndonPairedConsistencyProperty (F₁ : Set (Σ n, L.Functions n))
 /-- **Paired model existence, polarity-refined.** From a root pair side-typed at the two polarity
 classes and inseparable at the flipped intersection class, the fair enumeration produces a
 Henkin-complete set containing both roots, whose quotient term model realizes them. -/
-theorem exists_lyndon_paired_model [L.IsRelational] [Countable (Σ l, L.Relations l)]
+private theorem exists_lyndon_paired_model [L.IsRelational] [Countable (Σ l, L.Relations l)]
     (F₁ : Set (Σ n, L.Functions n)) (P₁ N₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (P₂ N₂ : Set (Σ n, L.Relations n))
     (rL rR : L[[ℕ]].Sentenceω)

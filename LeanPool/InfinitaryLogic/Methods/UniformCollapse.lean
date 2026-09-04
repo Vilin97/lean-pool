@@ -35,7 +35,7 @@ namespace Language
 variable {L : Language.{0, 0}}
 
 /-- The dummy language: one function and one relation symbol at every arity. -/
-def dummyLang : Language.{0, 0} :=
+private def dummyLang : Language.{0, 0} :=
   ⟨fun _ => Unit, fun _ => Unit⟩
 
 /-- The uniform countable target: `φ`'s generated sublanguage plus the dummies. -/
@@ -45,7 +45,7 @@ def dummyLang : Language.{0, 0} :=
 open Classical in
 /-- **The collapsing hom**: `φ`'s symbols to their sublanguage copies, every omitted function
 and relation to the dummy of its arity. -/
-noncomputable def uniformCollapse (φ : L.Sentenceω) : L →ᴸ uniformLanguage φ where
+private noncomputable def uniformCollapse (φ : L.Sentenceω) : L →ᴸ uniformLanguage φ where
   onFunction {n} f :=
     if h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ BoundedFormulaω.functionsIn φ then
       Sum.inl ⟨f, h⟩
@@ -55,7 +55,7 @@ noncomputable def uniformCollapse (φ : L.Sentenceω) : L →ᴸ uniformLanguage
       Sum.inl ⟨R, h⟩
     else Sum.inr ()
 
-theorem countable_sigma_functions_uniformLanguage (φ : L.Sentenceω) :
+private theorem countable_sigma_functions_uniformLanguage (φ : L.Sentenceω) :
     Countable (Σ n, (uniformLanguage φ).Functions n) := by
   have h1 : Countable (Σ n, (symbSublang (L := L) φ.functionsIn φ.relationsIn).Functions n) :=
     symbSublang_fun_countable (BoundedFormulaω.functionsIn_countable φ) _
@@ -63,7 +63,7 @@ theorem countable_sigma_functions_uniformLanguage (φ : L.Sentenceω) :
     inferInstanceAs (Countable (Σ _ : ℕ, Unit))
   exact Countable.of_equiv _ (Equiv.sigmaSumDistrib _ _).symm
 
-theorem countable_sigma_relations_uniformLanguage (φ : L.Sentenceω) :
+private theorem countable_sigma_relations_uniformLanguage (φ : L.Sentenceω) :
     Countable (Σ n, (uniformLanguage φ).Relations n) := by
   have h1 : Countable (Σ n, (symbSublang (L := L) φ.functionsIn φ.relationsIn).Relations n) :=
     symbSublang_rel_countable _ (BoundedFormulaω.relationsIn_countable φ)
@@ -73,7 +73,7 @@ theorem countable_sigma_relations_uniformLanguage (φ : L.Sentenceω) :
 
 /-- On terms supported in `φ`'s function symbols, the collapse agrees with sublanguage
 restriction followed by `sumInl`. -/
-theorem Term.onTerm_uniformCollapse_eq {φ : L.Sentenceω} {α : Type} :
+private theorem Term.onTerm_uniformCollapse_eq {φ : L.Sentenceω} {α : Type} :
     ∀ (t : L.Term α) (hF : t.functionsIn ⊆ BoundedFormulaω.functionsIn φ),
       (uniformCollapse φ).onTerm t
         = (LHom.sumInl :
@@ -89,7 +89,7 @@ theorem Term.onTerm_uniformCollapse_eq {φ : L.Sentenceω} {α : Type} :
 
 /-- **The support-aware collapse identity**: on formulas whose symbols lie in `φ`'s, the
 collapse is sublanguage restriction followed by `sumInl`. -/
-theorem BoundedFormulaω.mapLanguage_uniformCollapse_eq {φ : L.Sentenceω} {α : Type} :
+private theorem BoundedFormulaω.mapLanguage_uniformCollapse_eq {φ : L.Sentenceω} {α : Type} :
     ∀ {n : ℕ} (ψ : L.BoundedFormulaω α n)
       (hF : ψ.functionsIn ⊆ BoundedFormulaω.functionsIn φ)
       (hR : ψ.relationsIn ⊆ BoundedFormulaω.relationsIn φ),
@@ -142,7 +142,7 @@ theorem BoundedFormulaω.mapLanguage_uniformCollapse_eq {φ : L.Sentenceω} {α 
 sublanguage symbols genuinely, dummy functions constantly (the model is nonempty by the size
 request), dummy relations as `False`. So the collapsed sentence inherits arbitrarily large
 models. -/
-theorem hasArbLargeModels_mapLanguage_uniformCollapse {φ : L.Sentenceω}
+private theorem hasArbLargeModels_mapLanguage_uniformCollapse {φ : L.Sentenceω}
     (hφarb : HasArbLargeModels φ) :
     HasArbLargeModels (φ.mapLanguage (uniformCollapse φ)) := by
   intro μ

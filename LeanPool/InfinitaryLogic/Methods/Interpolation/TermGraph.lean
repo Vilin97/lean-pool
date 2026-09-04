@@ -161,7 +161,7 @@ theorem realize_termGraphAux :
 
 /-- **Public semantics**: over the graph expansion, `termGraph t y` holds iff the value of `t`
 equals the value of `y` in the ambient environment. -/
-theorem realize_termGraph (t : L.Term (α ⊕ Fin m)) (y : (graphLanguage L).Term (α ⊕ Fin m))
+private theorem realize_termGraph (t : L.Term (α ⊕ Fin m)) (y : (graphLanguage L).Term (α ⊕ Fin m))
     (v : α → M) (xs : Fin m → M) :
     (termGraph t y).Realize v xs ↔
       t.realize (Sum.elim v xs) = y.realize (Sum.elim v xs) := by
@@ -224,20 +224,20 @@ theorem relationsIn_termGraphAux :
 
 /-- The relation symbols of `termGraph t y` are exactly the graph relations of `t`'s function
 symbols. -/
-theorem relationsIn_termGraph (t : L.Term (α ⊕ Fin m))
+private theorem relationsIn_termGraph (t : L.Term (α ⊕ Fin m))
     (y : (graphLanguage L).Term (α ⊕ Fin m)) :
     (termGraph t y).relationsIn = graphRelSym L '' t.functionsIn :=
   relationsIn_termGraphAux t Term.var y
 
 /-- No base relation occurs in a term-graph formula. -/
-theorem relationsIn_termGraph_inter_base (t : L.Term (α ⊕ Fin m))
+private theorem relationsIn_termGraph_inter_base (t : L.Term (α ⊕ Fin m))
     (y : (graphLanguage L).Term (α ⊕ Fin m)) (R : Set (Σ n, L.Relations n)) :
     (termGraph t y).relationsIn ∩ baseRelSym L '' R = ∅ := by
   rw [relationsIn_termGraph]
   exact graphRelSym_image_inter_baseRelSym_image _ _
 
 /-- No function symbol occurs in a term-graph formula (the graph language is relational). -/
-theorem functionsIn_termGraph (t : L.Term (α ⊕ Fin m))
+private theorem functionsIn_termGraph (t : L.Term (α ⊕ Fin m))
     (y : (graphLanguage L).Term (α ⊕ Fin m)) :
     (termGraph t y).functionsIn = ∅ :=
   BoundedFormulaω.functionsIn_of_isRelational _

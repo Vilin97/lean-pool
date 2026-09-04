@@ -125,7 +125,7 @@ private theorem realize_termGraphAux_ctxLift {k : ℕ} (w : L.Term (α ⊕ Fin n
 
 /-- **Atomic realization, equality**: the one-witness translation of `t = u` realizes to value
 equality. -/
-theorem realize_equalGraph (t u : L.Term (α ⊕ Fin n)) (v : α → M) (xs : Fin n → M) :
+private theorem realize_equalGraph (t u : L.Term (α ⊕ Fin n)) (v : α → M) (xs : Fin n → M) :
     (equalGraph t u).Realize v xs ↔
       t.realize (Sum.elim v xs) = u.realize (Sum.elim v xs) := by
   rw [equalGraph, BoundedFormulaω.realize_existsBlock]
@@ -141,7 +141,7 @@ theorem realize_equalGraph (t u : L.Term (α ⊕ Fin n)) (v : α → M) (xs : Fi
 
 /-- **Atomic realization, relations**: the translation of `R(t₀, …, t_{k-1})` realizes to the
 base relation on the terms' values. -/
-theorem realize_relGraph {k : ℕ} (R : L.Relations k) (ts : Fin k → L.Term (α ⊕ Fin n))
+private theorem realize_relGraph {k : ℕ} (R : L.Relations k) (ts : Fin k → L.Term (α ⊕ Fin n))
     (v : α → M) (xs : Fin n → M) :
     (relGraph R ts).Realize v xs ↔
       RelMap R fun i => (ts i).realize (Sum.elim v xs) := by
@@ -223,7 +223,7 @@ end Semantics
 
 /-- The equality atom's relation symbols: exactly the graph relations of the function symbols
 occurring in `t` or `u`. -/
-theorem relationsIn_equalGraph (t u : L.Term (α ⊕ Fin n)) :
+private theorem relationsIn_equalGraph (t u : L.Term (α ⊕ Fin n)) :
     (equalGraph t u).relationsIn = graphRelSym L '' (t.functionsIn ∪ u.functionsIn) := by
   rw [equalGraph, BoundedFormulaω.relationsIn_existsBlock, BoundedFormulaω.relationsIn_and,
     relationsIn_termGraphAux, relationsIn_termGraphAux]
@@ -231,7 +231,7 @@ theorem relationsIn_equalGraph (t u : L.Term (α ⊕ Fin n)) :
 
 /-- The relation atom's relation symbols: exactly the relationalization of its own symbols —
 the base relation `R` plus the graph relations of the arguments' function symbols. -/
-theorem relationsIn_relGraph {k : ℕ} (R : L.Relations k) (ts : Fin k → L.Term (α ⊕ Fin n)) :
+private theorem relationsIn_relGraph {k : ℕ} (R : L.Relations k) (ts : Fin k → L.Term (α ⊕ Fin n)) :
     (relGraph R ts).relationsIn = relSym L (⋃ i, (ts i).functionsIn) {⟨k, R⟩} := by
   rw [relGraph, BoundedFormulaω.relationsIn_existsBlock, BoundedFormulaω.relationsIn_and,
     BoundedFormulaω.relationsIn_einf,

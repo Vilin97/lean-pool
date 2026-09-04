@@ -207,13 +207,13 @@ theorem graphExpansion_realizes_graphAxioms (F : Set (Σ n, L.Functions n)) [Cou
 
 /-! ## Occurrence identities -/
 
-theorem relationsIn_graphTotality {n : ℕ} (f : L.Functions n) :
+private theorem relationsIn_graphTotality {n : ℕ} (f : L.Functions n) :
     (graphTotality f).relationsIn = {⟨n + 1, GraphRelation.graph f⟩} := by
   rw [graphTotality, BoundedFormulaω.relationsIn_forallBlock,
     BoundedFormulaω.relationsIn_existsBlock]
   rfl
 
-theorem relationsIn_graphFunctionality {n : ℕ} (f : L.Functions n) :
+private theorem relationsIn_graphFunctionality {n : ℕ} (f : L.Functions n) :
     (graphFunctionality f).relationsIn = {⟨n + 1, GraphRelation.graph f⟩} := by
   rw [graphFunctionality, BoundedFormulaω.relationsIn_forallBlock]
   show ({⟨n + 1, GraphRelation.graph f⟩} ∪ ({⟨n + 1, GraphRelation.graph f⟩} ∪ ∅) :
@@ -241,7 +241,7 @@ theorem relationsIn_graphAxioms (F : Set (Σ n, L.Functions n)) [Countable ↥F]
     exact ⟨⟨s, hs⟩, rfl⟩
 
 /-- No function symbol occurs in the graph axioms (the graph language is relational). -/
-theorem functionsIn_graphAxioms (F : Set (Σ n, L.Functions n)) [Countable ↥F] :
+private theorem functionsIn_graphAxioms (F : Set (Σ n, L.Functions n)) [Countable ↥F] :
     (graphAxioms F).functionsIn = ∅ :=
   BoundedFormulaω.functionsIn_of_isRelational _
 

@@ -45,11 +45,7 @@ The base measurable space is explicit so specializing never triggers recursive i
     exact ⟨fun ⟨n, hn⟩ => ⟨n, ((hf n).2 g x).mp hn⟩,
       fun ⟨n, hn⟩ => ⟨n, ((hf n).2 g x).mpr hn⟩⟩⟩
 
-/-- Membership in the generic invariant σ-algebra: measurable and invariant. -/
-theorem MeasurableSpace.measurableSet_smulInvariant {G X : Type*} [SMul G X]
-    {m : MeasurableSpace X} {B : Set X} :
-    MeasurableSet[MeasurableSpace.smulInvariant G m] B
-      ↔ MeasurableSet[m] B ∧ ∀ (g : G) (x : X), x ∈ B ↔ g • x ∈ B := Iff.rfl
+
 
 namespace FirstOrder.Language
 
@@ -68,8 +64,7 @@ theorem ActionInvariant.iUnion {f : ℕ → Set (StructureSpace L)}
   simp only [Set.mem_iUnion]
   exact ⟨fun ⟨n, hn⟩ => ⟨n, (h n σ c).mp hn⟩, fun ⟨n, hn⟩ => ⟨n, (h n σ c).mpr hn⟩⟩
 
-theorem actionInvariant_empty : ActionInvariant (∅ : Set (StructureSpace L)) :=
-  fun _ _ => by simp
+
 
 variable [L.IsRelational]
 
@@ -84,7 +79,7 @@ theorem IsomorphismInvariant.iUnion {f : ℕ → Set (StructureSpace L)}
   simp only [Set.mem_iUnion]
   exact ⟨fun ⟨n, hn⟩ => ⟨n, (h n c d hcd).mp hn⟩, fun ⟨n, hn⟩ => ⟨n, (h n c d hcd).mpr hn⟩⟩
 
-theorem isomorphismInvariant_empty : IsomorphismInvariant (∅ : Set (StructureSpace L)) :=
+private theorem isomorphismInvariant_empty : IsomorphismInvariant (∅ : Set (StructureSpace L)) :=
   fun _ _ _ => by simp
 
 /-! ## The two named invariant σ-algebras -/
@@ -113,13 +108,13 @@ for the `S∞`-action on `StructureSpace L` over the product σ-algebra. Needs n
 
 /-- A class is `actionInvariantMeasurableSpace`-measurable iff it is measurable and
 action-invariant. -/
-theorem measurableSet_actionInvariantMeasurableSpace {B : Set (StructureSpace L)} :
+private theorem measurableSet_actionInvariantMeasurableSpace {B : Set (StructureSpace L)} :
     MeasurableSet[actionInvariantMeasurableSpace] B ↔ MeasurableSet B ∧ ActionInvariant B :=
   Iff.rfl
 
 /-- A class is `isoInvariantMeasurableSpace`-measurable iff it is measurable and
 isomorphism-invariant. -/
-theorem measurableSet_isoInvariantMeasurableSpace [L.IsRelational] {B : Set (StructureSpace L)} :
+private theorem measurableSet_isoInvariantMeasurableSpace [L.IsRelational] {B : Set (StructureSpace L)} :
     MeasurableSet[isoInvariantMeasurableSpace] B ↔ MeasurableSet B ∧ IsomorphismInvariant B :=
   Iff.rfl
 
@@ -128,7 +123,7 @@ theorem measurableSet_isoInvariantMeasurableSpace [L.IsRelational] {B : Set (Str
 /-- **The invariant σ-algebras coincide.** Action invariance and isomorphism invariance define the
 same measurable classes, by `actionInvariant_iff_isomorphismInvariant`. No Polishness or
 symbol-countability hypothesis is used. -/
-theorem actionInvariantMeasurableSpace_eq_isoInvariantMeasurableSpace [L.IsRelational] :
+private theorem actionInvariantMeasurableSpace_eq_isoInvariantMeasurableSpace [L.IsRelational] :
     (actionInvariantMeasurableSpace : MeasurableSpace (StructureSpace L)) =
       isoInvariantMeasurableSpace := by
   refine MeasurableSpace.ext fun B => ?_

@@ -56,7 +56,7 @@ private theorem canonicalScottSentence_iff_BFEquiv0
   exact realize_scottFormula_iff_BFEquiv _ _ _ (scottHeight_lt_omega1_of hcount M)
 
 /-- Conditional variant of `canonicalScottSentence_iff_potentialIso`. -/
-theorem canonicalScottSentence_iff_potentialIso_of
+private theorem canonicalScottSentence_iff_potentialIso_of
     (hcount : CountableRefinementHypothesis.{u, v, w} L)
     {M : Type w} [L.Structure M] [Countable M]
     {N : Type w} [L.Structure N] [Countable N] :
@@ -83,7 +83,7 @@ theorem canonicalScottSentence_iff_potentialIso_of
     exact P.implies_BFEquiv_all (scottHeight (L := L) M)
 
 /-- Conditional variant of `canonicalScottSentence_characterizes`. -/
-theorem canonicalScottSentence_characterizes_of
+private theorem canonicalScottSentence_characterizes_of
     (hcount : CountableRefinementHypothesis.{u, v, w} L)
     {M : Type w} [L.Structure M] [Countable M]
     {N : Type w} [L.Structure N] [Countable N] :
@@ -97,7 +97,7 @@ theorem canonicalScottSentence_characterizes_of
     exact equiv_implies_BFEquiv e _ 0 Fin.elim0
 
 /-- Conditional variant of `canonicalScottSentence_equiv_scottSentence`. -/
-theorem canonicalScottSentence_equiv_scottSentence_of
+private theorem canonicalScottSentence_equiv_scottSentence_of
     (hcount : CountableRefinementHypothesis.{u, v, w} L)
     {M : Type w} [L.Structure M] [Countable M]
     {N : Type w} [L.Structure N] [Countable N] :
@@ -106,7 +106,7 @@ theorem canonicalScottSentence_equiv_scottSentence_of
   rw [canonicalScottSentence_characterizes_of hcount, scottSentence_characterizes_of hcount]
 
 /-- Conditional variant of `canonicalScottSentence_qrank`. -/
-theorem canonicalScottSentence_qrank_of
+private theorem canonicalScottSentence_qrank_of
     (hcount : CountableRefinementHypothesis.{u, v, w} L)
     (M : Type w) [L.Structure M] [Countable M] :
     (canonicalScottSentence (L := L) M).qrank ≤
@@ -116,7 +116,7 @@ theorem canonicalScottSentence_qrank_of
     le_self_add
 
 /-- The canonical Scott sentence characterizes potential isomorphism. -/
-theorem canonicalScottSentence_iff_potentialIso
+private theorem canonicalScottSentence_iff_potentialIso
     {M : Type w} [L.Structure M] [Countable M]
     {N : Type w} [L.Structure N] [Countable N] :
     (canonicalScottSentence (L := L) M).realize_as_sentence N ↔
@@ -124,7 +124,7 @@ theorem canonicalScottSentence_iff_potentialIso
   canonicalScottSentence_iff_potentialIso_of countableRefinementHypothesis
 
 /-- For countable structures, the canonical Scott sentence characterizes isomorphism. -/
-theorem canonicalScottSentence_characterizes
+private theorem canonicalScottSentence_characterizes
     {M : Type w} [L.Structure M] [Countable M]
     {N : Type w} [L.Structure N] [Countable N] :
     (canonicalScottSentence (L := L) M).realize_as_sentence N ↔
@@ -132,7 +132,7 @@ theorem canonicalScottSentence_characterizes
   canonicalScottSentence_characterizes_of countableRefinementHypothesis
 
 /-- The canonical Scott sentence is semantically equivalent to the standard Scott sentence. -/
-theorem canonicalScottSentence_equiv_scottSentence
+private theorem canonicalScottSentence_equiv_scottSentence
     {M : Type w} [L.Structure M] [Countable M]
     {N : Type w} [L.Structure N] [Countable N] :
     (canonicalScottSentence (L := L) M).realize_as_sentence N ↔
@@ -140,7 +140,7 @@ theorem canonicalScottSentence_equiv_scottSentence
   canonicalScottSentence_equiv_scottSentence_of countableRefinementHypothesis
 
 /-- The quantifier rank of the canonical Scott sentence is bounded. -/
-theorem canonicalScottSentence_qrank
+private theorem canonicalScottSentence_qrank
     (M : Type w) [L.Structure M] [Countable M] :
     (canonicalScottSentence (L := L) M).qrank ≤
     scottHeight (L := L) M + Ordinal.omega0 :=

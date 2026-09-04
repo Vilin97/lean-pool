@@ -47,17 +47,11 @@ instance permSmul (n : ℕ) : SMul (Equiv.Perm (Fin n)) (StructureSpaceOn L (Fin
 
 omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
 @[simp]
-theorem perm_smul_apply (n : ℕ) (σ : Equiv.Perm (Fin n))
+private theorem perm_smul_apply (n : ℕ) (σ : Equiv.Perm (Fin n))
     (c : StructureSpaceOn L (Fin n)) (R : Σ l, L.Relations l) (v : Fin R.1 → Fin n) :
     (σ • c) ⟨R, v⟩ = c ⟨R, σ.symm ∘ v⟩ := rfl
 
-instance permMulAction (n : ℕ) :
-    MulAction (Equiv.Perm (Fin n)) (StructureSpaceOn L (Fin n)) where
-  one_smul c := by ext ⟨R, v⟩; show c ⟨R, ⇑(1 : Equiv.Perm (Fin n)).symm ∘ v⟩ = c ⟨R, v⟩; congr 1
-  mul_smul σ τ c := by
-    ext ⟨R, v⟩
-    show c ⟨R, ⇑(σ * τ).symm ∘ v⟩ = c ⟨R, ⇑τ.symm ∘ ⇑σ.symm ∘ v⟩
-    congr 1
+
 
 /-! ### Isomorphism = orbit equivalence -/
 
@@ -104,7 +98,7 @@ structures they decode on `Fin n` are `L`-isomorphic.  Stated on all of
 This mirrors `structureIsoSetoid` at the `ℕ` tier, and for the same reason: perfectness of a set
 of codes must be a property of the ambient space, not of whichever refinement was chosen to make
 one model class Polish. -/
-def structureIsoSetoidOn (L : Language.{u, v}) [L.IsRelational] (n : ℕ) :
+private def structureIsoSetoidOn (L : Language.{u, v}) [L.IsRelational] (n : ℕ) :
     Setoid (StructureSpaceOn L (Fin n)) where
   r c₁ c₂ := Nonempty (@Language.Equiv L (Fin n) (Fin n)
     (StructureSpaceOn.toStructure c₁) (StructureSpaceOn.toStructure c₂))
@@ -122,57 +116,19 @@ def isoSetoidOn (φ : L.Sentenceω) (n : ℕ) :
     Setoid ↥(ModelsOfOn (α := Fin n) φ) :=
   (structureIsoSetoidOn L n).comap Subtype.val
 
-omit [Countable ((l : ℕ) × L.Relations l)] in
-/-- Membership in the pulled-back relation is membership in the ambient one. -/
-theorem isoSetoidOn_r_iff {φ : L.Sentenceω} {n : ℕ} {c₁ c₂ : ↥(ModelsOfOn (α := Fin n) φ)} :
-    (isoSetoidOn φ n).r c₁ c₂ ↔ (structureIsoSetoidOn L n).r c₁.1 c₂.1 := Iff.rfl
 
-/-- `φ` has a perfect set of pairwise non-isomorphic models with carrier `Fin n`.
 
-The finite tier is not decoration: an infinite language can have continuum-many `Fin n` models
-while having no `ℕ`-models at all, so a counting dichotomy that only spoke about `ℕ`-models would
-miss that case entirely. -/
-def Sentenceω.HasPerfectSetOfPairwiseNonisomorphicFinModels (φ : L.Sentenceω) (n : ℕ) : Prop :=
-  HasPerfectAntichainOn (structureIsoSetoidOn L n) (ModelsOfOn (α := Fin n) φ)
 
-/-- The ambient half of the finite-tier route: a Cantor antichain on the model class in the
-ambient topology gives a perfect set of pairwise non-isomorphic `Fin n`-models.
 
-`StructureSpaceOn L (Fin n)` is metrizable but carries no chosen metric, so the `T2Space` instance
-that `HasCantorAntichainOn.hasPerfectAntichainOn` needs is produced here rather than assumed; the
-topology is unchanged, so the hypothesis still applies. -/
-theorem Sentenceω.hasPerfectSetFin_of_ambient_cantorAntichain {φ : L.Sentenceω} {n : ℕ}
-    (h : HasCantorAntichainOn (structureIsoSetoidOn L n) (ModelsOfOn (α := Fin n) φ)) :
-    φ.HasPerfectSetOfPairwiseNonisomorphicFinModels n := by
-  let := TopologicalSpace.upgradeIsCompletelyMetrizable (StructureSpaceOn L (Fin n))
-  exact h.hasPerfectAntichainOn
 
-/-- **The bridge to the quotient**: a perfect set of pairwise non-isomorphic `Fin n`-models gives
-continuum-many isomorphism classes at that tier.
 
-Mirrors the `ℕ`-tier bridge and for the same reason: the antichain lives in the ambient space
-while the quotient is over the subtype, so the transversal is transported through the inclusion —
-which is what `isoSetoidOn` being a `comap` licenses. -/
-theorem Sentenceω.HasPerfectSetOfPairwiseNonisomorphicFinModels.continuum_le
-    {φ : L.Sentenceω} {n : ℕ} (h : φ.HasPerfectSetOfPairwiseNonisomorphicFinModels n) :
-    Cardinal.continuum ≤ #(Quotient (isoSetoidOn φ n)) := by
-  obtain ⟨P, hperf, hne, hsub, hanti⟩ := h
-  have hinj : Function.Injective
-      (fun x : P => Quotient.mk (isoSetoidOn φ n) ⟨x.1, hsub x.2⟩) := by
-    intro x y hxy
-    have hr : (isoSetoidOn φ n).r ⟨x.1, hsub x.2⟩ ⟨y.1, hsub y.2⟩ := Quotient.exact hxy
-    exact Subtype.ext (hanti x.1 x.2 y.1 y.2 (isoSetoidOn_r_iff.mp hr))
-  -- as at the `ℕ` tier: a metric is needed for the cardinality of a perfect set, and the upgrade
-  -- supplies one without changing the topology, so `hperf` survives
-  let := TopologicalSpace.upgradeIsCompletelyMetrizable (StructureSpaceOn L (Fin n))
-  calc Cardinal.continuum = #P := (hperf.mk_eq_continuum hne).symm
-    _ ≤ #(Quotient (isoSetoidOn φ n)) := Cardinal.mk_le_of_injective hinj
+
 
 /-! ### Isomorphism relation is Borel on finite carriers -/
 
 omit [L.IsRelational] [Countable ((l : ℕ) × L.Relations l)] in
 /-- Each orbit map `c ↦ σ • c` is continuous on `StructureSpaceOn L (Fin n)`. -/
-theorem continuous_perm_smul (n : ℕ) (σ : Equiv.Perm (Fin n)) :
+private theorem continuous_perm_smul (n : ℕ) (σ : Equiv.Perm (Fin n)) :
     Continuous (fun c : StructureSpaceOn L (Fin n) => σ • c) := by
   apply continuous_pi
   intro ⟨R, v⟩
@@ -180,7 +136,7 @@ theorem continuous_perm_smul (n : ℕ) (σ : Equiv.Perm (Fin n)) :
 
 /-- The isomorphism relation on `Fin n`-models is measurable.
 It equals `⋃ σ : Perm(Fin n), graph(σ • ·)`, a finite union of closed sets. -/
-theorem isoSetoidOn_measurableSet (φ : L.Sentenceω) (n : ℕ) :
+private theorem isoSetoidOn_measurableSet (φ : L.Sentenceω) (n : ℕ) :
     MeasurableSet {p : ↥(ModelsOfOn (α := Fin n) φ) × ↥(ModelsOfOn (α := Fin n) φ) |
       (isoSetoidOn φ n).r p.1 p.2} := by
   -- The relation on the subtype is the preimage of the relation on the full space

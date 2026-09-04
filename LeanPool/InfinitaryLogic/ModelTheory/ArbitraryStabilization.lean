@@ -75,35 +75,35 @@ variable [L.IsRelational] [Countable (Σ l, L.Relations l)]
 variable {N : Type w} [L.Structure N] [Countable N]
 
 /-- The closed level-`α` Scott formulas of all finite tuples of the countable source. -/
-noncomputable def scottSeed (N : Type w) [L.Structure N] [Countable N] (α : Ordinal) :
+private noncomputable def scottSeed (N : Type w) [L.Structure N] [Countable N] (α : Ordinal) :
     Set (Σ n, L.BoundedFormulaω Empty n) :=
   ⋃ m : ℕ, (fun a : Fin m → N =>
     (⟨m, (scottFormula (L := L) a α).relabel (Sum.inr : Fin m → Empty ⊕ Fin m)⟩ :
       Σ n, L.BoundedFormulaω Empty n)) '' Set.univ
 
 omit [L.IsRelational] in
-theorem scottSeed_countable (α : Ordinal) : (scottSeed (L := L) N α).Countable :=
+private theorem scottSeed_countable (α : Ordinal) : (scottSeed (L := L) N α).Countable :=
   Set.countable_iUnion fun _ => Set.countable_univ.image _
 
 /-- The controlling fragment for arbitrary-target stabilization. -/
-noncomputable def scottFragment (N : Type w) [L.Structure N] [Countable N] (α : Ordinal) :
+private noncomputable def scottFragment (N : Type w) [L.Structure N] [Countable N] (α : Ordinal) :
     Fragment L :=
   Fragment.generated (scottSeed N α)
 
 omit [L.IsRelational] in
-theorem scottFragment_countable (α : Ordinal) :
+private theorem scottFragment_countable (α : Ordinal) :
     (scottFragment (L := L) N α).toSet.Countable :=
   Fragment.generated_countable (scottSeed_countable α)
 
 omit [L.IsRelational] in
-theorem closedScott_mem_scottFragment (α : Ordinal) {m : ℕ} (a : Fin m → N) :
+private theorem closedScott_mem_scottFragment (α : Ordinal) {m : ℕ} (a : Fin m → N) :
     (⟨m, (scottFormula (L := L) a α).relabel (Sum.inr : Fin m → Empty ⊕ Fin m)⟩ :
       Σ n, L.BoundedFormulaω Empty n) ∈ (scottFragment (L := L) N α).toSet :=
   Fragment.subset_generated _ (Set.mem_iUnion.mpr ⟨m, Set.mem_image_of_mem _ (Set.mem_univ a)⟩)
 
 omit [L.IsRelational] in
 /-- The closed Scott formula realizes exactly as the open one. -/
-theorem realize_closedScott_iff {P : Type w} [L.Structure P] (α : Ordinal) {m : ℕ}
+private theorem realize_closedScott_iff {P : Type w} [L.Structure P] (α : Ordinal) {m : ℕ}
     (a : Fin m → N) (b : Fin m → P) :
     ((scottFormula (L := L) a α).relabel
         (Sum.inr : Fin m → Empty ⊕ Fin m)).Realize (Empty.elim : Empty → P) b
@@ -128,7 +128,7 @@ theorem countable_functions_of_isRelational :
 omit [L.IsRelational] in
 /-- BFEquiv transfers between the arbitrary target and a fragment-elementary substructure,
 through the closed Scott formulas. -/
-theorem bfEquiv_iff_of_scottFragment_aElementary {α : Ordinal} (hα : α < Ordinal.omega 1)
+private theorem bfEquiv_iff_of_scottFragment_aElementary {α : Ordinal} (hα : α < Ordinal.omega 1)
     {P₀ : L.Substructure P} (hAe : AElementary (scottFragment (L := L) N α) P₀.subtype)
     {m : ℕ} (a : Fin m → N) (b : Fin m → P₀) :
     BFEquiv (L := L) α m a (fun i => (b i : P)) ↔ BFEquiv (L := L) α m a b := by
@@ -140,7 +140,7 @@ theorem bfEquiv_iff_of_scottFragment_aElementary {α : Ordinal} (hα : α < Ordi
 
 /-- **Arbitrary-target stabilization** (the #13 × #17 kernel): a complete stabilization level
 of the countable source upgrades `BFEquiv` against an ARBITRARY target. -/
-theorem bfEquiv_succ_of_stabilizesCompletely_arbitrary {α : Ordinal}
+private theorem bfEquiv_succ_of_stabilizesCompletely_arbitrary {α : Ordinal}
     (hα : α < Ordinal.omega 1) (hstab : StabilizesCompletely (L := L) N α)
     {n : ℕ} {a : Fin n → N} {b : Fin n → P} (h : BFEquiv (L := L) α n a b) :
     BFEquiv (L := L) (Order.succ α) n a b := by

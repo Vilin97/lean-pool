@@ -50,7 +50,7 @@ theorem eq_constTerm_qtConst (t : L[[ℕ]].Term Empty) : t = constTerm (qtConst 
   (exists_eq_constTerm t).choose_spec
 
 omit [L.IsRelational] in
-theorem constTerm_injective {a b : ℕ}
+private theorem constTerm_injective {a b : ℕ}
     (h : (constTerm (L' := L) (J := ℕ) a) = constTerm b) : a = b := by
   simp only [constTerm] at h
   -- `Term.func.injEq` cannot fire: the goal spells the head symbol as `Sum.inr a`, typed
@@ -58,16 +58,16 @@ theorem constTerm_injective {a b : ℕ}
   injection h with _ hf _
   exact Sum.inr.inj hf
 
-theorem qtConst_constTerm (c : ℕ) : qtConst (constTerm (L' := L) (J := ℕ) c) = c :=
+private theorem qtConst_constTerm (c : ℕ) : qtConst (constTerm (L' := L) (J := ℕ) c) = c :=
   constTerm_injective (eq_constTerm_qtConst (constTerm c)).symm
 
 /-! ## The quotient carrier -/
 
 /-- The equality relation on closed terms: their collapsed constants are `S`-equal. -/
-def qRel (t u : L[[ℕ]].Term Empty) : Prop := constEq (L := L) (qtConst t) (qtConst u) ∈ S
+private def qRel (t u : L[[ℕ]].Term Empty) : Prop := constEq (L := L) (qtConst t) (qtConst u) ∈ S
 
 /-- The equality relation is an equivalence (from the atomic equality fields of `S`). -/
-theorem qRel_equiv (hsc : HenkinComplete U S) : Equivalence (qRel (L := L) (S := S)) where
+private theorem qRel_equiv (hsc : HenkinComplete U S) : Equivalence (qRel (L := L) (S := S)) where
   refl t := HenkinComplete.eq_refl hsc (qtConst t)
   symm {_ _} h := HenkinComplete.eq_symm hsc _ _ h
   trans {_ _ _} h1 h2 := HenkinComplete.eq_trans hsc _ _ _ h1 h2
@@ -83,11 +83,11 @@ def QModel (hsc : HenkinComplete U S) := Quotient (qSetoid hsc)
 def qmk (hsc : HenkinComplete U S) (t : L[[ℕ]].Term Empty) : QModel hsc :=
   Quotient.mk (qSetoid hsc) t
 
-theorem qmk_eq_iff (hsc : HenkinComplete U S) (t u : L[[ℕ]].Term Empty) :
+private theorem qmk_eq_iff (hsc : HenkinComplete U S) (t u : L[[ℕ]].Term Empty) :
     qmk hsc t = qmk hsc u ↔ constEq (qtConst t) (qtConst u) ∈ S :=
   Quotient.eq (r := qSetoid hsc)
 
-theorem qmk_constTerm_eq_iff (hsc : HenkinComplete U S) (a b : ℕ) :
+private theorem qmk_constTerm_eq_iff (hsc : HenkinComplete U S) (a b : ℕ) :
     qmk hsc (constTerm a) = qmk hsc (constTerm b) ↔ constEq a b ∈ S := by
   rw [qmk_eq_iff, qtConst_constTerm, qtConst_constTerm]
 
@@ -96,7 +96,7 @@ theorem qmk_constTerm_eq_iff (hsc : HenkinComplete U S) (a b : ℕ) :
 omit [L.IsRelational] in
 /-- **Coordinatewise relation congruence**: `S`-equal argument tuples give the same relation
 membership. Iterates the atomic one-coordinate congruence `HenkinComplete.rel_congr`. -/
-theorem relInst_congr (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g g' : Fin l → ℕ)
+private theorem relInst_congr (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g g' : Fin l → ℕ)
     (h : ∀ i, constEq (g i) (g' i) ∈ S) (hg : relInst R g ∈ S) : relInst R g' ∈ S := by
   suffices H : ∀ k : ℕ, relInst R (fun i : Fin l => if (i : ℕ) < k then g' i else g i) ∈ S by
     have hl := H l
@@ -133,7 +133,7 @@ theorem relInst_congr (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (
 
 omit [L.IsRelational] in
 /-- The tuple congruence as an iff (using equality symmetry for the reverse). -/
-theorem relInst_congr_iff (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g g' : Fin l → ℕ)
+private theorem relInst_congr_iff (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g g' : Fin l → ℕ)
     (h : ∀ i, constEq (g i) (g' i) ∈ S) : relInst R g ∈ S ↔ relInst R g' ∈ S :=
   ⟨relInst_congr hsc R g g' h,
     relInst_congr hsc R g' g fun i => HenkinComplete.eq_symm hsc _ _ (h i)⟩
@@ -171,7 +171,7 @@ theorem qterm_realize_eq_mk (hsc : HenkinComplete U S) (t : L[[ℕ]].Term Empty)
 /-- **`RelMap` of a constant tuple reflects to atomic membership.** Forward reflects through the
 representatives chosen by the relation map (via the tuple congruence); backward is the identity
 representative. -/
-theorem relMap_qmk_iff (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) :
+private theorem relMap_qmk_iff (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) :
     (qModelStructure hsc).RelMap (Sum.inl R) (fun i => qmk hsc (constTerm (g i)))
       ↔ relInst R g ∈ S := by
   constructor

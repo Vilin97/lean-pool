@@ -47,16 +47,16 @@ section Construction
 variable (X : Type) [LinearOrder X]
 
 /-- The lexicographic value group of the construction. -/
-abbrev hahnGamma : Type := Lex (X →₀ ℤ)
+private abbrev hahnGamma : Type := Lex (X →₀ ℤ)
 
 /-- The ambient lexicographically ordered Hahn-series field. -/
-abbrev hahnField : Type := Lex (HahnSeries (hahnGamma X) ℚ)
+private abbrev hahnField : Type := Lex (HahnSeries (hahnGamma X) ℚ)
 
 /-- The monomial embedding of the index type. -/
-noncomputable def hahnMonomial (x : X) : hahnField X :=
+private noncomputable def hahnMonomial (x : X) : hahnField X :=
   toLex (HahnSeries.single (toLex (Finsupp.single x 1)) (1 : ℚ))
 
-theorem hahnMonomial_injective : Function.Injective (hahnMonomial X) := by
+private theorem hahnMonomial_injective : Function.Injective (hahnMonomial X) := by
   intro x y hxy
   have h1 : (ofLex (hahnMonomial X x)).coeff (toLex (Finsupp.single x 1)) = 1 :=
     HahnSeries.coeff_single_same _ _
@@ -70,10 +70,10 @@ theorem hahnMonomial_injective : Function.Injective (hahnMonomial X) := by
   exact one_ne_zero h1.symm
 
 /-- The generated subfield: the ordered field of cardinality `#X`. -/
-noncomputable def hahnSubfield : Subfield (hahnField X) :=
+private noncomputable def hahnSubfield : Subfield (hahnField X) :=
   Subfield.closure (Set.range (hahnMonomial X))
 
-theorem mk_hahnSubfield [Infinite X] : Cardinal.mk (hahnSubfield X) = Cardinal.mk X := by
+private theorem mk_hahnSubfield [Infinite X] : Cardinal.mk (hahnSubfield X) = Cardinal.mk X := by
   have : Infinite (Set.range (hahnMonomial X)) :=
     Set.infinite_coe_iff.mpr (Set.infinite_range_of_injective (hahnMonomial_injective X))
   rw [hahnSubfield, Subfield.cardinalMk_closure,
@@ -96,10 +96,6 @@ noncomputable def highlyTransitiveOrderAt (κ : Cardinal.{0}) (hκ : Cardinal.al
   · rw [mk_hahnSubfield, Cardinal.mk_toType, Cardinal.card_ord]
   · exact HighlyOrderTransitive.of_field _
 
-/-- The existential corollary — the acceptance signature of issue #11 unit 6. -/
-theorem exists_highlyTransitive_linearOrder (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ) :
-    ∃ (J : Type) (_ : LinearOrder J), Cardinal.mk J = κ ∧ HighlyOrderTransitive J :=
-  let W := highlyTransitiveOrderAt κ hκ
-  ⟨W.Carrier, W.linearOrder, W.card_eq, W.highlyTransitive⟩
+
 
 end FirstOrder

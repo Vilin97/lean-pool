@@ -95,13 +95,9 @@ instead; at `A = HF` the two coincide, and nowhere else. -/
 def IsFinitelySatisfiable (T : L.Theoryω) : Prop :=
   ∀ T₀ ⊆ T, T₀.Finite → T₀.IsSatisfiable
 
-/-- The published satisfiability predicate is exactly the universe-zero specialization. -/
-theorem isSatisfiableIn_zero_iff {T : L.Theoryω} :
-    IsSatisfiableIn.{u, v, 0} T ↔ T.IsSatisfiable := Iff.rfl
 
-/-- The published finite-satisfiability predicate is exactly the universe-zero specialization. -/
-theorem isFinitelySatisfiableIn_zero_iff {T : L.Theoryω} :
-    IsFinitelySatisfiableIn.{u, v, 0} T ↔ T.IsFinitelySatisfiable := Iff.rfl
+
+
 
 /-- Satisfiability in a fixed carrier universe is monotone under shrinking the theory. -/
 theorem IsSatisfiableIn.mono {T T' : L.Theoryω} (h : T ⊆ T')

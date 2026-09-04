@@ -150,11 +150,9 @@ def esupWith {ι : Type*} (e : Encodable ι) (φs : ι → L.BoundedFormulaω α
     L.BoundedFormulaω α n :=
   @esup L α n ι e φs
 
-@[simp] theorem einfWith_eq {ι : Type*} (e : Encodable ι) (φs : ι → L.BoundedFormulaω α n) :
-    einfWith e φs = @einf L α n ι e φs := rfl
 
-@[simp] theorem esupWith_eq {ι : Type*} (e : Encodable ι) (φs : ι → L.BoundedFormulaω α n) :
-    esupWith e φs = @esup L α n ι e φs := rfl
+
+
 
 end BoundedFormulaω
 

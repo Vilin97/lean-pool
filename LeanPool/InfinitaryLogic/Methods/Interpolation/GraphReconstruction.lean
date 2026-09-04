@@ -39,7 +39,7 @@ variable {F : Set (Σ n, L.Functions n)} [Countable ↥F]
 
 /-- The function value extracted from a model of the graph axioms: the totality witness for
 `f ∈ F` (unique by functionality), an arbitrary element outside `F`. -/
-noncomputable def graphValue (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
+private noncomputable def graphValue (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
     (f : L.Functions n) (xs : Fin n → M) : M :=
   letI := Classical.dec ((⟨n, f⟩ : Σ n, L.Functions n) ∈ F)
   if h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F then
@@ -48,7 +48,7 @@ noncomputable def graphValue (hAx : Sentenceω.Realize (graphAxioms F) M) {n : �
   else Classical.arbitrary M
 
 /-- The extracted value satisfies the graph relation. -/
-theorem graphValue_spec (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
+private theorem graphValue_spec (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
     (f : L.Functions n) (h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F) (xs : Fin n → M) :
     RelMap (L := graphLanguage L) (GraphRelation.graph f)
       (Fin.snoc xs (graphValue hAx f xs)) := by
@@ -58,7 +58,7 @@ theorem graphValue_spec (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
 
 /-- Uniqueness from functionality: anything the graph relation relates to `xs` is the
 extracted value. -/
-theorem graphValue_unique (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
+private theorem graphValue_unique (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
     (f : L.Functions n) (h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F) (xs : Fin n → M) (y : M)
     (hy : RelMap (L := graphLanguage L) (GraphRelation.graph f) (Fin.snoc xs y)) :
     y = graphValue hAx f xs :=
@@ -78,19 +78,10 @@ theorem reconstruct_relMap_base (hAx : Sentenceω.Realize (graphAxioms F) M) {n 
       RelMap (L := graphLanguage L) (GraphRelation.base R) v :=
   Iff.rfl
 
-/-- For `f ∈ F`, the reconstructed `funMap` is characterized by the graph relation. -/
-theorem reconstruct_funMap_graph_iff (hAx : Sentenceω.Realize (graphAxioms F) M) {n : ℕ}
-    (f : L.Functions n) (h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F) (xs : Fin n → M) (y : M) :
-    (reconstructStructure F hAx).funMap f xs = y ↔
-      RelMap (L := graphLanguage L) (GraphRelation.graph f) (Fin.snoc xs y) := by
-  constructor
-  · rintro rfl
-    exact graphValue_spec hAx f h xs
-  · intro hy
-    exact (graphValue_unique hAx f h xs y hy).symm
+
 
 /-- Graph-expanding a reconstruction preserves the graph relations of `F`. -/
-theorem graphExpansion_reconstruct_relMap_graph (hAx : Sentenceω.Realize (graphAxioms F) M)
+private theorem graphExpansion_reconstruct_relMap_graph (hAx : Sentenceω.Realize (graphAxioms F) M)
     {n : ℕ} (f : L.Functions n) (h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F)
     (v : Fin (n + 1) → M) :
     (@graphExpansion L M (reconstructStructure F hAx)).RelMap (GraphRelation.graph f) v ↔
@@ -141,15 +132,10 @@ section RoundTrip
 variable {M : Type} [Nonempty M] [L.Structure M]
 variable (F : Set (Σ n, L.Functions n)) [Countable ↥F]
 
-/-- Reconstructing the graph expansion preserves all base relations — definitionally. -/
-theorem reconstruct_graphExpansion_relMap {n : ℕ} (R : L.Relations n) (v : Fin n → M) :
-    letI := graphExpansion L M
-    ((reconstructStructure F (graphExpansion_realizes_graphAxioms F M)).RelMap R v ↔
-      RelMap R v) :=
-  Iff.rfl
+
 
 /-- Reconstructing the graph expansion recovers `funMap` on every symbol of `F`. -/
-theorem reconstruct_graphExpansion_funMap {n : ℕ} (f : L.Functions n)
+private theorem reconstruct_graphExpansion_funMap {n : ℕ} (f : L.Functions n)
     (h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F) (v : Fin n → M) :
     letI := graphExpansion L M
     ((reconstructStructure F (graphExpansion_realizes_graphAxioms F M)).funMap f v =

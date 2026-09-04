@@ -109,8 +109,7 @@ instance : Bot (L.BoundedFormulaInf ι α n) :=
 instance : Top (L.BoundedFormulaInf ι α n) :=
   ⟨BoundedFormulaInf.verum⟩
 
-instance : Inhabited (L.BoundedFormulaInf ι α n) :=
-  ⟨⊥⟩
+
 
 /-- Existential quantification over the last bound variable. -/
 @[match_pattern]

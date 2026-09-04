@@ -64,8 +64,7 @@ abbrev negativeRelationsIn {n : ℕ} (φ : L.BoundedFormulaω α n) : Set (Σ n,
 @[simp] theorem relationsInSigned_falsum {n : ℕ} (s : Bool) :
     relationsInSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α n) = ∅ := rfl
 
-@[simp] theorem relationsInSigned_bot {n : ℕ} (s : Bool) :
-    relationsInSigned s (⊥ : L.BoundedFormulaω α n) = ∅ := rfl
+
 
 @[simp] theorem relationsInSigned_equal {n : ℕ} (s : Bool)
     (t₁ t₂ : L.Term (α ⊕ Fin n)) :
@@ -114,10 +113,7 @@ theorem negativeRelationsIn_not {n : ℕ} (φ : L.BoundedFormulaω α n) :
   show relationsInSigned s ((φ.imp ψ.not).not) = _
   rw [relationsInSigned_not, relationsInSigned_imp, relationsInSigned_not, Bool.not_not]
 
-@[simp] theorem relationsInSigned_or {n : ℕ} (s : Bool) (φ ψ : L.BoundedFormulaω α n) :
-    relationsInSigned s (φ.or ψ) = relationsInSigned s φ ∪ relationsInSigned s ψ := by
-  show relationsInSigned s (φ.not.imp ψ) = _
-  rw [relationsInSigned_imp, relationsInSigned_not, Bool.not_not]
+
 
 /-- **Existential quantification preserves the signs** (two flips cancel). -/
 @[simp] theorem relationsInSigned_ex {n : ℕ} (s : Bool) (φ : L.BoundedFormulaω α (n + 1)) :
@@ -140,37 +136,11 @@ theorem relationsInSigned_einf {ι : Type*} [Encodable ι] {n : ℕ} (s : Bool)
   · rintro ⟨i, hi⟩
     exact ⟨Encodable.encode i, by rw [Encodable.encodek]; exact hi⟩
 
-/-- An `Encodable`-indexed disjunction collects the branches' signed occurrences (the `⊥` padding
-of undecodable indices contributes nothing). -/
-theorem relationsInSigned_esup {ι : Type*} [Encodable ι] {n : ℕ} (s : Bool)
-    (φs : ι → L.BoundedFormulaω α n) :
-    relationsInSigned s (BoundedFormulaω.esup φs) = ⋃ i, relationsInSigned s (φs i) := by
-  ext x
-  simp only [BoundedFormulaω.esup, relationsInSigned_iSup, Set.mem_iUnion]
-  constructor
-  · rintro ⟨k, hk⟩
-    cases hd : Encodable.decode (α := ι) k with
-    | none => rw [hd, relationsInSigned_bot] at hk; exact absurd hk (Set.notMem_empty x)
-    | some i => rw [hd] at hk; exact ⟨i, hk⟩
-  · rintro ⟨i, hi⟩
-    exact ⟨Encodable.encode i, by rw [Encodable.encodek]; exact hi⟩
+
 
 /-! ## Countability -/
 
-theorem relationsInSigned_countable {n : ℕ} (s : Bool) (φ : L.BoundedFormulaω α n) :
-    (relationsInSigned s φ).Countable := by
-  induction φ generalizing s with
-  | falsum => exact Set.countable_empty
-  | equal => exact Set.countable_empty
-  | rel R ts =>
-    rw [relationsInSigned_rel]
-    cases s
-    · exact Set.countable_empty
-    · exact Set.countable_singleton _
-  | imp φ ψ ihφ ihψ => exact (ihφ _).union (ihψ _)
-  | all φ ih => exact ih _
-  | iSup φs ih => exact Set.countable_iUnion fun i => ih i _
-  | iInf φs ih => exact Set.countable_iUnion fun i => ih i _
+
 
 end BoundedFormulaω
 

@@ -44,11 +44,10 @@ universe u v w uCode uIndex
 variable {L : Language.{0, 0}}
 
 /-- The all-arity first-order image: every formula containing no infinitary node. -/
-def hfSet (L : Language.{u, v}) : Set (Σ n, L.BoundedFormulaω Empty n) :=
+private def hfSet (L : Language.{u, v}) : Set (Σ n, L.BoundedFormulaω Empty n) :=
   {p | p.2.IsFirstOrder}
 
-@[simp] theorem mem_hfSet_iff {n : ℕ} {φ : L.BoundedFormulaω Empty n} :
-    (⟨n, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ hfSet L ↔ φ.IsFirstOrder := Iff.rfl
+
 
 /-- **The HF fragment.**  Each field is now one appeal to the first-order-image API: three
 structural equations and the two negative facts.  Compare the five hand-rolled constructor
@@ -66,14 +65,14 @@ def hfFragment (L : Language.{u, v}) : Fragment L where
 def finitaryFragment (L : Language.{u, v}) : Set L.Sentenceω :=
   Set.range Sentence.toLω
 
-theorem mem_finitaryFragment_iff {L : Language.{u, v}} {φ : L.Sentenceω} :
+private theorem mem_finitaryFragment_iff {L : Language.{u, v}} {φ : L.Sentenceω} :
     φ ∈ finitaryFragment L ↔ ∃ φ₀ : L.Sentence, φ₀.toLω = φ := Iff.rfl
 
 /-- **The oracle, condition 1.**  The sentence slice of `hfFragment` is exactly `finitaryFragment`.
 Any proposed `AdmissibleFragment` whose HF instance fails this is wrong.
 
 Both sides are universe-general. -/
-theorem sentence_slice_hfFragment (L : Language.{u, v}) :
+private theorem sentence_slice_hfFragment (L : Language.{u, v}) :
     {φ : L.Sentenceω | (⟨0, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ hfFragment L} =
       finitaryFragment L := by
   ext φ
@@ -83,12 +82,12 @@ theorem sentence_slice_hfFragment (L : Language.{u, v}) :
 /-- The **full preimage theory** — every first-order sentence whose image lies in `T`, not one
 chosen representative per member.  Choosing representatives would need `Classical.choice` and would
 make the model correspondence direction-sensitive. -/
-def foTheory {L : Language.{u, v}} (T : Set L.Sentenceω) : L.Theory :=
+private def foTheory {L : Language.{u, v}} (T : Set L.Sentenceω) : L.Theory :=
   {φ₀ : L.Sentence | φ₀.toLω ∈ T}
 
 /-- **Model correspondence.**  For a theory inside the finitary fragment, models of the preimage
 theory are exactly models of the original. -/
-theorem model_foTheory_iff {L : Language.{u, v}} {T : Set L.Sentenceω}
+private theorem model_foTheory_iff {L : Language.{u, v}} {T : Set L.Sentenceω}
     (hT : T ⊆ finitaryFragment L) (M : Type w) [L.Structure M] [Nonempty M] :
     M ⊨ foTheory T ↔ Theoryω.Model T M := by
   constructor
@@ -106,7 +105,7 @@ No `compact` field is consulted: the infinitary finite-satisfiability hypothesis
 `toLω` to the preimage theory, Mathlib supplies its canonical model in `Type (max u v)`, and the
 correspondence carries it back.  Finite-subtheory witnesses may live in any fixed `Type w`; their
 universe is independent of the output universe. -/
-theorem finitaryFragment_compactIn {L : Language.{u, v}} {T : L.Theoryω}
+private theorem finitaryFragment_compactIn {L : Language.{u, v}} {T : L.Theoryω}
     (hT : T ⊆ finitaryFragment L) (hfin : Theoryω.IsFinitelySatisfiableIn.{u, v, w} T) :
     Theoryω.IsSatisfiableIn.{u, v, max u v} T := by
   -- every finite subset of the preimage theory is satisfiable
@@ -139,20 +138,9 @@ For HF the certificate is empty, so `CodedFamily` is uninhabited and the upward-
 any `AdmissibleFragment` over it are vacuous.  Note where the emptiness lives: in `IsFamilyCode`,
 **not** in the index type's cardinality and **not** in `einf`'s padding. -/
 
-/-- **Gate 4.**  `CodedFamily` over HF is uninhabited.
 
-Stated over `hfFamily`, the family-layer HF presentation, so the syntax consumers of HF depend on
-no presentation carrying theory decoding or `Sigma1`.  The emptiness comes solely from
-`IsFamilyCode := False`. -/
-theorem isEmpty_codedFamily_hf : IsEmpty (CodedFamily (hfFamily L) n) :=
-  isEmpty_codedFamily_hfFamily
 
-/-- Consequently every upward-closure obligation over HF is vacuous, for **any** target set. -/
-theorem hf_coded_closure_vacuous (S : Set (Σ n, L.BoundedFormulaω Empty n)) :
-    ∀ F : CodedFamily (hfFamily L) n,
-      (∀ i, (⟨n, F.decode i⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ S) →
-        (⟨n, codedIInf F⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ S :=
-  hfFamily_coded_closure_vacuous S
+
 
 
 /-! ## Step 4 — the honest HF instance
@@ -166,10 +154,7 @@ def hfAdmissibleFragment (L : Language.{0, 0}) : AdmissibleFragment (hfFamily L)
   iInf_coded_mem := fun F _ => absurd F.infinitary not_false
   iSup_coded_mem := fun F _ => absurd F.infinitary not_false
 
-/-- **Oracle condition 1, at the interface level.**  The HF admissible fragment's underlying
-`Fragment` is exactly `hfFragment`, whose sentence slice is `finitaryFragment`. -/
-theorem hfAdmissibleFragment_toFragment (L : Language.{0, 0}) :
-    (hfAdmissibleFragment L).toFragment = hfFragment L := rfl
+
 
 
 /-! ## The universe boundary

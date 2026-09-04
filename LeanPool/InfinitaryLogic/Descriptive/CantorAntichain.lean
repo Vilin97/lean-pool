@@ -39,7 +39,7 @@ namespace CantorScheme
 
 /-- Membership in the domain of `inducedMap` is definitionally nonemptiness of the branch
 intersection. -/
-theorem mem_inducedMap_fst_iff {β α : Type*} {A : List β → Set α} {x : ℕ → β} :
+private theorem mem_inducedMap_fst_iff {β α : Type*} {A : List β → Set α} {x : ℕ → β} :
     x ∈ (inducedMap A).1 ↔ (⋂ n, A (PiNat.res x n)).Nonempty :=
   Iff.rfl
 

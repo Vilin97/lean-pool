@@ -114,12 +114,7 @@ The paired family carries the invariant `support Γ ∪ support Δ ⊆ ↑A` —
 (supplied by the invariant whenever `c ∉ A`) is the one non-trivial move, and it is exactly
 constant abstraction. -/
 
-/-- **Variance (shrink the budget).** A smaller allowed support makes inseparability easier: every
-separator allowed at `A` is allowed at `B ⊇ A`. -/
-theorem insepAt_mono_support {B : Finset ℕ} (hAB : A ⊆ B)
-    (h : InsepAt F R B Γ Δ) : InsepAt F R A Γ Δ := by
-  rintro ⟨σ, hbf, hbr, hsupp, hΓσ, hΔσ⟩
-  exact h ⟨σ, hbf, hbr, hsupp.trans (Finset.coe_subset.mpr hAB), hΓσ, hΔσ⟩
+
 
 /-- **Fresh growth.** Enlarging the allowed-support budget by a constant `c` fresh for `Δ` preserves
 inseparability: a separator using `c` abstracts to `genEx c σ`, whose support lies back in `A`. Only

@@ -183,10 +183,10 @@ theorem neg_iSup_entails_neg_component (φs : ℕ → L[[ℕ]].Sentenceω) (k : 
 the interpretations coincide. -/
 
 /-- The ambient interpretation of the constant `c_c` (as the realization of `constTermS c`). -/
-noncomputable def cval (M : Type) [S : L[[ℕ]].Structure M] (c : ℕ) : M :=
+private noncomputable def cval (M : Type) [S : L[[ℕ]].Structure M] (c : ℕ) : M :=
   (constTermS (L := L) c).realize (Sum.elim Empty.elim Fin.elim0 : Empty ⊕ Fin 0 → M)
 
-theorem realize_constEq (M : Type) [S : L[[ℕ]].Structure M] (a b : ℕ) :
+private theorem realize_constEq (M : Type) [S : L[[ℕ]].Structure M] (a b : ℕ) :
     Sentenceω.Realize (constEq (L := L) a b) M ↔ cval (L := L) M a = cval (L := L) M b := by
   rw [constEq]; exact BoundedFormulaω.realize_equal (M := M) (constTermS a) (constTermS b)
 
@@ -236,7 +236,7 @@ theorem entails_rel_congr {Γ : Set L[[ℕ]].Sentenceω} {l : ℕ} (Rr : L.Relat
 
 /-- Realizing the constant instance `φ(c)` in an ambient structure is realizing `φ` at the
 constant's ambient interpretation. -/
-theorem realize_instConst_ambient_iff (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
+private theorem realize_instConst_ambient_iff (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
     (M : Type) [S : L[[ℕ]].Structure M] :
     @Sentenceω.Realize L[[ℕ]] (instConst c φ) M S ↔
       @BoundedFormulaω.Realize L[[ℕ]] M S Empty 1 φ Empty.elim
@@ -412,184 +412,40 @@ variable {F : Set (Σ n, L.Functions n)} {R : Set (Σ n, L.Relations n)}
 
 theorem InsepFamilyMem.finite (h : InsepFamilyMem F R Δ r₁ r₂ Γ) : Γ.Finite := h.1
 
-theorem InsepFamilyMem.subset_genU (h : InsepFamilyMem F R Δ r₁ r₂ Γ) : Γ ⊆ GenU r₁ r₂ := h.2.1
 
-/-- The total constant support of a family member is finite (each member has finite support by
-`genU_finite_support`, and a family member is a finite union of members). -/
-theorem InsepFamilyMem.support_finite
-    (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁).Finite)
-    (hr₂ : (sentenceJConsts (L' := L) (J := ℕ) r₂).Finite)
-    (h : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    (⋃ γ ∈ Γ, sentenceJConsts (L' := L) (J := ℕ) γ).Finite :=
-  h.finite.biUnion fun γ hγ => genU_finite_support hr₁ hr₂ γ (h.subset_genU hγ)
+
+
 
 /-! ## The family closure lemmas (one per `ConsistencyPropertyEqOn` field) -/
 
-/-- **C0 field**: `⊥ ∉ Γ` for a family member. -/
-theorem insepFamily_no_falsum (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    (BoundedFormulaω.falsum : L[[ℕ]].Sentenceω) ∉ Γ := by
-  intro hmem
-  obtain ⟨_, _, A, hA⟩ := hfam
-  exact insepAt_falsum_absurd hmem hA
 
-/-- **Contradiction field**: no sentence and its negation both lie in a family member. -/
-theorem insepFamily_no_contradiction (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    ∀ φ : L[[ℕ]].Sentenceω, ¬(φ ∈ Γ ∧ φ.not ∈ Γ) := by
-  rintro φ ⟨h1, h2⟩
-  obtain ⟨_, _, A, hA⟩ := hfam
-  exact insepAt_contradiction_absurd h1 h2 hA
 
-/-- **C1 field**: an implication yields one of the two refined family members. -/
-theorem insepFamily_imp {φ ψ : L[[ℕ]].Sentenceω} (hmem : φ.imp ψ ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    InsepFamilyMem F R Δ r₁ r₂ (insert φ.not Γ) ∨ InsepFamilyMem F R Δ r₁ r₂ (insert ψ Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  rcases insepAt_imp_dichotomy hmem hA with hstep | hstep
-  · exact Or.inl ⟨hfin.insert _, Set.insert_subset_iff.mpr ⟨imp_negleft_mem (hsub hmem), hsub⟩,
-      A, hstep⟩
-  · exact Or.inr ⟨hfin.insert _, Set.insert_subset_iff.mpr ⟨imp_right_mem (hsub hmem), hsub⟩,
-      A, hstep⟩
 
-/-- **C2 field (negated implication)**: `¬(φ → ψ)` yields both refined family members. -/
-theorem insepFamily_neg_imp {φ ψ : L[[ℕ]].Sentenceω} (hmem : (φ.imp ψ).not ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    InsepFamilyMem F R Δ r₁ r₂ (insert φ Γ) ∧ InsepFamilyMem F R Δ r₁ r₂ (insert ψ.not Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  refine ⟨⟨hfin.insert _, ?_, A, ?_⟩, ⟨hfin.insert _, ?_, A, ?_⟩⟩
-  · exact Set.insert_subset_iff.mpr ⟨negimp_left_mem (hsub hmem), hsub⟩
-  · exact insepAt_insert_of_entails (entails_of_mem_of_entails hmem (negimp_entails_left φ ψ)) hA
-  · exact Set.insert_subset_iff.mpr ⟨negimp_right_mem (hsub hmem), hsub⟩
-  · exact insepAt_insert_of_entails (entails_of_mem_of_entails hmem (negimp_entails_right φ ψ)) hA
 
-/-- **Double-negation field**: `¬¬φ` refines to `φ`. -/
-theorem insepFamily_not_not {φ : L[[ℕ]].Sentenceω} (hmem : φ.not.not ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    InsepFamilyMem F R Δ r₁ r₂ (insert φ Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  refine ⟨hfin.insert _, ?_, A, ?_⟩
-  · exact Set.insert_subset_iff.mpr
-      ⟨negimp_left_mem (φ := φ) (ψ := (⊥ : L[[ℕ]].Sentenceω)) (hsub hmem), hsub⟩
-  · exact insepAt_insert_of_entails (entails_of_mem_of_entails hmem (not_not_entails φ)) hA
 
-/-- **C3 field (conjunction)**: each component of a conjunction refines the member. -/
-theorem insepFamily_iInf {φs : ℕ → L[[ℕ]].Sentenceω} (hmem : BoundedFormulaω.iInf φs ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    ∀ k, InsepFamilyMem F R Δ r₁ r₂ (insert (φs k) Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  intro k
-  refine ⟨hfin.insert _, ?_, A, ?_⟩
-  · exact Set.insert_subset_iff.mpr ⟨iInf_comp_mem k (hsub hmem), hsub⟩
-  · exact insepAt_insert_of_entails (entails_of_mem_of_entails hmem (iInf_entails_component φs k)) hA
 
-/-- **C3' field (negated conjunction)**: some negated component refines the member. -/
-theorem insepFamily_neg_iInf {φs : ℕ → L[[ℕ]].Sentenceω} (hmem : (BoundedFormulaω.iInf φs).not ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    ∃ k, InsepFamilyMem F R Δ r₁ r₂ (insert (φs k).not Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  obtain ⟨k, hk⟩ := insepAt_neg_iInf_component φs hmem hA
-  exact ⟨k, hfin.insert _, Set.insert_subset_iff.mpr ⟨negiInf_comp_mem k (hsub hmem), hsub⟩, A, hk⟩
 
-/-- **C4 field (disjunction)**: some component refines the member. -/
-theorem insepFamily_iSup {φs : ℕ → L[[ℕ]].Sentenceω} (hmem : BoundedFormulaω.iSup φs ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    ∃ k, InsepFamilyMem F R Δ r₁ r₂ (insert (φs k) Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  obtain ⟨k, hk⟩ := insepAt_iSup_component φs hmem hA
-  exact ⟨k, hfin.insert _, Set.insert_subset_iff.mpr ⟨iSup_comp_mem k (hsub hmem), hsub⟩, A, hk⟩
 
-/-- **C4' field (negated disjunction)**: each negated component refines the member. -/
-theorem insepFamily_neg_iSup {φs : ℕ → L[[ℕ]].Sentenceω} (hmem : (BoundedFormulaω.iSup φs).not ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    ∀ k, InsepFamilyMem F R Δ r₁ r₂ (insert (φs k).not Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  intro k
-  refine ⟨hfin.insert _, ?_, A, ?_⟩
-  · exact Set.insert_subset_iff.mpr ⟨negiSup_comp_mem k (hsub hmem), hsub⟩
-  · exact insepAt_insert_of_entails
-      (entails_of_mem_of_entails hmem (neg_iSup_entails_neg_component φs k)) hA
 
-/-- **Equality reflexivity field**: `c = c` can always be added. -/
-theorem insepFamily_eq_refl (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    ∀ c, InsepFamilyMem F R Δ r₁ r₂ (insert (constEq c c) Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  intro c
-  refine ⟨hfin.insert _, ?_, A, ?_⟩
-  · exact Set.insert_subset_iff.mpr ⟨eqRefl_mem c, hsub⟩
-  · exact insepAt_insert_of_entails (entails_constEq_refl c) hA
 
-/-- **Equality symmetry field**: `a = b ∈ Γ` lets `b = a` be added. -/
-theorem insepFamily_eq_symm {a b : ℕ} (hmem : constEq a b ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    InsepFamilyMem F R Δ r₁ r₂ (insert (constEq b a) Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  refine ⟨hfin.insert _, ?_, A, ?_⟩
-  · exact Set.insert_subset_iff.mpr ⟨constEq_mem b a, hsub⟩
-  · exact insepAt_insert_of_entails (entails_constEq_symm hmem) hA
 
-/-- **Equality transitivity field**: `a = b, b = d ∈ Γ` let `a = d` be added. -/
-theorem insepFamily_eq_trans {a b d : ℕ} (h1 : constEq a b ∈ Γ) (h2 : constEq b d ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    InsepFamilyMem F R Δ r₁ r₂ (insert (constEq a d) Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  refine ⟨hfin.insert _, ?_, A, ?_⟩
-  · exact Set.insert_subset_iff.mpr ⟨constEq_mem a d, hsub⟩
-  · exact insepAt_insert_of_entails (entails_constEq_trans h1 h2) hA
 
-/-- **Relation-congruence field**: replacing one argument of an atomic relation instance by an
-equal constant can be added. -/
-theorem insepFamily_rel_congr {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ) (i : Fin l) (b : ℕ)
-    (h1 : relInst Rr g ∈ Γ) (h2 : constEq (g i) b ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    InsepFamilyMem F R Δ r₁ r₂ (insert (relInst Rr (Function.update g i b)) Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  refine ⟨hfin.insert _, ?_, A, ?_⟩
-  · exact Set.insert_subset_iff.mpr ⟨relInst_mem Rr (Function.update g i b), hsub⟩
-  · exact insepAt_insert_of_entails (entails_rel_congr Rr g i b h1 h2) hA
 
-/-- **Universal instantiation field**: `∀x φ ∈ Γ` lets every constant instance `φ(c)` be added. -/
-theorem insepFamily_all_inst {φ : L[[ℕ]].BoundedFormulaω Empty 1} (hmem : φ.all ∈ Γ)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) :
-    ∀ c, InsepFamilyMem F R Δ r₁ r₂ (insert (instConst c φ) Γ) := by
-  obtain ⟨hfin, hsub, A, hA⟩ := hfam
-  intro c
-  refine ⟨hfin.insert _, ?_, A, ?_⟩
-  · exact Set.insert_subset_iff.mpr ⟨all_inst_mem c (hsub hmem), hsub⟩
-  · exact insepAt_insert_of_entails
-      (entails_of_mem_of_entails hmem (all_entails_instConst c φ)) hA
 
-/-- **The fresh-witness field (negated universal)**: `¬∀x φ ∈ Γ` produces a *fresh* constant `c`
-and the refined family member `insert ¬φ(c) Γ`. Freshness of `c` (for `Γ`, `Δ`, and `φ`) is what
-makes the abstracted separator strip cleanly; it exists because the total constant support in
-play is finite. -/
-theorem insepFamily_neg_all_witness {φ : L[[ℕ]].BoundedFormulaω Empty 1}
-    (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁).Finite)
-    (hr₂ : (sentenceJConsts (L' := L) (J := ℕ) r₂).Finite)
-    (hΔfin : (⋃ δ ∈ Δ, sentenceJConsts (L' := L) (J := ℕ) δ).Finite)
-    (hfam : InsepFamilyMem F R Δ r₁ r₂ Γ) (hmem : φ.all.not ∈ Γ) :
-    ∃ c, InsepFamilyMem F R Δ r₁ r₂ (insert ((instConst c φ).not) Γ) := by
-  obtain ⟨hΓfin, hΓsub, A, hA⟩ := hfam
-  have hSΓfin : (⋃ γ ∈ Γ, sentenceJConsts (L' := L) (J := ℕ) γ).Finite :=
-    hΓfin.biUnion fun γ hγ => genU_finite_support hr₁ hr₂ γ (hΓsub hγ)
-  have hnotallmem : φ.all.not ∈ GenU r₁ r₂ := hΓsub hmem
-  have hSφfin : (sentenceJConsts (L' := L) (J := ℕ) φ).Finite := by
-    have hx := genU_finite_support hr₁ hr₂ _ hnotallmem
-    rwa [sentenceJConsts_not, sentenceJConsts_all] at hx
-  -- a fresh constant, avoiding the (finite) constant support of Γ, Δ, φ, and A
-  obtain ⟨c, hc⟩ :=
-    (((hSΓfin.union hΔfin).union hSφfin).union A.finite_toSet).exists_notMem
-  simp only [Set.mem_union, not_or] at hc
-  obtain ⟨⟨⟨hcΓ', hcΔ'⟩, hcφ⟩, _hcA⟩ := hc
-  have hcΓ : ∀ γ ∈ Γ, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ :=
-    fun γ hγ hmem' => hcΓ' (Set.mem_biUnion hγ hmem')
-  have hcΔ : ∀ δ ∈ Δ, c ∉ sentenceJConsts (L' := L) (J := ℕ) δ :=
-    fun δ hδ hmem' => hcΔ' (Set.mem_biUnion hδ hmem')
-  -- `φ.all.not ∈ Γ`, so inserting it changes nothing
-  have hAins : InsepAt F R A (insert (φ.all).not Γ) Δ := by
-    rw [Set.insert_eq_self.mpr hmem]; exact hA
-  have hins := insepAt_not_instConst_of_insepAt_not_all c φ
-    (by rw [sentenceJConsts_not]; exact hcφ) hcΓ hcΔ hAins
-  rw [instConst_not] at hins
-  exact ⟨c, hΓfin.insert _,
-    Set.insert_subset_iff.mpr ⟨negall_inst_mem c hnotallmem, hΓsub⟩, insert c A, hins⟩
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 end FirstOrder.Language

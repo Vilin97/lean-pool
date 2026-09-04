@@ -41,17 +41,7 @@ instance instSMulPermStructureSpace : SMul (Equiv.Perm ℕ) (StructureSpace L) w
     (R : Σ l, L.Relations l) (v : Fin R.1 → ℕ) :
     (σ • c) ⟨R, v⟩ = c ⟨R, ⇑σ⁻¹ ∘ v⟩ := rfl
 
-instance : MulAction (Equiv.Perm ℕ) (StructureSpace L) where
-  one_smul c := by
-    funext q
-    show c ⟨q.1, ⇑(1 : Equiv.Perm ℕ)⁻¹ ∘ q.2⟩ = c q
-    simp
-    rfl
-  mul_smul σ τ c := by
-    funext q
-    show c ⟨q.1, ⇑(σ * τ)⁻¹ ∘ q.2⟩ = c ⟨q.1, ⇑τ⁻¹ ∘ ⇑σ⁻¹ ∘ q.2⟩
-    rw [mul_inv_rev]
-    rfl
+
 
 /-- **Action invariance** of a class of coded structures. -/
 def ActionInvariant (B : Set (StructureSpace L)) : Prop :=
@@ -63,7 +53,7 @@ variable [L.IsRelational]
 
 /-- **Orbit = isomorphism**: two codes lie in the same `S∞`-orbit iff their decoded structures are
 `L`-isomorphic. -/
-theorem orbit_iff_iso (c d : StructureSpace L) :
+private theorem orbit_iff_iso (c d : StructureSpace L) :
     (∃ σ : Equiv.Perm ℕ, σ • c = d) ↔
       Nonempty (@Language.Equiv L ℕ ℕ c.toStructure d.toStructure) := by
   constructor

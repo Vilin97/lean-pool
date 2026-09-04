@@ -79,16 +79,10 @@ theorem elementRank_le_completeStab {M : Type w} [L.Structure M] [Countable M]
     elementRank (L := L) m ≤ α :=
   csInf_le' (completeStab_mem_elementRank_set hstab m)
 
-/-- Conditional variant of `elementRank_lt_omega1`. -/
-theorem elementRank_lt_omega1_of
-    (hcount : CountableRefinementHypothesis.{u, v, w} L)
-    {M : Type w} [L.Structure M] [Countable M] (m : M) :
-    elementRank (L := L) m < (Ordinal.omega 1 : Ordinal.{0}) := by
-  obtain ⟨α, hα_lt, hstab⟩ := exists_complete_stabilization_of hcount M
-  exact lt_of_le_of_lt (elementRank_le_completeStab hstab m) hα_lt
+
 
 /-- Conditional variant of `scottRank_lt_omega1`. -/
-theorem scottRank_lt_omega1_of
+private theorem scottRank_lt_omega1_of
     (hcount : CountableRefinementHypothesis.{u, v, w} L)
     (M : Type w) [L.Structure M] [Countable M] :
     scottRank (L := L) M < (Ordinal.omega 1 : Ordinal.{0}) := by
@@ -115,10 +109,7 @@ theorem scottRank_lt_omega1_of
 
 /-! ### Unconditional Wrappers (via CRH) -/
 
-/-- Element rank is below ω₁ for countable structures. -/
-theorem elementRank_lt_omega1 {M : Type w} [L.Structure M] [Countable M] (m : M) :
-    elementRank (L := L) m < (Ordinal.omega 1 : Ordinal.{0}) :=
-  elementRank_lt_omega1_of countableRefinementHypothesis m
+
 
 /-- Scott rank of a countable structure is a countable ordinal. -/
 theorem scottRank_lt_omega1 (M : Type w) [L.Structure M] [Countable M] :

@@ -47,7 +47,7 @@ This combines ℕ-coded models (BF-equivalence Borelness, `counting_coded_models
 with finite-carrier models (permutation orbits, `counting_fin_models_dichotomy`).
 `AllCodedIsoClasses φ` faithfully represents all iso classes of countable models
 (by `codeModel`, `codeModel_eq_of_iso`, `iso_of_codeModel_eq`, `codeModel_surjective`). -/
-theorem counting_countable_models_bounded_scottHeight
+private theorem counting_countable_models_bounded_scottHeight
     (silver : SilverBurgessDichotomy.{v})
     {φ : L.Sentenceω} {α : Ordinal.{0}} (hα : α < Ordinal.omega 1)
     (hbound : ∀ (M : Type) [L.Structure M] [Countable M],

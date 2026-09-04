@@ -40,7 +40,7 @@ variable {L : Language.{u, v}} [L.IsRelational] [Countable (Σ l, L.Relations l)
 /-! ### BFEquiv setoid on coded models -/
 
 /-- The BFEquiv α equivalence relation on coded ℕ-models of φ (at the empty tuple). -/
-def bfEquivSetoid (φ : L.Sentenceω) (α : Ordinal.{0}) :
+private def bfEquivSetoid (φ : L.Sentenceω) (α : Ordinal.{0}) :
     Setoid ↥(ModelsOf φ) where
   r c₁ c₂ := @BFEquiv L ℕ c₁.1.toStructure ℕ c₂.1.toStructure α 0 Fin.elim0 Fin.elim0
   iseqv := by
@@ -54,7 +54,7 @@ def bfEquivSetoid (φ : L.Sentenceω) (α : Ordinal.{0}) :
 
 omit [Countable (Σ l, L.Relations l)] in
 /-- Iso implies BFEquiv α: isoSetoid refines bfEquivSetoid. -/
-theorem isoSetoid_refines_bfEquivSetoid (φ : L.Sentenceω) (α : Ordinal.{0})
+private theorem isoSetoid_refines_bfEquivSetoid (φ : L.Sentenceω) (α : Ordinal.{0})
     {c₁ c₂ : ↥(ModelsOf φ)} :
     (isoSetoid φ).r c₁ c₂ → (bfEquivSetoid φ α).r c₁ c₂ := by
   intro ⟨e⟩
@@ -65,7 +65,7 @@ theorem isoSetoid_refines_bfEquivSetoid (φ : L.Sentenceω) (α : Ordinal.{0})
   exact @equiv_implies_BFEquiv L ℕ ℕ c₁.1.toStructure c₂.1.toStructure e α 0 Fin.elim0
 
 /-- The BFEquiv α relation on ModelsOf φ is measurable. -/
-theorem bfEquivSetoid_measurableSet (φ : L.Sentenceω) (α : Ordinal.{0})
+private theorem bfEquivSetoid_measurableSet (φ : L.Sentenceω) (α : Ordinal.{0})
     (hα : α < Ordinal.omega 1) :
     MeasurableSet {p : ↥(ModelsOf φ) × ↥(ModelsOf φ) |
       (bfEquivSetoid φ α).r p.1 p.2} := by
@@ -82,7 +82,7 @@ theorem bfEquivSetoid_measurableSet (φ : L.Sentenceω) (α : Ordinal.{0})
     (bfEquivSet_measurableSet α hα 0 Fin.elim0 Fin.elim0)
 
 /-- Per-level BFEquiv dichotomy. -/
-theorem bfEquiv_classes_dichotomy (silver : SilverBurgessDichotomy.{v})
+private theorem bfEquiv_classes_dichotomy (silver : SilverBurgessDichotomy.{v})
     (φ : L.Sentenceω) (α : Ordinal.{0}) (hα : α < Ordinal.omega 1) :
     (#(Quotient (bfEquivSetoid φ α)) ≤ ℵ₀) ∨
     (#(Quotient (bfEquivSetoid φ α)) = Cardinal.continuum) :=
@@ -90,42 +90,40 @@ theorem bfEquiv_classes_dichotomy (silver : SilverBurgessDichotomy.{v})
 
 omit [Countable (Σ l, L.Relations l)] in
 /-- The depth-`α` projection of isomorphism classes onto back-and-forth classes. -/
-def bfProj (φ : L.Sentenceω) (α : Ordinal.{0}) :
+private def bfProj (φ : L.Sentenceω) (α : Ordinal.{0}) :
     Quotient (isoSetoid φ) → Quotient (bfEquivSetoid φ α) :=
   Quotient.map id (fun _a _b h => isoSetoid_refines_bfEquivSetoid φ α h)
 
-omit [Countable (Σ l, L.Relations l)] in
-@[simp] theorem bfProj_mk (φ : L.Sentenceω) (α : Ordinal.{0}) (c : ↥(ModelsOf φ)) :
-    bfProj φ α (Quotient.mk _ c) = Quotient.mk _ c := rfl
+
 
 omit [Countable (Σ l, L.Relations l)] in
-theorem bfProj_surjective (φ : L.Sentenceω) (α : Ordinal.{0}) :
+private theorem bfProj_surjective (φ : L.Sentenceω) (α : Ordinal.{0}) :
     Function.Surjective (bfProj φ α) := fun q =>
   q.inductionOn fun c => ⟨Quotient.mk _ c, rfl⟩
 
 omit [Countable (Σ l, L.Relations l)] in
 /-- The depth-`α` projection of the isomorphism classes satisfying `P`: the range of `bfProj`
 restricted to `P`. -/
-def bfProjRange (φ : L.Sentenceω) (P : Quotient (isoSetoid φ) → Prop) (α : Ordinal.{0}) :
+private def bfProjRange (φ : L.Sentenceω) (P : Quotient (isoSetoid φ) → Prop) (α : Ordinal.{0}) :
     Set (Quotient (bfEquivSetoid φ α)) :=
   Set.range (fun q : {q : Quotient (isoSetoid φ) // P q} => bfProj φ α q.1)
 
 omit [Countable (Σ l, L.Relations l)] in
-theorem mem_bfProjRange {φ : L.Sentenceω} {P : Quotient (isoSetoid φ) → Prop} {α : Ordinal.{0}}
+private theorem mem_bfProjRange {φ : L.Sentenceω} {P : Quotient (isoSetoid φ) → Prop} {α : Ordinal.{0}}
     {x : Quotient (bfEquivSetoid φ α)} :
     x ∈ bfProjRange φ P α ↔ ∃ q : {q : Quotient (isoSetoid φ) // P q}, bfProj φ α q.1 = x :=
   Iff.rfl
 
 omit [Countable (Σ l, L.Relations l)] in
 /-- Refinement gives: #(BFEquiv α classes) ≤ #(iso classes). -/
-theorem bfEquiv_classes_le_iso_classes (φ : L.Sentenceω) (α : Ordinal.{0}) :
+private theorem bfEquiv_classes_le_iso_classes (φ : L.Sentenceω) (α : Ordinal.{0}) :
     #(Quotient (bfEquivSetoid φ α)) ≤ #(Quotient (isoSetoid φ)) :=
   Cardinal.mk_le_of_surjective (bfProj_surjective φ α)
 
 /-! ### Height function on iso classes -/
 
 /-- scottHeight lifted to the ℕ-model quotient. -/
-noncomputable def isoClassHeight {φ : L.Sentenceω}
+private noncomputable def isoClassHeight {φ : L.Sentenceω}
     (q : Quotient (isoSetoid φ)) : Ordinal.{0} :=
   Quotient.lift
     (fun (c : ↥(ModelsOf φ)) =>
@@ -137,7 +135,7 @@ noncomputable def isoClassHeight {φ : L.Sentenceω}
         ℕ (StructureSpace.toStructure c₂.1) _ e) q
 
 /-- Every ℕ-model iso class has height < ω₁. -/
-theorem isoClassHeight_lt_omega1 {φ : L.Sentenceω}
+private theorem isoClassHeight_lt_omega1 {φ : L.Sentenceω}
     (q : Quotient (isoSetoid φ)) :
     isoClassHeight q < Ordinal.omega 1 :=
   Quotient.inductionOn q fun c =>
@@ -150,7 +148,7 @@ depth `α` bounding the Scott height of the first are isomorphic.  This is the o
 stratification argument consults the Scott height, and it is exposed so that variants of the
 stratification (relativized to a subclass of isomorphism classes, or with weaker per-level
 bounds) can reuse it. -/
-theorem bfEquiv_at_height_implies_iso {φ : L.Sentenceω} {c₁ c₂ : ↥(ModelsOf φ)}
+private theorem bfEquiv_at_height_implies_iso {φ : L.Sentenceω} {c₁ c₂ : ↥(ModelsOf φ)}
     {α : Ordinal.{0}} (hα : α < Ordinal.omega 1)
     (hht₁ : isoClassHeight (Quotient.mk (isoSetoid φ) c₁) ≤ α)
     (hBF : (bfEquivSetoid φ α).r c₁ c₂) :
@@ -169,7 +167,7 @@ omit [L.IsRelational] in
 
 Stated for an arbitrary countable carrier rather than for `ℕ` alone, since the finite tiers need
 exactly the same bound at `Fin n`. -/
-theorem mk_structureSpaceOn_le_continuum {α : Type} [Countable α] :
+private theorem mk_structureSpaceOn_le_continuum {α : Type} [Countable α] :
     #(StructureSpaceOn L α) ≤ Cardinal.continuum := by
   -- `#(X → Bool) = 2 ^ #X ≤ 2 ^ ℵ₀ = continuum` once `X` is countable
   show #(RelQueryOn L α → Bool) ≤ _
@@ -186,7 +184,7 @@ theorem mk_structureSpaceOn_le_continuum {α : Type} [Countable α] :
 
 omit [L.IsRelational] in
 /-- The cardinality of `StructureSpace L` is at most continuum. -/
-theorem mk_structureSpace_le_continuum :
+private theorem mk_structureSpace_le_continuum :
     #(StructureSpace L) ≤ Cardinal.continuum := mk_structureSpaceOn_le_continuum
 
 /-- **The Scott-height stratification bound, relativized.**  Let `P` be any collection of
@@ -197,7 +195,7 @@ The height-`α` classes in `P` inject into that range (`bfEquiv_at_height_implie
 union over the `ω₁` heights is bounded by `ℵ₁ · ℵ₁ = ℵ₁`.  Two things are deliberately weaker
 than in the unrelativized statement: only the classes in `P` are counted at each level, and each
 level is allowed `ℵ₁` rather than `ℵ₀` classes. -/
-theorem mk_isoSetoid_subtype_le_aleph_one (φ : L.Sentenceω)
+private theorem mk_isoSetoid_subtype_le_aleph_one (φ : L.Sentenceω)
     (P : Quotient (isoSetoid φ) → Prop)
     (hle : ∀ α : Ordinal.{0}, α < Ordinal.omega 1 → #(bfProjRange φ P α) ≤ Cardinal.aleph 1) :
     #{q : Quotient (isoSetoid φ) // P q} ≤ Cardinal.aleph 1 := by
@@ -255,7 +253,7 @@ theorem mk_isoSetoid_subtype_le_aleph_one (φ : L.Sentenceω)
 
 /-- The relativized stratification bound with countable levels: if for every `α < ω₁` the
 depth-`α` projection of `P` has countable range, then `P` has at most `ℵ₁` members. -/
-theorem mk_isoSetoid_subtype_le_aleph_one_of_countable_levels (φ : L.Sentenceω)
+private theorem mk_isoSetoid_subtype_le_aleph_one_of_countable_levels (φ : L.Sentenceω)
     (P : Quotient (isoSetoid φ) → Prop)
     (hle : ∀ α : Ordinal.{0}, α < Ordinal.omega 1 → #(bfProjRange φ P α) ≤ ℵ₀) :
     #{q : Quotient (isoSetoid φ) // P q} ≤ Cardinal.aleph 1 :=
@@ -267,7 +265,7 @@ countably many classes, then isomorphism has at most `ℵ₁` classes.  This is 
 `mk_isoSetoid_subtype_le_aleph_one_of_countable_levels`; both `morley_counting_coded` and the
 witness-bearing route consume it, since the stratification argument is indifferent to how the
 countability of each level was established. -/
-theorem mk_isoSetoid_quotient_le_aleph_one (φ : L.Sentenceω)
+private theorem mk_isoSetoid_quotient_le_aleph_one (φ : L.Sentenceω)
     (hle : ∀ α, α < Ordinal.omega 1 → #(Quotient (bfEquivSetoid φ α)) ≤ ℵ₀) :
     #(Quotient (isoSetoid φ)) ≤ Cardinal.aleph 1 := by
   have h := mk_isoSetoid_subtype_le_aleph_one_of_countable_levels φ (fun _ => True)
@@ -275,7 +273,7 @@ theorem mk_isoSetoid_quotient_le_aleph_one (φ : L.Sentenceω)
   rwa [Cardinal.mk_congr (Equiv.subtypeUnivEquiv fun _ => trivial)] at h
 
 /-- Morley counting for ℕ-coded models: ≤ ℵ₁ or = 2^ℵ₀. -/
-theorem morley_counting_coded (silver : SilverBurgessDichotomy.{v}) (φ : L.Sentenceω) :
+private theorem morley_counting_coded (silver : SilverBurgessDichotomy.{v}) (φ : L.Sentenceω) :
     (#(Quotient (isoSetoid φ)) ≤ Cardinal.aleph 1) ∨
     (#(Quotient (isoSetoid φ)) = Cardinal.continuum) := by
   -- Case split: does some BFEquiv_α level have continuum-many classes?

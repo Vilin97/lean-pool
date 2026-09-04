@@ -66,9 +66,7 @@ abbrev StructureSpaceOn (L : Language.{u, v}) (α : Type*) := RelQueryOn L α �
 does the relation hold on that tuple? -/
 def StructureSpace (L : Language.{u, v}) := StructureSpaceOn L ℕ
 
-/-- The pair space for carrier α. -/
-abbrev StructurePairSpaceOn (L : Language.{u, v}) (α : Type*) :=
-  StructureSpaceOn L α × StructureSpaceOn L α
+
 
 namespace StructureSpaceOn
 
@@ -101,12 +99,7 @@ theorem toStructure_ofStructure [L.IsRelational]
     @Structure.RelMap _ _ inst _ R v := by
   simp only [relMap_toStructure, ofStructure, decide_eq_true_eq]
 
-/-- Round-trip: encoding a decoded structure recovers the original code. -/
-theorem ofStructure_toStructure [L.IsRelational]
-    (c : StructureSpaceOn L α) : ofStructure (c.toStructure) = c := by
-  funext ⟨⟨l, R⟩, v⟩
-  simp only [ofStructure, relMap_toStructure]
-  cases c ⟨⟨l, R⟩, v⟩ <;> simp
+
 
 end StructureSpaceOn
 
@@ -137,12 +130,7 @@ theorem toStructure_ofStructure [L.IsRelational]
     @Structure.RelMap _ _ inst _ R v := by
   simp only [relMap_toStructure, ofStructure, StructureSpaceOn.ofStructure, decide_eq_true_eq]
 
-/-- Round-trip: encoding a decoded structure recovers the original code. -/
-theorem ofStructure_toStructure [L.IsRelational]
-    (c : StructureSpace L) : ofStructure (c.toStructure) = c := by
-  funext ⟨⟨l, R⟩, v⟩
-  simp only [ofStructure, StructureSpaceOn.ofStructure, relMap_toStructure]
-  cases c ⟨⟨l, R⟩, v⟩ <;> simp
+
 
 end StructureSpace
 

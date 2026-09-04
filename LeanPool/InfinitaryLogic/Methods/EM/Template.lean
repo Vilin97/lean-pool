@@ -63,7 +63,7 @@ variable {N : Type*} [L.Structure N] {J : Type*} [LinearOrder J]
 /-- A sequence `b : J → N` realizes a template `T` if for every formula `φ` and
 every strictly increasing `n`-tuple `t : Fin n → J`, the truth value of `φ` on
 `b ∘ t` agrees with `T.truth φ`. -/
-def RealizesOn (T : Lomega1omegaTemplate L) (b : J → N) : Prop :=
+private def RealizesOn (T : Lomega1omegaTemplate L) (b : J → N) : Prop :=
   ∀ {n : ℕ} (φ : L.BoundedFormulaω Empty n) {t : Fin n → J} (_ : StrictMono t),
     T.truth φ ↔ φ.Realize (Empty.elim : Empty → N) (b ∘ t)
 
@@ -95,12 +95,7 @@ def template {a : I → M}
     letI := ‹L.Structure M›
     ∃ s : Fin n → I, StrictMono s ∧ φ.Realize (Empty.elim : Empty → M) (a ∘ s)
 
-/-- The hypothesis-bearing `template` equals the bare `templateOfSeq`. Proof
-is `rfl` because the existing `template` discards its indiscernibility
-argument in its data. -/
-theorem template_eq_templateOfSeq {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a) :
-    h.template = templateOfSeq (L := L) a := rfl
+
 
 /-- Well-definedness of `template`: the template's value at `φ` equals the
 truth value of `φ` on any specific strictly increasing tuple. This is the
@@ -116,7 +111,7 @@ theorem template_truth_iff {a : I → M}
   exact (h.iff_realize φ ht hs).mp hφ
 
 /-- An indiscernible sequence realizes its own template. -/
-theorem realizesTemplate {a : I → M}
+private theorem realizesTemplate {a : I → M}
     (h : IsLomega1omegaIndiscernible (L := L) a) :
     h.template.RealizesOn a := by
   intro n φ t ht
@@ -125,7 +120,7 @@ theorem realizesTemplate {a : I → M}
 /-- Restricting an indiscernible sequence to a sub-order along an order
 embedding `e : J ↪o I` produces a sequence that realizes the **same** template
 as the original. (The template object is built from `h`, not `h.restrict e`.) -/
-theorem realizesTemplate_restrict {a : I → M}
+private theorem realizesTemplate_restrict {a : I → M}
     (h : IsLomega1omegaIndiscernible (L := L) a)
     {J : Type*} [LinearOrder J] (e : J ↪o I) :
     h.template.RealizesOn (a ∘ e) := by
@@ -135,19 +130,13 @@ theorem realizesTemplate_restrict {a : I → M}
   have := h.template_truth_iff φ heT
   simpa [Function.comp_assoc] using this
 
-/-- Reindexing an indiscernible sequence by an order isomorphism `e : J ≃o I`
-produces a sequence that realizes the same template. -/
-theorem realizesTemplate_reindex {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    {J : Type*} [LinearOrder J] (e : J ≃o I) :
-    h.template.RealizesOn (a ∘ e) :=
-  h.realizesTemplate_restrict e.toOrderEmbedding
+
 
 /-- Reindexing an indiscernible sequence by an order isomorphism produces a
 template equal to the original. (Restricting along a non-surjective order
 embedding generally does *not* produce an equal template — only the realisation
 direction is preserved; see `realizesTemplate_restrict`.) -/
-theorem template_reindex {a : I → M}
+private theorem template_reindex {a : I → M}
     (h : IsLomega1omegaIndiscernible (L := L) a)
     {J : Type*} [LinearOrder J] (e : J ≃o I) :
     (h.reindex e).template = h.template := by

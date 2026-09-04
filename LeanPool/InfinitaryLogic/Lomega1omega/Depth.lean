@@ -72,7 +72,7 @@ theorem depth_lt_all {φ : L.BoundedFormulaω α (n + 1)} :
   simp only [BoundedFormulaω.depth]
   exact Order.lt_succ _
 
-theorem depth_castLE (h : m ≤ n) (φ : L.BoundedFormulaω α m) :
+private theorem depth_castLE (h : m ≤ n) (φ : L.BoundedFormulaω α m) :
     (φ.castLE h).depth = φ.depth := by
   induction φ generalizing n with
   | falsum => rfl
@@ -90,7 +90,7 @@ theorem depth_castLE (h : m ≤ n) (φ : L.BoundedFormulaω α m) :
     simp only [BoundedFormulaω.castLE, BoundedFormulaω.depth]
     congr 1; exact iSup_congr (fun k => ih k h)
 
-theorem depth_relabel (g : α → β ⊕ Fin p)
+private theorem depth_relabel (g : α → β ⊕ Fin p)
     (φ : L.BoundedFormulaω α n) : (φ.relabel g).depth = φ.depth := by
   induction φ with
   | falsum => rfl

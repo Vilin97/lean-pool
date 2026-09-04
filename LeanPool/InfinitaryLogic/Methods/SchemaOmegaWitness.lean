@@ -69,7 +69,7 @@ theorem canonDeForm_mem_ΓEMlocal {m : ℕ} {φ : (localColim s₀).BoundedFormu
 formula is exactly its eventual truth on the consecutive deep tuples `k ↦ a (d+k)`. Forward is
 "consecutive tuples are strictly-monotone deep tuples"; backward is the tail indiscernibility
 (all sufficiently deep strict-mono tuples agree). -/
-theorem tailTemplate_truth_iff_eventually {a : ℕ → M}
+private theorem tailTemplate_truth_iff_eventually {a : ℕ → M}
     (hTail : IsLomega1omegaIndiscernibleOnTail (L := localColim s₀) a (ΓEMlocal s₀))
     {p : ℕ} {ψ : (localColim s₀).BoundedFormulaω Empty p}
     (hψ : (⟨p, ψ⟩ : Σ n, (localColim s₀).BoundedFormulaω Empty n) ∈ ΓEMlocal s₀) :
@@ -96,7 +96,7 @@ consecutive truth of the disjunction's deForm ⇒ its template truth ⇒ (witnes
 template truth ⇒ its eventual consecutive truth. `canonDeForm` distributes over the connectives
 definitionally, so `realize_iSup`/`realize_iInf` move between the connective and its
 components. -/
-theorem TailTemplateOmegaWitnessed.to_localEMOmegaHomogeneous {a : ℕ → M}
+private theorem TailTemplateOmegaWitnessed.to_localEMOmegaHomogeneous {a : ℕ → M}
     (hTail : IsLomega1omegaIndiscernibleOnTail (L := localColim s₀) a (ΓEMlocal s₀))
     (h : TailTemplateOmegaWitnessed s₀ a) : LocalEMOmegaHomogeneous s₀ a := by
   refine ⟨?_, ?_⟩

@@ -78,25 +78,8 @@ These connect the *syntactic* `skolemTerm` to the *semantic* Skolem function of
 term model, which uses `skolem₁ω_funMap_spec` directly. Kept as the natural entry points for any
 future syntactic Skolemization. -/
 
-/-- The syntactic Skolem term evaluates to the semantic Skolem function value: realizing
-`skolemTerm ψ ts` under `v` is `funMap ψ` applied to the realized arguments. Definitional, via
-`Term.realize_func` and `funMap_sumInr`. -/
-theorem realize_skolemTerm {γ : Type u'} {n : ℕ} (ψ : L.BoundedFormulaω Empty (n + 1))
-    (ts : Fin n → (L.sum (skolem₁ω L)).Term γ) (v : γ → M) :
-    (skolemTerm ψ ts).realize v
-      = Structure.funMap (L := skolem₁ω L) ψ (fun i => (ts i).realize v) := by
-  simp only [skolemTerm]
-  rfl
 
-/-- **Skolem witness lemma** (currently unused). If, under the assignment given by `ts`, the
-formula `ψ` has a witness for its last variable, then the Skolem term `skolemTerm ψ ts` *is* such
-a witness: `ψ` holds at the realized arguments extended by the realized Skolem term. -/
-theorem exists_witness_skolemTerm {γ : Type u'} {n : ℕ} (ψ : L.BoundedFormulaω Empty (n + 1))
-    (ts : Fin n → (L.sum (skolem₁ω L)).Term γ) (v : γ → M)
-    (h : ∃ a, ψ.Realize (Empty.elim : Empty → M) (Fin.snoc (fun i => (ts i).realize v) a)) :
-    ψ.Realize (Empty.elim : Empty → M)
-      (Fin.snoc (fun i => (ts i).realize v) ((skolemTerm ψ ts).realize v)) := by
-  rw [realize_skolemTerm]
-  exact skolem₁ω_funMap_spec ψ (fun i => (ts i).realize v) h
+
+
 
 end FirstOrder.Language

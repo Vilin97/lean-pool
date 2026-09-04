@@ -89,7 +89,7 @@ theorem baseRelationsIn_component_iSup {φs : ℕ → L[[ℕ]].Sentenceω} (k : 
 
 /-! ## Relation occurrences are invariant under `subst` / `openBounds` (for `instConst`) -/
 
-theorem relationsIn_subst_eq {α β : Type} {n : ℕ}
+private theorem relationsIn_subst_eq {α β : Type} {n : ℕ}
     (φ : L[[ℕ]].BoundedFormulaω α n) (tf : α → L[[ℕ]].Term β) :
     (φ.subst tf).relationsIn = φ.relationsIn := by
   induction φ with
@@ -104,7 +104,7 @@ theorem relationsIn_subst_eq {α β : Type} {n : ℕ}
   | iInf φs ih =>
     simp only [BoundedFormulaω.subst, BoundedFormulaω.relationsIn]; exact iSup_congr fun k => ih k
 
-theorem relationsIn_openBounds_eq {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n) :
+private theorem relationsIn_openBounds_eq {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n) :
     (φ.openBounds).relationsIn = φ.relationsIn := by
   induction φ with
   | falsum => rfl

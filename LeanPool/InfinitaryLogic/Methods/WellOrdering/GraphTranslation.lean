@@ -67,7 +67,7 @@ theorem exists_model_relPreserving (φ : L.Sentenceω) (lt : L.Relations 2)
 
 /-- **Boundedness, well-founded form (arbitrary language)**: if every model of `φ`
 interprets `lt` as a well-founded relation, some countable ordinal chains into no model. -/
-theorem wellFounded_boundedness (φ : L.Sentenceω) (lt : L.Relations 2)
+private theorem wellFounded_boundedness (φ : L.Sentenceω) (lt : L.Relations 2)
     (hwf : ∀ (M : Type) (_ : L.Structure M), Sentenceω.Realize φ M →
       WellFounded fun x y : M => RelMap lt ![x, y]) :
     ∃ α : Ordinal.{0}, α < (Cardinal.aleph 1).ord ∧

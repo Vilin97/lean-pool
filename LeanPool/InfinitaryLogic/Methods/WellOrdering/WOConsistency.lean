@@ -35,7 +35,7 @@ variable {L : Language.{0, 0}} (φ : L.Sentenceω) (lt : L.Relations 2)
 
 /-- **The well-ordering consistency property**: the `WOMem` stage family, bundled — each
 kernel field is one of the fifteen closure theorems. -/
-def woConsistencyProperty :
+private def woConsistencyProperty :
     ConsistencyPropertyEqOn (GenU (φ.mapLanguage (L.lhomWithConstants ℕ))
       (φ.mapLanguage (L.lhomWithConstants ℕ))) where
   sets := {S | WOMem φ lt S}

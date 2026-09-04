@@ -77,12 +77,7 @@ infinitary node. -/
 def InfEquivW (L : Language.{u, v}) (M N : Type w) [L.Structure M] [L.Structure N] : Prop :=
   ∀ ι : Type w, InfEquivAt L ι M N
 
-/-- **Expressive strength is contravariant in codings**: a carrier that codes `ι` can express
-every `ι`-branching sentence, so agreement at the larger carrier implies agreement at the
-smaller. -/
-theorem InfEquivAt.of_reindex {M : Type w} {N : Type w'} [L.Structure M] [L.Structure N]
-    (c : IndexCoding ι κ) (h : InfEquivAt L κ M N) : InfEquivAt L ι M N := fun φ =>
-  ((realize_reindex c φ _ _).symm.trans (h (reindex c φ))).trans (realize_reindex c φ _ _)
+
 
 section KarpAtCarrier
 
@@ -99,13 +94,13 @@ the branching carrier.
 
 Bound positions are what let the `all` case below consume `forth`/`back` directly: no
 free-variable relabeling operation appears anywhere in this development. -/
-def atomicFormulaInf (idx : L.AtomicIdx n) : L.BoundedFormulaInf ι Empty n :=
+private def atomicFormulaInf (idx : L.AtomicIdx n) : L.BoundedFormulaInf ι Empty n :=
   match idx with
   | .eq i j => .equal (.var (.inr i)) (.var (.inr j))
   | .rel R f => .rel R fun k => .var (.inr (f k))
 
 omit [L.IsRelational] in
-theorem realize_atomicFormulaInf {P : Type w} [L.Structure P] (idx : L.AtomicIdx n)
+private theorem realize_atomicFormulaInf {P : Type w} [L.Structure P] (idx : L.AtomicIdx n)
     (xs : Fin n → P) :
     (atomicFormulaInf (ι := ι) idx).Realize Empty.elim xs ↔ idx.holds xs := by
   cases idx with
@@ -172,7 +167,7 @@ admitting codings of both structures already builds a potential isomorphism.
 
 The separating formula is an `iInfAlong` — a conjunction indexed by one structure's carrier,
 expressed at `κ` along the given coding — closed by `ex`. The sum carrier plays no role. -/
-theorem infEquivAt_implies_potentialIso (cM : IndexCoding M κ) (cN : IndexCoding N κ)
+private theorem infEquivAt_implies_potentialIso (cM : IndexCoding M κ) (cN : IndexCoding N κ)
     (h : InfEquivAt L κ M N) :
     Nonempty (PotentialIso L M N) := by
   refine ⟨{
@@ -254,7 +249,7 @@ theorem infEquivAt_implies_potentialIso (cM : IndexCoding M κ) (cN : IndexCodin
 
 Agreement in *one* carrier admitting codings of both structures already characterizes
 potential isomorphism. The structures may live in different universes. -/
-theorem karp_theorem_at (cM : IndexCoding M κ) (cN : IndexCoding N κ) :
+private theorem karp_theorem_at (cM : IndexCoding M κ) (cN : IndexCoding N κ) :
     Nonempty (PotentialIso L M N) ↔ InfEquivAt L κ M N :=
   ⟨fun ⟨P⟩ => P.infEquivAt _, infEquivAt_implies_potentialIso cM cN⟩
 
@@ -266,7 +261,7 @@ variable [L.IsRelational] {M N : Type w} [L.Structure M] [L.Structure N]
 
 /-- **Karp's theorem at the sum carrier**: the canonical specialization of
 `karp_theorem_at`, obtained by feeding it the two sum injections. -/
-theorem karp_theorem_on_sum :
+private theorem karp_theorem_on_sum :
     Nonempty (PotentialIso L M N) ↔ InfEquivAt L (M ⊕ N) M N :=
   karp_theorem_at (.sumInl M N) (.sumInr M N)
 
@@ -297,12 +292,7 @@ section AgreementQR
 
 variable [L.IsRelational] {M : Type w} {N : Type w'} [L.Structure M] [L.Structure N]
 
-omit [L.IsRelational] in
-/-- `Sum.elim v xs` agrees with `Fin.append v xs ∘ finSumFinEquiv`. -/
-private theorem sumElim_eq_append_comp {γ : Type*} {n k : ℕ}
-    (v : Fin n → γ) (xs : Fin k → γ) :
-    Sum.elim v xs = Fin.append v xs ∘ finSumFinEquiv :=
-  (Fin.append_comp_sumElim (xs := v) (ys := xs)).symm
+
 
 omit [L.IsRelational] in
 /-- `Fin.snoc` distributes into `Fin.append` on the right component. -/
@@ -311,77 +301,9 @@ private theorem snoc_append_eq_append_snoc {γ : Type*} {n k : ℕ}
     Fin.snoc (Fin.append v xs) x = Fin.append v (Fin.snoc xs x) :=
   (Fin.append_snoc v xs x).symm
 
-/-- The rank-bounded agreement lemma, generalized to allow bound variables. -/
-private theorem BFEquiv_implies_agree_aux (α : Ordinal.{uι}) {n k : ℕ}
-    (φ : L.BoundedFormulaInf ι (Fin n) k) (hφ : φ.qrank ≤ α)
-    (v : Fin n → M) (w : Fin n → N) (xs : Fin k → M) (ys : Fin k → N)
-    (hBF : BFEquiv (L := L) α (n + k) (Fin.append v xs) (Fin.append w ys)) :
-    (φ.Realize v xs ↔ φ.Realize w ys) := by
-  induction φ generalizing α with
-  | falsum => simp
-  | equal t₁ t₂ =>
-    obtain ⟨x₁, rfl⟩ := term_eq_var t₁
-    obtain ⟨x₂, rfl⟩ := term_eq_var t₂
-    simp only [realize_equal, Term.realize]
-    have hSAT : SameAtomicType (L := L) (Fin.append v xs) (Fin.append w ys) :=
-      (BFEquiv.zero _ _).mp (BFEquiv.monotone bot_le hBF)
-    rw [sumElim_eq_append_comp v xs, sumElim_eq_append_comp w ys]
-    simp only [Function.comp]
-    exact hSAT (.eq (finSumFinEquiv x₁) (finSumFinEquiv x₂))
-  | rel R ts =>
-    simp only [realize_rel]
-    have hSAT : SameAtomicType (L := L) (Fin.append v xs) (Fin.append w ys) :=
-      (BFEquiv.zero _ _).mp (BFEquiv.monotone bot_le hBF)
-    have hvars : ∀ i, ∃ x, ts i = Term.var x := fun i => term_eq_var (ts i)
-    choose ts_var hts using hvars
-    have hM : (RelMap R fun i => (ts i).realize (Sum.elim v xs)) ↔
-              RelMap R (Fin.append v xs ∘ (fun i => finSumFinEquiv (ts_var i))) := by
-      constructor <;> intro h <;> convert h using 1 <;> ext i <;>
-        simp [hts i, sumElim_eq_append_comp v xs, Function.comp]
-    have hN : (RelMap R fun i => (ts i).realize (Sum.elim w ys)) ↔
-              RelMap R (Fin.append w ys ∘ (fun i => finSumFinEquiv (ts_var i))) := by
-      constructor <;> intro h <;> convert h using 1 <;> ext i <;>
-        simp [hts i, sumElim_eq_append_comp w ys, Function.comp]
-    rw [hM, hN]
-    exact hSAT (.rel R (fun i => finSumFinEquiv (ts_var i)))
-  | imp φ ψ ihφ ihψ =>
-    simp only [realize_imp, BoundedFormulaInf.qrank_imp] at hφ ⊢
-    exact imp_congr
-      (ihφ α (le_of_max_le_left hφ) xs ys hBF)
-      (ihψ α (le_of_max_le_right hφ) xs ys hBF)
-  | all φ ih =>
-    simp only [realize_all, BoundedFormulaInf.qrank_all] at hφ ⊢
-    have hBF' := BFEquiv.monotone hφ hBF
-    constructor
-    · intro hAll y
-      obtain ⟨m, hm⟩ := BFEquiv.back hBF' y
-      rw [snoc_append_eq_append_snoc, snoc_append_eq_append_snoc] at hm
-      exact (ih φ.qrank le_rfl (Fin.snoc xs m) (Fin.snoc ys y) hm).mp (hAll m)
-    · intro hAll x
-      obtain ⟨y, hy⟩ := BFEquiv.forth hBF' x
-      rw [snoc_append_eq_append_snoc, snoc_append_eq_append_snoc] at hy
-      exact (ih φ.qrank le_rfl (Fin.snoc xs x) (Fin.snoc ys y) hy).mpr (hAll y)
-  | iSup φs ih =>
-    simp only [realize_iSup, BoundedFormulaInf.qrank_iSup] at hφ ⊢
-    exact exists_congr fun i =>
-      ih i α (le_trans (Ordinal.le_iSup (fun i => (φs i).qrank) i) hφ) xs ys hBF
-  | iInf φs ih =>
-    simp only [realize_iInf, BoundedFormulaInf.qrank_iInf] at hφ ⊢
-    exact forall_congr' fun i =>
-      ih i α (le_trans (Ordinal.le_iSup (fun i => (φs i).qrank) i) hφ) xs ys hBF
 
-/-- **The Karp lemma, forward direction**: back-and-forth equivalence at level `α` implies
-agreement on every formula of quantifier rank at most `α`.
 
-Carrier-polymorphic, with independent structure universes, and with the `BFEquiv` ordinal in
-the same universe as the rank. -/
-theorem BFEquiv_implies_agreeQR (α : Ordinal.{uι}) {n : ℕ} (a : Fin n → M) (b : Fin n → N)
-    (h : BFEquiv (L := L) α n a b)
-    (φ : L.BoundedFormulaInf ι (Fin n) 0) (hφ : φ.qrank ≤ α) :
-    (FormulaInf.Realize φ a ↔ FormulaInf.Realize φ b) := by
-  have ha : Fin.append a (Fin.elim0 : Fin 0 → M) = a := by simp [Fin.append_elim0]
-  have hb : Fin.append b (Fin.elim0 : Fin 0 → N) = b := by simp [Fin.append_elim0]
-  exact BFEquiv_implies_agree_aux α φ hφ a b Fin.elim0 Fin.elim0 (by rwa [ha, hb])
+
 
 end AgreementQR
 

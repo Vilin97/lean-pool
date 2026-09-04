@@ -44,7 +44,7 @@ def hasQuantSigned : ∀ {n : ℕ}, Bool → L.BoundedFormulaω α n → Prop
   | _, s, .iInf φs => ∃ i, hasQuantSigned s (φs i)
 
 /-- A universal quantifier occurs in `φ`. -/
-abbrev HasUniversal {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := hasQuantSigned true φ
+private abbrev HasUniversal {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := hasQuantSigned true φ
 
 /-- An existential quantifier occurs in `φ`. -/
 abbrev HasExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := hasQuantSigned false φ
@@ -54,8 +54,7 @@ abbrev HasExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := hasQuan
 @[simp] theorem hasQuantSigned_falsum {n : ℕ} (s : Bool) :
     ¬ hasQuantSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α n) := id
 
-@[simp] theorem hasQuantSigned_bot {n : ℕ} (s : Bool) :
-    ¬ hasQuantSigned s (⊥ : L.BoundedFormulaω α n) := id
+
 
 @[simp] theorem hasQuantSigned_equal {n : ℕ} (s : Bool) (t₁ t₂ : L.Term (α ⊕ Fin n)) :
     ¬ hasQuantSigned s (BoundedFormulaω.equal t₁ t₂) := id
@@ -82,20 +81,14 @@ abbrev HasExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := hasQuan
     (BoundedFormulaω.falsum : L.BoundedFormulaω α n) ↔ _
   simp
 
-@[simp] theorem hasQuantSigned_top {n : ℕ} (s : Bool) :
-    ¬ hasQuantSigned s (⊤ : L.BoundedFormulaω α n) := by
-  show ¬ (hasQuantSigned (!s) (BoundedFormulaω.falsum : L.BoundedFormulaω α n) ∨ _)
-  simp
+
 
 @[simp] theorem hasQuantSigned_and {n : ℕ} (s : Bool) (φ ψ : L.BoundedFormulaω α n) :
     hasQuantSigned s (φ.and ψ) ↔ hasQuantSigned s φ ∨ hasQuantSigned s ψ := by
   show hasQuantSigned s ((φ.imp ψ.not).not) ↔ _
   simp
 
-@[simp] theorem hasQuantSigned_or {n : ℕ} (s : Bool) (φ ψ : L.BoundedFormulaω α n) :
-    hasQuantSigned s (φ.or ψ) ↔ hasQuantSigned s φ ∨ hasQuantSigned s ψ := by
-  show hasQuantSigned s (φ.not.imp ψ) ↔ _
-  simp
+
 
 @[simp] theorem hasQuantSigned_ex {n : ℕ} (s : Bool) (φ : L.BoundedFormulaω α (n + 1)) :
     hasQuantSigned s φ.ex ↔ s = false ∨ hasQuantSigned s φ := by
@@ -130,8 +123,7 @@ theorem universalSigned_iff_not_hasQuantSigned :
 theorem isUniversal_iff_not_hasExistential {n : ℕ} (φ : L.BoundedFormulaω α n) :
     IsUniversal φ ↔ ¬ HasExistential φ := universalSigned_iff_not_hasQuantSigned true φ
 
-theorem isExistential_iff_not_hasUniversal {n : ℕ} (φ : L.BoundedFormulaω α n) :
-    IsExistential φ ↔ ¬ HasUniversal φ := universalSigned_iff_not_hasQuantSigned false φ
+
 
 /-! ## Stability under the variable operations -/
 
@@ -186,10 +178,10 @@ variable {L : Language.{0, 0}}
 def HasQuantSigned (s : Bool) (T : Set L.Sentenceω) : Prop := ∃ σ ∈ T, hasQuantSigned s σ
 
 /-- A universal quantifier occurs somewhere in `T`. -/
-abbrev HasUniversal (T : Set L.Sentenceω) : Prop := HasQuantSigned true T
+private abbrev HasUniversal (T : Set L.Sentenceω) : Prop := HasQuantSigned true T
 
 /-- An existential quantifier occurs somewhere in `T`. -/
-abbrev HasExistential (T : Set L.Sentenceω) : Prop := HasQuantSigned false T
+private abbrev HasExistential (T : Set L.Sentenceω) : Prop := HasQuantSigned false T
 
 variable {s : Bool} {T T' : Set L.Sentenceω} {σ : L.Sentenceω}
 

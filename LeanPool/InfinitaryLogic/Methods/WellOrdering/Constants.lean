@@ -48,11 +48,8 @@ variable {L : Language.{0, 0}}
 /-- The rational constant `d_q` as a closed `L[[ℕ]]`-term. -/
 def ratConstTerm (q : ℚ) : L[[ℕ]].Term Empty := constTerm (ratConstIdx q)
 
-/-- The rational constant `d_q` in the sentence-term context. -/
-def ratConstTermS (q : ℚ) : L[[ℕ]].Term (Empty ⊕ Fin 0) := constTermS (ratConstIdx q)
 
-@[simp] theorem ratConstTerm_relabel_inl (q : ℚ) :
-    (ratConstTerm (L := L) q).relabel (Sum.inl : Empty → Empty ⊕ Fin 0) = ratConstTermS q :=
-  constTerm_relabel_inl _
+
+
 
 end FirstOrder.Language

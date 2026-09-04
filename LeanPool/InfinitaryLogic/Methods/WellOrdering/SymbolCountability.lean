@@ -90,67 +90,10 @@ theorem exists_model_relPreserving_isRelational [L.IsRelational]
         (insert (⟨2, lt⟩ : Σ n, L.Relations n) φ.relationsIn))
       ⟨lt, Set.mem_insert _ _⟩ ![f q, f r]).symm hpres
 
-/-- **Boundedness, well-founded form, no symbol countability**: layer 2's
-`wellFounded_boundedness_relational` through the sublanguage-wrapped endpoint. -/
-theorem wellFounded_boundedness_isRelational [L.IsRelational]
-    (φ : L.Sentenceω) (lt : L.Relations 2)
-    (hwf : ∀ (M : Type) (_ : L.Structure M), Sentenceω.Realize φ M →
-      WellFounded fun x y : M => RelMap lt ![x, y]) :
-    ∃ α : Ordinal.{0}, α < (Cardinal.aleph 1).ord ∧
-      ∀ (M : Type) (_ : L.Structure M), Sentenceω.Realize φ M →
-        ¬ ∃ w : α.ToType → M, RelChain lt α w := by
-  by_contra hcon
-  push Not at hcon
-  have hchains : HasWellOrderedChains φ lt := by
-    intro α hα
-    rcases eq_or_ne α 0 with rfl | hne
-    · obtain ⟨M, inst, hreal, w, -⟩ := hcon 1 (by
-        have h1 := add_one_lt_omega1 hα
-        rwa [zero_add] at h1)
-      have : Nonempty (Ordinal.ToType 1) := Ordinal.nonempty_toType_iff.mpr one_ne_zero
-      exact ⟨M, inst, ⟨w (Classical.arbitrary _)⟩, hreal,
-        fun x => isEmptyElim x, fun x => isEmptyElim x⟩
-    · obtain ⟨M, inst, hreal, w, hw⟩ := hcon α hα
-      have : Nonempty α.ToType := Ordinal.nonempty_toType_iff.mpr hne
-      exact ⟨M, inst, ⟨w (Classical.arbitrary _)⟩, hreal, w, hw⟩
-  obtain ⟨M, instL, -, f, hφreal, hf⟩ := exists_model_relPreserving_isRelational φ lt hchains
-  exact not_relPreserving_of_wellFounded (hwf M instL hφreal) f hf
 
-/-- **Boundedness, order-type form, no symbol countability** (Marker Corollary 4.27 at any
-relational language). -/
-theorem wellOrder_type_boundedness_isRelational [L.IsRelational]
-    (φ : L.Sentenceω) (lt : L.Relations 2)
-    (hwo : ∀ (M : Type) (_ : L.Structure M), Sentenceω.Realize φ M →
-      IsWellOrder M fun x y : M => RelMap lt ![x, y]) :
-    ∃ α : Ordinal.{0}, α < (Cardinal.aleph 1).ord ∧
-      ∀ (M : Type) (inst : L.Structure M) (hreal : Sentenceω.Realize φ M),
-        @Ordinal.type M (fun x y => RelMap lt ![x, y]) (hwo M inst hreal) < α := by
-  obtain ⟨α, hα, hnochain⟩ := wellFounded_boundedness_isRelational φ lt
-    (fun M inst h => letI := hwo M inst h; IsWellFounded.wf)
-  refine ⟨α, hα, fun M inst hreal => ?_⟩
-  let := hwo M inst hreal
-  by_contra hle
-  rw [not_lt, ← Ordinal.type_toType α] at hle
-  obtain ⟨g⟩ := Ordinal.type_le_iff'.mp hle
-  exact hnochain M inst hreal ⟨g, fun x y hxy => g.map_rel_iff.mpr hxy⟩
 
-/-- **Undefinability of well-ordering, no symbol countability** (weak form, any relational
-language). -/
-theorem wellOrdering_undefinable_isRelational {L : Language.{0, 0}} [L.IsRelational]
-    (lt : L.Relations 2) :
-    ¬ ∃ φ : L.Sentenceω, ∀ (M : Type) (_ : L.Structure M),
-        (Sentenceω.Realize φ M ↔ IsWellOrder M fun x y : M => RelMap lt ![x, y]) := by
-  rintro ⟨φ, hφ⟩
-  obtain ⟨α, hα, hbound⟩ := wellOrder_type_boundedness_isRelational φ lt
-    (fun M inst h => (hφ M inst).mp h)
-  let instα : L.Structure α.ToType := ordinalStructure L α
-  have hwo := ordinalStructure_isWellOrder L α lt
-  have hreal : Sentenceω.Realize φ α.ToType := (hφ α.ToType instα).mpr hwo
-  have hb := hbound α.ToType instα hreal
-  have hiso : (fun x y : α.ToType => RelMap lt ![x, y]) ≃r
-      ((· < ·) : α.ToType → α.ToType → Prop) :=
-    ⟨_root_.Equiv.refl _, fun {a b} => (ordinalStructure_relMap L α lt a b).symm⟩
-  rw [RelIso.ordinalType_congr hiso, Ordinal.type_toType] at hb
-  exact absurd hb (lt_irrefl α)
+
+
+
 
 end FirstOrder.Language

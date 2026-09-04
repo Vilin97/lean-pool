@@ -125,14 +125,14 @@ structure LocalEMContext.OmegaCompleteOn (ctx : LocalEMContext Λ J (M := M))
 /-- **Compatibility adapter**: global completeness restricts to any family and any covering —
 existing `OmegaComplete` producers serve every `OmegaCompleteOn` consumer by dropping the
 membership and the covering. -/
-theorem LocalEMContext.OmegaComplete.toOmegaCompleteOn {ctx : LocalEMContext Λ J (M := M)}
+private theorem LocalEMContext.OmegaComplete.toOmegaCompleteOn {ctx : LocalEMContext Λ J (M := M)}
     (hc : ctx.OmegaComplete) (Γ' : Set (Σ n, Λ.BoundedFormulaω Empty n)) :
     LocalEMContext.OmegaCompleteOn (Λ := Λ) (J := J) ctx Γ' :=
   ⟨fun φs _ ts S _ h => hc.iSup_complete φs ts S h,
    fun φs _ ts S _ h => hc.iInf_complete φs ts S h⟩
 
 /-- The easy `iSup` direction: a single component's eventual deep truth gives the disjunction's. -/
-theorem LocalEMContext.eventualDeepTruth_iSup_of_exists (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
+private theorem LocalEMContext.eventualDeepTruth_iSup_of_exists (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
     (φs : ℕ → Λ.BoundedFormulaω Empty m)
     (ts : Fin m → Λ[[J]].Term Empty) (S : Finset J)
     (h : ∃ i, LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (φs i) ts S) :
@@ -142,7 +142,7 @@ theorem LocalEMContext.eventualDeepTruth_iSup_of_exists (ctx : LocalEMContext Λ
   exact hi.mono fun _ hd => ⟨i, hd⟩
 
 /-- The easy `iInf` direction: the conjunction's eventual deep truth gives every component's. -/
-theorem LocalEMContext.eventualDeepTruth_iInf_forall (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
+private theorem LocalEMContext.eventualDeepTruth_iInf_forall (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
     (φs : ℕ → Λ.BoundedFormulaω Empty m)
     (ts : Fin m → Λ[[J]].Term Empty) (S : Finset J)
     (h : LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (BoundedFormulaω.iInf φs) ts S)
@@ -161,7 +161,7 @@ about the source sequence (`LocalEMOmegaHomogeneous` below). -/
 /-- **deForm normal form for eventual deep truth**: over a covered support, the eventual deep
 truth of `φ` on `ts`/`S` is the eventual truth of the de-substituted `locDeForm S φ ts` on the
 consecutive deep tuples `k ↦ ctx.a (d + k)`. Pointwise `realize_locDeForm`. -/
-theorem LocalEMContext.eventualDeepTruth_iff_eventual_locDeForm
+private theorem LocalEMContext.eventualDeepTruth_iff_eventual_locDeForm
     (ctx : LocalEMContext Λ J (M := M)) {n : ℕ} (φ : Λ.BoundedFormulaω Empty n)
     (ts : Fin n → Λ[[J]].Term Empty) (S : Finset J)
     (hsub : ∀ i, locJSupport Λ J (ts i) ⊆ S) :
@@ -172,25 +172,14 @@ theorem LocalEMContext.eventualDeepTruth_iff_eventual_locDeForm
   Filter.eventually_congr (Filter.Eventually.of_forall fun d =>
     (realize_locDeForm Λ J ctx.a d S φ ts hsub).symm)
 
-/-- De-substitution commutes with `⋁` (the `openBounds → subst → relabel` template is
-structural). -/
-theorem locDeForm_iSup {n : ℕ} (φs : ℕ → Λ.BoundedFormulaω Empty n)
-    (ts : Fin n → Λ[[J]].Term Empty) {S : Finset J}
-    (hsub : ∀ i, locJSupport Λ J (ts i) ⊆ S) :
-    locDeForm Λ J S (BoundedFormulaω.iSup φs) ts hsub
-      = BoundedFormulaω.iSup (fun i => locDeForm Λ J S (φs i) ts hsub) := rfl
 
-/-- De-substitution commutes with `⋀`. -/
-theorem locDeForm_iInf {n : ℕ} (φs : ℕ → Λ.BoundedFormulaω Empty n)
-    (ts : Fin n → Λ[[J]].Term Empty) {S : Finset J}
-    (hsub : ∀ i, locJSupport Λ J (ts i) ⊆ S) :
-    locDeForm Λ J S (BoundedFormulaω.iInf φs) ts hsub
-      = BoundedFormulaω.iInf (fun i => locDeForm Λ J S (φs i) ts hsub) := rfl
+
+
 
 /-- **Decidedness of a formula's eventual deep truth** (the named output of
 `eventualDeepTruth_decided`): either it holds eventually, or it fails eventually. Local analogue of
 `EMContext.Decided`, with the ambient `[Λ.Structure M]` in place of the `skolemColim` `letI`. -/
-def LocalEMContext.Decided (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
+private def LocalEMContext.Decided (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
     (φ : Λ.BoundedFormulaω Empty m)
     (ts : Fin m → Λ[[J]].Term Empty) (S : Finset J) : Prop :=
   (∀ᶠ d in Filter.atTop, φ.Realize Empty.elim fun i => locDeepInterp Λ J ctx.a d S (ts i)) ∨
@@ -360,7 +349,7 @@ subformula closure holds only at successor stages (`bfSubformulas_subset_Γlocal
 membership recursion descends through it, and the `imp`-antecedent decidedness obligations are
 discharged by `eventualDeepTruth_decided` fed by the mixin. Local analogue of
 `EMContext.TLReady_mapLang_of_GammaStar`. -/
-theorem LocalEMContext.TLReady_mapLang_of_Γlocal_succ
+private theorem LocalEMContext.TLReady_mapLang_of_Γlocal_succ
     (ctx : LocalEMContext (localColim s₀) J (M := M)) {k : ℕ}
     (hclosed : LocalEMContext.DeFormClosedForColim (s₀ := s₀) (J := J) ctx) :
     ∀ {n : ℕ} (ψ : (Llocal s₀ (k + 1)).BoundedFormulaω Empty n),
@@ -410,7 +399,7 @@ theorem LocalEMContext.TLReady_mapLang_of_Γlocal_succ
 endpoint, modulo the deForm-closure mixin `hclosed`): every `Γlocal s₀ (k + 1)` formula is
 `truthLemmaStage`-ready. Wraps `TLReady_mapLang_of_Γlocal_succ` over the enlarged supports `T ⊇ S`
 (each still covers `ts`). Local analogue of `EMContext.TLReadyStage_of_GammaStar`. -/
-theorem LocalEMContext.TLReadyStage_of_Γlocal_succ
+private theorem LocalEMContext.TLReadyStage_of_Γlocal_succ
     (ctx : LocalEMContext (localColim s₀) J (M := M)) {k : ℕ}
     (hclosed : LocalEMContext.DeFormClosedForColim (s₀ := s₀) (J := J) ctx)
     {n : ℕ} (ψ : (Llocal s₀ (k + 1)).BoundedFormulaω Empty n)
@@ -433,7 +422,7 @@ theorem mapLanguage_LlocalInclusion_lift {k n : ℕ} (ψ : (Llocal s₀ k).Bound
 /-- **Constructor inversion for `mapLanguage` at `⋁`**: language maps preserve constructor heads,
 so a `⋁`-image comes from a `⋁`-preimage, componentwise. Feeds the colimit component-membership
 lemmas below. -/
-theorem BoundedFormulaω.mapLanguage_eq_iSup {L₁ L₂ : Language.{0, 0}} {g : L₁ →ᴸ L₂}
+private theorem BoundedFormulaω.mapLanguage_eq_iSup {L₁ L₂ : Language.{0, 0}} {g : L₁ →ᴸ L₂}
     {α : Type} {m : ℕ} {ψ : L₁.BoundedFormulaω α m} {φs : ℕ → L₂.BoundedFormulaω α m}
     (h : ψ.mapLanguage g = BoundedFormulaω.iSup φs) :
     ∃ ψs : ℕ → L₁.BoundedFormulaω α m,
@@ -453,7 +442,7 @@ theorem BoundedFormulaω.mapLanguage_eq_iSup {L₁ L₂ : Language.{0, 0}} {g : 
   | iInf ψs => exact absurd h (by simp [BoundedFormulaω.mapLanguage])
 
 /-- Constructor inversion for `mapLanguage` at `⋀`. -/
-theorem BoundedFormulaω.mapLanguage_eq_iInf {L₁ L₂ : Language.{0, 0}} {g : L₁ →ᴸ L₂}
+private theorem BoundedFormulaω.mapLanguage_eq_iInf {L₁ L₂ : Language.{0, 0}} {g : L₁ →ᴸ L₂}
     {α : Type} {m : ℕ} {ψ : L₁.BoundedFormulaω α m} {φs : ℕ → L₂.BoundedFormulaω α m}
     (h : ψ.mapLanguage g = BoundedFormulaω.iInf φs) :
     ∃ ψs : ℕ → L₁.BoundedFormulaω α m,

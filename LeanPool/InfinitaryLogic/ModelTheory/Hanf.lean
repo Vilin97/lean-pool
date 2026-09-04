@@ -65,7 +65,7 @@ noncomputable def HanfNumber (φ : L.Sentenceω) : Cardinal :=
 /-- Every Lω₁ω sentence has a Hanf number (i.e., a Hanf bound exists).
 
 This is a fundamental structural result about Lω₁ω. -/
-theorem hanf_existence (φ : L.Sentenceω) : ∃ κ, IsHanfBound φ κ := by
+private theorem hanf_existence (φ : L.Sentenceω) : ∃ κ, IsHanfBound φ κ := by
   by_cases h : HasArbLargeModels φ
   · -- Any κ works: the conclusion `HasArbLargeModels φ` is always true
     exact ⟨0, fun _ => h⟩
@@ -84,7 +84,7 @@ theorem IsHanfBound.mono {φ : L.Sentenceω} {κ μ : Cardinal}
 
 /-- **The Hanf number is itself a Hanf bound**: the set of bounds is nonempty
 (`hanf_existence`), and an infimum of cardinals is attained. -/
-theorem hanfNumber_isHanfBound (φ : L.Sentenceω) : IsHanfBound φ (HanfNumber φ) :=
+private theorem hanfNumber_isHanfBound (φ : L.Sentenceω) : IsHanfBound φ (HanfNumber φ) :=
   show HanfNumber φ ∈ {κ : Cardinal | IsHanfBound φ κ} from
     csInf_mem ⟨(hanf_existence φ).choose, (hanf_existence φ).choose_spec⟩
 
@@ -95,15 +95,11 @@ theorem hanfNumber_le_of_isHanfBound {φ : L.Sentenceω} {κ : Cardinal}
 
 /-- The universal property: `HanfNumber φ ≤ κ` exactly when `κ` is a Hanf bound (bounds are
 upward closed and the Hanf number is the least one). -/
-theorem hanfNumber_le_iff_isHanfBound {φ : L.Sentenceω} {κ : Cardinal} :
+private theorem hanfNumber_le_iff_isHanfBound {φ : L.Sentenceω} {κ : Cardinal} :
     HanfNumber φ ≤ κ ↔ IsHanfBound φ κ :=
   ⟨fun h => (hanfNumber_isHanfBound φ).mono h, hanfNumber_le_of_isHanfBound⟩
 
-/-- The strict dual of the universal property — the bounded-spectrum witness-consumption
-interface: refuting the bound at `κ` is exactly the strict lower bound `κ < HanfNumber φ`. -/
-theorem lt_hanfNumber_iff_not_isHanfBound {φ : L.Sentenceω} {κ : Cardinal} :
-    κ < HanfNumber φ ↔ ¬IsHanfBound φ κ := by
-  rw [← not_le, hanfNumber_le_iff_isHanfBound]
+
 
 end Language
 

@@ -35,7 +35,7 @@ open Cardinal
 Morley seed is realizable over every target order — by the schema-route construction, which does
 not even consume the sequence's tail indiscernibility. The transparent intermediate; the
 sublanguage reduction below removes the countability. -/
-theorem morleySeedTailTemplateRealizable_of_countable_symbols {L' : Language.{0, 0}}
+private theorem morleySeedTailTemplateRealizable_of_countable_symbols {L' : Language.{0, 0}}
     [Countable (Σ n, L'.Functions n)] [Countable (Σ n, L'.Relations n)] :
     MorleySeedTailTemplateRealizable (L' := L') := by
   intro φ M _ a J _ hSize hφ ha _
@@ -46,7 +46,7 @@ every `L_{ω₁ω}` sentence over a language with countably many function and re
 seed-template realizability (the schema construction) alone — no extraction is consumed (an
 injective sequence is already seed-indiscernible, `morleySeed_indiscernibleOn`). The transparent
 intermediate to the assumption-free `morley_hanf` below. -/
-theorem morley_hanf_countable_symbols {L' : Language.{0, 0}}
+private theorem morley_hanf_countable_symbols {L' : Language.{0, 0}}
     [Countable (Σ n, L'.Functions n)] [Countable (Σ n, L'.Relations n)]
     (φ : L'.Sentenceω) :
     IsHanfBound φ (Cardinal.beth (Ordinal.omega 1)) :=
@@ -83,7 +83,7 @@ through. -/
 /-- **Template sentences transfer along the two-sorted expansion** — the `symbSublang` analogue
 of `realize_templateSentence_expand`: skeleton constants agree definitionally, and both symbol
 sorts peel off through the expansion property (`dif_pos` on the generating sets). -/
-theorem realize_templateSentence_expandSymb {L : Language.{0, 0}}
+private theorem realize_templateSentence_expandSymb {L : Language.{0, 0}}
     {F : Set (Σ n, L.Functions n)} {R : Set (Σ n, L.Relations n)}
     (J : Type) [LinearOrder J] {N : Type} [Nonempty N]
     [instN : (symbSublang (L := L) F R)[[J]].Structure N]

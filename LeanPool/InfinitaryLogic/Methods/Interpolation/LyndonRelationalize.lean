@@ -52,19 +52,14 @@ variable {L : Language.{0, 0}} {α β : Type}
 
 /-! ## Symbol-range disjointness -/
 
-/-- A set of graph-relation images meets no base-relation image. -/
-theorem graphRelSym_image_inter_range_baseRelSym (X : Set (Σ n, L.Functions n)) :
-    graphRelSym L '' X ∩ Set.range (baseRelSym L) = ∅ := by
-  rw [Set.eq_empty_iff_forall_notMem]
-  rintro q ⟨⟨p, -, rfl⟩, ⟨p', hp'⟩⟩
-  exact baseRelSym_ne_graphRelSym p' p hp'
+
 
 /-! ## Gate 1: the atomic calculus — term graphs are positive-only -/
 
 /-- **The term-graph signed identity**, both signs at once (the recursion needs both): positive
 occurrences are the whole `graphRelSym`-image, negative occurrences are empty — term graphs are
 built from graph atoms by conjunction, `einf`, and existential blocks, all sign-preserving. -/
-theorem relationsInSigned_termGraphAux :
+private theorem relationsInSigned_termGraphAux :
     ∀ {m : ℕ} (t : L.Term β) (ρ : β → (graphLanguage L).Term (α ⊕ Fin m))
       (y : (graphLanguage L).Term (α ⊕ Fin m)),
       relationsInSigned true (termGraphAux t ρ y) = graphRelSym L '' t.functionsIn ∧
@@ -87,23 +82,13 @@ theorem relationsInSigned_termGraphAux :
       show (⋃ _i : Fin _, (∅ : Set (Σ n, GraphRelation L n))) ∪ ∅ = ∅
       rw [Set.iUnion_empty, Set.union_empty]
 
-/-- Term graphs put every graph relation **positively**. -/
-theorem positiveRelationsIn_termGraphAux {m : ℕ} (t : L.Term β)
-    (ρ : β → (graphLanguage L).Term (α ⊕ Fin m))
-    (y : (graphLanguage L).Term (α ⊕ Fin m)) :
-    (termGraphAux t ρ y).positiveRelationsIn = graphRelSym L '' t.functionsIn :=
-  (relationsInSigned_termGraphAux t ρ y).1
 
-/-- Term graphs put **nothing** negatively. -/
-theorem negativeRelationsIn_termGraphAux {m : ℕ} (t : L.Term β)
-    (ρ : β → (graphLanguage L).Term (α ⊕ Fin m))
-    (y : (graphLanguage L).Term (α ⊕ Fin m)) :
-    (termGraphAux t ρ y).negativeRelationsIn = ∅ :=
-  (relationsInSigned_termGraphAux t ρ y).2
+
+
 
 /-- **The equality atom's translation is positive-only**, with exactly the two terms' graph
 relations. -/
-theorem relationsInSigned_equalGraph {n : ℕ} (t u : L.Term (α ⊕ Fin n)) :
+private theorem relationsInSigned_equalGraph {n : ℕ} (t u : L.Term (α ⊕ Fin n)) :
     relationsInSigned true (equalGraph t u) =
         graphRelSym L '' (t.functionsIn ∪ u.functionsIn) ∧
       relationsInSigned false (equalGraph t u) = ∅ := by
@@ -119,7 +104,7 @@ theorem relationsInSigned_equalGraph {n : ℕ} (t u : L.Term (α ⊕ Fin n)) :
 
 /-- **The relation atom's translation is positive-only**: the arguments' graph relations *and* the
 base symbol itself, all positive; nothing negative. -/
-theorem relationsInSigned_relGraph {n k : ℕ} (R : L.Relations k)
+private theorem relationsInSigned_relGraph {n k : ℕ} (R : L.Relations k)
     (ts : Fin k → L.Term (α ⊕ Fin n)) :
     relationsInSigned true (relGraph R ts) =
         graphRelSym L '' (⋃ i, (ts i).functionsIn) ∪ {baseRelSym L ⟨k, R⟩} ∧
@@ -139,7 +124,7 @@ theorem relationsInSigned_relGraph {n k : ℕ} (R : L.Relations k)
     rw [Set.iUnion_empty, ite_eq_right (by simp), Set.union_empty]
 
 /-- Preimage form of range-disjointness: no base symbol pulls back from a graph image. -/
-theorem preimage_baseRelSym_graphRelSym_image (X : Set (Σ n, L.Functions n)) :
+private theorem preimage_baseRelSym_graphRelSym_image (X : Set (Σ n, L.Functions n)) :
     baseRelSym L ⁻¹' (graphRelSym L '' X) = ∅ := by
   rw [Set.eq_empty_iff_forall_notMem]
   rintro p ⟨q, -, hq⟩
@@ -147,7 +132,7 @@ theorem preimage_baseRelSym_graphRelSym_image (X : Set (Σ n, L.Functions n)) :
 
 /-- The graph axioms have **no base-relation occurrence in either sign** — the fact that makes the
 base-polarity identities insensitive to which side the axioms sit on. -/
-theorem preimage_baseRelSym_relationsInSigned_graphAxioms (s : Bool)
+private theorem preimage_baseRelSym_relationsInSigned_graphAxioms (s : Bool)
     (F : Set (Σ n, L.Functions n)) [Countable ↥F] :
     baseRelSym L ⁻¹' relationsInSigned s (graphAxioms F) = ∅ := by
   refine Set.eq_empty_of_subset_empty ?_
@@ -159,7 +144,7 @@ theorem preimage_baseRelSym_relationsInSigned_graphAxioms (s : Bool)
     (by rw [preimage_baseRelSym_graphRelSym_image F]; exact Set.notMem_empty p)
 
 /-- Intersection form of the same fact. -/
-theorem relationsInSigned_graphAxioms_inter_base (s : Bool) (F : Set (Σ n, L.Functions n))
+private theorem relationsInSigned_graphAxioms_inter_base (s : Bool) (F : Set (Σ n, L.Functions n))
     [Countable ↥F] :
     relationsInSigned s (graphAxioms F) ∩ Set.range (baseRelSym L) = ∅ := by
   rw [Set.eq_empty_iff_forall_notMem]
@@ -174,7 +159,7 @@ theorem relationsInSigned_graphAxioms_inter_base (s : Bool) (F : Set (Σ n, L.Fu
 `s` in the relationalization exactly when it occurs with sign `s` in the original.  Phrased as a
 membership equivalence so the induction never touches set operations at the two (definitionally
 equal but syntactically distinct) relation-symbol types. -/
-theorem mem_relationsInSigned_relationalizeFormula (s : Bool) (p : Σ n, L.Relations n) :
+private theorem mem_relationsInSigned_relationalizeFormula (s : Bool) (p : Σ n, L.Relations n) :
     ∀ {n : ℕ} (φ : L.BoundedFormulaω α n),
       baseRelSym L p ∈ relationsInSigned s (relationalizeFormula φ) ↔
         p ∈ relationsInSigned s φ
@@ -234,39 +219,13 @@ theorem mem_relationsInSigned_relationalizeFormula (s : Bool) (p : Σ n, L.Relat
     · rintro ⟨-, ⟨i, rfl⟩, hi⟩
       exact Set.mem_iUnion.mpr ⟨i, (mem_relationsInSigned_relationalizeFormula s p (φs i)).mpr hi⟩
 
-/-- **The D6 stop/go equation, preimage form**: pulling the translated signed occurrences back
-along the base embedding recovers the original signed occurrences exactly. -/
-theorem preimage_baseRelSym_relationalizeFormula (s : Bool) {n : ℕ}
-    (φ : L.BoundedFormulaω α n) :
-    baseRelSym L ⁻¹' relationsInSigned s (relationalizeFormula φ) = relationsInSigned s φ := by
-  ext p
-  exact mem_relationsInSigned_relationalizeFormula s p φ
 
-/-- **The D6 stop/go equation, in the audit's image/intersection form.** -/
-theorem relationsInSigned_relationalizeFormula_inter_base (s : Bool) {n : ℕ}
-    (φ : L.BoundedFormulaω α n) :
-    relationsInSigned s (relationalizeFormula φ) ∩ Set.range (baseRelSym L) =
-      baseRelSym L '' relationsInSigned s φ := by
-  ext q
-  constructor
-  · rintro ⟨hq, p, rfl⟩
-    exact ⟨p, (mem_relationsInSigned_relationalizeFormula s p φ).mp hq, rfl⟩
-  · rintro ⟨p, hp, rfl⟩
-    exact ⟨(mem_relationsInSigned_relationalizeFormula s p φ).mpr hp, p, rfl⟩
 
-/-- Gate 2, positive corollary (the audit's stated form). -/
-theorem positiveRelationsIn_relationalizeFormula_inter_base {n : ℕ}
-    (φ : L.BoundedFormulaω α n) :
-    (relationalizeFormula φ).positiveRelationsIn ∩ Set.range (baseRelSym L) =
-      baseRelSym L '' φ.positiveRelationsIn :=
-  relationsInSigned_relationalizeFormula_inter_base true φ
 
-/-- Gate 2, negative corollary. -/
-theorem negativeRelationsIn_relationalizeFormula_inter_base {n : ℕ}
-    (φ : L.BoundedFormulaω α n) :
-    (relationalizeFormula φ).negativeRelationsIn ∩ Set.range (baseRelSym L) =
-      baseRelSym L '' φ.negativeRelationsIn :=
-  relationsInSigned_relationalizeFormula_inter_base false φ
+
+
+
+
 
 /-! ## Gate 3: back-translation -/
 
@@ -274,7 +233,7 @@ theorem negativeRelationsIn_relationalizeFormula_inter_base {n : ℕ}
 in the back-translation exactly when its graph image occurs with sign `s` upstream.  The `graph`
 atom case is the acceptance fact: it back-translates to an *equality*, contributing to neither
 sign, so graph relations may carry arbitrary polarity upstream and still vanish. -/
-theorem mem_relationsInSigned_backTranslateFormula (s : Bool) (p : Σ n, L.Relations n) :
+private theorem mem_relationsInSigned_backTranslateFormula (s : Bool) (p : Σ n, L.Relations n) :
     ∀ {n : ℕ} (θ : (graphLanguage L).BoundedFormulaω α n),
       p ∈ relationsInSigned s (backTranslateFormula θ) ↔
         baseRelSym L p ∈ relationsInSigned s θ
@@ -344,7 +303,7 @@ theorem mem_relationsInSigned_backTranslateFormula (s : Bool) (p : Σ n, L.Relat
 
 /-- **Gate 3**: the signed occurrences of a back-translation are the base-embedding preimage of the
 graph formula's signed occurrences. -/
-theorem relationsInSigned_backTranslateFormula (s : Bool) {n : ℕ}
+private theorem relationsInSigned_backTranslateFormula (s : Bool) {n : ℕ}
     (θ : (graphLanguage L).BoundedFormulaω α n) :
     relationsInSigned s (backTranslateFormula θ) = baseRelSym L ⁻¹' relationsInSigned s θ := by
   ext p
@@ -364,25 +323,9 @@ theorem negativeRelationsIn_backTranslateFormula {n : ℕ}
 
 /-! ## The base-polarity identities for Craig's graph roots -/
 
-/-- The graph **antecedent** `(graphAxioms F).and (relationalizeFormula r)` has exactly the base
-polarity of `r`, in either sign. -/
-theorem relationsInSigned_graphAnd_inter_base (s : Bool) (F : Set (Σ n, L.Functions n))
-    [Countable ↥F] (φ : L.Sentenceω) :
-    relationsInSigned s ((graphAxioms F).and (relationalizeFormula φ)) ∩
-        Set.range (baseRelSym L) = baseRelSym L '' relationsInSigned s φ := by
-  rw [relationsInSigned_and, Set.union_inter_distrib_right,
-    relationsInSigned_graphAxioms_inter_base s F, Set.empty_union,
-    relationsInSigned_relationalizeFormula_inter_base s φ]
 
-/-- The graph **consequent** `(graphAxioms F).imp (relationalizeFormula r)` likewise: the axioms
-contribute nothing to the base part even though the implication flips their sign. -/
-theorem relationsInSigned_graphImp_inter_base (s : Bool) (F : Set (Σ n, L.Functions n))
-    [Countable ↥F] (φ : L.Sentenceω) :
-    relationsInSigned s ((graphAxioms F).imp (relationalizeFormula φ)) ∩
-        Set.range (baseRelSym L) = baseRelSym L '' relationsInSigned s φ := by
-  rw [relationsInSigned_imp, Set.union_inter_distrib_right,
-    relationsInSigned_graphAxioms_inter_base (!s) F, Set.empty_union,
-    relationsInSigned_relationalizeFormula_inter_base s φ]
+
+
 
 /-- Preimage form of the graph-antecedent identity — the shape the endpoint consumes, so that no
 `Sigma`/definitional-equality friction leaks into the assembly. -/

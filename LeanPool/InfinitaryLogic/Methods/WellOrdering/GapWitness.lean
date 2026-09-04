@@ -56,15 +56,7 @@ theorem ratLtAtom_mem_baseDiagram (φ : L.Sentenceω) (lt : L.Relations 2) {q r 
     (h : q < r) : ratLtAtom lt q r ∈ baseDiagram φ lt :=
   Set.mem_insert_of_mem _ ⟨q, r, h, rfl⟩
 
-/-- The base diagram is countable. -/
-theorem baseDiagram_countable (φ : L.Sentenceω) (lt : L.Relations 2) :
-    (baseDiagram φ lt).Countable := by
-  refine Set.Countable.insert _ ?_
-  have : {χ : L[[ℕ]].Sentenceω | ∃ q r : ℚ, q < r ∧ χ = ratLtAtom lt q r} ⊆
-      Set.range fun p : ℚ × ℚ => ratLtAtom lt p.1 p.2 := by
-    rintro χ ⟨q, r, _, rfl⟩
-    exact ⟨(q, r), rfl⟩
-  exact (Set.countable_range _).mono this
+
 
 /-! ## The raw positive predicates -/
 

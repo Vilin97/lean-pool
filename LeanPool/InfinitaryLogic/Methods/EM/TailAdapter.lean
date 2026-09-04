@@ -249,7 +249,7 @@ exactly that model as input; the broad compactness oracle factors through them. 
 /-- **EM stretching (sentence form) from a model of the tail-template theory.** Needs only that
 the (proved finitely-satisfiable) tail-template theory over `J` has a model — not a compactness
 oracle. -/
-theorem IsLomega1omegaIndiscernibleOnTail.stretch_restricted_of_model
+private theorem IsLomega1omegaIndiscernibleOnTail.stretch_restricted_of_model
     {M : Type} [L.Structure M] {a : ℕ → M}
     (s : ℕ → Σ n, L.BoundedFormulaω Empty n)
     {J : Type u} [LinearOrder J]

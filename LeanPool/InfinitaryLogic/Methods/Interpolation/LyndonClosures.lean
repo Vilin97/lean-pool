@@ -58,10 +58,7 @@ def SentBndPol (F : Set (Σ n, L.Functions n)) (P N : Set (Σ n, L.Relations n))
 
 variable {F : Set (Σ n, L.Functions n)} {P N : Set (Σ n, L.Relations n)}
 
-theorem mem_sentBndPol_iff {σ : L[[ℕ]].Sentenceω} :
-    σ ∈ SentBndPol F P N ↔
-      σ.baseFunctionsIn ⊆ F ∧ σ.basePositiveRelations ⊆ P ∧ σ.baseNegativeRelations ⊆ N :=
-  Iff.rfl
+
 
 /-- **Negation exchanges the polarity components** — the directional fact that replaces the
 unsigned `sentBnd_not_iff`.  It is *not* a same-class equivalence. -/
@@ -160,7 +157,7 @@ theorem sentBndPol_constEq (a b : ℕ) : constEq (L := L) a b ∈ SentBndPol F P
 /-- **Atomic relation instances are positive-only**: membership in the side class is exactly
 membership of the symbol in the *positive* component.  It never requires — and never grants —
 membership in `N`. -/
-theorem sentBndPol_relInst_iff {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) :
+private theorem sentBndPol_relInst_iff {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) :
     relInst R g ∈ SentBndPol F P N ↔ (⟨l, R⟩ : Σ n, L.Relations n) ∈ P := by
   constructor
   · intro h
@@ -188,11 +185,7 @@ theorem lyndonInsepAt_insert_of_entails {φ : L[[ℕ]].Sentenceω}
   rintro ⟨σ, hbf, hbp, hbn, hsupp, hΓφσ, hΔσ⟩
   exact h ⟨σ, hbf, hbp, hbn, hsupp, Theoryω.Entails.cut hcons hΓφσ, hΔσ⟩
 
-/-- Shrinking the allowed-support budget keeps inseparability. -/
-theorem lyndonInsepAt_mono_support {B : Finset ℕ} (hAB : A ⊆ B)
-    (h : LyndonInsepAt F P N B Γ Δ) : LyndonInsepAt F P N A Γ Δ := by
-  rintro ⟨σ, hbf, hbp, hbn, hsupp, hΓσ, hΔσ⟩
-  exact h ⟨σ, hbf, hbp, hbn, hsupp.trans (Finset.coe_subset.mpr hAB), hΓσ, hΔσ⟩
+
 
 /-! ## The one-sided closures: component selection (separator `⨆ σ`) -/
 

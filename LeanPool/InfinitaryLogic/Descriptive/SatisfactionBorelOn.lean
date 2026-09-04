@@ -48,7 +48,7 @@ variable [L.IsRelational] {α : Type*}
 
 /-- The set of codes in `StructureSpaceOn L α` where a bounded formula is realized,
 given variable assignments. -/
-def ModelsOfBoundedOn
+private def ModelsOfBoundedOn
     {β : Type u'} {n : ℕ}
     (φ : L.BoundedFormulaω β n) (v : β → α) (xs : Fin n → α) :
     Set (StructureSpaceOn L α) :=
@@ -91,7 +91,7 @@ private theorem modelsOfBoundedOn_iInf {β : Type u'} {n : ℕ}
 
 /-- Satisfaction of any bounded Lω₁ω formula in a countable relational language
 is measurable on the carrier-parametric structure space. -/
-theorem modelsOfBoundedOn_measurableSet [Countable α]
+private theorem modelsOfBoundedOn_measurableSet [Countable α]
     {β : Type u'} {n : ℕ}
     (φ : L.BoundedFormulaω β n) (v : β → α) (xs : Fin n → α) :
     MeasurableSet (ModelsOfBoundedOn (α := α) φ v xs) := by

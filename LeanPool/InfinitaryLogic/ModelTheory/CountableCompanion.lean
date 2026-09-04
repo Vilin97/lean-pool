@@ -31,7 +31,7 @@ variable {L : Language.{u, v}} {M : Type w} [L.Structure M]
 
 /-- The controlling seed: all isolators, and the existential closures of all isolators of one
 higher arity. -/
-def isolatorSeed (hsmall : Lomega1omegaSmall (L := L) M) :
+private def isolatorSeed (hsmall : Lomega1omegaSmall (L := L) M) :
     Set (Σ n, L.BoundedFormulaω Empty n) :=
   (⋃ n : ℕ, (fun p : Set (L.BoundedFormulaω Empty n) =>
       (⟨n, isolatingFormula (hsmall n) p⟩ : Σ n, L.BoundedFormulaω Empty n)) ''
@@ -40,7 +40,7 @@ def isolatorSeed (hsmall : Lomega1omegaSmall (L := L) M) :
       (⟨n, (isolatingFormula (hsmall (n + 1)) p).ex⟩ : Σ n, L.BoundedFormulaω Empty n)) ''
     RealizedInfinitaryTypes (L := L) M (n + 1))
 
-theorem isolatorSeed_countable (hsmall : Lomega1omegaSmall (L := L) M) :
+private theorem isolatorSeed_countable (hsmall : Lomega1omegaSmall (L := L) M) :
     (isolatorSeed hsmall).Countable :=
   Set.Countable.union
     (Set.countable_iUnion fun n => (hsmall n).image _)
@@ -50,7 +50,7 @@ theorem isolatorSeed_countable (hsmall : Lomega1omegaSmall (L := L) M) :
 def isolatorFragment (hsmall : Lomega1omegaSmall (L := L) M) : Fragment L :=
   Fragment.generated (isolatorSeed hsmall)
 
-theorem isolatorFragment_countable (hsmall : Lomega1omegaSmall (L := L) M) :
+private theorem isolatorFragment_countable (hsmall : Lomega1omegaSmall (L := L) M) :
     (isolatorFragment hsmall).toSet.Countable :=
   Fragment.generated_countable (isolatorSeed_countable hsmall)
 

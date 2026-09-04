@@ -60,11 +60,11 @@ def theoryJConsts (T : Set L[[ℕ]].Sentenceω) : Set ℕ :=
 
 variable {T T' : Set L[[ℕ]].Sentenceω} {σ : L[[ℕ]].Sentenceω} {c : ℕ}
 
-theorem sentenceJConsts_subset_theoryJConsts (hmem : σ ∈ T) :
+private theorem sentenceJConsts_subset_theoryJConsts (hmem : σ ∈ T) :
     sentenceJConsts (L' := L) (J := ℕ) σ ⊆ theoryJConsts T :=
   Set.subset_biUnion_of_mem hmem
 
-theorem theoryJConsts_mono (h : T ⊆ T') : theoryJConsts (L := L) T ⊆ theoryJConsts T' := by
+private theorem theoryJConsts_mono (h : T ⊆ T') : theoryJConsts (L := L) T ⊆ theoryJConsts T' := by
   intro k hk
   simp only [theoryJConsts, Set.mem_iUnion] at hk ⊢
   obtain ⟨ρ, hρ, hk⟩ := hk
@@ -85,13 +85,13 @@ theorem theoryJConsts_mono (h : T ⊆ T') : theoryJConsts (L := L) T ⊆ theoryJ
 
 /-- **Insertion non-growth for constants**: inserting a sentence whose constants the side already
 carries does not enlarge the side's support.  Every branch rule needs exactly this. -/
-theorem theoryJConsts_insert_of_subset
+private theorem theoryJConsts_insert_of_subset
     (h : sentenceJConsts (L' := L) (J := ℕ) σ ⊆ theoryJConsts T) :
     theoryJConsts (L := L) (insert σ T) = theoryJConsts T := by
   rw [theoryJConsts_insert, Set.union_eq_self_of_subset_left h]
 
 /-- Freshness for a side is exactly non-membership in its support. -/
-theorem notMem_theoryJConsts_iff :
+private theorem notMem_theoryJConsts_iff :
     c ∉ theoryJConsts (L := L) T ↔ ∀ γ ∈ T, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ := by
   constructor
   · intro h γ hγ hk
@@ -134,7 +134,7 @@ sides.  Contrapositively, inseparability of the larger pair gives it for every s
 This is what lets a discharge transfer a premise onto a side temporarily and then drop it again. -/
 
 /-- **Antitonicity in both labels.** -/
-theorem budgetedPairInsep_antitone {Γ' Δ' : Set L[[ℕ]].Sentenceω}
+private theorem budgetedPairInsep_antitone {Γ' Δ' : Set L[[ℕ]].Sentenceω}
     (hΓ : Γ ⊆ Γ') (hΔ : Δ ⊆ Δ')
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ' Δ') :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ := by
@@ -147,12 +147,12 @@ theorem budgetedPairInsep_antitone {Γ' Δ' : Set L[[ℕ]].Sentenceω}
   · exact fun hq => Theoryω.hasQuantSigned_mono hΔ (hx hq)
 
 /-- Antitonicity on the left alone — the form that drops a temporarily transferred premise. -/
-theorem budgetedPairInsep_antitone_left {Γ' : Set L[[ℕ]].Sentenceω} (hΓ : Γ ⊆ Γ')
+private theorem budgetedPairInsep_antitone_left {Γ' : Set L[[ℕ]].Sentenceω} (hΓ : Γ ⊆ Γ')
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ' Δ) : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ :=
   budgetedPairInsep_antitone hΓ (subset_refl Δ) h
 
 /-- Antitonicity on the right alone. -/
-theorem budgetedPairInsep_antitone_right {Δ' : Set L[[ℕ]].Sentenceω} (hΔ : Δ ⊆ Δ')
+private theorem budgetedPairInsep_antitone_right {Δ' : Set L[[ℕ]].Sentenceω} (hΔ : Δ ⊆ Δ')
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ') : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ :=
   budgetedPairInsep_antitone (subset_refl Γ) hΔ h
 
@@ -165,7 +165,7 @@ right.  All five conditions are paid by the two memberships themselves. -/
 shared because the two sides bound the same sentence, its constants occur in both, its universal
 occurrences are paid by `Γ`, and its existential occurrences are paid by the **universal** occurrences
 of `σ.not` in `Δ`. -/
-theorem not_budgetedPairInsep_of_mixed (hΓ : Γ ⊆ SentBnd F₁ R₁) (hΔ : Δ ⊆ SentBnd F₂ R₂)
+private theorem not_budgetedPairInsep_of_mixed (hΓ : Γ ⊆ SentBnd F₁ R₁) (hΔ : Δ ⊆ SentBnd F₂ R₂)
     (hσΓ : σ ∈ Γ) (hσΔ : σ.not ∈ Δ) : ¬ BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ := by
   intro h
   have hb₁ : σ ∈ SentBnd (L := L) F₁ R₁ := hΓ hσΓ
@@ -186,7 +186,7 @@ sentence itself on the right.  `σ.not` separates directly — no double-negatio
 Both permissions flip with the sign: the *universal* occurrences of `σ.not` are paid by its own
 membership in `Γ`, and its *existential* occurrences are the universal occurrences of `σ`, paid by
 `σ ∈ Δ`. -/
-theorem not_budgetedPairInsep_of_mixed_rev (hΓ : Γ ⊆ SentBnd F₁ R₁) (hΔ : Δ ⊆ SentBnd F₂ R₂)
+private theorem not_budgetedPairInsep_of_mixed_rev (hΓ : Γ ⊆ SentBnd F₁ R₁) (hΔ : Δ ⊆ SentBnd F₂ R₂)
     (hσΓ : σ.not ∈ Γ) (hσΔ : σ ∈ Δ) : ¬ BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ := by
   intro h
   have hb₁ : σ.not ∈ SentBnd (L := L) F₁ R₁ := hΓ hσΓ
@@ -209,7 +209,7 @@ theorem not_budgetedPairInsep_of_mixed_rev (hΓ : Γ ⊆ SentBnd F₁ R₁) (hΔ
 
 /-- **Same-side C0.**  A sentence and its negation on one side make it inconsistent, and the
 quantifier-free, constant-free `⊥` (resp. `⊤`) separates. -/
-theorem not_budgetedPairInsep_of_left_contradiction (hσ : σ ∈ Γ) (hnσ : σ.not ∈ Γ) :
+private theorem not_budgetedPairInsep_of_left_contradiction (hσ : σ ∈ Γ) (hnσ : σ.not ∈ Γ) :
     ¬ BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ := by
   intro h
   refine h ⟨BoundedFormulaω.falsum, ?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -230,7 +230,7 @@ theorem not_budgetedPairInsep_of_left_contradiction (hσ : σ ∈ Γ) (hnσ : σ
 
 /-- **C0a, left.**  `⊥` on a side is its own separator: `Γ ⊨ ⊥` by membership, `Δ ⊨ ¬⊥` vacuously,
 and `⊥` carries no symbol, constant or quantifier. -/
-theorem not_budgetedPairInsep_of_falsum_left
+private theorem not_budgetedPairInsep_of_falsum_left
     (hmem : (BoundedFormulaω.falsum : L[[ℕ]].Sentenceω) ∈ Γ) :
     ¬ BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ := by
   intro h
@@ -246,7 +246,7 @@ theorem not_budgetedPairInsep_of_falsum_left
   · exact fun hq => absurd hq (hasQuantSigned_falsum false)
 
 /-- **C0a, right.**  Dual: `⊤` separates, since `Δ` holding `⊥` has no models at all. -/
-theorem not_budgetedPairInsep_of_falsum_right
+private theorem not_budgetedPairInsep_of_falsum_right
     (hmem : (BoundedFormulaω.falsum : L[[ℕ]].Sentenceω) ∈ Δ) :
     ¬ BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ := by
   intro h
@@ -275,7 +275,7 @@ when on the **right**.  There is no leakage case to consider — the branch sent
 their parent is on, and nowhere else. -/
 
 /-- **C1, left.**  Separator `τ₁ ∨ τ₂`, written `(τ₁.not).imp τ₂`. -/
-theorem budgetedPairInsep_imp_left (φ ψ : L[[ℕ]].Sentenceω) (hmem : φ.imp ψ ∈ Γ)
+private theorem budgetedPairInsep_imp_left (φ ψ : L[[ℕ]].Sentenceω) (hmem : φ.imp ψ ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert φ.not Γ) Δ ∨
       BudgetedPairInsep F₁ R₁ F₂ R₂ (insert ψ Γ) Δ := by
@@ -338,7 +338,7 @@ theorem budgetedPairInsep_imp_left (φ ψ : L[[ℕ]].Sentenceω) (hmem : φ.imp 
     exact hq.elim hx₁ hx₂
 
 /-- **C1, right.**  Separator `τ₁ ∧ τ₂`. -/
-theorem budgetedPairInsep_imp_right (φ ψ : L[[ℕ]].Sentenceω) (hmem : φ.imp ψ ∈ Δ)
+private theorem budgetedPairInsep_imp_right (φ ψ : L[[ℕ]].Sentenceω) (hmem : φ.imp ψ ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert φ.not Δ) ∨
       BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert ψ Δ) := by
@@ -409,51 +409,11 @@ Freshness on the *opposite* side is what forbids the separator from mentioning `
 shared-constant condition — so the separator transports **unchanged**; freshness on the *own* side is
 what moves the entailment.  No constant abstraction appears anywhere. -/
 
-/-- Entailment transfer for a separator that does not mention the witness constant, from an
-existential parent.  The `_of_fresh` suffix distinguishes these from the quarantined
-constant-*free* versions in `FefermanProjection.lean`: here the separator need only avoid the single
-witness constant, which is exactly what the shared-constant condition delivers. -/
-theorem entails_of_entails_insert_witness_of_fresh (c : ℕ) (φc τ : L[[ℕ]].Sentenceω)
-    (hpar : genEx c φc ∈ T) (hcT : ∀ γ ∈ T, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ)
-    (hcτ : c ∉ sentenceJConsts (L' := L) (J := ℕ) τ)
-    (h : Theoryω.Entails (insert φc T) τ) : Theoryω.Entails T τ := by
-  intro N instN neN hmodel
-  set base := (L.lhomWithConstants ℕ).reduct N with hbase
-  set hm := ambientConstMap (L := L) N with hh
-  have bridge : ∀ (ρ : L[[ℕ]].Sentenceω),
-      @Sentenceω.Realize L[[ℕ]] ρ N instN
-        ↔ @BoundedFormulaω.Realize L[[ℕ]] N (wc base hm) Empty 0 ρ Empty.elim Fin.elim0 :=
-    fun ρ => ambient_realize_iff_wc (S := instN) ρ Empty.elim Fin.elim0
-  have hφ : @BoundedFormulaω.Realize L[[ℕ]] N (wc base hm) Empty 0 (genEx c φc)
-      Empty.elim Fin.elim0 := (bridge _).mp (hmodel _ hpar)
-  obtain ⟨x, hx⟩ := (realize_genEx base hm c φc).mp hφ
-  have hT : ∀ γ ∈ T,
-      @BoundedFormulaω.Realize L[[ℕ]] N (wc base (Function.update hm c x)) Empty 0 γ
-        Empty.elim Fin.elim0 := by
-    intro γ hγ
-    have hg : @BoundedFormulaω.Realize L[[ℕ]] N (wc base hm) Empty 0 γ Empty.elim Fin.elim0 :=
-      (bridge _).mp (hmodel _ hγ)
-    have hcongr : ∀ k ∈ sentenceJConsts (L' := L) (J := ℕ) γ, hm k = Function.update hm c x k := by
-      intro k hk
-      have hkc : (k : ℕ) ≠ c := fun heq => hcT γ hγ (heq ▸ hk)
-      exact (Function.update_of_ne (α := ℕ) hkc x hm).symm
-    rwa [BoundedFormulaω.realize_congr_const base γ hcongr Empty.elim Fin.elim0] at hg
-  have hτ : @BoundedFormulaω.Realize L[[ℕ]] N (wc base (Function.update hm c x)) Empty 0 τ
-      Empty.elim Fin.elim0 :=
-    @h N (wc base (Function.update hm c x)) neN (fun ρ hρ => by
-      rcases Set.mem_insert_iff.mp hρ with rfl | hρ
-      · exact hx
-      · exact hT ρ hρ)
-  have hback : ∀ k ∈ sentenceJConsts (L' := L) (J := ℕ) τ, Function.update hm c x k = hm k := by
-    intro k hk
-    have hkc : (k : ℕ) ≠ c := fun heq => hcτ (heq ▸ hk)
-    exact Function.update_of_ne (α := ℕ) hkc x hm
-  exact (bridge _).mpr
-    ((BoundedFormulaω.realize_congr_const base τ hback Empty.elim Fin.elim0).mp hτ)
+
 
 /-- The kernel's `neg_all_witness` shape: parent `(φ.all).not`, inserted witness
 `(instConst c φ).not`. -/
-theorem entails_of_entails_insert_negInstConst_of_fresh (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
+private theorem entails_of_entails_insert_negInstConst_of_fresh (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
     (τ : L[[ℕ]].Sentenceω) (hpar : (BoundedFormulaω.all φ).not ∈ T)
     (hcT : ∀ γ ∈ T, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ)
     (hcτ : c ∉ sentenceJConsts (L' := L) (J := ℕ) τ)
@@ -512,7 +472,7 @@ theorem entails_of_entails_insert_negInstConst_of_fresh (c : ℕ) (φ : L[[ℕ]]
 
 /-- **Fresh witness on the left.**  The separator is transported unchanged: opposite-side freshness
 plus the shared-constant condition force `c ∉ sentenceJConsts θ`. -/
-theorem budgetedPairInsep_witness_left (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
+private theorem budgetedPairInsep_witness_left (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
     (hpar : (BoundedFormulaω.all φ).not ∈ Γ)
     (hcΓ : c ∉ theoryJConsts (L := L) Γ) (hcΔ : c ∉ theoryJConsts (L := L) Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
@@ -549,7 +509,7 @@ theorem budgetedPairInsep_witness_left (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω
     · exact hk'
 
 /-- **Fresh witness on the right**, the mirror image. -/
-theorem budgetedPairInsep_witness_right (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
+private theorem budgetedPairInsep_witness_right (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
     (hpar : (BoundedFormulaω.all φ).not ∈ Δ)
     (hcΓ : c ∉ theoryJConsts (L := L) Γ) (hcΔ : c ∉ theoryJConsts (L := L) Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
@@ -603,7 +563,7 @@ theorem sentenceJConsts_eq_empty_of_budgetedPairSeparates {θ : L[[ℕ]].Sentenc
 /-- **The root equation.**  Failure of the invariant at the root pair `({r₁}, {r₂.not})` — with `r₂`
 carrying no existential occurrence, i.e. universal, and the roots constant-free — delivers exactly a
 Malitz interpolant: universal, shared-vocabulary, constant-free, `r₁ ⊨ θ` and `θ ⊨ r₂`. -/
-theorem exists_universal_interpolant_of_not_budgetedPairInsep {r₁ r₂ : L[[ℕ]].Sentenceω}
+private theorem exists_universal_interpolant_of_not_budgetedPairInsep {r₁ r₂ : L[[ℕ]].Sentenceω}
     (hr₂ : ¬ hasQuantSigned false r₂) (hc₁ : sentenceJConsts (L' := L) (J := ℕ) r₁ = ∅)
     (h : ¬ BudgetedPairInsep F₁ R₁ F₂ R₂ {r₁} {r₂.not}) :
     ∃ θ : L[[ℕ]].Sentenceω, IsUniversal θ ∧ θ ∈ SentBnd (F₁ ∩ F₂) (R₁ ∩ R₂) ∧
@@ -658,7 +618,7 @@ def BudgetedPairMem (r₁ r₂ : L[[ℕ]].Sentenceω)
 variable {r₁ r₂ : L[[ℕ]].Sentenceω}
 
 /-- Left-label insertion bookkeeping: the union re-decomposes with `σ` on the left. -/
-theorem budgetedPairMem_insert_left {S : Set L[[ℕ]].Sentenceω}
+private theorem budgetedPairMem_insert_left {S : Set L[[ℕ]].Sentenceω}
     (hΓfin : Γ.Finite) (hΔfin : Δ.Finite)
     (hΓU : Γ ⊆ GenU r₁ r₂) (hΔU : Δ ⊆ GenU r₁ r₂)
     (hΓb : Γ ⊆ SentBnd F₁ R₁) (hΔb : Δ ⊆ SentBnd F₂ R₂)
@@ -672,7 +632,7 @@ theorem budgetedPairMem_insert_left {S : Set L[[ℕ]].Sentenceω}
   · rw [hS, Set.insert_union]
 
 /-- Right-label insertion bookkeeping. -/
-theorem budgetedPairMem_insert_right {S : Set L[[ℕ]].Sentenceω}
+private theorem budgetedPairMem_insert_right {S : Set L[[ℕ]].Sentenceω}
     (hΓfin : Γ.Finite) (hΔfin : Δ.Finite)
     (hΓU : Γ ⊆ GenU r₁ r₂) (hΔU : Δ ⊆ GenU r₁ r₂)
     (hΓb : Γ ⊆ SentBnd F₁ R₁) (hΔb : Δ ⊆ SentBnd F₂ R₂)
@@ -692,7 +652,7 @@ constants.  Finiteness of the *support* needs the `GenU` bound as well, via `gen
 together with finite constant support of the two roots. -/
 
 /-- The constant support of a finite, `GenU`-bounded side is finite. -/
-theorem theoryJConsts_finite_of_subset_genU
+private theorem theoryJConsts_finite_of_subset_genU
     (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁).Finite)
     (hr₂ : (sentenceJConsts (L' := L) (J := ℕ) r₂).Finite)
     (hΓfin : Γ.Finite) (hΓU : Γ ⊆ GenU r₁ r₂) :
@@ -701,7 +661,7 @@ theorem theoryJConsts_finite_of_subset_genU
 
 /-- **A constant fresh for both labels exists.**  Consumed only by the fresh-witness fields; the root
 finiteness hypotheses enter the package for this reason alone. -/
-theorem exists_fresh_budgetedPair
+private theorem exists_fresh_budgetedPair
     (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁).Finite)
     (hr₂ : (sentenceJConsts (L' := L) (J := ℕ) r₂).Finite)
     (hΓfin : Γ.Finite) (hΔfin : Δ.Finite)
@@ -715,7 +675,7 @@ theorem exists_fresh_budgetedPair
 
 /-- **Same-side C0, right.**  An inconsistent right side is separated by `⊤`, the mirror of the `⊥`
 separator for an inconsistent left side. -/
-theorem not_budgetedPairInsep_of_right_contradiction (hσ : σ ∈ Δ) (hnσ : σ.not ∈ Δ) :
+private theorem not_budgetedPairInsep_of_right_contradiction (hσ : σ ∈ Δ) (hnσ : σ.not ∈ Δ) :
     ¬ BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ := by
   intro h
   have hincon : ∀ (N : Type) [inst : L[[ℕ]].Structure N], Theoryω.Model Δ N → False := by
@@ -750,7 +710,7 @@ receiving side — the shared-constant condition is what charges it. -/
 
 /-- **Transfer right → left.**  A quantifier-free shared `σ ∈ Δ` whose constants `Γ` already carries
 may be duplicated onto the left. -/
-theorem budgetedPairInsep_insert_shared_left (hσΔ : σ ∈ Δ)
+private theorem budgetedPairInsep_insert_shared_left (hσΔ : σ ∈ Δ)
     (hb₁ : σ ∈ SentBnd (L := L) F₁ R₁) (hb₂ : σ ∈ SentBnd (L := L) F₂ R₂)
     (hcσ : sentenceJConsts (L' := L) (J := ℕ) σ ⊆ theoryJConsts Γ)
     (hq : ∀ s : Bool, ¬ hasQuantSigned s σ)
@@ -791,7 +751,7 @@ theorem budgetedPairInsep_insert_shared_left (hσΔ : σ ∈ Δ)
     exact hqθ.elim (fun hh => absurd hh (hq true)) hx
 
 /-- **Transfer left → right.**  The mirror: separator `σ.and θ`. -/
-theorem budgetedPairInsep_insert_shared_right (hσΓ : σ ∈ Γ)
+private theorem budgetedPairInsep_insert_shared_right (hσΓ : σ ∈ Γ)
     (hb₁ : σ ∈ SentBnd (L := L) F₁ R₁) (hb₂ : σ ∈ SentBnd (L := L) F₂ R₂)
     (hcσ : sentenceJConsts (L' := L) (J := ℕ) σ ⊆ theoryJConsts Δ)
     (hq : ∀ s : Bool, ¬ hasQuantSigned s σ)
@@ -854,7 +814,7 @@ quantifier is introduced, so both budgets are untouched. -/
 /-- **Mixed-label relation congruence.**  `relInst R g ∈ Γ`, `constEq (g i) b ∈ Δ`, `b` fresh for the
 left: the derived atom may be inserted on the left.  The separator is transported by
 `substConst b (g i)`. -/
-theorem budgetedPairInsep_relCongr_mixed {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
+private theorem budgetedPairInsep_relCongr_mixed {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
     (b : ℕ) (hrel : relInst R g ∈ Γ) (heq : constEq (g i) b ∈ Δ)
     (hbΓ : b ∉ theoryJConsts (L := L) Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
@@ -971,7 +931,7 @@ carried there.  The three obligations stay separate on purpose — the proof's c
 received the formula. -/
 
 /-- **Left driver.** -/
-theorem budgetedPairInsep_insert_entailed_left (hent : Theoryω.Entails Γ σ)
+private theorem budgetedPairInsep_insert_entailed_left (hent : Theoryω.Entails Γ σ)
     (hcσ : sentenceJConsts (L' := L) (J := ℕ) σ ⊆ theoryJConsts Γ)
     (hqσ : hasQuantSigned true σ → Theoryω.HasQuantSigned true Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
@@ -987,7 +947,7 @@ theorem budgetedPairInsep_insert_entailed_left (hent : Theoryω.Entails Γ σ)
   · exact hmodel ρ hρ
 
 /-- **Right driver.** -/
-theorem budgetedPairInsep_insert_entailed_right (hent : Theoryω.Entails Δ σ)
+private theorem budgetedPairInsep_insert_entailed_right (hent : Theoryω.Entails Δ σ)
     (hcσ : sentenceJConsts (L' := L) (J := ℕ) σ ⊆ theoryJConsts Δ)
     (hqσ : hasQuantSigned true σ → Theoryω.HasQuantSigned true Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
@@ -1003,7 +963,7 @@ theorem budgetedPairInsep_insert_entailed_right (hent : Theoryω.Entails Δ σ)
   · exact hmodel ρ hρ
 
 /-- The recurring shape: the new sentence is licensed by a **member** `ρ` of the side. -/
-theorem budgetedPairInsep_insert_of_member_left {ρ : L[[ℕ]].Sentenceω} (hρ : ρ ∈ Γ)
+private theorem budgetedPairInsep_insert_of_member_left {ρ : L[[ℕ]].Sentenceω} (hρ : ρ ∈ Γ)
     (hent : Theoryω.Entails Γ σ)
     (hc : sentenceJConsts (L' := L) (J := ℕ) σ ⊆ sentenceJConsts (L' := L) (J := ℕ) ρ)
     (hq : hasQuantSigned true σ → hasQuantSigned true ρ)
@@ -1013,7 +973,7 @@ theorem budgetedPairInsep_insert_of_member_left {ρ : L[[ℕ]].Sentenceω} (hρ 
     (hc.trans (sentenceJConsts_subset_theoryJConsts hρ))
     (fun hqσ => Theoryω.hasQuantSigned_of_mem hρ (hq hqσ)) h
 
-theorem budgetedPairInsep_insert_of_member_right {ρ : L[[ℕ]].Sentenceω} (hρ : ρ ∈ Δ)
+private theorem budgetedPairInsep_insert_of_member_right {ρ : L[[ℕ]].Sentenceω} (hρ : ρ ∈ Δ)
     (hent : Theoryω.Entails Δ σ)
     (hc : sentenceJConsts (L' := L) (J := ℕ) σ ⊆ sentenceJConsts (L' := L) (J := ℕ) ρ)
     (hq : hasQuantSigned true σ → hasQuantSigned true ρ)
@@ -1033,7 +993,7 @@ section Deterministic
 variable {φ ψ : L[[ℕ]].Sentenceω} {φs : ℕ → L[[ℕ]].Sentenceω} {k : ℕ}
 
 /-- C2, left. -/
-theorem budgetedPairInsep_not_not_left (hmem : φ.not.not ∈ Γ)
+private theorem budgetedPairInsep_not_not_left (hmem : φ.not.not ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert φ Γ) Δ := by
   refine budgetedPairInsep_insert_of_member_left hmem ?_ ?_ ?_ h
@@ -1048,7 +1008,7 @@ theorem budgetedPairInsep_not_not_left (hmem : φ.not.not ∈ Γ)
     exact hq
 
 /-- C2, right. -/
-theorem budgetedPairInsep_not_not_right (hmem : φ.not.not ∈ Δ)
+private theorem budgetedPairInsep_not_not_right (hmem : φ.not.not ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert φ Δ) := by
   refine budgetedPairInsep_insert_of_member_right hmem ?_ ?_ ?_ h
@@ -1063,7 +1023,7 @@ theorem budgetedPairInsep_not_not_right (hmem : φ.not.not ∈ Δ)
     exact hq
 
 /-- C1′ antecedent, left. -/
-theorem budgetedPairInsep_neg_imp_left₁ (hmem : (φ.imp ψ).not ∈ Γ)
+private theorem budgetedPairInsep_neg_imp_left₁ (hmem : (φ.imp ψ).not ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert φ Γ) Δ := by
   refine budgetedPairInsep_insert_of_member_left hmem ?_ ?_ ?_ h
@@ -1078,7 +1038,7 @@ theorem budgetedPairInsep_neg_imp_left₁ (hmem : (φ.imp ψ).not ∈ Γ)
     exact Or.inl hq
 
 /-- C1′ consequent, left. -/
-theorem budgetedPairInsep_neg_imp_left₂ (hmem : (φ.imp ψ).not ∈ Γ)
+private theorem budgetedPairInsep_neg_imp_left₂ (hmem : (φ.imp ψ).not ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert ψ.not Γ) Δ := by
   refine budgetedPairInsep_insert_of_member_left hmem ?_ ?_ ?_ h
@@ -1095,7 +1055,7 @@ theorem budgetedPairInsep_neg_imp_left₂ (hmem : (φ.imp ψ).not ∈ Γ)
     exact Or.inr hq
 
 /-- C1′ antecedent, right. -/
-theorem budgetedPairInsep_neg_imp_right₁ (hmem : (φ.imp ψ).not ∈ Δ)
+private theorem budgetedPairInsep_neg_imp_right₁ (hmem : (φ.imp ψ).not ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert φ Δ) := by
   refine budgetedPairInsep_insert_of_member_right hmem ?_ ?_ ?_ h
@@ -1110,7 +1070,7 @@ theorem budgetedPairInsep_neg_imp_right₁ (hmem : (φ.imp ψ).not ∈ Δ)
     exact Or.inl hq
 
 /-- C1′ consequent, right. -/
-theorem budgetedPairInsep_neg_imp_right₂ (hmem : (φ.imp ψ).not ∈ Δ)
+private theorem budgetedPairInsep_neg_imp_right₂ (hmem : (φ.imp ψ).not ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert ψ.not Δ) := by
   refine budgetedPairInsep_insert_of_member_right hmem ?_ ?_ ?_ h
@@ -1127,7 +1087,7 @@ theorem budgetedPairInsep_neg_imp_right₂ (hmem : (φ.imp ψ).not ∈ Δ)
     exact Or.inr hq
 
 /-- C3, left: a conjunction component. -/
-theorem budgetedPairInsep_iInf_component_left (hmem : BoundedFormulaω.iInf φs ∈ Γ)
+private theorem budgetedPairInsep_iInf_component_left (hmem : BoundedFormulaω.iInf φs ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (φs k) Γ) Δ := by
   refine budgetedPairInsep_insert_of_member_left hmem ?_ (sentenceJConsts_component_iInf φs k) ?_ h
@@ -1140,7 +1100,7 @@ theorem budgetedPairInsep_iInf_component_left (hmem : BoundedFormulaω.iInf φs 
     exact ⟨k, hq⟩
 
 /-- C3, right. -/
-theorem budgetedPairInsep_iInf_component_right (hmem : BoundedFormulaω.iInf φs ∈ Δ)
+private theorem budgetedPairInsep_iInf_component_right (hmem : BoundedFormulaω.iInf φs ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (φs k) Δ) := by
   refine budgetedPairInsep_insert_of_member_right hmem ?_ (sentenceJConsts_component_iInf φs k) ?_ h
@@ -1153,7 +1113,7 @@ theorem budgetedPairInsep_iInf_component_right (hmem : BoundedFormulaω.iInf φs
     exact ⟨k, hq⟩
 
 /-- C4′, left: a negated-disjunction component. -/
-theorem budgetedPairInsep_neg_iSup_component_left (hmem : (BoundedFormulaω.iSup φs).not ∈ Γ)
+private theorem budgetedPairInsep_neg_iSup_component_left (hmem : (BoundedFormulaω.iSup φs).not ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (φs k).not Γ) Δ := by
   refine budgetedPairInsep_insert_of_member_left hmem ?_ ?_ ?_ h
@@ -1171,7 +1131,7 @@ theorem budgetedPairInsep_neg_iSup_component_left (hmem : (BoundedFormulaω.iSup
     exact ⟨k, hq⟩
 
 /-- C4′, right. -/
-theorem budgetedPairInsep_neg_iSup_component_right (hmem : (BoundedFormulaω.iSup φs).not ∈ Δ)
+private theorem budgetedPairInsep_neg_iSup_component_right (hmem : (BoundedFormulaω.iSup φs).not ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (φs k).not Δ) := by
   refine budgetedPairInsep_insert_of_member_right hmem ?_ ?_ ?_ h
@@ -1239,7 +1199,7 @@ private theorem sentenceJConsts_iInf_subset {A : Set ℕ} (τ : ℕ → L[[ℕ]]
   exact hτ k hk
 
 /-- **C4, left: countable disjunction.**  Separator `⋁ₙ θₙ`. -/
-theorem budgetedPairInsep_iSup_left (hmem : BoundedFormulaω.iSup φs ∈ Γ)
+private theorem budgetedPairInsep_iSup_left (hmem : BoundedFormulaω.iSup φs ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     ∃ k, BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (φs k) Γ) Δ := by
   by_contra hcon
@@ -1288,7 +1248,7 @@ theorem budgetedPairInsep_iSup_left (hmem : BoundedFormulaω.iSup φs ∈ Γ)
     exact (hsep n).2.2.2.2.2 hn
 
 /-- **C4, right: countable disjunction.**  Separator `⋀ₙ θₙ`. -/
-theorem budgetedPairInsep_iSup_right (hmem : BoundedFormulaω.iSup φs ∈ Δ)
+private theorem budgetedPairInsep_iSup_right (hmem : BoundedFormulaω.iSup φs ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     ∃ k, BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (φs k) Δ) := by
   by_contra hcon
@@ -1337,7 +1297,7 @@ theorem budgetedPairInsep_iSup_right (hmem : BoundedFormulaω.iSup φs ∈ Δ)
     exact (huΔ n).mp ((hsep n).2.2.2.2.2 hn)
 
 /-- **C3′, left: negated countable conjunction.**  Separator `⋁ₙ θₙ`. -/
-theorem budgetedPairInsep_neg_iInf_left (hmem : (BoundedFormulaω.iInf φs).not ∈ Γ)
+private theorem budgetedPairInsep_neg_iInf_left (hmem : (BoundedFormulaω.iInf φs).not ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     ∃ k, BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (φs k).not Γ) Δ := by
   by_contra hcon
@@ -1393,7 +1353,7 @@ theorem budgetedPairInsep_neg_iInf_left (hmem : (BoundedFormulaω.iInf φs).not 
     exact (hsep n).2.2.2.2.2 hn
 
 /-- **C3′, right: negated countable conjunction.**  Separator `⋀ₙ θₙ`. -/
-theorem budgetedPairInsep_neg_iInf_right (hmem : (BoundedFormulaω.iInf φs).not ∈ Δ)
+private theorem budgetedPairInsep_neg_iInf_right (hmem : (BoundedFormulaω.iInf φs).not ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     ∃ k, BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (φs k).not Δ) := by
   by_contra hcon
@@ -1463,7 +1423,7 @@ solves it too, and the two statements genuinely align, so the common core is ext
 the right side carries.  If the left entails the `c := b` image of `ψ` and the right proves `b = c`,
 then a separator of the extended pair substitutes down to one of the original pair — mentioning the
 shared pivot `b` instead of the remote `c`.  `hasQuantSigned_substConst` keeps both budgets fixed. -/
-theorem budgetedPairInsep_substCut_left (b c : ℕ) (ψ : L[[ℕ]].Sentenceω)
+private theorem budgetedPairInsep_substCut_left (b c : ℕ) (ψ : L[[ℕ]].Sentenceω)
     (hcΓ : c ∉ theoryJConsts (L := L) Γ)
     (hbΓ : b ∈ theoryJConsts (L := L) Γ) (hbΔ : b ∈ theoryJConsts (L := L) Δ)
     (hΔeq : Theoryω.Entails Δ (constEq (L := L) b c))
@@ -1551,7 +1511,7 @@ theorem budgetedPairInsep_substCut_left (b c : ℕ) (ψ : L[[ℕ]].Sentenceω)
 /-- **Substitution cut, right.**  The mirror of `budgetedPairInsep_substCut_left`: `ψ` goes onto the
 right, mentioning a constant `c` that only the *left* side carries, and it is the left that proves
 `b = c`.  Same separator operation, sides exchanged. -/
-theorem budgetedPairInsep_substCut_right (b c : ℕ) (ψ : L[[ℕ]].Sentenceω)
+private theorem budgetedPairInsep_substCut_right (b c : ℕ) (ψ : L[[ℕ]].Sentenceω)
     (hcΔ : c ∉ theoryJConsts (L := L) Δ)
     (hbΓ : b ∈ theoryJConsts (L := L) Γ) (hbΔ : b ∈ theoryJConsts (L := L) Δ)
     (hΓeq : Theoryω.Entails Γ (constEq (L := L) b c))
@@ -1674,7 +1634,7 @@ private theorem entails_substConst_relInst {l : ℕ} (Rr : L.Relations l) (g : F
 the right, the equation on the left.  A short application of the right substitution cut — the pivot
 is `g i` (shared: on the right by the atom, on the left by the equation) and the remote constant is
 the replacement `b`, which only the left carries. -/
-theorem budgetedPairInsep_relCongr_mixed_rev {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ)
+private theorem budgetedPairInsep_relCongr_mixed_rev {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ)
     (i : Fin l) (b : ℕ) (hrel : relInst Rr g ∈ Δ) (heq : constEq (L := L) (g i) b ∈ Γ)
     (hbΔ : b ∉ theoryJConsts (L := L) Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
@@ -1716,7 +1676,7 @@ private theorem entails_substConst_constEq (hac : a ≠ c) (hmem : constEq (L :=
 
 /-- **Mixed transitivity, remote right endpoint.**  `a = b` on the left, `b = d` on the right, `d`
 absent from the left: insert `a = d` on the left, substituting the pivot `b` for `d`. -/
-theorem budgetedPairInsep_eq_trans_mixed_right (hab : constEq (L := L) a b ∈ Γ)
+private theorem budgetedPairInsep_eq_trans_mixed_right (hab : constEq (L := L) a b ∈ Γ)
     (hbd : constEq (L := L) b d ∈ Δ) (hdΓ : d ∉ theoryJConsts (L := L) Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (constEq (L := L) a d) Γ) Δ := by
@@ -1739,7 +1699,7 @@ theorem budgetedPairInsep_eq_trans_mixed_right (hab : constEq (L := L) a b ∈ �
 
 /-- **Mixed transitivity, remote left endpoint.**  `a = b` on the right, `b = d` on the left, `a`
 absent from the left: insert `a = d` on the left, substituting the pivot `b` for `a`. -/
-theorem budgetedPairInsep_eq_trans_mixed_left (hab : constEq (L := L) a b ∈ Δ)
+private theorem budgetedPairInsep_eq_trans_mixed_left (hab : constEq (L := L) a b ∈ Δ)
     (hbd : constEq (L := L) b d ∈ Γ) (haΓ : a ∉ theoryJConsts (L := L) Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (constEq (L := L) a d) Γ) Δ := by
@@ -1797,7 +1757,7 @@ private theorem hasQuantSigned_constEq_false (s : Bool) (a b : ℕ) :
 
 /-- `eq_refl`, left.  Legal whenever `c` is already on the left, or absent from the right — together
 with the right twin this covers every constant. -/
-theorem budgetedPairInsep_eq_refl_left
+private theorem budgetedPairInsep_eq_refl_left
     (hc : c ∈ theoryJConsts (L := L) Γ ∨ c ∉ theoryJConsts (L := L) Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (constEq (L := L) c c) Γ) Δ := by
@@ -1830,7 +1790,7 @@ theorem budgetedPairInsep_eq_refl_left
       · exact hq'
 
 /-- `eq_symm`, left. -/
-theorem budgetedPairInsep_eq_symm_left (hmem : constEq (L := L) a b ∈ Γ)
+private theorem budgetedPairInsep_eq_symm_left (hmem : constEq (L := L) a b ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (constEq (L := L) b a) Γ) Δ := by
   refine budgetedPairInsep_insert_of_member_left hmem ?_ ?_ ?_ h
@@ -1842,7 +1802,7 @@ theorem budgetedPairInsep_eq_symm_left (hmem : constEq (L := L) a b ∈ Γ)
   · intro hq; exact absurd hq (hasQuantSigned_constEq_false true b a)
 
 /-- `eq_symm`, right. -/
-theorem budgetedPairInsep_eq_symm_right (hmem : constEq (L := L) a b ∈ Δ)
+private theorem budgetedPairInsep_eq_symm_right (hmem : constEq (L := L) a b ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (constEq (L := L) b a) Δ) := by
   refine budgetedPairInsep_insert_of_member_right hmem ?_ ?_ ?_ h
@@ -1854,7 +1814,7 @@ theorem budgetedPairInsep_eq_symm_right (hmem : constEq (L := L) a b ∈ Δ)
   · intro hq; exact absurd hq (hasQuantSigned_constEq_false true b a)
 
 /-- `eq_trans`, both premises on the left. -/
-theorem budgetedPairInsep_eq_trans_left (hab : constEq (L := L) a b ∈ Γ)
+private theorem budgetedPairInsep_eq_trans_left (hab : constEq (L := L) a b ∈ Γ)
     (hbd : constEq (L := L) b d ∈ Γ) (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (constEq (L := L) a d) Γ) Δ := by
   refine budgetedPairInsep_insert_entailed_left ?_ ?_ ?_ h
@@ -1872,7 +1832,7 @@ theorem budgetedPairInsep_eq_trans_left (hab : constEq (L := L) a b ∈ Γ)
   · intro hq; exact absurd hq (hasQuantSigned_constEq_false true a d)
 
 /-- `eq_trans`, both premises on the right. -/
-theorem budgetedPairInsep_eq_trans_right (hab : constEq (L := L) a b ∈ Δ)
+private theorem budgetedPairInsep_eq_trans_right (hab : constEq (L := L) a b ∈ Δ)
     (hbd : constEq (L := L) b d ∈ Δ) (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (constEq (L := L) a d) Δ) := by
   refine budgetedPairInsep_insert_entailed_right ?_ ?_ ?_ h
@@ -1905,7 +1865,7 @@ variable {F₁ F₂ : Set (Σ n, L.Functions n)} {R₁ R₂ : Set (Σ n, L.Relat
 
 /-- `eq_refl`, right — the twin of `budgetedPairInsep_eq_refl_left`; together they cover every
 constant. -/
-theorem budgetedPairInsep_eq_refl_right
+private theorem budgetedPairInsep_eq_refl_right
     (hc : c ∈ theoryJConsts (L := L) Δ ∨ c ∉ theoryJConsts (L := L) Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (constEq (L := L) c c) Δ) := by
@@ -1940,7 +1900,7 @@ theorem budgetedPairInsep_eq_refl_right
 there, and every constant it mentions — including the replacement `b` — is already carried, `b` by
 the equation `constEq (g i) b ∈ Γ` itself.  Contrast `budgetedPairInsep_relCongr_mixed`, where the
 equation sits on the opposite side and the separator must be substituted. -/
-theorem budgetedPairInsep_relCongr_left {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
+private theorem budgetedPairInsep_relCongr_left {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
     (b : ℕ) (hrel : relInst Rr g ∈ Γ) (heq : constEq (L := L) (g i) b ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (relInst Rr (Function.update g i b)) Γ) Δ := by
@@ -1958,7 +1918,7 @@ theorem budgetedPairInsep_relCongr_left {l : ℕ} (Rr : L.Relations l) (g : Fin 
   · intro hq; exact absurd hq (hasQuantSigned_relInst_false true Rr _)
 
 /-- **Same-side relation congruence, right.** -/
-theorem budgetedPairInsep_relCongr_right {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
+private theorem budgetedPairInsep_relCongr_right {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
     (b : ℕ) (hrel : relInst Rr g ∈ Δ) (heq : constEq (L := L) (g i) b ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (relInst Rr (Function.update g i b)) Δ) := by
@@ -1995,14 +1955,14 @@ variable {F₁ F₂ : Set (Σ n, L.Functions n)} {R₁ R₂ : Set (Σ n, L.Relat
 
 /-- `genAll` keeps a sentence inside a side's vocabulary bound: generalization removes a constant,
 it never introduces a base symbol. -/
-theorem sentBnd_genAll {F : Set (Σ n, L.Functions n)} {R : Set (Σ n, L.Relations n)} (c : ℕ)
+private theorem sentBnd_genAll {F : Set (Σ n, L.Functions n)} {R : Set (Σ n, L.Relations n)} (c : ℕ)
     {θ : L[[ℕ]].Sentenceω} (h : θ ∈ SentBnd F R) : genAll c θ ∈ SentBnd F R :=
   ⟨(baseFunctionsIn_genAll_subset c θ).trans h.1,
     (baseRelationsIn_genAll c θ).subset.trans h.2⟩
 
 /-- **Support growth of an instance.**  Inserting `instConst c φ` beside its universal parent
 enlarges the side's constant support by at most `{c}`. -/
-theorem theoryJConsts_insert_instConst_subset {φ : L[[ℕ]].BoundedFormulaω Empty 1} {c : ℕ}
+private theorem theoryJConsts_insert_instConst_subset {φ : L[[ℕ]].BoundedFormulaω Empty 1} {c : ℕ}
     (hmem : φ.all ∈ Γ) :
     theoryJConsts (L := L) (insert (instConst c φ) Γ) ⊆ insert c (theoryJConsts Γ) := by
   intro k hk
@@ -2020,7 +1980,7 @@ Stated unconditionally rather than as
 `HasQuantSigned true (insert (instConst c φ) Γ) → HasQuantSigned true Γ`: the implication is what the
 gate consumes, but it holds vacuously, because the conclusion never depended on the inserted
 instance.  Every universal permission demanded of the augmented left side is discharged by this. -/
-theorem hasQuantSigned_true_of_all_mem {φ : L[[ℕ]].BoundedFormulaω Empty 1}
+private theorem hasQuantSigned_true_of_all_mem {φ : L[[ℕ]].BoundedFormulaω Empty 1}
     (hmem : φ.all ∈ Γ) : Theoryω.HasQuantSigned true Γ :=
   ⟨φ.all, hmem, Or.inl rfl⟩
 
@@ -2038,7 +1998,7 @@ The proof splits on whether `Γ` already owns `c`.
   instantiating at `c`'s own interpretation.
 
 Both branches pay the universal permission with `φ.all` itself, never with the instance. -/
-theorem budgetedPairInsep_all_inst_left {φ : L[[ℕ]].BoundedFormulaω Empty 1} (c : ℕ)
+private theorem budgetedPairInsep_all_inst_left {φ : L[[ℕ]].BoundedFormulaω Empty 1} (c : ℕ)
     (hmem : φ.all ∈ Γ) (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (instConst c φ) Γ) Δ := by
   have hentΓ : Theoryω.Entails Γ (instConst c φ) :=
@@ -2078,7 +2038,7 @@ theorem budgetedPairInsep_all_inst_left {φ : L[[ℕ]].BoundedFormulaω Empty 1}
       exact hx (hq.resolve_left (by simp))
 
 /-- `genEx` keeps a sentence inside a side's vocabulary bound. -/
-theorem sentBnd_genEx {F : Set (Σ n, L.Functions n)} {R : Set (Σ n, L.Relations n)} (c : ℕ)
+private theorem sentBnd_genEx {F : Set (Σ n, L.Functions n)} {R : Set (Σ n, L.Relations n)} (c : ℕ)
     {θ : L[[ℕ]].Sentenceω} (h : θ ∈ SentBnd F R) : genEx c θ ∈ SentBnd F R :=
   ⟨(baseFunctionsIn_genEx_subset c θ).trans h.1,
     (baseRelationsIn_genEx c θ).subset.trans h.2⟩
@@ -2092,7 +2052,7 @@ Given a witness `x` for `genEx c θ`, reinterpret `c` as `x`: freshness preserve
 then refutes the corresponding instance of `θ`.
 
 Neutral in content — belongs in the eventual `#39` constant-surgery consolidation rather than here. -/
-theorem entails_not_genEx_of_all_inst_entails_not {φ : L[[ℕ]].BoundedFormulaω Empty 1} {c : ℕ}
+private theorem entails_not_genEx_of_all_inst_entails_not {φ : L[[ℕ]].BoundedFormulaω Empty 1} {c : ℕ}
     {θ : L[[ℕ]].Sentenceω}
     (hfresh : ∀ δ ∈ Δ, c ∉ sentenceJConsts (L' := L) (J := ℕ) δ) (hmem : φ.all ∈ Δ)
     (hyp : Theoryω.Entails (insert (instConst c φ) Δ) θ.not) :
@@ -2137,7 +2097,7 @@ The asymmetry is only in which side abstracts: here `Γ ⊨ genEx c θ` is fresh
 (`∃`-introduction is weakening), and the work moves to `Δ`, where the fresh-case hypothesis is
 exactly what `entails_not_genEx_of_all_inst_entails_not` consumes.  The new *existential* occurrence
 is paid outright by `φ.all ∈ Δ`, which witnesses a universal budget on the receiving side. -/
-theorem budgetedPairInsep_all_inst_right {φ : L[[ℕ]].BoundedFormulaω Empty 1} (c : ℕ)
+private theorem budgetedPairInsep_all_inst_right {φ : L[[ℕ]].BoundedFormulaω Empty 1} (c : ℕ)
     (hmem : φ.all ∈ Δ) (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (instConst c φ) Δ) := by
   have hentΔ : Theoryω.Entails Δ (instConst c φ) :=
@@ -2187,12 +2147,12 @@ section FamilyFields
 variable {F₁ F₂ : Set (Σ n, L.Functions n)} {R₁ R₂ : Set (Σ n, L.Relations n)}
   {r₁ r₂ : L[[ℕ]].Sentenceω} {S : Set L[[ℕ]].Sentenceω}
 
-theorem budgetedPairMem_subset_U (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) :
+private theorem budgetedPairMem_subset_U (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) :
     S ⊆ GenU r₁ r₂ := by
   obtain ⟨Γ, Δ, -, -, hΓU, hΔU, -, -, hSeq, -⟩ := hS
   rw [hSeq]; exact Set.union_subset hΓU hΔU
 
-theorem budgetedPairMem_C0_no_falsum (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) :
+private theorem budgetedPairMem_C0_no_falsum (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) :
     (BoundedFormulaω.falsum : L[[ℕ]].Sentenceω) ∉ S := by
   obtain ⟨Γ, Δ, -, -, -, -, -, -, hSeq, hA⟩ := hS
   rw [hSeq]
@@ -2201,7 +2161,7 @@ theorem budgetedPairMem_C0_no_falsum (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F
   · exact not_budgetedPairInsep_of_falsum_right hmem hA
 
 /-- All four label combinations, visibly. -/
-theorem budgetedPairMem_C0_no_contradiction (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_C0_no_contradiction (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     (φ : L[[ℕ]].Sentenceω) : ¬(φ ∈ S ∧ φ.not ∈ S) := by
   obtain ⟨Γ, Δ, -, -, -, -, hΓb, hΔb, hSeq, hA⟩ := hS
   rintro ⟨hφ, hφn⟩
@@ -2217,7 +2177,7 @@ theorem budgetedPairMem_C0_no_contradiction (hS : BudgetedPairMem r₁ r₂ F₁
 /-- **C1.**  The first field that builds a new member, so it is the one that exercises the whole
 repackaging path: label dispatch, the gate's own disjunction, and the `insert`-versus-union
 normalization — which is confined to the `simpa only [Set.union_singleton]` at each boundary. -/
-theorem budgetedPairMem_C1_imp (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_C1_imp (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     (φ ψ : L[[ℕ]].Sentenceω) (hmem : φ.imp ψ ∈ S) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {φ.not}) ∨
       BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {ψ}) := by
@@ -2244,7 +2204,7 @@ theorem budgetedPairMem_C1_imp (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R�
             (imp_right_mem (hΔU hΔ)) (sentBnd_imp_right (hΔb hΔ)) h)
 
 /-- **C1′.**  A conjunction of two insertions per label, so four gate applications. -/
-theorem budgetedPairMem_C1_neg_imp (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_C1_neg_imp (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     (φ ψ : L[[ℕ]].Sentenceω) (hmem : (φ.imp ψ).not ∈ S) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {φ}) ∧
       BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {ψ.not}) := by
@@ -2273,7 +2233,7 @@ theorem budgetedPairMem_C1_neg_imp (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F�
           (budgetedPairInsep_neg_imp_right₂ hΔ hA)⟩
 
 /-- **C2.** -/
-theorem budgetedPairMem_C2_not_not (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_C2_not_not (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     (φ : L[[ℕ]].Sentenceω) (hmem : φ.not.not ∈ S) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {φ}) := by
   obtain ⟨Γ, Δ, hΓfin, hΔfin, hΓU, hΔU, hΓb, hΔb, hSeq, hA⟩ := hS
@@ -2297,7 +2257,7 @@ and return the **same** `k`, so the `GenU`, `SentBnd` and insertion obligations 
 component.  No witness is constructed here. -/
 
 /-- **C3.** -/
-theorem budgetedPairMem_C3_iInf (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_C3_iInf (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     (φs : ℕ → L[[ℕ]].Sentenceω) (hmem : BoundedFormulaω.iInf φs ∈ S) (k : ℕ) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {φs k}) := by
   obtain ⟨Γ, Δ, hΓfin, hΔfin, hΓU, hΔU, hΓb, hΔb, hSeq, hA⟩ := hS
@@ -2313,7 +2273,7 @@ theorem budgetedPairMem_C3_iInf (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R
         (budgetedPairInsep_iInf_component_right (k := k) hΔ hA)
 
 /-- **C4′.** -/
-theorem budgetedPairMem_C4_neg_iSup (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_C4_neg_iSup (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     (φs : ℕ → L[[ℕ]].Sentenceω) (hmem : (BoundedFormulaω.iSup φs).not ∈ S) (k : ℕ) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {(φs k).not}) := by
   obtain ⟨Γ, Δ, hΓfin, hΔfin, hΓU, hΔU, hΓb, hΔb, hSeq, hA⟩ := hS
@@ -2331,7 +2291,7 @@ theorem budgetedPairMem_C4_neg_iSup (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F�
         (budgetedPairInsep_neg_iSup_component_right (k := k) hΔ hA)
 
 /-- **C4.**  The gate's witness is returned unchanged. -/
-theorem budgetedPairMem_C4_iSup (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_C4_iSup (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     (φs : ℕ → L[[ℕ]].Sentenceω) (hmem : BoundedFormulaω.iSup φs ∈ S) :
     ∃ k, BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {φs k}) := by
   obtain ⟨Γ, Δ, hΓfin, hΔfin, hΓU, hΔU, hΓb, hΔb, hSeq, hA⟩ := hS
@@ -2349,7 +2309,7 @@ theorem budgetedPairMem_C4_iSup (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R
           (iSup_comp_mem k (hΔU hΔ)) (sentBnd_component_iSup k (hΔb hΔ)) hk⟩
 
 /-- **C3′.**  The gate's witness is returned unchanged. -/
-theorem budgetedPairMem_C3_neg_iInf (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_C3_neg_iInf (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     (φs : ℕ → L[[ℕ]].Sentenceω) (hmem : (BoundedFormulaω.iInf φs).not ∈ S) :
     ∃ k, BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {(φs k).not}) := by
   obtain ⟨Γ, Δ, hΓfin, hΔfin, hΓU, hΔU, hΓb, hΔb, hSeq, hA⟩ := hS
@@ -2373,7 +2333,7 @@ theorem budgetedPairMem_C3_neg_iInf (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F�
 /-- **`eq_refl`.**  One case split suffices: if the left already carries `c`, insert there; otherwise
 `c ∉ theoryJConsts Γ` is exactly the right gate's second disjunct.  The right support is never
 inspected. -/
-theorem budgetedPairMem_eq_refl (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) (c : ℕ) :
+private theorem budgetedPairMem_eq_refl (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) (c : ℕ) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {constEq (L := L) c c}) := by
   obtain ⟨Γ, Δ, hΓfin, hΔfin, hΓU, hΔU, hΓb, hΔb, hSeq, hA⟩ := hS
   by_cases hcΓ : c ∈ theoryJConsts (L := L) Γ
@@ -2385,7 +2345,7 @@ theorem budgetedPairMem_eq_refl (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R
         (eqRefl_mem c) (sentBnd_constEq c c) (budgetedPairInsep_eq_refl_right (Or.inr hcΓ) hA)
 
 /-- **`eq_symm`.** -/
-theorem budgetedPairMem_eq_symm (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) (a b : ℕ)
+private theorem budgetedPairMem_eq_symm (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) (a b : ℕ)
     (hmem : constEq (L := L) a b ∈ S) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {constEq (L := L) b a}) := by
   obtain ⟨Γ, Δ, hΓfin, hΔfin, hΓU, hΔU, hΓb, hΔb, hSeq, hA⟩ := hS
@@ -2406,7 +2366,7 @@ When the "remote" endpoint is not actually remote, the mixed gate does not apply
 the opposite side's equality onto `Γ` (legal, since it is quantifier-free and `Γ` already carries
 both its constants), apply the same-side gate, and drop the transferred premise with
 `budgetedPairInsep_antitone_left`. -/
-theorem budgetedPairMem_eq_trans (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) (a b d : ℕ)
+private theorem budgetedPairMem_eq_trans (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) (a b d : ℕ)
     (hab : constEq (L := L) a b ∈ S) (hbd : constEq (L := L) b d ∈ S) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {constEq (L := L) a d}) := by
   obtain ⟨Γ, Δ, hΓfin, hΔfin, hΓU, hΔU, hΓb, hΔb, hSeq, hA⟩ := hS
@@ -2467,7 +2427,7 @@ splits on whether the replacement constant is fresh for the *receiving* side, an
 transfers the equality across, applies the same-side gate, and drops the transferred premise with
 antitonicity.  The transfer is legal because the atom supplies the pivot `g i` and the non-fresh
 branch supplies `b`. -/
-theorem budgetedPairMem_rel_congr (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_rel_congr (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ) (i : Fin l) (b : ℕ)
     (hrel : relInst Rr g ∈ S) (heq : constEq (L := L) (g i) b ∈ S) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {relInst Rr (Function.update g i b)}) := by
@@ -2532,7 +2492,7 @@ theorem budgetedPairMem_rel_congr (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂
     · exact mk (budgetedPairInsep_relCongr_right Rr g i b hrΔ heqΔ hA)
 
 /-- **`all_inst`.**  Plain label dispatch: neither gate takes a freshness hypothesis. -/
-theorem budgetedPairMem_all_inst (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
+private theorem budgetedPairMem_all_inst (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
     (φ : L[[ℕ]].BoundedFormulaω Empty 1) (hmem : BoundedFormulaω.all φ ∈ S) (c : ℕ) :
     BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ (S ∪ {instConst c φ}) := by
   obtain ⟨Γ, Δ, hΓfin, hΔfin, hΓU, hΔU, hΓb, hΔb, hSeq, hA⟩ := hS
@@ -2551,7 +2511,7 @@ theorem budgetedPairMem_all_inst (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ 
 *before* the label dispatch, since both gates demand freshness for **both** supports and the
 requirement is symmetric.  This is also the only consumer of root-support finiteness, which is why
 those hypotheses appear here and nowhere else in the layer. -/
-theorem budgetedPairMem_neg_all_witness
+private theorem budgetedPairMem_neg_all_witness
     (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁).Finite)
     (hr₂ : (sentenceJConsts (L' := L) (J := ℕ) r₂).Finite)
     (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S)
@@ -2603,15 +2563,7 @@ theorem budgetedPairInsep_root_of_no_interpolant {r₁ r₂ : L[[ℕ]].Sentence�
   not_not.mp fun hsep =>
     hno (exists_universal_interpolant_of_not_budgetedPairInsep hr₂ hc₁ hsep)
 
-/-- The root member itself, assembled from the two facts above. -/
-theorem budgetedPairMem_root_of_no_interpolant {r₁ r₂ : L[[ℕ]].Sentenceω}
-    (hr₂ : ¬ hasQuantSigned false r₂) (hc₁ : sentenceJConsts (L' := L) (J := ℕ) r₁ = ∅)
-    (hb₁ : r₁ ∈ SentBnd (L := L) F₁ R₁) (hb₂ : r₂.not ∈ SentBnd (L := L) F₂ R₂)
-    (hno : ¬ ∃ θ : L[[ℕ]].Sentenceω, IsUniversal θ ∧ θ ∈ SentBnd (F₁ ∩ F₂) (R₁ ∩ R₂) ∧
-      sentenceJConsts (L' := L) (J := ℕ) θ = ∅ ∧
-      Sentenceω.Entails r₁ θ ∧ Sentenceω.Entails θ r₂) :
-    BudgetedPairMem r₁ r₂.not F₁ R₁ F₂ R₂ ({r₁} ∪ {r₂.not}) :=
-  budgetedPairMem_root hb₁ hb₂ (budgetedPairInsep_root_of_no_interpolant hr₂ hc₁ hno)
+
 
 /-! ## The consistency property
 

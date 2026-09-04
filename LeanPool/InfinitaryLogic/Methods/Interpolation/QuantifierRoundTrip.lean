@@ -27,7 +27,7 @@ open FirstOrder Structure
 variable {L : Language.{0, 0}} {M : Type}
 
 /-- The constant `c_c` realizes to its interpretation `h c`. -/
-theorem realize_constTerm (base : L.Structure M) (h : ℕ → M) (c : ℕ) (v : Empty → M) :
+private theorem realize_constTerm (base : L.Structure M) (h : ℕ → M) (c : ℕ) (v : Empty → M) :
     @Term.realize L[[ℕ]] M (wc base h) Empty v (constTerm c) = h c := by
   show @Structure.funMap L[[ℕ]] M (wc base h) 0 (Sum.inr c) _ = h c
   rw [wc_funMap_inr]
@@ -45,7 +45,7 @@ theorem realize_instConst (base : L.Structure M) (h : ℕ → M) (c : ℕ)
 
 /-- **The substitution round-trip**: for `c` fresh for `ψ`, `genEx c (instConst c ψ)` realizes
 exactly as `ψ.ex`. -/
-theorem realize_genEx_instConst (base : L.Structure M) (h : ℕ → M) (c : ℕ)
+private theorem realize_genEx_instConst (base : L.Structure M) (h : ℕ → M) (c : ℕ)
     (ψ : L[[ℕ]].BoundedFormulaω Empty 1)
     (hfresh : c ∉ sentenceJConsts (L' := L) (J := ℕ) ψ) :
     @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 (genEx c (instConst c ψ))
@@ -96,7 +96,7 @@ theorem entails_insert_congr {σ₁ σ₂ τ : L[[ℕ]].Sentenceω}
 
 /-- `InsepAt` is invariant under replacing an inserted premise by a semantically equivalent
 sentence. -/
-theorem insepAt_insert_congr {σ₁ σ₂ : L[[ℕ]].Sentenceω}
+private theorem insepAt_insert_congr {σ₁ σ₂ : L[[ℕ]].Sentenceω}
     (hequiv : ∀ (M : Type) [L[[ℕ]].Structure M] [Nonempty M],
       Sentenceω.Realize σ₁ M ↔ Sentenceω.Realize σ₂ M) :
     InsepAt F R A (insert σ₁ Γ) Δ ↔ InsepAt F R A (insert σ₂ Γ) Δ := by
@@ -110,7 +110,7 @@ theorem insepAt_insert_congr {σ₁ σ₂ : L[[ℕ]].Sentenceω}
 /-- **C7 consumer (existential)**: if the existential pair is inseparable at support `A`, then
 the constant-instance pair is inseparable at support `insert c A`, for `c` fresh for `ψ`, `Γ`,
 `Δ`. -/
-theorem insepAt_instConst_of_insepAt_ex (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1)
+private theorem insepAt_instConst_of_insepAt_ex (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1)
     (hcψ : c ∉ sentenceJConsts (L' := L) (J := ℕ) ψ)
     (hcΓ : ∀ γ ∈ Γ, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ)
     (hcΔ : ∀ δ ∈ Δ, c ∉ sentenceJConsts (L' := L) (J := ℕ) δ)

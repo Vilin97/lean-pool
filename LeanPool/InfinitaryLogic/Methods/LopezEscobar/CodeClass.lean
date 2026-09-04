@@ -42,7 +42,7 @@ B ⊆ codeReduct '' ModelsOf Θ ⊆ W
 
 is available for every invariant `W ⊇ B` and is what boundedness arguments actually consume.
 `pcClass_subset` is the specialization `W := B`. -/
-theorem pcClass_subset_of_invariant_superset {B W : Set (StructureSpace L)} (side : PCSide)
+private theorem pcClass_subset_of_invariant_superset {B W : Set (StructureSpace L)} (side : PCSide)
     (T : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ)))
     (hT : ∀ c : StructureSpace L, c ∈ B ↔ ∃ g : ℕ → ℕ,
       ∀ n, ((fun i : Fin n => queryCode c (i : ℕ)), (fun i : Fin n => g i)) ∈ T n)
@@ -142,7 +142,7 @@ theorem pcClass_subset_of_invariant_superset {B W : Set (StructureSpace L)} (sid
 /-- **Converse gate** (`pcClass_subset`): the base reducts of the PC class lie in `B`, when `B`
 itself is invariant.  The `W := B` specialization of
 `pcClass_subset_of_invariant_superset`. -/
-theorem pcClass_subset {B : Set (StructureSpace L)} (side : PCSide)
+private theorem pcClass_subset {B : Set (StructureSpace L)} (side : PCSide)
     (T : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ)))
     (hT : ∀ c : StructureSpace L, c ∈ B ↔ ∃ g : ℕ → ℕ,
       ∀ n, ((fun i : Fin n => queryCode c (i : ℕ)), (fun i : Fin n => g i)) ∈ T n)

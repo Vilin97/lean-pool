@@ -107,7 +107,7 @@ def GenU (r₁ r₂ : L[[ℕ]].Sentenceω) : Set L[[ℕ]].Sentenceω :=
 
 variable {r₁ r₂ : L[[ℕ]].Sentenceω}
 
-theorem seed_subset_genU : seed r₁ r₂ ⊆ GenU r₁ r₂ := fun _ h => .base h
+
 
 theorem root₁_mem : r₁ ∈ GenU r₁ r₂ :=
   .base (Or.inl (Or.inl (Set.mem_insert _ _)))
@@ -154,7 +154,7 @@ theorem countable_relations_each [Countable (Σ l, L.Relations l)] (l : ℕ) :
   Function.Injective.countable (f := fun r => (⟨l, r⟩ : Σ l, L.Relations l))
     (fun _ _ h => by simpa using h)
 
-theorem seed_countable [Countable (Σ l, L.Relations l)] : (seed r₁ r₂).Countable := by
+private theorem seed_countable [Countable (Σ l, L.Relations l)] : (seed r₁ r₂).Countable := by
   refine Set.Countable.union (Set.Countable.union ?_ ?_) ?_
   · exact Set.countable_insert.mpr (Set.countable_singleton _)
   · exact Set.countable_range _
@@ -173,7 +173,7 @@ theorem seed_countable [Countable (Σ l, L.Relations l)] : (seed r₁ r₂).Coun
 /-- One decomposition step, coded by `(tag, index)`. Matching on the tag first keeps the step
 reducible on concrete members (the sentence discriminant is inspected only after the tag has
 already selected the intended rule). -/
-def uStep (p : L[[ℕ]].Sentenceω) (c : ℕ × ℕ) : Option L[[ℕ]].Sentenceω :=
+private def uStep (p : L[[ℕ]].Sentenceω) (c : ℕ × ℕ) : Option L[[ℕ]].Sentenceω :=
   match c.1, p with
   | 0, .imp φ _ => some φ.not
   | 1, .imp _ ψ => some ψ
@@ -188,12 +188,12 @@ def uStep (p : L[[ℕ]].Sentenceω) (c : ℕ × ℕ) : Option L[[ℕ]].Sentence�
   | _, _ => none
 
 /-- Iterated steps along a list of codes. -/
-def uPath (p : L[[ℕ]].Sentenceω) :
+private def uPath (p : L[[ℕ]].Sentenceω) :
     List (ℕ × ℕ) → Option L[[ℕ]].Sentenceω
   | [] => some p
   | c :: l => (uStep p c).bind (uPath · l)
 
-theorem uPath_append (p : L[[ℕ]].Sentenceω) (l₁ l₂ : List (ℕ × ℕ)) :
+private theorem uPath_append (p : L[[ℕ]].Sentenceω) (l₁ l₂ : List (ℕ × ℕ)) :
     uPath p (l₁ ++ l₂) = (uPath p l₁).bind (uPath · l₂) := by
   induction l₁ generalizing p with
   | nil => rfl
@@ -205,7 +205,7 @@ theorem uPath_append (p : L[[ℕ]].Sentenceω) (l₁ l₂ : List (ℕ × ℕ)) :
     | some q => exact ih q
 
 /-- A single coded step lands inside the reachability set. -/
-theorem ReachFrom.of_uStep {S : Set L[[ℕ]].Sentenceω} {q p : L[[ℕ]].Sentenceω} {c : ℕ × ℕ}
+private theorem ReachFrom.of_uStep {S : Set L[[ℕ]].Sentenceω} {q p : L[[ℕ]].Sentenceω} {c : ℕ × ℕ}
     (hq : ReachFrom S q) (h : uStep q c = some p) : ReachFrom S p := by
   unfold uStep at h
   split at h
@@ -223,7 +223,7 @@ theorem ReachFrom.of_uStep {S : Set L[[ℕ]].Sentenceω} {q p : L[[ℕ]].Sentenc
 
 /-- **The path characterization**: `ReachFrom S` is exactly what is reachable from `S` by
 finitely many coded steps. -/
-theorem reachFrom_iff_path {S : Set L[[ℕ]].Sentenceω} {p : L[[ℕ]].Sentenceω} :
+private theorem reachFrom_iff_path {S : Set L[[ℕ]].Sentenceω} {p : L[[ℕ]].Sentenceω} :
     ReachFrom S p ↔ ∃ s ∈ S, ∃ l : List (ℕ × ℕ), uPath s l = some p := by
   constructor
   · intro hp
@@ -351,7 +351,7 @@ theorem genU_finite_support (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁)
 induction principle for the generated universe. (The current paired construction carries its
 side-membership bound as an explicit invariant instead of instantiating this principle, so
 `genU_le` presently has no in-tree consumer; it is the library-level minimality statement.) -/
-theorem genU_le {P : Set L[[ℕ]].Sentenceω} (hseed : seed r₁ r₂ ⊆ P)
+private theorem genU_le {P : Set L[[ℕ]].Sentenceω} (hseed : seed r₁ r₂ ⊆ P)
     (himp_negleft : ∀ {φ ψ : L[[ℕ]].Sentenceω}, φ.imp ψ ∈ P → φ.not ∈ P)
     (himp_right : ∀ {φ ψ : L[[ℕ]].Sentenceω}, φ.imp ψ ∈ P → ψ ∈ P)
     (hnegimp_left : ∀ {φ ψ : L[[ℕ]].Sentenceω}, (φ.imp ψ).not ∈ P → φ ∈ P)

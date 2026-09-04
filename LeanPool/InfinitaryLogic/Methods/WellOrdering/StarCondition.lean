@@ -44,11 +44,7 @@ variable {L : Language.{0, 0}}
 def ratSupport (Γ : Set L[[ℕ]].Sentenceω) : Set ℚ :=
   {q | ∃ χ ∈ Γ, ratConstIdx q ∈ sentenceJConsts (L' := L) (J := ℕ) χ}
 
-/-- Monotonicity of the mentioned-rationals set. -/
-theorem ratSupport_mono {Γ Γ' : Set L[[ℕ]].Sentenceω} (h : Γ ⊆ Γ') :
-    ratSupport (L := L) Γ ⊆ ratSupport Γ' := by
-  rintro q ⟨χ, hχ, hmem⟩
-  exact ⟨χ, h hχ, hmem⟩
+
 
 /-! ## The star witness -/
 
@@ -91,14 +87,7 @@ theorem StarCondition.mono {φ : L.Sentenceω} {lt : L.Relations 2}
   obtain ⟨W⟩ := h
   exact ⟨{ W with witness := @GapWitness.mono L W.M W.inst lt α β hβ _ _ W.witness }⟩
 
-/-- Shrinking the remainder preserves (*) (the marking still covers the smaller support). -/
-theorem StarCondition.mono_subset {φ : L.Sentenceω} {lt : L.Relations 2}
-    {Γ Γ' : Set L[[ℕ]].Sentenceω} (hΓ : Γ' ⊆ Γ) {α : Ordinal.{0}}
-    (h : StarCondition φ lt Γ α) : StarCondition φ lt Γ' α := by
-  obtain ⟨W⟩ := h
-  exact ⟨{ W with
-    rem_realize := fun χ hχ => W.rem_realize χ (hΓ hχ)
-    mark_cover := le_trans (ratSupport_mono hΓ) W.mark_cover }⟩
+
 
 /-! ## Atomic realization at the controlled expansion -/
 
@@ -106,9 +95,7 @@ section AtomicRealize
 
 variable {M : Type} {base : L.Structure M} {h : ℕ → M}
 
-/-- The sentence-context constant realizes to its `h`-value at the controlled expansion. -/
-theorem realize_constTermS_wc (c : ℕ) (v : Empty ⊕ Fin 0 → M) :
-    @Term.realize L[[ℕ]] M (wc base h) _ v (constTermS c) = h c := rfl
+
 
 /-- A constant relation instance realizes at the controlled expansion to the base relation on
 the constant values. -/

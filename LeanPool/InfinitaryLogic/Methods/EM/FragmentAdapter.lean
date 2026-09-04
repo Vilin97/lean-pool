@@ -106,10 +106,9 @@ def morleySeed (φ : L.Sentenceω) : ℕ → Σ n, L.BoundedFormulaω Empty n :=
   | 1 => ⟨2, disEqFormula⟩
   | _ + 2 => ⟨0, φ⟩
 
-@[simp] theorem morleySeed_zero (φ : L.Sentenceω) : morleySeed φ 0 = ⟨0, φ⟩ := rfl
 
-@[simp] theorem morleySeed_one (φ : L.Sentenceω) :
-    morleySeed φ 1 = ⟨2, (disEqFormula : L.BoundedFormulaω Empty 2)⟩ := rfl
+
+
 
 /-- **The Morley seed needs no extraction**: ANY pairwise-distinct sequence is fully
 `Lω₁ω`-indiscernible on `Set.range (morleySeed φ)` — the arity-`0` members ignore their tuples,
@@ -183,7 +182,7 @@ theorem IsLomega1omegaIndiscernibleOn.templateTheoryOfSeq_model_of_compact
 
 
 /-- **EM stretching (sentence form, compact oracle, restricted source).** -/
-theorem IsLomega1omegaIndiscernibleOn.stretch_restricted_of_compact
+private theorem IsLomega1omegaIndiscernibleOn.stretch_restricted_of_compact
     {I : Type w} [LinearOrder I] [Infinite I]
     {M : Type} [L.Structure M] {a : I → M}
     (s : ℕ → Σ n, L.BoundedFormulaω Empty n)

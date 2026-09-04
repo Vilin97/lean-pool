@@ -67,38 +67,23 @@ theorem BoundedFormulaω.functionsIn_countable {α : Type} {n : ℕ}
 subtype) and **all** of `L`'s relations. Keeping the relations whole means relation-symbol
 countability transports from `L` unchanged, and only the function side — the one the local EM
 tower needs and the honest residuals do not assume — is cut down to `F`. -/
-def funSublang (F : Set (Σ n, L.Functions n)) : Language.{0, 0} where
+private def funSublang (F : Set (Σ n, L.Functions n)) : Language.{0, 0} where
   Functions n := {f : L.Functions n // ⟨n, f⟩ ∈ F}
   Relations n := L.Relations n
 
 /-- The inclusion of the generated sublanguage. -/
-def funSublangIncl (F : Set (Σ n, L.Functions n)) : funSublang (L := L) F →ᴸ L where
+private def funSublangIncl (F : Set (Σ n, L.Functions n)) : funSublang (L := L) F →ᴸ L where
   onFunction := fun {_} f => f.1
   onRelation := fun {_} r => r
 
-/-- The generated sublanguage of a countable symbol set has countably many function symbols —
-the certificate the local EM tower needs, now provable rather than assumed. -/
-theorem funSublang_fun_countable {F : Set (Σ n, L.Functions n)} (hF : F.Countable) :
-    Countable (Σ n, (funSublang (L := L) F).Functions n) := by
-  have := hF.to_subtype
-  refine Function.Injective.countable
-    (f := fun p : Σ n, (funSublang (L := L) F).Functions n => (⟨⟨p.1, p.2.1⟩, p.2.2⟩ : ↥F)) ?_
-  rintro ⟨n, f, hf⟩ ⟨n', f', hf'⟩ h
-  simp only [Subtype.mk.injEq] at h
-  obtain ⟨rfl, h2⟩ := Sigma.mk.inj_iff.mp h
-  cases eq_of_heq h2
-  rfl
 
-/-- Relation-symbol countability transports to the generated sublanguage (definitionally the
-same relation symbols). -/
-theorem funSublang_rel_countable (F : Set (Σ n, L.Functions n))
-    [h : Countable (Σ l, L.Relations l)] :
-    Countable (Σ l, (funSublang (L := L) F).Relations l) := h
+
+
 
 /-! ## Restriction of terms and formulas into the generated sublanguage -/
 
 /-- Restrict a term whose function symbols lie in `F` to the generated sublanguage. -/
-def Term.restrictFuns {α : Type} {F : Set (Σ n, L.Functions n)} :
+private def Term.restrictFuns {α : Type} {F : Set (Σ n, L.Functions n)} :
     (t : L.Term α) → t.functionsIn ⊆ F → (funSublang (L := L) F).Term α
   | .var x, _ => .var x
   | .func f ts, h =>
@@ -106,21 +91,11 @@ def Term.restrictFuns {α : Type} {F : Set (Σ n, L.Functions n)} :
       (fun i => (ts i).restrictFuns
         (fun _ hx => h (Set.mem_insert_of_mem _ (Set.mem_iUnion.mpr ⟨i, hx⟩))))
 
-/-- The inclusion is a left inverse of term restriction. -/
-theorem Term.onTerm_restrictFuns {α : Type} {F : Set (Σ n, L.Functions n)} :
-    ∀ (t : L.Term α) (h : t.functionsIn ⊆ F),
-      (funSublangIncl F).onTerm (t.restrictFuns h) = t := by
-  intro t
-  induction t with
-  | var x => intro h; rfl
-  | func f ts ih =>
-    intro h
-    simp only [Term.restrictFuns, LHom.onTerm]
-    exact congrArg _ (funext fun i => ih i _)
+
 
 /-- Restrict a formula whose function symbols lie in `F` to the generated sublanguage (relations
 pass through unchanged). -/
-def BoundedFormulaω.restrictFuns {α : Type} {F : Set (Σ n, L.Functions n)} :
+private def BoundedFormulaω.restrictFuns {α : Type} {F : Set (Σ n, L.Functions n)} :
     ∀ {n : ℕ} (φ : L.BoundedFormulaω α n), φ.functionsIn ⊆ F →
       (funSublang (L := L) F).BoundedFormulaω α n
   | _, .falsum, _ => .falsum
@@ -138,38 +113,7 @@ def BoundedFormulaω.restrictFuns {α : Type} {F : Set (Σ n, L.Functions n)} :
   | _, .iInf φs, h =>
     .iInf fun i => (φs i).restrictFuns fun _ hx => h (Set.mem_iUnion.mpr ⟨i, hx⟩)
 
-/-- The inclusion is a left inverse of formula restriction: the restricted formula maps back to
-the original. The bridge that lets the sublanguage EM model realize the original formulas. -/
-theorem BoundedFormulaω.mapLanguage_restrictFuns {α : Type} {F : Set (Σ n, L.Functions n)} :
-    ∀ {n : ℕ} (φ : L.BoundedFormulaω α n) (h : φ.functionsIn ⊆ F),
-      (φ.restrictFuns h).mapLanguage (funSublangIncl F) = φ := by
-  intro n φ
-  induction φ with
-  | falsum => intro h; rfl
-  | equal t u =>
-    intro h
-    simp only [BoundedFormulaω.restrictFuns, BoundedFormulaω.mapLanguage]
-    exact congrArg₂ _ (Term.onTerm_restrictFuns _ _) (Term.onTerm_restrictFuns _ _)
-  | rel R ts =>
-    intro h
-    simp only [BoundedFormulaω.restrictFuns, BoundedFormulaω.mapLanguage]
-    exact congrArg _ (funext fun i => Term.onTerm_restrictFuns (ts i) _)
-  | imp φ ψ ihφ ihψ =>
-    intro h
-    simp only [BoundedFormulaω.restrictFuns, BoundedFormulaω.mapLanguage]
-    exact congrArg₂ _ (ihφ _) (ihψ _)
-  | all φ ih =>
-    intro h
-    simp only [BoundedFormulaω.restrictFuns, BoundedFormulaω.mapLanguage]
-    exact congrArg _ (ih _)
-  | iSup φs ih =>
-    intro h
-    simp only [BoundedFormulaω.restrictFuns, BoundedFormulaω.mapLanguage]
-    exact congrArg _ (funext fun i => ih i _)
-  | iInf φs ih =>
-    intro h
-    simp only [BoundedFormulaω.restrictFuns, BoundedFormulaω.mapLanguage]
-    exact congrArg _ (funext fun i => ih i _)
+
 
 /-! ## The simultaneous symbol-generated sublanguage
 
@@ -253,7 +197,7 @@ def Term.restrictSymbols {α : Type} {F : Set (Σ n, L.Functions n)}
         (fun _ hx => h (Set.mem_insert_of_mem _ (Set.mem_iUnion.mpr ⟨i, hx⟩))))
 
 /-- The inclusion is a left inverse of two-sorted term restriction. -/
-theorem Term.onTerm_restrictSymbols {α : Type} {F : Set (Σ n, L.Functions n)}
+private theorem Term.onTerm_restrictSymbols {α : Type} {F : Set (Σ n, L.Functions n)}
     {R : Set (Σ n, L.Relations n)} :
     ∀ (t : L.Term α) (h : t.functionsIn ⊆ F),
       (symbSublangIncl F R).onTerm (t.restrictSymbols R h) = t := by

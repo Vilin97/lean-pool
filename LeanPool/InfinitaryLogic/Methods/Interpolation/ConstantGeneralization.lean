@@ -49,7 +49,7 @@ noncomputable def genAll (j : ℕ) (ρ : L[[ℕ]].Sentenceω) : L[[ℕ]].Sentenc
 
 /-- Realizing the universal generalization is realizing the original at every reinterpretation of
 `c_j`. -/
-theorem realize_genAll (base : L.Structure M) (h : ℕ → M) (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
+private theorem realize_genAll (base : L.Structure M) (h : ℕ → M) (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
     @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 (genAll j ρ) Empty.elim Fin.elim0
       ↔ ∀ x, @BoundedFormulaω.Realize L[[ℕ]] M (wc base (Function.update h j x)) Empty 0 ρ
           Empty.elim Fin.elim0 := by
@@ -79,7 +79,7 @@ theorem notMem_sentenceJConsts_genAll (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
 
 /-! ### Occurrence facts for `genAll` -/
 
-theorem functionsIn_genAll_subset (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
+private theorem functionsIn_genAll_subset (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
     (genAll j ρ).functionsIn ⊆ ρ.functionsIn := by
   rw [genAll,
     show (((ρ.abstractConst j).relabel (Sum.inr : Fin 1 → Empty ⊕ Fin 1)).all).functionsIn
@@ -91,7 +91,7 @@ theorem baseFunctionsIn_genAll_subset (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
     (genAll j ρ).baseFunctionsIn ⊆ ρ.baseFunctionsIn :=
   fun _ hs => functionsIn_genAll_subset j ρ hs
 
-theorem relationsIn_genAll (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
+private theorem relationsIn_genAll (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
     (genAll j ρ).relationsIn = ρ.relationsIn := by
   rw [genAll,
     show (((ρ.abstractConst j).relabel (Sum.inr : Fin 1 → Empty ⊕ Fin 1)).all).relationsIn
@@ -110,7 +110,7 @@ theorem sentenceJConsts_genAll_subset (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
 /-! ### The quantifier class of `genAll` (and the `genEx` non-fact) -/
 
 /-- Constant abstraction does not move the quantifier class. -/
-theorem BoundedFormulaω.universalSigned_abstractConst (j : ℕ) (s : Bool) :
+private theorem BoundedFormulaω.universalSigned_abstractConst (j : ℕ) (s : Bool) :
     ∀ {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n),
       universalSigned s (BoundedFormulaω.abstractConst j φ) ↔ universalSigned s φ := by
   intro n φ
@@ -135,7 +135,7 @@ theorem BoundedFormulaω.universalSigned_abstractConst (j : ℕ) (s : Bool) :
 
 /-- **`genAll` is class-preserving**: universally generalizing a fresh constant out of a universal
 sentence leaves it universal.  This is the whole point of the right-hand C7 trigger. -/
-theorem isUniversal_genAll (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
+private theorem isUniversal_genAll (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
     IsUniversal (genAll j ρ) ↔ IsUniversal ρ := by
   rw [genAll]
   show (true = true ∧ universalSigned true _) ↔ _
@@ -171,7 +171,7 @@ theorem hasQuantSigned_genEx (j : ℕ) (s : Bool) (ρ : L[[ℕ]].Sentenceω) :
 /-- **`genEx` is not class-preserving**, recorded separately: `genEx j ρ` is never universal, since
 it is a negatively-occurring `all`.  This is a fact about the *construction*, and is not by itself a
 failure of the left closure (see `malitzInsepAt_witness_of_existentialDelta`). -/
-theorem not_isUniversal_genEx (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
+private theorem not_isUniversal_genEx (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
     ¬ IsUniversal (genEx j ρ) :=
   not_isUniversal_ex _
 
@@ -208,7 +208,7 @@ theorem entails_genAll_of_entails
 
 /-- **Acceptance, `Δ` side**: `Δ, δ(c) ⊨ ¬σ(c)` upgrades to `Δ, ∃x δ(x) ⊨ ¬∀x σ(x)` when `c_j` is
 fresh for `Δ`.  The witness for `∃x δ(x)` is exactly the reinterpretation that refutes `∀x σ(x)`. -/
-theorem entails_not_genAll_of_entails_not
+private theorem entails_not_genAll_of_entails_not
     (hfresh : ∀ δ ∈ Δ, j ∉ sentenceJConsts (L' := L) (J := ℕ) δ)
     (hyp : Theoryω.Entails (insert φc Δ) σc.not) :
     Theoryω.Entails (insert (genEx j φc) Δ) (genAll j σc).not := by
@@ -285,58 +285,13 @@ section Conjunction
 
 variable {T : L[[ℕ]].Theoryω} {hT : T.Countable}
 
-/-- A countable conjunction of existential sentences is existential. -/
-theorem isExistential_conjunction (T : L[[ℕ]].Theoryω) (hT : T.Countable)
-    (h : ∀ σ ∈ T, IsExistential σ) : IsExistential (T.conjunction hT) := by
-  classical
-  rw [Theoryω.conjunction]
-  split_ifs with hne
-  · refine fun n => h _ ?_
-    exact (hT.exists_eq_range hne).choose_spec.symm.subset (Set.mem_range_self n)
-  · exact ⟨trivial, trivial⟩
 
-theorem baseFunctionsIn_conjunction_subset (T : L[[ℕ]].Theoryω) (hT : T.Countable)
-    (h : ∀ σ ∈ T, σ.baseFunctionsIn ⊆ F) : (T.conjunction hT).baseFunctionsIn ⊆ F := by
-  classical
-  rw [Theoryω.conjunction]
-  split_ifs with hne
-  · intro s hs
-    simp only [BoundedFormulaω.baseFunctionsIn, BoundedFormulaω.functionsIn, Set.mem_ofPred_eq,
-      Set.mem_iUnion] at hs
-    obtain ⟨n, hn⟩ := hs
-    exact h _ ((hT.exists_eq_range hne).choose_spec.symm.subset (Set.mem_range_self n)) hn
-  · intro s hs
-    simp only [BoundedFormulaω.baseFunctionsIn, BoundedFormulaω.functionsIn, Set.mem_ofPred_eq,
-      Set.union_self, Set.mem_empty_iff_false] at hs
 
-theorem baseRelationsIn_conjunction_subset (T : L[[ℕ]].Theoryω) (hT : T.Countable)
-    (h : ∀ σ ∈ T, σ.baseRelationsIn ⊆ R) : (T.conjunction hT).baseRelationsIn ⊆ R := by
-  classical
-  rw [Theoryω.conjunction]
-  split_ifs with hne
-  · intro s hs
-    simp only [BoundedFormulaω.baseRelationsIn, BoundedFormulaω.relationsIn, Set.mem_ofPred_eq,
-      Set.mem_iUnion] at hs
-    obtain ⟨n, hn⟩ := hs
-    exact h _ ((hT.exists_eq_range hne).choose_spec.symm.subset (Set.mem_range_self n)) hn
-  · intro s hs
-    simp only [BoundedFormulaω.baseRelationsIn, BoundedFormulaω.relationsIn, Set.mem_ofPred_eq,
-      Set.union_self, Set.mem_empty_iff_false] at hs
 
-theorem sentenceJConsts_conjunction_subset (T : L[[ℕ]].Theoryω) (hT : T.Countable) {A : Set ℕ}
-    (h : ∀ σ ∈ T, sentenceJConsts (L' := L) (J := ℕ) σ ⊆ A) :
-    sentenceJConsts (L' := L) (J := ℕ) (T.conjunction hT) ⊆ A := by
-  classical
-  rw [Theoryω.conjunction]
-  split_ifs with hne
-  · intro k hk
-    simp only [sentenceJConsts, BoundedFormulaω.functionsIn, Set.mem_ofPred_eq,
-      Set.mem_iUnion] at hk
-    obtain ⟨n, hn⟩ := hk
-    exact h _ ((hT.exists_eq_range hne).choose_spec.symm.subset (Set.mem_range_self n)) hn
-  · intro k hk
-    simp only [sentenceJConsts, BoundedFormulaω.functionsIn, Set.mem_ofPred_eq, Set.union_self,
-      Set.mem_empty_iff_false] at hk
+
+
+
+
 
 end Conjunction
 

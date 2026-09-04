@@ -49,7 +49,7 @@ output `κ⁺`. Level `0`/`1` = `κ⁺` (nothing to do / point pigeonhole);
 level `n+2` = `succ (2 ^ level (n+1))`, sized so that generalized pair ER **at color bound
 `finiteERBound κ (n+1)`** applied to a source of size `finiteERBound κ (n+2)` outputs a
 suborder of size `succ (finiteERBound κ (n+1))`, ample source for stage `n+1`. -/
-noncomputable def finiteERBound (κ : Cardinal.{0}) : ℕ → Cardinal.{0}
+private noncomputable def finiteERBound (κ : Cardinal.{0}) : ℕ → Cardinal.{0}
   | 0 => Order.succ κ
   | 1 => Order.succ κ
   | (n + 2) => Order.succ ((2 : Cardinal.{0}) ^ finiteERBound κ (n + 1))
@@ -59,18 +59,17 @@ noncomputable def finiteERBound (κ : Cardinal.{0}) : ℕ → Cardinal.{0}
 section LadderLemmas
 
 /-- Ladder level `0` is `κ⁺`. -/
-theorem finiteERBound_zero (κ : Cardinal.{0}) : finiteERBound κ 0 = Order.succ κ := rfl
+private theorem finiteERBound_zero (κ : Cardinal.{0}) : finiteERBound κ 0 = Order.succ κ := rfl
 
-/-- Ladder level `1` is `κ⁺`. -/
-theorem finiteERBound_one (κ : Cardinal.{0}) : finiteERBound κ 1 = Order.succ κ := rfl
+
 
 /-- The ladder recursion, as an equality: level `n+2` is exactly the generalized-pair-ER
 source bound for color bound `finiteERBound κ (n+1)`. -/
-theorem finiteERBound_succ_succ (κ : Cardinal.{0}) (n : ℕ) :
+private theorem finiteERBound_succ_succ (κ : Cardinal.{0}) (n : ℕ) :
     finiteERBound κ (n + 2) = Order.succ ((2 : Cardinal.{0}) ^ finiteERBound κ (n + 1)) := rfl
 
 /-- Every ladder level dominates `κ⁺`. -/
-theorem succ_le_finiteERBound (κ : Cardinal.{0}) : ∀ n : ℕ, Order.succ κ ≤ finiteERBound κ n
+private theorem succ_le_finiteERBound (κ : Cardinal.{0}) : ∀ n : ℕ, Order.succ κ ≤ finiteERBound κ n
   | 0 => le_rfl
   | 1 => le_rfl
   | (n + 2) => by
@@ -79,29 +78,18 @@ theorem succ_le_finiteERBound (κ : Cardinal.{0}) : ∀ n : ℕ, Order.succ κ �
       ((Order.le_succ κ).trans (succ_le_finiteERBound κ (n + 1))).trans (Cardinal.cantor _).le
     exact Order.succ_le_succ hκ
 
-/-- The ladder is monotone in the arity. -/
-theorem finiteERBound_mono (κ : Cardinal.{0}) : Monotone (finiteERBound κ) := by
-  apply monotone_nat_of_le_succ
-  intro n
-  match n with
-  | 0 => exact le_rfl
-  | (m + 1) =>
-    show finiteERBound κ (m + 1) ≤ finiteERBound κ (m + 2)
-    rw [finiteERBound_succ_succ]
-    exact (Cardinal.cantor _).le.trans (Order.le_succ _)
+
 
 /-- Every ladder level of index `≥ 2` dominates the generalized pair-ER source bound
 `succ (2 ^ κ)` — this is what lets the arity-2 theorem consume any level `≥ 2`. -/
-theorem pair_source_le_finiteERBound (κ : Cardinal.{0}) (n : ℕ) :
+private theorem pair_source_le_finiteERBound (κ : Cardinal.{0}) (n : ℕ) :
     Order.succ ((2 : Cardinal.{0}) ^ κ) ≤ finiteERBound κ (n + 2) := by
   rw [finiteERBound_succ_succ]
   have hκ : κ ≤ finiteERBound κ (n + 1) :=
     (Order.le_succ κ).trans (succ_le_finiteERBound κ (n + 1))
   exact Order.succ_le_succ (Cardinal.power_le_power_left two_ne_zero hκ)
 
-/-- `ℵ₀ ≤ ℶ₁` — the infinite-cardinal hypothesis for the ladder at the Morley–Hanf color
-bound. -/
-theorem aleph0_le_beth_one : Cardinal.aleph0 ≤ Cardinal.beth 1 := Cardinal.aleph0_le_beth 1
+
 
 /-- `ℶ_{o+1} = 2 ^ ℶ_o`, with the successor index written additively. -/
 private lemma beth_add_one (o : Ordinal.{0}) :
@@ -117,7 +105,7 @@ private lemma succ_beth_le (o : Ordinal.{0}) :
 /-- At `κ = ℶ₁`, ladder level `n` is bounded by `ℶ_{2n+2}`: each ladder step
 `succ ∘ (2 ^ ·)` costs strictly more than one beth step (the inner `succ`), but two beth
 steps absorb it. -/
-theorem finiteERBound_beth_one_le :
+private theorem finiteERBound_beth_one_le :
     ∀ n : ℕ, finiteERBound (Cardinal.beth 1) n ≤ Cardinal.beth ((2 * n + 2 : ℕ) : Ordinal)
   | 0 => by
     have h : ((2 * 0 + 2 : ℕ) : Ordinal.{0}) = (1 : Ordinal) + 1 := by
@@ -147,14 +135,14 @@ theorem finiteERBound_beth_one_le :
 
 /-- At `κ = ℶ₁`, every ladder level is strictly below `ℶ_{ω₁}` — the source size the
 Morley–Hanf chain supplies dominates every finite stage. -/
-theorem finiteERBound_lt_beth_omega1 (n : ℕ) :
+private theorem finiteERBound_lt_beth_omega1 (n : ℕ) :
     finiteERBound (Cardinal.beth 1) n < Cardinal.beth (Ordinal.omega 1) :=
   (finiteERBound_beth_one_le n).trans_lt (Cardinal.beth_lt_beth.mpr
     ((Ordinal.natCast_lt_omega0 _).trans Ordinal.omega0_lt_omega_one))
 
 /-- At `κ = ℶ₁`, every ladder level is at most `ℶ_{ω₁}` (the form consumed when feeding a
 `ℶ_{ω₁}`-sized source into a finite ladder stage). -/
-theorem finiteERBound_le_beth_omega1 (n : ℕ) :
+private theorem finiteERBound_le_beth_omega1 (n : ℕ) :
     finiteERBound (Cardinal.beth 1) n ≤ Cardinal.beth (Ordinal.omega 1) :=
   (finiteERBound_lt_beth_omega1 n).le
 
@@ -164,7 +152,7 @@ in the base index `α` (the `α = 1` bound above is the sharper special case; th
 on purpose — the goal is a reusable scheduled estimate, not sharpness). This is the arithmetic
 behind the Marker-style consistency-property schedule: per-arity Erdős–Rado approximations at
 every base `ℶ_α`, `α < ω₁`, all fed from a `ℶ_{ω₁}`-sized source. -/
-theorem finiteERBound_beth_le (α : Ordinal.{0}) :
+private theorem finiteERBound_beth_le (α : Ordinal.{0}) :
     ∀ N : ℕ, finiteERBound (Cardinal.beth α) N ≤ Cardinal.beth (α + ((2 * N + 2 : ℕ) : Ordinal))
   | 0 => by
     rw [finiteERBound_zero]
@@ -204,7 +192,7 @@ with color types of size `≤ κ` admit a single `κ⁺`-suborder homogeneous fo
 `≤ N` simultaneously. The family is `ℕ`-indexed from the start, per the design note that the
 all-arity theorem must recurse internally over arity, not iterate over the external
 sequence. -/
-def FiniteArityHomogeneousUpTo (κ : Cardinal.{0}) (N : ℕ) : Prop :=
+private def FiniteArityHomogeneousUpTo (κ : Cardinal.{0}) (N : ℕ) : Prop :=
   ∀ (I : Type) [LinearOrder I] [WellFoundedLT I],
     Cardinal.mk I ≥ finiteERBound κ N →
     ∀ (C : ℕ → Type) (_ : ∀ n, Cardinal.mk (C n) ≤ κ) (c : ∀ n, (Fin n ↪o I) → C n),
@@ -232,19 +220,19 @@ instance : Subsingleton (Fin 0 ↪o I) :=
 
 /-- The one-point order embedding `Fin 1 ↪o I` at `x` (strict monotonicity is vacuous on the
 subsingleton `Fin 1`). -/
-def singletonOE (x : I) : Fin 1 ↪o I :=
+private def singletonOE (x : I) : Fin 1 ↪o I :=
   OrderEmbedding.ofStrictMono (fun _ => x) fun a b hab =>
     absurd (Subsingleton.elim a b) (ne_of_lt hab)
 
 /-- Every `Fin 1 ↪o I` is the one-point embedding at its value. -/
-theorem orderEmbedding_fin_one_eq (t : Fin 1 ↪o I) : t = singletonOE (t 0) := by
+private theorem orderEmbedding_fin_one_eq (t : Fin 1 ↪o I) : t = singletonOE (t 0) := by
   refine DFunLike.ext t _ fun k => ?_
   rw [Fin.eq_zero k]
   rfl
 
 /-- Every `Fin 2 ↪o I` with prescribed endpoint values is the corresponding `pairEmbed`
 (stated flexibly so the `<`-proof can be supplied through the endpoints of any suborder). -/
-theorem orderEmbedding_fin_two_eq_pairEmbed (t : Fin 2 ↪o I) {u v : I} (h : u < v)
+private theorem orderEmbedding_fin_two_eq_pairEmbed (t : Fin 2 ↪o I) {u v : I} (h : u < v)
     (h0 : t 0 = u) (h1 : t 1 = v) : t = pairEmbed h := by
   refine DFunLike.ext t _ fun k => ?_
   match k with
@@ -255,7 +243,7 @@ theorem orderEmbedding_fin_two_eq_pairEmbed (t : Fin 2 ↪o I) {u v : I} (h : u 
 is closed under ordinal successor (`succ_lt_ord_of_lt`), so every element has a strict
 upper bound. Supplies the second pair element the arity-1 endgame of the arity-2 theorem
 needs. -/
-theorem exists_gt_succOrdToType {κ : Cardinal.{0}} (hκ : Cardinal.aleph0 ≤ κ)
+private theorem exists_gt_succOrdToType {κ : Cardinal.{0}} (hκ : Cardinal.aleph0 ≤ κ)
     (x : (Order.succ κ).ord.ToType) : ∃ y : (Order.succ κ).ord.ToType, x < y := by
   set d : Set.Iio (Order.succ κ).ord := Ordinal.ToType.mk.symm x
   have hδ : d.1 < (Order.succ κ).ord := d.2
@@ -285,7 +273,7 @@ theorem exists_orderEmbedding_factor {J I : Type*} [LinearOrder J] [LinearOrder 
 
 /-- Every `(n+2)`-tuple is its `castSucc`-prefix extended by its last point — the
 decomposition through which end-homogeneity reaches an arbitrary top-arity tuple. -/
-theorem eq_appendLastOE {I : Type*} [LinearOrder I] {n : ℕ} (t : Fin (n + 2) ↪o I) :
+private theorem eq_appendLastOE {I : Type*} [LinearOrder I] {n : ℕ} (t : Fin (n + 2) ↪o I) :
     t = appendLastOE (Fin.castSuccOrderEmb.trans t) (t (Fin.last (n + 1)))
       (fun k => t.strictMono (Fin.castSucc_lt_last k)) := by
   refine DFunLike.ext _ _ fun k => ?_
@@ -302,7 +290,7 @@ end Factoring
 
 /-- **Arity `≤ 0`.** Homogeneity up to arity `0` from a `κ⁺`-sized source: there is nothing
 to homogenize (`Fin 0 ↪o I` is a subsingleton), so any `κ⁺`-suborder works. -/
-theorem finiteArityHomogeneousUpTo_zero (κ : Cardinal.{0}) (_hκ : Cardinal.aleph0 ≤ κ) :
+private theorem finiteArityHomogeneousUpTo_zero (κ : Cardinal.{0}) (_hκ : Cardinal.aleph0 ≤ κ) :
     FiniteArityHomogeneousUpTo κ 0 := by
   intro I _ _ hI C hC c
   have hI' : Order.succ κ ≤ Cardinal.mk I := hI
@@ -316,7 +304,7 @@ theorem finiteArityHomogeneousUpTo_zero (κ : Cardinal.{0}) (_hκ : Cardinal.ale
 /-- **Arity `≤ 1`.** Homogeneity up to arity `1` from a `κ⁺`-sized source: point pigeonhole
 (`exists_large_fiber_of_small_codomain`) on the point coloring `x ↦ c 1 (singletonOE x)`
 yields a `κ⁺`-sized monochromatic fiber, which re-well-orders into a `κ⁺`-suborder. -/
-theorem finiteArityHomogeneousUpTo_one (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ) :
+private theorem finiteArityHomogeneousUpTo_one (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ) :
     FiniteArityHomogeneousUpTo κ 1 := by
   intro I _ _ hI C hC c
   have hI' : Order.succ κ ≤ Cardinal.mk I := hI
@@ -344,7 +332,7 @@ pack the pair color and the induced point color into `C 2 × C 1` (still of size
 apply the generalized pair theorem `pairErdosRado_general_of_large`, and read the two
 components back off the homogeneous suborder — arity `1` via the no-max lemma
 (`exists_gt_succOrdToType` supplies a second pair element above any given point). -/
-theorem finiteArityHomogeneousUpTo_two (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ) :
+private theorem finiteArityHomogeneousUpTo_two (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ) :
     FiniteArityHomogeneousUpTo κ 2 := by
   intro I _ _ hI C hC c
   have hD : Cardinal.mk (C 2 × C 1) ≤ κ := by
@@ -393,7 +381,7 @@ no-max lemma `exists_gt_succOrdToType` — and feed everything to the inductive 
 An arity-`(n+2)` tuple from the final suborder is then handled by decomposing it as
 prefix-plus-last (`eq_appendLastOE`), swapping the last point for the chosen point above
 its prefix (end-homogeneity), and reading off the induced color's constancy from the IH. -/
-theorem finiteArityHomogeneousUpTo_step (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ) (n : ℕ)
+private theorem finiteArityHomogeneousUpTo_step (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ) (n : ℕ)
     (ih : FiniteArityHomogeneousUpTo κ (n + 1)) : FiniteArityHomogeneousUpTo κ (n + 2) := by
   intro I _ _ hI C hC c
   set lam := finiteERBound κ (n + 1) with hlam_def
@@ -492,7 +480,7 @@ theorem finiteArityHomogeneousUpTo_step (κ : Cardinal.{0}) (hκ : Cardinal.alep
 and each higher level is one application of the induction step. (The step at `n = 0`
 subsumes the independently validated `finiteArityHomogeneousUpTo_two`, which is kept as a
 regression check on the statement.) -/
-theorem finiteArityHomogeneousUpTo_all (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ) :
+private theorem finiteArityHomogeneousUpTo_all (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ) :
     ∀ N : ℕ, FiniteArityHomogeneousUpTo κ N
   | 0 => finiteArityHomogeneousUpTo_zero κ hκ
   | 1 => finiteArityHomogeneousUpTo_one κ hκ
@@ -507,11 +495,7 @@ theorem finiteArityErdosRadoBounded (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 �
     FiniteArityErdosRadoBounded κ :=
   finiteArityHomogeneousUpTo_all κ hκ
 
-/-- The bounded finite-arity Erdős–Rado theorem at the Morley–Hanf color bound `ℶ₁`, where
-every ladder level sits below `ℶ_{ω₁}` (`finiteERBound_le_beth_omega1`). -/
-theorem finiteArityErdosRadoBounded_beth_one :
-    FiniteArityErdosRadoBounded (Cardinal.beth 1) :=
-  finiteArityErdosRadoBounded _ aleph0_le_beth_one
+
 
 /-- **The Marker-stage Erdős–Rado supply**: from a source of size `≥ ℶ_{α + 2N + 2}` and any
 `ℕ`-indexed coloring family with color types of size `≤ ℶ_α`, one `(ℶ_α)⁺`-suborder

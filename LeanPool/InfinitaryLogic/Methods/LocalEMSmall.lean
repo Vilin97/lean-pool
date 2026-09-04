@@ -29,7 +29,7 @@ namespace Language
 variable {Λ : Language.{0, 0}} {J : Type} [LinearOrder J] {M : Type} [Λ.Structure M]
 
 /-- The fiber of realized types over a tuple code: the types of tuples whose code is `c`. -/
-def LocalEMContext.CodeTypes (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
+private def LocalEMContext.CodeTypes (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (c : LocalEMTupleCode Λ n) : Set (Set (Λ.BoundedFormulaω Empty n)) :=
   letI := ctx.structureBase
   {p | ∃ a : Fin n → ctx.Carrier, ctx.tupleCode a = c ∧ infinitaryType ctx.Carrier a = p}
@@ -37,7 +37,7 @@ def LocalEMContext.CodeTypes (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
 /-- **Each code fiber is subsingleton**: tuples with the same code lie in one orbit of the
 induced automorphisms (`exists_carrierEquiv_of_tupleCode_eq`), and every infinitary formula is
 invariant under those automorphisms (`realize_carrierEquiv`), so they realize the same type. -/
-theorem LocalEMContext.codeTypes_subsingleton (ctx : LocalEMContext Λ J (M := M))
+private theorem LocalEMContext.codeTypes_subsingleton (ctx : LocalEMContext Λ J (M := M))
     (hJ : HighlyOrderTransitive J) {n : ℕ} (c : LocalEMTupleCode Λ n) :
     (ctx.CodeTypes c).Subsingleton := by
   let := ctx.structureBase
@@ -51,7 +51,7 @@ theorem LocalEMContext.codeTypes_subsingleton (ctx : LocalEMContext Λ J (M := M
     show ⇑(ctx.carrierEquiv e) ∘ a = b from funext he] at h1
 
 /-- **The realized types are the union of the code fibers** — set extensionality. -/
-theorem LocalEMContext.realizedTypes_eq_iUnion_codeTypes (ctx : LocalEMContext Λ J (M := M))
+private theorem LocalEMContext.realizedTypes_eq_iUnion_codeTypes (ctx : LocalEMContext Λ J (M := M))
     (n : ℕ) :
     letI := ctx.structureBase
     RealizedInfinitaryTypes (L := Λ) ctx.Carrier n

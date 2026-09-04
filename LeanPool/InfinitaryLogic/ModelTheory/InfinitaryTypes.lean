@@ -41,13 +41,11 @@ arities. -/
 def Lomega1omegaSmall (M : Type w) [L.Structure M] : Prop :=
   ∀ n, (RealizedInfinitaryTypes (L := L) M n).Countable
 
-theorem infinitaryType_mem_realizedInfinitaryTypes (M : Type w) [L.Structure M] {n : ℕ}
-    (a : Fin n → M) : infinitaryType M a ∈ RealizedInfinitaryTypes (L := L) M n :=
-  ⟨a, rfl⟩
+
 
 /-- **Isomorphism transport for types**: an `L`-isomorphism carries the complete type of a
 tuple to the complete type of its image. -/
-theorem infinitaryType_equiv {M N : Type w} [L.Structure M] [L.Structure N] (e : M ≃[L] N)
+private theorem infinitaryType_equiv {M N : Type w} [L.Structure M] [L.Structure N] (e : M ≃[L] N)
     {n : ℕ} (a : Fin n → M) :
     infinitaryType (L := L) M a = infinitaryType (L := L) N (fun i => e (a i)) := by
   ext ψ

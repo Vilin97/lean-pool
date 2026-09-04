@@ -47,12 +47,12 @@ universe u v
 
 /-- A condensation point for E-classes in U: every open neighborhood meets
 uncountably many E-classes. -/
-def IsClassCondensationPt (r : Setoid α) [TopologicalSpace α] (U : Set α) (x : α) : Prop :=
+private def IsClassCondensationPt (r : Setoid α) [TopologicalSpace α] (U : Set α) (x : α) : Prop :=
   x ∈ U ∧ ∀ V : Set α, IsOpen V → x ∈ V → ¬(Set.Countable {q : Quotient r | ∃ y ∈ U ∩ V, ⟦y⟧ = q})
 
 /-- In a second-countable space, if U meets uncountably many E-classes,
 there exist condensation points in uncountably many classes. -/
-theorem exists_classCondensationPt_of_uncountable {α : Type u}
+private theorem exists_classCondensationPt_of_uncountable {α : Type u}
     [TopologicalSpace α] [SecondCountableTopology α]
     (r : Setoid α) {U : Set α}
     (hunc : ¬(Set.Countable {q : Quotient r | ∃ y ∈ U, ⟦y⟧ = q})) :
@@ -97,7 +97,7 @@ theorem exists_classCondensationPt_of_uncountable {α : Type u}
 
 /-- In a second-countable space, if U meets uncountably many E-classes,
 then uncountably many classes have a condensation point representative in U. -/
-theorem uncountable_classCondensationPt_classes {α : Type u}
+private theorem uncountable_classCondensationPt_classes {α : Type u}
     [TopologicalSpace α] [SecondCountableTopology α]
     (r : Setoid α) {U : Set α}
     (hunc : ¬(Set.Countable {q : Quotient r | ∃ y ∈ U, ⟦y⟧ = q})) :
@@ -143,7 +143,7 @@ theorem uncountable_classCondensationPt_classes {α : Type u}
 If a closed set U meets uncountably many classes of a closed equivalence
 relation, it contains disjoint closed subsets each meeting uncountably
 many classes with no cross-equivalence. -/
-theorem splitting_lemma_closed {α : Type u}
+private theorem splitting_lemma_closed {α : Type u}
     [MetricSpace α] [SecondCountableTopology α]
     (r : Setoid α) (hclosed_r : IsClosed {p : α × α | r.r p.1 p.2})
     {U : Set α} (hU : IsClosed U)
@@ -253,7 +253,7 @@ theorem splitting_lemma_closed {α : Type u}
 uncountably many classes splits into two disjoint closed pieces of diameter ≤ ε, each
 nonempty, each meeting uncountably many classes, with no cross-equivalence. Obtained from
 `splitting_lemma_closed` by first shrinking around a condensation point. -/
-theorem splitting_lemma_closed_small_diam {α : Type u}
+private theorem splitting_lemma_closed_small_diam {α : Type u}
     [MetricSpace α] [SecondCountableTopology α]
     (r : Setoid α) (hclosed_r : IsClosed {p : α × α | r.r p.1 p.2})
     {E : Set α} (hE_cl : IsClosed E)

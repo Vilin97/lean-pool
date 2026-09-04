@@ -45,7 +45,7 @@ def locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) : Λ[[J]].Term �
   (Λ.lhomWithConstantsMap (e : J → J)).onTerm t
 
 /-- Renaming carries each function symbol's skeleton constant by `Finset.image e`. -/
-theorem locJConstOf_lhomWithConstantsMap (e : J ≃o J) {n : ℕ} (f : Λ[[J]].Functions n) :
+private theorem locJConstOf_lhomWithConstantsMap (e : J ≃o J) {n : ℕ} (f : Λ[[J]].Functions n) :
     locJConstOf Λ J ((Λ.lhomWithConstantsMap (e : J → J)).onFunction f)
       = (locJConstOf Λ J f).image e := by
   rcases n with _ | n
@@ -58,7 +58,7 @@ theorem locJConstOf_lhomWithConstantsMap (e : J ≃o J) {n : ℕ} (f : Λ[[J]].F
     · exact c.elim
 
 /-- **Test lemma 1**: the skeleton support of the renamed term is the image of the support. -/
-theorem locJSupport_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
+private theorem locJSupport_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
     locJSupport Λ J (locJRename Λ J e t) = (locJSupport Λ J t).image e := by
   induction t with
   | var x => simp [locJRename, LHom.onTerm, locJSupport]
@@ -79,7 +79,7 @@ theorem locJSupport_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) 
 
 /-- **Test lemma 2**: an order automorphism preserves the internal rank enumeration of a finite
 support: the rank of `e j` in `S.image e` is the rank of `j` in `S`. -/
-theorem deepRank_image_orderIso (e : J ≃o J) (S : Finset J) (j : J) :
+private theorem deepRank_image_orderIso (e : J ≃o J) (S : Finset J) (j : J) :
     deepRank J (S.image e) (e j) = deepRank J S j := by
   unfold deepRank
   rw [Finset.filter_image]
@@ -90,7 +90,7 @@ theorem deepRank_image_orderIso (e : J ≃o J) (S : Finset J) (j : J) :
 
 /-- De-substitution intertwines skeleton renaming with variable relabeling: the
 `constantsToVars` of the renamed term is the relabel of the original's along `Sum.map e id`. -/
-theorem constantsToVars_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
+private theorem constantsToVars_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
     (locJRename Λ J e t).constantsToVars
       = t.constantsToVars.relabel (Sum.map e id) := by
   induction t with
@@ -115,7 +115,7 @@ theorem constantsToVars_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term 
 /-- **Test lemma 3**: the deep interpretation of the renamed term over the image support equals
 that of the original term over the original support — pointwise in the depth `d`, not merely
 eventually. -/
-theorem locDeepInterp_locJRename {M : Type} [Λ.Structure M] (a : ℕ → M) (e : J ≃o J)
+private theorem locDeepInterp_locJRename {M : Type} [Λ.Structure M] (a : ℕ → M) (e : J ≃o J)
     (d : ℕ) (S : Finset J) (t : Λ[[J]].Term Empty) :
     locDeepInterp Λ J a d (S.image e) (locJRename Λ J e t) = locDeepInterp Λ J a d S t := by
   rw [locDeepInterp_eq_realize, locDeepInterp_eq_realize, constantsToVars_locJRename,
@@ -130,7 +130,7 @@ theorem locDeepInterp_locJRename {M : Type} [Λ.Structure M] (a : ℕ → M) (e 
 /-- **The critical gate**: the defining semantic equivalence of the local EM quotient is
 preserved AND reflected by skeleton renaming — the two eventual equalities are pointwise
 equivalent propositions. The existing quotient is equivariant. -/
-theorem LocalEMEq_locJRename_iff {M : Type} [Λ.Structure M] (a : ℕ → M) (e : J ≃o J)
+private theorem LocalEMEq_locJRename_iff {M : Type} [Λ.Structure M] (a : ℕ → M) (e : J ≃o J)
     (t u : Λ[[J]].Term Empty) :
     LocalEMEq Λ J a (locJRename Λ J e t) (locJRename Λ J e u) ↔ LocalEMEq Λ J a t u := by
   unfold LocalEMEq
@@ -140,7 +140,7 @@ theorem LocalEMEq_locJRename_iff {M : Type} [Λ.Structure M] (a : ℕ → M) (e 
 
 /-- The setoid form of the gate, for a full local EM context: renamed representatives are
 related exactly when the originals are. -/
-theorem LocalEMContext.setoid_locJRename_iff {M : Type} [Λ.Structure M]
+private theorem LocalEMContext.setoid_locJRename_iff {M : Type} [Λ.Structure M]
     (ctx : LocalEMContext Λ J (M := M)) (e : J ≃o J) (t u : Λ[[J]].Term Empty) :
     ctx.setoid.r (locJRename Λ J e t) (locJRename Λ J e u) ↔ ctx.setoid.r t u :=
   LocalEMEq_locJRename_iff Λ J ctx.a e t u
@@ -149,7 +149,7 @@ variable {Λ} {J}
 
 /-! ## Functoriality of the renaming action -/
 
-theorem locJRename_refl {α : Type} (t : Λ[[J]].Term α) :
+private theorem locJRename_refl {α : Type} (t : Λ[[J]].Term α) :
     locJRename Λ J (OrderIso.refl J) t = t := by
   induction t with
   | var x => rfl
@@ -163,7 +163,7 @@ theorem locJRename_refl {α : Type} (t : Λ[[J]].Term α) :
       · exact congrArg _ harg
       · exact c.elim
 
-theorem locJRename_trans (e₁ e₂ : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
+private theorem locJRename_trans (e₁ e₂ : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
     locJRename Λ J e₂ (locJRename Λ J e₁ t) = locJRename Λ J (e₁.trans e₂) t := by
   induction t with
   | var x => rfl
@@ -178,18 +178,18 @@ theorem locJRename_trans (e₁ e₂ : J ≃o J) {α : Type} (t : Λ[[J]].Term α
       · exact congrArg _ harg
       · exact c.elim
 
-theorem locJRename_symm_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
+private theorem locJRename_symm_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
     locJRename Λ J e.symm (locJRename Λ J e t) = t := by
   rw [locJRename_trans, OrderIso.self_trans_symm]
   exact locJRename_refl t
 
-theorem locJRename_locJRename_symm (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
+private theorem locJRename_locJRename_symm (e : J ≃o J) {α : Type} (t : Λ[[J]].Term α) :
     locJRename Λ J e (locJRename Λ J e.symm t) = t := by
   rw [locJRename_trans, OrderIso.symm_trans_self]
   exact locJRename_refl t
 
 /-- The renaming action as an equivalence of closed terms. -/
-def locJRenameEquiv (e : J ≃o J) : Λ[[J]].Term Empty ≃ Λ[[J]].Term Empty where
+private def locJRenameEquiv (e : J ≃o J) : Λ[[J]].Term Empty ≃ Λ[[J]].Term Empty where
   toFun := locJRename Λ J e
   invFun := locJRename Λ J e.symm
   left_inv t := locJRename_symm_locJRename e t
@@ -213,7 +213,7 @@ theorem LocalEMContext.carrierEquiv_mkClass (ctx : LocalEMContext Λ J (M := M))
 
 /-- **The skeleton-class equation**: the descended automorphism sends the class of the skeleton
 constant `c_j` to the class of `c_{e j}`. -/
-theorem LocalEMContext.carrierEquiv_const (ctx : LocalEMContext Λ J (M := M))
+private theorem LocalEMContext.carrierEquiv_const (ctx : LocalEMContext Λ J (M := M))
     (e : J ≃o J) (j : J) :
     ctx.carrierEquiv e
         (ctx.mkClass (t := Term.func (Sum.inr j : Λ[[J]].Functions 0) Fin.elim0))
@@ -223,7 +223,7 @@ theorem LocalEMContext.carrierEquiv_const (ctx : LocalEMContext Λ J (M := M))
 
 /-- Equivariance of function interpretation under the language renaming induced by `e`: the
 targeted expanded-language fact (the base-reduct automorphism consumes its `Sum.inl` case). -/
-theorem LocalEMContext.carrierEquiv_funMap (ctx : LocalEMContext Λ J (M := M))
+private theorem LocalEMContext.carrierEquiv_funMap (ctx : LocalEMContext Λ J (M := M))
     (e : J ≃o J) {n : ℕ} (f : Λ[[J]].Functions n) (xs : Fin n → ctx.Carrier) :
     ctx.carrierEquiv e (@Structure.funMap (Λ[[J]]) ctx.Carrier ctx.structure n f xs)
       = @Structure.funMap (Λ[[J]]) ctx.Carrier ctx.structure n
@@ -240,7 +240,7 @@ theorem LocalEMContext.carrierEquiv_funMap (ctx : LocalEMContext Λ J (M := M))
 
 /-- Equivariance of base-relation interpretation: the descended map preserves and reflects
 every base relation — via the pointwise deep-interpretation equality over the image support. -/
-theorem LocalEMContext.carrierEquiv_relMap (ctx : LocalEMContext Λ J (M := M))
+private theorem LocalEMContext.carrierEquiv_relMap (ctx : LocalEMContext Λ J (M := M))
     (e : J ≃o J) {n : ℕ} (R : Λ.Relations n) (xs : Fin n → ctx.Carrier) :
     (@Structure.RelMap (Λ[[J]]) ctx.Carrier ctx.structure n (Sum.inl R)
         (fun i => ctx.carrierEquiv e (xs i))
@@ -271,7 +271,7 @@ theorem LocalEMContext.carrierEquiv_relMap (ctx : LocalEMContext Λ J (M := M))
 base-language (`Λ`-reduct) structure on the local EM carrier — every order automorphism of the
 skeleton induces a structure automorphism sending `[c_j]` to `[c_{e j}]`
 (`carrierEquiv_const`). -/
-noncomputable def LocalEMContext.baseAutomorphism (ctx : LocalEMContext Λ J (M := M))
+private noncomputable def LocalEMContext.baseAutomorphism (ctx : LocalEMContext Λ J (M := M))
     (e : J ≃o J) :
     letI := ctx.structureBase
     ctx.Carrier ≃[Λ] ctx.Carrier :=

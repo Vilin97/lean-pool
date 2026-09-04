@@ -56,7 +56,7 @@ namespace Term
 variable {L : Language.{u, v}} {α β γ : Type u'}
 
 /-- Substituting after substituting is substituting the composite. -/
-theorem subst_subst (t : L.Term α) (f : α → L.Term β) (g : β → L.Term γ) :
+private theorem subst_subst (t : L.Term α) (f : α → L.Term β) (g : β → L.Term γ) :
     (t.subst f).subst g = t.subst fun a => (f a).subst g := by
   induction t with
   | var a => rfl
@@ -65,7 +65,7 @@ theorem subst_subst (t : L.Term α) (f : α → L.Term β) (g : β → L.Term γ
     congr 1; funext i; exact ih i
 
 /-- Substituting after relabeling is substituting along the relabeling. -/
-theorem subst_relabel (t : L.Term α) (f : α → β) (g : β → L.Term γ) :
+private theorem subst_relabel (t : L.Term α) (f : α → β) (g : β → L.Term γ) :
     (t.relabel f).subst g = t.subst (g ∘ f) := by
   induction t with
   | var a => rfl
@@ -74,7 +74,7 @@ theorem subst_relabel (t : L.Term α) (f : α → β) (g : β → L.Term γ) :
     congr 1; funext i; exact ih i
 
 /-- Relabeling after substituting is substituting the relabeled terms. -/
-theorem relabel_subst (t : L.Term α) (f : α → L.Term β) (g : β → γ) :
+private theorem relabel_subst (t : L.Term α) (f : α → L.Term β) (g : β → γ) :
     (t.subst f).relabel g = t.subst fun a => (f a).relabel g := by
   induction t with
   | var a => rfl
@@ -83,7 +83,7 @@ theorem relabel_subst (t : L.Term α) (f : α → L.Term β) (g : β → γ) :
     congr 1; funext i; exact ih i
 
 /-- Substituting variables for themselves does nothing. -/
-theorem subst_var_eq (t : L.Term α) : t.subst Term.var = t := by
+private theorem subst_var_eq (t : L.Term α) : t.subst Term.var = t := by
   induction t with
   | var a => rfl
   | func F ts ih =>
@@ -114,7 +114,7 @@ private theorem substAux_comp (f : α → L.Term β) (g : β → L.Term γ)
 
 /-- **Composition of substitutions**: substituting `f` and then `g` is substituting
 `a ↦ (f a).subst g`.  No side condition: `subst` never touches bound variables. -/
-theorem subst_subst : ∀ {n : ℕ} (φ : L.BoundedFormulaω α n) (f : α → L.Term β)
+private theorem subst_subst : ∀ {n : ℕ} (φ : L.BoundedFormulaω α n) (f : α → L.Term β)
     (g : β → L.Term γ), (φ.subst f).subst g = φ.subst fun a => (f a).subst g
   | _, falsum, _, _ => rfl
   | _, equal t₁ t₂, f, g => by
@@ -159,40 +159,25 @@ section CloseBy
 
 variable {n : ℕ}
 
-@[simp]
-theorem closeBy_falsum (τ : Fin n → ℕ) :
-    closeBy (BoundedFormulaω.falsum : L[[ℕ]].BoundedFormulaω Empty n) τ = BoundedFormulaω.falsum :=
-  rfl
 
-@[simp]
-theorem closeBy_imp (φ ψ : L[[ℕ]].BoundedFormulaω Empty n) (τ : Fin n → ℕ) :
-    closeBy (φ.imp ψ) τ = (closeBy φ τ).imp (closeBy ψ τ) :=
-  rfl
 
-@[simp]
-theorem closeBy_not (φ : L[[ℕ]].BoundedFormulaω Empty n) (τ : Fin n → ℕ) :
-    closeBy φ.not τ = (closeBy φ τ).not :=
-  rfl
 
-@[simp]
-theorem closeBy_iInf (φs : ℕ → L[[ℕ]].BoundedFormulaω Empty n) (τ : Fin n → ℕ) :
-    closeBy (BoundedFormulaω.iInf φs) τ = BoundedFormulaω.iInf fun k => closeBy (φs k) τ :=
-  rfl
 
-@[simp]
-theorem closeBy_iSup (φs : ℕ → L[[ℕ]].BoundedFormulaω Empty n) (τ : Fin n → ℕ) :
-    closeBy (BoundedFormulaω.iSup φs) τ = BoundedFormulaω.iSup fun k => closeBy (φs k) τ :=
-  rfl
+
+
+
+
+
 
 /-- The arity-one remainder of closing a universal: `closeBy φ.all τ` is the universal closure of
 `φ` opened, relabeled so that the last bound variable stays bound, and closed by `τ`. -/
-theorem closeBy_all (φ : L[[ℕ]].BoundedFormulaω Empty (n + 1)) (τ : Fin n → ℕ) :
+private theorem closeBy_all (φ : L[[ℕ]].BoundedFormulaω Empty (n + 1)) (τ : Fin n → ℕ) :
     closeBy φ.all τ =
       (((φ.openBounds).relabel insertLastBound).subst fun i => constTerm (τ i)).all :=
   rfl
 
 /-- `instConst` is `closeBy` at arity one. -/
-theorem instConst_eq_closeBy (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1) :
+private theorem instConst_eq_closeBy (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω Empty 1) :
     instConst c ψ = closeBy ψ (fun _ => c) :=
   rfl
 
@@ -502,12 +487,12 @@ private theorem closeWith_id : ∀ {m : ℕ} (φ : L.BoundedFormulaω Empty m)
     simp only [closeWith]; congr 1; funext i; exact closeWith_id (φs i) ρ h
 
 /-- Closing a sentence by the empty tuple does nothing. -/
-theorem closeBy_zero (φ : L[[ℕ]].Sentenceω) (τ : Fin 0 → ℕ) : closeBy φ τ = φ := by
+private theorem closeBy_zero (φ : L[[ℕ]].Sentenceω) (τ : Fin 0 → ℕ) : closeBy φ τ = φ := by
   rw [closeBy_eq_closeWith]
   exact closeWith_id φ _ fun j => j.elim0
 
 /-- **The instance of the remainder is the closure at the extended tuple.** -/
-theorem instConst_closeBy_all_remainder {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty (n + 1))
+private theorem instConst_closeBy_all_remainder {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty (n + 1))
     (τ : Fin n → ℕ) (c : ℕ) :
     instConst c (((φ.openBounds).relabel insertLastBound).subst fun i => constTerm (τ i))
       = closeBy φ (Fin.snoc τ c) := by

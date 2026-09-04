@@ -40,8 +40,7 @@ instance modelsOf_standardBorel (φ : L.Sentenceω) :
     StandardBorelSpace ↥(ModelsOf φ) :=
   (modelsOf_measurableSet φ).standardBorel
 
-/-- The space of coded ℕ-models of φ, as a standard Borel space. -/
-abbrev ModelSpace (φ : L.Sentenceω) := ↥(ModelsOf φ)
+
 
 end Language
 

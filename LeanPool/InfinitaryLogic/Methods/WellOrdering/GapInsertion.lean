@@ -28,7 +28,7 @@ variable {L : Language.{0, 0}} {M : Type} [L.Structure M] {lt : L.Relations 2}
 
 /-- The rank of the point inserted at slot `s`: `α` below everything (slot `0`), the
 predecessor's rank plus `α` otherwise. -/
-def insertGapRank {m : ℕ} (rank : Fin m → Ordinal.{0}) (α : Ordinal.{0})
+private def insertGapRank {m : ℕ} (rank : Fin m → Ordinal.{0}) (α : Ordinal.{0})
     (s : Fin (m + 1)) : Ordinal.{0} :=
   Fin.cases α (fun k => rank k + α) s
 

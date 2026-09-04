@@ -64,7 +64,7 @@ theorem add_one_lt_omega1 {α : Ordinal.{0}} (hα : α < (Cardinal.aleph 1).ord)
 /-! ## The strict-monotonicity slot -/
 
 /-- The range of an inserted tuple. -/
-theorem range_insertNth {m : ℕ} {γ : Type*} (s : Fin (m + 1)) (x : γ) (f : Fin m → γ) :
+private theorem range_insertNth {m : ℕ} {γ : Type*} (s : Fin (m + 1)) (x : γ) (f : Fin m → γ) :
     Set.range (Fin.insertNth s x f) = insert x (Set.range f) := by
   ext y
   constructor
@@ -81,7 +81,7 @@ theorem range_insertNth {m : ℕ} {γ : Type*} (s : Fin (m + 1)) (x : γ) (f : F
 
 /-- **The slot lemma**: an unmarked rational has a slot at which insertion keeps the
 enumeration strictly monotone. -/
-theorem exists_insertNth_slot {m : ℕ} {mark : Fin m → ℚ} (hm : StrictMono mark)
+private theorem exists_insertNth_slot {m : ℕ} {mark : Fin m → ℚ} (hm : StrictMono mark)
     {q₀ : ℚ} (hq : q₀ ∉ Set.range mark) :
     ∃ s : Fin (m + 1), StrictMono (Fin.insertNth s q₀ mark) := by
   set c := (Finset.univ.filter fun k : Fin m => mark k < q₀).card with hc

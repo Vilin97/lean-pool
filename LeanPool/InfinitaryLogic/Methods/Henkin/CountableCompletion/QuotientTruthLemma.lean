@@ -56,7 +56,7 @@ Sentence atomics `equal t u` / `rel R ts` carry terms in `L[[ℕ]].Term (Empty �
 
 /-- Collapse a sentence-atomic term (variables in the uninhabited `Empty ⊕ Fin 0`) to a closed
 `Term Empty`. -/
-def Term.toGround : L[[ℕ]].Term (Empty ⊕ Fin 0) → L[[ℕ]].Term Empty
+private def Term.toGround : L[[ℕ]].Term (Empty ⊕ Fin 0) → L[[ℕ]].Term Empty
   | .var x => match x with
     | Sum.inl e => Empty.elim e
     | Sum.inr i => i.elim0
@@ -64,7 +64,7 @@ def Term.toGround : L[[ℕ]].Term (Empty ⊕ Fin 0) → L[[ℕ]].Term Empty
 
 omit [L.IsRelational] in
 /-- Relabeling a `toGround`-collapsed term back to `Empty ⊕ Fin 0` recovers the original. -/
-theorem Term.toGround_relabel_inl (t : L[[ℕ]].Term (Empty ⊕ Fin 0)) :
+private theorem Term.toGround_relabel_inl (t : L[[ℕ]].Term (Empty ⊕ Fin 0)) :
     (t.toGround).relabel (Sum.inl : Empty → Empty ⊕ Fin 0) = t := by
   induction t with
   | var x => rcases x with e | i
@@ -75,7 +75,7 @@ theorem Term.toGround_relabel_inl (t : L[[ℕ]].Term (Empty ⊕ Fin 0)) :
 omit [L.IsRelational] in
 /-- Evaluating a sentence-atomic term with any assignment equals evaluating its `toGround` collapse
 with `Empty.elim` (both variable types are uninhabited). -/
-theorem Term.realize_toGround {M : Type*} [L[[ℕ]].Structure M]
+private theorem Term.realize_toGround {M : Type*} [L[[ℕ]].Structure M]
     (t : L[[ℕ]].Term (Empty ⊕ Fin 0)) (v : Empty ⊕ Fin 0 → M) :
     t.realize v = (t.toGround).realize (Empty.elim : Empty → M) := by
   induction t with
@@ -102,7 +102,7 @@ theorem realize_closeBy (hsc : HenkinComplete U S) (φ : L[[ℕ]].BoundedFormula
 /-- The constant instance `instConst c body` realizes in `QModel hsc` exactly as `body` at the class
 of `c` in its single variable.  This is the semantic bridge the `all` case consumes; it needs no
 syntactic substitution-composition identity. -/
-theorem realize_instConst_qmodel (hsc : HenkinComplete U S)
+private theorem realize_instConst_qmodel (hsc : HenkinComplete U S)
     (body : L[[ℕ]].BoundedFormulaω Empty 1) (c : ℕ) :
     @Sentenceω.Realize L[[ℕ]] (instConst c body) (QModel hsc) (qModelStructure hsc)
       ↔ @BoundedFormulaω.Realize L[[ℕ]] (QModel hsc) (qModelStructure hsc) Empty 1 body Empty.elim
@@ -112,7 +112,7 @@ theorem realize_instConst_qmodel (hsc : HenkinComplete U S)
 /-! ## Surjectivity of the quotient map -/
 
 /-- Every element of the quotient term model is the class of some constant. -/
-theorem qmk_surjective (hsc : HenkinComplete U S) (x : QModel hsc) :
+private theorem qmk_surjective (hsc : HenkinComplete U S) (x : QModel hsc) :
     ∃ c : ℕ, x = qmk hsc (constTerm c) := by
   obtain ⟨t, ht⟩ := Quotient.exists_rep x
   obtain ⟨c, rfl⟩ := exists_eq_constTerm t
@@ -147,7 +147,7 @@ private theorem snoc_elim0_const {M : Type*} (y : M) :
 variable [L.IsRelational]
 
 /-- A ground sentence-atomic term is the standard constant term of its collapsed constant. -/
-theorem constTermS_qtConst_toGround (t : L[[ℕ]].Term (Empty ⊕ Fin 0)) :
+private theorem constTermS_qtConst_toGround (t : L[[ℕ]].Term (Empty ⊕ Fin 0)) :
     constTermS (qtConst t.toGround) = t := by
   rw [← constTerm_relabel_inl, ← eq_constTerm_qtConst, Term.toGround_relabel_inl]
 
@@ -160,7 +160,7 @@ case recurses on `instConst c body` (a sentence of strictly smaller depth). -/
 /-- **The forward, polarity-sensitive truth lemma (bundled).**  For every sentence `σ`, membership
 in `S` forces truth in `QModel hsc` (positive), and membership of `σ.not` forces falsity (negative).
 Proven by one simultaneous well-founded recursion on the ordinal depth of `σ`. -/
-theorem truth_both (hsc : HenkinComplete U S) :
+private theorem truth_both (hsc : HenkinComplete U S) :
     (σ : L[[ℕ]].Sentenceω) →
       (σ ∈ S → @Sentenceω.Realize L[[ℕ]] σ (QModel hsc) (qModelStructure hsc)) ∧
       (σ.not ∈ S → ¬ @Sentenceω.Realize L[[ℕ]] σ (QModel hsc) (qModelStructure hsc))
@@ -273,7 +273,7 @@ theorem truth_both (hsc : HenkinComplete U S) :
 /-- **Forward truth lemma, positive polarity** (open form).  If the constant closure `closeBy φ τ`
 belongs to `S`, then `φ` is realized in `QModel hsc` at the classes of the constants `τ`.  A thin
 `realize_closeBy` wrapper over the sentence-level engine `truth_both`. -/
-theorem truth_pos (hsc : HenkinComplete U S) {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n)
+private theorem truth_pos (hsc : HenkinComplete U S) {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n)
     (τ : Fin n → ℕ) (hmem : closeBy φ τ ∈ S) :
     @BoundedFormulaω.Realize L[[ℕ]] (QModel hsc) (qModelStructure hsc) Empty n φ Empty.elim
       (fun i => qmk hsc (constTerm (τ i))) :=
@@ -282,7 +282,7 @@ theorem truth_pos (hsc : HenkinComplete U S) {n : ℕ} (φ : L[[ℕ]].BoundedFor
 /-- **Forward truth lemma, negative polarity** (open form).  If the negation of the constant closure
 `closeBy φ τ` belongs to `S`, then `φ` is *not* realized in `QModel hsc` at the classes of the
 constants `τ`. -/
-theorem truth_neg (hsc : HenkinComplete U S) {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n)
+private theorem truth_neg (hsc : HenkinComplete U S) {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n)
     (τ : Fin n → ℕ) (hmem : (closeBy φ τ).not ∈ S) :
     ¬ @BoundedFormulaω.Realize L[[ℕ]] (QModel hsc) (qModelStructure hsc) Empty n φ Empty.elim
       (fun i => qmk hsc (constTerm (τ i))) :=
