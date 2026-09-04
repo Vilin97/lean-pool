@@ -260,6 +260,54 @@ projects:
     msc:
       - "05D10"
       - "05C55"
+  - slug: infinite-connes-rigidity
+    title: Infinite counterexamples to Connes's rigidity conjecture
+    summary: >-
+      Constructs one finitely generated property-(T) ICC group and an infinite
+      family of finitely generated property-(T) ICC groups that are pairwise
+      nonisomorphic and are each nonisomorphic to the first group, while all of
+      their tracial group von Neumann algebras are normally star-isomorphic.
+      This unconditional infinite-family result is independent of the pooled
+      conditional two-group Connes-rigidity formalization.
+    branch: operator algebras and geometric group theory
+    entry_module: LeanPool.InfiniteConnesRigidity
+    authors:
+      - OpenAI
+      - Dean Cureton
+    source:
+      title: Ten advances in mathematics and theoretical computer science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - ConnesRigidity.infiniteConnesRigidity
+    main_results:
+      - declaration: ConnesRigidity.infiniteConnesRigidity
+        informal: >-
+          Registry-friendly alias of the exact canonical infinite-family
+          Connes-rigidity counterexample theorem below.
+      - declaration: ConnesRigidity.exists_infinite_pairwise_nonisomorphic_propertyT_icc_groups_with_isomorphic_factors
+        informal: >-
+          There exist a finitely generated property-(T) ICC group and an
+          infinite sequence of finitely generated property-(T) ICC groups such
+          that all their tracial group von Neumann algebras are normally
+          star-isomorphic, although the sequence is pairwise nonisomorphic and
+          none of its groups is isomorphic to the distinguished group.
+    tags:
+      - operator-algebras
+      - von-neumann-algebras
+      - property-t
+      - group-theory
+      - connes-rigidity
+    msc:
+      - "46L10"
+      - "20F65"
+      - "22D10"
   - slug: connes-rigidity
     title: Conditional formalization of Zhou's Connes-rigidity counterexample
     summary: >-
