@@ -64,8 +64,6 @@ private def doubleIntoTwoTorsion : E →+ twoTorsion E where
     apply Subtype.ext
     simp only [smul_add, AddMemClass.mk_add_mk]
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def doubledWithinTwoTorsion : AddSubgroup (twoTorsion E) :=
   (doubleIntoTwoTorsion E hfour).range
@@ -87,20 +85,6 @@ private abbrev twoTorsionQuotient :=
   (twoTorsion E) ⧸ doubledWithinTwoTorsion E hfour
 
 end TwoTorsion
-
-section Isomorphism
-
-variable {E : Type u} {E' : Type v} [AddCommGroup E] [AddCommGroup E']
-
-
-
-
-
-
-
-
-
-end Isomorphism
 
 section ExactExtension
 
@@ -184,8 +168,6 @@ private def iotaIntoTwoTorsion : P →+ twoTorsion E where
     ⟨F.iota v, (F.mem_twoTorsion_iff _).2 <| by simp only [sigma_iota, map_zero]⟩
   map_zero' := Subtype.ext (F.iota.map_zero)
   map_add' x y := Subtype.ext (F.iota.map_add x y)
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem iota_mem_doubledWithinTwoTorsion_iff (v : P) :
@@ -293,34 +275,11 @@ private def finiteOrbitSubgroup : AddSubgroup A where
     refine ⟨g • x, ⟨g, rfl⟩, ?_⟩
     exact (smul_neg g x).symm
 
-
-
 variable {K A}
 variable {K' : Type w} {A' : Type z}
   [Group K'] [AddCommGroup A'] [DistribMulAction K' A']
 
-
-
-
-
-
-
-
-
 end FiniteOrbits
-
-section QuotientEquivariance
-
-variable {K : Type u} {K' : Type v} {E : Type w} {E' : Type z}
-  [Group K] [Group K'] [AddCommGroup E] [AddCommGroup E']
-  [DistribMulAction K E] [DistribMulAction K' E']
-
-variable (hfour : ∀ x : E, (4 : ℕ) • x = 0)
-variable (hfour' : ∀ x : E', (4 : ℕ) • x = 0)
-
-
-
-end QuotientEquivariance
 
 section FiniteOrbitKernel
 
@@ -417,8 +376,6 @@ private def sigmaIntoRetractionKer : twoTorsion E →+ D.retraction.ker where
   map_zero' := Subtype.ext D.sigma.map_zero
   map_add' x y := Subtype.ext (D.sigma.map_add x y)
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem doubledWithin_le_sigmaIntoRetractionKer_ker :
     doubledWithinTwoTorsion E D.exponent_four ≤ D.sigmaIntoRetractionKer.ker := by
@@ -445,8 +402,6 @@ private theorem quotientSigma_mk (x : twoTorsion E) :
 private def quotientIotaBase : P →+ twoTorsionQuotient E D.exponent_four :=
   (QuotientAddGroup.mk' (doubledWithinTwoTorsion E D.exponent_four)).comp
     D.iotaIntoTwoTorsion
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem shift_range_le_quotientIotaBase_ker :
@@ -569,8 +524,6 @@ private noncomputable def shiftedQuotientToKernelEquiv
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def quotientSigmaToB : twoTorsionQuotient E D.exponent_four →+ B₀ :=
   D.retraction.ker.subtype.comp D.quotientSigma
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem quotientSigmaToB_ker_eq :
@@ -740,8 +693,6 @@ private def intrinsicConjugationAut
   QuotientGroup.congr (intrinsicDenominator I D) (intrinsicDenominator I D)
     (MulAut.conjNormal g) (intrinsicDenominator_conj_map I D g)
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def intrinsicConjugationAction
     (I D : Subgroup G) [I.Normal] [D.Normal] :
@@ -827,8 +778,6 @@ private def intrinsicSubquotientEquiv
     (intrinsicDenominator I' D')
     (intrinsicRestrictedEquiv e hI)
     (intrinsicRestrictedEquiv_map_denominator e hI hD)
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem intrinsicSubquotientEquiv_conjugation
@@ -1095,8 +1044,6 @@ private def semidirectTwoTorsionInl :
     (Multiplicative E ⋊[φ] K)).comp
       (AddMonoidHom.toMultiplicative (twoTorsion E).subtype)
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem semidirectTwoTorsionInl_injective :
     Function.Injective (semidirectTwoTorsionInl φ) := by
@@ -1131,8 +1078,6 @@ private def semidirectTwoTorsionInclusionEquiv
   (MonoidHom.ofInjective (semidirectTwoTorsionInl_injective φ)).trans
     (MulEquiv.subgroupCongr
       ((semidirectTwoTorsionInl_range φ).trans hI.symm))
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem semidirectTwoTorsionInclusionEquiv_map_doubled
@@ -1756,8 +1701,6 @@ private theorem two_mul_previous_box (N : ℕ) (hN : 0 < N) :
 private def primitiveCount (N : ℕ) : ℕ :=
   if N = 0 then 0 else 7 * (2 ^ (4 * N - 3)) + 1
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem primitiveCount_eq (N : ℕ) (hN : 0 < N) :
     primitiveCount N = 7 * 2 ^ (4 * N - 3) + 1 := by
@@ -1800,8 +1743,6 @@ private abbrev PrimitivePolynomialVector (N : ℕ) :=
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def polynomialVectorVal {N : ℕ} (v : BinaryPolynomialVector N) : V :=
   fun i ↦ (v i : R)
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[simp]
@@ -1916,10 +1857,6 @@ private theorem mem_degreeLT_of_natDegree_lt {N : ℕ} (p : R)
     by_cases hpzero : p = 0
     · simp only [hpzero, Polynomial.degree_zero, WithBot.bot_lt_natCast]
     · exact (Polynomial.natDegree_lt_iff_degree_lt hpzero).mp hp
-
-
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem card_eq_sum_card_fibers {α β : Type*} [Fintype α] [Fintype β]
@@ -2307,10 +2244,6 @@ private theorem primitiveVector_actingGroup_completion
     ∃ k : K, kLinear k e = v :=
   primitiveVector_actingGroup_completion_of_surjective pi₂_surjective v hv
 
-
-
-
-
 end
 
 section
@@ -2424,8 +2357,6 @@ private def boundedVectorLinearDirect (N : ℕ) : BinaryPolynomialVector N →�
   map_smul' c x := by
     funext i
     rfl
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem divided_square_truncated_support_quarter_direct
@@ -2583,7 +2514,6 @@ section
 open MeasureTheory Filter Set
 open scoped ENNReal Topology BigOperators
 
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem measure_detection_gap_of_uniform_primitive_counts
     {α ι : Type*} [MeasurableSpace α]
@@ -2704,10 +2634,6 @@ local instance dualProductBorel : BorelSpace (X × Y) := ⟨rfl⟩
 private def dualPointAction (k : K) (z : X × Y) : X × Y :=
   (z.1.comp (kLinear k⁻¹).toLinearMap,
     z.2.comp (kDividedSquareLinear k⁻¹).toLinearMap)
-
-
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem continuous_dualPointAction (k : K) :
@@ -2969,8 +2895,6 @@ private def homeomorphPushProbability (e : α ≃ₜ β)
     (μ : ProbabilityMeasure α) : ProbabilityMeasure β :=
   μ.map e.continuous.measurable.aemeasurable
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem homeomorphPushProbability_invariant
     (e : α ≃ₜ β) (μ : ProbabilityMeasure α)
@@ -3016,7 +2940,6 @@ end
 section
 
 open ConnesRigidity MeasureTheory
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 public
@@ -3358,18 +3281,12 @@ private def l2Curry (ι : Type u) (κ : Type v) :
     rw [lp.norm_rpow_eq_tsum (by norm_num : 0 < (2 : ℝ≥0∞).toReal)]
     rfl
 
-
-
-
-
 variable {A : Type u} {K : Type v} [Group A] [Group K]
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def semidirectFubiniCoordinates (φ : K →* MulAut A) :
     SemidirectProduct A K φ ≃ K × A :=
   SemidirectProduct.equivProd.trans (Equiv.prodComm A K)
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def semidirectFubini (φ : K →* MulAut A) :
@@ -3384,8 +3301,6 @@ private theorem semidirectFubini_apply
     (ξ : GroupL2 (SemidirectProduct A K φ)) (k : K) (a : A) :
     semidirectFubini φ ξ k a =
       ξ (⟨a, k⟩ : SemidirectProduct A K φ) := rfl
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem semidirectFubini_leftRegular_apply
@@ -3436,12 +3351,6 @@ private theorem semidirectFubini_leftRegular_inr_apply
     inv_one, one_mul] using semidirectFubini_leftRegular_apply φ
     (SemidirectProduct.inr h) ξ k a
 
-
-
-
-
-
-
 end
 
 end
@@ -3488,10 +3397,6 @@ private theorem groupFactorUnitary_apply
     groupFactorUnitary φ X F ξ h =
       F ((l2Reindex (Multiplicative.toAdd : Multiplicative A ≃ A))
         (semidirectFubini φ ξ h)) := rfl
-
-
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem groupFactorUnitary_conj_inl
@@ -3679,7 +3584,6 @@ private theorem splitFourierEquiv_kDLinear (k : K) (ξ : GroupL2 D) :
 end
 
 section
-
 
 open ConnesRigidity MeasureTheory
 open scoped ENNReal
@@ -3969,8 +3873,6 @@ private def toStarAlgEquiv (U : PaperFactorUnitaryWitness G H) :
     exact map_smul U.unitary.conjStarAlgEquiv c
       (x : GroupL2 G →L[ℂ] GroupL2 G)
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem starAlgEquiv_isNormal
     {A : Type u} {B : Type v}
@@ -4251,7 +4153,6 @@ open ConnesRigidity MeasureTheory
 open scoped ENNReal
 
 section
-
 
 universe u v w
 
@@ -4735,8 +4636,6 @@ private def spectralPairProbability
     ProbabilityMeasure (X × Y) :=
   homeomorphPushProbability pairDualHomeomorph.symm μ
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem spectralPairProbability_invariant
     (μ : ProbabilityMeasure (DiscreteCharacterSpace D))
@@ -5104,10 +5003,6 @@ section
 
 open ConnesRigidity
 
-
-
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private instance paperDividedSquareDistribMulAction : DistribMulAction K B where
   smul k b := kDividedSquareLinear k b
@@ -5156,12 +5051,6 @@ private instance paperDualDistribMulAction (n : ℕ) : DistribMulAction K (E n) 
         Multiplicative.toAdd (kEAction n k (Multiplicative.ofAdd θ))
     rw [map_mul]
     rfl
-
-
-
-
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private abbrev paperTwoTorsionQuotient (n : ℕ) :=
@@ -5301,18 +5190,10 @@ private def toPaperFamilyInput (input : PaperAnalyticInput) :
     PaperFamilyInput :=
   paperFamilyInput_of_universalLattice input.universalLattice
 
-
-
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def infinitePropertyTFiber (input : PaperAnalyticInput) :
     InfinitePropertyTFiber :=
   input.toPaperFamilyInput.toInfinitePropertyTFiber
-
-
-
-
 
 end PaperAnalyticInput
 

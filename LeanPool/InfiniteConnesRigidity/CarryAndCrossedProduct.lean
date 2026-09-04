@@ -8317,7 +8317,7 @@ private theorem realUnit_add_conj (x : ℝ) :
   apply Complex.ext <;> simp [realUnit]; ring
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
-private theorem complex_four_unit_decomposition {z : ℂ} (_hz : ‖z‖ ≤ 1) :
+private theorem complex_four_unit_decomposition {z : ℂ} :
     z = (realUnit z.re + starRingEnd ℂ (realUnit z.re)) / 2 +
       Complex.I * (realUnit z.im + starRingEnd ℂ (realUnit z.im)) / 2 := by
   rw [realUnit_add_conj, realUnit_add_conj]
@@ -8451,7 +8451,7 @@ private theorem lp_infty_four_unit_decomposition (f : Lp ℂ ⊤ μ) :
         (((‖f‖ + 1 : ℝ) : ℂ) / 2 * Complex.I) * unitImConj f x := by
   filter_upwards [normalizedCoefficient_ae f] with x hx
   have hdecomp := complex_four_unit_decomposition
-    (norm_normalizedCoefficient_le f x)
+    (z := normalizedCoefficient f x)
   rw [hx] at hdecomp
   simp only [unitReConj, unitImConj, unitRe, unitIm, hx]
   have hR : ((‖f‖ + 1 : ℝ) : ℂ) ≠ 0 := by

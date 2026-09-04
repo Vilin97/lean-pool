@@ -3514,7 +3514,7 @@ private theorem shalom_four_sector_supported_action_gap
 private theorem shalom_punctured_support_measureReal_eq_one
     {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ]
-    {support : Set Ω} (_hsupport : MeasurableSet support)
+    {support : Set Ω}
     (hmass : μ.real support = 1)
     (origin : Ω) (horigin : MeasurableSet ({origin} : Set Ω))
     (hzero : μ.real ({origin} : Set Ω) = 0) :
@@ -5547,8 +5547,7 @@ private theorem polynomialCharacterSectorSupport_measureReal_eq_one
     (hatom : μ.real ({1} : Set PolynomialRankTwoCharacter) = 0) :
     μ.real polynomialCharacterSectorSupport = 1 := by
   exact shalom_punctured_support_measureReal_eq_one μ
-    polynomialCharacterNoFree_measurable hfree 1
-    (measurableSet_singleton 1) hatom
+    hfree 1 (measurableSet_singleton 1) hatom
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem polynomialCharacterSector_action_gap

@@ -57,8 +57,6 @@ private def crossedOperatorBlock (X : HaarProbabilityAction K Ω)
       lp.singleContinuousLinearMap ℂ
         (fun _ : K ↦ crossedBaseHilbert X) 2 k
 
-
-
 omit [Group K] in
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem crossedFiberwiseOperator_single
@@ -1081,8 +1079,6 @@ private def quotientFixedOrthogonalIsometry
     exact map_smul (π (E.splitting h) : V →L[ℂ] V) c (x : V)
   norm_map' x := Unitary.norm_map (π (E.splitting h)) x
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private def quotientFixedOrthogonalIsometryHom
     (E : SplitAbelianExtension A G H)
@@ -1110,8 +1106,6 @@ private def quotientFixedOrthogonalRepresentation
     UnitaryRepresentation H (quotientFixedSubmodule E π)ᗮ :=
   Unitary.linearIsometryEquiv.symm.toMonoidHom.comp
     (quotientFixedOrthogonalIsometryHom E π)
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem quotientFixedOrthogonal_no_nonzero_invariant
@@ -1495,8 +1489,6 @@ def probabilityMeasure
     (x : V) (hx : ‖x‖ = 1) :
     ProbabilityMeasure (DiscreteCharacterSpace A) :=
   ⟨Φ.measure x, Φ.measure_isProbabilityMeasure x hx⟩
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 public
@@ -2380,8 +2372,6 @@ def spectralKernelOperator
     StarSubalgebra.le_topologicalClosure _
       (StarAlgebra.subset_adjoin ℂ _ ⟨a, rfl⟩)⟩
 
-
-
 omit [TopologicalSpace A] [DiscreteTopology A] in
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[simp]
@@ -2466,8 +2456,6 @@ def spectralCharacter
     rw [spectralKernelOperator_add, map_mul]
   continuous_toFun := continuous_of_discreteTopology
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 public
 theorem spectralCharacter_continuous
@@ -2509,8 +2497,6 @@ private def spectralCharacterEvaluation
     (a : A) : C(DiscreteCharacterSpace A, ℂ) :=
   ⟨fun χ ↦ ((χ (Multiplicative.ofAdd a) : Circle) : ℂ),
     continuous_character_evaluation a⟩
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem jointFunctionalCalculus_characterEvaluation
@@ -2683,8 +2669,6 @@ def dualCharacterHomeomorph
     rw [← dualCharacterAction_mul, mul_inv_cancel, dualCharacterAction_one]
   continuous_toFun := dualCharacterAction_continuous action h
   continuous_invFun := dualCharacterAction_continuous action h⁻¹
-
-
 
 section Riesz
 
@@ -2906,8 +2890,6 @@ private def quotientSpectralOperatorConjugation
     exact map_smul (quotientOperatorConjugation E π h) c
       (T : V →L[ℂ] V)
 
-
-
 omit [TopologicalSpace A] [DiscreteTopology A] in
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[simp]
@@ -2946,8 +2928,6 @@ private def dualCharacterActionContinuousMap
     (action : H →* Multiplicative (AddAut A)) (h : H) :
     C(DiscreteCharacterSpace A, DiscreteCharacterSpace A) :=
   ⟨dualCharacterAction action h, dualCharacterAction_continuous action h⟩
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem jointFunctionalCalculus_quotient_covariance
@@ -3047,8 +3027,6 @@ private def characterRealSqrt (f : C_c(X, ℝ)) : C_c(X, ℝ) where
   continuous_toFun := Real.continuous_sqrt.comp f.continuous
   hasCompactSupport' := HasCompactSupport.of_compactSpace _
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem characterRealComplexification_eq_star_mul_sqrt
     (f : C_c(X, ℝ)) (hf : ∀ y : X, 0 ≤ f y) :
@@ -3080,8 +3058,6 @@ def characterVectorFunctionalLinear
         r * (inner ℂ x
           ((calculus (characterRealComplexification f)) x)).re
     rw [inner_smul_right, Complex.re_ofReal_mul]
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem characterVectorFunctionalLinear_nonneg
@@ -3118,8 +3094,6 @@ def characterVectorFunctional
         characterVectorFunctionalLinear calculus x g
     rw [map_sub] at hpositive
     linarith
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem characterVectorFunctional_one
@@ -3234,8 +3208,6 @@ def jointCharacterFunctional
     (π : UnitaryRepresentation G W) (x : W) :
     C_c(DiscreteCharacterSpace A, ℝ) →ₚ[ℝ] ℝ :=
   characterVectorFunctional (jointFunctionalCalculusOperator E π) x
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 public
@@ -3866,8 +3838,6 @@ theorem abs_conditionedProbability_measureReal_sub_le
 
 end ConditionalSpectralMeasure
 
-
-
 end
 
 section
@@ -3892,10 +3862,6 @@ public
 def IsAffineFixed (α : AffineHilbertAction G V)
     (K : Subgroup G) (x : V) : Prop :=
   ∀ k : K, α (k : G) x = x
-
-
-
-
 
 omit [CompleteSpace V] in
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
@@ -3935,8 +3901,6 @@ def affineLinearRepresentation
     (α : AffineHilbertAction G V) : UnitaryRepresentation G V :=
   Unitary.linearIsometryEquiv.symm.toMonoidHom.comp
     (affineLinearIsometryHom α)
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem affineLinearRepresentation_sub_fixed
@@ -4053,8 +4017,6 @@ private def affineLinearStabilizer
         rw [map_mul]
         rfl
       _ = x := by simp only [inv_mul_cancel, map_one, OneMemClass.coe_one, one_apply_eq_self]
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem affineLinear_invariant_of_sup_eq_top
@@ -4550,12 +4512,6 @@ private theorem hilbertKernelRealization_pair_vector_add
     horth (g, h), horth (h, j), horth (g, j)]
   simp only [add_zero, sub_self]
 
-
-
-
-
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[expose]
 public
@@ -4586,8 +4542,6 @@ def unitaryCocycleAffineAction
       (π g (π h x) + π g (b h)) + b g
     abel
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[simp]
 private theorem unitaryCocycleAffineAction_linearIsometryEquiv
@@ -4600,12 +4554,6 @@ private theorem unitaryCocycleAffineAction_linearIsometryEquiv
   apply LinearIsometryEquiv.ext
   intro x
   rfl
-
-
-
-
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[expose]
@@ -5765,18 +5713,6 @@ theorem unitary_mem_normalFixedSubmodule_orthogonal
         ((π g⁻¹ : H →L[ℂ] H) y) x
     _ = 0 := hinner
 
-
-
-
-
-
-
-
-
-
-
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[expose]
 public
@@ -5828,8 +5764,6 @@ def normalFixedOrthogonalRepresentation :
       (π g : H →L[ℂ] H) ((π h : H →L[ℂ] H) (x : H))
     rw [map_mul]
     rfl
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 public
@@ -6116,6 +6050,8 @@ private theorem affineIsometryEquiv_hilbertCircumcenter_fixed
     rw [hdist]
     exact hilbertCircumcenter_encloses S hSne hS w hw
   · exact hilbertCircumcenter_encloses S hSne hS
+
+variable {G : Type u} [Group G]
 
 section AffineActions
 
@@ -6574,8 +6510,6 @@ def diagonalDisplacement
   ⟨fun n => (π g : V →L[ℂ] V) (v n) - v n,
     diagonalDisplacement_memℓp_of_summable π v g (hsum g)⟩
 
-
-
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[expose]
 public
@@ -6601,8 +6535,6 @@ def diagonalLinearIsometryHom
       (π g : V →L[ℂ] V) ((π h : V →L[ℂ] V) (x n))
     rw [map_mul]
     rfl
-
-
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[expose]
@@ -7450,7 +7382,7 @@ private theorem gaussian_defect_le_parameter (u : ℝ) :
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem gaussian_parameter_lt_one_of_displacement
     {t r d : ℝ}
-    (_ht : 0 < t) (_hr : 0 ≤ r) (hd : 0 ≤ d) (hdlt : d < 1)
+    (hd : 0 ≤ d) (hdlt : d < 1)
     (hsq : d ^ 2 = 2 * (1 - Real.exp (-(t * r ^ 2)))) :
     t * r ^ 2 < 1 := by
   have hdsq : d ^ 2 < 1 := by nlinarith
@@ -7467,11 +7399,11 @@ private theorem gaussian_parameter_lt_one_of_displacement
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem gaussian_affine_displacement_le
     {t r d : ℝ}
-    (ht : 0 < t) (hr : 0 ≤ r) (hd : 0 ≤ d) (hdlt : d < 1)
+    (ht : 0 < t) (hd : 0 ≤ d) (hdlt : d < 1)
     (hsq : d ^ 2 = 2 * (1 - Real.exp (-(t * r ^ 2)))) :
     r ≤ Real.sqrt (1 / t) := by
   apply Real.le_sqrt_of_sq_le
-  have hlt := gaussian_parameter_lt_one_of_displacement ht hr hd hdlt hsq
+  have hlt := gaussian_parameter_lt_one_of_displacement hd hdlt hsq
   apply le_of_lt
   apply (lt_div_iff₀ ht).mpr
   linarith
@@ -7558,7 +7490,6 @@ private theorem gaussian_relativeAffineFixedPoint_of_uniform
   refine ⟨Real.sqrt (1 / t), ?_⟩
   intro n
   exact gaussian_affine_displacement_le ht
-    (norm_nonneg (α (n : G) x - x))
     (norm_nonneg ((π (n : G) : W →L[ℂ] W) ξ - ξ))
     (hN n) (hformula (n : G))
 
@@ -7731,8 +7662,6 @@ variable {I V : Type u} [NormedAddCommGroup V]
 private def gaussianKernel (v : I → V) (t : ℝ) : Matrix I I ℂ :=
   fun i j => (Real.exp (-t * ‖v i - v j‖ ^ 2) : ℂ)
 
-
-
 omit [InnerProductSpace ℂ V] in
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 @[simp]
@@ -7825,16 +7754,6 @@ private theorem gaussianKernel_posSemidef
     exact gaussianKernel_factor v t i j
   rw [hfactor]
   exact hexp.hadamard hweight
-
-section AffineActions
-
-variable {G : Type u} [Group G] [CompleteSpace V]
-
-
-
-
-
-end AffineActions
 
 end
 
