@@ -28,8 +28,10 @@ open RationalClosure
 open RationalFusionRun
 open RationalTransfiniteExtension
 
+/-- The block-size schedule used by the assembled rational construction. -/
 abbrev N : ℕ → ℕ := RationalFusionRun.blockSize
 theorem hN (l : ℕ) : 0 < N l := RationalFusionRun.blockSize_pos l
+/-- The bounded-independence schedule used by the assembled rational construction. -/
 abbrev M : ℕ → ℕ := RationalFusionRun.independenceBound
 
 /-- The local limiting character supplied by the concrete fusion. -/

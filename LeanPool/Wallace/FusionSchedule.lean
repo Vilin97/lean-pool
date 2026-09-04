@@ -195,8 +195,7 @@ theorem card_union_le_tupleLengthBound {G : Type*} [DecidableEq G]
     _ = tupleLengthBound l := rfl
 
 /-- The bounded-deletion lemma specialized to the numerical schedule. -/
-theorem exists_stage_deletion {G : Type*} [AddCommGroup G] [IsAddTorsionFree G]
-    [DecidableEq G]
+theorem exists_stage_deletion {G : Type*} [AddCommGroup G] [DecidableEq G]
     {l : ℕ} (A X : Finset G) (hA : A.card ≤ protectedBound l)
     (hX : BoundedIndependent (stageIndependenceBound l) X) :
     ∃ Y : Finset G, Y ⊆ X ∧ (X \ Y).card ≤ A.card ∧

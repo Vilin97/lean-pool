@@ -39,13 +39,19 @@ ultrafilters, and a compatible separating character for every nonzero element.  
 does not assume any topology or compactness property of the free Abelian group.
 -/
 structure SeparationPackage (I : Type u) where
+  /-- Codes for injective sequences in the free Abelian group. -/
   Code : Type u
+  /-- The identification of codes with injective sequences. -/
   codeEquiv : Code ≃ InjectiveSequence' (I →₀ ℤ)
+  /-- The distinguished coordinate assigned to each code. -/
   codeIndex : Code → I
+  /-- The selected subsequence of the sequence represented by each code. -/
   subsequence : Code → ℕ → ℕ
   subsequence_strictMono : ∀ c, StrictMono (subsequence c)
+  /-- The free ultrafilter along which the selected subsequence converges. -/
   ultrafilter : Code → Ultrafilter ℕ
   ultrafilter_free : ∀ c, (ultrafilter c : Filter ℕ) ≤ cofinite
+  /-- A circle-valued character separating each nonzero group element. -/
   character : {x : I →₀ ℤ // x ≠ 0} → (I →₀ ℤ) →+ UnitAddCircle
   character_self_ne_zero : ∀ x, character x x ≠ 0
   character_limit :

@@ -28,10 +28,14 @@ universe u v
 
 /-- The minimal triangular input for rational-valued prepared sequences. -/
 structure Data (I : Type u) [LT I] where
+  /-- Codes for the prepared injective sequences. -/
   Code : Type v
+  /-- The injective assignment of a distinguished coordinate to every code. -/
   codeIndex : Code ↪ I
+  /-- The prepared rational sequence represented by each code. -/
   prepared : Code → ℕ → I →₀ ℚ
   support_lt : ∀ c n i, i ∈ (prepared c n).support → i < codeIndex c
+  /-- The ultrafilter along which the prepared sequence is required to converge. -/
   p : Code → Ultrafilter ℕ
 
 /-- Closure under all supports needed by a code whose distinguished coordinate is local. -/
@@ -173,6 +177,7 @@ theorem globalCoordinate_codeIndex_of_not_mem
 
 /-! ## Global character, extension, and admissibility -/
 
+/-- The global character assembled from the recursively extended rational coordinates. -/
 def globalCharacter {I : Type u} [LinearOrder I] [WellFoundedLT I]
     (E : Data I) (D : Set I) (χD : (D →₀ ℚ) →+ UnitAddCircle) :
     (I →₀ ℚ) →+ UnitAddCircle :=
@@ -274,6 +279,7 @@ theorem globalCharacter_admissible
       extendRationalCoordinate_one]
     exact hlim
 
+/-- Rational transfinite-extension data over the canonical continuum index. -/
 abbrev ContinuumData := Data RationalTriangularPreprocess.ContinuumIndex
 
 end

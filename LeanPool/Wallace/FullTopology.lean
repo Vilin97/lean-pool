@@ -60,15 +60,22 @@ theorem countablyCompact_of_nonzero_ultrafilter_limits
 /-- The exact character data from which all conclusions of the group theorem follow.  This
 interface applies without change to free Abelian groups and rational vector groups. -/
 structure FullCharacterPackage (G : Type u) [AddCommGroup G] where
+  /-- Codes for injective sequences in `G`. -/
   Code : Type v
+  /-- The identification of codes with injective sequences. -/
   codeEquiv : Code ≃ InjectiveSequence' G
+  /-- The selected subsequence of the sequence represented by each code. -/
   subsequence : Code → ℕ → ℕ
   subsequence_strictMono : ∀ c, StrictMono (subsequence c)
+  /-- The free ultrafilter along which the selected subsequence converges. -/
   ultrafilter : Code → Ultrafilter ℕ
   ultrafilter_free : ∀ c, (ultrafilter c : Filter ℕ) ≤ cofinite
+  /-- The prescribed nonzero limit of the selected subsequence. -/
   limitPoint : Code → G
   limitPoint_ne_zero : ∀ c, limitPoint c ≠ 0
+  /-- Indices for the separating family of circle-valued characters. -/
   CharacterIndex : Type v
+  /-- The separating family of circle-valued additive characters. -/
   character : CharacterIndex → G →+ UnitAddCircle
   character_detects : ∀ x : G, x ≠ 0 → ∃ j, character j x ≠ 0
   character_limit :
@@ -237,6 +244,7 @@ theorem initial_onlyEventuallyConstantConvergentSequences
   rw [← C.full_initialTopology_eq]
   exact C.toFullCharacterPackage.initial_onlyEventuallyConstantConvergentSequences
 
+/-- The uniform structure induced by all characters in the separation package. -/
 @[reducible] def initialUniformSpace (C : SeparationPackage I) :
     UniformSpace (I →₀ ℤ) :=
   C.toFullCharacterPackage.initialUniformSpace

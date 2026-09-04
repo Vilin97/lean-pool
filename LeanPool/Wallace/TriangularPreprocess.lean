@@ -234,15 +234,15 @@ theorem exists_index_gt_avoiding_finset
 
 /-- State of the recursive block selector.  `values l` contains the values already selected in
 block `l`; `last` is the last source index used. -/
-structure BlockSelectionState (G : Type*) where
+private structure BlockSelectionState (G : Type*) where
   last : ℕ
   values : ℕ → Finset G
 
-def initialBlockSelectionState (G : Type*) : BlockSelectionState G where
+private def initialBlockSelectionState (G : Type*) : BlockSelectionState G where
   last := 0
   values := fun _ => ∅
 
-noncomputable def excludedAt
+private noncomputable def excludedAt
     {G : Type*} [AddCommGroup G] (M block : ℕ → ℕ) (n : ℕ)
     (st : BlockSelectionState G) : Finset G := by
   classical
@@ -251,13 +251,13 @@ noncomputable def excludedAt
 
 /-- The next source index: strictly later than the previous one and outside both the values
 already used in this block and every bounded forbidden equation over them. -/
-def nextBlockIndex
+private def nextBlockIndex
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) : ℕ :=
   Classical.choose <|
     exists_index_gt_avoiding_finset hu (excludedAt M block n st) st.last
 
-theorem nextBlockIndex_spec
+private theorem nextBlockIndex_spec
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) :
     st.last < nextBlockIndex u hu M block n st ∧
@@ -265,7 +265,7 @@ theorem nextBlockIndex_spec
   Classical.choose_spec <|
     exists_index_gt_avoiding_finset hu (excludedAt M block n st) st.last
 
-theorem nextBlockIndex_not_mem_values
+private theorem nextBlockIndex_not_mem_values
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) :
     u (nextBlockIndex u hu M block n st) ∉ st.values (block n) := by
@@ -273,7 +273,7 @@ theorem nextBlockIndex_not_mem_values
   exact fun h => (nextBlockIndex_spec u hu M block n st).2
     (Finset.mem_union_left _ h)
 
-theorem nextBlockIndex_not_forbidden
+private theorem nextBlockIndex_not_forbidden
     {G : Type*} [AddCommGroup G] [IsAddTorsionFree G]
     (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) :
@@ -284,7 +284,7 @@ theorem nextBlockIndex_not_forbidden
   exact (nextBlockIndex_spec u hu M block n st).2
     (Finset.mem_union_right _ <| forbidden_mem_forbiddenFinset h)
 
-noncomputable def blockSelectionStep
+private noncomputable def blockSelectionStep
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) (st : BlockSelectionState G) :
     BlockSelectionState G := by
@@ -296,7 +296,7 @@ noncomputable def blockSelectionStep
         (insert (u k) (st.values (block n))) }
 
 /-- States after the first `n` positions of the new sequence have been selected. -/
-def blockSelectionStates
+private def blockSelectionStates
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) : ℕ → BlockSelectionState G
   | 0 => initialBlockSelectionState G
@@ -308,7 +308,7 @@ def blockSubsequenceIndex
     (M block : ℕ → ℕ) (n : ℕ) : ℕ :=
   (blockSelectionStates u hu M block (n + 1)).last
 
-theorem blockSelectionStates_last_lt_succ
+private theorem blockSelectionStates_last_lt_succ
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) :
     (blockSelectionStates u hu M block n).last <
@@ -324,7 +324,7 @@ theorem blockSubsequenceIndex_strictMono
   intro n
   exact blockSelectionStates_last_lt_succ u hu M block (n + 1)
 
-theorem blockSelectionStates_boundedIndependent
+private theorem blockSelectionStates_boundedIndependent
     {G : Type*} [AddCommGroup G] [IsAddTorsionFree G]
     (u : ℕ → G) (hu : Function.Injective u) (M block : ℕ → ℕ)
     (n l : ℕ) :
@@ -348,7 +348,7 @@ theorem blockSelectionStates_boundedIndependent
       · simp only [blockSelectionStep, ne_eq, hl, not_false_eq_true, Function.update_of_ne]
         exact ih
 
-theorem blockSelectionStates_values_mono_succ
+private theorem blockSelectionStates_values_mono_succ
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n l : ℕ) :
     (blockSelectionStates u hu M block n).values l ⊆
@@ -360,14 +360,14 @@ theorem blockSelectionStates_values_mono_succ
     simp [blockSelectionStep]
   · simp [blockSelectionStep, hl]
 
-theorem blockSelectionStates_values_monotone
+private theorem blockSelectionStates_values_monotone
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (l : ℕ) :
     Monotone fun n => (blockSelectionStates u hu M block n).values l :=
   monotone_nat_of_le_succ fun n =>
     blockSelectionStates_values_mono_succ u hu M block n l
 
-theorem selected_value_mem_state
+private theorem selected_value_mem_state
     {G : Type*} [AddCommGroup G] (u : ℕ → G) (hu : Function.Injective u)
     (M block : ℕ → ℕ) (n : ℕ) :
     u (blockSubsequenceIndex u hu M block n) ∈

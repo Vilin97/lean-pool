@@ -24,6 +24,7 @@ noncomputable section
 
 /-- Finite blocks which move to infinity. -/
 structure BlockSystem where
+  /-- The finite block carrying a given natural-number label. -/
   block : ℕ → Finset ℕ
   block_nonempty : ∀ l, (block l).Nonempty
   eventually_disjoint_finite :

@@ -28,6 +28,7 @@ noncomputable section
 
 open FiniteCombinatorics
 
+/-- The canonical well-ordered index type of cardinality continuum. -/
 abbrev ContinuumIndex := TriangularPreprocess.ContinuumIndex
 
 /-- The direct sum of continuum many copies of the additive group of rationals. -/
@@ -88,6 +89,7 @@ def rationalSequenceCodeEquiv : ContinuumIndex ≃ RationalInjectiveSequences :=
   Classical.choice <| Cardinal.eq.mp <|
     mk_continuumIndex.trans mk_rationalInjectiveSequences.symm
 
+/-- The injective rational sequence represented by the code `a`. -/
 def codedSequence (a : ContinuumIndex) : ℕ → ContinuumRationalGroup :=
   (rationalSequenceCodeEquiv a).1
 

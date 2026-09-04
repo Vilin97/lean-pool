@@ -45,7 +45,7 @@ open FiniteCombinatorics
 
 /-- A scheduled bounded-deletion and finite-fusion stage. -/
 theorem exists_character_after_deletion
-    {G : Type} [AddCommGroup G] [IsAddTorsionFree G] [DecidableEq G]
+    {G : Type} [AddCommGroup G] [DecidableEq G]
     (l : ℕ) (A X : Finset G)
     (hA : A.card ≤ FusionSchedule.protectedBound l)
     (hXcard : X.card ≤ FusionSchedule.blockSize l)
@@ -193,10 +193,15 @@ theorem limitCharacter_ne_zero_of_initial_half (R : FusionRun G) {x : G}
 
 /-- Abstract block data associated with one relevant code in the local closure. -/
 structure CodeBlocks (R : FusionRun G) where
+  /-- The ultrafilter used for this code. -/
   p : Ultrafilter ℕ
+  /-- The finite block at each stage label. -/
   block : ℕ → Finset ℕ
+  /-- The stages assigned to this code. -/
   labels : Set ℕ
+  /-- The positions deleted from each block. -/
   deletions : ℕ → Finset ℕ
+  /-- The local group difference represented by each position. -/
   difference : ℕ → G
   retained_mem : (⋃ l ∈ labels, ↑(block l \ deletions l)) ∈ p
   retained_in_stage : ∀ l n, l ∈ labels → n ∈ block l \ deletions l →
@@ -262,7 +267,9 @@ end FusionRun
 /-- The finite state before stage `l`: its character and the union of every set retained at
 earlier stages.  The cardinality invariant is the exact invariant used by `protectedBound`. -/
 structure FusionState (G : Type) [AddCommGroup G] (l : ℕ) where
+  /-- The character constructed before stage `l`. -/
   character : G →+ UnitAddCircle
+  /-- The union of all finite sets retained before stage `l`. -/
   pastRetained : Finset G
   pastRetained_card_le : pastRetained.card ≤ FusionSchedule.accumulatedSize l
 
@@ -295,7 +302,9 @@ theorem stageGuard_card_le {G : Type} [AddCommGroup G] [DecidableEq G]
 structure FusionStep {G : Type} [AddCommGroup G] [DecidableEq G]
     (fresh : ℕ → Finset G) (enumeration : ℕ → G) (x : G)
     (l : ℕ) (S : FusionState G l) where
+  /-- The subset of the fresh block retained at this stage. -/
   retained : Finset G
+  /-- The character produced by this stage. -/
   next : G →+ UnitAddCircle
   retained_subset : retained ⊆ fresh l
   deleted_card_le : (fresh l \ retained).card ≤ (stageGuard enumeration x l S).card
@@ -305,7 +314,7 @@ structure FusionStep {G : Type} [AddCommGroup G] [DecidableEq G]
 
 /-- The finite deletion/fusion theorem supplies the next state at every stage. -/
 theorem fusionStep_nonempty
-    {G : Type} [AddCommGroup G] [IsAddTorsionFree G] [DecidableEq G]
+    {G : Type} [AddCommGroup G] [DecidableEq G]
     (fresh : ℕ → Finset G) (enumeration : ℕ → G) (x : G)
     (hfresh_card : ∀ l, (fresh l).card ≤ FusionSchedule.blockSize l)
     (hfresh_independent : ∀ l,
@@ -324,7 +333,7 @@ theorem fusionStep_nonempty
 
 /-- A stage choice, fixed once and reused by both the state recursion and its certificate. -/
 def chosenFusionStep
-    {G : Type} [AddCommGroup G] [IsAddTorsionFree G] [DecidableEq G]
+    {G : Type} [AddCommGroup G] [DecidableEq G]
     (fresh : ℕ → Finset G) (enumeration : ℕ → G) (x : G)
     (hfresh_card : ∀ l, (fresh l).card ≤ FusionSchedule.blockSize l)
     (hfresh_independent : ∀ l,
@@ -335,7 +344,7 @@ def chosenFusionStep
 
 /-- Update the state using the single chosen stage certificate. -/
 def nextFusionState
-    {G : Type} [AddCommGroup G] [IsAddTorsionFree G] [DecidableEq G]
+    {G : Type} [AddCommGroup G] [DecidableEq G]
     (fresh : ℕ → Finset G) (enumeration : ℕ → G) (x : G)
     (hfresh_card : ∀ l, (fresh l).card ≤ FusionSchedule.blockSize l)
     (hfresh_independent : ∀ l,
@@ -364,7 +373,7 @@ def nextFusionState
 
 /-- The dependent natural-number recursion starting from `initial`. -/
 def fusionStates
-    {G : Type} [AddCommGroup G] [IsAddTorsionFree G] [DecidableEq G]
+    {G : Type} [AddCommGroup G] [DecidableEq G]
     (fresh : ℕ → Finset G) (enumeration : ℕ → G) (x : G)
     (hfresh_card : ∀ l, (fresh l).card ≤ FusionSchedule.blockSize l)
     (hfresh_independent : ∀ l,
@@ -375,7 +384,7 @@ def fusionStates
       (fusionStates fresh enumeration x hfresh_card hfresh_independent initial l)
 
 @[simp] theorem fusionStates_zero
-    {G : Type} [AddCommGroup G] [IsAddTorsionFree G] [DecidableEq G]
+    {G : Type} [AddCommGroup G] [DecidableEq G]
     (fresh : ℕ → Finset G) (enumeration : ℕ → G) (x : G)
     (hfresh_card : ∀ l, (fresh l).card ≤ FusionSchedule.blockSize l)
     (hfresh_independent : ∀ l,
@@ -387,7 +396,7 @@ def fusionStates
 /- The rest of the construction uses shorter local names. -/
 section ScheduledConstruction
 
-variable {G : Type} [AddCommGroup G] [IsAddTorsionFree G] [DecidableEq G]
+variable {G : Type} [AddCommGroup G] [DecidableEq G]
 variable (fresh : ℕ → Finset G) (enumeration : ℕ → G) (x : G)
 variable (hfresh_card : ∀ l, (fresh l).card ≤ FusionSchedule.blockSize l)
 variable (hfresh_independent : ∀ l,
@@ -459,6 +468,7 @@ def scheduledRun (henumeration : Function.Surjective enumeration) : FusionRun G 
 
 /-- Public certificate exported by the scheduling recursion. -/
 structure ScheduledRunCertificate where
+  /-- The certified infinite fusion run. -/
   run : FusionRun G
   initial_half : run.character 0 x = ((1 / 2 : ℝ) : UnitAddCircle)
   distinguished_protected : ∀ l, x ∈ run.guardSet l
@@ -527,6 +537,7 @@ structure ConcreteCodeBlocks
     (x : ContinuumFreeGroup)
     (R : FusionRun (closure N hN M x →₀ ℤ))
     (a : RelevantCode N hN M x) where
+  /-- The underlying abstract retained-block data. -/
   blocks : R.CodeBlocks
   p_eq : blocks.p = ultrafilter N hN a.1
   block_eq : ∀ l, blocks.block l = blockPositions N hN l
@@ -584,10 +595,12 @@ relevant code; all limiting arguments are discharged above. -/
 structure LocalRunCertificate
     (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
     (x : {x : ContinuumFreeGroup // x ≠ 0}) where
+  /-- The fusion run on the countable local group generated by `x`. -/
   run : FusionRun (closure N hN M x.1 →₀ ℤ)
   self_ne_zero :
     run.limitCharacter
       (Finsupp.subtypeDomain (closure N hN M x.1) x.1) ≠ 0
+  /-- A retained-block certificate for every locally relevant code. -/
   codeBlocks : ∀ a : RelevantCode N hN M x.1,
     ConcreteCodeBlocks N hN M x.1 run a
 

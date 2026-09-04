@@ -31,6 +31,7 @@ open FiniteCombinatorics
 
 variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
 
+/-- Codes whose distinguished coordinate lies in the local closure of `x`. -/
 abbrev RelevantCode (x : ContinuumRationalGroup) :=
   {a : ContinuumIndex // codeIndex a ∈ closure N hN M x}
 
@@ -48,6 +49,7 @@ private theorem relevantLabels_pairwise (x : ContinuumRationalGroup) :
   apply hab
   exact Subtype.ext heq
 
+/-- Pairwise-disjoint refinements of the block labels of all relevant codes. -/
 def refinedLabel (x : ContinuumRationalGroup) :
     RelevantCode N hN M x → Set ℕ := by
   letI : Countable (RelevantCode N hN M x) := relevantCode_countable N hN M x
@@ -81,6 +83,7 @@ theorem refinedLabel_unique (x : ContinuumRationalGroup) {l : ℕ}
   by_contra hab
   exact Set.disjoint_left.mp (refinedLabel_pairwise N hN M x hab) ha hb
 
+/-- The unique relevant code assigned to stage `l`, when one exists. -/
 def activeCode (x : ContinuumRationalGroup) (l : ℕ) :
     Option (RelevantCode N hN M x) := by
   classical
@@ -101,6 +104,7 @@ theorem activeCode_eq_some_of_mem (x : ContinuumRationalGroup) (l : ℕ)
 
 /-! ## The countable local rational group -/
 
+/-- The additive inclusion of the local rational direct sum into the ambient one. -/
 def closureInclusion (x : ContinuumRationalGroup) :
     (closure N hN M x →₀ ℚ) →+ ContinuumRationalGroup := by
   classical
@@ -127,6 +131,7 @@ theorem closureInclusion_injective (x : ContinuumRationalGroup) :
         (.subtype (closure N hN M x : ContinuumIndex → Prop)) z at h
   exact h
 
+/-- The prepared difference restricted to the local coordinate closure. -/
 def localDifference (x : ContinuumRationalGroup)
     (a : RelevantCode N hN M x) (n : ℕ) : closure N hN M x →₀ ℚ := by
   classical
@@ -183,6 +188,7 @@ theorem localDifference_injective (x : ContinuumRationalGroup)
   rw [← closureInclusion_localDifference N hN M x a m,
     ← closureInclusion_localDifference N hN M x a n, hmn]
 
+/-- The finite block of local prepared differences for a relevant code. -/
 def localDifferenceBlock (x : ContinuumRationalGroup)
     (a : RelevantCode N hN M x) (l : ℕ) :
     Finset (closure N hN M x →₀ ℚ) :=
@@ -212,6 +218,7 @@ theorem localDifferenceBlock_boundedIndependent (x : ContinuumRationalGroup)
   rw [localDifferenceBlock_image_inclusion]
   exact differenceBlock_boundedIndependent N hN M a.1 l
 
+/-- The local difference block active at stage `l`, or the empty block. -/
 def localActiveBlock (x : ContinuumRationalGroup) (l : ℕ) :
     Finset (closure N hN M x →₀ ℚ) :=
   match activeCode N hN M x l with

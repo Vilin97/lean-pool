@@ -79,6 +79,7 @@ theorem preparedDifference_injective (a : ContinuumIndex) :
   apply prepared_injective N hN M a
   exact sub_left_injective hmn
 
+/-- The concrete block system used by the rational construction. -/
 abbrev blocks : BlockSystem := BlockSystem.ofBlockPositions N hN
 
 /-- A free ultrafilter refining the block-density filter for code `a`. -/

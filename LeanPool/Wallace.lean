@@ -9,6 +9,17 @@ import LeanPool.Wallace.RealMain
 import LeanPool.Wallace.TychonoffWallace
 
 /-!
+# The Wallace problem in ZFC
+
+Source: arxiv:2608.17317, doi:10.48550/arXiv.2608.17317, url:https://github.com/vo-rodrigues/wallace-problem-zfc-paper
+Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
+Status: verified
+Main declarations: `Wallace.commutativeTychonoffWallaceCounterexampleExists`
+Tags: wallace-problem, topological-groups, set-theoretic-topology
+MSC: 22A05, 54D30, 20K20
+-/
+
+/-!
 # Countably compact groups and the Wallace counterexample
 
 This library proves the paper's main theorem for every torsion-free Abelian group of cardinality

@@ -94,12 +94,12 @@ omit [AddCommGroup G] in
   rw [coefficientPatterns, Fintype.mem_piFinset]
   simp only [mem_boundedIntFinset_iff]
 
-noncomputable def equationSolution (B : Finset G) (q : ℤ) (c : B → ℤ) : G :=
+private noncomputable def equationSolution (B : Finset G) (q : ℤ) (c : B → ℤ) : G :=
   by
     classical
     exact if h : ∃ x : G, q • x + ∑ b, c b • (b : G) = 0 then Classical.choose h else 0
 
-theorem equationSolution_spec {B : Finset G} {q : ℤ} {c : B → ℤ}
+private theorem equationSolution_spec {B : Finset G} {q : ℤ} {c : B → ℤ}
     (h : ∃ x : G, q • x + ∑ b, c b • (b : G) = 0) :
     q • equationSolution B q c + ∑ b, c b • (b : G) = 0 := by
   classical
@@ -209,21 +209,21 @@ theorem exists_integer_dependence (s : ℕ) (b : Fin (s + 1) → Fin s → ℤ) 
 abbrev BoundedInt (Q : ℕ) := ↑(boundedIntFinset Q)
 
 /-- All bounded vector families of every dimension at most `r`. -/
-structure BoundedVectorFamily (r Q : ℕ) where
+private structure BoundedVectorFamily (r Q : ℕ) where
   size : Fin (r + 1)
   vec : Fin (size + 1) → Fin size → BoundedInt Q
 deriving Fintype
 
-noncomputable def chosenIntegerDependence {r Q : ℕ} (B : BoundedVectorFamily r Q) :
+private noncomputable def chosenIntegerDependence {r Q : ℕ} (B : BoundedVectorFamily r Q) :
     Fin (B.size + 1) → ℤ :=
   Classical.choose <| exists_integer_dependence B.size fun i j ↦ B.vec i j
 
-theorem chosenIntegerDependence_spec {r Q : ℕ} (B : BoundedVectorFamily r Q) :
+private theorem chosenIntegerDependence_spec {r Q : ℕ} (B : BoundedVectorFamily r Q) :
     (∃ i, chosenIntegerDependence B i ≠ 0) ∧
       ∀ j, ∑ i, chosenIntegerDependence B i * (B.vec i j : ℤ) = 0 :=
   Classical.choose_spec <| exists_integer_dependence B.size fun i j ↦ B.vec i j
 
-noncomputable def familyDependenceBound {r Q : ℕ} (B : BoundedVectorFamily r Q) : ℕ :=
+private noncomputable def familyDependenceBound {r Q : ℕ} (B : BoundedVectorFamily r Q) : ℕ :=
   Finset.univ.sup fun i ↦ Int.natAbs (chosenIntegerDependence B i)
 
 /-- A uniform bound for an integer dependence among any `s+1` vectors in `ℤ^s`, for `s ≤ r`,
@@ -267,6 +267,7 @@ def HasMixedRelation (Q : ℕ) (A Y : Finset G) : Prop :=
     (∃ y ∈ Y, c y ≠ 0) ∧
       (∑ a ∈ A, b a • a) + ∑ y ∈ Y, c y • y = 0
 
+/-- No nontrivial relation of coefficient height at most `Q` uses both `A` and `Y`. -/
 def MixedRelationFree (Q : ℕ) (A Y : Finset G) : Prop :=
   ¬ HasMixedRelation Q A Y
 

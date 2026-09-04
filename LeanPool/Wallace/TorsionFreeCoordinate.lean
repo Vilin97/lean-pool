@@ -26,8 +26,10 @@ noncomputable section
 
 /-- The witness form of the paper's coordinatization lemma. -/
 structure RationalCoordinatization (G : Type) [AddCommGroup G] where
+  /-- An additive embedding of `G` into the continuum-indexed rational direct sum. -/
   embedding : G →+ RationalTriangularPreprocess.ContinuumRationalGroup
   embedding_injective : Function.Injective embedding
+  /-- A chosen preimage in `G` of every standard basis vector. -/
   basisPreimage : TriangularPreprocess.ContinuumIndex → G
   embedding_basisPreimage : ∀ i,
     embedding (basisPreimage i) = Finsupp.single i 1
