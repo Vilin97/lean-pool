@@ -77,6 +77,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
                                      https://github.com/Arthur742Ramos/finite-graph-fundamental-group
   LeanPool/FiveEighthsTheorem        https://github.com/ldct/lean-monorepo
   LeanPool/Flean                     https://github.com/josephmckinsey/flean
+  LeanPool/FltRegular                https://github.com/leanprover-community/flt-regular
   LeanPool/FoZfc                     https://github.com/ishiut/fo_zfc
   LeanPool/FormalLearningTheory      https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
   LeanPool/FriezePatterns            https://github.com/Antoine-dSG/frieze_patterns
