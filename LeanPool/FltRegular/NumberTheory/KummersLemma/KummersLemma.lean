@@ -12,7 +12,6 @@ public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
 
 import LeanPool.FltRegular.NumberTheory.Cyclotomic.MoreLemmas
-import LeanPool.FltRegular.NumberTheory.Hilbert92
 import LeanPool.FltRegular.NumberTheory.Hilbert94
 import LeanPool.FltRegular.NumberTheory.KummersLemma.Field
 

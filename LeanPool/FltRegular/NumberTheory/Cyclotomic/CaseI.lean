@@ -9,7 +9,6 @@ module
 public import Mathlib.NumberTheory.NumberField.CMField
 public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 
-import LeanPool.FltRegular.NumberTheory.Cyclotomic.CyclRat
 import LeanPool.FltRegular.NumberTheory.Cyclotomic.MoreLemmas
 import LeanPool.FltRegular.NumberTheory.Cyclotomic.UnitLemmas
 

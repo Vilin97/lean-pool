@@ -13,7 +13,6 @@ public import Mathlib.RingTheory.ClassGroup.Basic
 import LeanPool.FltRegular.CaseII.AuxLemmas
 import LeanPool.FltRegular.NumberTheory.Cyclotomic.MoreLemmas
 import LeanPool.FltRegular.NumberTheory.Cyclotomic.UnitLemmas
-import LeanPool.FltRegular.NumberTheory.Hilbert92
 import LeanPool.FltRegular.NumberTheory.KummersLemma.KummersLemma
 
 /-!

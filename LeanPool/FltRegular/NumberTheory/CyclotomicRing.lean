@@ -8,7 +8,6 @@ module
 
 public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
-import LeanPool.FltRegular.NumberTheory.Cyclotomic.MoreLemmas
 
 /-!
 # Cyclotomic integers

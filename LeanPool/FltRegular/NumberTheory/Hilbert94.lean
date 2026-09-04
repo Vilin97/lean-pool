@@ -10,7 +10,6 @@ public import Mathlib.NumberTheory.NumberField.ClassNumber
 import Mathlib.RepresentationTheory.Homological.GroupCohomology.Hilbert90
 
 import LeanPool.FltRegular.NumberTheory.Hilbert92
-import LeanPool.FltRegular.NumberTheory.RegularPrimes
 import LeanPool.FltRegular.NumberTheory.Unramified
 
 /-!

@@ -8,7 +8,6 @@ module
 
 public import LeanPool.FltRegular.NumberTheory.SystemOfUnits
 public import Mathlib.NumberTheory.NumberField.Units.DirichletTheorem
-public import Mathlib.RingTheory.Henselian
 public import Mathlib.GroupTheory.FiniteAbelian.Basic
 public import Mathlib.LinearAlgebra.Dimension.Torsion.Finite
 

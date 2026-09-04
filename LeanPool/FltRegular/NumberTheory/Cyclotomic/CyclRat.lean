@@ -63,13 +63,6 @@ theorem diff_of_roots [hp : Fact p.Prime] (ph : 5 ≤ p) {η₁ η₂ : R}
     ⟨u, hu⟩
   refine ⟨-u, by grind [Units.val_neg]⟩
 
-theorem diff_of_roots2 [Fact p.Prime] (ph : 5 ≤ p) {η₁ η₂ : R}
-    (hη₁ : η₁ ∈ nthRootsFinset p 1) (hη₂ : η₂ ∈ nthRootsFinset p 1)
-    (hdiff : η₁ ≠ η₂) (hwlog : η₁ ≠ 1) :
-    ∃ u : Rˣ, η₂ - η₁ = u * (1 - η₁) := by
-  obtain ⟨u, hu⟩ := diff_of_roots ph hη₁ hη₂ hdiff hwlog
-  exact ⟨-u, by simp [← hu]⟩
-
 lemma fltIdeals_coprime2_lemma [Fact p.Prime] (ph : 5 ≤ p) {x y : ℤ} {η₁ η₂ : R}
     (hη₁ : η₁ ∈ nthRootsFinset p 1)
     (hη₂ : η₂ ∈ nthRootsFinset p 1) (hdiff : η₁ ≠ η₂) (hp : IsCoprime x y)
@@ -84,14 +77,15 @@ lemma fltIdeals_coprime2_lemma [Fact p.Prime] (ph : 5 ≤ p) {x y : ℤ} {η₁ 
       (mem_sup_left (mem_fltIdeals x y η₁)) (mem_sup_right (mem_fltIdeals x y η₂))
     rwa [add_sub_add_left_eq_sub, ← sub_mul, hv, mul_right_comm] at this
   have hel2 : ∃ v : Rˣ, (v : R) * x * (1 - η₁) ∈ I := by
-    obtain ⟨v, hv⟩ := diff_of_roots2 ph hη₁ hη₂ hdiff hwlog
-    refine ⟨v, ?_⟩
+    obtain ⟨v, hv⟩ := diff_of_roots ph hη₁ hη₂ hdiff hwlog
+    refine ⟨-v, ?_⟩
     have := Ideal.add_mem _ (mul_mem_left _ η₂ (mem_sup_left (mem_fltIdeals x y η₁)))
         (mul_mem_left _ (-η₁) (mem_sup_right (mem_fltIdeals x y η₂)))
     have h1 : η₂ * (↑x + η₁ * ↑y) + -η₁ * (↑x + η₂ * ↑y) =
         (η₂ - η₁) * x := by
       ring
-    rwa [h1, hv, mul_right_comm] at this
+    rw [h1, ← neg_sub, hv] at this
+    simpa [Units.val_neg, mul_assoc, mul_left_comm, mul_comm] using this
   have hy : (y : R) * (1 - η₁) ∈ I := by
     obtain ⟨v, hv⟩ := hel1
     rw [mul_assoc] at hv

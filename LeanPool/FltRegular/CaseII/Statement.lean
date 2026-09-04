@@ -8,7 +8,6 @@ module
 
 public import LeanPool.FltRegular.NumberTheory.RegularPrimes
 import LeanPool.FltRegular.CaseII.InductionStep
-import LeanPool.FltRegular.NumberTheory.Cyclotomic.MoreLemmas
 import Mathlib.Order.CompletePartialOrder
 public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
