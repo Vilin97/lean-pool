@@ -4,7 +4,26 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import Mathlib
+module
+
+public import Mathlib.Combinatorics.SimpleGraph.Acyclic
+public import Mathlib.Combinatorics.SimpleGraph.Extremal.Basic
+public import Mathlib.Data.Real.Basic
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Combinatorics.SimpleGraph.Coloring.Constructions
+import Mathlib.Data.SetLike.Fintype
+import Mathlib.FieldTheory.Finite.GaloisField
+import Mathlib.LinearAlgebra.BilinearForm.IsometryEquiv
+import Mathlib.LinearAlgebra.BilinearForm.Orthogonal
+import Mathlib.LinearAlgebra.Projectivization.Cardinality
+import Mathlib.Tactic.ENatToNat
+
+/-!
+# A counterexample to the Erdős--Simonovits compactness conjecture
+
+This file constructs a finite family of connected bipartite cyclic graphs whose
+family extremal number grows strictly more slowly than that of every member.
+-/
 
 namespace CompactnessConjecture
 
@@ -13,15 +32,20 @@ noncomputable section Foundations
 open Filter Finset SimpleGraph
 open scoped Topology
 
-structure FiniteGraph where
+/-- A finite simple graph packaged with its vertex count. -/
+public structure FiniteGraph where
+  /-- The number of vertices. -/
   order : ℕ
+  /-- The graph on the standard finite vertex type. -/
   graph : SimpleGraph (Fin order)
 
-def FamilyFree (family : Finset FiniteGraph) {n : ℕ}
+/-- A host graph contains no member of the forbidden family. -/
+public def FamilyFree (family : Finset FiniteGraph) {n : ℕ}
     (host : SimpleGraph (Fin n)) : Prop :=
   ∀ forbidden ∈ family, forbidden.graph.Free host
 
-noncomputable def familyExtremal (family : Finset FiniteGraph)
+/-- The maximum edge count of a host avoiding every member of a finite family. -/
+public noncomputable def familyExtremal (family : Finset FiniteGraph)
     (n : ℕ) : ℕ := by
   classical
   exact (Finset.univ.filter (FamilyFree family)).sup
@@ -30,13 +54,15 @@ noncomputable def familyExtremal (family : Finset FiniteGraph)
 def IsCyclicFamily (family : Finset FiniteGraph) : Prop :=
   ∀ forbidden ∈ family, ¬ forbidden.graph.IsAcyclic
 
-def IsCompactFamily (family : Finset FiniteGraph) : Prop :=
+/-- The extremal function of one member controls that of the whole family. -/
+public def IsCompactFamily (family : Finset FiniteGraph) : Prop :=
   ∃ forbidden ∈ family, ∃ C : ℝ, 0 < C ∧
     ∀ᶠ n : ℕ in atTop,
       (SimpleGraph.extremalNumber n forbidden.graph : ℝ) ≤
         C * (familyExtremal family n : ℝ)
 
-def CompactnessConjectureStatement : Prop :=
+/-- The Erdős--Simonovits compactness conjecture. -/
+public def CompactnessConjectureStatement : Prop :=
   ∀ family : Finset FiniteGraph,
     family.Nonempty → IsCyclicFamily family → IsCompactFamily family
 
@@ -51,7 +77,6 @@ end Foundations
 noncomputable section DensityReduction
 
 open Finset SimpleGraph
-open scoped Classical
 
 lemma edgeFinset_card_eq_natCard {V : Type*} (G : SimpleGraph V)
     [Fintype G.edgeSet] :
@@ -110,12 +135,14 @@ lemma booleanCut_deleteIncidence_flip
   simp only [SimpleGraph.deleteIncidenceSet_adj, booleanCut_adj]
   by_cases hx : x = v
   · subst x
-    simp only [flipBooleanColor_self, ne_eq, Bool.not_eq_eq_eq_not, Bool.not_eq_not, not_true_eq_false, false_and,
+    simp only [flipBooleanColor_self, ne_eq, Bool.not_eq_eq_eq_not, Bool.not_eq_not,
+        not_true_eq_false, false_and,
       and_false]
   by_cases hy : y = v
   · subst y
     simp only [flipBooleanColor_self, ne_eq, Bool.not_eq_not, not_true_eq_false, and_false]
-  simp only [flipBooleanColor, ne_eq, hx, not_false_eq_true, Function.update_of_ne, hy, and_self, and_true]
+  simp only [flipBooleanColor, ne_eq, hx, not_false_eq_true, Function.update_of_ne, hy,
+      and_self, and_true]
 
 lemma booleanCut_flip_neighborFinset
     {V : Type*} [Fintype V] [DecidableEq V]
@@ -129,7 +156,8 @@ lemma booleanCut_flip_neighborFinset
     booleanCut_adj]
   by_cases hwv : w = v
   · subst w
-    simp only [SimpleGraph.irrefl, flipBooleanColor_self, ne_eq, not_true_eq_false, and_self, not_false_eq_true,
+    simp only [SimpleGraph.irrefl, flipBooleanColor_self, ne_eq, not_true_eq_false, and_self,
+        not_false_eq_true,
       and_true]
   · cases hcv : color v <;> cases hcw : color w <;>
       simp [flipBooleanColor, hwv, hcv, hcw]
@@ -151,8 +179,9 @@ lemma booleanCut_flip_degree_add
     simpa only [SimpleGraph.mem_neighborFinset] using hw
   simpa only [SimpleGraph.mem_neighborFinset] using hadj.1
 
+open Classical in
 theorem exists_maximum_booleanCut
-    {V : Type*} [Fintype V] [DecidableEq V]
+    {V : Type*} [Fintype V]
     (G : SimpleGraph V) [DecidableRel G.Adj] :
     ∃ color : V → Bool, ∀ other : V → Bool,
       (booleanCut G other).edgeFinset.card ≤
@@ -164,8 +193,9 @@ theorem exists_maximum_booleanCut
     (Finset.univ_nonempty)
   exact ⟨color, fun other => hcolor other (Finset.mem_univ other)⟩
 
+open Classical in
 lemma maximum_booleanCut_degree
-    {V : Type*} [Fintype V] [DecidableEq V]
+    {V : Type*} [Fintype V]
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (color : V → Bool)
     (hmax : ∀ other : V → Bool,
@@ -208,8 +238,9 @@ lemma maximum_booleanCut_degree
     (booleanCut G color).degree v = G.degree v at hpartition
   omega
 
+open Classical in
 theorem exists_bipartite_half_edges
-    {V : Type*} [Fintype V] [DecidableEq V]
+    {V : Type*} [Fintype V]
     (G : SimpleGraph V) [DecidableRel G.Adj] :
     ∃ B : SimpleGraph V,
       B.IsBipartite ∧ B ≤ G ∧
@@ -240,11 +271,13 @@ lemma natCard_support_le_card
     (Finite.card_subtype_le (fun v : V => v ∈ G.support))
 
 lemma natCard_support_deleteIncidence_add_one_le
-    {V : Type*} [Fintype V] [DecidableEq V]
-    (G : SimpleGraph V) [DecidableRel G.Adj]
+    {V : Type*} [Finite V]
+    (G : SimpleGraph V)
     {v : V} (hv : v ∈ G.support) :
     Nat.card (G.deleteIncidenceSet v).support + 1 ≤
       Nat.card G.support := by
+  classical
+  let _ : Fintype V := Fintype.ofFinite V
   have hdrop := SimpleGraph.card_support_deleteIncidenceSet G hv
   have hpositive : 0 < Nat.card G.support :=
     Finite.card_pos_iff.mpr ⟨⟨v, hv⟩⟩
@@ -261,8 +294,9 @@ noncomputable def sharpPruningScore {V : Type*} [Fintype V]
   2 * sharpPruningPotential originalEdges H +
     (if 0 < Nat.card H.edgeSet then 1 else 0)
 
+open Classical in
 theorem exists_maximum_sharp_pruning_subgraph
-    {V : Type*} [Fintype V] [DecidableEq V]
+    {V : Type*} [Fintype V]
     (base : SimpleGraph V) (originalEdges : ℕ) :
     ∃ H : SimpleGraph V, H ≤ base ∧
       (∀ D : SimpleGraph V, D ≤ base →
@@ -289,8 +323,9 @@ theorem exists_maximum_sharp_pruning_subgraph
     exact hmax D
       (Finset.mem_filter.mpr ⟨Finset.mem_univ D, hD⟩)
 
+open Classical in
 lemma maximum_sharp_pruning_subgraph_degree
-    {V : Type*} [Fintype V] [DecidableEq V]
+    {V : Type*} [Fintype V]
     (base H : SimpleGraph V) [DecidableRel H.Adj]
     (originalEdges : ℕ) (hHB : H ≤ base)
     (hmax : ∀ D : SimpleGraph V, D ≤ base →
@@ -351,8 +386,9 @@ lemma maximum_sharp_pruning_subgraph_degree
   simp only [degree_eq_natCard_neighborSet]
   omega
 
+open Classical in
 lemma maximum_sharp_pruning_subgraph_edge_positive
-    {V : Type*} [Fintype V] [DecidableEq V]
+    {V : Type*} [Fintype V]
     (original base H : SimpleGraph V) [DecidableRel original.Adj]
     (hpositive : 0 < original.edgeFinset.card)
     (hhalf : original.edgeFinset.card ≤ 2 * base.edgeFinset.card)
@@ -398,7 +434,8 @@ lemma maximum_sharp_pruning_subgraph_edge_positive
         2 * (Nat.card original.edgeSet * Fintype.card V) := by
     rw [hHbot]
     simp only [sharpPruningScore, sharpPruningPotential, edgeSet_bot, Nat.card_eq_fintype_card,
-      Fintype.card_eq_zero, mul_zero, Fintype.card_ofFinset, support_bot, tsub_zero, zero_add, lt_self_iff_false,
+      Fintype.card_eq_zero, mul_zero, Fintype.card_ofFinset, support_bot, tsub_zero, zero_add,
+          lt_self_iff_false,
       ↓reduceIte, add_zero]
   have hscoreContradiction :
       2 * sharpPruningPotential (Nat.card original.edgeSet) base + 1 ≤
@@ -407,15 +444,16 @@ lemma maximum_sharp_pruning_subgraph_edge_positive
       2 * sharpPruningPotential (Nat.card original.edgeSet) base + 1 =
           sharpPruningScore (Nat.card original.edgeSet) base := by
         unfold sharpPruningScore
-        rw [if_pos hbasePositive]
+        rw [ite_eq_left hbasePositive]
       _ ≤ sharpPruningScore (Nat.card original.edgeSet) H :=
         hbaseScore
       _ = 2 * (Nat.card original.edgeSet * Fintype.card V) :=
         hHscore
   omega
 
+open Classical in
 theorem exists_bipartite_min_degree_supported_subgraph
-    {V : Type*} [Fintype V] [DecidableEq V]
+    {V : Type*} [Fintype V]
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hpositive : 0 < G.edgeFinset.card) :
     ∃ H : SimpleGraph V,
@@ -437,6 +475,7 @@ theorem exists_bipartite_min_degree_supported_subgraph
     (maximum_sharp_pruning_subgraph_degree
       cut H (Nat.card G.edgeSet) hH hpotential hv)
 
+open Classical in
 theorem exists_bipartite_min_degree_subgraph
     {n : ℕ} (G : SimpleGraph (Fin n))
     (hpositive : 0 < G.edgeFinset.card) :
@@ -504,7 +543,7 @@ theorem exists_bipartite_min_degree_subgraph
       using hdegree
   have hNn : N ≤ n := by
     simpa only [Fintype.card_fin] using Fintype.card_le_of_injective f f.injective
-  letI : Nonempty (Fin N) := ⟨⟨0, hsupportPositive⟩⟩
+  let _ : Nonempty (Fin N) := ⟨⟨0, hsupportPositive⟩⟩
   obtain ⟨v, hv⟩ := B.exists_minimal_degree_vertex
   have hmin : G.edgeFinset.card ≤ 2 * n * B.minDegree := by
     rw [hv]
@@ -529,6 +568,32 @@ def subdivisionRelation (k : ℕ) :
 
 def SubdivisionGraph (k : ℕ) : SimpleGraph (SubdivisionVertex k) :=
   SimpleGraph.fromRel (subdivisionRelation k)
+
+instance subdivisionRelationDecidable (k : ℕ) :
+    DecidableRel (subdivisionRelation k)
+  | .inl (.inl base), .inr (otherBase, _) => by
+      change Decidable (base = otherBase)
+      infer_instance
+  | .inl (.inr center), .inr (_, otherCenter) => by
+      change Decidable (center = otherCenter)
+      infer_instance
+  | .inl (.inl _), .inl _ => by
+      change Decidable False
+      infer_instance
+  | .inl (.inr _), .inl _ => by
+      change Decidable False
+      infer_instance
+  | .inr _, .inl _ => by
+      change Decidable False
+      infer_instance
+  | .inr _, .inr _ => by
+      change Decidable False
+      infer_instance
+
+instance subdivisionGraphDecidableRel (k : ℕ) :
+    DecidableRel (SubdivisionGraph k).Adj :=
+  @instDecidableRelAdjFromRelOfDecidableEq _ inferInstance _
+    (subdivisionRelationDecidable k)
 
 def subdivisionColor (k : ℕ) : SubdivisionVertex k → Bool
   | .inl _ => false
@@ -705,13 +770,15 @@ theorem proposedFamilyFree_four_cycle
     {n : ℕ} {host : SimpleGraph (Fin n)}
     (hfree : FamilyFree proposedFamily host) :
     (SimpleGraph.cycleGraph 4).Free host := by
-  simpa only [not_nonempty_iff, finiteCycle] using FamilyFree.member four_cycle_mem_proposedFamily hfree
+  simpa only [not_nonempty_iff,
+      finiteCycle] using FamilyFree.member four_cycle_mem_proposedFamily hfree
 
 theorem proposedFamilyFree_six_cycle
     {n : ℕ} {host : SimpleGraph (Fin n)}
     (hfree : FamilyFree proposedFamily host) :
     (SimpleGraph.cycleGraph 6).Free host := by
-  simpa only [not_nonempty_iff, finiteCycle] using FamilyFree.member six_cycle_mem_proposedFamily hfree
+  simpa only [not_nonempty_iff,
+      finiteCycle] using FamilyFree.member six_cycle_mem_proposedFamily hfree
 
 lemma jQuotient_mem_proposedFamily
     {f : JVertex → JVertex} (hf : JAdmissible f) :
@@ -788,16 +855,20 @@ theorem standardSymplecticForm_nondegenerate_left
   funext i
   fin_cases i
   · simpa only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, Pi.zero_apply, standardSymplecticForm,
-      Matrix.cons_val_one, Matrix.cons_val_zero, mul_one, mul_zero, sub_zero, Matrix.cons_val, sub_self, add_zero] using
+      Matrix.cons_val_one, Matrix.cons_val_zero, mul_one, mul_zero, sub_zero, Matrix.cons_val,
+          sub_self, add_zero] using
       h ![0, 1, 0, 0]
   · simpa only [Nat.reduceAdd, Fin.mk_one, Fin.isValue, Pi.zero_apply, standardSymplecticForm,
-      Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, mul_one, zero_sub, Matrix.cons_val, sub_self, add_zero,
+      Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, mul_one, zero_sub, Matrix.cons_val,
+          sub_self, add_zero,
       neg_eq_zero] using h ![1, 0, 0, 0]
   · simpa only [Nat.reduceAdd, Fin.reduceFinMk, Fin.isValue, Pi.zero_apply, standardSymplecticForm,
-      Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, sub_self, Matrix.cons_val, mul_one, sub_zero, zero_add] using
+      Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, sub_self, Matrix.cons_val, mul_one,
+          sub_zero, zero_add] using
       h ![0, 0, 0, 1]
   · simpa only [Nat.reduceAdd, Fin.reduceFinMk, Fin.isValue, Pi.zero_apply, standardSymplecticForm,
-      Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, sub_self, Matrix.cons_val, mul_one, zero_sub, zero_add,
+      Matrix.cons_val_one, Matrix.cons_val_zero, mul_zero, sub_self, Matrix.cons_val, mul_one,
+          zero_sub, zero_add,
       neg_eq_zero] using h ![0, 0, 1, 0]
 
 theorem standardSymplecticForm_nondegenerate_right
@@ -849,7 +920,8 @@ lemma symplecticPoint_le_orthogonal (p : SymplecticPoint K) :
   change ∀ y ∈ p.1, standardSymplecticForm K y x = 0
   intro y hy
   by_cases hx0 : x = 0
-  · simp only [standardSymplecticForm, Fin.isValue, hx0, Pi.zero_apply, mul_zero, sub_self, add_zero]
+  · simp only [standardSymplecticForm, Fin.isValue, hx0, Pi.zero_apply, mul_zero, sub_self,
+      add_zero]
   · have hxsub : (⟨x, hx⟩ : p.1) ≠ 0 := by
       intro h
       apply hx0
@@ -867,7 +939,8 @@ lemma symplecticPointOrthogonal_finrank
     ((standardSymplecticBilin K).orthogonal p.1) = 3
   rw [LinearMap.BilinForm.finrank_orthogonal
     (standardSymplecticBilin_nondegenerate K), p.2]
-  simp only [SymplecticVector, Module.finrank_fintype_fun_eq_card, Fintype.card_fin, Nat.add_one_sub_one]
+  simp only [SymplecticVector, Module.finrank_fintype_fun_eq_card, Fintype.card_fin,
+      Nat.add_one_sub_one]
 
 abbrev SymplecticPointRadical (p : SymplecticPoint K) :
     Submodule K (SymplecticPointOrthogonal K p) :=
@@ -927,7 +1000,8 @@ lemma symplectic_two_plane_isotropic
   · exact hSorth hv u huP
   · have hle : p.1 ⊔ K ∙ u ≤ S := by
       apply sup_le hpS
-      exact (Submodule.span_le).mpr (by simpa only [Set.singleton_subset_iff, SetLike.mem_coe] using hu)
+      exact (Submodule.span_le).mpr (by simpa only [Set.singleton_subset_iff,
+          SetLike.mem_coe] using hu)
     have hspan : p.1 ⊔ K ∙ u = S :=
       Submodule.eq_of_le_of_finrank_eq hle (by
         rw [Submodule.finrank_sup_span_singleton huP, p.2, hdim])
@@ -1177,7 +1251,8 @@ lemma symplectic_triangle_points_collinear
     have hcd := Lpr.2.2 c (hrLpr hc) d (hpLpr hd)
     have hce := Lqr.2.2 c (hrLqr hc) e (hqLqr he)
     have hcf := Lpr.2.2 c (hrLpr hc) f (hrLpr hf)
-    simp only [standardSymplecticForm_add_right, standardSymplecticForm_add_left, had, hbd, add_zero, hcd, hae,
+    simp only [standardSymplecticForm_add_right, standardSymplecticForm_add_left, had, hbd,
+        add_zero, hcd, hae,
       hbe, hce, haf, hbf, hcf]
   have hbound : Module.finrank K T ≤ 2 :=
     symplectic_isotropic_finrank_le_two K T hiso
@@ -1213,7 +1288,8 @@ def symplecticQuadrangle : SimpleGraph (QuadrangleVertex K) :=
 theorem symplecticQuadrangle_incidence_adj
     (p : SymplecticPoint K) (L : SymplecticLine K) :
     (symplecticQuadrangle K).Adj (.inl p) (.inr L) ↔ p.1 ≤ L.1 := by
-  simp only [symplecticQuadrangle, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, quadrangleIncidence,
+  simp only [symplecticQuadrangle, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+      quadrangleIncidence,
     or_false, true_and]
 
 theorem symplecticQuadrangle_adjacent_to_point
@@ -1221,7 +1297,8 @@ theorem symplecticQuadrangle_adjacent_to_point
     (h : (symplecticQuadrangle K).Adj (.inl p) v) :
     ∃ L : SymplecticLine K, v = .inr L ∧ p.1 ≤ L.1 := by
   rcases v with q | L
-  · simp only [symplecticQuadrangle, fromRel_adj, ne_eq, Sum.inl.injEq, quadrangleIncidence, or_self,
+  · simp only [symplecticQuadrangle, fromRel_adj, ne_eq, Sum.inl.injEq, quadrangleIncidence,
+      or_self,
       and_false] at h
   · exact ⟨L, rfl, (symplecticQuadrangle_incidence_adj K p L).mp h⟩
 
@@ -1232,7 +1309,8 @@ theorem symplecticQuadrangle_adjacent_to_line
   rcases v with p | M
   · exact ⟨p, rfl,
       (symplecticQuadrangle_incidence_adj K p L).mp h.symm⟩
-  · simp only [symplecticQuadrangle, fromRel_adj, ne_eq, Sum.inr.injEq, quadrangleIncidence, or_self,
+  · simp only [symplecticQuadrangle, fromRel_adj, ne_eq, Sum.inr.injEq, quadrangleIncidence,
+      or_self,
       and_false] at h
 
 theorem symplecticQuadrangle_common_neighbor_unique
@@ -1246,8 +1324,10 @@ theorem symplecticQuadrangle_common_neighbor_unique
     rcases v with q | M <;>
     rcases w with r | R <;>
     rcases z with s | S <;>
-    simp [symplecticQuadrangle, SimpleGraph.fromRel_adj,
-      quadrangleIncidence] at huw hvw huz hvz
+    simp only [symplecticQuadrangle, fromRel_adj, ne_eq,
+      Sum.inl.injEq, reduceCtorEq, not_false_eq_true,
+      quadrangleIncidence, or_self, and_false, or_false, true_and,
+      Sum.inr.injEq, false_or] at huw hvw huz hvz
   · apply congrArg Sum.inr
     apply symplecticLine_eq_of_points K
       (fun hpq => huv (congrArg Sum.inl hpq))
@@ -1384,7 +1464,8 @@ lemma symplecticPoint_card [Finite K] :
       Nat.card_congr
         (Projectivization.equivSubmodule K (SymplecticVector K)).symm
     _ = ∑ i ∈ Finset.range 4, (Nat.card K) ^ i :=
-      Projectivization.card_of_finrank K (SymplecticVector K) (by simp only [Module.finrank_fintype_fun_eq_card, Fintype.card_fin])
+      Projectivization.card_of_finrank K (SymplecticVector K) (by simp only
+          [Module.finrank_fintype_fun_eq_card, Fintype.card_fin])
     _ = (Nat.card K + 1) * ((Nat.card K) ^ 2 + 1) := by
       simp only [Finset.sum_range_succ, Finset.range_one, Finset.sum_singleton, pow_zero, pow_one]
       ring
@@ -1420,8 +1501,8 @@ lemma symplecticIncidence_card_by_points [Finite K] :
     Nat.card (SymplecticIncidence K) =
       Nat.card (SymplecticPoint K) * (Nat.card K + 1) := by
   classical
-  letI : Fintype (SymplecticPoint K) := Fintype.ofFinite _
-  letI : Fintype (SymplecticLine K) := Fintype.ofFinite _
+  let _ : Fintype (SymplecticPoint K) := Fintype.ofFinite _
+  let _ : Fintype (SymplecticLine K) := Fintype.ofFinite _
   calc
     Nat.card (SymplecticIncidence K) =
         Nat.card (Σ p : SymplecticPoint K,
@@ -1439,8 +1520,8 @@ lemma symplecticIncidence_card_by_lines [Finite K] :
     Nat.card (SymplecticIncidence K) =
       Nat.card (SymplecticLine K) * (Nat.card K + 1) := by
   classical
-  letI : Fintype (SymplecticPoint K) := Fintype.ofFinite _
-  letI : Fintype (SymplecticLine K) := Fintype.ofFinite _
+  let _ : Fintype (SymplecticPoint K) := Fintype.ofFinite _
+  let _ : Fintype (SymplecticLine K) := Fintype.ofFinite _
   calc
     Nat.card (SymplecticIncidence K) =
         Nat.card (Σ L : SymplecticLine K,
@@ -1508,7 +1589,8 @@ lemma symplecticIncidenceToEdge_surjective :
     rw [huv]
     exact e.2
   rcases u with p | L <;> rcases v with q | M
-  · simp only [symplecticQuadrangle, fromRel_adj, ne_eq, Sum.inl.injEq, quadrangleIncidence, or_self,
+  · simp only [symplecticQuadrangle, fromRel_adj, ne_eq, Sum.inl.injEq, quadrangleIncidence,
+      or_self,
       and_false] at hadj
   · refine ⟨⟨(p, M),
         (symplecticQuadrangle_incidence_adj K p M).mp hadj⟩, ?_⟩
@@ -1518,7 +1600,8 @@ lemma symplecticIncidenceToEdge_surjective :
         (symplecticQuadrangle_incidence_adj K q L).mp hadj.symm⟩, ?_⟩
     apply Subtype.ext
     exact Sym2.eq_swap.trans huv
-  · simp only [symplecticQuadrangle, fromRel_adj, ne_eq, Sum.inr.injEq, quadrangleIncidence, or_self,
+  · simp only [symplecticQuadrangle, fromRel_adj, ne_eq, Sum.inr.injEq, quadrangleIncidence,
+      or_self,
       and_false] at hadj
 
 noncomputable def symplecticIncidenceEquivEdge :
@@ -1618,12 +1701,7 @@ def thetaCycleVertex : Fin 8 → SubdivisionVertex 2 :=
 def thetaCycleCopy :
     SimpleGraph.Copy (SimpleGraph.cycleGraph 8) thetaGraph := by
   refine ⟨⟨thetaCycleVertex, ?_⟩, ?_⟩
-  · intro u v hadj
-    fin_cases u <;> fin_cases v <;>
-      simp_all [thetaCycleVertex, SubdivisionGraph,
-        subdivisionRelation, SimpleGraph.cycleGraph]
-    all_goals
-      exact (of_decide_eq_false rfl) hadj
+  · decide
   · decide
 
 def jThetaVertex (copy : Fin 2) : SubdivisionVertex 2 → JVertex
@@ -1649,7 +1727,9 @@ def jThetaCopy (copy : Fin 2) :
       · left
         rcases u with (u | u) | u <;>
           rcases v with (v | v) | v <;>
-          simp_all [subdivisionRelation, jTemplateRelation, jThetaVertex]
+          simp_all only [ne_eq, Sum.inl.injEq, reduceCtorEq,
+            not_false_eq_true, subdivisionRelation, jTemplateRelation,
+            jThetaVertex, Prod.mk.eta, Sum.inr.injEq, and_self]
     · apply (SimpleGraph.fromRel_adj
         jTemplateRelation (jThetaVertex copy u)
         (jThetaVertex copy v)).mpr
@@ -1661,7 +1741,9 @@ def jThetaCopy (copy : Fin 2) :
       · right
         rcases u with (u | u) | u <;>
           rcases v with (v | v) | v <;>
-          simp_all [subdivisionRelation, jTemplateRelation, jThetaVertex]
+          simp_all only [ne_eq, Sum.inl.injEq, reduceCtorEq,
+            not_false_eq_true, subdivisionRelation, jTemplateRelation,
+            jThetaVertex, Prod.mk.eta, Sum.inr.injEq, and_self]
   · fin_cases copy <;> decide
 
 lemma jThetaVertex_mem (copy : Fin 2)
@@ -1685,12 +1767,7 @@ def gammaCycleVertex : Fin 8 → SubdivisionVertex 3 :=
 def gammaCycleCopy :
     SimpleGraph.Copy (SimpleGraph.cycleGraph 8) gammaGraph := by
   refine ⟨⟨gammaCycleVertex, ?_⟩, ?_⟩
-  · intro u v hadj
-    fin_cases u <;> fin_cases v <;>
-      simp_all [gammaCycleVertex, SubdivisionGraph,
-        subdivisionRelation, SimpleGraph.cycleGraph]
-    all_goals
-      exact (of_decide_eq_false rfl) hadj
+  · decide
   · decide
 
 def kGammaVertex (copy : Fin 2)
@@ -1872,14 +1949,16 @@ lemma subdivisionGraph_base_pair_adj
     (k : ℕ) (base : Fin 3) (center : Fin k) :
     (SubdivisionGraph k).Adj
       (.inl (.inl base)) (.inr (base, center)) := by
-  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, subdivisionRelation,
+  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+      subdivisionRelation,
     or_false, and_self]
 
 lemma subdivisionGraph_center_pair_adj
     (k : ℕ) (base : Fin 3) (center : Fin k) :
     (SubdivisionGraph k).Adj
       (.inl (.inr center)) (.inr (base, center)) := by
-  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, subdivisionRelation,
+  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+      subdivisionRelation,
     or_false, and_self]
 
 lemma subdivisionPoint_pair_incidence
@@ -2310,12 +2389,14 @@ theorem symplecticQuadrangle_no_point_jTemplate
   have hjoin0 : jTemplate.Adj
       (.inl (.inl (0 : Fin 4)))
       (.inr (.inr ())) := by
-    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation,
+    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+        jTemplateRelation,
       zero_ne_one, or_false, and_self]
   have hjoin1 : jTemplate.Adj
       (.inl (.inl (1 : Fin 4)))
       (.inr (.inr ())) := by
-    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation,
+    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+        jTemplateRelation,
       one_ne_zero, or_true, or_false, and_self]
   have hleft := hom.map_rel hjoin0
   have hright := hom.map_rel hjoin1
@@ -2455,8 +2536,10 @@ theorem symplecticQuadrangle_kTemplate_has_line_gamma
   have hjoin : kTemplate.Adj
       ((0 : Fin 2), kSpecifiedCenter)
       ((1 : Fin 2), kSpecifiedCenter) := by
-    simp only [kTemplate, Fin.isValue, kSpecifiedCenter, fromRel_adj, ne_eq, Prod.mk.injEq, zero_ne_one, and_true,
-      not_false_eq_true, kTemplateRelation, false_and, and_self, or_true, one_ne_zero, or_self, or_false]
+    simp only [kTemplate, Fin.isValue, kSpecifiedCenter, fromRel_adj, ne_eq, Prod.mk.injEq,
+        zero_ne_one, and_true,
+      not_false_eq_true, kTemplateRelation, false_and, and_self, or_true, one_ne_zero, or_self,
+          or_false]
   have hadj := hom.map_rel hjoin
   change (symplecticQuadrangle K).Adj
     (hom ((0 : Fin 2), kSpecifiedCenter))
@@ -2589,11 +2672,10 @@ lemma subdivisionLine_centers_injective
       copy (.inl (.inr center)) = .inr (C center)) :
     Function.Injective C := by
   intro i j hij
-  apply Sum.inr.inj
-  apply Sum.inl.inj
-  apply copy.injective
-  change copy (.inl (.inr i)) = copy (.inl (.inr j))
-  rw [hcenter i, hcenter j, hij]
+  have hcopy :
+      copy (.inl (.inr i)) = copy (.inl (.inr j)) := by
+    rw [hcenter i, hcenter j, hij]
+  exact Sum.inr.inj (Sum.inl.inj (copy.injective hcopy))
 
 lemma subdivisionLine_bases_disjoint
     {k : ℕ}
@@ -2663,7 +2745,9 @@ open SimpleGraph
 def GraphHasNoIsolated {V : Type*} (graph : SimpleGraph V) : Prop :=
   ∀ u : V, ∃ v : V, graph.Adj u v
 
-lemma free_map_of_no_isolated
+/-- Mapping a free graph along an embedding preserves freeness when the forbidden graph
+has no isolated vertices. -/
+public lemma free_map_of_no_isolated
     {U V W : Type*}
     (forbidden : SimpleGraph U)
     (hneighbors : ∀ u : U, ∃ v : U, forbidden.Adj u v)
@@ -2698,7 +2782,8 @@ lemma free_map_of_no_isolated
     rw [← hlift u, ← hlift v]
     exact congrArg embedding huv
 
-lemma extremalNumber_monotone_of_no_isolated
+/-- The extremal number of a graph without isolated vertices is monotone in the host order. -/
+public lemma extremalNumber_monotone_of_no_isolated
     {U : Type*} (forbidden : SimpleGraph U)
     (hneighbors : ∀ u : U, ∃ v : U, forbidden.Adj u v)
     {m n : ℕ} (hmn : m ≤ n) :
@@ -2776,26 +2861,33 @@ lemma jTemplate_no_isolated :
     (⟨copy, ⟨base, center⟩⟩ | lastVertex)
   · fin_cases base
     · refine ⟨.inr (.inr ()), ?_⟩
-      simp only [jTemplate, Nat.reduceAdd, Fin.zero_eta, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq,
+      simp only [jTemplate, Fin.zero_eta, Fin.isValue, fromRel_adj, ne_eq,
+          reduceCtorEq,
         not_false_eq_true, jTemplateRelation, zero_ne_one, or_false, and_self]
     · refine ⟨.inr (.inr ()), ?_⟩
-      simp only [jTemplate, Nat.reduceAdd, Fin.mk_one, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq,
+      simp only [jTemplate, Fin.mk_one, Fin.isValue, fromRel_adj, ne_eq,
+          reduceCtorEq,
         not_false_eq_true, jTemplateRelation, one_ne_zero, or_true, or_false, and_self]
     · refine ⟨.inr (.inl (0, (1, 0))), ?_⟩
-      simp only [jTemplate, Nat.reduceAdd, Fin.reduceFinMk, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq,
+      simp only [jTemplate, Fin.reduceFinMk, Fin.isValue, fromRel_adj, ne_eq,
+          reduceCtorEq,
         not_false_eq_true, jTemplateRelation, jBase, one_ne_zero, ↓reduceIte, or_false, and_self]
     · refine ⟨.inr (.inl (0, (2, 0))), ?_⟩
-      simp only [jTemplate, Nat.reduceAdd, Fin.reduceFinMk, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq,
+      simp only [jTemplate, Fin.reduceFinMk, Fin.isValue, fromRel_adj, ne_eq,
+          reduceCtorEq,
         not_false_eq_true, jTemplateRelation, jBase, Fin.reduceEq, ↓reduceIte, or_false, and_self]
   · refine ⟨.inr (.inl (copy, (0, center))), ?_⟩
-    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation,
+    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+        jTemplateRelation,
       and_self, or_false]
   · refine ⟨.inl (.inl (jBase copy base)), ?_⟩
-    simp only [jTemplate, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation, or_true,
+    simp only [jTemplate, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+        jTemplateRelation, or_true,
       and_self]
   · refine ⟨.inl (.inl 0), ?_⟩
     cases lastVertex
-    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation,
+    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+        jTemplateRelation,
       zero_ne_one, or_false, or_true, and_self]
 
 lemma kTemplate_no_isolated :
@@ -2809,7 +2901,8 @@ lemma kTemplate_no_isolated :
     simp only [kTemplate, Fin.isValue, fromRel_adj, ne_eq, Prod.mk.injEq, reduceCtorEq, and_false,
       not_false_eq_true, kTemplateRelation, subdivisionRelation, and_self, true_or, false_or]
   · refine ⟨(copy, .inl (.inl base)), ?_⟩
-    simp only [kTemplate, fromRel_adj, ne_eq, Prod.mk.injEq, reduceCtorEq, and_false, not_false_eq_true,
+    simp only [kTemplate, fromRel_adj, ne_eq, Prod.mk.injEq, reduceCtorEq, and_false,
+        not_false_eq_true,
       kTemplateRelation, subdivisionRelation, Fin.isValue, false_or, and_self, true_or, or_true]
 
 lemma encodedJQuotient_no_isolated
@@ -2893,7 +2986,7 @@ theorem quadrangle_extremal_lower_of_free
       SimpleGraph.extremalNumber
         (quadrangleVertexCount (Nat.card K)) forbidden := by
   classical
-  letI : Fintype (QuadrangleVertex K) := Fintype.ofFinite _
+  let _ : Fintype (QuadrangleVertex K) := Fintype.ofFinite _
   have hvertex : Fintype.card (QuadrangleVertex K) =
       quadrangleVertexCount (Nat.card K) := by
     rw [← Nat.card_eq_fintype_card, symplecticQuadrangle_vertex_card]
@@ -3411,6 +3504,8 @@ lemma nonbacktrackingFourPathWitness_injective
   apply nonbacktrackingFourPathPair_injective G hfour
   exact congrArg Subtype.val hpq
 
+open Classical in
+omit [DecidableEq V] in
 lemma four_path_endpoint_witness_count_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
@@ -3471,6 +3566,7 @@ lemma fourPathEndpointWitness_card_eq_sum
   rw [Fintype.card_congr (fourPathEndpointWitnessEquiv G u),
     Fintype.card_sigma]
 
+omit [DecidableEq V] in
 theorem four_path_common_second_neighbor_sum_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
@@ -3489,7 +3585,7 @@ def CommonNeighborIndependent (G : SimpleGraph V)
   ∀ ⦃x y : V⦄, x ∈ vertices → y ∈ vertices → x ≠ y →
     ¬ CommonNeighborRelated G x y
 
-omit [Fintype V] in
+omit [Fintype V] [DecidableEq V] in
 lemma commonNeighborIndependent_neighborhood_injective
     (G : SimpleGraph V) (vertices : Finset V)
     (hindependent : CommonNeighborIndependent G vertices) :
@@ -3512,6 +3608,7 @@ lemma commonNeighborIndependent_neighborhood_injective
   subst b
   rfl
 
+omit [DecidableEq V] in
 lemma commonNeighborIndependent_sum_degree_le_card
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (vertices : Finset V)
@@ -3528,6 +3625,7 @@ lemma commonNeighborIndependent_sum_degree_le_card
   simpa only [Fintype.card_sigma,
     SimpleGraph.card_neighborSet_eq_degree] using hcard
 
+omit [DecidableEq V] in
 lemma commonNeighborIndependent_card_mul_degree_le
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (vertices : Finset V)
@@ -3535,7 +3633,8 @@ lemma commonNeighborIndependent_card_mul_degree_le
     (d : ℕ) (hdegree : ∀ v : V, d ≤ G.degree v) :
     vertices.card * d ≤ Fintype.card V := by
   calc
-    vertices.card * d = ∑ _x : {x : V // x ∈ vertices}, d := by simp only [Finset.univ_eq_attach, Finset.sum_const, Finset.card_attach, smul_eq_mul]
+    vertices.card * d = ∑ _x : {x : V // x ∈ vertices},
+        d := by simp only [Finset.univ_eq_attach, Finset.sum_const, Finset.card_attach, smul_eq_mul]
     _ ≤ ∑ x : {x : V // x ∈ vertices}, G.degree (x : V) :=
       Finset.sum_le_sum fun x _ => hdegree x
     _ ≤ Fintype.card V :=
@@ -3593,7 +3692,7 @@ lemma card_nonbacktrackingThreePath_lower
   rw [pow_two]
   exact hcount
 
-omit [Fintype V] in
+omit [Fintype V] [DecidableEq V] in
 lemma nonbacktrackingThreePathEndpoint_injective
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
@@ -3644,6 +3743,8 @@ lemma nonbacktrackingThreePathEndpoint_injective
   subst b'
   rfl
 
+open Classical in
+omit [DecidableEq V] in
 theorem girthEight_degree_mul_pred_sq_le_card
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
@@ -3802,6 +3903,29 @@ lemma subdivisionVertexImage_injective
       (fun ij : Fin 3 × Fin k =>
         (Sum.inr ij : SubdivisionVertex k)) heq
 
+lemma subdivisionVertexImage_map_directedRelation
+    (base : Fin 3 → V) (center : Fin k → V)
+    (pair : Fin 3 → Fin k → V)
+    (hpair_base : ∀ i j, G.Adj (base i) (pair i j))
+    (hpair_center : ∀ i j, G.Adj (center j) (pair i j))
+    {u v : SubdivisionVertex k}
+    (hadj : subdivisionRelation k u v) :
+    G.Adj (subdivisionVertexImage base center pair u)
+      (subdivisionVertexImage base center pair v) := by
+  rcases u with (i | j) | ⟨i, j⟩
+  · rcases v with (i' | j') | ⟨i', j'⟩
+    · exact hadj.elim
+    · exact hadj.elim
+    · subst i'
+      exact hpair_base i j'
+  · rcases v with (i' | j') | ⟨i', j'⟩
+    · exact hadj.elim
+    · exact hadj.elim
+    · subst j'
+      exact hpair_center i' j
+  · rcases v with (i' | j') | ⟨i', j'⟩ <;>
+      exact hadj.elim
+
 lemma subdivisionVertexImage_map_relation
     (base : Fin 3 → V) (center : Fin k → V)
     (pair : Fin 3 → Fin k → V)
@@ -3811,14 +3935,11 @@ lemma subdivisionVertexImage_map_relation
     (hadj : (SubdivisionGraph k).Adj u v) :
     G.Adj (subdivisionVertexImage base center pair u)
       (subdivisionVertexImage base center pair v) := by
-  rcases u with (i | j) | ⟨i, j⟩ <;>
-    rcases v with (i' | j') | ⟨i', j'⟩ <;>
-    simp_all [SubdivisionGraph, SimpleGraph.fromRel_adj,
-      subdivisionRelation, subdivisionVertexImage]
-  all_goals
-    first
-    | exact (hpair_base _ _).symm
-    | exact (hpair_center _ _).symm
+  rcases hadj with ⟨_, huv | hvu⟩
+  · exact subdivisionVertexImage_map_directedRelation
+      base center pair hpair_base hpair_center huv
+  · exact (subdivisionVertexImage_map_directedRelation
+      base center pair hpair_base hpair_center hvu).symm
 
 def subdivisionCopyOfCommonNeighbors
     (hbip : G.IsBipartite)
@@ -4257,7 +4378,8 @@ def FamilyLittleO (family : Finset FiniteGraph) : Prop :=
     ∀ᶠ n : ℕ in atTop,
       (familyExtremal family n : ℝ) ≤ ε * extremalScale n
 
-def UniformMemberLower (family : Finset FiniteGraph) (c : ℝ) : Prop :=
+/-- Every member of a forbidden family has a uniform extremal-number lower bound. -/
+public def UniformMemberLower (family : Finset FiniteGraph) (c : ℝ) : Prop :=
   ∀ forbidden ∈ family,
     ∀ᶠ n : ℕ in atTop,
       c * extremalScale n ≤
@@ -4416,6 +4538,7 @@ lemma common_second_neighbor_pairwise_unrelated
     (commonNeighborRelated_symm y.property.1)
     (commonNeighborRelated_symm y.property.2)
 
+omit [DecidableEq V] in
 lemma four_path_heavy_common_second_neighbor_mass_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
@@ -4537,13 +4660,15 @@ lemma inJCopy_iff_exists_jThetaVertex
 lemma theta_base_pair_adj (base : Fin 3) (center : Fin 2) :
     thetaGraph.Adj
       (.inl (.inl base)) (.inr (base, center)) := by
-  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, subdivisionRelation,
+  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+      subdivisionRelation,
     or_false, and_self]
 
 lemma theta_center_pair_adj (base : Fin 3) (center : Fin 2) :
     thetaGraph.Adj
       (.inl (.inr center)) (.inr (base, center)) := by
-  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, subdivisionRelation,
+  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+      subdivisionRelation,
     or_false, and_self]
 
 omit [Fintype V] [DecidableEq V] in
@@ -4584,7 +4709,8 @@ lemma gluedJVertex_map_relation
       · subst base
         simpa only [gluedJVertex, gluedJBase, Fin.isValue, Matrix.cons_val_zero] using hjoinFirst
       · subst base
-        simpa only [gluedJVertex, gluedJBase, Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero] using
+        simpa only [gluedJVertex, gluedJBase, Fin.isValue, Matrix.cons_val_one,
+            Matrix.cons_val_zero] using
           hjoinSecond
   · rcases center with ⟨copy, center⟩
     rcases target with (targetBase | targetCenter) | (targetPair | targetStar)
@@ -4796,7 +4922,8 @@ lemma gluedJVertex_color_false_iff
       color (gluedJVertex copies joining vertex) =
         color (copies 0 (.inl (.inl (0 : Fin 3)))) := by
   rcases vertex with (base | center) | (pair | star)
-  · simpa only [jColor, gluedJVertex, Fin.isValue, true_iff] using gluedJBase_color_eq copies hfirst color base
+  · simpa only [jColor, gluedJVertex, Fin.isValue,
+      true_iff] using gluedJBase_color_eq copies hfirst color base
   · rcases center with ⟨copy, center⟩
     simp only [jColor, gluedJVertex, true_iff]
     calc
@@ -5009,8 +5136,10 @@ section CubicBinomialSupersaturation
 
 lemma choose_three_factorial_identity (t : ℕ) :
     6 * t.choose 3 = t * (t - 1) * (t - 2) := by
-  simpa only [Nat.mul_comm, Nat.mul_assoc, Nat.factorial, Nat.succ_eq_add_one, Nat.reduceAdd, zero_add, mul_one,
-    Nat.reduceMul, Nat.descFactorial, tsub_zero] using (Nat.descFactorial_eq_factorial_mul_choose t 3).symm
+  simpa only [Nat.mul_comm, Nat.mul_assoc, Nat.factorial, Nat.succ_eq_add_one, Nat.reduceAdd,
+      zero_add, mul_one,
+    Nat.reduceMul, Nat.descFactorial,
+        tsub_zero] using (Nat.descFactorial_eq_factorial_mul_choose t 3).symm
 
 lemma choose_three_cubic_lower {t : ℕ} (ht : 3 ≤ t) :
     (t : ℝ) ^ 3 / 27 ≤ (t.choose 3 : ℝ) := by
@@ -5039,6 +5168,7 @@ noncomputable def commonSecondNeighborTripleMass
   ∑ v : UnrelatedFourPathEndpoint G u,
     (Fintype.card (CommonSecondNeighbor G u (v : V))).choose 3
 
+omit [DecidableEq V] in
 lemma four_path_common_second_neighbor_triple_mass_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
@@ -5133,7 +5263,8 @@ theorem proposedFamilyFree_four_path_triple_mass_lower
         (d * (d - 1) ^ 3) := by
     simpa only [Fintype.card_fin] using hthreshold
   simpa only [Nat.cast_mul, Nat.cast_pow, ge_iff_le, Fintype.card_fin] using
-    four_path_common_second_neighbor_triple_mass_lower host hbip (proposedFamilyFree_four_cycle hfree)
+    four_path_common_second_neighbor_triple_mass_lower host hbip (proposedFamilyFree_four_cycle
+        hfree)
       (proposedFamilyFree_six_cycle hfree) d hdegree u hthreshold'
 
 end ActualTripleSupersaturation
@@ -5161,7 +5292,8 @@ lemma orderedThetaTripleCount_mul_degree_le
       gcongr with y _ z _
       exact thetaBaseExtensions_card_mul_degree_le
         host hfree hbip d hdegree y z
-    _ = n ^ 3 := by simp only [sum_const, card_univ, Fintype.card_fin, smul_eq_mul, pow_succ, pow_zero, one_mul, Nat.mul_assoc]
+    _ = n ^ 3 := by simp only [sum_const, card_univ, Fintype.card_fin, smul_eq_mul, pow_succ,
+        pow_zero, one_mul, Nat.mul_assoc]
 
 end OrderedThetaTripleCounting
 
@@ -5173,6 +5305,7 @@ def GammaGood (G : SimpleGraph V) (u : V) : Prop :=
   ∃ witness : SimpleGraph.Copy gammaGraph G,
     witness kSpecifiedCenter = u
 
+omit [DecidableEq V] in
 lemma gammaGood_of_three_common_centers
     {G : SimpleGraph V}
     (hbip : G.IsBipartite)
@@ -5220,13 +5353,15 @@ lemma gammaGood_of_three_common_centers
 lemma gamma_base_pair_adj (base : Fin 3) (center : Fin 3) :
     gammaGraph.Adj
       (.inl (.inl base)) (.inr (base, center)) := by
-  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, subdivisionRelation,
+  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+      subdivisionRelation,
     or_false, and_self]
 
 lemma gamma_center_pair_adj (base : Fin 3) (center : Fin 3) :
     gammaGraph.Adj
       (.inl (.inr center)) (.inr (base, center)) := by
-  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, subdivisionRelation,
+  simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+      subdivisionRelation,
     or_false, and_self]
 
 omit [Fintype V] [DecidableEq V] in
@@ -5493,6 +5628,7 @@ theorem proposedFamilyFree_edge_has_gammaBad
   · left
     exact (mem_gammaBadVertices host u).mpr hu
 
+omit [DecidableEq V] in
 lemma edgeFinset_card_le_sum_degree_of_vertex_cover
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (cover : Finset V)
@@ -5544,14 +5680,14 @@ noncomputable section BadVertexCounting
 open Finset SimpleGraph
 
 noncomputable def finiteBadFiberMass
-    {α β : Type*} [Fintype α] [Fintype β]
+    {α β : Type*} [Fintype α]
     (fibers : α → Finset β) (good : β → Prop) : ℕ := by
   classical
   exact ∑ index : α,
     ((fibers index).filter fun vertex => ¬ good vertex).card
 
 lemma finite_bad_fiber_card_le_two
-    {α β : Type*} [Fintype β]
+    {α β : Type*}
     (fibers : α → Finset β) (good : β → Prop)
     [DecidablePred good]
     (hgood : ∀ (index : α) (vertex : β),
@@ -5573,7 +5709,7 @@ lemma finite_bad_fiber_card_le_two
     omega
 
 lemma finite_bad_fiber_mass_le_two
-    {α β : Type*} [Fintype α] [Fintype β]
+    {α β : Type*} [Fintype α]
     (fibers : α → Finset β) (good : β → Prop)
     (hgood : ∀ (index : α) (vertex : β),
       vertex ∈ fibers index →
@@ -5581,7 +5717,8 @@ lemma finite_bad_fiber_mass_le_two
     finiteBadFiberMass fibers good ≤ 2 * Fintype.card α := by
   classical
   simpa only [finiteBadFiberMass, Nat.mul_comm, card_univ, smul_eq_mul] using
-    Finset.sum_le_card_nsmul Finset.univ (fun index => ((fibers index).filter fun vertex => ¬good vertex).card) 2
+    Finset.sum_le_card_nsmul Finset.univ (fun index => ((fibers index).filter fun vertex =>
+        ¬good vertex).card) 2
       (fun index _ => finite_bad_fiber_card_le_two fibers good hgood index)
 
 section ActualIndependentTriples
@@ -5946,7 +6083,8 @@ lemma badIndependentThetaTriple_other_center_unique
   have hcard : 3 ≤ (commonCenterFinset G triple.val).card := by
     calc
       3 = ({u, v, w} : Finset V).card := by
-        simp only [mem_insert, huv, mem_singleton, huw, or_self, not_false_eq_true, card_insert_of_notMem, hvw,
+        simp only [mem_insert, huv, mem_singleton, huw, or_self, not_false_eq_true,
+            card_insert_of_notMem, hvw,
           card_singleton, Nat.reduceAdd]
       _ ≤ (commonCenterFinset G triple.val).card :=
         Finset.card_le_card hsubset
@@ -6256,7 +6394,8 @@ lemma quantitative_minimum_degree_edge_bound
     (d : ℕ) (hdegree : ∀ vertex : Fin n, d ≤ host.degree vertex) :
     n * d ≤ 2 * host.edgeFinset.card := by
   simpa only [card_univ, Fintype.card_fin, smul_eq_mul, sum_degrees_eq_twice_card_edges] using
-    Finset.card_nsmul_le_sum Finset.univ (fun vertex : Fin n => host.degree vertex) d (fun vertex _ => hdegree vertex)
+    Finset.card_nsmul_le_sum Finset.univ (fun vertex : Fin n => host.degree vertex) d (fun
+        vertex _ => hdegree vertex)
 
 lemma quantitative_bad_vertex_edge_bound
     {n : ℕ} (host : SimpleGraph (Fin n))
@@ -6453,9 +6592,12 @@ def coordinateCenterLine (x y : K) (hxy : x ≠ 0 ∨ y ≠ 0) :
     · intro u hu v hv
       obtain ⟨u', rfl⟩ := hu
       obtain ⟨v', rfl⟩ := hv
-      simp only [standardSymplecticForm, coordinateCenterLinearMap, Fin.isValue, symplecticHorizontalVector,
-        Matrix.smul_cons, smul_eq_mul, mul_zero, Matrix.smul_empty, symplecticAnnihilatorVector, mul_neg, Matrix.add_cons,
-        Matrix.head_cons, add_zero, Matrix.tail_cons, zero_add, Matrix.empty_add_empty, LinearMap.coe_mk, AddHom.coe_mk,
+      simp only [standardSymplecticForm, coordinateCenterLinearMap, Fin.isValue,
+          symplecticHorizontalVector,
+        Matrix.smul_cons, smul_eq_mul, mul_zero, Matrix.smul_empty,
+            symplecticAnnihilatorVector, mul_neg, Matrix.add_cons,
+        Matrix.head_cons, add_zero, Matrix.tail_cons, zero_add, Matrix.empty_add_empty,
+            LinearMap.coe_mk, AddHom.coe_mk,
         Matrix.cons_val_zero, Matrix.cons_val_one, neg_mul, sub_neg_eq_add, Matrix.cons_val]
       ring⟩
 
@@ -6477,9 +6619,11 @@ lemma symmetricGraphLinearMap_injective
   intro u v huv
   funext i
   fin_cases i
-  · simpa only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector,
+  · simpa only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, symmetricGraphLinearMap,
+      symmetricGraphVector,
       LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_zero] using congrFun huv 0
-  · simpa only [Nat.reduceAdd, Fin.mk_one, Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector,
+  · simpa only [Nat.reduceAdd, Fin.mk_one, Fin.isValue, symmetricGraphLinearMap,
+      symmetricGraphVector,
       LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val] using congrFun huv 2
 
 def symmetricGraphLine (a b c : K) : SymplecticLine K :=
@@ -6508,7 +6652,8 @@ lemma symmetricGraphVector_mem_center_span_iff
     have htwo := congrFun hvector 2
     have hthree := congrFun hvector 3
     simp only [symmetricGraphVector, Fin.isValue, Matrix.cons_val_zero, symplecticHorizontalVector,
-      Matrix.smul_cons, smul_eq_mul, mul_zero, Matrix.smul_empty, symplecticAnnihilatorVector, mul_neg, Pi.add_apply,
+      Matrix.smul_cons, smul_eq_mul, mul_zero, Matrix.smul_empty, symplecticAnnihilatorVector,
+          mul_neg, Pi.add_apply,
       add_zero, Matrix.cons_val_one, zero_add, Matrix.cons_val] at hzero hone htwo hthree
     have hs : s = 1 := by
       rcases hxy with hx | hy
@@ -6529,35 +6674,53 @@ lemma symmetricGraphVector_mem_center_span_iff
     · refine ⟨1, (b * x + c * y) / x, ?_⟩
       funext i
       fin_cases i
-      · simp only [symmetricGraphVector, Nat.reduceAdd, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
-          symplecticHorizontalVector, one_smul, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul, mul_zero, mul_neg,
+      · simp only [symmetricGraphVector, Fin.zero_eta, Fin.isValue,
+          Matrix.cons_val_zero,
+          symplecticHorizontalVector, one_smul, symplecticAnnihilatorVector, Matrix.smul_cons,
+              smul_eq_mul, mul_zero, mul_neg,
           Matrix.smul_empty, Pi.add_apply, add_zero]
-      · simp only [symmetricGraphVector, Nat.reduceAdd, Fin.mk_one, Fin.isValue, Matrix.cons_val_one,
-          Matrix.cons_val_zero, symplecticHorizontalVector, one_smul, symplecticAnnihilatorVector, Matrix.smul_cons,
+      · simp only [symmetricGraphVector, Fin.mk_one, Fin.isValue,
+          Matrix.cons_val_one,
+          Matrix.cons_val_zero, symplecticHorizontalVector, one_smul,
+              symplecticAnnihilatorVector, Matrix.smul_cons,
           smul_eq_mul, mul_zero, mul_neg, Matrix.smul_empty, Pi.add_apply, zero_add]
         field_simp [hx]
         linear_combination hbilinear
-      · simp only [symmetricGraphVector, Nat.reduceAdd, Fin.reduceFinMk, Matrix.cons_val, symplecticHorizontalVector,
-          one_smul, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul, mul_zero, mul_neg, Matrix.smul_empty,
+      · simp only [symmetricGraphVector, Fin.reduceFinMk, Matrix.cons_val,
+          symplecticHorizontalVector,
+          one_smul, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul, mul_zero,
+              mul_neg, Matrix.smul_empty,
           Pi.add_apply, Fin.isValue, add_zero]
-      · simp only [symmetricGraphVector, Nat.reduceAdd, Fin.reduceFinMk, Matrix.cons_val, symplecticHorizontalVector,
-          one_smul, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul, mul_zero, mul_neg, isUnit_iff_ne_zero, ne_eq,
-          hx, not_false_eq_true, IsUnit.div_mul_cancel, Matrix.smul_empty, Pi.add_apply, Fin.isValue, zero_add]
+      · simp only [symmetricGraphVector, Fin.reduceFinMk, Matrix.cons_val,
+          symplecticHorizontalVector,
+          one_smul, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul, mul_zero,
+              mul_neg, isUnit_iff_ne_zero, ne_eq,
+          hx, not_false_eq_true, IsUnit.div_mul_cancel, Matrix.smul_empty, Pi.add_apply,
+              Fin.isValue, zero_add]
     · refine ⟨1, -(a * x + b * y) / y, ?_⟩
       funext i
       fin_cases i
-      · simp only [symmetricGraphVector, Nat.reduceAdd, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
-          symplecticHorizontalVector, one_smul, neg_add_rev, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul,
+      · simp only [symmetricGraphVector, Fin.zero_eta, Fin.isValue,
+          Matrix.cons_val_zero,
+          symplecticHorizontalVector, one_smul, neg_add_rev, symplecticAnnihilatorVector,
+              Matrix.smul_cons, smul_eq_mul,
           mul_zero, mul_neg, Matrix.smul_empty, Pi.add_apply, add_zero]
-      · simp only [symmetricGraphVector, Nat.reduceAdd, Fin.mk_one, Fin.isValue, Matrix.cons_val_one,
-          Matrix.cons_val_zero, symplecticHorizontalVector, one_smul, neg_add_rev, symplecticAnnihilatorVector,
-          Matrix.smul_cons, smul_eq_mul, mul_zero, mul_neg, isUnit_iff_ne_zero, ne_eq, hy, not_false_eq_true,
+      · simp only [symmetricGraphVector, Fin.mk_one, Fin.isValue,
+          Matrix.cons_val_one,
+          Matrix.cons_val_zero, symplecticHorizontalVector, one_smul, neg_add_rev,
+              symplecticAnnihilatorVector,
+          Matrix.smul_cons, smul_eq_mul, mul_zero, mul_neg, isUnit_iff_ne_zero, ne_eq, hy,
+              not_false_eq_true,
           IsUnit.div_mul_cancel, neg_neg, Matrix.smul_empty, Pi.add_apply, zero_add]
-      · simp only [symmetricGraphVector, Nat.reduceAdd, Fin.reduceFinMk, Matrix.cons_val, symplecticHorizontalVector,
-          one_smul, neg_add_rev, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul, mul_zero, mul_neg,
+      · simp only [symmetricGraphVector, Fin.reduceFinMk, Matrix.cons_val,
+          symplecticHorizontalVector,
+          one_smul, neg_add_rev, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul,
+              mul_zero, mul_neg,
           Matrix.smul_empty, Pi.add_apply, Fin.isValue, add_zero]
-      · simp only [symmetricGraphVector, Nat.reduceAdd, Fin.reduceFinMk, Matrix.cons_val, symplecticHorizontalVector,
-          one_smul, neg_add_rev, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul, mul_zero, mul_neg,
+      · simp only [symmetricGraphVector, Fin.reduceFinMk, Matrix.cons_val,
+          symplecticHorizontalVector,
+          one_smul, neg_add_rev, symplecticAnnihilatorVector, Matrix.smul_cons, smul_eq_mul,
+              mul_zero, mul_neg,
           Matrix.smul_empty, Pi.add_apply, Fin.isValue, zero_add]
         field_simp [hy]
         linear_combination hbilinear
@@ -6582,7 +6745,8 @@ lemma symmetricGraphLine_coordinateCenter_intersection_iff
     have htwo := congrFun hvector 2
     have hthree := congrFun hvector 3
     simp only [symmetricGraphVector, Fin.isValue, Matrix.cons_val_zero, symplecticHorizontalVector,
-      Matrix.smul_cons, smul_eq_mul, mul_zero, Matrix.smul_empty, symplecticAnnihilatorVector, mul_neg, Pi.add_apply,
+      Matrix.smul_cons, smul_eq_mul, mul_zero, Matrix.smul_empty, symplecticAnnihilatorVector,
+          mul_neg, Pi.add_apply,
       add_zero, Matrix.cons_val_one, zero_add, Matrix.cons_val] at hzero hone htwo hthree
     have hdnonzero : d 0 ≠ 0 := by
       intro hd0
@@ -6608,14 +6772,18 @@ lemma symmetricGraphLine_coordinateCenter_intersection_iff
     · intro hzero
       rcases hxy with hx | hy
       · apply hx
-        simpa only [symmetricGraphVector, Fin.isValue, Matrix.cons_val_zero, Pi.zero_apply] using congrFun hzero 0
+        simpa only [symmetricGraphVector, Fin.isValue, Matrix.cons_val_zero,
+            Pi.zero_apply] using congrFun hzero 0
       · apply hy
-        simpa only [symmetricGraphVector, Fin.isValue, Matrix.cons_val, Pi.zero_apply] using congrFun hzero 2
+        simpa only [symmetricGraphVector, Fin.isValue, Matrix.cons_val,
+            Pi.zero_apply] using congrFun hzero 2
     · refine ⟨![x, y], ?_⟩
-      simp only [symmetricGraphLinearMap, symmetricGraphVector, Fin.isValue, LinearMap.coe_mk, AddHom.coe_mk,
+      simp only [symmetricGraphLinearMap, symmetricGraphVector, Fin.isValue, LinearMap.coe_mk,
+          AddHom.coe_mk,
         Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one]
     · refine ⟨![s, t], ?_⟩
-      simpa only [coordinateCenterLinearMap, Fin.isValue, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_zero,
+      simpa only [coordinateCenterLinearMap, Fin.isValue, LinearMap.coe_mk, AddHom.coe_mk,
+          Matrix.cons_val_zero,
         Matrix.cons_val_one, Matrix.cons_val_fin_one] using hvector.symm
 
 lemma symmetricGraphLine_coordinateCenter_common_point_iff
@@ -6639,8 +6807,10 @@ lemma symmetricGraphLine_coordinateCenter_common_point_iff
     let p : SymplecticPoint K :=
       ⟨K ∙ w, finrank_span_singleton hwne⟩
     refine ⟨p, ?_, ?_⟩
-    · exact (Submodule.span_le).mpr (by simpa only [Set.singleton_subset_iff, SetLike.mem_coe] using hwgraph)
-    · exact (Submodule.span_le).mpr (by simpa only [Set.singleton_subset_iff, SetLike.mem_coe] using hwcenter)
+    · exact (Submodule.span_le).mpr (by simpa only [Set.singleton_subset_iff,
+        SetLike.mem_coe] using hwgraph)
+    · exact (Submodule.span_le).mpr (by simpa only [Set.singleton_subset_iff,
+        SetLike.mem_coe] using hwcenter)
 
 lemma projectiveDirection_nonzero_left
     {x y x' y' : K}
@@ -6880,7 +7050,8 @@ lemma symplecticLine_orthogonal_eq
         ((standardSymplecticBilin K).orthogonal L.1) = 2 := by
     rw [LinearMap.BilinForm.finrank_orthogonal
       (standardSymplecticBilin_nondegenerate K), L.2.1]
-    simp only [SymplecticVector, Module.finrank_fintype_fun_eq_card, Fintype.card_fin, Nat.reduceSub]
+    simp only [SymplecticVector, Module.finrank_fintype_fun_eq_card, Fintype.card_fin,
+        Nat.reduceSub]
   exact (Submodule.eq_of_le_of_finrank_eq hle
     (L.2.1.trans hdim.symm)).symm
 
@@ -6901,7 +7072,8 @@ def symplecticLinePairing
       map_add' := by
         intro x x'
         simpa only [Submodule.coe_add] using
-          standardSymplecticForm_add_left K (x : SymplecticVector K) (x' : SymplecticVector K) (y : SymplecticVector K)
+          standardSymplecticForm_add_left K (x : SymplecticVector K) (x' : SymplecticVector K)
+              (y : SymplecticVector K)
       map_smul' := by
         intro c x
         simpa only [SetLike.val_smul, RingHom.id_apply, smul_eq_mul] using
@@ -6911,13 +7083,16 @@ def symplecticLinePairing
     apply LinearMap.ext
     intro x
     simpa only [Submodule.coe_add, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.add_apply] using
-      standardSymplecticForm_add_right K (x : SymplecticVector K) (y : SymplecticVector K) (y' : SymplecticVector K)
+      standardSymplecticForm_add_right K (x : SymplecticVector K) (y : SymplecticVector K) (y'
+          : SymplecticVector K)
   map_smul' := by
     intro c y
     apply LinearMap.ext
     intro x
-    simpa only [SetLike.val_smul, LinearMap.coe_mk, AddHom.coe_mk, RingHom.id_apply, LinearMap.smul_apply,
-      smul_eq_mul] using standardSymplecticForm_smul_right K c (x : SymplecticVector K) (y : SymplecticVector K)
+    simpa only [SetLike.val_smul, LinearMap.coe_mk, AddHom.coe_mk, RingHom.id_apply,
+        LinearMap.smul_apply,
+      smul_eq_mul] using standardSymplecticForm_smul_right K c (x : SymplecticVector K) (y :
+          SymplecticVector K)
 
 lemma symplecticLinePairing_injective
     {L M : SymplecticLine K}
@@ -6937,7 +7112,8 @@ lemma symplecticLinePairing_injective
             (y : SymplecticVector K) = 0
       intro x hx
       have hz := DFunLike.congr_fun hpair (⟨x, hx⟩ : L.1)
-      simpa only [symplecticLinePairing, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.zero_apply] using hz
+      simpa only [symplecticLinePairing, LinearMap.coe_mk, AddHom.coe_mk,
+          LinearMap.zero_apply] using hz
     have hyL : (y : SymplecticVector K) ∈ L.1 := by
       rw [symplecticLine_orthogonal_eq K L] at hyorth
       exact hyorth
@@ -7057,7 +7233,8 @@ lemma symplecticLinePairing_coordinate_expansion
       apply Finset.sum_congr rfl
       intro i _
       rw [map_smul]
-      simp only [Module.Basis.equivFun_apply, symplecticLinePairing, LinearMap.coe_mk, AddHom.coe_mk, smul_eq_mul]
+      simp only [Module.Basis.equivFun_apply, symplecticLinePairing, LinearMap.coe_mk,
+          AddHom.coe_mk, smul_eq_mul]
     _ = (symplecticLineBasis K L).equivFun x 0 *
           symplecticLineDualCoordinates K L M hLM y 0 +
         (symplecticLineBasis K L).equivFun x 1 *
@@ -7227,9 +7404,11 @@ lemma symplecticVerticalLinearMap_injective :
   intro u v huv
   funext i
   fin_cases i
-  · simpa only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, symplecticVerticalLinearMap, LinearMap.coe_mk,
+  · simpa only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, symplecticVerticalLinearMap,
+      LinearMap.coe_mk,
       AddHom.coe_mk, Matrix.cons_val_one, Matrix.cons_val_zero] using congrFun huv 1
-  · simpa only [Nat.reduceAdd, Fin.mk_one, Fin.isValue, symplecticVerticalLinearMap, LinearMap.coe_mk,
+  · simpa only [Nat.reduceAdd, Fin.mk_one, Fin.isValue, symplecticVerticalLinearMap,
+      LinearMap.coe_mk,
       AddHom.coe_mk, Matrix.cons_val] using congrFun huv 3
 
 def symplecticVerticalLine : SymplecticLine K :=
@@ -7241,8 +7420,10 @@ def symplecticVerticalLine : SymplecticLine K :=
     · intro u hu v hv
       obtain ⟨u', rfl⟩ := hu
       obtain ⟨v', rfl⟩ := hv
-      simp only [standardSymplecticForm, symplecticVerticalLinearMap, Fin.isValue, LinearMap.coe_mk, AddHom.coe_mk,
-        Matrix.cons_val_zero, Matrix.cons_val_one, zero_mul, mul_zero, sub_self, Matrix.cons_val, add_zero]⟩
+      simp only [standardSymplecticForm, symplecticVerticalLinearMap, Fin.isValue,
+          LinearMap.coe_mk, AddHom.coe_mk,
+        Matrix.cons_val_zero, Matrix.cons_val_one, zero_mul, mul_zero, sub_self,
+            Matrix.cons_val, add_zero]⟩
 
 lemma symplecticLineNormalizer_map_left
     (L M : SymplecticLine K)
@@ -7272,8 +7453,10 @@ lemma symplecticLineNormalizer_map_left
           (symplecticLineBasis K L).equivFun.apply_symm_apply z]
     refine Submodule.mem_map.mpr
       ⟨(x : SymplecticVector K), x.2, ?_⟩
-    simpa only [LinearEquiv.coe_coe, LinearMap.BilinForm.IsometryEquiv.coe_toLinearEquiv, symmetricGraphLinearMap,
-      symmetricGraphVector, Fin.isValue, zero_mul, add_zero, LinearMap.coe_mk, AddHom.coe_mk, Nat.succ_eq_add_one,
+    simpa only [LinearEquiv.coe_coe, LinearMap.BilinForm.IsometryEquiv.coe_toLinearEquiv,
+        symmetricGraphLinearMap,
+      symmetricGraphVector, Fin.isValue, zero_mul, add_zero, LinearMap.coe_mk, AddHom.coe_mk,
+          Nat.succ_eq_add_one,
       Nat.reduceAdd] using hx
 
 lemma symplecticLineNormalizer_map_right
@@ -7344,7 +7527,8 @@ lemma symplecticHorizontalProjection_ker :
     have hzero := LinearMap.mem_ker.mp hv
     have hfirst := congrFun hzero 0
     have hthird := congrFun hzero 1
-    simp only [symplecticHorizontalProjection, Fin.isValue, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_zero,
+    simp only [symplecticHorizontalProjection, Fin.isValue, LinearMap.coe_mk, AddHom.coe_mk,
+        Matrix.cons_val_zero,
       Pi.zero_apply, Matrix.cons_val_one, Matrix.cons_val_fin_one] at hfirst hthird
     change v ∈ LinearMap.range (symplecticVerticalLinearMap K)
     refine ⟨![v 1, v 3], ?_⟩
@@ -7454,13 +7638,15 @@ lemma symplecticLineGraphMap_symmetric
     simpa only [Fin.isValue, symplecticHorizontalProjection, LinearMap.coe_mk, AddHom.coe_mk,
       Matrix.cons_val_zero, Nat.succ_eq_add_one, Nat.reduceAdd] using congrFun hu 0
   have hu2 : (u : SymplecticVector K) 2 = 0 := by
-    simpa only [Fin.isValue, symplecticHorizontalProjection, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_one,
+    simpa only [Fin.isValue, symplecticHorizontalProjection, LinearMap.coe_mk, AddHom.coe_mk,
+        Matrix.cons_val_one,
       Matrix.cons_val_fin_one, Nat.succ_eq_add_one, Nat.reduceAdd] using congrFun hu 1
   have hv0 : (v : SymplecticVector K) 0 = 0 := by
     simpa only [Fin.isValue, symplecticHorizontalProjection, LinearMap.coe_mk, AddHom.coe_mk,
       Matrix.cons_val_zero, Nat.succ_eq_add_one, Nat.reduceAdd] using congrFun hv 0
   have hv2 : (v : SymplecticVector K) 2 = 1 := by
-    simpa only [Fin.isValue, symplecticHorizontalProjection, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_one,
+    simpa only [Fin.isValue, symplecticHorizontalProjection, LinearMap.coe_mk, AddHom.coe_mk,
+        Matrix.cons_val_one,
       Matrix.cons_val_fin_one, Nat.succ_eq_add_one, Nat.reduceAdd] using congrFun hv 1
   have hu3 :
       (u : SymplecticVector K) 3 =
@@ -7468,7 +7654,8 @@ lemma symplecticLineGraphMap_symmetric
     have h := congrFun
       (symplecticLineGraphMap_horizontal K L hvertical u) 1
     rw [hu] at h
-    simpa only [Fin.isValue, symplecticVerticalProjection, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_one,
+    simpa only [Fin.isValue, symplecticVerticalProjection, LinearMap.coe_mk, AddHom.coe_mk,
+        Matrix.cons_val_one,
       Matrix.cons_val_fin_one, Nat.succ_eq_add_one, Nat.reduceAdd] using h.symm
   have hv1 :
       (v : SymplecticVector K) 1 =
@@ -7476,7 +7663,8 @@ lemma symplecticLineGraphMap_symmetric
     have h := congrFun
       (symplecticLineGraphMap_horizontal K L hvertical v) 0
     rw [hv] at h
-    simpa only [Fin.isValue, symplecticVerticalProjection, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_zero,
+    simpa only [Fin.isValue, symplecticVerticalProjection, LinearMap.coe_mk, AddHom.coe_mk,
+        Matrix.cons_val_zero,
       Nat.succ_eq_add_one, Nat.reduceAdd] using h.symm
   have hpair := L.2.2
     (u : SymplecticVector K) u.2
@@ -7485,7 +7673,8 @@ lemma symplecticLineGraphMap_symmetric
       symplecticLineGraphMap K L hvertical ![0, 1] 0 -
         symplecticLineGraphMap K L hvertical ![1, 0] 1 = 0 := by
     rw [sub_eq_add_neg]
-    simpa only [Fin.isValue, standardSymplecticForm, hu0, hv1, one_mul, hv0, mul_zero, sub_zero, hu2, zero_mul,
+    simpa only [Fin.isValue, standardSymplecticForm, hu0, hv1, one_mul, hv0, mul_zero,
+        sub_zero, hu2, zero_mul,
       hu3, hv2, mul_one, zero_sub] using hpair
   exact (sub_eq_zero.mp hzero).symm
 
@@ -7545,7 +7734,8 @@ lemma symplecticLineGraphMap_graphVector
       (u : SymplecticVector K)
   funext i
   fin_cases i
-  · simpa only [symmetricGraphVector, Fin.isValue, Nat.reduceAdd, Fin.zero_eta, Matrix.cons_val_zero,
+  · simpa only [symmetricGraphVector, Fin.isValue, Nat.reduceAdd, Fin.zero_eta,
+      Matrix.cons_val_zero,
       symplecticHorizontalProjection, LinearMap.coe_mk, AddHom.coe_mk] using (congrFun hu 0).symm
   · have hg0 := congrFun hg 0
     change
@@ -7558,7 +7748,8 @@ lemma symplecticLineGraphMap_graphVector
     exact (symplecticLineGraphMap_coordinate_expansion
       K L hvertical z 0).symm.trans hg0
   · simpa only [symmetricGraphVector, Fin.isValue, Nat.reduceAdd, Fin.reduceFinMk, Matrix.cons_val,
-      symplecticHorizontalProjection, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_one, Matrix.cons_val_fin_one] using
+      symplecticHorizontalProjection, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_one,
+          Matrix.cons_val_fin_one] using
       (congrFun hu 1).symm
   · have hg1 := congrFun hg 1
     change
@@ -7693,10 +7884,12 @@ lemma symplecticCanonicalLines_disjoint :
   obtain ⟨t, ht⟩ := hwV
   have heq := hz.trans ht.symm
   have hz0 : z 0 = 0 := by
-    simpa only [Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector, zero_mul, add_zero, LinearMap.coe_mk,
+    simpa only [Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector, zero_mul, add_zero,
+        LinearMap.coe_mk,
       AddHom.coe_mk, Matrix.cons_val_zero, symplecticVerticalLinearMap] using congrFun heq 0
   have hz1 : z 1 = 0 := by
-    simpa only [Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector, zero_mul, add_zero, LinearMap.coe_mk,
+    simpa only [Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector, zero_mul, add_zero,
+        LinearMap.coe_mk,
       AddHom.coe_mk, Matrix.cons_val, symplecticVerticalLinearMap] using congrFun heq 2
   rw [← hz]
   funext i
@@ -7717,10 +7910,12 @@ lemma symplecticVertical_mem_coordinateCenter_of_orthogonal
     simpa only [Fin.isValue, symplecticVerticalLinearMap, LinearMap.coe_mk, AddHom.coe_mk,
       Matrix.cons_val_zero] using (congrFun hz 0).symm
   have hv2 : v 2 = 0 := by
-    simpa only [Fin.isValue, symplecticVerticalLinearMap, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val] using
+    simpa only [Fin.isValue, symplecticVerticalLinearMap, LinearMap.coe_mk, AddHom.coe_mk,
+        Matrix.cons_val] using
       (congrFun hz 2).symm
   have heq : x * v 1 + y * v 3 = 0 := by
-    simpa only [Fin.isValue, standardSymplecticForm, symplecticHorizontalVector, Matrix.cons_val_zero,
+    simpa only [Fin.isValue, standardSymplecticForm, symplecticHorizontalVector,
+        Matrix.cons_val_zero,
       Matrix.cons_val_one, zero_mul, sub_zero, Matrix.cons_val] using horth
   change v ∈ LinearMap.range (coordinateCenterLinearMap K x y)
   by_cases hx : x = 0
@@ -7768,10 +7963,12 @@ lemma symplecticLine_eq_coordinateCenterLine_of_common_points
     at huhorizontal
   obtain ⟨z, hz⟩ := huhorizontal
   have hu1 : (u : SymplecticVector K) 1 = 0 := by
-    simpa only [Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector, zero_mul, add_zero, LinearMap.coe_mk,
+    simpa only [Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector, zero_mul, add_zero,
+        LinearMap.coe_mk,
       AddHom.coe_mk, Matrix.cons_val_one, Matrix.cons_val_zero] using (congrFun hz 1).symm
   have hu3 : (u : SymplecticVector K) 3 = 0 := by
-    simpa only [Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector, zero_mul, add_zero, LinearMap.coe_mk,
+    simpa only [Fin.isValue, symmetricGraphLinearMap, symmetricGraphVector, zero_mul, add_zero,
+        LinearMap.coe_mk,
       AddHom.coe_mk, Matrix.cons_val] using (congrFun hz 3).symm
   let x : K := (u : SymplecticVector K) 0
   let y : K := (u : SymplecticVector K) 2
@@ -7812,9 +8009,12 @@ lemma symplecticLine_eq_coordinateCenterLine_of_common_points
         LinearMap.range (coordinateCenterLinearMap K x y)
     refine ⟨![1, 0], ?_⟩
     rw [huvector]
-    simp only [coordinateCenterLinearMap, Fin.isValue, symplecticHorizontalVector, Matrix.smul_cons, smul_eq_mul,
-      mul_zero, Matrix.smul_empty, symplecticAnnihilatorVector, mul_neg, Matrix.add_cons, Matrix.head_cons, add_zero,
-      Matrix.tail_cons, zero_add, Matrix.empty_add_empty, LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val_zero, one_mul,
+    simp only [coordinateCenterLinearMap, Fin.isValue, symplecticHorizontalVector,
+        Matrix.smul_cons, smul_eq_mul,
+      mul_zero, Matrix.smul_empty, symplecticAnnihilatorVector, mul_neg, Matrix.add_cons,
+          Matrix.head_cons, add_zero,
+      Matrix.tail_cons, zero_add, Matrix.empty_add_empty, LinearMap.coe_mk, AddHom.coe_mk,
+          Matrix.cons_val_zero, one_mul,
       Matrix.cons_val_one, Matrix.cons_val_fin_one, zero_mul, neg_zero]
   have hpcenter :
       p.1 ≤ (coordinateCenterLine K x y hxy).1 := by
@@ -8390,11 +8590,13 @@ theorem symplecticQuadrangle_no_jTemplate_of_char_two_line_avoidance
       exact ⟨p, hpB, hpC⟩
   have hjoinX : jTemplate.Adj
       (.inl (.inl (0 : Fin 4))) (.inr (.inr ())) := by
-    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation,
+    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+        jTemplateRelation,
       zero_ne_one, or_false, and_self]
   have hjoinX' : jTemplate.Adj
       (.inl (.inl (1 : Fin 4))) (.inr (.inr ())) := by
-    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation,
+    simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+        jTemplateRelation,
       one_ne_zero, or_true, or_false, and_self]
   have hadjX := hom.map_rel hjoinX
   change (symplecticQuadrangle K).Adj
@@ -8668,8 +8870,9 @@ end CharacteristicTwoLineAvoidance
 noncomputable section UpperBoundReduction
 
 open Filter Finset SimpleGraph
-open scoped Classical Topology
+open scoped Topology
 
+open Classical in
 theorem familyExtremal_real_le_of_forall_free
     (family : Finset FiniteGraph) (n : ℕ)
     {bound : ℝ} (hbound : 0 ≤ bound)
@@ -8689,6 +8892,7 @@ theorem familyExtremal_real_le_of_forall_free
     exact_mod_cast hnat
   exact hcast.trans (Nat.floor_le hbound)
 
+open Classical in
 lemma familyLittleO_of_eventual_host_bounds
     (family : Finset FiniteGraph)
     (hhost : ∀ ε : ℝ, 0 < ε →
@@ -8707,7 +8911,7 @@ end UpperBoundReduction
 noncomputable section AsymptoticExtraction
 
 open Filter Finset SimpleGraph
-open scoped Classical Topology
+open scoped Topology
 
 lemma familyFree_of_embedded_subgraph
     {family : Finset FiniteGraph}
@@ -8723,11 +8927,11 @@ lemma familyFree_of_embedded_subgraph
       ⟨(SimpleGraph.Embedding.map embedding subgraph).toCopy⟩).mono_right hsub)
 
 lemma eventually_constant_le_positive_nat_rpow
-    (constant coefficient exponent : ℝ)
+    (bound coefficient exponent : ℝ)
     (hcoefficient : 0 < coefficient)
     (hexponent : 0 < exponent) :
     ∀ᶠ n : ℕ in Filter.atTop,
-      constant ≤ coefficient * (n : ℝ) ^ exponent := by
+      bound ≤ coefficient * (n : ℝ) ^ exponent := by
   have hpower :
       Filter.Tendsto
         (fun n : ℕ => (n : ℝ) ^ exponent)
@@ -8735,10 +8939,10 @@ lemma eventually_constant_le_positive_nat_rpow
     (tendsto_rpow_atTop hexponent).comp
       (tendsto_natCast_atTop_atTop (R := ℝ))
   filter_upwards [hpower.eventually
-    (Filter.eventually_ge_atTop (constant / coefficient))]
+    (Filter.eventually_ge_atTop (bound / coefficient))]
     with n hn
   calc
-    constant = coefficient * (constant / coefficient) := by
+    bound = coefficient * (bound / coefficient) := by
       field_simp
     _ ≤ coefficient * (n : ℝ) ^ exponent :=
       mul_le_mul_of_nonneg_left hn hcoefficient.le
@@ -8760,18 +8964,19 @@ lemma extremalScale_sixteenth_power
     _ = (n : ℝ) ^ 21 * (n : ℝ) ^ ((1 : ℝ) / 3) := by
       simp only [one_div, Real.rpow_add hnreal, Real.rpow_ofNat]
 
+open Classical in
 lemma familyLittleO_of_sixteenth_power_host_bound
-    (family : Finset FiniteGraph) (constant : ℝ)
+    (family : Finset FiniteGraph) (bound : ℝ)
     (hbound : ∀ (n : ℕ) (host : SimpleGraph (Fin n)),
       FamilyFree family host →
         (host.edgeFinset.card : ℝ) ^ 16 ≤
-          constant * (n : ℝ) ^ 21) :
+          bound * (n : ℝ) ^ 21) :
     FamilyLittleO family := by
   apply familyLittleO_of_eventual_host_bounds
   intro ε hε
   have hεpow : 0 < ε ^ (16 : ℕ) := pow_pos hε _
   have hconstant := eventually_constant_le_positive_nat_rpow
-    constant (ε ^ (16 : ℕ)) ((1 : ℝ) / 3)
+    bound (ε ^ (16 : ℕ)) ((1 : ℝ) / 3)
     hεpow (by norm_num)
   filter_upwards [hconstant, Filter.eventually_gt_atTop 0]
     with n hn hnpositive
@@ -8783,7 +8988,7 @@ lemma familyLittleO_of_sixteenth_power_host_bound
         (ε * extremalScale n) ^ 16 := by
     calc
       (host.edgeFinset.card : ℝ) ^ 16 ≤
-          constant * (n : ℝ) ^ 21 := hhost
+          bound * (n : ℝ) ^ 21 := hhost
       _ ≤ (ε ^ (16 : ℕ) * (n : ℝ) ^ ((1 : ℝ) / 3)) *
           (n : ℝ) ^ 21 :=
         mul_le_mul_of_nonneg_right hn (by positivity)
@@ -8801,6 +9006,7 @@ lemma familyLittleO_of_sixteenth_power_host_bound
 noncomputable def compactnessDegreePowerConstant : ℝ :=
   (48 : ℝ) ^ (4 : ℕ) + 1769472 + 1
 
+open Classical in
 theorem proposedFamilyFree_minDegree_ambient_sixteenth_power_le
     {N n : ℕ} (host : SimpleGraph (Fin N))
     (hN : 0 < N) (hn : 0 < n) (hNn : N ≤ n)
@@ -8862,6 +9068,7 @@ theorem proposedFamilyFree_minDegree_ambient_sixteenth_power_le
 noncomputable def compactnessHostPowerConstant : ℝ :=
   (2 : ℝ) ^ (16 : ℕ) * compactnessDegreePowerConstant
 
+open Classical in
 theorem proposedFamilyFree_sixteenth_power_host_bound
     (n : ℕ) (host : SimpleGraph (Fin n))
     (hfree : FamilyFree proposedFamily host) :
@@ -8952,7 +9159,8 @@ theorem member_eventual_lower_of_prime_power_avoidance
   filter_upwards [eventually_ge_atTop (quadrangleVertexCount t)]
     with n hn
   simpa only [manuscriptLowerConstant, extremalScale] using
-    quadrangle_uniform_lower_of_prime_power_avoidance forbidden.graph (proposedFamily_member_no_isolated hmember) t ht
+    quadrangle_uniform_lower_of_prime_power_avoidance forbidden.graph
+        (proposedFamily_member_no_isolated hmember) t ht
       htgap hfree hn
 
 theorem uniformMemberLower_of_characteristic_avoidance
@@ -9033,13 +9241,15 @@ lemma jTemplate_connected : jTemplate.Connected := by
       jTemplate.Adj
         (.inl (.inl (jBase copy base)))
         (.inr (.inl (copy, (base, center)))) := by
-    simp only [jTemplate, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation, or_false,
+    simp only [jTemplate, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+        jTemplateRelation, or_false,
       and_self]
   have hcenterPair (copy : Fin 2) (base : Fin 3) (center : Fin 2) :
       jTemplate.Adj
         (.inl (.inr (copy, center)))
         (.inr (.inl (copy, (base, center)))) := by
-    simp only [jTemplate, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation, and_self,
+    simp only [jTemplate, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+        jTemplateRelation, and_self,
       or_false]
   have hrootCenter (copy : Fin 2) (center : Fin 2) :
       jTemplate.Reachable root (.inl (.inr (copy, center))) := by
@@ -9061,16 +9271,20 @@ lemma jTemplate_connected : jTemplate.Connected := by
       (⟨copy, ⟨base, center⟩⟩ | lastVertex)
   · fin_cases base
     · simpa only [Nat.reduceAdd, Fin.zero_eta, Fin.isValue, jBase, ↓reduceIte] using hrootBase 0 0
-    · simpa only [Nat.reduceAdd, Fin.mk_one, Fin.isValue, jBase, ↓reduceIte, one_ne_zero] using hrootBase 1 0
-    · simpa only [Nat.reduceAdd, Fin.reduceFinMk, Fin.isValue, jBase, one_ne_zero, ↓reduceIte] using hrootBase 0 1
-    · simpa only [Nat.reduceAdd, Fin.reduceFinMk, Fin.isValue, jBase, Fin.reduceEq, ↓reduceIte] using hrootBase 0 2
+    · simpa only [Nat.reduceAdd, Fin.mk_one, Fin.isValue, jBase, ↓reduceIte,
+        one_ne_zero] using hrootBase 1 0
+    · simpa only [Nat.reduceAdd, Fin.reduceFinMk, Fin.isValue, jBase, one_ne_zero,
+        ↓reduceIte] using hrootBase 0 1
+    · simpa only [Nat.reduceAdd, Fin.reduceFinMk, Fin.isValue, jBase, Fin.reduceEq,
+        ↓reduceIte] using hrootBase 0 2
   · exact hrootCenter copy center
   · exact hrootPair copy base center
   · cases lastVertex
     have hjoin :
         jTemplate.Adj (.inl (.inl (0 : Fin 4)))
           (.inr (.inr ())) := by
-      simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true, jTemplateRelation,
+      simp only [jTemplate, Fin.isValue, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
+          jTemplateRelation,
         zero_ne_one, or_false, and_self]
     have hzero :
         jTemplate.Reachable root (.inl (.inl (0 : Fin 4))) := by
@@ -9085,18 +9299,22 @@ lemma kTemplate_connected : kTemplate.Connected := by
       kTemplate.Adj
         (copy, .inl (.inl base))
         (copy, .inr (base, center)) := by
-    simp only [kTemplate, fromRel_adj, ne_eq, Prod.mk.injEq, reduceCtorEq, and_false, not_false_eq_true,
+    simp only [kTemplate, fromRel_adj, ne_eq, Prod.mk.injEq, reduceCtorEq, and_false,
+        not_false_eq_true,
       kTemplateRelation, subdivisionRelation, and_self, Fin.isValue, true_or, false_or]
   have hcenterPair (copy : Fin 2) (base : Fin 3) (center : Fin 3) :
       kTemplate.Adj
         (copy, .inl (.inr center))
         (copy, .inr (base, center)) := by
-    simp only [kTemplate, fromRel_adj, ne_eq, Prod.mk.injEq, reduceCtorEq, and_false, not_false_eq_true,
+    simp only [kTemplate, fromRel_adj, ne_eq, Prod.mk.injEq, reduceCtorEq, and_false,
+        not_false_eq_true,
       kTemplateRelation, subdivisionRelation, and_self, Fin.isValue, true_or, false_or]
   have hbridge :
       kTemplate.Adj root ((1 : Fin 2), kSpecifiedCenter) := by
-    simp only [kTemplate, Fin.isValue, kSpecifiedCenter, fromRel_adj, ne_eq, Prod.mk.injEq, zero_ne_one, and_true,
-      not_false_eq_true, kTemplateRelation, subdivisionRelation, and_self, or_true, one_ne_zero, or_self, or_false, root]
+    simp only [kTemplate, Fin.isValue, kSpecifiedCenter, fromRel_adj, ne_eq, Prod.mk.injEq,
+        zero_ne_one, and_true,
+      not_false_eq_true, kTemplateRelation, subdivisionRelation, and_self, or_true,
+          one_ne_zero, or_self, or_false, root]
   have hhub (copy : Fin 2) :
       kTemplate.Reachable root (copy, kSpecifiedCenter) := by
     fin_cases copy
@@ -9160,7 +9378,7 @@ lemma encodedKQuotient_connected {f : KVertex → KVertex}
 theorem finiteCycle_connected {n : ℕ} (hn : 0 < n) :
     (finiteCycle n).graph.Connected := by
   change (SimpleGraph.cycleGraph n).Connected
-  letI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  let _ : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   exact ⟨SimpleGraph.cycleGraph_preconnected⟩
 
 theorem proposedFamily_member_connected
@@ -9266,7 +9484,8 @@ theorem finiteNatSup_sixteenth_power_le
   classical
   rcases s.eq_empty_or_nonempty with hs | hs
   · subst s
-    simpa only [sup_empty, Nat.bot_eq_zero, CharP.cast_eq_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+    simpa only [sup_empty, Nat.bot_eq_zero, CharP.cast_eq_zero, ne_eq, OfNat.ofNat_ne_zero,
+        not_false_eq_true,
       zero_pow] using hbound
   · obtain ⟨a, ha, hmax⟩ := Finset.exists_mem_eq_sup s hs weight
     simpa only [hmax] using hweight a ha
@@ -9293,7 +9512,6 @@ end FamilyExtremal
 noncomputable section MainTheorem
 
 open Finset SimpleGraph
-open scoped Classical
 
 noncomputable def compactnessSharpHostPowerConstant : ℝ :=
   compactnessHostPowerConstant
@@ -9304,6 +9522,7 @@ theorem compactnessSharpHostPowerConstant_pos :
     compactnessDegreePowerConstant
   positivity
 
+open Classical in
 theorem checkedManuscriptCounterexample :
     proposedFamily.Nonempty ∧
       (∀ forbidden ∈ proposedFamily,
@@ -9333,7 +9552,9 @@ theorem checkedManuscriptCounterexample :
     proposedFamily_member_isBipartite hforbidden,
     proposedFamily_isCyclic forbidden hforbidden⟩
 
-theorem quantitativeCompactnessCounterexample :
+open Classical in
+/-- A quantitative counterexample to the Erdős--Simonovits compactness conjecture. -/
+public theorem quantitativeCompactnessCounterexample :
     ∃ (family : Finset FiniteGraph) (c C : ℝ),
       family.Nonempty ∧
       (∀ forbidden ∈ family,

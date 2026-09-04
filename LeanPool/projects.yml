@@ -260,6 +260,56 @@ projects:
     msc:
       - "05D10"
       - "05C55"
+  - slug: compactness-and-degeneracy
+    title: Counterexamples to graph compactness and two-degenerate extremal bounds
+    summary: >-
+      Formalizes two counterexamples in extremal graph theory. The first gives
+      a finite family of connected bipartite cyclic graphs whose family
+      extremal number grows strictly slower than every member's extremal
+      number, disproving the Erdős--Simonovits compactness conjecture. The
+      second constructs a connected bipartite two-degenerate graph with
+      extremal number at least c n^(3/2+ε), disproving the proposed universal
+      n^(3/2) upper bound under the stated bipartition degree condition.
+    branch: extremal combinatorics and graph theory
+    entry_module: LeanPool.CompactnessAndDegeneracy
+    authors:
+      - OpenAI
+      - Dean Cureton
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - CompactnessConjecture.quantitativeCompactnessCounterexample
+    main_results:
+      - declaration: CompactnessConjecture.quantitativeCompactnessCounterexample
+        informal: >-
+          There is a nonempty finite family of connected bipartite cyclic
+          graphs such that every member has a uniform positive
+          n^(4/3)-scale extremal lower bound, while every family-free host on n
+          vertices has its sixteenth power of the edge count bounded by a
+          constant times n^21. Consequently the family is not compact and the
+          Erdős--Simonovits compactness conjecture is false.
+      - declaration: TwoDegenerateGraphs.twoDegenerateExtremalCounterexample
+        informal: >-
+          There is a connected bipartite two-degenerate finite graph H such
+          that each side of every two-coloring has a vertex of degree greater
+          than two, yet ex(n,H) is eventually at least c n^(3/2+ε) for some
+          positive constants c and ε.
+    tags:
+      - extremal-combinatorics
+      - extremal-graph-theory
+      - degenerate-graphs
+      - counterexamples
+    msc:
+      - "05C35"
+      - "05C75"
   - slug: connes-rigidity
     title: Conditional formalization of Zhou's Connes-rigidity counterexample
     summary: >-

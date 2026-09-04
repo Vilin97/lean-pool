@@ -4,7 +4,23 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
+module
+
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.Combinatorics.SimpleGraph.Bipartite
+public import Mathlib.Combinatorics.SimpleGraph.Extremal.Basic
 import LeanPool.CompactnessAndDegeneracy.Compactness
+import all Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+import Mathlib.Analysis.SpecialFunctions.Log.Base
+import all Mathlib.InformationTheory.Hamming
+import Mathlib.Probability.Distributions.SetBernoulli
+
+/-!
+# A two-degenerate extremal-number counterexample
+
+This file constructs a connected bipartite two-degenerate graph whose extremal
+number grows faster than every constant multiple of `n ^ (3 / 2)`.
+-/
 
 namespace TwoDegenerateGraphs
 
@@ -587,8 +603,10 @@ theorem independentBinaryPairMass_nonneg {q : ℝ}
 theorem independentBinaryPairMass_sum (q : ℝ) :
     (∑ left : Bool, ∑ right : Bool,
       independentBinaryPairMass q left right) = 1 := by
-  simp only [Fintype.univ_bool, independentBinaryPairMass, binaryCoinMass, mul_ite, ite_mul, mem_singleton,
-    Bool.true_eq_false, not_false_eq_true, sum_insert, ↓reduceIte, sum_singleton, Bool.false_eq_true]
+  simp only [Fintype.univ_bool, independentBinaryPairMass, binaryCoinMass, mul_ite, ite_mul,
+      mem_singleton,
+    Bool.true_eq_false, not_false_eq_true, sum_insert, ↓reduceIte, sum_singleton,
+        Bool.false_eq_true]
   ring
 
 structure BinaryPairKernel where
@@ -654,7 +672,8 @@ theorem childMarginal_le_one (kernel : BinaryPairKernel) :
               kernel.parentProbability_nonneg kernel.parentProbability_le_one
               left right)
     _ = 1 := by
-      simpa only [Fintype.univ_bool, mul_one, mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert,
+      simpa only [Fintype.univ_bool, mul_one, mem_singleton, Bool.true_eq_false,
+          not_false_eq_true, sum_insert,
         sum_singleton] using independentBinaryPairMass_sum kernel.parentProbability
 
 theorem childMarginal_eq_four_outcomes (kernel : BinaryPairKernel) :
@@ -667,8 +686,10 @@ theorem childMarginal_eq_four_outcomes (kernel : BinaryPairKernel) :
           kernel.childProbability true false +
         kernel.parentProbability ^ 2 *
           kernel.childProbability true true := by
-  simp only [childMarginal, Fintype.univ_bool, independentBinaryPairMass, binaryCoinMass, mul_ite, ite_mul,
-    mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, ↓reduceIte, sum_singleton, Bool.false_eq_true]
+  simp only [childMarginal, Fintype.univ_bool, independentBinaryPairMass, binaryCoinMass,
+      mul_ite, ite_mul,
+    mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, ↓reduceIte,
+        sum_singleton, Bool.false_eq_true]
   ring
 
 theorem conditionalEntropy_mul_log_two (kernel : BinaryPairKernel) :
@@ -681,8 +702,10 @@ theorem conditionalEntropy_mul_log_two (kernel : BinaryPairKernel) :
           Real.binEntropy (kernel.childProbability true false) +
         kernel.parentProbability ^ 2 *
           Real.binEntropy (kernel.childProbability true true) := by
-  simp only [conditionalEntropy, Fintype.univ_bool, independentBinaryPairMass, binaryCoinMass, mul_ite, ite_mul,
-    binaryEntropy, mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, ↓reduceIte, sum_singleton,
+  simp only [conditionalEntropy, Fintype.univ_bool, independentBinaryPairMass, binaryCoinMass,
+      mul_ite, ite_mul,
+    binaryEntropy, mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert,
+        ↓reduceIte, sum_singleton,
     Bool.false_eq_true]
   field_simp [log_two_pos.ne']
   ring
@@ -702,8 +725,10 @@ theorem averageDisagreement_eq_four_outcomes (kernel : BinaryPairKernel) :
         kernel.parentProbability * (1 - kernel.parentProbability) +
         kernel.parentProbability ^ 2 *
           (1 - kernel.childProbability true true) := by
-  simp only [averageDisagreement, Fintype.univ_bool, independentBinaryPairMass, binaryCoinMass, mul_ite,
-    ite_mul, bitDisagreementProbability, mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, ↓reduceIte,
+  simp only [averageDisagreement, Fintype.univ_bool, independentBinaryPairMass, binaryCoinMass,
+      mul_ite,
+    ite_mul, bitDisagreementProbability, mem_singleton, Bool.true_eq_false, not_false_eq_true,
+        sum_insert, ↓reduceIte,
     sum_singleton, Bool.false_eq_true, add_self_div_two, sub_add_cancel, one_div, add_sub_cancel]
   ring
 
@@ -998,8 +1023,10 @@ theorem conditionalEntropy_bound (kernel : BinaryPairKernel) :
         hmixing_tendsto
     have hzero :
         smoothedConditionalEntropy kernel 0 = kernel.conditionalEntropy := by
-      simp only [smoothedConditionalEntropy, Fintype.univ_bool, sub_zero, one_mul, zero_div, add_zero,
-        mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, sum_singleton, conditionalEntropy]
+      simp only [smoothedConditionalEntropy, Fintype.univ_bool, sub_zero, one_mul, zero_div,
+          add_zero,
+        mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, sum_singleton,
+            conditionalEntropy]
     rw [hzero] at hcontinuous
     refine hcontinuous.congr' ?_
     filter_upwards [] with n
@@ -1127,13 +1154,18 @@ theorem withoutReplacementBinaryPairMass_nonneg
         linarith
       exact mul_nonneg hzero_nonneg hfactor
   cases left <;> cases right
-  · simpa only [withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount, Bool.false_eq_true, ↓reduceIte,
+  · simpa only [withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount,
+      Bool.false_eq_true, ↓reduceIte,
       ge_iff_le] using div_nonneg hzero_diagonal hdenominator
-  · simpa only [withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount, Bool.false_eq_true, ↓reduceIte,
+  · simpa only [withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount,
+      Bool.false_eq_true, ↓reduceIte,
       sub_zero, ge_iff_le] using div_nonneg (mul_nonneg hzero_nonneg hone_nonneg) hdenominator
-  · simpa only [withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount, ↓reduceIte, Bool.false_eq_true,
-      Bool.true_eq_false, sub_zero, ge_iff_le] using div_nonneg (mul_nonneg hone_nonneg hzero_nonneg) hdenominator
-  · simpa only [withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount, ↓reduceIte, ge_iff_le] using
+  · simpa only [withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount, ↓reduceIte,
+      Bool.false_eq_true,
+      Bool.true_eq_false, sub_zero,
+          ge_iff_le] using div_nonneg (mul_nonneg hone_nonneg hzero_nonneg) hdenominator
+  · simpa only [withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount, ↓reduceIte,
+      ge_iff_le] using
       div_nonneg hone_diagonal hdenominator
 
 theorem withoutReplacementBinaryPairMass_sum
@@ -1146,8 +1178,10 @@ theorem withoutReplacementBinaryPairMass_sum
     have htwo : (2 : ℝ) ≤ (parentCount : ℝ) := by
       exact_mod_cast hparents
     linarith
-  simp only [Fintype.univ_bool, withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount, ite_mul,
-    mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, ↓reduceIte, sum_singleton, Bool.false_eq_true,
+  simp only [Fintype.univ_bool, withoutReplacementBinaryPairMass, empiricalBinaryOutcomeCount,
+      ite_mul,
+    mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, ↓reduceIte,
+        sum_singleton, Bool.false_eq_true,
     sub_zero]
   field_simp [hparent_real.ne', hparent_minus.ne']
   ring
@@ -1176,8 +1210,10 @@ theorem withoutReplacementBinaryPairExpectation_sub
     have htwo : (2 : ℝ) ≤ (parentCount : ℝ) := by
       exact_mod_cast hparents
     linarith
-  simp only [withoutReplacementBinaryPairExpectation, Fintype.univ_bool, withoutReplacementBinaryPairMass,
-    empiricalBinaryOutcomeCount, ite_mul, mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, ↓reduceIte,
+  simp only [withoutReplacementBinaryPairExpectation, Fintype.univ_bool,
+      withoutReplacementBinaryPairMass,
+    empiricalBinaryOutcomeCount, ite_mul, mem_singleton, Bool.true_eq_false, not_false_eq_true,
+        sum_insert, ↓reduceIte,
     sum_singleton, Bool.false_eq_true, sub_zero, independentBinaryPairMass, binaryCoinMass, mul_ite]
   field_simp [hparent_real.ne', hparent_minus.ne']
   ring
@@ -1284,7 +1320,8 @@ theorem withoutReplacementBinaryPairExpectation_le_one
             (withoutReplacementBinaryPairMass_nonneg
               parentCount oneCount hparents hones left right)
     _ = 1 := by
-      simpa only [Fintype.univ_bool, mul_one, mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert,
+      simpa only [Fintype.univ_bool, mul_one, mem_singleton, Bool.true_eq_false,
+          not_false_eq_true, sum_insert,
         sum_singleton] using withoutReplacementBinaryPairMass_sum parentCount oneCount hparents
 
 noncomputable def empiricalChildMarginal
@@ -1336,8 +1373,10 @@ theorem empiricalChildMarginal_error
       ⟨kernel.childProbability_nonneg left right,
         kernel.childProbability_le_one left right⟩)
   rw [← hparameter] at herror
-  simpa only [empiricalChildMarginal, BinaryPairKernel.childMarginal, Fintype.univ_bool, mem_singleton,
-    Bool.true_eq_false, not_false_eq_true, sum_insert, sum_singleton, one_div, ge_iff_le] using herror
+  simpa only [empiricalChildMarginal, BinaryPairKernel.childMarginal, Fintype.univ_bool,
+      mem_singleton,
+    Bool.true_eq_false, not_false_eq_true, sum_insert, sum_singleton, one_div,
+        ge_iff_le] using herror
 
 theorem empiricalConditionalEntropy_error
     (parentCount oneCount : ℕ)
@@ -1358,7 +1397,8 @@ theorem empiricalConditionalEntropy_error
         binaryEntropy_le_one (kernel.childProbability left right)⟩)
   rw [← hparameter] at herror
   simpa only [empiricalConditionalEntropy, BinaryPairKernel.conditionalEntropy, Fintype.univ_bool,
-    mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, sum_singleton, one_div, ge_iff_le] using herror
+    mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, sum_singleton, one_div,
+        ge_iff_le] using herror
 
 theorem empiricalAverageDisagreement_error
     (parentCount oneCount : ℕ)
@@ -1610,8 +1650,10 @@ theorem binomialProbabilityMass_le_mode
     by_cases hsuccess_zero : successCount = 0
     · subst successCount
       exact le_rfl
-    · simp only [binomialProbabilityMass, CharP.cast_eq_zero, zero_div, ne_eq, hsuccess_zero, not_false_eq_true,
-        zero_pow, mul_zero, sub_zero, one_pow, mul_one, Nat.choose_zero_right, Nat.cast_one, pow_zero, tsub_zero,
+    · simp only [binomialProbabilityMass, CharP.cast_eq_zero, zero_div, ne_eq, hsuccess_zero,
+        not_false_eq_true,
+        zero_pow, mul_zero, sub_zero, one_pow, mul_one, Nat.choose_zero_right, Nat.cast_one,
+            pow_zero, tsub_zero,
         zero_le_one]
   by_cases hmode_full : mode = trialCount
   · subst mode
@@ -1622,7 +1664,8 @@ theorem binomialProbabilityMass_le_mode
     · subst successCount
       exact le_rfl
     · have hpositive : 0 < trialCount - successCount := by omega
-      simp only [binomialProbabilityMass, one_pow, mul_one, sub_self, ne_eq, hpositive.ne', not_false_eq_true,
+      simp only [binomialProbabilityMass, one_pow, mul_one, sub_self, ne_eq, hpositive.ne',
+          not_false_eq_true,
         zero_pow, mul_zero, Nat.choose_self, Nat.cast_one, tsub_self, pow_zero, zero_le_one]
   have hmode_lt : mode < trialCount := by omega
   let probability : ℝ := (mode : ℝ) / (trialCount : ℝ)
@@ -1730,14 +1773,18 @@ theorem binomialProbabilityMass_mode_mul_exp_entropy
       (trialCount.choose mode : ℝ) := by
   by_cases hzero : mode = 0
   · subst mode
-    simp only [binomialProbabilityMass, Nat.choose_zero_right, Nat.cast_one, CharP.cast_eq_zero, zero_div,
-      pow_zero, mul_one, sub_zero, tsub_zero, one_pow, Real.binEntropy_zero, mul_zero, Real.exp_zero]
+    simp only [binomialProbabilityMass, Nat.choose_zero_right, Nat.cast_one,
+        CharP.cast_eq_zero, zero_div,
+      pow_zero, mul_one, sub_zero, tsub_zero, one_pow, Real.binEntropy_zero, mul_zero,
+          Real.exp_zero]
   by_cases hfull : mode = trialCount
   · subst mode
     have htrials : (trialCount : ℝ) ≠ 0 := by
       exact_mod_cast hzero
-    simp only [binomialProbabilityMass, Nat.choose_self, Nat.cast_one, ne_eq, htrials, not_false_eq_true,
-      div_self, one_pow, mul_one, sub_self, tsub_self, pow_zero, Real.binEntropy_one, mul_zero, Real.exp_zero]
+    simp only [binomialProbabilityMass, Nat.choose_self, Nat.cast_one, ne_eq, htrials,
+        not_false_eq_true,
+      div_self, one_pow, mul_one, sub_self, tsub_self, pow_zero, Real.binEntropy_one, mul_zero,
+          Real.exp_zero]
   have hmode_pos : 0 < mode := Nat.pos_of_ne_zero hzero
   have hmode_lt : mode < trialCount :=
     lt_of_le_of_ne hmode hfull
@@ -1896,7 +1943,8 @@ theorem log_choose_le_binary_entropy
         Real.binEntropy_zero, mul_zero, Std.le_refl]
     · have htrials_real : (trialCount : ℝ) ≠ 0 := by
         exact_mod_cast htrials
-      simp only [Nat.choose_self, Nat.cast_one, Real.log_one, ne_eq, htrials_real, not_false_eq_true, div_self,
+      simp only [Nat.choose_self, Nat.cast_one, Real.log_one, ne_eq, htrials_real,
+          not_false_eq_true, div_self,
         Real.binEntropy_one, mul_zero, Std.le_refl]
   have hsuccess : 0 < successCount := Nat.pos_of_ne_zero hzero
   have hstrict : successCount < trialCount :=
@@ -2505,11 +2553,14 @@ noncomputable def neighborsWithin {V : Type*} (G : SimpleGraph V)
   classical
   exact s.filter (G.Adj v)
 
-def IsDegenerate {V : Type*} (r : ℕ) (G : SimpleGraph V) : Prop :=
+/-- Every nonempty induced finite subgraph has a vertex of degree at most `r`. -/
+public def IsDegenerate {V : Type*} (r : ℕ) (G : SimpleGraph V) : Prop :=
   ∀ s : Finset V, s.Nonempty →
     ∃ v ∈ s, (neighborsWithin G s v).card ≤ r
 
-abbrev IsTwoDegenerate {V : Type*} (G : SimpleGraph V) : Prop :=
+/-- A graph is two-degenerate when every nonempty induced finite subgraph has a
+vertex with at most two neighbors. -/
+public abbrev IsTwoDegenerate {V : Type*} (G : SimpleGraph V) : Prop :=
   IsDegenerate 2 G
 
 theorem isTwoDegenerate_of_iso {V W : Type*}
@@ -2529,7 +2580,8 @@ theorem isTwoDegenerate_of_iso {V W : Type*}
     obtain ⟨w, hw, heq⟩ := Finset.mem_map.mp hv
     have hwv : w = e v := by
       apply e.symm.toEquiv.injective
-      simpa only [RelIso.coe_fn_toEquiv, RelIso.symm_apply_apply, Function.Embedding.coeFn_mk] using heq
+      simpa only [RelIso.coe_fn_toEquiv, RelIso.symm_apply_apply,
+          Function.Embedding.coeFn_mk] using heq
     simpa only [← hwv] using hw
   · have hneighbors :
         neighborsWithin H s (e v) =
@@ -2833,7 +2885,7 @@ theorem pairBaseVertices_reachable (baseSize depth : ℕ)
       (pairBaseVertex baseSize depth a)
       (pairBaseVertex baseSize depth b) := by
   classical
-  letI pairDecidableEq : DecidableEq (PairLayer baseSize 0) := Classical.decEq _
+  let pairDecidableEq : DecidableEq (PairLayer baseSize 0) := Classical.decEq _
   by_cases hab : a = b
   · subst b
     exact SimpleGraph.Reachable.rfl
@@ -2933,7 +2985,7 @@ theorem pairGraph_exists_adj_degree_gt_two
   let b : PairLayer baseSize 0 := ⟨1, by omega⟩
   let c : PairLayer baseSize 0 := ⟨2, by omega⟩
   let d : PairLayer baseSize 0 := ⟨3, by omega⟩
-  letI pairDecidableEq : DecidableEq (PairLayer baseSize 0) := Classical.decEq _
+  let pairDecidableEq : DecidableEq (PairLayer baseSize 0) := Classical.decEq _
   have hab : a ≠ b := by
     intro heq
     have hval := congrArg Fin.val heq
@@ -3226,7 +3278,9 @@ noncomputable def booleanWordsOfWeightEquiv
     apply Subtype.ext
     funext index
     cases hbit : word.val index <;>
-      simp [booleanWordOnes, hbit]
+      simp only [booleanWordOnes, Finset.mem_filter,
+        Finset.mem_univ, true_and, hbit, Bool.false_eq_true,
+        decide_false, decide_true]
   · intro support
     apply Subtype.ext
     ext index
@@ -3283,7 +3337,8 @@ noncomputable def classifiedWordSupportEquiv
                 word candidate.val = true)) := by
         simpa only [booleanWordOnes] using index.property
       exact (Finset.mem_filter.mp hmembership).2
-    simp only [classifiedWordOnes, classificationGroup, mem_filter, mem_univ, index.val.property, and_self, hbit]
+    simp only [classifiedWordOnes, classificationGroup, mem_filter, mem_univ,
+        index.val.property, and_self, hbit]
   · have hmembership :
         index.val ∈
           (classificationGroup classify group).filter
@@ -3427,7 +3482,8 @@ abbrev PairTypeCountProfile (parentCount dimension : ℕ) :=
 theorem pairTypeCountProfile_card (parentCount dimension : ℕ) :
     Fintype.card (PairTypeCountProfile parentCount dimension) =
       (parentCount.choose 2 + 1) ^ (3 * dimension) := by
-  simp only [PairTypeCountProfile, Fintype.card_pi, Fintype.card_fin, prod_const, card_univ, Nat.mul_comm,
+  simp only [PairTypeCountProfile, Fintype.card_pi, Fintype.card_fin, prod_const, card_univ,
+      Nat.mul_comm,
     pow_mul]
 
 noncomputable def pairCoordinateBitType
@@ -3632,7 +3688,8 @@ theorem pairChildClassificationOnes_card
         (Finset.mem_filter.mp hsecond_group).2
       have hfirst_coordinate := congrArg Prod.snd hfirst_class
       have hsecond_coordinate := congrArg Prod.snd hsecond_class
-      simpa only [pairCoordinateClassification] using hfirst_coordinate.trans hsecond_coordinate.symm
+      simpa only [pairCoordinateClassification] using hfirst_coordinate.trans
+          hsecond_coordinate.symm
   · intro pair hpair
     refine ⟨(pair, coordinate), ?_, rfl⟩
     have hpair_parts := Finset.mem_filter.mp hpair
@@ -3843,7 +3900,8 @@ theorem pairParentCoordinateSupport_card_add
     Finset.card_filter_add_card_filter_not
       (s := (Finset.univ : Finset (Fin parentCount)))
       (fun parent => parents parent coordinate = false)
-  simpa only [pairParentCoordinateSupport, Bool.not_eq_false, card_univ, Fintype.card_fin] using hpartition
+  simpa only [pairParentCoordinateSupport, Bool.not_eq_false, card_univ,
+      Fintype.card_fin] using hpartition
 
 theorem pairParentCoordinateSupport_false_card
     {parentCount dimension : ℕ}
@@ -3949,7 +4007,8 @@ theorem pairTypeGroup_false_card
     (coordinate : Fin dimension) :
     (pairTypeGroup parents coordinate 0).card =
       (parentCount - pairParentCoordinateOneCount parents coordinate).choose 2 := by
-  simpa only [Fin.isValue, Bool.false_eq_true, ↓reduceIte, pairParentCoordinateSupport_false_card] using
+  simpa only [Fin.isValue, Bool.false_eq_true, ↓reduceIte,
+      pairParentCoordinateSupport_false_card] using
     pairTypeGroup_homogeneous_card parents coordinate false
 
 theorem pairTypeGroup_true_card
@@ -3974,7 +4033,8 @@ theorem pairTypeGroup_mixed_card
         (pairTypeGroup parents coordinate 1).card +
           (pairTypeGroup parents coordinate 2).card =
             parentCount.choose 2 := by
-    simpa only [Fin.isValue, add_assoc, Fin.sum_univ_succ, Fin.succ_zero_eq_one, univ_unique, Fin.default_eq_zero,
+    simpa only [Fin.isValue, add_assoc, Fin.sum_univ_succ, Fin.succ_zero_eq_one, univ_unique,
+        Fin.default_eq_zero,
       sum_singleton, Fin.succ_one_eq_two] using sum_pairTypeGroup_card parents coordinate
   rw [pairTypeGroup_false_card,
     pairTypeGroup_true_card] at htotal
@@ -4094,7 +4154,8 @@ theorem sum_pairTypeGroupChildOnes_card
         (fun pair => pairCoordinateBitType parents coordinate pair = bitType) =
       pairTypeGroupChildOnes parents children coordinate bitType := by
     ext pair
-    simp only [booleanWordOnes, mem_filter, mem_univ, true_and, pairTypeGroupChildOnes, pairTypeGroup, and_comm,
+    simp only [booleanWordOnes, mem_filter, mem_univ, true_and, pairTypeGroupChildOnes,
+        pairTypeGroup, and_comm,
       support]
   calc
     (∑ bitType : PairBitType,
@@ -4186,8 +4247,10 @@ theorem pairCoordinateKernel_empiricalConditionalEntropy
   simp_rw [withoutReplacementBinaryPairMass_eq_pairTypeGroup
     hparents parents coordinate]
   simp only [Fintype.univ_bool, pairBitTypeOfOutcomes, Fin.isValue, one_div, mul_ite, mul_one,
-    pairCoordinateKernel_childProbability, ite_mul, mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert,
-    and_false, ↓reduceIte, and_true, sum_singleton, Bool.false_eq_true, pairCoordinateConditionalEntropy,
+    pairCoordinateKernel_childProbability, ite_mul, mem_singleton, Bool.true_eq_false,
+        not_false_eq_true, sum_insert,
+    and_false, ↓reduceIte, and_true, sum_singleton, Bool.false_eq_true,
+        pairCoordinateConditionalEntropy,
     Fin.sum_univ_succ, Fin.succ_zero_eq_one, univ_unique, Fin.default_eq_zero, Fin.succ_one_eq_two]
   ring
 
@@ -4252,8 +4315,10 @@ theorem pairCoordinateKernel_empiricalChildMarginal
       simp_rw [withoutReplacementBinaryPairMass_eq_pairTypeGroup
         hparents parents coordinate]
       simp only [Fintype.univ_bool, pairBitTypeOfOutcomes, Fin.isValue, one_div, mul_ite, mul_one,
-        pairCoordinateKernel_childProbability, ite_mul, mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert,
-        and_false, ↓reduceIte, and_true, sum_singleton, Bool.false_eq_true, Fin.sum_univ_succ, Fin.succ_zero_eq_one,
+        pairCoordinateKernel_childProbability, ite_mul, mem_singleton, Bool.true_eq_false,
+            not_false_eq_true, sum_insert,
+        and_false, ↓reduceIte, and_true, sum_singleton, Bool.false_eq_true, Fin.sum_univ_succ,
+            Fin.succ_zero_eq_one,
         univ_unique, Fin.default_eq_zero, Fin.succ_one_eq_two]
       ring
     _ = (pairChildCoordinateOneCount children coordinate : ℝ) /
@@ -4344,8 +4409,10 @@ theorem pairCoordinateKernel_empiricalAverageDisagreement
       simp_rw [withoutReplacementBinaryPairMass_eq_pairTypeGroup
         hparents parents coordinate]
       simp only [Fintype.univ_bool, pairBitTypeOfOutcomes, Fin.isValue, one_div, mul_ite, mul_one,
-        BinaryPairKernel.bitDisagreementProbability, pairCoordinateKernel_childProbability, ite_mul, mem_singleton,
-        Bool.true_eq_false, not_false_eq_true, sum_insert, and_false, ↓reduceIte, and_true, sum_singleton,
+        BinaryPairKernel.bitDisagreementProbability, pairCoordinateKernel_childProbability,
+            ite_mul, mem_singleton,
+        Bool.true_eq_false, not_false_eq_true, sum_insert, and_false, ↓reduceIte, and_true,
+            sum_singleton,
         Bool.false_eq_true, add_self_div_two, sub_add_cancel, add_sub_cancel]
       ring
     _ =
@@ -4413,7 +4480,7 @@ theorem pairCoordinatePairMismatchCount_homogeneous
         exact hequal.symm.trans
           (hhomogeneous parent hmember)
     unfold pairCoordinatePairMismatchCount
-    rw [hfull, if_neg hchild]
+    rw [hfull, ite_eq_right hchild]
     exact pair.property
 
 theorem pairCoordinatePairMismatchCount_mixed
@@ -4472,16 +4539,20 @@ theorem pairCoordinatePairMismatchCount_mixed
   have hmismatch : mismatches.Nonempty := by
     cases hchild : children pair coordinate
     · refine ⟨trueParent, ?_⟩
-      simp only [hchild, ne_eq, Bool.not_eq_false, mem_filter, htrueParent, htrueBit, and_self, mismatches]
+      simp only [hchild, ne_eq, Bool.not_eq_false, mem_filter, htrueParent, htrueBit, and_self,
+          mismatches]
     · refine ⟨falseParent, ?_⟩
-      simp only [hchild, ne_eq, Bool.not_eq_true, mem_filter, hfalseParent, hfalseBit, and_self, mismatches]
+      simp only [hchild, ne_eq, Bool.not_eq_true, mem_filter, hfalseParent, hfalseBit,
+          and_self, mismatches]
   have hagreement : agreements.Nonempty := by
     cases hchild : children pair coordinate
     · refine ⟨falseParent, ?_⟩
-      simp only [hchild, ne_eq, Bool.not_eq_false, Bool.not_eq_true, mem_filter, hfalseParent, hfalseBit, and_self,
+      simp only [hchild, ne_eq, Bool.not_eq_false, Bool.not_eq_true, mem_filter, hfalseParent,
+          hfalseBit, and_self,
         agreements]
     · refine ⟨trueParent, ?_⟩
-      simp only [hchild, ne_eq, Bool.not_eq_true, Bool.not_eq_false, mem_filter, htrueParent, htrueBit, and_self,
+      simp only [hchild, ne_eq, Bool.not_eq_true, Bool.not_eq_false, mem_filter, htrueParent,
+          htrueBit, and_self,
         agreements]
   have hpartition : mismatches.card + agreements.card = 2 := by
     have hfilter := Finset.card_filter_add_card_filter_not
@@ -4651,7 +4722,8 @@ theorem sum_pairCoordinatePairMismatchCount
         (∑ pair ∈ pairTypeGroup parents coordinate 2,
           pairCoordinatePairMismatchCount
             parents children coordinate pair) := by
-    simpa only [pairTypeGroup, Fin.isValue, add_assoc, Fin.sum_univ_succ, Fin.succ_zero_eq_one, univ_unique,
+    simpa only [pairTypeGroup, Fin.isValue, add_assoc, Fin.sum_univ_succ, Fin.succ_zero_eq_one,
+        univ_unique,
       Fin.default_eq_zero, sum_singleton, Fin.succ_one_eq_two] using hfiber
   rw [pairCoordinatePairMismatchCount_sum_false,
     pairCoordinatePairMismatchCount_sum_true,
@@ -4849,7 +4921,8 @@ theorem pairChildArrayAverageDisagreement_le_radius
         intro pair _
         simp only [sum_const, pair.property, smul_eq_mul]
       _ = 2 * parentCount.choose 2 * radius := by
-        simp only [Nat.mul_comm, sum_const, card_univ, pairLayer_card_succ, pairLayer_card_zero, smul_eq_mul,
+        simp only [Nat.mul_comm, sum_const, card_univ, pairLayer_card_succ,
+            pairLayer_card_zero, smul_eq_mul,
           Nat.mul_assoc]
   have htotal_real :
       (∑ coordinate : Fin dimension,
@@ -5438,7 +5511,7 @@ theorem hammingRetentionMeasure_integrable
     (observable : Set (Bool × HammingWord dimension) → ℝ) :
     MeasureTheory.Integrable observable
       (hammingRetentionMeasure dimension) := by
-  letI : MeasureTheory.IsProbabilityMeasure
+  let _ : MeasureTheory.IsProbabilityMeasure
       (hammingRetentionMeasure dimension) :=
     hammingRetentionMeasure_isProbability dimension
   exact MeasureTheory.Integrable.of_finite
@@ -5475,7 +5548,7 @@ theorem hammingRetentionMeasure_real_event_eq_sum
           (hammingRetentionMeasure dimension).real {retained}
         else 0 := by
   classical
-  letI : MeasureTheory.IsProbabilityMeasure
+  let _ : MeasureTheory.IsProbabilityMeasure
       (hammingRetentionMeasure dimension) :=
     hammingRetentionMeasure_isProbability dimension
   let support : Finset (Set (Bool × HammingWord dimension)) :=
@@ -5483,7 +5556,7 @@ theorem hammingRetentionMeasure_real_event_eq_sum
   have hsupport :
       (support : Set (Set (Bool × HammingWord dimension))) = event := by
     ext retained
-    simp only [coe_filter, mem_univ, true_and, Set.setOf_mem_eq, support]
+    simp only [coe_filter, mem_univ, true_and, Set.ofPred_mem_eq, support]
   calc
     (hammingRetentionMeasure dimension).real event =
         (hammingRetentionMeasure dimension).real support := by
@@ -5524,7 +5597,7 @@ theorem hammingRetentionMeasure_real_deviation_le
       ProbabilityTheory.variance observable
           (hammingRetentionMeasure dimension) /
         threshold ^ 2 := by
-  letI : MeasureTheory.IsProbabilityMeasure
+  let _ : MeasureTheory.IsProbabilityMeasure
       (hammingRetentionMeasure dimension) :=
     hammingRetentionMeasure_isProbability dimension
   have hchebyshev :=
@@ -5558,7 +5631,7 @@ theorem hammingRetentionMeasure_real_contains_finset
         Set.pi (required : Set (Bool × HammingWord dimension))
           (fun _ => ({True} : Set Prop)) := by
     ext membership
-    simp only [Prod.forall, Bool.forall_bool, Set.preimage_setOf_eq, Set.mem_setOf_eq, Set.mem_pi,
+    simp only [Prod.forall, Bool.forall_bool, Set.preimage_ofPred_eq, Set.mem_ofPred_eq, Set.mem_pi,
       SetLike.mem_coe, Set.mem_singleton_iff, eq_iff_iff, iff_true]
   have hmeasure :
       hammingRetentionMeasure dimension
@@ -5571,9 +5644,12 @@ theorem hammingRetentionMeasure_real_contains_finset
     rw [ProbabilityTheory.setBernoulli_apply']
     rw [hpreimage]
     rw [MeasureTheory.Measure.infinitePi_pi]
-    · simp only [Set.mem_univ, MeasureTheory.Measure.coe_add, MeasureTheory.Measure.coe_smul, Pi.add_apply,
-        Pi.smul_apply, MeasurableSpace.measurableSet_top, MeasureTheory.Measure.dirac_apply', Set.mem_singleton_iff,
-        Set.indicator_of_mem, Pi.one_apply, ENNReal.smul_one, eq_iff_iff, iff_true, not_false_eq_true,
+    · simp only [Set.mem_univ, MeasureTheory.Measure.coe_add, MeasureTheory.Measure.coe_smul,
+        Pi.add_apply,
+        Pi.smul_apply, MeasurableSpace.measurableSet_top, MeasureTheory.Measure.dirac_apply',
+            Set.mem_singleton_iff,
+        Set.indicator_of_mem, Pi.one_apply, ENNReal.smul_one, eq_iff_iff, iff_true,
+            not_false_eq_true,
         Set.indicator_of_notMem, smul_zero, add_zero, prod_const]
     · intro vertex _
       measurability
@@ -5635,25 +5711,34 @@ theorem hammingRetentionMeasure_real_contains_edgePair
       {retained : Set (Bool × HammingWord dimension) |
         ∀ vertex ∈ required, vertex ∈ retained} := by
     ext retained
-    simp only [and_left_comm, Set.mem_setOf_eq, mem_insert, mem_singleton, forall_eq_or_imp, forall_eq, required]
+    simp only [and_left_comm, Set.mem_ofPred_eq, mem_insert, mem_singleton, forall_eq_or_imp,
+        forall_eq, required]
   rw [hevent, hammingRetentionMeasure_real_contains_finset]
   by_cases hleft : firstLeft = secondLeft <;>
     by_cases hright : firstRight = secondRight
   · subst secondLeft
     subst secondRight
-    simp only [mem_insert, Prod.mk.injEq, Bool.true_eq_false, false_and, mem_singleton, or_true, insert_eq_of_mem,
-      Bool.false_eq_true, or_false, not_false_eq_true, card_insert_of_notMem, card_singleton, Nat.reduceAdd, ↓reduceIte,
+    simp only [mem_insert, Prod.mk.injEq, Bool.true_eq_false, false_and, mem_singleton,
+        or_true, insert_eq_of_mem,
+      Bool.false_eq_true, or_false, not_false_eq_true, card_insert_of_notMem, card_singleton,
+          Nat.reduceAdd, ↓reduceIte,
       add_zero, required]
   · subst secondLeft
-    simp only [mem_insert, Prod.mk.injEq, Bool.false_eq_true, false_and, mem_singleton, or_false, or_true,
-      insert_eq_of_mem, Bool.true_eq_false, hright, and_false, or_self, not_false_eq_true, card_insert_of_notMem,
+    simp only [mem_insert, Prod.mk.injEq, Bool.false_eq_true, false_and, mem_singleton,
+        or_false, or_true,
+      insert_eq_of_mem, Bool.true_eq_false, hright, and_false, or_self, not_false_eq_true,
+          card_insert_of_notMem,
       card_singleton, Nat.reduceAdd, ↓reduceIte, add_zero, required]
   · subst secondRight
-    simp only [mem_insert, Prod.mk.injEq, Bool.true_eq_false, false_and, mem_singleton, or_true, insert_eq_of_mem,
-      hleft, and_false, Bool.false_eq_true, or_self, not_false_eq_true, card_insert_of_notMem, card_singleton,
+    simp only [mem_insert, Prod.mk.injEq, Bool.true_eq_false, false_and, mem_singleton,
+        or_true, insert_eq_of_mem,
+      hleft, and_false, Bool.false_eq_true, or_self, not_false_eq_true, card_insert_of_notMem,
+          card_singleton,
       Nat.reduceAdd, ↓reduceIte, add_zero, required]
-  · simp only [mem_insert, Prod.mk.injEq, Bool.false_eq_true, false_and, hleft, and_false, mem_singleton, or_self,
-      not_false_eq_true, card_insert_of_notMem, Bool.true_eq_false, hright, card_singleton, Nat.reduceAdd, ↓reduceIte,
+  · simp only [mem_insert, Prod.mk.injEq, Bool.false_eq_true, false_and, hleft, and_false,
+      mem_singleton, or_self,
+      not_false_eq_true, card_insert_of_notMem, Bool.true_eq_false, hright, card_singleton,
+          Nat.reduceAdd, ↓reduceIte,
       required]
 
 theorem hammingRetentionMeasure_real_contains_edgePair_le
@@ -5696,7 +5781,8 @@ theorem hammingExpectedRetainedVertexCount_eq
   unfold hammingExpectedRetainedVertexCount
   simp_rw [hammingRetentionMeasure_real_contains_vertex]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
-  simp only [HammingWord, Fintype.card_prod, Fintype.card_bool, Fintype.card_pi, prod_const, card_univ,
+  simp only [HammingWord, Fintype.card_prod, Fintype.card_bool, Fintype.card_pi, prod_const,
+      card_univ,
     Fintype.card_fin, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_pow]
   ring
 
@@ -5746,7 +5832,7 @@ theorem hammingRetentionMeasure_real_vertexPair
         {retained : Set (Bool × HammingWord dimension) |
           first ∈ retained} := by
       ext retained
-      simp only [and_self, Set.mem_setOf_eq]
+      simp only [and_self, Set.mem_ofPred_eq]
     rw [hevent, hammingRetentionMeasure_real_contains_vertex]
     simp only [↓reduceIte]
   · rw [hammingRetentionMeasure_real_contains_pair
@@ -5785,8 +5871,10 @@ theorem hammingExpectedRetainedVertexSquare_eq
   unfold hammingExpectedRetainedVertexSquare
   simp_rw [hammingRetentionMeasure_real_vertexPair,
     hpoint, Finset.sum_add_distrib]
-  simp only [HammingWord, sum_const, card_univ, Fintype.card_prod, Fintype.card_bool, Fintype.card_pi,
-    prod_const, Fintype.card_fin, nsmul_eq_mul, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_pow, sum_ite_eq,
+  simp only [HammingWord, sum_const, card_univ, Fintype.card_prod, Fintype.card_bool,
+      Fintype.card_pi,
+    prod_const, Fintype.card_fin, nsmul_eq_mul, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_pow,
+        sum_ite_eq,
     mem_univ, ↓reduceIte]
   ring
 
@@ -5909,7 +5997,7 @@ theorem hammingRetainedVertexCount_variance_eq
         (hammingRetentionMeasure dimension) =
       hammingExpectedRetainedVertexSquare dimension -
         hammingExpectedRetainedVertexCount dimension ^ 2 := by
-  letI : MeasureTheory.IsProbabilityMeasure
+  let _ : MeasureTheory.IsProbabilityMeasure
       (hammingRetentionMeasure dimension) :=
     hammingRetentionMeasure_isProbability dimension
   rw [ProbabilityTheory.variance_eq_sub
@@ -5972,7 +6060,7 @@ theorem hammingRetainedVertexCount_upper_tail_probability_le
             ((2 ^ dimension : ℕ) : ℝ) ≤
           hammingRetainedVertexCount dimension retained} ≤
       4 / hammingExpectedRetainedVertexCount dimension := by
-  letI : MeasureTheory.IsProbabilityMeasure
+  let _ : MeasureTheory.IsProbabilityMeasure
       (hammingRetentionMeasure dimension) :=
     hammingRetentionMeasure_isProbability dimension
   have hmean := hammingExpectedRetainedVertexCount_pos dimension
@@ -6069,7 +6157,8 @@ theorem hammingRetentionMeasure_real_pairChildren
           ∀ vertex ∈ pairChildVertexFinset side children,
             vertex ∈ retained} := by
     ext retained
-    simp only [pairChildRetentionEvent, Set.mem_setOf_eq, pairChildVertexFinset, mem_image, mem_univ, true_and,
+    simp only [pairChildRetentionEvent, Set.mem_ofPred_eq, pairChildVertexFinset, mem_image,
+        mem_univ, true_and,
       forall_exists_index, forall_apply_eq_imp_iff]
   rw [hevent, hammingRetentionMeasure_real_contains_finset,
     pairChildVertexFinset_card side children hinjective]
@@ -6163,7 +6252,8 @@ theorem badPairChildRetentionEvent_real_le
 theorem hammingParentTuple_card (parentCount dimension : ℕ) :
     Fintype.card (Fin parentCount → HammingWord dimension) =
       2 ^ (dimension * parentCount) := by
-  simp only [HammingWord, Fintype.card_pi, Fintype.card_bool, prod_const, card_univ, Fintype.card_fin,
+  simp only [HammingWord, Fintype.card_pi, Fintype.card_bool, prod_const, card_univ,
+      Fintype.card_fin,
     ← pow_mul]
 
 noncomputable def badPairLayerRetentionEvent
@@ -6384,8 +6474,10 @@ theorem badPairLayersRetentionEvent_real_le
           (hparents layer) hdimension (hbase layer) side).le
     _ = (((2 * depth : ℕ) : ℝ)) *
           Real.exp (-(dimension : ℝ) * Real.log 2) := by
-        simp only [Fintype.univ_bool, neg_mul, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul, mem_singleton,
-          Bool.true_eq_false, not_false_eq_true, card_insert_of_notMem, card_singleton, Nat.reduceAdd, Nat.cast_ofNat,
+        simp only [Fintype.univ_bool, neg_mul, sum_const, card_univ, Fintype.card_fin,
+            nsmul_eq_mul, mem_singleton,
+          Bool.true_eq_false, not_false_eq_true, card_insert_of_notMem, card_singleton,
+              Nat.reduceAdd, Nat.cast_ofNat,
           Nat.cast_mul, bound]
         ring
 
@@ -6425,7 +6517,7 @@ theorem exists_hammingRetention_outside_event
     (event : Set (Set (Bool × HammingWord dimension)))
     (hsmall : (hammingRetentionMeasure dimension).real event < 1) :
     ∃ retained : Set (Bool × HammingWord dimension), retained ∉ event := by
-  letI : MeasureTheory.IsProbabilityMeasure
+  let _ : MeasureTheory.IsProbabilityMeasure
       (hammingRetentionMeasure dimension) :=
     hammingRetentionMeasure_isProbability dimension
   by_contra hnone
@@ -6480,9 +6572,11 @@ theorem hammingDifferenceSet_flip {dimension : ℕ}
   classical
   ext coordinate
   by_cases hcoordinate : coordinate ∈ coordinates
-  · simp only [hammingDifferenceSet, hammingFlip, ne_eq, right_eq_ite_iff, Bool.eq_not_self, imp_false,
+  · simp only [hammingDifferenceSet, hammingFlip, ne_eq, right_eq_ite_iff, Bool.eq_not_self,
+      imp_false,
       Decidable.not_not, subset_univ, filter_mem_eq_of_subset, hcoordinate]
-  · simp only [hammingDifferenceSet, hammingFlip, ne_eq, right_eq_ite_iff, Bool.eq_not_self, imp_false,
+  · simp only [hammingDifferenceSet, hammingFlip, ne_eq, right_eq_ite_iff, Bool.eq_not_self,
+      imp_false,
       Decidable.not_not, subset_univ, filter_mem_eq_of_subset, hcoordinate]
 
 theorem hammingFlip_differenceSet {dimension : ℕ}
@@ -6668,7 +6762,8 @@ theorem hammingWordEdge_sum_const
   classical
   simp_rw [hammingWordNeighbor_sum_const]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
-  simp only [HammingWord, Fintype.card_pi, Fintype.card_bool, prod_const, card_univ, Fintype.card_fin,
+  simp only [HammingWord, Fintype.card_pi, Fintype.card_bool, prod_const, card_univ,
+      Fintype.card_fin,
     Nat.cast_pow, Nat.cast_ofNat, Nat.cast_sum]
   ring
 
@@ -6699,7 +6794,7 @@ theorem hammingWordEdgePair_sum_const
               dimension.choose distance : ℕ) : ℝ) * weight
         else 0 := by
     by_cases hedge : hammingDist firstLeft firstRight ≤ radius
-    · simp only [hedge, true_and, if_true]
+    · simp only [hedge, true_and, ite_true]
       exact hammingWordEdge_sum_const dimension radius weight
     · simp only [hedge, false_and, ↓reduceIte, sum_const_zero]
   simp_rw [hinner]
@@ -6761,7 +6856,7 @@ theorem hammingWordEdgePairSharedLeft_sum_const
             dimension.choose distance : ℕ) : ℝ) * weight
         else 0 := by
     by_cases hedge : hammingDist firstLeft firstRight ≤ radius
-    · simp only [hedge, true_and, if_true]
+    · simp only [hedge, true_and, ite_true]
       exact hshared firstLeft
     · simp only [hedge, false_and, ↓reduceIte, sum_const_zero]
   simp_rw [hinner]
@@ -6835,7 +6930,7 @@ theorem hammingWordEdgePairIdentical_sum_const
       apply Finset.sum_congr rfl
       intro firstRight _
       by_cases hedge : hammingDist firstLeft firstRight ≤ radius
-      · simp only [hedge, true_and, if_true]
+      · simp only [hedge, true_and, ite_true]
         have hpoint (secondLeft secondRight : HammingWord dimension) :
             (if hammingDist secondLeft secondRight ≤ radius then
               if firstLeft = secondLeft ∧ firstRight = secondRight then
@@ -6874,7 +6969,8 @@ theorem hammingExpectedRetainedEdgeCount_eq
             (false, left) ∈ retained ∧ (true, right) ∈ retained} =
         hammingRetentionProbability dimension ^ 2 :=
     hammingRetentionMeasure_real_contains_pair
-      dimension (false, left) (true, right) (by simp only [ne_eq, Prod.mk.injEq, Bool.false_eq_true, false_and, not_false_eq_true])
+      dimension (false, left) (true, right) (by simp only [ne_eq, Prod.mk.injEq,
+          Bool.false_eq_true, false_and, not_false_eq_true])
   unfold hammingExpectedRetainedEdgeCount
   simp_rw [hpair]
   simpa only [Nat.cast_pow, Nat.cast_ofNat, mul_comm, Nat.cast_sum, mul_assoc, mul_left_comm] using
@@ -6890,7 +6986,8 @@ theorem hammingExpectedRetainedEdgeCount_pos
       (s := Finset.range (radius + 1))
       (f := fun distance : ℕ => dimension.choose distance)
       (fun distance _ => Nat.zero_le _)
-      (show 0 ∈ Finset.range (radius + 1) by simp only [mem_range, lt_add_iff_pos_left, Order.lt_add_one_iff, zero_le])
+      (show 0 ∈ Finset.range (radius + 1) by simp only [mem_range, lt_add_iff_pos_left,
+          Order.lt_add_one_iff, zero_le])
     simpa only [ge_iff_le, Nat.choose_zero_right] using hzero
   have hdegree :
       0 < ((∑ distance ∈ Finset.range (radius + 1),
@@ -7108,7 +7205,7 @@ theorem hammingRetainedEdgeCount_integral_eq
   apply Finset.sum_congr rfl
   intro right _
   by_cases hedge : hammingDist left right ≤ radius
-  · simp only [hedge, true_and, if_true]
+  · simp only [hedge, true_and, ite_true]
     rw [hammingRetentionMeasure_integral_eq_sum,
       hammingRetentionMeasure_real_event_eq_sum]
     apply Finset.sum_congr rfl
@@ -7247,7 +7344,7 @@ theorem hammingRetainedEdgeCount_variance_eq
         (hammingRetentionMeasure dimension) =
       hammingExpectedRetainedEdgeSquare dimension radius -
         hammingExpectedRetainedEdgeCount dimension radius ^ 2 := by
-  letI : MeasureTheory.IsProbabilityMeasure
+  let _ : MeasureTheory.IsProbabilityMeasure
       (hammingRetentionMeasure dimension) :=
     hammingRetentionMeasure_isProbability dimension
   rw [ProbabilityTheory.variance_eq_sub
@@ -7325,7 +7422,7 @@ theorem hammingRetainedEdgeCount_lower_tail_probability_le
       4 / hammingExpectedRetainedEdgeCount dimension radius +
         8 / (hammingRetentionProbability dimension *
           ((2 ^ dimension : ℕ) : ℝ)) := by
-  letI : MeasureTheory.IsProbabilityMeasure
+  let _ : MeasureTheory.IsProbabilityMeasure
       (hammingRetentionMeasure dimension) :=
     hammingRetentionMeasure_isProbability dimension
   have hmean := hammingExpectedRetainedEdgeCount_pos dimension radius
@@ -7366,7 +7463,8 @@ theorem hammingRetainedEdgeCount_lower_tail_probability_le
         (s := Finset.range (radius + 1))
         (f := fun distance : ℕ => dimension.choose distance)
         (fun distance _ => Nat.zero_le _)
-        (show 0 ∈ Finset.range (radius + 1) by simp only [mem_range, lt_add_iff_pos_left, Order.lt_add_one_iff, zero_le])
+        (show 0 ∈ Finset.range (radius + 1) by simp only [mem_range, lt_add_iff_pos_left,
+            Order.lt_add_one_iff, zero_le])
       simpa only [ge_iff_le, Nat.choose_zero_right] using hzero
     exact_mod_cast (show 0 < ∑ distance ∈ Finset.range (radius + 1),
       dimension.choose distance by omega)
@@ -7778,7 +7876,8 @@ theorem pairGraphCopyLayerPotential_mem_Icc
       unfold booleanWordOnes
       simpa only [card_univ] using
         (Finset.card_filter_le (Finset.univ : Finset (PairLayer baseSize layer.val))
-          (fun vertex => (copy (pairLayerEmbedding baseSize depth layer.val layer.isLt vertex)).val.2 coordinate = true))
+          (fun vertex => (copy (pairLayerEmbedding baseSize depth layer.val layer.isLt
+              vertex)).val.2 coordinate = true))
     have hzero :
         0 ≤
           ((booleanWordOnes
@@ -7966,7 +8065,8 @@ theorem pairGraphCopy_parent_child_hammingDist_le
           ((pairLayerFinEquiv baseSize layer.val).symm parent))).val at hedge
   have hdist :=
     ((hammingHost_adj_iff dimension radius _ _).mp hedge).2
-  simpa only [pairGraphCopyParentWords, pairGraphCopyChildWords, ge_iff_le, hammingDist_comm] using hdist
+  simpa only [pairGraphCopyParentWords, pairGraphCopyChildWords, ge_iff_le,
+      hammingDist_comm] using hdist
 
 theorem pairGraphCopy_averageDisagreement_le_radius
     {baseSize depth dimension radius : ℕ}
@@ -8671,7 +8771,7 @@ theorem pairGraphOverFin_forall_exists_adj
   have hcard : 2 ≤ Fintype.card (PairVertex baseSize depth) := by
     have hcard_base := baseSize_le_pairVertex_card baseSize depth
     omega
-  letI : Nontrivial (Fin (Fintype.card (PairVertex baseSize depth))) :=
+  let _ : Nontrivial (Fin (Fintype.card (PairVertex baseSize depth))) :=
     Fin.nontrivial_iff_two_le.mpr hcard
   intro vertex
   exact
@@ -9082,7 +9182,9 @@ theorem exists_manuscriptVertexCount_bracket
     exact hnext
 
 open Classical in
-theorem twoDegenerateExtremalCounterexample :
+/-- A bipartite two-degenerate graph whose extremal number grows faster than
+every constant multiple of `n ^ (3 / 2)`. -/
+public theorem twoDegenerateExtremalCounterexample :
     ∃ (q : ℕ) (H : SimpleGraph (Fin q)),
       H.Connected ∧
       H.IsBipartite ∧

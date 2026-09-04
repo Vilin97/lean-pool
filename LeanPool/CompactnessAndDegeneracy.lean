@@ -8,6 +8,17 @@ import LeanPool.CompactnessAndDegeneracy.Compactness
 import LeanPool.CompactnessAndDegeneracy.Degeneracy
 
 /-!
+# Counterexamples to graph compactness and two-degenerate extremal bounds
+
+Source: url:https://github.com/openai/ten-proofs
+Authors: OpenAI, Dean Cureton
+Status: verified
+Main declarations: `CompactnessConjecture.quantitativeCompactnessCounterexample`
+Tags: extremal-combinatorics, extremal-graph-theory, degenerate-graphs, counterexamples
+MSC: 05C35, 05C75
+-/
+
+/-!
 # Counterexamples in extremal graph theory
 
 This project proves quantitative counterexamples to the Erdős–Simonovits
