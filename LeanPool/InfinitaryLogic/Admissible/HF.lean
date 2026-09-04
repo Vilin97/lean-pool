@@ -47,8 +47,6 @@ variable {L : Language.{0, 0}}
 private def hfSet (L : Language.{u, v}) : Set (Σ n, L.BoundedFormulaω Empty n) :=
   {p | p.2.IsFirstOrder}
 
-
-
 /-- **The HF fragment.**  Each field is now one appeal to the first-order-image API: three
 structural equations and the two negative facts.  Compare the five hand-rolled constructor
 inversions this replaces. -/
@@ -60,24 +58,9 @@ def hfFragment (L : Language.{u, v}) : Fragment L where
   iInf_mem h := absurd h (BoundedFormulaω.not_isFirstOrder_iInf _)
   iSup_mem h := absurd h (BoundedFormulaω.not_isFirstOrder_iSup _)
 
-
 /-- **The finitary fragment**: the image of first-order syntax in `Lω₁ω`.  This is `L_HF = L_ωω`. -/
 def finitaryFragment (L : Language.{u, v}) : Set L.Sentenceω :=
   Set.range Sentence.toLω
-
-private theorem mem_finitaryFragment_iff {L : Language.{u, v}} {φ : L.Sentenceω} :
-    φ ∈ finitaryFragment L ↔ ∃ φ₀ : L.Sentence, φ₀.toLω = φ := Iff.rfl
-
-/-- **The oracle, condition 1.**  The sentence slice of `hfFragment` is exactly `finitaryFragment`.
-Any proposed `AdmissibleFragment` whose HF instance fails this is wrong.
-
-Both sides are universe-general. -/
-private theorem sentence_slice_hfFragment (L : Language.{u, v}) :
-    {φ : L.Sentenceω | (⟨0, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ hfFragment L} =
-      finitaryFragment L := by
-  ext φ
-  simp only [Set.mem_ofPred_eq, Fragment.mem_def, mem_finitaryFragment_iff]
-  exact Iff.rfl
 
 /-- The **full preimage theory** — every first-order sentence whose image lies in `T`, not one
 chosen representative per member.  Choosing representatives would need `Classical.choice` and would
@@ -131,31 +114,23 @@ theorem finitaryFragment_compact {T : L.Theoryω} (hT : T ⊆ finitaryFragment L
     (hfin : T.IsFinitelySatisfiable) : T.IsSatisfiable :=
   finitaryFragment_compactIn hT hfin
 
-
 /-! ## Gate 4 — the HF oracle
 
 For HF the certificate is empty, so `CodedFamily` is uninhabited and the upward-closure fields of
 any `AdmissibleFragment` over it are vacuous.  Note where the emptiness lives: in `IsFamilyCode`,
 **not** in the index type's cardinality and **not** in `einf`'s padding. -/
 
-
-
-
-
-
 /-! ## Step 4 — the honest HF instance
 
 Essentially a structure literal: the base is `hfFragment`, and both upward fields are closed by
-certificate absurdity.  That it *is* nearly definitional is the signal that the signature is right. -/
+certificate absurdity. That it *is* nearly definitional is the signal that the signature is
+right. -/
 
 /-- **The HF admissible fragment.**  No adapter, no widening. -/
 def hfAdmissibleFragment (L : Language.{0, 0}) : AdmissibleFragment (hfFamily L) where
   toFragment := hfFragment L
   iInf_coded_mem := fun F _ => absurd F.infinitary not_false
   iSup_coded_mem := fun F _ => absurd F.infinitary not_false
-
-
-
 
 /-! ## The universe boundary
 

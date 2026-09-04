@@ -65,56 +65,45 @@ variable {v : α → M} {xs : Fin n → M}
 Mathlib states each of these with implicit arguments; the project's consumers supply them
 explicitly (`realize_rel R ts`, `realize_imp φ ψ`, …), so the wrappers keep that convention. -/
 
-@[simp]
 theorem realize_falsum : (falsum : L.BoundedFormulaω α n).Realize v xs ↔ False :=
   BoundedFormulaInf.realize_falsum
 
-@[simp]
 theorem realize_bot : (⊥ : L.BoundedFormulaω α n).Realize v xs ↔ False :=
   BoundedFormulaInf.realize_bot
 
-@[simp]
 theorem realize_equal (t₁ t₂ : L.Term (α ⊕ Fin n)) :
     (equal t₁ t₂ : L.BoundedFormulaω α n).Realize v xs ↔
       t₁.realize (Sum.elim v xs) = t₂.realize (Sum.elim v xs) :=
   BoundedFormulaInf.realize_equal
 
-@[simp]
 theorem realize_rel {l : ℕ} (R : L.Relations l) (ts : Fin l → L.Term (α ⊕ Fin n)) :
     (rel R ts : L.BoundedFormulaω α n).Realize v xs ↔
       RelMap R fun i => (ts i).realize (Sum.elim v xs) :=
   BoundedFormulaInf.realize_rel
 
-@[simp]
 theorem realize_imp (φ ψ : L.BoundedFormulaω α n) :
     (imp φ ψ).Realize v xs ↔ (φ.Realize v xs → ψ.Realize v xs) :=
   BoundedFormulaInf.realize_imp
 
-@[simp]
 theorem realize_all (φ : L.BoundedFormulaω α (n + 1)) :
     (all φ).Realize v xs ↔ ∀ x : M, φ.Realize v (snoc xs x) :=
   BoundedFormulaInf.realize_all
 
-@[simp]
 theorem realize_iSup (φs : ℕ → L.BoundedFormulaω α n) :
     (iSup φs).Realize v xs ↔ ∃ i, (φs i).Realize v xs :=
   BoundedFormulaInf.realize_iSup
 
-@[simp]
 theorem realize_iInf (φs : ℕ → L.BoundedFormulaω α n) :
     (iInf φs).Realize v xs ↔ ∀ i, (φs i).Realize v xs :=
   BoundedFormulaInf.realize_iInf
 
-@[simp]
 theorem realize_top : (⊤ : L.BoundedFormulaω α n).Realize v xs ↔ True :=
   BoundedFormulaInf.realize_top
 
-@[simp]
 theorem realize_not (φ : L.BoundedFormulaω α n) :
     φ.not.Realize v xs ↔ ¬φ.Realize v xs :=
   BoundedFormulaInf.realize_not
 
-@[simp]
 theorem realize_ex (φ : L.BoundedFormulaω α (n + 1)) :
     φ.ex.Realize v xs ↔ ∃ x : M, φ.Realize v (snoc xs x) :=
   BoundedFormulaInf.realize_ex
@@ -174,10 +163,6 @@ theorem realize_esup {ι : Type*} [Encodable ι] (φs : ι → L.BoundedFormula�
     use Encodable.encode i
     simp only [Encodable.encodek, hi]
 
-
-
-
-
 end BoundedFormulaω
 
 namespace Formulaω
@@ -196,9 +181,8 @@ tuple.
 `FormulaInf.Realize` is a plain definition upstream, not a reducible abbreviation (matching the
 finitary `Formula.Realize`), so neither `rw` nor `simp` can see a `BoundedFormulaω` realization
 lemma through it. Supply this lemma explicitly — `simp only [Formulaω.realize_def, realize_not]` —
-in place of unfolding `Formulaω.Realize`, which lands on the opaque `FormulaInf.Realize` and makes
-every bounded-formula lemma inapplicable. Deliberately not `@[simp]`: the formula-level lemmas
-below are the normal interface, and this escape hatch should be visible where it is used. -/
+instead of crossing that abstraction boundary. Deliberately not `@[simp]`: the formula-level
+lemmas below are the normal interface, and this escape hatch should be visible where it is used. -/
 theorem realize_def (φ : L.Formulaω α) (v : α → M) :
     Realize φ v ↔ BoundedFormulaω.Realize φ v Fin.elim0 := Iff.rfl
 

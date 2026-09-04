@@ -31,27 +31,6 @@ namespace FirstOrder.Language
 
 open Cardinal
 
-/-- **The honest Morley–Hanf residual, countable-symbol form**: the tail-template theory of the
-Morley seed is realizable over every target order — by the schema-route construction, which does
-not even consume the sequence's tail indiscernibility. The transparent intermediate; the
-sublanguage reduction below removes the countability. -/
-private theorem morleySeedTailTemplateRealizable_of_countable_symbols {L' : Language.{0, 0}}
-    [Countable (Σ n, L'.Functions n)] [Countable (Σ n, L'.Relations n)] :
-    MorleySeedTailTemplateRealizable (L' := L') := by
-  intro φ M _ a J _ hSize hφ ha _
-  exact morleySeed_tailTemplate_model_of_schemaSource φ M a J hSize hφ ha
-
-/-- **The Morley–Hanf theorem for countable-symbol languages**: `ℶ_{ω₁}` is a Hanf bound for
-every `L_{ω₁ω}` sentence over a language with countably many function and relation symbols, by
-seed-template realizability (the schema construction) alone — no extraction is consumed (an
-injective sequence is already seed-indiscernible, `morleySeed_indiscernibleOn`). The transparent
-intermediate to the assumption-free `morley_hanf` below. -/
-private theorem morley_hanf_countable_symbols {L' : Language.{0, 0}}
-    [Countable (Σ n, L'.Functions n)] [Countable (Σ n, L'.Relations n)]
-    (φ : L'.Sentenceω) :
-    IsHanfBound φ (Cardinal.beth (Ordinal.omega 1)) :=
-  morley_hanf_of_seed_realizable morleySeedTailTemplateRealizable_of_countable_symbols φ
-
 /-! ## Removing symbol countability: the two-sorted sublanguage reduction -/
 
 open Classical in
@@ -104,14 +83,14 @@ private theorem realize_templateSentence_expandSymb {L : Language.{0, 0}}
   have : (symbSublangIncl F R).IsExpansionOn N := by
     constructor
     · intro m f xs
-      show (if h : (⟨m, f.1⟩ : Σ n, L.Functions n) ∈ F then
+      change (if h : (⟨m, f.1⟩ : Σ n, L.Functions n) ∈ F then
           Structure.funMap (L := (symbSublang (L := L) F R)[[J]])
             (Sum.inl (⟨f.1, h⟩ : (symbSublang (L := L) F R).Functions m)) xs
         else Classical.arbitrary N) = _
       rw [dite_eq_left f.2]
       rfl
     · intro m r xs
-      show (if h : (⟨m, r.1⟩ : Σ n, L.Relations n) ∈ R then
+      change (if h : (⟨m, r.1⟩ : Σ n, L.Relations n) ∈ R then
           Structure.RelMap (L := (symbSublang (L := L) F R)[[J]])
             (Sum.inl (⟨r.1, h⟩ : (symbSublang (L := L) F R).Relations m)) xs
         else False) = _
@@ -123,7 +102,7 @@ private theorem realize_templateSentence_expandSymb {L : Language.{0, 0}}
           Fin.elim0 : (symbSublang (L := L) F R)[[J]].Term Empty).realize
           (Empty.elim : Empty → N)) := by
     funext i
-    show Structure.funMap (L := L[[J]]) (Sum.inr (t i) : L[[J]].Functions 0)
+    change Structure.funMap (L := L[[J]]) (Sum.inr (t i) : L[[J]].Functions 0)
         (fun j => ((Fin.elim0 : Fin 0 → L[[J]].Term Empty) j).realize
           (Empty.elim : Empty → N))
       = Structure.funMap (L := (symbSublang (L := L) F R)[[J]])

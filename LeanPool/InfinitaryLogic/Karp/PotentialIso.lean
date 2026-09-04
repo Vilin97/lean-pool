@@ -110,32 +110,6 @@ induction, no Scott formulas, no infinitary formula agreement.  In particular th
 Contrast `bfEquiv_all_of_extensionFamily`, which serves the opposite purpose: it consumes an
 extension family to produce formula-level agreement.  These produce the `PotentialIso` itself. -/
 
-/-- **Build a potential isomorphism from a relation-form extension family.**
-
-The family is literally `{p | R p.1 p.2.1 p.2.2}`.  Tuples are arbitrary functions `Fin n → M`, so
-repeated coordinates are supported and no injectivity is assumed; atomic compatibility is exactly
-`SameAtomicType`.  Carrier universes stay independent. -/
-private def ofExtensionFamily
-    (R : ∀ n : ℕ, (Fin n → M) → (Fin n → N) → Prop)
-    (empty : R 0 Fin.elim0 Fin.elim0)
-    (compatible : ∀ {n a b}, R n a b → SameAtomicType (L := L) a b)
-    (forth : ∀ {n a b}, R n a b → ∀ m : M,
-      ∃ n' : N, R (n + 1) (Fin.snoc a m) (Fin.snoc b n'))
-    (back : ∀ {n a b}, R n a b → ∀ n' : N,
-      ∃ m : M, R (n + 1) (Fin.snoc a m) (Fin.snoc b n')) :
-    PotentialIso L M N where
-  family := {p | R p.1 p.2.1 p.2.2}
-  empty_mem := by simpa only [Set.mem_ofPred_eq] using empty
-  compatible := fun _ hp => compatible (by simpa only [Set.mem_ofPred_eq] using hp)
-  forth := fun _ hp m => by
-    simpa only [Set.mem_ofPred_eq] using forth (by simpa only [Set.mem_ofPred_eq] using hp) m
-  back := fun _ hp n' => by
-    simpa only [Set.mem_ofPred_eq] using back (by simpa only [Set.mem_ofPred_eq] using hp) n'
-
-
-
-
-
 end PotentialIso
 
 /-! ### PotentialIso implies isomorphism for countable structures -/
@@ -273,11 +247,11 @@ theorem PotentialIso.countable_toEquiv
   let bSeq : ℕ → N := fun i => (chain (i + 1)).val.2 (Fin.last i)
   -- aSeq(2k) = enumM(k) and bSeq(2k+1) = enumN(k)
   have haSeq : ∀ k, aSeq (2 * k) = enumM k := fun k => by
-    show (chain (2 * k + 1)).val.1 (Fin.last (2 * k)) = enumM k
+    change (chain (2 * k + 1)).val.1 (Fin.last (2 * k)) = enumM k
     have h := P.buildChain_forth_last enumM enumN (2 * k) (by omega)
     rwa [show 2 * k / 2 = k by omega] at h
   have hbSeq : ∀ k, bSeq (2 * k + 1) = enumN k := fun k => by
-    show (chain (2 * k + 1 + 1)).val.2 (Fin.last (2 * k + 1)) = enumN k
+    change (chain (2 * k + 1 + 1)).val.2 (Fin.last (2 * k + 1)) = enumN k
     have h := P.buildChain_back_last enumM enumN (2 * k + 1) (by omega)
     rwa [show (2 * k + 1) / 2 = k by omega] at h
   have hSAT : ∀ s, SameAtomicType (L := L) (chain s).val.1 (chain s).val.2 :=
@@ -305,14 +279,14 @@ theorem PotentialIso.countable_toEquiv
   -- f and g are inverses
   have hgf : ∀ m, g (f m) = m := by
     intro m
-    show aSeq (idxN (bSeq (idxM m))) = m
+    change aSeq (idxN (bSeq (idxM m))) = m
     conv_rhs => rw [← hidxM m]
     exact (hEq (by omega : idxN (bSeq (idxM m)) < idxN (bSeq (idxM m)) + idxM m + 2)
                (by omega : idxM m < idxN (bSeq (idxM m)) + idxM m + 2)).mpr
       (hidxN (bSeq (idxM m)))
   have hfg : ∀ n, f (g n) = n := by
     intro n
-    show bSeq (idxM (aSeq (idxN n))) = n
+    change bSeq (idxM (aSeq (idxN n))) = n
     conv_rhs => rw [← hidxN n]
     exact (hEq (by omega : idxM (aSeq (idxN n)) < idxM (aSeq (idxN n)) + idxN n + 2)
                (by omega : idxN n < idxM (aSeq (idxN n)) + idxN n + 2)).mp
@@ -340,56 +314,13 @@ theorem PotentialIso.countable_toEquiv
   · intro hfx
     have h1 : RelMap r (fun i => (chain s).val.2 ⟨idxM (x i), hi_lt i⟩) := by
       convert hfx using 1; exact funext fun i => hN_eq i
-    show RelMap r x
+    change RelMap r x
     convert hRel.mpr h1 using 1; exact (funext fun i => hM_eq i).symm
   · intro hx
     have h1 : RelMap r (fun i => (chain s).val.1 ⟨idxM (x i), hi_lt i⟩) := by
       convert hx using 1; exact funext fun i => hM_eq i
-    show RelMap r (fun i => f (x i))
+    change RelMap r (fun i => f (x i))
     convert hRel.mp h1 using 1; exact (funext fun i => hN_eq i).symm
-
-/-- Given a potential isomorphism, BFEquiv holds at every ordinal level for any pair
-in the family. This is the key inductive step for the (→) direction of the
-potential isomorphism characterization.
-
-The proof proceeds by ordinal induction: the zero case uses atomic type preservation,
-the successor case uses the forth/back extension properties, and the limit case
-follows from the induction hypothesis.
-
-The structures may live in different universes, and no countability of the language is
-required: the induction consumes only the family's atomic-type compatibility and its two
-extension properties. -/
-private theorem PotentialIso.family_bfEquiv
-    {M : Type w} [L.Structure M]
-    {N : Type w'} [L.Structure N]
-    (P : PotentialIso L M N) (α : Ordinal)
-    {n : ℕ} {a : Fin n → M} {b : Fin n → N}
-    (hab : ⟨n, a, b⟩ ∈ P.family) : BFEquiv (L := L) α n a b := by
-  induction α using Ordinal.limitRecOn generalizing n a b with
-  | zero =>
-    exact (BFEquiv.zero a b).mpr (P.compatible _ hab)
-  | add_one β ih =>
-    rw [← Order.succ_eq_add_one, BFEquiv.succ]
-    refine ⟨ih hab, ?_, ?_⟩
-    · intro m
-      obtain ⟨n', hn'⟩ := P.forth _ hab m
-      exact ⟨n', ih hn'⟩
-    · intro n'
-      obtain ⟨m, hm⟩ := P.back _ hab n'
-      exact ⟨m, ih hm⟩
-  | limit β hβ ih =>
-    rw [BFEquiv.limit β hβ]
-    exact fun γ hγ => ih γ hγ hab
-
-
-
-/-- A potential isomorphism implies BF-equivalence at all ordinals for the empty tuple. -/
-theorem PotentialIso.implies_BFEquiv_all
-    {M : Type w} [L.Structure M]
-    {N : Type w'} [L.Structure N]
-    (P : PotentialIso L M N) (α : Ordinal) :
-    BFEquiv (L := L) α 0 (Fin.elim0 : Fin 0 → M) (Fin.elim0 : Fin 0 → N) :=
-  P.family_bfEquiv α P.empty_mem
 
 /-- BF-equivalence at all ordinals implies potential isomorphism.
 
@@ -442,19 +373,6 @@ theorem BFEquiv_all_implies_potentialIso
     obtain ⟨m₀, hm₀⟩ := BFEquiv.back (hfamily (Order.succ (⨆ m, αbad m))) n'
     exact hbad m₀ (BFEquiv.monotone (le_ciSup hbdd m₀) hm₀)
 
-/-- A potential isomorphism exists if and only if BFEquiv holds at all ordinals
-for the empty tuple. This is the main characterization theorem for potential isomorphism.
-
-**Universe note**: The ordinal universe is constrained to match the type universe `w`
-by `BFEquiv_all_implies_potentialIso` (which uses a supremum over `N : Type w`).
-The forward direction is universe-polymorphic; the backward direction requires this match. -/
-private theorem potentialIso_iff_BFEquiv_all
-    {M : Type w} [L.Structure M]
-    {N : Type w} [L.Structure N] :
-    Nonempty (PotentialIso L M N) ↔
-    ∀ α : Ordinal.{w}, BFEquiv (L := L) α 0 (Fin.elim0 : Fin 0 → M) (Fin.elim0 : Fin 0 → N) :=
-  ⟨fun ⟨P⟩ α => P.implies_BFEquiv_all α, BFEquiv_all_implies_potentialIso⟩
-
 /-! ## Proof-relevant presentations
 
 A second producer-facing adapter, for callers who build *states* (partial maps, finite
@@ -491,27 +409,6 @@ namespace ExtensionPresentation
 
 variable {M : Type w} [L.Structure M] {N : Type w'} [L.Structure N]
 variable (P : ExtensionPresentation L M N)
-
-/-- The family a presentation induces: the **existential image** of its states.  Two distinct
-states presenting the same pair collapse here and nowhere earlier. -/
-private def Rel (n : ℕ) (a : Fin n → M) (b : Fin n → N) : Prop :=
-  ∃ s : P.State n, P.left s = a ∧ P.right s = b
-
-
-
-/-- The standard object a presentation produces. -/
-private def toPotentialIso : PotentialIso L M N :=
-  PotentialIso.ofExtensionFamily P.Rel
-    ⟨P.empty, funext fun i => i.elim0, funext fun i => i.elim0⟩
-    (fun ⟨s, hl, hr⟩ => hl ▸ hr ▸ P.compatible s)
-    (fun {_ _ _} h m => by
-      obtain ⟨s, rfl, rfl⟩ := h
-      obtain ⟨n', s', hl, hr⟩ := P.forth s m
-      exact ⟨n', s', hl, hr⟩)
-    (fun {_ _ _} h n' => by
-      obtain ⟨s, rfl, rfl⟩ := h
-      obtain ⟨m, s', hl, hr⟩ := P.back s n'
-      exact ⟨m, s', hl, hr⟩)
 
 end ExtensionPresentation
 

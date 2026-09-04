@@ -105,8 +105,6 @@ private theorem realize_castLE_of_eq {m n : ℕ} (φ : L.BoundedFormulaω α m) 
   have : h = le_refl m := rfl
   rw [this, castLE_refl]
 
-
-
 /-- `castLE` over any proof `h : n ≤ n` preserves semantics.
 This handles the case where the proof term is not definitionally `le_refl`
 (e.g., constructed via rewriting or other means). -/
@@ -263,10 +261,6 @@ def subst : ∀ {n : ℕ}, L.BoundedFormulaω α n → (α → L.Term β) → L.
   | _, iSup φs, tf => iSup fun i => (φs i).subst tf
   | _, iInf φs, tf => iInf fun i => (φs i).subst tf
 
-
-
-
-
 private theorem sum_elim_subst_tf {M : Type*} [L.Structure M]
     (tf : α → L.Term β) (v : β → M) (xs : Fin n → M) :
     (fun a : α ⊕ Fin n =>
@@ -325,238 +319,9 @@ def openBounds : ∀ {n : ℕ}, L.BoundedFormulaω Empty n → L.Formulaω (Fin 
 
 /-! ### Bridge: openBounds ∘ relabel Sum.inr roundtrip -/
 
-/-- `castLE h φ = φ` for any proof `h : n ≤ n`, not just `le_refl`. -/
-theorem castLE_self (φ : L.BoundedFormulaω α n) (h : n ≤ n) :
-    φ.castLE h = φ := by
-  have : h = le_refl n := Subsingleton.elim h _
-  subst this; exact castLE_refl φ
-
-
-
-/-- `insertLastBound` is the inverse of `finSumFinEquiv` restricted to splitting
-the last element of `Fin (n+1)` into `Fin n ⊕ Fin 1`. -/
-theorem insertLastBound_eq_finSumFinEquiv_symm (n : ℕ) :
-    (insertLastBound : Fin (n + 1) → Fin n ⊕ Fin 1) = finSumFinEquiv.symm := by
-  funext ⟨i, hi⟩
-  simp [insertLastBound, finSumFinEquiv, Fin.addCases, Fin.castAdd, Fin.natAdd]
-  split
-  · simp
-  · next h =>
-    push Not at h
-    have : i = n := Nat.le_antisymm (Nat.lt_succ_iff.mp hi) h
-    subst this; simp
-
-/-- The composition `(Sum.elim Empty.elim Sum.inl) ∘ (relabelAux Sum.inr k)` maps
-`Fin n ⊕ Fin k` to `Fin (n+k) ⊕ Fin 0` via `Sum.inl ∘ finSumFinEquiv`. -/
-private theorem term_roundtrip_comp (n k : ℕ) :
-    (Sum.elim Empty.elim Sum.inl : Empty ⊕ Fin (n+k) → Fin (n+k) ⊕ Fin 0) ∘
-    (relabelAux (Sum.inr : Fin n → Empty ⊕ Fin n) k) =
-    (Sum.inl ∘ finSumFinEquiv : Fin n ⊕ Fin k → Fin (n+k) ⊕ Fin 0) := by
-  funext x
-  rcases x with ⟨i, hi⟩ | ⟨j, hj⟩
-  · simp [relabelAux, Equiv.sumAssoc, finSumFinEquiv, Fin.castAdd]
-  · simp [relabelAux, Equiv.sumAssoc, finSumFinEquiv, Fin.castAdd]
-
-
-private theorem term_roundtrip_full (n k : ℕ) (t : L.Term (Fin n ⊕ Fin k)) :
-    ((t.relabel (relabelAux (Sum.inr : Fin n → Empty ⊕ Fin n) k)).relabel
-      (Sum.elim Empty.elim Sum.inl : Empty ⊕ Fin (n+k) → Fin (n+k) ⊕ Fin 0)).relabel
-      (relabelAux (fun i => finSumFinEquiv.symm i : Fin (n+k) → Fin n ⊕ Fin k) 0) = t := by
-  simp only [Term.relabel_relabel]
-  have : (relabelAux (fun i => finSumFinEquiv.symm i : Fin (n+k) → Fin n ⊕ Fin k) 0 ∘
-    Sum.elim Empty.elim Sum.inl ∘ relabelAux (Sum.inr : Fin n → Empty ⊕ Fin n) k) = id := by
-    have h1 := term_roundtrip_comp n k
-    funext x; simp only [Function.comp_apply, id_eq]
-    rcases x with ⟨i, hi⟩ | ⟨j, hj⟩
-    · -- inl case
-      have h2 : (Sum.elim Empty.elim Sum.inl ∘ relabelAux Sum.inr k) (Sum.inl ⟨i, hi⟩) =
-        (Sum.inl ∘ finSumFinEquiv) (Sum.inl ⟨i, hi⟩) := congr_fun h1 (Sum.inl ⟨i, hi⟩)
-      simp only [Function.comp_apply] at h2
-      rw [h2]
-      simp only [relabelAux, Function.comp_apply, Sum.map_inl, finSumFinEquiv,
-        Equiv.coe_fn_mk, Equiv.coe_fn_symm_mk, Sum.elim_inl, Fin.castAdd,
-        Fin.addCases]
-      split
-      · rfl
-      · rename_i h_false; exfalso; exact h_false (by assumption)
-    · -- inr case
-      have h2 : (Sum.elim Empty.elim Sum.inl ∘ relabelAux Sum.inr k) (Sum.inr ⟨j, hj⟩) =
-        (Sum.inl ∘ finSumFinEquiv) (Sum.inr ⟨j, hj⟩) := congr_fun h1 (Sum.inr ⟨j, hj⟩)
-      simp only [Function.comp_apply] at h2
-      rw [h2]
-      -- Goal: relabelAux (finSumFinEquiv.symm) 0 (Sum.inl (finSumFinEquiv (Sum.inr ⟨j,hj⟩))) = ...
-      -- finSumFinEquiv (Sum.inr ⟨j,hj⟩) = Fin.natAdd n ⟨j,hj⟩ (by Sum.elim definition)
-      -- finSumFinEquiv.symm (Fin.natAdd n ⟨j,hj⟩) = Sum.inr ⟨j,hj⟩ (by symm_apply_natAdd)
-      -- Then relabelAux maps Sum.inr through sumAssoc to inr, and finSumFinEquiv on castAdd 0.
-      show relabelAux (fun i => finSumFinEquiv.symm i) 0
-        (Sum.inl (finSumFinEquiv (Sum.inr ⟨j, hj⟩))) = Sum.inr ⟨j, hj⟩
-      simp only [finSumFinEquiv_apply_right, relabelAux, Function.comp_apply, Sum.map_inl,
-        finSumFinEquiv_symm_apply_natAdd, Equiv.sumAssoc_apply_inl_inr,
-        Sum.map_inr, finSumFinEquiv_apply_left, Fin.castAdd, Fin.castLE]
-  rw [this, Term.relabel_id]
-
-
-
 -- Helper: relabelAux applied to Sum.inl where g returns Sum.inr
 
-
 -- Helper: relabelAux applied to Sum.inr
-
-
-private theorem relabelAux_insertLastBound_finSumFinEquiv (n k l : ℕ) (x : Fin (n+k+1) ⊕ Fin l) :
-    relabelAux (fun i => finSumFinEquiv.symm i : Fin (n+k) → Fin n ⊕ Fin k) (1+l)
-      (relabelAux (insertLastBound : Fin (n+k+1) → Fin (n+k) ⊕ Fin 1) l x) =
-    Sum.map id (Fin.castLE (show (k + 1) + l ≤ k + (1 + l) by omega))
-      (relabelAux (fun i => finSumFinEquiv.symm i : Fin (n+k+1) → Fin n ⊕ Fin (k+1)) l x) := by
-  rw [insertLastBound_eq_finSumFinEquiv_symm]
-  rcases x with ⟨i, hi⟩ | ⟨j, hj⟩
-  · -- Free variable i : Fin (n+k+1)
-    -- Unfold relabelAux, finSumFinEquiv, and addCases; use Fin.val_castLT to resolve hypotheses
-    simp only [relabelAux, Function.comp_apply, Sum.map_inl,
-      finSumFinEquiv, Equiv.coe_fn_mk, Equiv.coe_fn_symm_mk,
-      Fin.addCases, Fin.castAdd, Fin.natAdd]
-    -- Split on the insertLastBound/finSumFinEquiv.symm dite: i < n+k or i ≥ n+k
-    split <;> rename_i h1
-    · -- i < n+k
-      simp only [Equiv.sumAssoc_apply_inl_inl, Sum.map_inl, id_eq]
-      -- Split on finSumFinEquiv.symm at (n, k): i < n or n ≤ i
-      split <;> rename_i h2
-      · -- Inner: i maps to inl. Now split on finSumFinEquiv.symm at (n, k+1) on RHS
-        split <;> rename_i h3
-        · -- Both sides are inl.
-          simp only [Equiv.sumAssoc_apply_inl_inl, Sum.map_inl, id_eq,
-            Sum.inl.injEq, Fin.ext_iff, Fin.val_castLT]
-        · -- Contradiction: h2 says castLT value < n, h3 says it's ≥ n
-          exfalso; rw [Fin.val_castLT] at h2; exact h3 (by omega)
-      · -- Inner: i maps to inr (natAdd side). Split on RHS
-        split <;> rename_i h3
-        · -- Contradiction
-          exfalso; rw [Fin.val_castLT] at h2; exact h2 (by omega)
-        · -- Both sides are inr. Use dsimp to definitionally reduce, then simp + omega.
-          rw [Fin.val_castLT] at h2
-          simp only [Fin.subNat]
-          simp [Sum.elim, Fin.castLT]
-    · -- i ≥ n+k (i.e., i = n+k)
-      push Not at h1
-      have h_eq : i = n + k := Nat.le_antisymm (by omega) h1
-      subst h_eq
-      split <;> rename_i h2
-      · exfalso; omega
-      · simp only [Fin.subNat]
-        simp [Sum.elim, Fin.castLT]
-        ext; simp [Fin.val_natAdd, Fin.val_castLE]
-  · -- Bound variable j
-    simp only [relabelAux, Function.comp_apply, Sum.map_inr,
-      Equiv.sumAssoc_apply_inr, Sum.elim_inr, id_eq, Fin.castLE, Fin.natAdd,
-      finSumFinEquiv, Equiv.coe_fn_mk]
-    congr 1; exact Fin.ext (by simp; omega)
-
-/-- Composing `relabel insertLastBound` and `relabel finSumFinEquiv.symm` at the formula level. -/
-theorem relabel_insertLastBound_comp_finSumFinEquiv (n k : ℕ) :
-    ∀ {l : ℕ} (φ : L.BoundedFormulaω (Fin (n + k + 1)) l),
-    (φ.relabel (insertLastBound : Fin (n+k+1) → Fin (n+k) ⊕ Fin 1)).relabel
-      (fun i => finSumFinEquiv.symm i : Fin (n+k) → Fin n ⊕ Fin k) =
-    (φ.relabel (fun i => finSumFinEquiv.symm i : Fin (n+k+1) → Fin n ⊕ Fin (k+1))).castLE
-      (show (k + 1) + l ≤ k + (1 + l) by omega) := by
-  intro l φ
-  induction φ with
-  | falsum => rfl
-  | @equal m t₁ t₂ =>
-    simp only [relabel, castLE, Term.relabel_relabel]
-    congr 1 <;> (congr 1; funext x; exact relabelAux_insertLastBound_finSumFinEquiv n k m x)
-  | @rel m rl R ts =>
-    simp only [relabel, castLE, Term.relabel_relabel]
-    congr 1; funext i; congr 1; funext x
-    exact relabelAux_insertLastBound_finSumFinEquiv n k m x
-  | imp _ _ ih₁ ih₂ => simp only [relabel, castLE, ih₁, ih₂]
-  | all φ ih =>
-    simp only [relabel, castLE]
-    congr 1
-    simp only [castLE_self]
-    rw [ih]
-  | iSup _ ih =>
-    simp only [relabel, castLE]; congr 1; funext i; exact ih i
-  | iInf _ ih =>
-    simp only [relabel, castLE]; congr 1; funext i; exact ih i
-
-/-- Generalized roundtrip: `openBounds ∘ relabel Sum.inr`, composed with
-`relabel finSumFinEquiv.symm` to convert free variables back, recovers the original formula. -/
-private theorem roundtrip_general :
-    ∀ {k : ℕ} (φ : L.BoundedFormulaω (Fin n) k),
-    (openBounds (φ.relabel (Sum.inr : Fin n → Empty ⊕ Fin n))).relabel
-      (fun i => finSumFinEquiv.symm i : Fin (n + k) → Fin n ⊕ Fin k) = φ := by
-  intro k φ
-  induction φ with
-  | falsum => rfl
-  | @equal m t₁ t₂ =>
-    simp only [relabel, openBounds]
-    congr 1 <;> exact term_roundtrip_full n m _
-  | @rel m rl R ts =>
-    simp only [relabel, openBounds]
-    congr 1; funext i; exact term_roundtrip_full n m _
-  | imp _ _ ih₁ ih₂ => simp only [relabel, openBounds, ih₁, ih₂]
-  | @all m ψ ih =>
-    -- Goal: (openBounds ((all ψ).relabel Sum.inr)).relabel fsfe = all ψ
-    simp only [relabel, openBounds]
-    congr 1
-    -- After congr 1, we have inner formulas to match.
-    -- Use castLE_self, then the composition lemma, then IH.
-    simp only [castLE_self]
-    -- Goal: (openBounds (ψ.relabel Sum.inr)).relabel insertLastBound |>.relabel fsfe = ψ
-    -- Use the composition lemma at (n, m):
-    have comp := relabel_insertLastBound_comp_finSumFinEquiv n m
-      (openBounds (relabel (Sum.inr : Fin n → Empty ⊕ Fin n) ψ))
-    simp only [castLE_self] at comp
-    rw [comp]; exact ih
-  | iSup _ ih =>
-    simp only [relabel, openBounds]
-    congr 1; funext i; exact ih i
-  | iInf _ ih =>
-    simp only [relabel, openBounds]
-    congr 1; funext i; exact ih i
-
-/-- `relabel (fun i => finSumFinEquiv.symm i)` at `k = 0` is the identity,
-since `finSumFinEquiv.symm : Fin n → Fin n ⊕ Fin 0` maps everything to `Sum.inl`. -/
-theorem relabel_finSumFinEquiv_symm_zero (φ : L.Formulaω (Fin n)) :
-    φ.relabel (fun i => finSumFinEquiv.symm i : Fin (n + 0) → Fin n ⊕ Fin 0) = φ := by
-  suffices h : ∀ {k : ℕ} (φ : L.BoundedFormulaω (Fin n) k),
-      φ.relabel (fun i => finSumFinEquiv.symm i : Fin (n + 0) → Fin n ⊕ Fin 0) =
-      φ.castLE (show k ≤ 0 + k by omega) by
-    rw [h]; exact castLE_self φ _
-  intro k φ
-  induction φ with
-  | falsum => rfl
-  | @equal m t₁ t₂ =>
-    simp only [relabel, castLE]
-    congr 1 <;> (congr 1; funext x; rcases x with ⟨i, hi⟩ | ⟨j, hj⟩ <;>
-    simp only [Function.comp_apply, relabelAux, Sum.map_inl, Sum.map_inr,
-      finSumFinEquiv, Equiv.coe_fn_mk, Equiv.coe_fn_symm_mk,
-      Equiv.sumAssoc_apply_inr,
-      Sum.elim_inr, Fin.addCases, Fin.castAdd, Fin.natAdd, Fin.castLE] <;>
-    (try split) <;> simp_all; omega)
-  | @rel m rl R ts =>
-    simp only [relabel, castLE]
-    congr 1; funext i; congr 1; funext x; rcases x with ⟨i, hi⟩ | ⟨j, hj⟩ <;>
-    simp only [Function.comp_apply, relabelAux, Sum.map_inl, Sum.map_inr,
-      finSumFinEquiv, Equiv.coe_fn_mk, Equiv.coe_fn_symm_mk,
-      Equiv.sumAssoc_apply_inr,
-      Sum.elim_inr, Fin.addCases, Fin.castAdd, Fin.natAdd, Fin.castLE] <;>
-    (try split) <;> simp_all; omega
-  | imp _ _ ih₁ ih₂ => simp only [relabel, castLE, ih₁, ih₂]
-  | all _ ih => simp only [relabel, castLE, ih]; congr 1; exact castLE_self _ _
-  | iSup _ ih => simp only [relabel, castLE]; congr 1; funext i; exact ih i
-  | iInf _ ih => simp only [relabel, castLE]; congr 1; funext i; exact ih i
-
-/-- **Roundtrip**: `openBounds` after `relabel Sum.inr` is the identity on `Formulaω (Fin n)`.
-
-This bridges between the two representations of a formula with one free variable:
-`BoundedFormulaω Empty 1` (free variable as bound) and `Formulaω (Fin 1)` (free variable
-as free). Used to connect the proof system's `all_elim` with ConsistencyPropertyEq's C7. -/
-theorem openBounds_relabel_sumInr (φ : L.Formulaω (Fin n)) :
-    (φ.relabel (Sum.inr : Fin n → Empty ⊕ Fin n)).openBounds = φ := by
-  have h := roundtrip_general φ
-  rw [relabel_finSumFinEquiv_symm_zero] at h
-  exact h
 
 /-! ### Language Maps -/
 
@@ -606,7 +371,7 @@ theorem realize_mapLanguage {L' : Language.{u, v}} (g : L →ᴸ L')
 @[simp]
 theorem mapLanguage_not {L' : Language.{u, v}} (g : L →ᴸ L') (φ : L.BoundedFormulaω α n) :
     (φ.not).mapLanguage g = (φ.mapLanguage g).not := by
-  show (φ.imp falsum).mapLanguage g = (φ.mapLanguage g).imp falsum
+  change (φ.imp falsum).mapLanguage g = (φ.mapLanguage g).imp falsum
   rfl
 
 /-- `mapLanguage` commutes with `imp`. -/
@@ -616,25 +381,9 @@ theorem mapLanguage_imp {L' : Language.{u, v}} (g : L →ᴸ L')
     (φ.imp ψ).mapLanguage g = (φ.mapLanguage g).imp (ψ.mapLanguage g) := by
   simp only [mapLanguage]
 
-
-
-
-
-
-
-
-
-
-
-
-
 end BoundedFormulaω
 
 namespace Formulaω
-
-
-
-
 
 end Formulaω
 
@@ -697,7 +446,8 @@ namespace Sentence
 def toLω (φ : L.Sentence) : L.Sentenceω := Formula.toLω φ
 
 @[simp]
-theorem realize_toLω {M : Type*} [L.Structure M] [Nonempty M] (φ : L.Sentence) :
+theorem realize_toLω {M : Type*} [L.Structure M] [_nonemptyM : Nonempty M]
+    (φ : L.Sentence) :
     Sentenceω.Realize φ.toLω M ↔ M ⊨ φ := by
   -- M ⊨ φ uses `default : Empty → M`, while Sentenceω.Realize uses `Empty.elim`
   -- These are propositionally equal

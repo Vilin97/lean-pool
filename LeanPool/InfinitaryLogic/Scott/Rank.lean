@@ -54,14 +54,16 @@ noncomputable def elementRank {M : Type w} [L.Structure M] (m : M) : Ordinal.{0}
 
 /-- The Scott rank of a structure M is the supremum of element ranks + 1.
 We use Ordinal.{0} for consistency with elementRank and stabilizationOrdinal. -/
-noncomputable def scottRank (M : Type w) [L.Structure M] [Countable M] : Ordinal.{0} :=
+noncomputable def scottRank (M : Type w) [L.Structure M] [_countableM : Countable M] :
+    Ordinal.{0} :=
   ⨆ (m : M), elementRank (L := L) m + 1
 
 omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
 /-- At a complete stabilization ordinal, the elementRank defining set is satisfied trivially:
 `StabilizesCompletely M α` gives `BFEquiv α ↔ BFEquiv (succ α)` for all tuples, so both
 directions of the iff hold. -/
-private theorem completeStab_mem_elementRank_set {M : Type w} [L.Structure M] [Countable M]
+private theorem completeStab_mem_elementRank_set {M : Type w} [L.Structure M]
+    [_countableM : Countable M]
     {α : Ordinal.{0}} (hstab : StabilizesCompletely (L := L) M α) (m : M) :
     α ∈ {α : Ordinal.{0} | ∀ (N : Type w) [L.Structure N] [Countable N] (b : Fin 1 → N),
       BFEquiv (L := L) (M := M) (N := N) α 1 ![m] b →
@@ -78,8 +80,6 @@ theorem elementRank_le_completeStab {M : Type w} [L.Structure M] [Countable M]
     {α : Ordinal.{0}} (hstab : StabilizesCompletely (L := L) M α) (m : M) :
     elementRank (L := L) m ≤ α :=
   csInf_le' (completeStab_mem_elementRank_set hstab m)
-
-
 
 /-- Conditional variant of `scottRank_lt_omega1`. -/
 private theorem scottRank_lt_omega1_of
@@ -108,8 +108,6 @@ private theorem scottRank_lt_omega1_of
     exact Ordinal.omega_pos 1
 
 /-! ### Unconditional Wrappers (via CRH) -/
-
-
 
 /-- Scott rank of a countable structure is a countable ordinal. -/
 theorem scottRank_lt_omega1 (M : Type w) [L.Structure M] [Countable M] :

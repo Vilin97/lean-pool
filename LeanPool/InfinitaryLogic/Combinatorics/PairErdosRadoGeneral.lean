@@ -120,45 +120,6 @@ theorem exists_ordToType_embedding_of_card_ge
   obtain ⟨r⟩ := hiso
   exact ⟨seg.toOrderEmbedding.trans (OrderIso.ofRelIsoLT r).toOrderEmbedding⟩
 
-/-- Any subset of `c.ord.ToType` of cardinality at least `c` is order-isomorphic to
-`c.ord.ToType` (the generalization of the legacy `ℵ_1`-subset-of-`ω_1` lemma).
-
-Proof outline: the subset's order type `β` satisfies `β ≤ c.ord` (suborder) and
-`β.card ≥ c`; since `c.ord` is the *least* ordinal of cardinality `c`, any `β < c.ord`
-would force `β.card < c` (`Cardinal.lt_ord`), a contradiction. So `β = c.ord`, giving a
-`RelIso` transported to an `OrderIso`. -/
-theorem ordIso_ordToType_of_card_ge {c : Cardinal.{0}}
-    {S : Set c.ord.ToType}
-    (hS : Cardinal.mk S ≥ c) :
-    Nonempty (S ≃o c.ord.ToType) := by
-  have : IsWellOrder S (· < ·) := inferInstance
-  set β : Ordinal.{0} := @Ordinal.type S (· < ·) _ with hβ
-  -- The inclusion `S ↪o c.ord.ToType`.
-  let incl : S ↪o c.ord.ToType := OrderEmbedding.subtype _
-  -- `β ≤ c.ord`.
-  have hβ_le : β ≤ c.ord := by
-    have : @Ordinal.type c.ord.ToType (· < ·) _ = c.ord := Ordinal.type_toType _
-    rw [← this]
-    exact Ordinal.type_le_iff'.mpr ⟨incl.ltEmbedding⟩
-  -- `β.card = #S ≥ c`.
-  have hβ_card : β.card = Cardinal.mk S := Ordinal.card_type (· < ·)
-  have hβ_card_ge : c ≤ β.card := hβ_card ▸ hS
-  -- `β ≥ c.ord`: if `β < c.ord`, then `β.card < c`, contradicting the above.
-  have hβ_ge : c.ord ≤ β := by
-    by_contra hne
-    push Not at hne
-    have : β.card < c := Cardinal.lt_ord.mp hne
-    exact absurd hβ_card_ge (not_le.mpr this)
-  have hβ_eq : β = c.ord := le_antisymm hβ_le hβ_ge
-  -- So `type (<_S) = type (<_{c.ord.ToType})`, giving a `RelIso`.
-  have htype : @Ordinal.type S (· < ·) _ =
-      @Ordinal.type c.ord.ToType (· < ·) _ := by
-    show β = _; rw [hβ_eq, Ordinal.type_toType]
-  obtain ⟨r⟩ := (Ordinal.type_eq.mp htype :
-    Nonempty ((· < · : S → S → Prop) ≃r
-      (· < · : c.ord.ToType → c.ord.ToType → Prop)))
-  exact ⟨OrderIso.ofRelIsoLT r⟩
-
 /-- Composition of `initialSegOfLe` via `InitialSeg.eq` uniqueness on well-orders.
 Two initial segments from `α.ToType` to `γ.ToType` (both well-ordered) agree
 pointwise.  (Shared with `EndHomogER`, which previously carried a private copy.) -/
@@ -266,19 +227,6 @@ theorem succ_mul_two_power (hκ : Cardinal.aleph0 ≤ κ) :
   rw [Cardinal.mul_eq_max (aleph0_le_succ_self hκ) (aleph0_le_two_power hκ)]
   exact max_eq_right (succ_le_two_power κ)
 
-/-- Any coloring on `Source κ` witnesses `Nonempty C`: the source is nontrivial
-(`#(Source κ) = succ (2 ^ κ) ≥ 2`), so it contains a strict pair, whose color inhabits
-`C`. Supplies the junk value the coverage `y`-path needs. -/
-private theorem nonempty_color {C : Type} (cR : (Fin 2 ↪o Source κ) → C) :
-    Nonempty C := by
-  have hnontriv : Nontrivial (Source κ) := by
-    rw [← Cardinal.one_lt_iff_nontrivial, mk_source]
-    exact Order.lt_succ_iff.mpr (Cardinal.one_le_iff_ne_zero.mpr (two_power_ne_zero κ))
-  obtain ⟨a, b, hab⟩ := hnontriv
-  rcases lt_or_gt_of_ne hab with h | h
-  · exact ⟨cR (pairEmbed h)⟩
-  · exact ⟨cR (pairEmbed h)⟩
-
 end CardinalHelpers
 
 /-! ### Branch structures: `validFiber`, `CoherentMajorityBranch`, `EHMRBranch` -/
@@ -286,67 +234,6 @@ end CardinalHelpers
 section BranchStructures
 
 variable {κ : Cardinal.{0}} {C : Type}
-
-/-- **Valid fiber (quantifier form).** The set of elements `y ∈ Source κ` strictly above
-every `p β`, whose pair color with each `p β` matches `τ β`. Kept in quantifier form so
-that successor rewriting and restriction lemmas do not have to commute big intersections
-through the recursion. -/
-private def validFiber (cR : (Fin 2 ↪o Source κ) → C) {α : Ordinal.{0}}
-    (p : α.ToType ↪o Source κ) (τ : α.ToType → C) : Set (Source κ) :=
-  { y | ∀ β : α.ToType, ∃ h : p β < y, cR (pairEmbed h) = τ β }
-
-/-- **`CoherentMajorityBranch cR`**: globally coherent prefix + branch data of length
-`(succ κ).ord` — the object the pair Erdős–Rado endgame consumes. Produced from an
-`EHMRBranch` by `exists_coherentMajorityBranch_of_ehmrBranch`. -/
-structure CoherentMajorityBranch (cR : (Fin 2 ↪o Source κ) → C) where
-  /-- Prefix at each level `α < (succ κ).ord`. -/
-  prefixAt : ∀ α : Ordinal.{0},
-    α < (Order.succ κ).ord → α.ToType ↪o Source κ
-  /-- Type function at each level `α < (succ κ).ord`. -/
-  branch : ∀ α : Ordinal.{0},
-    α < (Order.succ κ).ord → α.ToType → C
-  /-- Prefix coherence: prefix at α restricted to β-level via the
-  initial-segment inclusion equals prefix at β. -/
-  prefix_restrict : ∀ {β α : Ordinal.{0}} (hβα : β ≤ α)
-    (hβ : β < (Order.succ κ).ord) (hα : α < (Order.succ κ).ord)
-    (x : β.ToType),
-    haveI : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-    haveI : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-    prefixAt α hα ((initialSegOfLe hβα).toOrderEmbedding x) =
-      prefixAt β hβ x
-  /-- Branch coherence: branch at α restricted to β-level equals
-  branch at β. -/
-  branch_restrict : ∀ {β α : Ordinal.{0}} (hβα : β ≤ α)
-    (hβ : β < (Order.succ κ).ord) (hα : α < (Order.succ κ).ord)
-    (x : β.ToType),
-    haveI : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-    haveI : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-    branch α hα ((initialSegOfLe hβα).toOrderEmbedding x) =
-      branch β hβ x
-  /-- **Chain extension**: the value at the top of `(succ γ).ToType` is in the
-  `validFiber` for the lower-level chain at γ. This is the within-chain pair-color
-  consistency that pair-homogeneity needs. -/
-  top_in_validFiber : ∀ (γ : Ordinal.{0}) (hγ : γ < (Order.succ κ).ord)
-      (hsγ : Order.succ γ < (Order.succ κ).ord),
-    haveI : IsWellOrder (Order.succ γ).ToType (· < ·) := isWellOrder_lt
-    prefixAt (Order.succ γ) hsγ (⊤ : (Order.succ γ).ToType) ∈
-      validFiber cR (prefixAt γ hγ) (branch γ hγ)
-
-/-- **`EHMRBranch cR`**: a strictly increasing `(succ κ).ord`-indexed family of reps with
-recorded colors — `cR({rep β, rep γ}) = bit β` for `β < γ` (EHMR fact (8) content).
-Produced by the tree-counting theorem `ehmr_tree_has_branch`. -/
-structure EHMRBranch (cR : (Fin 2 ↪o Source κ) → C) where
-  /-- The rep at each position `β < (succ κ).ord`. -/
-  rep : ∀ β : Ordinal.{0}, β < (Order.succ κ).ord → Source κ
-  /-- The recorded color at each position `β < (succ κ).ord`. -/
-  bit : ∀ β : Ordinal.{0}, β < (Order.succ κ).ord → C
-  /-- The reps strictly increase. -/
-  rep_strictMono : ∀ {β γ : Ordinal.{0}} (hβ : β < (Order.succ κ).ord)
-    (hγ : γ < (Order.succ κ).ord), β < γ → rep β hβ < rep γ hγ
-  /-- End-homogeneity: the pair color of `{rep β, rep γ}` is `bit β` for `β < γ`. -/
-  coloring : ∀ {β γ : Ordinal.{0}} (hβ : β < (Order.succ κ).ord)
-    (hγ : γ < (Order.succ κ).ord) (hβγ : β < γ),
-    cR (pairEmbed (rep_strictMono hβ hγ hβγ)) = bit β hβ
 
 end BranchStructures
 
@@ -500,14 +387,6 @@ private theorem ehmr_level_card_le (hκ : Cardinal.aleph0 ≤ κ) (hC : Cardinal
     Cardinal.mk (EHMRNodeAt C β) ≤ (2 : Cardinal.{0}) ^ κ :=
   mk_node_le hκ hC hβ
 
-/-- `ehmrChosen` transported along a level equality: equal levels plus
-heterogeneously-equal nodes give equal chosen reps. -/
-private theorem ehmrChosen_congr (cR : (Fin 2 ↪o Source κ) → C) {δ₁ δ₂ : Ordinal.{0}}
-    (hδ : δ₁ = δ₂) {n₁ : EHMRNodeAt C δ₁} {n₂ : EHMRNodeAt C δ₂} (hn : HEq n₁ n₂) :
-    ehmrChosen cR δ₁ n₁ = ehmrChosen cR δ₂ n₂ := by
-  subst hδ
-  rw [eq_of_heq hn]
-
 /-- Level smallness: for `β < (succ κ).ord` there are `≤ 2 ^ κ` live length-`β` nodes
 (a fortiori `≤ 2 ^ κ` nodes, by `ehmr_level_card_le`). -/
 private theorem ehmr_live_level_small (hκ : Cardinal.aleph0 ≤ κ) (hC : Cardinal.mk C ≤ κ)
@@ -578,7 +457,7 @@ theorem yNode_restrict (cR : (Fin 2 ↪o Source κ) → C) (y : Source κ)
   funext x'
   have htx : Ordinal.typein (· < ·) ((initialSegOfLe hδ).toOrderEmbedding x')
       = Ordinal.typein (· < ·) x' := Ordinal.typein_apply (initialSegOfLe hδ) x'
-  show yNode cR y β ((initialSegOfLe hδ).toOrderEmbedding x') = yNode cR y δ x'
+  change yNode cR y β ((initialSegOfLe hδ).toOrderEmbedding x') = yNode cR y δ x'
   simp only [yNode, htx]
 
 /-- The reps of `yNode cR y β` are exactly `yRep cR y (typein x)`. (The `IsWellOrder`
@@ -590,7 +469,7 @@ private theorem ehmrRep_yNode (cR : (Fin 2 ↪o Source κ) → C) (y : Source κ
   classical
   have hlt : Ordinal.typein (· < ·) x < β :=
     lt_of_lt_of_eq (Ordinal.typein_lt_type (· < ·) x) (Ordinal.type_toType β)
-  show ehmrChosen cR (Ordinal.typein (· < ·) x) ((yNode cR y β).restrict (le_of_lt hlt))
+  change ehmrChosen cR (Ordinal.typein (· < ·) x) ((yNode cR y β).restrict (le_of_lt hlt))
      = yRep cR y (Ordinal.typein (· < ·) x)
   rw [yRep_eq, yNode_restrict]
 
@@ -698,7 +577,7 @@ theorem EHMRNodeAt.restrict_trans {β : Ordinal.{0}} (h : EHMRNodeAt C β)
   have : IsWellOrder δ.ToType (· < ·) := isWellOrder_lt
   have : IsWellOrder ε.ToType (· < ·) := isWellOrder_lt
   funext z
-  show h ((initialSegOfLe hδ).toOrderEmbedding
+  change h ((initialSegOfLe hδ).toOrderEmbedding
         ((initialSegOfLe hε).toOrderEmbedding z))
      = h ((initialSegOfLe (hε.trans hδ)).toOrderEmbedding z)
   rw [initialSegOfLe_compose]
@@ -708,117 +587,6 @@ theorem EHMRNodeAt.restrict_heq {β : Ordinal.{0}} (h : EHMRNodeAt C β)
     {δ₁ δ₂ : Ordinal.{0}} (hδ : δ₁ = δ₂) (h1 : δ₁ ≤ β) (h2 : δ₂ ≤ β) :
     HEq (h.restrict h1) (h.restrict h2) := by
   subst hδ; exact heq_of_eq rfl
-
-/-- The reps of a restriction agree with the parent's reps at the lifted positions. -/
-private theorem ehmrRep_restrict (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
-    (h : EHMRNodeAt C β) {δ : Ordinal.{0}} (hδ : δ ≤ β) (x : δ.ToType) :
-    ehmrRep cR (h.restrict hδ) x =
-      ehmrRep cR h ((initialSegOfLe hδ).toOrderEmbedding x) := by
-  classical
-  have : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-  have : IsWellOrder δ.ToType (· < ·) := isWellOrder_lt
-  set lx := (initialSegOfLe hδ).toOrderEmbedding x with hlx_def
-  have htx : Ordinal.typein (· < ·) lx = Ordinal.typein (· < ·) x := by
-    rw [hlx_def]; exact Ordinal.typein_apply (initialSegOfLe hδ) x
-  have hx_lt : Ordinal.typein (· < ·) x < δ :=
-    lt_of_lt_of_eq (Ordinal.typein_lt_type (· < ·) x) (Ordinal.type_toType δ)
-  have hlx_lt : Ordinal.typein (· < ·) lx < β :=
-    lt_of_lt_of_eq (Ordinal.typein_lt_type (· < ·) lx) (Ordinal.type_toType β)
-  show ehmrChosen cR (Ordinal.typein (· < ·) x) ((h.restrict hδ).restrict (le_of_lt hx_lt))
-     = ehmrChosen cR (Ordinal.typein (· < ·) lx) (h.restrict (le_of_lt hlx_lt))
-  refine ehmrChosen_congr cR htx.symm ?_
-  rw [EHMRNodeAt.restrict_trans h hδ (le_of_lt hx_lt)]
-  exact EHMRNodeAt.restrict_heq h htx.symm ((le_of_lt hx_lt).trans hδ) (le_of_lt hlx_lt)
-
-/-- A restriction of a live node is live (the same witness `y` serves, since the reps
-and recorded colors only shrink). -/
-private theorem ehmrLive_restrict (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
-    {h : EHMRNodeAt C β} (hlive : ehmrLive cR h) {δ : Ordinal.{0}} (hδ : δ ≤ β) :
-    ehmrLive cR (h.restrict hδ) := by
-  classical
-  have : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-  have : IsWellOrder δ.ToType (· < ·) := isWellOrder_lt
-  obtain ⟨y, hy⟩ := hlive
-  refine ⟨y, ?_⟩
-  intro x
-  obtain ⟨hlt, hcol⟩ := hy ((initialSegOfLe hδ).toOrderEmbedding x)
-  rw [ehmrRep_restrict cR h hδ x]
-  exact ⟨hlt, hcol⟩
-
-/-- `cR ∘ pairEmbed` depends only on the two endpoints, not on the `<`-proof: equal
-endpoints give equal colors. -/
-private theorem cR_pairEmbed_congr (cR : (Fin 2 ↪o Source κ) → C)
-    {a a' b b' : Source κ} (ha : a = a') (hb : b = b') (p : a < b) (q : a' < b') :
-    cR (pairEmbed p) = cR (pairEmbed q) := by
-  subst ha; subst hb; rfl
-
-/-- **End-homogeneity, strict monotonicity.** On a live node the chosen reps strictly
-increase: the rep at `x₁` is the rep of the restriction-to-`x₂` at the position of `x₁`,
-hence strictly below that restriction's chosen min `= rep x₂`. -/
-private theorem ehmrRep_strictMono (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
-    {h : EHMRNodeAt C β} (hlive : ehmrLive cR h) {x₁ x₂ : β.ToType} (hx : x₁ < x₂) :
-    ehmrRep cR h x₁ < ehmrRep cR h x₂ := by
-  classical
-  have : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-  have : IsWellOrder (Ordinal.typein (· < · : β.ToType → β.ToType → Prop) x₂).ToType (· < ·) :=
-    isWellOrder_lt
-  have hx₂lt : Ordinal.typein (· < ·) x₂ < β :=
-    lt_of_lt_of_eq (Ordinal.typein_lt_type (· < ·) x₂) (Ordinal.type_toType β)
-  have h₂live : ehmrLive cR (h.restrict (le_of_lt hx₂lt)) :=
-    ehmrLive_restrict cR hlive (le_of_lt hx₂lt)
-  have hx₁ty : Ordinal.typein (· < ·) x₁ <
-      Ordinal.type (· < · : (Ordinal.typein (· < ·) x₂).ToType →
-        (Ordinal.typein (· < ·) x₂).ToType → Prop) := by
-    rw [Ordinal.type_toType]; exact (Ordinal.typein_lt_typein (· < ·)).mpr hx
-  set z₁ := Ordinal.enum (· < ·) ⟨Ordinal.typein (· < ·) x₁, hx₁ty⟩ with hz₁_def
-  have hlift : (initialSegOfLe (le_of_lt hx₂lt)).toOrderEmbedding z₁ = x₁ := by
-    refine (Ordinal.typein_inj (· < ·)).mp ?_
-    have e1 : Ordinal.typein (· < ·)
-          ((initialSegOfLe (le_of_lt hx₂lt)).toOrderEmbedding z₁) =
-        Ordinal.typein (· < ·) z₁ :=
-      Ordinal.typein_apply (initialSegOfLe (le_of_lt hx₂lt)) z₁
-    have e2 : Ordinal.typein (· < ·) z₁ = Ordinal.typein (· < ·) x₁ := by
-      rw [hz₁_def]; exact Ordinal.typein_enum (· < ·) _
-    rw [e1, e2]
-  obtain ⟨hlt, _⟩ := ehmrChosen_mem cR (h.restrict (le_of_lt hx₂lt)) h₂live z₁
-  rw [ehmrRep_restrict cR h (le_of_lt hx₂lt) z₁, hlift] at hlt
-  exact hlt
-
-/-- **End-homogeneity, EHMR fact (8).** On a live node, the recorded color at `x₁` is
-the pair-color of the reps `{rep x₁, rep x₂}` for any `x₁ < x₂`. -/
-private theorem ehmr_fact8 (cR : (Fin 2 ↪o Source κ) → C) {β : Ordinal.{0}}
-    {h : EHMRNodeAt C β} (hlive : ehmrLive cR h) {x₁ x₂ : β.ToType} (hx : x₁ < x₂) :
-    cR (pairEmbed (ehmrRep_strictMono cR hlive hx)) = h x₁ := by
-  classical
-  have : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-  have : IsWellOrder (Ordinal.typein (· < · : β.ToType → β.ToType → Prop) x₂).ToType (· < ·) :=
-    isWellOrder_lt
-  have hx₂lt : Ordinal.typein (· < ·) x₂ < β :=
-    lt_of_lt_of_eq (Ordinal.typein_lt_type (· < ·) x₂) (Ordinal.type_toType β)
-  have h₂live : ehmrLive cR (h.restrict (le_of_lt hx₂lt)) :=
-    ehmrLive_restrict cR hlive (le_of_lt hx₂lt)
-  have hx₁ty : Ordinal.typein (· < ·) x₁ <
-      Ordinal.type (· < · : (Ordinal.typein (· < ·) x₂).ToType →
-        (Ordinal.typein (· < ·) x₂).ToType → Prop) := by
-    rw [Ordinal.type_toType]; exact (Ordinal.typein_lt_typein (· < ·)).mpr hx
-  set z₁ := Ordinal.enum (· < ·) ⟨Ordinal.typein (· < ·) x₁, hx₁ty⟩ with hz₁_def
-  have hlift : (initialSegOfLe (le_of_lt hx₂lt)).toOrderEmbedding z₁ = x₁ := by
-    refine (Ordinal.typein_inj (· < ·)).mp ?_
-    have e1 : Ordinal.typein (· < ·)
-          ((initialSegOfLe (le_of_lt hx₂lt)).toOrderEmbedding z₁) =
-        Ordinal.typein (· < ·) z₁ :=
-      Ordinal.typein_apply (initialSegOfLe (le_of_lt hx₂lt)) z₁
-    have e2 : Ordinal.typein (· < ·) z₁ = Ordinal.typein (· < ·) x₁ := by
-      rw [hz₁_def]; exact Ordinal.typein_enum (· < ·) _
-    rw [e1, e2]
-  obtain ⟨hlt, hcol⟩ := ehmrChosen_mem cR (h.restrict (le_of_lt hx₂lt)) h₂live z₁
-  have hrep_z : ehmrRep cR (h.restrict (le_of_lt hx₂lt)) z₁ = ehmrRep cR h x₁ := by
-    rw [ehmrRep_restrict cR h (le_of_lt hx₂lt) z₁, hlift]
-  have hcol_z : (h.restrict (le_of_lt hx₂lt)) z₁ = h x₁ := by
-    show h ((initialSegOfLe (le_of_lt hx₂lt)).toOrderEmbedding z₁) = h x₁
-    rw [hlift]
-  rw [← hcol_z, ← hcol]
-  exact cR_pairEmbed_congr cR hrep_z.symm rfl (ehmrRep_strictMono cR hlive hx) hlt
 
 end EndHomogeneity
 
@@ -832,34 +600,6 @@ reading it off at the first `(succ κ).ord` positions yields an `EHMRBranch`. -/
 section BranchExtraction
 
 variable {κ : Cardinal.{0}} {C : Type}
-
-/-- The position `enum β'` of a length-`β` node, for `β' < (succ κ).ord ≤ β`. -/
-private noncomputable def ehmrBranchPos {β : Ordinal.{0}} (hβ : (Order.succ κ).ord ≤ β)
-    (β' : Ordinal.{0}) (hβ' : β' < (Order.succ κ).ord) : β.ToType := by
-  haveI : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-  exact Ordinal.enum (· < ·) ⟨β', by rw [Ordinal.type_toType]; exact hβ'.trans_le hβ⟩
-
-/-- Positions are strictly monotone in the level. -/
-private theorem ehmrBranchPos_strictMono {β : Ordinal.{0}} (hβ : (Order.succ κ).ord ≤ β)
-    {β' γ' : Ordinal.{0}} (hβ' : β' < (Order.succ κ).ord)
-    (hγ' : γ' < (Order.succ κ).ord) (h' : β' < γ') :
-    ehmrBranchPos hβ β' hβ' < ehmrBranchPos hβ γ' hγ' := by
-  have : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-  show Ordinal.enum (· < ·) ⟨β', _⟩ < Ordinal.enum (· < ·) ⟨γ', _⟩
-  exact Ordinal.enum_lt_enum.mpr h'
-
-/-- A live node of length `≥ (succ κ).ord` *is* an `EHMRBranch`: its reps (read off at
-the positions `enum β'`) strictly increase (`ehmrRep_strictMono`) and satisfy fact (8)
-(`ehmr_fact8`). -/
-private noncomputable def ehmrBranch_of_live {β : Ordinal.{0}}
-    (cR : (Fin 2 ↪o Source κ) → C) (h : EHMRNodeAt C β)
-    (hβ : (Order.succ κ).ord ≤ β) (hlive : ehmrLive cR h) : EHMRBranch cR where
-  rep β' hβ' := ehmrRep cR h (ehmrBranchPos hβ β' hβ')
-  bit β' hβ' := h (ehmrBranchPos hβ β' hβ')
-  rep_strictMono hβ' hγ' h' :=
-    ehmrRep_strictMono cR hlive (ehmrBranchPos_strictMono hβ hβ' hγ' h')
-  coloring hβ' hγ' h' :=
-    ehmr_fact8 cR hlive (ehmrBranchPos_strictMono hβ hβ' hγ' h')
 
 /-- **[THE COUNTING CORE — EHMR Theorem 13.1]** Some live node has length
 `≥ (succ κ).ord`.
@@ -925,16 +665,6 @@ theorem exists_live_node_ge [Nonempty C] (hκ : Cardinal.aleph0 ≤ κ)
   exact absurd (hlower.trans hupper)
     (not_le.mpr (Order.lt_succ ((2 : Cardinal.{0}) ^ κ)))
 
-/-- **[EHMR §13 Theorem 13.1 / §14 Theorem 14.3 — branch-length]** The canonical
-partition tree for `cR` has a branch of length `(succ κ).ord`: a live node of length
-`≥ (succ κ).ord` (`exists_live_node_ge`) restricts to the sought `EHMRBranch`
-(`ehmrBranch_of_live`). -/
-private theorem ehmr_tree_has_branch [Nonempty C] (hκ : Cardinal.aleph0 ≤ κ)
-    (hC : Cardinal.mk C ≤ κ) (cR : (Fin 2 ↪o Source κ) → C) :
-    Nonempty (EHMRBranch cR) := by
-  obtain ⟨β, h, hβ, hlive⟩ := exists_live_node_ge hκ hC cR
-  exact ⟨ehmrBranch_of_live cR h hβ hlive⟩
-
 end BranchExtraction
 
 /-! ### Assembly: EHMR branch → `CoherentMajorityBranch` -/
@@ -942,111 +672,6 @@ end BranchExtraction
 section Assembly
 
 variable {κ : Cardinal.{0}} {C : Type}
-
-/-- Assemble an `EHMRBranch` into a `CoherentMajorityBranch`. `prefixAt α` is the
-embedding `α.ToType ↪o Source κ` sending position `β < α` to `rep β`; `branch α` reads
-off `bit`; `prefix_restrict`/`branch_restrict` are immediate from the assembly;
-`top_in_validFiber` is EHMR fact (8) (`coloring`). -/
-private theorem exists_coherentMajorityBranch_of_ehmrBranch
-    {cR : (Fin 2 ↪o Source κ) → C} (b : EHMRBranch cR) :
-    Nonempty (CoherentMajorityBranch cR) := by
-  classical
-  -- `typein x < (succ κ).ord` for `x : α.ToType` when `α < (succ κ).ord`.
-  have htlt : ∀ {α : Ordinal.{0}} (_hα : α < (Order.succ κ).ord) (x : α.ToType),
-      haveI : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-      Ordinal.typein (· < ·) x < (Order.succ κ).ord := by
-    intro α hα x
-    have : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-    have h := Ordinal.typein_lt_type (· < · : α.ToType → α.ToType → Prop) x
-    rw [Ordinal.type_toType] at h
-    exact h.trans hα
-  -- `rep`/`bit` depend on the ordinal only (proof-irrelevant in the `< (succ κ).ord` arg).
-  have repc : ∀ {A B : Ordinal.{0}} (hA : A < (Order.succ κ).ord)
-      (hB : B < (Order.succ κ).ord), A = B → b.rep A hA = b.rep B hB := by
-    intro A B hA hB h; subst h; rfl
-  have bitc : ∀ {A B : Ordinal.{0}} (hA : A < (Order.succ κ).ord)
-      (hB : B < (Order.succ κ).ord), A = B → b.bit A hA = b.bit B hB := by
-    intro A B hA hB h; subst h; rfl
-  -- `typein ⊤ = γ` inside `(succ γ).ToType`.
-  have htop : ∀ (γ : Ordinal.{0}),
-      haveI : IsWellOrder (Order.succ γ).ToType (· < ·) := isWellOrder_lt
-      Ordinal.typein (· < ·) (⊤ : (Order.succ γ).ToType) = γ := by
-    intro γ
-    have : IsWellOrder (Order.succ γ).ToType (· < ·) := isWellOrder_lt
-    rw [show (⊤ : (Order.succ γ).ToType) = Ordinal.enum (α := (Order.succ γ).ToType) (· < ·)
-          ⟨γ, by simp only [Set.mem_Iio, Ordinal.type_toType]; exact Order.lt_succ γ⟩ from
-        Ordinal.enum_succ_eq_top.symm]
-    exact Ordinal.typein_enum _ _
-  -- The assembled prefix embedding at each level.
-  let pre : ∀ α : Ordinal.{0}, α < (Order.succ κ).ord → α.ToType ↪o Source κ :=
-    fun α hα =>
-      haveI : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-      OrderEmbedding.ofStrictMono
-        (fun x => b.rep (Ordinal.typein (· < ·) x) (htlt hα x))
-        (fun _ _ hxy => b.rep_strictMono _ _ ((Ordinal.typein_lt_typein (· < ·)).mpr hxy))
-  let br : ∀ α : Ordinal.{0}, α < (Order.succ κ).ord → α.ToType → C :=
-    fun α hα x =>
-      haveI : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-      b.bit (Ordinal.typein (· < ·) x) (htlt hα x)
-  have pre_apply : ∀ (α : Ordinal.{0}) (hα : α < (Order.succ κ).ord) (x : α.ToType),
-      haveI : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-      pre α hα x = b.rep (Ordinal.typein (· < ·) x) (htlt hα x) := by
-    intro α hα x; have : IsWellOrder α.ToType (· < ·) := isWellOrder_lt; rfl
-  have br_apply : ∀ (α : Ordinal.{0}) (hα : α < (Order.succ κ).ord) (x : α.ToType),
-      haveI : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-      br α hα x = b.bit (Ordinal.typein (· < ·) x) (htlt hα x) := by
-    intro α hα x; rfl
-  refine ⟨{
-    prefixAt := pre
-    branch := br
-    prefix_restrict := ?_
-    branch_restrict := ?_
-    top_in_validFiber := ?_ }⟩
-  · -- prefix_restrict
-    intro β α hβα hβ hα x
-    have : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-    have : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-    rw [pre_apply α hα, pre_apply β hβ]
-    exact repc _ _ (Ordinal.typein_apply _ x)
-  · -- branch_restrict
-    intro β α hβα hβ hα x
-    have : IsWellOrder α.ToType (· < ·) := isWellOrder_lt
-    have : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
-    rw [br_apply α hα, br_apply β hβ]
-    exact bitc _ _ (Ordinal.typein_apply _ x)
-  · -- top_in_validFiber
-    intro γ hγ hsγ
-    have : IsWellOrder (Order.succ γ).ToType (· < ·) := isWellOrder_lt
-    have : IsWellOrder γ.ToType (· < ·) := isWellOrder_lt
-    intro x
-    have hx_lt : Ordinal.typein (· < ·) x < γ := by
-      have h := Ordinal.typein_lt_type (· < · : γ.ToType → γ.ToType → Prop) x
-      rwa [Ordinal.type_toType] at h
-    have hpx : pre γ hγ x = b.rep (Ordinal.typein (· < ·) x) (htlt hγ x) := pre_apply γ hγ x
-    have hpt : pre (Order.succ γ) hsγ (⊤ : (Order.succ γ).ToType) = b.rep γ hγ := by
-      rw [pre_apply (Order.succ γ) hsγ]; exact repc _ _ (htop γ)
-    have h₀ : pre γ hγ x < pre (Order.succ γ) hsγ (⊤ : (Order.succ γ).ToType) := by
-      rw [hpx, hpt]; exact b.rep_strictMono _ _ hx_lt
-    refine ⟨h₀, ?_⟩
-    have hpe : pairEmbed h₀ = pairEmbed (b.rep_strictMono (htlt hγ x) hγ hx_lt) := by
-      apply RelEmbedding.ext
-      intro i
-      match i with
-      | ⟨0, _⟩ => simp only [pairEmbed]; exact hpx
-      | ⟨1, _⟩ => simp only [pairEmbed]; exact hpt
-    rw [hpe, br_apply γ hγ]
-    exact b.coloring (htlt hγ x) hγ hx_lt
-
-/-- Existence of a `CoherentMajorityBranch` — a coherent branch (prefix/branch
-restriction coherence + `top_in_validFiber`) of length `(succ κ).ord`, the object the
-pair Erdős–Rado endgame consumes. Derived directly from the EHMR canonical partition
-tree. -/
-private theorem exists_coherentMajorityBranch (hκ : Cardinal.aleph0 ≤ κ)
-    (hC : Cardinal.mk C ≤ κ) (cR : (Fin 2 ↪o Source κ) → C) :
-    Nonempty (CoherentMajorityBranch cR) := by
-  have : Nonempty C := nonempty_color cR
-  obtain ⟨b⟩ := ehmr_tree_has_branch hκ hC cR
-  exact exists_coherentMajorityBranch_of_ehmrBranch b
 
 end Assembly
 
@@ -1056,348 +681,8 @@ section Endgame
 
 variable {κ : Cardinal.{0}} {C : Type}
 
-/-- **`treeCommitOfBranch`**: canonical commit at position `δ` using B. Reads off
-`B.prefixAt (succ δ) ⊤` (the top of the succ δ chain). -/
-private noncomputable def treeCommitOfBranch
-    {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
-    (B : CoherentMajorityBranch cR) (δ : Ordinal.{0})
-    (hδ : δ < (Order.succ κ).ord) : Source κ :=
-  haveI : IsWellOrder (Order.succ δ).ToType (· < ·) := isWellOrder_lt
-  have hsδ : Order.succ δ < (Order.succ κ).ord := succ_lt_ord_of_lt hκ hδ
-  B.prefixAt (Order.succ δ) hsδ (⊤ : (Order.succ δ).ToType)
-
-/-- **`treeCommitColorOfBranch`**: canonical color at position `δ` using B. Reads off
-`B.branch (succ δ) ⊤`. -/
-private noncomputable def treeCommitColorOfBranch
-    {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
-    (B : CoherentMajorityBranch cR) (δ : Ordinal.{0})
-    (hδ : δ < (Order.succ κ).ord) : C :=
-  haveI : IsWellOrder (Order.succ δ).ToType (· < ·) := isWellOrder_lt
-  have hsδ : Order.succ δ < (Order.succ κ).ord := succ_lt_ord_of_lt hκ hδ
-  B.branch (Order.succ δ) hsδ (⊤ : (Order.succ δ).ToType)
-
-/-- **`treeCommitOfBranch_strictMono`**: strict monotonicity of the branch-driven chain
-values, inherited from `B.prefixAt`'s order embedding structure + `prefix_restrict` to
-identify levels. -/
-private lemma treeCommitOfBranch_strictMono
-    {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
-    (B : CoherentMajorityBranch cR) {δ₁ δ₂ : Ordinal.{0}}
-    (hδ₁ : δ₁ < (Order.succ κ).ord) (hδ₂ : δ₂ < (Order.succ κ).ord)
-    (h : δ₁ < δ₂) :
-    treeCommitOfBranch hκ B δ₁ hδ₁ < treeCommitOfBranch hκ B δ₂ hδ₂ := by
-  have : IsWellOrder (Order.succ δ₁).ToType (· < ·) := isWellOrder_lt
-  have : IsWellOrder (Order.succ δ₂).ToType (· < ·) := isWellOrder_lt
-  have hsδ₁ : Order.succ δ₁ < (Order.succ κ).ord := succ_lt_ord_of_lt hκ hδ₁
-  have hsδ₂ : Order.succ δ₂ < (Order.succ κ).ord := succ_lt_ord_of_lt hκ hδ₂
-  have hsδ₁_le_sδ₂ : Order.succ δ₁ ≤ Order.succ δ₂ :=
-    Order.succ_le_succ (le_of_lt h)
-  show B.prefixAt (Order.succ δ₁) hsδ₁ (⊤ : (Order.succ δ₁).ToType) <
-    B.prefixAt (Order.succ δ₂) hsδ₂ (⊤ : (Order.succ δ₂).ToType)
-  -- Use prefix_restrict to convert LHS to a (succ δ₂)-level expression.
-  rw [← B.prefix_restrict hsδ₁_le_sδ₂ hsδ₁ hsδ₂
-      (⊤ : (Order.succ δ₁).ToType)]
-  -- Now both sides are B.prefixAt (succ δ₂) hsδ₂ applied at two
-  -- elements of (succ δ₂).ToType; apply OrderEmbedding strict-mono.
-  apply (B.prefixAt (Order.succ δ₂) hsδ₂).strictMono
-  -- Compare typein values: initialSegOfLe ⊤_(succ δ₁) has typein δ₁;
-  -- ⊤_(succ δ₂) has typein δ₂. Since δ₁ < δ₂, < holds.
-  have h_typein_init :
-      Ordinal.typein (α := (Order.succ δ₂).ToType) (· < ·)
-        ((initialSegOfLe hsδ₁_le_sδ₂).toOrderEmbedding
-          (⊤ : (Order.succ δ₁).ToType)) = δ₁ := by
-    rw [show Ordinal.typein (α := (Order.succ δ₂).ToType) (· < ·)
-          ((initialSegOfLe hsδ₁_le_sδ₂).toOrderEmbedding
-            (⊤ : (Order.succ δ₁).ToType)) =
-        Ordinal.typein (α := (Order.succ δ₁).ToType) (· < ·)
-          (⊤ : (Order.succ δ₁).ToType) from
-      Ordinal.typein_apply (initialSegOfLe hsδ₁_le_sδ₂) _]
-    rw [show (⊤ : (Order.succ δ₁).ToType) =
-        Ordinal.enum (α := (Order.succ δ₁).ToType) (· < ·)
-          ⟨δ₁, (Ordinal.type_toType _).symm ▸ Order.lt_succ δ₁⟩ from
-      Ordinal.enum_succ_eq_top.symm]
-    exact Ordinal.typein_enum _ _
-  have h_typein_top :
-      Ordinal.typein (α := (Order.succ δ₂).ToType) (· < ·)
-        (⊤ : (Order.succ δ₂).ToType) = δ₂ := by
-    rw [show (⊤ : (Order.succ δ₂).ToType) =
-        Ordinal.enum (α := (Order.succ δ₂).ToType) (· < ·)
-          ⟨δ₂, (Ordinal.type_toType _).symm ▸ Order.lt_succ δ₂⟩ from
-      Ordinal.enum_succ_eq_top.symm]
-    exact Ordinal.typein_enum _ _
-  -- typein-order corresponds to <.
-  rw [← Ordinal.typein_lt_typein
-    (· < · : (Order.succ δ₂).ToType → (Order.succ δ₂).ToType → Prop)]
-  rw [h_typein_init, h_typein_top]
-  exact h
-
-/-- **`treeCommitColorFnOfBranch`**: indexed color function on `(succ κ).ord.ToType`
-using B. -/
-private noncomputable def treeCommitColorFnOfBranch
-    {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
-    (B : CoherentMajorityBranch cR) :
-    (Order.succ κ).ord.ToType → C := fun x =>
-  haveI : IsWellOrder (Order.succ κ).ord.ToType (· < ·) := isWellOrder_lt
-  treeCommitColorOfBranch hκ B (Ordinal.typein (· < ·) x) (by
-    simpa [Ordinal.type_toType] using
-      Ordinal.typein_lt_type
-        (· < · : (Order.succ κ).ord.ToType →
-          (Order.succ κ).ord.ToType → Prop) x)
-
-/-- **`treeChainEmbeddingOfBranch`**: `(succ κ).ord.ToType ↪o Source κ` embedding
-driven by B. -/
-private noncomputable def treeChainEmbeddingOfBranch
-    {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
-    (B : CoherentMajorityBranch cR) :
-    (Order.succ κ).ord.ToType ↪o Source κ := by
-  haveI : IsWellOrder (Order.succ κ).ord.ToType (· < ·) := isWellOrder_lt
-  refine OrderEmbedding.ofStrictMono
-    (fun x =>
-      treeCommitOfBranch hκ B (Ordinal.typein (· < ·) x) (by
-        simpa [Ordinal.type_toType] using
-          Ordinal.typein_lt_type
-            (· < · : (Order.succ κ).ord.ToType →
-              (Order.succ κ).ord.ToType → Prop) x))
-    ?_
-  intro x y hxy
-  have hx : Ordinal.typein (· < ·) x < (Order.succ κ).ord := by
-    simpa [Ordinal.type_toType] using
-      Ordinal.typein_lt_type
-        (· < · : (Order.succ κ).ord.ToType →
-          (Order.succ κ).ord.ToType → Prop) x
-  have hy : Ordinal.typein (· < ·) y < (Order.succ κ).ord := by
-    simpa [Ordinal.type_toType] using
-      Ordinal.typein_lt_type
-        (· < · : (Order.succ κ).ord.ToType →
-          (Order.succ κ).ord.ToType → Prop) y
-  exact treeCommitOfBranch_strictMono hκ B hx hy
-    ((Ordinal.typein_lt_typein (· < ·)).mpr hxy)
-
-/-- **`treeChain_pair_homogeneous_ofBranch`**: pair-homogeneity along the branch-driven
-chain. For `δ < η < (succ κ).ord`,
-`cR (pair (treeCommitOfBranch B δ) (treeCommitOfBranch B η)) = treeCommitColorOfBranch B δ`.
-
-Proof: by `B.top_in_validFiber η`, `commit η = B.prefixAt (succ η) ⊤` is in
-`validFiber cR (B.prefixAt η hη) (B.branch η hη)`. Apply at position `enum δ : η.ToType`;
-use `B.prefix_restrict` / `B.branch_restrict` to identify the constraint values with
-`commit δ` and `commit color δ`. -/
-private theorem treeChain_pair_homogeneous_ofBranch
-    {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
-    (B : CoherentMajorityBranch cR) {δ η : Ordinal.{0}}
-    (hδη : δ < η) (hη : η < (Order.succ κ).ord) :
-    cR (pairEmbed (treeCommitOfBranch_strictMono hκ B
-        (hδη.trans hη) hη hδη)) =
-      treeCommitColorOfBranch hκ B δ (hδη.trans hη) := by
-  have : IsWellOrder η.ToType (· < ·) := isWellOrder_lt
-  have : IsWellOrder (Order.succ δ).ToType (· < ·) := isWellOrder_lt
-  have : IsWellOrder (Order.succ η).ToType (· < ·) := isWellOrder_lt
-  have hδ : δ < (Order.succ κ).ord := hδη.trans hη
-  have hsδ : Order.succ δ < (Order.succ κ).ord := succ_lt_ord_of_lt hκ hδ
-  have hsη : Order.succ η < (Order.succ κ).ord := succ_lt_ord_of_lt hκ hη
-  have hsδ_le_η : Order.succ δ ≤ η := Order.succ_le_of_lt hδη
-  -- The top of (succ η)-chain is in the validFiber for level η.
-  have h_top_in :=
-    B.top_in_validFiber η hη hsη
-  set x_η : η.ToType :=
-    Ordinal.enum (α := η.ToType) (· < ·)
-      ⟨δ, (Ordinal.type_toType η).symm ▸ hδη⟩
-  obtain ⟨h_lt, h_col⟩ := h_top_in x_η
-  -- Helper: x_η = initialSegOfLe (⊤ : (succ δ).ToType).
-  have h_x_η_eq :
-      (initialSegOfLe hsδ_le_η).toOrderEmbedding
-          (⊤ : (Order.succ δ).ToType) = x_η := by
-    have h_typein_init :
-        Ordinal.typein (α := η.ToType) (· < ·)
-          ((initialSegOfLe hsδ_le_η).toOrderEmbedding
-            (⊤ : (Order.succ δ).ToType)) = δ := by
-      rw [show Ordinal.typein (α := η.ToType) (· < ·)
-            ((initialSegOfLe hsδ_le_η).toOrderEmbedding
-              (⊤ : (Order.succ δ).ToType)) =
-          Ordinal.typein (α := (Order.succ δ).ToType) (· < ·)
-            (⊤ : (Order.succ δ).ToType) from
-        Ordinal.typein_apply (initialSegOfLe hsδ_le_η) _]
-      rw [show (⊤ : (Order.succ δ).ToType) =
-          Ordinal.enum (α := (Order.succ δ).ToType) (· < ·)
-            ⟨δ, (Ordinal.type_toType _).symm ▸ Order.lt_succ δ⟩ from
-        Ordinal.enum_succ_eq_top.symm]
-      exact Ordinal.typein_enum _ _
-    rw [← Ordinal.enum_typein
-        (· < · : η.ToType → η.ToType → Prop)
-        ((initialSegOfLe hsδ_le_η).toOrderEmbedding
-          (⊤ : (Order.succ δ).ToType))]
-    congr 1
-    apply Subtype.ext
-    exact h_typein_init
-  -- B.prefixAt η hη x_η = B.prefixAt (succ δ) hsδ ⊤ = commit δ.
-  have h_prefix_η_x : B.prefixAt η hη x_η =
-      B.prefixAt (Order.succ δ) hsδ (⊤ : (Order.succ δ).ToType) := by
-    rw [← h_x_η_eq]
-    exact B.prefix_restrict hsδ_le_η hsδ hη
-      (⊤ : (Order.succ δ).ToType)
-  -- Similar for branch.
-  have h_branch_η_x : B.branch η hη x_η =
-      B.branch (Order.succ δ) hsδ (⊤ : (Order.succ δ).ToType) := by
-    rw [← h_x_η_eq]
-    exact B.branch_restrict hsδ_le_η hsδ hη
-      (⊤ : (Order.succ δ).ToType)
-  -- Combine. Goal: cR(pair our_witness) = commit color δ.
-  show cR _ = B.branch (Order.succ δ) hsδ (⊤ : (Order.succ δ).ToType)
-  rw [← h_branch_η_x]
-  -- pairEmbed of our_witness equals pairEmbed h_lt (same values).
-  have h_pair_eq :
-      (pairEmbed (treeCommitOfBranch_strictMono hκ B hδ hη hδη) :
-        Fin 2 ↪o Source κ) = pairEmbed h_lt := by
-    ext k
-    match k with
-    | ⟨0, _⟩ =>
-      show treeCommitOfBranch hκ B δ hδ = B.prefixAt η hη x_η
-      show B.prefixAt (Order.succ δ) hsδ (⊤ : (Order.succ δ).ToType) =
-        B.prefixAt η hη x_η
-      exact h_prefix_η_x.symm
-    | ⟨1, _⟩ => rfl
-  rw [h_pair_eq]
-  exact h_col
-
-/-- **[THE FINAL PIGEONHOLE]** Color pigeonhole on `treeCommitColorFnOfBranch B`: some
-color has a `succ κ`-sized preimage (domain of size `succ κ`, codomain of size
-`≤ κ`). -/
-private theorem exists_large_treeCommitColorFn_fiber_ofBranch
-    {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
-    (hC : Cardinal.mk C ≤ κ) (B : CoherentMajorityBranch cR) :
-    ∃ b : C,
-      Order.succ κ ≤
-        Cardinal.mk ((treeCommitColorFnOfBranch hκ B) ⁻¹' {b}) := by
-  have hα_card :
-      Cardinal.mk (Order.succ κ).ord.ToType ≥ Order.succ κ := by
-    rw [Cardinal.mk_ord_toType]
-  exact exists_large_fiber_of_small_codomain hκ hα_card hC
-    (treeCommitColorFnOfBranch hκ B)
-
-/-- **[CONDITIONAL HEADLINE]** Parameterized pair Erdős–Rado, assuming a
-`CoherentMajorityBranch`: there is a color `b` and a `(succ κ).ord`-indexed strict-mono
-sequence into `Source κ` whose every pair has `cR`-color `b`.
-
-Proof: color pigeonhole (`exists_large_treeCommitColorFn_fiber_ofBranch`) gives a
-`succ κ`-sized preimage of some `b`; `ordIso_ordToType_of_card_ge` gives an order iso
-preimage ≃ `(succ κ).ord.ToType`. Compose with `treeChainEmbeddingOfBranch B` to get the
-embedding; pair-homogeneity comes from `treeChain_pair_homogeneous_ofBranch` + constancy
-of `treeCommitColorFnOfBranch B` on the preimage. -/
-private theorem pairErdosRado_general_of_coherentMajorityBranch
-    {cR : (Fin 2 ↪o Source κ) → C} (hκ : Cardinal.aleph0 ≤ κ)
-    (hC : Cardinal.mk C ≤ κ) (B : CoherentMajorityBranch cR) :
-    ∃ (f : (Order.succ κ).ord.ToType ↪o Source κ) (b : C),
-      ∀ {x y : (Order.succ κ).ord.ToType} (hxy : x < y),
-        cR (pairEmbed (f.strictMono hxy)) = b := by
-  have : IsWellOrder (Order.succ κ).ord.ToType (· < ·) := isWellOrder_lt
-  obtain ⟨b, hb⟩ := exists_large_treeCommitColorFn_fiber_ofBranch hκ hC B
-  obtain ⟨iso⟩ := ordIso_ordToType_of_card_ge hb
-  -- f : (succ κ).ord.ToType → Source κ via iso.symm + value extraction +
-  -- treeChainEmbeddingOfBranch.
-  have h_strict : StrictMono
-      (fun z : (Order.succ κ).ord.ToType =>
-        treeChainEmbeddingOfBranch hκ B (iso.symm z).val) := by
-    intro a b hab
-    apply (treeChainEmbeddingOfBranch hκ B).strictMono
-    have h_iso_lt : iso.symm a < iso.symm b := iso.symm.lt_iff_lt.mpr hab
-    exact h_iso_lt
-  let f : (Order.succ κ).ord.ToType ↪o Source κ :=
-    OrderEmbedding.ofStrictMono
-      (fun z => treeChainEmbeddingOfBranch hκ B (iso.symm z).val) h_strict
-  refine ⟨f, b, ?_⟩
-  intro x y hxy
-  -- f x = treeChainEmbeddingOfBranch B (iso.symm x).val.
-  -- f y = treeChainEmbeddingOfBranch B (iso.symm y).val.
-  -- By treeChain_pair_homogeneous_ofBranch + commitColorFn = b on preimage.
-  have h_iso_x_in : (iso.symm x).val ∈
-      (treeCommitColorFnOfBranch hκ B) ⁻¹' {b} := (iso.symm x).property
-  have h_iso_x_eq : treeCommitColorFnOfBranch hκ B (iso.symm x).val = b :=
-    h_iso_x_in
-  have h_lt_typein :
-      Ordinal.typein (· < ·) (iso.symm x).val <
-        Ordinal.typein (· < ·) (iso.symm y).val := by
-    have h_iso_lt : iso.symm x < iso.symm y := iso.symm.lt_iff_lt.mpr hxy
-    exact (Ordinal.typein_lt_typein (· < ·)).mpr h_iso_lt
-  have h_xval_lt : Ordinal.typein (· < ·) (iso.symm x).val <
-      (Order.succ κ).ord := by
-    simpa [Ordinal.type_toType] using
-      Ordinal.typein_lt_type
-        (· < · : (Order.succ κ).ord.ToType →
-          (Order.succ κ).ord.ToType → Prop) _
-  have h_yval_lt : Ordinal.typein (· < ·) (iso.symm y).val <
-      (Order.succ κ).ord := by
-    simpa [Ordinal.type_toType] using
-      Ordinal.typein_lt_type
-        (· < · : (Order.succ κ).ord.ToType →
-          (Order.succ κ).ord.ToType → Prop) _
-  have h_pair := treeChain_pair_homogeneous_ofBranch hκ B h_lt_typein h_yval_lt
-  have h_color_eq : treeCommitColorOfBranch hκ B
-      (Ordinal.typein (· < ·) (iso.symm x).val) h_xval_lt = b := by
-    show treeCommitColorFnOfBranch hκ B _ = b
-    exact h_iso_x_eq
-  have h_pair_eq :
-      (pairEmbed (f.strictMono hxy) : Fin 2 ↪o Source κ) =
-      pairEmbed (treeCommitOfBranch_strictMono hκ B h_xval_lt h_yval_lt
-        h_lt_typein) := by
-    ext k
-    match k with
-    | ⟨0, _⟩ => rfl
-    | ⟨1, _⟩ => rfl
-  rw [h_pair_eq, h_pair]
-  exact h_color_eq
-
 end Endgame
 
 /-! ### The headline, the regression specialization, and the abstract-source wrapper -/
-
-/-- **[HEADLINE — parameterized pair Erdős–Rado]** For infinite `κ` and any color type
-`C` with `#C ≤ κ`, every pair coloring of `Source κ = (succ (2 ^ κ)).ord.ToType` is
-constant on a `(succ κ).ord`-indexed strict-mono suborder: `(2 ^ κ)⁺ → (κ⁺)²_κ`.
-The `κ = ℵ₀`, `C = Bool` case is the legacy `erdos_rado_pair_omega1`. -/
-private theorem pairErdosRado_general (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ)
-    {C : Type} (hC : Cardinal.mk C ≤ κ) (cR : (Fin 2 ↪o Source κ) → C) :
-    ∃ (f : (Order.succ κ).ord.ToType ↪o Source κ) (b : C),
-      ∀ {x y : (Order.succ κ).ord.ToType} (hxy : x < y),
-        cR (pairEmbed (f.strictMono hxy)) = b :=
-  pairErdosRado_general_of_coherentMajorityBranch hκ hC
-    (exists_coherentMajorityBranch hκ hC cR).some
-
-/-- **[REGRESSION]** The legacy Bool/ℵ₀ shape, recovered from the general theorem at
-`κ = ℵ₀` via `succ ℵ₀ = ℵ_1` and `(ℵ_1).ord = ω_1` (stated with this file's own
-`Source`/`pairEmbed`; `Source ℵ₀ = (succ (2 ^ ℵ₀)).ord.ToType` matches the legacy
-`PairERSource = (succ ℶ_1).ord.ToType` up to `2 ^ ℵ₀ = ℶ_1`). -/
-private theorem erdos_rado_pair_omega1_from_general
-    (cR : (Fin 2 ↪o Source Cardinal.aleph0) → Bool) :
-    ∃ (f : (Ordinal.omega.{0} 1).ToType ↪o Source Cardinal.aleph0) (b : Bool),
-      ∀ {x y : (Ordinal.omega.{0} 1).ToType} (hxy : x < y),
-        cR (pairEmbed (f.strictMono hxy)) = b := by
-  have hord : (Order.succ Cardinal.aleph0).ord = Ordinal.omega.{0} 1 := by
-    rw [Cardinal.succ_aleph0, Cardinal.ord_aleph]
-  rw [← hord]
-  exact pairErdosRado_general Cardinal.aleph0 le_rfl Cardinal.mk_le_aleph0 cR
-
-/-- **[ABSTRACT SOURCE]** The parameterized pair Erdős–Rado over any well-ordered source
-`I` of cardinality `≥ succ (2 ^ κ)`: embed `Source κ` into `I`
-(`exists_ordToType_embedding_of_card_ge`), pull the coloring back, and transport the
-homogeneous chain forward. -/
-theorem pairErdosRado_general_of_large (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ)
-    {C : Type} (hC : Cardinal.mk C ≤ κ)
-    {I : Type} [LinearOrder I] [WellFoundedLT I]
-    (hI : Order.succ ((2 : Cardinal.{0}) ^ κ) ≤ Cardinal.mk I)
-    (cR : (Fin 2 ↪o I) → C) :
-    ∃ (f : (Order.succ κ).ord.ToType ↪o I) (b : C),
-      ∀ {x y : (Order.succ κ).ord.ToType} (hxy : x < y),
-        cR (pairEmbed (f.strictMono hxy)) = b := by
-  obtain ⟨e⟩ : Nonempty (Source κ ↪o I) := exists_ordToType_embedding_of_card_ge hI
-  obtain ⟨f, b, hf⟩ := pairErdosRado_general κ hκ hC (fun t => cR (t.trans e))
-  refine ⟨f.trans e, b, ?_⟩
-  intro x y hxy
-  have key := hf hxy
-  -- `key : cR ((pairEmbed (f.strictMono hxy)).trans e) = b`; the goal's pair embedding
-  -- has the same two values `e (f x) < e (f y)`, so `cR` agrees.
-  rw [← key]
-  congr 1
-  ext k
-  match k with
-  | ⟨0, _⟩ => rfl
-  | ⟨1, _⟩ => rfl
 
 end FirstOrder.Combinatorics.PairERGen

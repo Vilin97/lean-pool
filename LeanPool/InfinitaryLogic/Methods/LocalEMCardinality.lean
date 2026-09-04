@@ -71,7 +71,7 @@ private theorem mk_locatedTermCode_le [Countable (Σ l, Λ.Functions l)] :
   have hcnt : ∀ k, Countable (Λ[[Fin k]].Term Empty) := fun k =>
     haveI := countable_sigma_functions_withFin Λ k
     inferInstance
-  show Cardinal.mk (Σ k : ℕ, (Fin k ↪o J) × Λ[[Fin k]].Term Empty)
+  change Cardinal.mk (Σ k : ℕ, (Fin k ↪o J) × Λ[[Fin k]].Term Empty)
     ≤ max Cardinal.aleph0 (Cardinal.mk J)
   refine FirstOrder.HanfLadder.mk_sigma_le_of_countable (le_max_left _ _) fun k => ?_
   have h1 : Cardinal.mk ((Fin k ↪o J) × Λ[[Fin k]].Term Empty)

@@ -3,10 +3,11 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Scott.QuantifierRank
+import LeanPool.InfinitaryLogic.Karp.PotentialIso
+import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
+import LeanPool.InfinitaryLogic.Scott.Formula
 import LeanPool.InfinitaryLogic.Scott.Rank
 import LeanPool.InfinitaryLogic.Scott.RefinementCount
-import LeanPool.InfinitaryLogic.Karp.PotentialIso
 /-!
 # Scott Height: Definition and Core Properties
 
@@ -47,7 +48,8 @@ for all tuples.
 
 Scott height is related to but may differ from Scott rank. We always have
 scottHeight ≤ scottRank. -/
-noncomputable def scottHeight (M : Type w) [L.Structure M] [Countable M] : Ordinal.{0} :=
+noncomputable def scottHeight (M : Type w) [L.Structure M]
+    [_countableM : Countable M] : Ordinal.{0} :=
   sInf {α : Ordinal.{0} | ∀ {n : ℕ} (a : Fin n → M)
     (N : Type w) [L.Structure N] [Countable N] (b : Fin n → N),
     BFEquiv (L := L) α n a b → BFEquiv (L := L) (Order.succ α) n a b}
@@ -78,7 +80,7 @@ theorem scottHeight_stabilizesCompletely_of
         [Countable N'] (b' : Fin k → N'),
         BFEquiv (L := L) (scottHeight (L := L) M) k a' b' →
         BFEquiv (L := L) (Order.succ (scottHeight (L := L) M)) k a' b' from h a N b hBF
-    show scottHeight (L := L) M ∈ {α : Ordinal.{0} | ∀ {n : ℕ} (a : Fin n → M)
+    change scottHeight (L := L) M ∈ {α : Ordinal.{0} | ∀ {n : ℕ} (a : Fin n → M)
         (N : Type w) [L.Structure N] [Countable N] (b : Fin n → N),
         BFEquiv (L := L) α n a b → BFEquiv (L := L) (Order.succ α) n a b}
     apply csInf_mem

@@ -287,11 +287,4 @@ theorem ΓEMlocal_nonempty : (ΓEMlocal s₀).Nonempty :=
   ⟨⟨1, canonEqAtom (localColim s₀) (Term.var (0 : Fin 1)) (Term.var (0 : Fin 1))⟩,
     Or.inl (Or.inl (Or.inr ⟨⟨1, (Term.var 0, Term.var 0)⟩, rfl⟩))⟩
 
-/-- An **enumeration** of `ΓEMlocal` as a sequence — the exact shape the tail extraction
-(`morleyHanfExtractionTail_holds`, whose extraction yields tail-indiscernibility on `Set.range`)
-consumes. -/
-theorem exists_ΓEMlocalEnum :
-    ∃ e : ℕ → Σ n, (localColim s₀).BoundedFormulaω Empty n, ΓEMlocal s₀ = Set.range e :=
-  (ΓEMlocal_countable s₀).exists_eq_range (ΓEMlocal_nonempty s₀)
-
 end FirstOrder.Language

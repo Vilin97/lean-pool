@@ -59,6 +59,4 @@ theorem add_omega0_lt_omega1 {α : Ordinal.{0}} (hα : α < (Cardinal.aleph 1).o
 
 /-! ## Rank is monotone in the relation -/
 
-
-
 end InfinitaryLogic

@@ -96,6 +96,4 @@ noncomputable def highlyTransitiveOrderAt (κ : Cardinal.{0}) (hκ : Cardinal.al
   · rw [mk_hahnSubfield, Cardinal.mk_toType, Cardinal.card_ord]
   · exact HighlyOrderTransitive.of_field _
 
-
-
 end FirstOrder

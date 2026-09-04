@@ -180,8 +180,6 @@ theorem relationsInSigned_existsBlock (s : Bool) {n : ℕ} :
   | _ + 1, φ =>
     (relationsInSigned_existsBlock s φ.ex).trans (relationsInSigned_ex s φ)
 
-
-
 end BoundedFormulaω
 
 /-! ## The constant-expansion machinery -/
@@ -216,7 +214,8 @@ private theorem relationsInSigned_genEx (j : ℕ) (s : Bool) (ρ : L[[ℕ]].Sent
     BoundedFormulaω.relationsInSigned_abstractConst]
 
 /-- Instantiating a universal at a constant does not move the signed occurrence sets. -/
-private theorem relationsInSigned_instConst (c : ℕ) (s : Bool) (φ : L[[ℕ]].BoundedFormulaω Empty 1) :
+private theorem relationsInSigned_instConst (c : ℕ) (s : Bool) (φ : L[[ℕ]].BoundedFormulaω
+  Empty 1) :
     BoundedFormulaω.relationsInSigned s (instConst c φ) =
       BoundedFormulaω.relationsInSigned s φ := by
   rw [instConst, BoundedFormulaω.relationsInSigned_subst,
@@ -259,10 +258,6 @@ private theorem relationsInSigned_rel_inl {n l : ℕ} (s : Bool) (R : L'.Relatio
     (ts : Fin l → L'[[J]].Term (α ⊕ Fin n)) :
     relationsInSigned s (BoundedFormulaω.rel (Sum.inl R : L'[[J]].Relations l) ts)
       = if s then {(⟨l, Sum.inl R⟩ : Σ n, L'[[J]].Relations n)} else ∅ := rfl
-
-
-
-
 
 @[simp] theorem baseRelationsInSigned_falsum {n : ℕ} (s : Bool) :
     baseRelationsInSigned s (BoundedFormulaω.falsum : L'[[J]].BoundedFormulaω α n) = ∅ := by
@@ -346,14 +341,12 @@ open BoundedFormulaω
     baseRelationsInSigned s (constEq (L := L) a b) = ∅ := by
   ext p; simp [baseRelationsInSigned, constEq]
 
-
-
 /-- An atomic relation instance's base **positive** set is exactly its own symbol. -/
 theorem basePositiveRelations_relInst_eq {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) :
     basePositiveRelations (relInst R g) = {(⟨l, R⟩ : Σ n, L.Relations n)} := by
   ext p
   obtain ⟨n, r⟩ := p
-  show (⟨n, Sum.inl r⟩ : Σ k, L[[ℕ]].Relations k)
+  change (⟨n, Sum.inl r⟩ : Σ k, L[[ℕ]].Relations k)
       ∈ ({⟨l, Sum.inl R⟩} : Set (Σ k, L[[ℕ]].Relations k)) ↔ _
   rw [Set.mem_singleton_iff, Set.mem_singleton_iff]
   constructor
@@ -428,7 +421,7 @@ theorem relationsInSigned_stripConsts (s : Bool) :
       · simp only [BoundedFormulaω.stripConsts, relationsInSigned_rel, ite_true,
           Set.mem_singleton_iff] at hp
         subst hp
-        show (⟨_, Sum.inl R⟩ : Σ n, L[[ℕ]].Relations n) ∈
+        change (⟨_, Sum.inl R⟩ : Σ n, L[[ℕ]].Relations n) ∈
           relationsInSigned true (BoundedFormulaω.rel (Sum.inl R) ts)
         rw [relationsInSigned_rel_inl]
         exact Set.mem_singleton _

@@ -120,7 +120,7 @@ private theorem schemaTerm_realize_sumElim_mk {n : ℕ}
     · exact e.elim
     · rfl
   | func f us ih =>
-    show Structure.funMap f _ = _
+    change Structure.funMap f _ = _
     rw [funext ih]
     exact schemaTerm_funMap_mk hM f _
 
@@ -147,7 +147,6 @@ section StagedTruthLemma
 
 variable {s₀ : LocalStage} {M : Type} [s₀.Lang.Structure M] [Nonempty M] [LinearOrder M]
   [WellFoundedLT M]
-
 
 private abbrev SchemaTruthStage
     (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M) (k : ℕ) {n : ℕ}
@@ -308,10 +307,12 @@ private theorem schemaTruthStage_imp
     rcases (schemaCompletionTheorySpec hM).complete_on_universe _ himpu with hpos | hneg
     · exact hpos
     · exfalso
-      by_cases hφT : schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) φ) ts
+      by_cases hφT : schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀
+        (k + 1)) φ) ts
           ∈ schemaCompletionTheory (schemaEnumeration s₀) hM
       · obtain ⟨σ, w, hbody⟩ := exists_body_of_subset hM
-          {(schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) (φ.imp ψ')) ts).not,
+          {(schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1))
+            (φ.imp ψ')) ts).not,
             schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) ψ') ts}
           (fun τ hτ => by
             rw [Finset.mem_insert, Finset.mem_singleton] at hτ
@@ -325,8 +326,10 @@ private theorem schemaTruthStage_imp
         rw [realize_schemaFormulaSentence_iff] at h2
         exact h1 fun _ => h2
       · obtain ⟨σ, w, hbody⟩ := exists_body_of_subset hM
-          {(schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) (φ.imp ψ')) ts).not,
-            (schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) φ) ts).not}
+          {(schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1))
+            (φ.imp ψ')) ts).not,
+            (schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1))
+              φ) ts).not}
           (fun τ hτ => by
             rw [Finset.mem_insert, Finset.mem_singleton] at hτ
             rcases hτ with rfl | rfl
@@ -343,9 +346,11 @@ private theorem schemaTruthStage_imp
     · exact hpos
     · exfalso
       obtain ⟨σ, w, hbody⟩ := exists_body_of_subset hM
-        {schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) (φ.imp ψ')) ts,
+        {schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1))
+          (φ.imp ψ')) ts,
           schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) φ) ts,
-          (schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) ψ') ts).not}
+          (schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1))
+            ψ') ts).not}
         (fun τ hτ => by
           rw [Finset.mem_insert, Finset.mem_insert, Finset.mem_singleton] at hτ
           rcases hτ with rfl | rfl | rfl
@@ -376,7 +381,8 @@ private theorem schemaTruthStage_all
     bfSubformulas_subset_Γlocal_succ s₀ hmem rfl
   rw [show ((BoundedFormulaω.all ψ₀).mapLanguage (LlocalInclusion s₀ (k + 1))).mapLanguage
         (lhomWithConstants (localColim s₀) ℕ)
-      = BoundedFormulaω.all ((BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) ψ₀).mapLanguage
+      = BoundedFormulaω.all ((BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1))
+        ψ₀).mapLanguage
           (lhomWithConstants (localColim s₀) ℕ)) from rfl,
     BoundedFormulaω.realize_all]
   constructor
@@ -451,7 +457,8 @@ private theorem schemaTruthStage_all
       rw [realizeWith_not, realize_schemaFormulaSentence_iff] at h2
       let : (constantsOn ℕ).Structure M := constantsOn.structure σ
       refine h2 ?_
-      show (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) ψ₀).Realize (Empty.elim : Empty → M)
+      change (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) ψ₀).Realize
+        (Empty.elim : Empty → M)
         (fun i => ((Fin.snoc ts u : Fin _ → (localColim s₀)[[ℕ]].Term Empty) i).realize
           Empty.elim)
       rw [show (fun i => ((Fin.snoc ts u : Fin _ → (localColim s₀)[[ℕ]].Term Empty) i).realize
@@ -560,7 +567,8 @@ private theorem schemaTruthStage_iInf
       obtain ⟨σ, w, hbody⟩ := exists_body_of_subset hM
         {schemaFormulaSentence ((BoundedFormulaω.iInf φs).mapLanguage
             (LlocalInclusion s₀ (k + 1))) ts,
-          (schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) (φs j)) ts).not}
+          (schemaFormulaSentence (BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1))
+            (φs j)) ts).not}
         (fun τ hτ => by
           rw [Finset.mem_insert, Finset.mem_singleton] at hτ
           rcases hτ with rfl | rfl
@@ -672,8 +680,6 @@ private def schemaCloseTerm {m : ℕ} (u : (localColim s₀).Term (Fin m)) (t : 
 variable {M : Type} [(localColim s₀).Structure M] [LinearOrder M] [WellFoundedLT M]
   (hM : Cardinal.beth (Ordinal.omega 1) ≤ Cardinal.mk M)
 
-
-
 omit [LinearOrder M] [WellFoundedLT M] in
 /-- **The body value of a closed instance**: under a certificate-body interpretation `σ`, the
 closed instance realizes to the open term realized at the `σ`-values of the tuple. -/
@@ -762,7 +768,7 @@ private theorem schemaEqSentence_close_mem_iff_schemaLift {m : ℕ}
       have h2 := realizeWith_templateSentence (L'' := localColim s₀) σ w
         (canonEqAtom (localColim s₀) u₁ u₂) t
       refine h1.trans (Iff.trans ?_ h2.symm)
-      show ((schemaCloseTerm u₁ t).realize (Empty.elim : Empty → M)
+      change ((schemaCloseTerm u₁ t).realize (Empty.elim : Empty → M)
             = (schemaCloseTerm u₂ t).realize Empty.elim)
           ↔ (canonEqAtom (localColim s₀) u₁ u₂).Realize (Empty.elim : Empty → M)
             (fun i => σ (t i))
@@ -790,7 +796,7 @@ private theorem schemaRelSentence_close_mem_iff_schemaLift {m l : ℕ}
       have h2 := realizeWith_templateSentence (L'' := localColim s₀) σ w
         (canonRelAtom (localColim s₀) R us) t
       refine h1.trans (Iff.trans ?_ h2.symm)
-      show (Structure.RelMap R fun i => (schemaCloseTerm (us i) t).realize
+      change (Structure.RelMap R fun i => (schemaCloseTerm (us i) t).realize
             (Empty.elim : Empty → M))
           ↔ (canonRelAtom (localColim s₀) R us).Realize (Empty.elim : Empty → M)
             (fun i => σ (t i))
@@ -821,7 +827,7 @@ private theorem schemaFormulaSentence_close_mem_iff_schemaLift_canonDeForm {q m 
       have h2 := realizeWith_templateSentence (L'' := localColim s₀) σ w
         (canonDeForm (localColim s₀) φ g) t
       refine h1.trans (Iff.trans ?_ h2.symm)
-      show (φ.Realize (Empty.elim : Empty → M)
+      change (φ.Realize (Empty.elim : Empty → M)
             fun j => (schemaCloseTerm (g j) t).realize Empty.elim)
           ↔ (canonDeForm (localColim s₀) φ g).Realize (Empty.elim : Empty → M)
             (fun i => σ (t i))
@@ -892,7 +898,7 @@ theorem schemaSeq_realize_iff_schemaLift_mem :
     (lhomWithConstants (localColim s₀) ℕ).reduct _
   have : (lhomWithConstants (localColim s₀) ℕ).IsExpansionOn
       (SchemaTermCarrier (s₀ := s₀) (M := M) hM) := LHom.isExpansionOn_reduct _ _
-  show ψ.Realize (Empty.elim : Empty → SchemaTermCarrier (s₀ := s₀) (M := M) hM)
+  change ψ.Realize (Empty.elim : Empty → SchemaTermCarrier (s₀ := s₀) (M := M) hM)
       (fun i => schemaSeq hM (t i)) ↔
     schemaLift ψ t ∈ schemaCompletionTheory (schemaEnumeration s₀) hM
   rcases hψ with ((hcolim | heqm) | hrelm) | hdem
@@ -910,7 +916,7 @@ theorem schemaSeq_realize_iff_schemaLift_mem :
     subst heq2
     refine Iff.trans ?_ (schemaEqSentence_close_mem_iff_schemaLift hM u₁ u₂ t)
     rw [canonEqAtom, BoundedFormulaω.realize_equal, Term.realize_relabel, Term.realize_relabel]
-    show (u₁.realize (fun i => schemaSeq (s₀ := s₀) (M := M) hM (t i))
+    change (u₁.realize (fun i => schemaSeq (s₀ := s₀) (M := M) hM (t i))
           = u₂.realize (fun i => schemaSeq hM (t i))) ↔ _
     rw [schemaCloseTerm_reduct_realize hM u₁ t, schemaCloseTerm_reduct_realize hM u₂ t]
     exact SchemaTermCarrier.mk_eq_mk_iff hM

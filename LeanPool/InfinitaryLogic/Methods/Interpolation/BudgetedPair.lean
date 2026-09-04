@@ -10,7 +10,8 @@ import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierOccurrence
 /-!
 # The budgeted labelled pair (issue #15, side-labelled restart)
 
-The certificate selected by `docs/malitz-source-reconstruction-2.md`: Feferman's Theorem 4.3 keeps the
+The certificate selected by `docs/malitz-source-reconstruction-2.md`: Feferman's Theorem 4.3
+keeps the
 two sides **labelled** — formulas are retained on their derivational side, never reprojected by
 vocabulary — and carries three conditions along the derivation beside the two entailments:
 
@@ -23,15 +24,19 @@ vocabulary — and carries three conditions along the derivation beside the two 
 The second permission reads `true` on the right because `Δ` holds the **negated** consequent: at the
 root `Un({r₂.not}) = Ex(r₂)`.
 
-The shared-constant condition is **primary**, not derived from the permissions.  That is the source's
+The shared-constant condition is **primary**, not derived from the permissions.  That is the
+source's
 own account: "in building up an interpolant following a cut-free derivation … we are forced to
-introduce quantifiers into the interpolant only as required to maintain the condition (iii), and that
+introduce quantifiers into the interpolant only as required to maintain the condition (iii),
+and that
 turns out to lead to (iv)" (Feferman, *"Ah, Chu!"*, pp. 2–3).  The earlier `FefermanAllowed` had the
 dependency backwards, charging constants into the permissions as a standing assumption.
 
 Everything the canonical-projection experiment needed disappears here.  A fresh witness constant is
-added to **one** labelled side; being absent from the other, the shared-constant condition forbids the
-separator from mentioning it, so the separator **transports unchanged** — no `genEx`, no `genAll`, no
+added to **one** labelled side; being absent from the other, the shared-constant condition
+forbids the
+separator from mentioning it, so the separator **transports unchanged** — no `genEx`, no
+`genAll`, no
 support parameter to strip, no projection coverage, and no root tags.  Quantifier non-growth is
 likewise immediate, because the quantified parent already sits on the same labelled side.
 
@@ -41,7 +46,8 @@ evidence for the canonical-projection route and its C1 failure, not as a depende
 ## Provenance
 
 The labelled architecture is **source-backed** by Feferman's split-sequent proof, which he describes
-explicitly.  The *semantic consistency-property* implementation below is this repository's adaptation:
+explicitly.  The *semantic consistency-property* implementation below is this repository's
+adaptation:
 Stern's model-theoretic forcing proof is identified as the semantic dual, but its exact invariant is
 **unverified** — the paper has not been read.
 -/
@@ -106,7 +112,8 @@ private theorem notMem_theoryJConsts_iff :
 variable {F₁ F₂ : Set (Σ n, L.Functions n)} {R₁ R₂ : Set (Σ n, L.Relations n)}
   {Γ Δ : Set L[[ℕ]].Sentenceω}
 
-/-- **A budgeted separator of the labelled pair `(Γ, Δ)`.**  Five conditions: the two entailments, the
+/-- **A budgeted separator of the labelled pair `(Γ, Δ)`.**  Five conditions: the two
+entailments, the
 shared vocabulary, the **shared constants**, and the two quantifier permissions. -/
 def BudgetedPairSeparates (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
@@ -163,7 +170,8 @@ right.  All five conditions are paid by the two memberships themselves. -/
 
 /-- **Mixed C0.**  If `σ ∈ Γ` and `σ.not ∈ Δ` then `σ` *is* a budgeted separator: its vocabulary is
 shared because the two sides bound the same sentence, its constants occur in both, its universal
-occurrences are paid by `Γ`, and its existential occurrences are paid by the **universal** occurrences
+occurrences are paid by `Γ`, and its existential occurrences are paid by the **universal**
+occurrences
 of `σ.not` in `Δ`. -/
 private theorem not_budgetedPairInsep_of_mixed (hΓ : Γ ⊆ SentBnd F₁ R₁) (hΔ : Δ ⊆ SentBnd F₂ R₂)
     (hσΓ : σ ∈ Γ) (hσΔ : σ.not ∈ Δ) : ¬ BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ := by
@@ -404,16 +412,17 @@ private theorem budgetedPairInsep_imp_right (φ ψ : L[[ℕ]].Sentenceω) (hmem 
 
 /-! ## The fresh-witness rules
 
-The payoff of labelling.  A witness constant `c` fresh for **both** sides is added to **one** of them.
+The payoff of labelling.  A witness constant `c` fresh for **both** sides is added to
+**one** of them.
 Freshness on the *opposite* side is what forbids the separator from mentioning `c` — via the
-shared-constant condition — so the separator transports **unchanged**; freshness on the *own* side is
+shared-constant condition — so the separator transports **unchanged**; freshness on the
+*own* side is
 what moves the entailment.  No constant abstraction appears anywhere. -/
-
-
 
 /-- The kernel's `neg_all_witness` shape: parent `(φ.all).not`, inserted witness
 `(instConst c φ).not`. -/
-private theorem entails_of_entails_insert_negInstConst_of_fresh (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
+private theorem entails_of_entails_insert_negInstConst_of_fresh (c : ℕ) (φ :
+  L[[ℕ]].BoundedFormulaω Empty 1)
     (τ : L[[ℕ]].Sentenceω) (hpar : (BoundedFormulaω.all φ).not ∈ T)
     (hcT : ∀ γ ∈ T, c ∉ sentenceJConsts (L' := L) (J := ℕ) γ)
     (hcτ : c ∉ sentenceJConsts (L' := L) (J := ℕ) τ)
@@ -560,41 +569,6 @@ theorem sentenceJConsts_eq_empty_of_budgetedPairSeparates {θ : L[[ℕ]].Sentenc
   rw [← hΓ]
   exact (h.2.2.2.1 hk).1
 
-/-- **The root equation.**  Failure of the invariant at the root pair `({r₁}, {r₂.not})` — with `r₂`
-carrying no existential occurrence, i.e. universal, and the roots constant-free — delivers exactly a
-Malitz interpolant: universal, shared-vocabulary, constant-free, `r₁ ⊨ θ` and `θ ⊨ r₂`. -/
-private theorem exists_universal_interpolant_of_not_budgetedPairInsep {r₁ r₂ : L[[ℕ]].Sentenceω}
-    (hr₂ : ¬ hasQuantSigned false r₂) (hc₁ : sentenceJConsts (L' := L) (J := ℕ) r₁ = ∅)
-    (h : ¬ BudgetedPairInsep F₁ R₁ F₂ R₂ {r₁} {r₂.not}) :
-    ∃ θ : L[[ℕ]].Sentenceω, IsUniversal θ ∧ θ ∈ SentBnd (F₁ ∩ F₂) (R₁ ∩ R₂) ∧
-      sentenceJConsts (L' := L) (J := ℕ) θ = ∅ ∧
-      Sentenceω.Entails r₁ θ ∧ Sentenceω.Entails θ r₂ := by
-  simp only [BudgetedPairInsep, not_not] at h
-  obtain ⟨θ, hsep⟩ := h
-  have hΔ : ¬ Theoryω.HasQuantSigned true ({r₂.not} : Set L[[ℕ]].Sentenceω) := by
-    rintro ⟨ρ, hρ, hq⟩
-    rw [Set.mem_singleton_iff] at hρ
-    subst hρ
-    exact hr₂ ((hasQuantSigned_not true r₂).mp hq)
-  have hΓ : theoryJConsts (L := L) ({r₁} : Set L[[ℕ]].Sentenceω) = ∅ := by
-    refine Set.subset_empty_iff.mp fun k hk => ?_
-    simp only [theoryJConsts, Set.mem_iUnion, Set.mem_singleton_iff] at hk
-    obtain ⟨ρ, rfl, hk⟩ := hk
-    rw [hc₁] at hk
-    exact hk
-  refine ⟨θ, isUniversal_of_budgetedPairSeparates hsep hΔ, hsep.2.2.1,
-    sentenceJConsts_eq_empty_of_budgetedPairSeparates hsep hΓ, hsep.1, ?_⟩
-  intro N instN neN hmodel
-  by_contra hnr₂
-  have := @hsep.2.1 N instN neN (fun ρ hρ => by
-    rw [Set.mem_singleton_iff] at hρ
-    subst hρ
-    rw [Sentenceω.realize_def, BoundedFormulaω.realize_not]
-    exact hnr₂)
-  rw [Sentenceω.realize_def, BoundedFormulaω.realize_not] at this
-  exact this (hmodel _ rfl)
-
-
 /-! ## The family shell
 
 `BudgetedPairMem` is the **existential labelled decomposition**: the scheduler still completes the
@@ -659,7 +633,8 @@ private theorem theoryJConsts_finite_of_subset_genU
     (theoryJConsts (L := L) Γ).Finite :=
   hΓfin.biUnion fun γ hγ => genU_finite_support hr₁ hr₂ γ (hΓU hγ)
 
-/-- **A constant fresh for both labels exists.**  Consumed only by the fresh-witness fields; the root
+/-- **A constant fresh for both labels exists.**  Consumed only by the fresh-witness fields;
+the root
 finiteness hypotheses enter the package for this reason alone. -/
 private theorem exists_fresh_budgetedPair
     (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁).Finite)
@@ -801,7 +776,6 @@ private theorem budgetedPairInsep_insert_shared_right (hσΓ : σ ∈ Γ)
     rw [hasQuantSigned_and] at hqθ
     exact hqθ.elim (fun hh => absurd hh (hq false)) hx
 
-
 /-! ## Cross-label equality and relation transfer
 
 The mixed `rel_congr` case, which was load-bearing in Craig's paired construction and is the
@@ -811,10 +785,12 @@ separator of the extended pair may mention `b`; substituting the equality's shar
 `b` removes it, and the **shared-constant condition pays for it** — `g i` occurs on both sides.  No
 quantifier is introduced, so both budgets are untouched. -/
 
-/-- **Mixed-label relation congruence.**  `relInst R g ∈ Γ`, `constEq (g i) b ∈ Δ`, `b` fresh for the
+/-- **Mixed-label relation congruence.**  `relInst R g ∈ Γ`, `constEq (g i) b ∈ Δ`, `b`
+fresh for the
 left: the derived atom may be inserted on the left.  The separator is transported by
 `substConst b (g i)`. -/
-private theorem budgetedPairInsep_relCongr_mixed {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
+private theorem budgetedPairInsep_relCongr_mixed {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ)
+  (i : Fin l)
     (b : ℕ) (hrel : relInst R g ∈ Γ) (heq : constEq (g i) b ∈ Δ)
     (hbΓ : b ∉ theoryJConsts (L := L) Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
@@ -861,7 +837,7 @@ private theorem budgetedPairInsep_relCongr_mixed {l : ℕ} (R : L.Relations l) (
         · subst hji
           rw [Function.update_self, Function.update_self]
         · rw [Function.update_of_ne hji, Function.update_of_ne (hgb j)]
-      show @Structure.RelMap L N base l R
+      change @Structure.RelMap L N base l R
         (fun j => Function.update hm b (hm (g i)) (Function.update g i b j))
       rw [hval]
       exact (bridge _).mp (hmodel _ hrel)
@@ -883,7 +859,7 @@ private theorem budgetedPairInsep_relCongr_mixed {l : ℕ} (R : L.Relations l) (
     have hval : hm (g i) = hm b := (bridge _).mp (hmodel _ heq)
     have hupd : Function.update hm b (hm (g i)) = hm := by
       rw [hval, Function.update_eq_self]
-    show @Sentenceω.Realize L[[ℕ]] τ.not N instN
+    change @Sentenceω.Realize L[[ℕ]] τ.not N instN
     rw [Sentenceω.realize_def, BoundedFormulaω.realize_not]
     intro hcontra
     have hθ := (realize_substConst base hm b (g i) θ).mp ((bridge _).mp hcontra)
@@ -922,11 +898,11 @@ private theorem budgetedPairInsep_relCongr_mixed {l : ℕ} (R : L.Relations l) (
   · intro hq
     exact hx ((hasQuantSigned_substConst b (g i) false θ).mp hq)
 
-
 /-! ## Generic insertion drivers
 
 Every deterministic field is an instance of the same statement: the new sentence is **entailed** by
-the side that receives it, and both its constants and its positive quantifier occurrences are already
+the side that receives it, and both its constants and its positive quantifier occurrences
+are already
 carried there.  The three obligations stay separate on purpose — the proof's content is which label
 received the formula. -/
 
@@ -1131,7 +1107,8 @@ private theorem budgetedPairInsep_neg_iSup_component_left (hmem : (BoundedFormul
     exact ⟨k, hq⟩
 
 /-- C4′, right. -/
-private theorem budgetedPairInsep_neg_iSup_component_right (hmem : (BoundedFormulaω.iSup φs).not ∈ Δ)
+private theorem budgetedPairInsep_neg_iSup_component_right (hmem : (BoundedFormulaω.iSup
+  φs).not ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (φs k).not Δ) := by
   refine budgetedPairInsep_insert_of_member_right hmem ?_ ?_ ?_ h
@@ -1150,7 +1127,6 @@ private theorem budgetedPairInsep_neg_iSup_component_right (hmem : (BoundedFormu
 
 end Deterministic
 
-
 /-! ## Countable branching — the last isolated gate
 
 The `⋁`-style fields, where the consumer must *choose* a component.  Each is proved by
@@ -1162,7 +1138,8 @@ Three things are worth watching, and all three come out clean:
 * the combined separator's constant support is the **union** of the component supports, and each
   component support already lies in both theory supports — because inserting a component does not
   enlarge the receiving side's support, the parent already carrying its constants;
-* `hasQuantSigned` on `iSup`/`iInf` **exposes one offending component**, so the permission flows from
+* `hasQuantSigned` on `iSup`/`iInf` **exposes one offending component**, so the permission
+flows from
   that component's separator and then from the parent formula, again by non-growth;
 * no label projection and no support enlargement appears anywhere.
 -/
@@ -1225,7 +1202,8 @@ private theorem budgetedPairInsep_iSup_left (hmem : BoundedFormulaω.iSup φs �
       · exact hn
       · exact hmodel ρ hρ⟩
   · intro N instN neN hmodel
-    rw [Sentenceω.realize_def, BoundedFormulaω.realize_not, BoundedFormulaω.realize_iSup, not_exists]
+    rw [Sentenceω.realize_def, BoundedFormulaω.realize_not, BoundedFormulaω.realize_iSup,
+      not_exists]
     intro n hn
     have hNn := (hsep n).2.1
     have := @hNn N instN neN hmodel
@@ -1272,7 +1250,8 @@ private theorem budgetedPairInsep_iSup_right (hmem : BoundedFormulaω.iSup φs �
     have hiSup := hmodel _ hmem
     rw [Sentenceω.realize_def, BoundedFormulaω.realize_iSup] at hiSup
     obtain ⟨n, hn⟩ := hiSup
-    rw [Sentenceω.realize_def, BoundedFormulaω.realize_not, BoundedFormulaω.realize_iInf, not_forall]
+    rw [Sentenceω.realize_def, BoundedFormulaω.realize_not, BoundedFormulaω.realize_iInf,
+      not_forall]
     have hNn := (hsep n).2.1
     have := @hNn N instN neN fun ρ hρ => by
       rcases Set.mem_insert_iff.mp hρ with rfl | hρ
@@ -1330,7 +1309,8 @@ private theorem budgetedPairInsep_neg_iInf_left (hmem : (BoundedFormulaω.iInf �
       · rw [Sentenceω.realize_def, BoundedFormulaω.realize_not]; exact hn
       · exact hmodel ρ hρ⟩
   · intro N instN neN hmodel
-    rw [Sentenceω.realize_def, BoundedFormulaω.realize_not, BoundedFormulaω.realize_iSup, not_exists]
+    rw [Sentenceω.realize_def, BoundedFormulaω.realize_not, BoundedFormulaω.realize_iSup,
+      not_exists]
     intro n hn
     have hNn := (hsep n).2.1
     have := @hNn N instN neN hmodel
@@ -1384,7 +1364,8 @@ private theorem budgetedPairInsep_neg_iInf_right (hmem : (BoundedFormulaω.iInf 
     rw [Sentenceω.realize_def, BoundedFormulaω.realize_not, BoundedFormulaω.realize_iInf,
       not_forall] at hneg
     obtain ⟨n, hn⟩ := hneg
-    rw [Sentenceω.realize_def, BoundedFormulaω.realize_not, BoundedFormulaω.realize_iInf, not_forall]
+    rw [Sentenceω.realize_def, BoundedFormulaω.realize_not, BoundedFormulaω.realize_iInf,
+      not_forall]
     have hNn := (hsep n).2.1
     have := @hNn N instN neN fun ρ hρ => by
       rcases Set.mem_insert_iff.mp hρ with rfl | hρ
@@ -1410,10 +1391,10 @@ private theorem budgetedPairInsep_neg_iInf_right (hmem : (BoundedFormulaω.iInf 
 
 end CountableBranching
 
-
 /-! ## The substitution cut, and the mixed equality cases
 
-Mixed `eq_trans` is the one equality case the shared-hypothesis transfer cannot reach: with `a = b` on
+Mixed `eq_trans` is the one equality case the shared-hypothesis transfer cannot reach: with
+`a = b` on
 the left and `b = d` on the right, neither side's support contains both endpoints — the pivot `b` is
 the only automatically shared constant.  The substitution mechanism that solved mixed `rel_congr`
 solves it too, and the two statements genuinely align, so the common core is extracted once.
@@ -1422,7 +1403,8 @@ solves it too, and the two statements genuinely align, so the common core is ext
 /-- **Substitution cut, left.**  Insert `ψ` on the left, where `ψ` mentions a constant `c` that only
 the right side carries.  If the left entails the `c := b` image of `ψ` and the right proves `b = c`,
 then a separator of the extended pair substitutes down to one of the original pair — mentioning the
-shared pivot `b` instead of the remote `c`.  `hasQuantSigned_substConst` keeps both budgets fixed. -/
+shared pivot `b` instead of the remote `c`.  `hasQuantSigned_substConst` keeps both budgets
+  fixed. -/
 private theorem budgetedPairInsep_substCut_left (b c : ℕ) (ψ : L[[ℕ]].Sentenceω)
     (hcΓ : c ∉ theoryJConsts (L := L) Γ)
     (hbΓ : b ∈ theoryJConsts (L := L) Γ) (hbΔ : b ∈ theoryJConsts (L := L) Δ)
@@ -1670,7 +1652,7 @@ private theorem entails_substConst_constEq (hac : a ≠ c) (hmem : constEq (L :=
         ↔ @BoundedFormulaω.Realize L[[ℕ]] N (wc base hm) Empty 0 ρ Empty.elim Fin.elim0 :=
     fun ρ => ambient_realize_iff_wc (S := instN) ρ Empty.elim Fin.elim0
   refine (bridge _).mpr ((realize_substConst base hm c b (constEq a c)).mpr ?_)
-  show Function.update hm c (hm b) a = Function.update hm c (hm b) c
+  change Function.update hm c (hm b) a = Function.update hm c (hm b) c
   rw [Function.update_of_ne hac, Function.update_self]
   exact (bridge _).mp (hmodel _ hmem)
 
@@ -1726,7 +1708,7 @@ private theorem budgetedPairInsep_eq_trans_mixed_left (hab : constEq (L := L) a 
           ↔ @BoundedFormulaω.Realize L[[ℕ]] N (wc base hm) Empty 0 ρ Empty.elim Fin.elim0 :=
       fun ρ => ambient_realize_iff_wc (S := instN) ρ Empty.elim Fin.elim0
     refine (bridge _).mpr ((realize_substConst base hm a b (constEq a d)).mpr ?_)
-    show Function.update hm a (hm b) a = Function.update hm a (hm b) d
+    change Function.update hm a (hm b) a = Function.update hm a (hm b) d
     rw [Function.update_self, Function.update_of_ne hda]
     exact (bridge _).mp (hmodel _ hbd)
   refine budgetedPairInsep_substCut_left b a _ haΓ hbΓ hbΔ hΔeq ?_ ?_ hΓψ h
@@ -1739,7 +1721,6 @@ private theorem budgetedPairInsep_eq_trans_mixed_left (hab : constEq (L := L) a 
     exact hq
 
 end Equality
-
 
 /-! ## The remaining equality fields
 
@@ -1862,7 +1843,6 @@ section AtomicFields
 variable {F₁ F₂ : Set (Σ n, L.Functions n)} {R₁ R₂ : Set (Σ n, L.Relations n)}
   {Γ Δ : Set L[[ℕ]].Sentenceω} {c : ℕ}
 
-
 /-- `eq_refl`, right — the twin of `budgetedPairInsep_eq_refl_left`; together they cover every
 constant. -/
 private theorem budgetedPairInsep_eq_refl_right
@@ -1900,7 +1880,8 @@ private theorem budgetedPairInsep_eq_refl_right
 there, and every constant it mentions — including the replacement `b` — is already carried, `b` by
 the equation `constEq (g i) b ∈ Γ` itself.  Contrast `budgetedPairInsep_relCongr_mixed`, where the
 equation sits on the opposite side and the separator must be substituted. -/
-private theorem budgetedPairInsep_relCongr_left {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
+private theorem budgetedPairInsep_relCongr_left {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ)
+  (i : Fin l)
     (b : ℕ) (hrel : relInst Rr g ∈ Γ) (heq : constEq (L := L) (g i) b ∈ Γ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ (insert (relInst Rr (Function.update g i b)) Γ) Δ := by
@@ -1918,7 +1899,8 @@ private theorem budgetedPairInsep_relCongr_left {l : ℕ} (Rr : L.Relations l) (
   · intro hq; exact absurd hq (hasQuantSigned_relInst_false true Rr _)
 
 /-- **Same-side relation congruence, right.** -/
-private theorem budgetedPairInsep_relCongr_right {l : ℕ} (Rr : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
+private theorem budgetedPairInsep_relCongr_right {l : ℕ} (Rr : L.Relations l) (g : Fin l →
+  ℕ) (i : Fin l)
     (b : ℕ) (hrel : relInst Rr g ∈ Δ) (heq : constEq (L := L) (g i) b ∈ Δ)
     (h : BudgetedPairInsep F₁ R₁ F₂ R₂ Γ Δ) :
     BudgetedPairInsep F₁ R₁ F₂ R₂ Γ (insert (relInst Rr (Function.update g i b)) Δ) := by
@@ -1977,7 +1959,8 @@ private theorem theoryJConsts_insert_instConst_subset {φ : L[[ℕ]].BoundedForm
 outright — `hasQuantSigned true φ.all` is `true = true ∨ _`, so the parent alone witnesses it.
 
 Stated unconditionally rather than as
-`HasQuantSigned true (insert (instConst c φ) Γ) → HasQuantSigned true Γ`: the implication is what the
+`HasQuantSigned true (insert (instConst c φ) Γ) → HasQuantSigned true Γ`: the implication is
+what the
 gate consumes, but it holds vacuously, because the conclusion never depended on the inserted
 instance.  Every universal permission demanded of the augmented left side is discharged by this. -/
 private theorem hasQuantSigned_true_of_all_mem {φ : L[[ℕ]].BoundedFormulaω Empty 1}
@@ -2051,8 +2034,10 @@ Given a witness `x` for `genEx c θ`, reinterpret `c` as `x`: freshness preserve
 `Δ`, the parent `φ.all ∈ Δ` re-supplies the instance under that reinterpretation, and the hypothesis
 then refutes the corresponding instance of `θ`.
 
-Neutral in content — belongs in the eventual `#39` constant-surgery consolidation rather than here. -/
-private theorem entails_not_genEx_of_all_inst_entails_not {φ : L[[ℕ]].BoundedFormulaω Empty 1} {c : ℕ}
+Neutral in content — belongs in the eventual `#39` constant-surgery consolidation rather
+  than here. -/
+private theorem entails_not_genEx_of_all_inst_entails_not {φ : L[[ℕ]].BoundedFormulaω Empty
+  1} {c : ℕ}
     {θ : L[[ℕ]].Sentenceω}
     (hfresh : ∀ δ ∈ Δ, c ∉ sentenceJConsts (L' := L) (J := ℕ) δ) (hmem : φ.all ∈ Δ)
     (hyp : Theoryω.Entails (insert (instConst c φ) Δ) θ.not) :
@@ -2064,7 +2049,7 @@ private theorem entails_not_genEx_of_all_inst_entails_not {φ : L[[ℕ]].Bounded
       @Sentenceω.Realize L[[ℕ]] ψ M instM
         ↔ @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 ψ Empty.elim Fin.elim0 :=
     fun ψ => ambient_realize_iff_wc (S := instM) ψ Empty.elim Fin.elim0
-  show @Sentenceω.Realize L[[ℕ]] (genEx c θ).not M instM
+  change @Sentenceω.Realize L[[ℕ]] (genEx c θ).not M instM
   rw [Sentenceω.realize_def, BoundedFormulaω.realize_not]
   intro hcon
   obtain ⟨x, hx⟩ := (realize_genEx base h c θ).mp ((bridge _).mp hcon)
@@ -2090,7 +2075,8 @@ private theorem entails_not_genEx_of_all_inst_entails_not {φ : L[[ℕ]].Bounded
     · exact hinst
     · exact hΔ ρ hρ)) hx
 
-/-- **`all_inst`, right.**  The mirror of `budgetedPairInsep_all_inst_left`, with `genEx` in place of
+/-- **`all_inst`, right.**  The mirror of `budgetedPairInsep_all_inst_left`, with `genEx` in
+place of
 `genAll`.
 
 The asymmetry is only in which side abstracts: here `Γ ⊨ genEx c θ` is freshness-free
@@ -2131,13 +2117,14 @@ private theorem budgetedPairInsep_all_inst_right {φ : L[[ℕ]].BoundedFormulaω
 
 end AllInst
 
-
 /-! ## The family-level field helpers
 
-One helper per `ConsistencyPropertyEqOn` field, each stated in the structure's own `S ∪ {φ}` shape so
+One helper per `ConsistencyPropertyEqOn` field, each stated in the structure's own `S ∪ {φ}`
+shape so
 that the final package is pure eta-application.  Every body follows the same four steps: unpack the
 labelled decomposition, dispatch on the label of the parent, apply **one** `BudgetedPairInsep` gate,
-and repackage with `budgetedPairMem_insert_left`/`_right`.  The `insert`-versus-union normalization is
+and repackage with `budgetedPairMem_insert_left`/`_right`.  The `insert`-versus-union
+normalization is
 hidden here via `Set.union_singleton`.
 
 No semantic realization proof appears below; if one is ever needed, a gate is missing. -/
@@ -2330,7 +2317,8 @@ private theorem budgetedPairMem_C3_neg_iInf (hS : BudgetedPairMem r₁ r₂ F₁
 
 /-! ### The equality fields -/
 
-/-- **`eq_refl`.**  One case split suffices: if the left already carries `c`, insert there; otherwise
+/-- **`eq_refl`.**  One case split suffices: if the left already carries `c`, insert there;
+otherwise
 `c ∉ theoryJConsts Γ` is exactly the right gate's second disjunct.  The right support is never
 inspected. -/
 private theorem budgetedPairMem_eq_refl (hS : BudgetedPairMem r₁ r₂ F₁ R₁ F₂ R₂ S) (c : ℕ) :
@@ -2395,7 +2383,8 @@ private theorem budgetedPairMem_eq_trans (hS : BudgetedPairMem r₁ r₂ F₁ R�
                   (mem_sentenceJConsts_constEq_right a b)
               · exact hk ▸ hdΓ)
             (fun s => hasQuantSigned_constEq_false s b d) hA
-        exact mkL rfl (budgetedPairInsep_antitone_left (Set.insert_subset_insert (Set.subset_insert _ _))
+        exact mkL rfl (budgetedPairInsep_antitone_left (Set.insert_subset_insert
+          (Set.subset_insert _ _))
           (budgetedPairInsep_eq_trans_left (Set.mem_insert_of_mem _ habΓ)
             (Set.mem_insert _ _) htr))
       · exact mkL rfl (budgetedPairInsep_eq_trans_mixed_right habΓ hbdΔ hdΓ hA)
@@ -2412,7 +2401,8 @@ private theorem budgetedPairMem_eq_trans (hS : BudgetedPairMem r₁ r₂ F₁ R�
               · exact hk ▸ (sentenceJConsts_subset_theoryJConsts hbdΓ)
                   (mem_sentenceJConsts_constEq_left b d))
             (fun s => hasQuantSigned_constEq_false s a b) hA
-        exact mkL rfl (budgetedPairInsep_antitone_left (Set.insert_subset_insert (Set.subset_insert _ _))
+        exact mkL rfl (budgetedPairInsep_antitone_left (Set.insert_subset_insert
+          (Set.subset_insert _ _))
           (budgetedPairInsep_eq_trans_left (Set.mem_insert _ _)
             (Set.mem_insert_of_mem _ hbdΓ) htr))
       · exact mkL rfl (budgetedPairInsep_eq_trans_mixed_left habΔ hbdΓ haΓ hA)
@@ -2535,9 +2525,11 @@ private theorem budgetedPairMem_neg_all_witness
 
 /-! ## The initial family member
 
-Two named facts, deliberately separate.  The **structural** one is pure packaging: a labelled pair of
+Two named facts, deliberately separate.  The **structural** one is pure packaging: a
+labelled pair of
 singletons, with the generated universe instantiated at those very roots so both `GenU` obligations
-are literally `root₁_mem`/`root₂_mem`.  The **logical** one supplies its hypothesis, and is where the
+are literally `root₁_mem`/`root₂_mem`.  The **logical** one supplies its hypothesis, and is
+where the
 interpolation assumption enters — note the root pair is inseparable *because no admissible
 interpolant exists*, not because of the entailment `r₁ ⊨ r₂`, which is consumed only at the very end
 against the extracted model. -/
@@ -2550,20 +2542,6 @@ theorem budgetedPairMem_root {ρ₁ ρ₂ : L[[ℕ]].Sentenceω}
   ⟨{ρ₁}, {ρ₂}, Set.finite_singleton _, Set.finite_singleton _,
     Set.singleton_subset_iff.mpr root₁_mem, Set.singleton_subset_iff.mpr root₂_mem,
     Set.singleton_subset_iff.mpr hb₁, Set.singleton_subset_iff.mpr hb₂, rfl, h⟩
-
-/-- **Root inseparability from failure of interpolation.**  The contrapositive of the root equation:
-if the labelled root pair were separable, the collapse would hand back exactly the admissible
-universal interpolant assumed not to exist. -/
-theorem budgetedPairInsep_root_of_no_interpolant {r₁ r₂ : L[[ℕ]].Sentenceω}
-    (hr₂ : ¬ hasQuantSigned false r₂) (hc₁ : sentenceJConsts (L' := L) (J := ℕ) r₁ = ∅)
-    (hno : ¬ ∃ θ : L[[ℕ]].Sentenceω, IsUniversal θ ∧ θ ∈ SentBnd (F₁ ∩ F₂) (R₁ ∩ R₂) ∧
-      sentenceJConsts (L' := L) (J := ℕ) θ = ∅ ∧
-      Sentenceω.Entails r₁ θ ∧ Sentenceω.Entails θ r₂) :
-    BudgetedPairInsep F₁ R₁ F₂ R₂ {r₁} {r₂.not} :=
-  not_not.mp fun hsep =>
-    hno (exists_universal_interpolant_of_not_budgetedPairInsep hr₂ hc₁ hsep)
-
-
 
 /-! ## The consistency property
 
@@ -2600,9 +2578,3 @@ def budgetedPairConsistencyProperty
 end FamilyFields
 
 end FirstOrder.Language
-
-
-
-
-
-

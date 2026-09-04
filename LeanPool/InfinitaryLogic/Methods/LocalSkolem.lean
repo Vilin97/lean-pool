@@ -9,8 +9,9 @@ import LeanPool.InfinitaryLogic.Methods.SkolemClosure
 
 The full Skolem language `skolem₁ω L` adjoins a function symbol for **every** `L_{ω₁ω}` formula, so
 it is **uncountable** (`BoundedFormulaω` is uncountable). That makes the colimit `skolemColim L` and
-its de-substituted atom diagram uncountable, which is fatal for the Ehrenfeucht–Mostowski term model:
-the extracted tail-indiscernible family `Γ` would have to be uncountable, but the cheap infinite-Ramsey
+its de-substituted atom diagram uncountable, which is fatal for the Ehrenfeucht–Mostowski term
+model: the extracted tail-indiscernible family `Γ` would have to be uncountable, but the cheap
+infinite-Ramsey
 extraction (`MorleyHanfExtractionTail`) only produces indiscernibility over a **countable** family.
 
 The fix is to Skolemize only a **countable family** `Γ` of formulas. `localSkolem L Γ` adjoins one
@@ -28,7 +29,8 @@ namespace FirstOrder.Language
 
 variable (L : Language.{0, 0})
 
-/-- The **local Skolem language** over a family `Γ` of `L`-formulas: an arity-`n` function symbol for
+/-- The **local Skolem language** over a family `Γ` of `L`-formulas: an arity-`n` function symbol
+for
 each `(n+1)`-ary formula **that lies in `Γ`** (witnessing its last existential), and no relation
 symbols. Unlike `skolem₁ω L` (which Skolemizes *all* formulas and is uncountable), this stays
 countable whenever `Γ` is. -/
@@ -47,7 +49,8 @@ noncomputable instance localSkolemStructure {M : Type w} [L.Structure M] [Nonemp
   funMap {_} φ x := Classical.epsilon fun a => φ.1.Realize (Empty.elim : Empty → M) (Fin.snoc x a)
   RelMap {_} r := r.elim
 
-/-- **Local Skolem axiom schema** (semantic form). If `∃ a, φ(x, a)` holds in `M`, then the witnessed
+/-- **Local Skolem axiom schema** (semantic form). If `∃ a, φ(x, a)` holds in `M`, then the
+witnessed
 body `φ` holds at `x` extended by the Skolem value `funMap φ x`. This is `Classical.epsilon_spec`;
 the local analogue of `skolem₁ω_funMap_spec`, powering the local EM term model's Skolem-witness
 transport. -/
@@ -57,11 +60,9 @@ theorem localSkolem_funMap_spec {M : Type w} [L.Structure M] [Nonempty M]
     (h : ∃ a, φ.1.Realize (Empty.elim : Empty → M) (Fin.snoc x a)) :
     φ.1.Realize (Empty.elim : Empty → M)
       (Fin.snoc x (Structure.funMap (L := localSkolem L Γ) φ x)) := by
-  show φ.1.Realize (Empty.elim : Empty → M)
+  change φ.1.Realize (Empty.elim : Empty → M)
     (Fin.snoc x (Classical.epsilon fun a => φ.1.Realize (Empty.elim : Empty → M) (Fin.snoc x a)))
   exact Classical.epsilon_spec h
-
-
 
 /-- The full (all-arity) function-symbol type of `localSkolem L Γ` is countable when `Γ` is. -/
 theorem localSkolem_sigma_functions_countable (Γ : Set (Σ n, L.BoundedFormulaω Empty n))
@@ -77,7 +78,7 @@ theorem localSkolem_sigma_functions_countable (Γ : Set (Σ n, L.BoundedFormula�
     rfl
   exact hinj.countable
 
-/-- `localSkolem L Γ` has no relation symbols, so its relation-symbol type is (trivially) countable. -/
+/-- `localSkolem L Γ` has no relation symbols, so its relation-symbol type is countable. -/
 theorem localSkolem_sigma_relations_countable
     (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) :
     Countable (Σ n, (localSkolem L Γ).Relations n) :=

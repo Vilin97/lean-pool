@@ -120,27 +120,18 @@ private theorem BoundedFormulaω.universalSigned_abstractConst (j : ℕ) (s : Bo
   | rel R ts => exact Iff.rfl
   | imp φ ψ ihφ ihψ =>
     -- induction-bound receivers carry the inductive type, so they need the qualified name
-    show universalSigned (!s) (BoundedFormulaω.abstractConst j φ) ∧
+    change universalSigned (!s) (BoundedFormulaω.abstractConst j φ) ∧
         universalSigned s (BoundedFormulaω.abstractConst j ψ) ↔ _
     exact and_congr (ihφ (!s)) (ihψ s)
   | all φ ih =>
-    show s = true ∧ universalSigned s (BoundedFormulaω.abstractConst j φ) ↔ _
+    change s = true ∧ universalSigned s (BoundedFormulaω.abstractConst j φ) ↔ _
     exact and_congr_right fun _ => ih s
   | iSup φs ih =>
-    show (∀ i, universalSigned s (BoundedFormulaω.abstractConst j (φs i))) ↔ _
+    change (∀ i, universalSigned s (BoundedFormulaω.abstractConst j (φs i))) ↔ _
     exact forall_congr' fun i => ih i s
   | iInf φs ih =>
-    show (∀ i, universalSigned s (BoundedFormulaω.abstractConst j (φs i))) ↔ _
+    change (∀ i, universalSigned s (BoundedFormulaω.abstractConst j (φs i))) ↔ _
     exact forall_congr' fun i => ih i s
-
-/-- **`genAll` is class-preserving**: universally generalizing a fresh constant out of a universal
-sentence leaves it universal.  This is the whole point of the right-hand C7 trigger. -/
-private theorem isUniversal_genAll (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
-    IsUniversal (genAll j ρ) ↔ IsUniversal ρ := by
-  rw [genAll]
-  show (true = true ∧ universalSigned true _) ↔ _
-  rw [BoundedFormulaω.universalSigned_relabel, BoundedFormulaω.universalSigned_abstractConst]
-  exact and_iff_right rfl
 
 /-- **The exact signed-occurrence equation for `genAll`.**  Universal generalization adds one
 positive occurrence and moves nothing else: at sign `true` the right disjunct is absorbed, and at
@@ -167,13 +158,6 @@ theorem hasQuantSigned_genEx (j : ℕ) (s : Bool) (ρ : L[[ℕ]].Sentenceω) :
   have h2 := BoundedFormulaω.universalSigned_iff_not_hasQuantSigned (!s) ρ
   rw [Bool.not_not] at h1 h2
   rw [← not_iff_not, ← h1, ← h2, BoundedFormulaω.universalSigned_abstractConst]
-
-/-- **`genEx` is not class-preserving**, recorded separately: `genEx j ρ` is never universal, since
-it is a negatively-occurring `all`.  This is a fact about the *construction*, and is not by itself a
-failure of the left closure (see `malitzInsepAt_witness_of_existentialDelta`). -/
-private theorem not_isUniversal_genEx (j : ℕ) (ρ : L[[ℕ]].Sentenceω) :
-    ¬ IsUniversal (genEx j ρ) :=
-  not_isUniversal_ex _
 
 /-! ### The `genAll` acceptance sequents -/
 
@@ -206,48 +190,6 @@ theorem entails_genAll_of_entails
     rwa [BoundedFormulaω.realize_congr_const base γ hcongr Empty.elim Fin.elim0] at hg
   exact @hyp M (wc base (Function.update h j x)) neM hΓ
 
-/-- **Acceptance, `Δ` side**: `Δ, δ(c) ⊨ ¬σ(c)` upgrades to `Δ, ∃x δ(x) ⊨ ¬∀x σ(x)` when `c_j` is
-fresh for `Δ`.  The witness for `∃x δ(x)` is exactly the reinterpretation that refutes `∀x σ(x)`. -/
-private theorem entails_not_genAll_of_entails_not
-    (hfresh : ∀ δ ∈ Δ, j ∉ sentenceJConsts (L' := L) (J := ℕ) δ)
-    (hyp : Theoryω.Entails (insert φc Δ) σc.not) :
-    Theoryω.Entails (insert (genEx j φc) Δ) (genAll j σc).not := by
-  intro M instM neM hmodel
-  set base := (L.lhomWithConstants ℕ).reduct M with hbase
-  set h := ambientConstMap (L := L) M with hh
-  have bridge : ∀ (ψ : L[[ℕ]].Sentenceω),
-      @Sentenceω.Realize L[[ℕ]] ψ M instM
-        ↔ @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 ψ Empty.elim Fin.elim0 :=
-    fun ψ => ambient_realize_iff_wc (S := instM) ψ Empty.elim Fin.elim0
-  show @Sentenceω.Realize L[[ℕ]] (genAll j σc).not M instM
-  -- apply the negation lemma rather than unfolding: unfolding lands on the opaque
-  -- `SentenceInf.Realize`, which no bounded-formula lemma can be keyed against
-  refine (BoundedFormulaω.realize_not _).mpr ?_
-  intro hcon
-  have hcon' : @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 (genAll j σc)
-      Empty.elim Fin.elim0 := (bridge _).mp hcon
-  have hφ : @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 (genEx j φc) Empty.elim Fin.elim0 :=
-    (bridge _).mp (hmodel _ (Set.mem_insert _ _))
-  obtain ⟨x, hx⟩ := (realize_genEx base h j φc).mp hφ
-  have hΔ : ∀ δ ∈ Δ,
-      @BoundedFormulaω.Realize L[[ℕ]] M (wc base (Function.update h j x)) Empty 0 δ
-        Empty.elim Fin.elim0 := by
-    intro δ hδ
-    have hg : @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 δ Empty.elim Fin.elim0 :=
-      (bridge _).mp (hmodel _ (Set.mem_insert_of_mem _ hδ))
-    have hcongr : ∀ k ∈ sentenceJConsts (L' := L) (J := ℕ) δ, h k = Function.update h j x k := by
-      intro k hk
-      have hkj : (k : ℕ) ≠ j := fun heq => hfresh δ hδ (heq ▸ hk)
-      exact (Function.update_of_ne (α := ℕ) hkj x h).symm
-    rwa [BoundedFormulaω.realize_congr_const base δ hcongr Empty.elim Fin.elim0] at hg
-  have hnot : @BoundedFormulaω.Realize L[[ℕ]] M (wc base (Function.update h j x)) Empty 0 σc.not
-      Empty.elim Fin.elim0 :=
-    @hyp M (wc base (Function.update h j x)) neM (fun ψ hψ => by
-      rcases Set.mem_insert_iff.mp hψ with rfl | hψ
-      · exact hx
-      · exact hΔ ψ hψ)
-  exact hnot ((realize_genAll base h j σc).mp hcon' x)
-
 /-- **Negative acceptance without freshness.**  If `Δ` already refutes `σ(c)`, it refutes
 `∀x σ(x)` outright: the universal is instantiated at `c`'s *own* interpretation, so nothing has to
 be fresh for `Δ` and no witness is consumed.
@@ -264,9 +206,8 @@ theorem entails_not_genAll_of_entails_not_self
       @Sentenceω.Realize L[[ℕ]] ψ M instM
         ↔ @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 ψ Empty.elim Fin.elim0 :=
     fun ψ => ambient_realize_iff_wc (S := instM) ψ Empty.elim Fin.elim0
-  show @Sentenceω.Realize L[[ℕ]] (genAll j σc).not M instM
-  -- apply the negation lemma rather than unfolding: unfolding lands on the opaque
-  -- `SentenceInf.Realize`, which no bounded-formula lemma can be keyed against
+  change @Sentenceω.Realize L[[ℕ]] (genAll j σc).not M instM
+  -- Apply the negation lemma before crossing to bounded-formula realization.
   refine (BoundedFormulaω.realize_not _).mpr ?_
   intro hcon
   have hcon' : @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 (genAll j σc)
@@ -284,14 +225,6 @@ theorem entails_not_genAll_of_entails_not_self
 section Conjunction
 
 variable {T : L[[ℕ]].Theoryω} {hT : T.Countable}
-
-
-
-
-
-
-
-
 
 end Conjunction
 

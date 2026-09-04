@@ -87,67 +87,10 @@ theorem bfSubformulas_countable {Λ : Language.{0, 0}} (χ : Σ n, Λ.BoundedFor
 
 variable (L : Language.{0, 0})
 
-/-- A colimit-language formula packaged with its arity. -/
-private abbrev ColimFormula := Σ n, (skolemColim L).BoundedFormulaω Empty n
-
-/-- A formula tagged with the finite language **stage** at which it lives. The closure works at
-this staged level — so the existential-witness Skolem term is directly available at the next stage
-— and projects to a colimit formula only via `toColimFormula`. This avoids ever inverting the
-colimit quotient. -/
-private abbrev SkFormula := Σ k : ℕ, Σ n : ℕ, (skolemStage L k).BoundedFormulaω Empty n
-
-/-- Project a staged formula to a colimit-language formula, transporting along the stage inclusion
-`skolemStageInclusion L k`. `Γ*` in the colimit language is the image of the staged closure under
-this map. -/
-private def toColimFormula : SkFormula L → ColimFormula L
-  | ⟨k, n, φ⟩ => ⟨n, φ.mapLanguage (skolemStageInclusion L k)⟩
-
-
-
-
-
 /-! ### Existential Skolem-witness step (stage `k` → `k+1`) -/
-
-/-- The **Skolem-witness body** of `∃x ψ` (with `ψ` the `(n+1)`-ary matrix at stage `k`): substitute
-the stage-`(k+1)` Skolem term `skolemTerm ψ` (of the remaining `n` variables) for the witnessed
-variable. Built with the template substitution pattern `openBounds → subst → relabel`, placing the
-Skolem term in the last slot. Lives at stage `k+1` and arity `n`. -/
-def skolemWitnessFormula {k n : ℕ} (ψ : (skolemStage L k).BoundedFormulaω Empty (n + 1)) :
-    (skolemStage L (k + 1)).BoundedFormulaω Empty n :=
-  (((ψ.openBounds.mapLanguage (skolemStageHom L k)).subst
-    (Fin.snoc (fun i => Term.var i) (skolemTerm ψ (fun i => Term.var i)))).relabel Sum.inr)
-
-/-- The **Skolem-witness step**: Skolemize the (primitive) universal quantifier. For `∀x φ` at
-stage `k`, add the witness body of its negation `∃x ¬φ`, namely `(¬φ)[skolemTerm (¬φ)]`, at stage
-`k+1`. Since `∃xψ = ¬∀x¬ψ`, this covers existentials too. Other forms add nothing. -/
-def skWitnessStep : SkFormula L → Set (SkFormula L)
-  | ⟨k, n, .all φ⟩ => {⟨k + 1, n, skolemWitnessFormula L φ.not⟩}
-  | _ => ∅
-
-
 
 /-! ### The Skolem-closed staged family `Γ*` -/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /-! ### Colimit image and enumeration -/
-
-
-
-
 
 end FirstOrder.Language

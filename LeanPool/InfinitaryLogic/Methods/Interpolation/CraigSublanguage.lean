@@ -6,7 +6,7 @@ Authors: Cameron Freer
 import LeanPool.InfinitaryLogic.Methods.Interpolation.CraigRelational
 import LeanPool.InfinitaryLogic.Methods.SymbSublangExpansion
 /-!
-# Craig interpolation for `L_ω₁ω`, relational core without a global countability hypothesis (Layer 2)
+# Craig interpolation for `L_ω₁ω`, relational core without global countability (Layer 2)
 
 Layer 1 (`craig_interpolation_relational_countable`) needs the whole language to have countably
 many relation symbols.  This layer removes that hypothesis: an individual `L_ω₁ω` sentence mentions
@@ -60,8 +60,9 @@ theorem entails_mapLanguage_restrictSymbols_left (F : Set (Σ n, L.Functions n))
         (Empty.elim : Empty → M) Fin.elim0
     rw [BoundedFormulaω.mapLanguage_restrictSymbols] at hiff
     exact hiff.mp hr
-  exact (BoundedFormulaω.realize_mapLanguage (symbSublangIncl F R) θ' (Empty.elim : Empty → M) Fin.elim0).mpr
-    ((Sentenceω.entails_iff.mp hE) M hr')
+  exact
+    (BoundedFormulaω.realize_mapLanguage (symbSublangIncl F R) θ'
+      (Empty.elim : Empty → M) Fin.elim0).mpr ((Sentenceω.entails_iff.mp hE) M hr')
 
 /-- Right entailment transport: a sublanguage entailment `θ' ⊨ r₂.restrictSymbols` lifts to
 `θ'.mapLanguage incl ⊨ r₂` in `L`. -/
@@ -75,7 +76,8 @@ theorem entails_mapLanguage_restrictSymbols_right (F : Set (Σ n, L.Functions n)
   let instM' : (symbSublang (L := L) F R).Structure M := (symbSublangIncl F R).reduct M
   have : (symbSublangIncl F R).IsExpansionOn M := LHom.isExpansionOn_reduct (symbSublangIncl F R) M
   have hθ' : @Sentenceω.Realize (symbSublang (L := L) F R) θ' M instM' :=
-    (BoundedFormulaω.realize_mapLanguage (symbSublangIncl F R) θ' (Empty.elim : Empty → M) Fin.elim0).mp hθ
+    (BoundedFormulaω.realize_mapLanguage (symbSublangIncl F R) θ'
+      (Empty.elim : Empty → M) Fin.elim0).mp hθ
   have hr :=
     (BoundedFormulaω.realize_mapLanguage (symbSublangIncl F R) (r.restrictSymbols hF hR)
       (Empty.elim : Empty → M) Fin.elim0).mpr ((Sentenceω.entails_iff.mp hE) M hθ')

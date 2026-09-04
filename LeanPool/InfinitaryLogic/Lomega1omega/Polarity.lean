@@ -64,8 +64,6 @@ abbrev negativeRelationsIn {n : ℕ} (φ : L.BoundedFormulaω α n) : Set (Σ n,
 @[simp] theorem relationsInSigned_falsum {n : ℕ} (s : Bool) :
     relationsInSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α n) = ∅ := rfl
 
-
-
 @[simp] theorem relationsInSigned_equal {n : ℕ} (s : Bool)
     (t₁ t₂ : L.Term (α ⊕ Fin n)) :
     relationsInSigned s (BoundedFormulaω.equal t₁ t₂) = ∅ := rfl
@@ -91,7 +89,7 @@ abbrev negativeRelationsIn {n : ℕ} (φ : L.BoundedFormulaω α n) : Set (Σ n,
 /-- **Negation swaps the signs** (the acceptance gate, generic form). -/
 @[simp] theorem relationsInSigned_not {n : ℕ} (s : Bool) (φ : L.BoundedFormulaω α n) :
     relationsInSigned s φ.not = relationsInSigned (!s) φ := by
-  show relationsInSigned (!s) φ ∪ relationsInSigned s
+  change relationsInSigned (!s) φ ∪ relationsInSigned s
     (BoundedFormulaω.falsum : L.BoundedFormulaω α n) = _
   rw [relationsInSigned_falsum, Set.union_empty]
 
@@ -105,20 +103,18 @@ theorem negativeRelationsIn_not {n : ℕ} (φ : L.BoundedFormulaω α n) :
 
 @[simp] theorem relationsInSigned_top {n : ℕ} (s : Bool) :
     relationsInSigned s (⊤ : L.BoundedFormulaω α n) = ∅ := by
-  show relationsInSigned s (BoundedFormulaω.imp .falsum .falsum) = _
+  change relationsInSigned s (BoundedFormulaω.imp .falsum .falsum) = _
   simp
 
 @[simp] theorem relationsInSigned_and {n : ℕ} (s : Bool) (φ ψ : L.BoundedFormulaω α n) :
     relationsInSigned s (φ.and ψ) = relationsInSigned s φ ∪ relationsInSigned s ψ := by
-  show relationsInSigned s ((φ.imp ψ.not).not) = _
+  change relationsInSigned s ((φ.imp ψ.not).not) = _
   rw [relationsInSigned_not, relationsInSigned_imp, relationsInSigned_not, Bool.not_not]
-
-
 
 /-- **Existential quantification preserves the signs** (two flips cancel). -/
 @[simp] theorem relationsInSigned_ex {n : ℕ} (s : Bool) (φ : L.BoundedFormulaω α (n + 1)) :
     relationsInSigned s φ.ex = relationsInSigned s φ := by
-  show relationsInSigned s (φ.not.all.not) = _
+  change relationsInSigned s (φ.not.all.not) = _
   rw [relationsInSigned_not, relationsInSigned_all, relationsInSigned_not, Bool.not_not]
 
 /-- An `Encodable`-indexed conjunction collects the branches' signed occurrences (the `⊤` padding
@@ -136,11 +132,7 @@ theorem relationsInSigned_einf {ι : Type*} [Encodable ι] {n : ℕ} (s : Bool)
   · rintro ⟨i, hi⟩
     exact ⟨Encodable.encode i, by rw [Encodable.encodek]; exact hi⟩
 
-
-
 /-! ## Countability -/
-
-
 
 end BoundedFormulaω
 

@@ -131,12 +131,12 @@ theorem realize_termGraphAux :
             Fin (k + 1) → (graphLanguage L).Term (α ⊕ Fin (m + k))) j)) = ws := by
       intro ws
       funext i
-      show Term.realize _
+      change Term.realize _
         ((Fin.snoc (fun i => graphWitnessVar m i) (graphTermLift k y) :
           Fin (k + 1) → (graphLanguage L).Term (α ⊕ Fin (m + k))) (Fin.castSucc i)) = ws i
       rw [Fin.snoc_castSucc]
       exact realize_graphWitnessVar i v xs ws
-    show (BoundedFormulaω.existsBlock _).Realize v xs ↔ _
+    change (BoundedFormulaω.existsBlock _).Realize v xs ↔ _
     rw [BoundedFormulaω.realize_existsBlock]
     constructor
     · rintro ⟨ws, hw⟩
@@ -214,32 +214,12 @@ theorem relationsIn_termGraphAux :
     simp only [termGraphAux, Term.functionsIn, Set.image_empty]
     rfl
   | m, .func f ts, ρ, y => by
-    show (BoundedFormulaω.existsBlock _).relationsIn = _
+    change (BoundedFormulaω.existsBlock _).relationsIn = _
     rw [BoundedFormulaω.relationsIn_existsBlock, BoundedFormulaω.relationsIn_and,
       BoundedFormulaω.relationsIn_einf]
     rw [Set.iUnion_congr fun i => relationsIn_termGraphAux (ts i) _ _]
-    show (⋃ i, graphRelSym L '' (ts i).functionsIn) ∪ {graphRelSym L ⟨_, f⟩} = _
+    change (⋃ i, graphRelSym L '' (ts i).functionsIn) ∪ {graphRelSym L ⟨_, f⟩} = _
     rw [← Set.image_iUnion, Set.union_singleton, ← Set.image_insert_eq]
     rfl
-
-/-- The relation symbols of `termGraph t y` are exactly the graph relations of `t`'s function
-symbols. -/
-private theorem relationsIn_termGraph (t : L.Term (α ⊕ Fin m))
-    (y : (graphLanguage L).Term (α ⊕ Fin m)) :
-    (termGraph t y).relationsIn = graphRelSym L '' t.functionsIn :=
-  relationsIn_termGraphAux t Term.var y
-
-/-- No base relation occurs in a term-graph formula. -/
-private theorem relationsIn_termGraph_inter_base (t : L.Term (α ⊕ Fin m))
-    (y : (graphLanguage L).Term (α ⊕ Fin m)) (R : Set (Σ n, L.Relations n)) :
-    (termGraph t y).relationsIn ∩ baseRelSym L '' R = ∅ := by
-  rw [relationsIn_termGraph]
-  exact graphRelSym_image_inter_baseRelSym_image _ _
-
-/-- No function symbol occurs in a term-graph formula (the graph language is relational). -/
-private theorem functionsIn_termGraph (t : L.Term (α ⊕ Fin m))
-    (y : (graphLanguage L).Term (α ⊕ Fin m)) :
-    (termGraph t y).functionsIn = ∅ :=
-  BoundedFormulaω.functionsIn_of_isRelational _
 
 end FirstOrder.Language

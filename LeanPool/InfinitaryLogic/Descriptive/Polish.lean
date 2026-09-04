@@ -48,11 +48,8 @@ section Generic
 
 variable (α : Type*) [Encodable α]
 
-
-
 -- StructureSpaceOn is abbrev, so TC sees through it. These named instances
 -- ensure the results are available by name when needed.
-
 
 instance : SecondCountableTopology (StructureSpaceOn L α) := inferInstance
 instance : TopologicalSpace.IsCompletelyMetrizableSpace (StructureSpaceOn L α) := inferInstance
@@ -62,19 +59,10 @@ instance : StandardBorelSpace (StructureSpaceOn L α) := inferInstance
 
 -- Pair space instances
 
-
-
-
 end Generic
-
-
 
 -- Bridge instances: StructureSpace L is a def, so TC can't unfold it.
 -- We explicitly provide what Mathlib proves for `RelQuery L → Bool`.
-
-
-
-
 
 instance : SecondCountableTopology (StructureSpace L) := by
   unfold StructureSpace; infer_instance
@@ -93,12 +81,6 @@ instance : BorelSpace (StructureSpace L) := by
 
 /-- The structure space is standard Borel (Polish + Borel). -/
 instance : StandardBorelSpace (StructureSpace L) := inferInstance
-
-
-
-
-
-
 
 end Language
 

@@ -30,31 +30,9 @@ variable {L : Language.{u, v}}
 -- Generic instance: StructureSpaceOn is abbrev, so TC sees through it.
 instance {α : Type*} : TopologicalSpace (StructureSpaceOn L α) := Pi.topologicalSpace
 
-
-
 /-- `StructureSpace L` inherits the product topology from `RelQuery L → Bool`.
 Since `Bool` has the discrete topology, this is the product of discrete spaces. -/
 instance : TopologicalSpace (StructureSpace L) := Pi.topologicalSpace
-
-/-- The set of codes where a given relation query returns `true` is clopen.
-This follows from the projection `c ↦ c q` being continuous and `{true}` being
-clopen in discrete `Bool`. -/
-private theorem isClopen_relHolds (q : RelQuery L) :
-    IsClopen {c : StructureSpace L | c q = true} := by
-  have : {c : StructureSpace L | c q = true} = (fun c => c q) ⁻¹' {true} := by
-    ext c; simp
-  rw [this]
-  exact (isClopen_discrete {true}).preimage (continuous_apply q)
-
-/-- The set of codes where a given relation query returns `true` is open. -/
-private theorem isOpen_relHolds (q : RelQuery L) :
-    IsOpen {c : StructureSpace L | c q = true} :=
-  (isClopen_relHolds q).isOpen
-
-/-- The set of codes where a given relation query returns `true` is closed. -/
-private theorem isClosed_relHolds (q : RelQuery L) :
-    IsClosed {c : StructureSpace L | c q = true} :=
-  (isClopen_relHolds q).isClosed
 
 end Language
 

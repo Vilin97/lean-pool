@@ -3,8 +3,9 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.ModelTheory.CountingCountable
 import LeanPool.InfinitaryLogic.Descriptive.BFEquivBorel
+import LeanPool.InfinitaryLogic.Descriptive.FiniteCarrier
+import LeanPool.InfinitaryLogic.ModelTheory.CountingModels
 /-!
 # Morley's Counting Theorem via Scott-Height Stratification
 
@@ -94,8 +95,6 @@ private def bfProj (φ : L.Sentenceω) (α : Ordinal.{0}) :
     Quotient (isoSetoid φ) → Quotient (bfEquivSetoid φ α) :=
   Quotient.map id (fun _a _b h => isoSetoid_refines_bfEquivSetoid φ α h)
 
-
-
 omit [Countable (Σ l, L.Relations l)] in
 private theorem bfProj_surjective (φ : L.Sentenceω) (α : Ordinal.{0}) :
     Function.Surjective (bfProj φ α) := fun q =>
@@ -109,7 +108,8 @@ private def bfProjRange (φ : L.Sentenceω) (P : Quotient (isoSetoid φ) → Pro
   Set.range (fun q : {q : Quotient (isoSetoid φ) // P q} => bfProj φ α q.1)
 
 omit [Countable (Σ l, L.Relations l)] in
-private theorem mem_bfProjRange {φ : L.Sentenceω} {P : Quotient (isoSetoid φ) → Prop} {α : Ordinal.{0}}
+private theorem mem_bfProjRange {φ : L.Sentenceω} {P : Quotient (isoSetoid φ) → Prop} {α :
+  Ordinal.{0}}
     {x : Quotient (bfEquivSetoid φ α)} :
     x ∈ bfProjRange φ P α ↔ ∃ q : {q : Quotient (isoSetoid φ) // P q}, bfProj φ α q.1 = x :=
   Iff.rfl
@@ -170,7 +170,7 @@ exactly the same bound at `Fin n`. -/
 private theorem mk_structureSpaceOn_le_continuum {α : Type} [Countable α] :
     #(StructureSpaceOn L α) ≤ Cardinal.continuum := by
   -- `#(X → Bool) = 2 ^ #X ≤ 2 ^ ℵ₀ = continuum` once `X` is countable
-  show #(RelQueryOn L α → Bool) ≤ _
+  change #(RelQueryOn L α → Bool) ≤ _
   calc #(RelQueryOn L α → Bool)
       = Cardinal.lift.{v, 0} #Bool ^ Cardinal.lift.{0, v} #(RelQueryOn L α) :=
         Cardinal.mk_arrow _ _
@@ -324,10 +324,10 @@ theorem morley_counting (silver : SilverBurgessDichotomy.{v}) (φ : L.Sentenceω
       hN.elim (·.trans (Cardinal.aleph_one_le_continuum)) le_of_eq
     have hFin_le : ∀ n, #(Quotient (isoSetoidOn φ n)) ≤ Cardinal.continuum :=
       fun n => (hFin n).elim (·.trans Cardinal.aleph0_le_continuum) le_of_eq
-    show #(AllCodedIsoClasses φ) = Cardinal.continuum
+    change #(AllCodedIsoClasses φ) = Cardinal.continuum
     apply le_antisymm
     · -- Upper bound
-      show #(Quotient (isoSetoid φ) ⊕ Σ n, Quotient (isoSetoidOn φ n)) ≤ Cardinal.continuum
+      change #(Quotient (isoSetoid φ) ⊕ Σ n, Quotient (isoSetoidOn φ n)) ≤ Cardinal.continuum
       rw [Cardinal.mk_sum, Cardinal.lift_id, Cardinal.lift_id]
       apply Cardinal.add_le_of_le Cardinal.aleph0_le_continuum hA_le
       calc #(Σ n, Quotient (isoSetoidOn φ n))
@@ -335,13 +335,13 @@ theorem morley_counting (silver : SilverBurgessDichotomy.{v}) (φ : L.Sentenceω
         _ = Cardinal.continuum := Cardinal.aleph0_mul_eq Cardinal.aleph0_le_continuum
     · -- Lower bound
       rcases hc with hcA | ⟨n₀, hn₀⟩
-      · show Cardinal.continuum ≤ #(AllCodedIsoClasses φ)
-        show Cardinal.continuum ≤ #(Quotient (isoSetoid φ) ⊕ Σ n, Quotient (isoSetoidOn φ n))
+      · change Cardinal.continuum ≤ #(AllCodedIsoClasses φ)
+        change Cardinal.continuum ≤ #(Quotient (isoSetoid φ) ⊕ Σ n, Quotient (isoSetoidOn φ n))
         rw [Cardinal.mk_sum, Cardinal.lift_id, Cardinal.lift_id]
         calc Cardinal.continuum = #(Quotient (isoSetoid φ)) := hcA.symm
           _ ≤ _ := le_self_add
-      · show Cardinal.continuum ≤ #(AllCodedIsoClasses φ)
-        show Cardinal.continuum ≤ #(Quotient (isoSetoid φ) ⊕ Σ n, Quotient (isoSetoidOn φ n))
+      · change Cardinal.continuum ≤ #(AllCodedIsoClasses φ)
+        change Cardinal.continuum ≤ #(Quotient (isoSetoid φ) ⊕ Σ n, Quotient (isoSetoidOn φ n))
         rw [Cardinal.mk_sum, Cardinal.lift_id, Cardinal.lift_id]
         calc Cardinal.continuum = #(Quotient (isoSetoidOn φ n₀)) := hn₀.symm
           _ ≤ #(Σ n, Quotient (isoSetoidOn φ n)) := hEmbed n₀
@@ -354,7 +354,7 @@ theorem morley_counting (silver : SilverBurgessDichotomy.{v}) (φ : L.Sentenceω
     have hA_le : #(Quotient (isoSetoid φ)) ≤ Cardinal.aleph 1 := hN.resolve_right hcA
     have hFin_le : ∀ n, #(Quotient (isoSetoidOn φ n)) ≤ ℵ₀ :=
       fun n => (hFin n).resolve_right (hcFin n)
-    show #(Quotient (isoSetoid φ) ⊕ Σ n, Quotient (isoSetoidOn φ n)) ≤ Cardinal.aleph 1
+    change #(Quotient (isoSetoid φ) ⊕ Σ n, Quotient (isoSetoidOn φ n)) ≤ Cardinal.aleph 1
     rw [Cardinal.mk_sum, Cardinal.lift_id, Cardinal.lift_id]
     apply Cardinal.add_le_of_le (Cardinal.aleph0_le_aleph 1) hA_le
     calc #(Σ n, Quotient (isoSetoidOn φ n))

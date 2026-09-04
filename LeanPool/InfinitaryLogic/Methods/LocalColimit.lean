@@ -254,33 +254,4 @@ theorem ΓlocalColim_countable : (ΓlocalColim s₀).Countable :=
 
 The wrappers the EM rebase will consume, so its proofs never touch raw `mapLanguage` equalities. -/
 
-/-- **Formula-level cocone coherence**: a stage-`k` formula lifted one stage (along `LlocalHom`)
-and then included into the colimit is the same colimit formula as including it directly. -/
-theorem toLocalColimFormula_step (k : ℕ) (p : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) :
-    toLocalColimFormula s₀ (k + 1) ⟨p.1, p.2.mapLanguage (LlocalHom s₀ k)⟩
-      = toLocalColimFormula s₀ k p := by
-  show (⟨p.1, (p.2.mapLanguage (LlocalHom s₀ k)).mapLanguage (LlocalInclusion s₀ (k + 1))⟩ :
-      Σ n, (localColim s₀).BoundedFormulaω Empty n)
-    = ⟨p.1, p.2.mapLanguage (LlocalInclusion s₀ k)⟩
-  rw [BoundedFormulaω.mapLanguage_mapLanguage, LlocalInclusion_comp_LlocalHom]
-
-/-- **Lifted membership**: the stage-`(k+1)` lift of a stage-`k` family member has its colimit
-image in `ΓlocalColim` — and by `toLocalColimFormula_step` that image coincides with the direct
-stage-`k` image, so the two membership routes agree. -/
-private theorem toLocalColimFormula_lift_mem_ΓlocalColim {k : ℕ}
-    {p : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n} (hp : p ∈ Γlocal s₀ k) :
-    toLocalColimFormula s₀ (k + 1) ⟨p.1, p.2.mapLanguage (LlocalHom s₀ k)⟩ ∈ ΓlocalColim s₀ :=
-  toLocalColimFormula_mem_ΓlocalColim s₀ (liftGamma_mem_Γlocal_succ s₀ hp)
-
-/-- **Witness-body membership in the colimit family**: for every universal member `∀ψ` of a stage
-family, the local Skolem witness body of `¬ψ` (available at the next stage thanks to `skolemNeed`)
-has its colimit image in `ΓlocalColim` — the closure fact the rebased truth lemma's `all`-case
-readiness will cite. -/
-private theorem localSkolemWitnessFormula_mem_ΓlocalColim {k n : ℕ}
-    {ψ : (Llocal s₀ k).BoundedFormulaω Empty (n + 1)}
-    (h : (⟨n, .all ψ⟩ : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) ∈ Γlocal s₀ k) :
-    toLocalColimFormula s₀ (k + 1)
-        ⟨n, localSkolemWitnessFormula (skolemNeedSymbol h)⟩ ∈ ΓlocalColim s₀ :=
-  toLocalColimFormula_mem_ΓlocalColim s₀ (localSkolemWitnessFormula_mem_Γlocal_succ s₀ h)
-
 end FirstOrder.Language

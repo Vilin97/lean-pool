@@ -47,36 +47,6 @@ structure LocalSkolemUniversalForColim (s₀ : LocalStage) {M : Type}
       ∀ x : M,
         (ψ.mapLanguage (LlocalInclusion s₀ k)).Realize (Empty.elim : Empty → M) (Fin.snoc xs x)
 
-/-- **The canonical structure satisfies the mixin**: `localColimStructure`'s Skolem symbols are
-Hilbert-choice values, so `localSkolem_funMap_spec` supplies the universal property — the exact
-inline argument of the current truth lemma, factored out. -/
-theorem localSkolemUniversalForColim_canonical (s₀ : LocalStage) {M : Type}
-    [s₀.Lang.Structure M] [Nonempty M] :
-    letI : (localColim s₀).Structure M := localColimStructure s₀
-    LocalSkolemUniversalForColim s₀ (M := M) := by
-  let : (localColim s₀).Structure M := localColimStructure s₀
-  refine ⟨?_⟩
-  intro k n ψ h xs
-  let : (Llocal s₀ k).Structure M := localStageStructure s₀ k
-  simp only [realize_map_LlocalInclusion]
-  intro hψw x
-  by_contra hcon
-  have hex : ∃ b, (ψ.not).Realize (Empty.elim : Empty → M) (Fin.snoc xs b) :=
-    ⟨x, by rw [BoundedFormulaω.realize_not]; exact hcon⟩
-  have hspec : (ψ.not).Realize (Empty.elim : Empty → M)
-      (Fin.snoc xs
-        (Structure.funMap (L := localSkolem (Llocal s₀ k) (skolemNeed (Γlocal s₀ k)))
-          (skolemNeedSymbol h) xs)) :=
-    localSkolem_funMap_spec (skolemNeedSymbol h) xs hex
-  have hwval : Structure.funMap
-        ((LlocalInclusion s₀ (k + 1)).onFunction
-          (Sum.inr (skolemNeedSymbol h) : (Llocal s₀ (k + 1)).Functions n)) xs
-      = Structure.funMap (L := localSkolem (Llocal s₀ k) (skolemNeed (Γlocal s₀ k)))
-          (skolemNeedSymbol h) xs := rfl
-  rw [hwval] at hψw
-  rw [BoundedFormulaω.realize_not] at hspec
-  exact hspec hψw
-
 /-- **Deep-term transport from the mixin**: the exact Skolem input the truth lemma's `all` case
 consumes (`locSkWitness_universal`), derived from the mixin alone — the deep interpretations of
 the argument terms supply the value assignment, and the witness term's value is the symbol's

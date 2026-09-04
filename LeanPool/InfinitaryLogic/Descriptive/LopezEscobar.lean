@@ -54,18 +54,4 @@ theorem lopezEscobar_action_iff {B : Set (StructureSpace L)} :
 
 /-! ## The collection equality (issue #28, target 7) -/
 
-variable (L) in
-/-- **The invariant Borel events are exactly the definable ones** (issue #28's post-#10
-target 7): the collection of Borel, action-invariant classes is the range of `ModelsOf`.  No
-closure operation is involved — this is the collection form of `lopezEscobar_action_iff`,
-with the two membership statements differing only in the orientation of the equality. -/
-private theorem invariantMeasurableSets_eq_range_modelsOf :
-    {B : Set (StructureSpace L) | MeasurableSet B ∧ ActionInvariant B} =
-      Set.range (ModelsOf (L := L)) := by
-  ext B
-  rw [Set.mem_ofPred_eq, lopezEscobar_action_iff, Set.mem_range]
-  exact ⟨fun ⟨φ, hφ⟩ => ⟨φ, hφ.symm⟩, fun ⟨φ, hφ⟩ => ⟨φ, hφ.symm⟩⟩
-
-
-
 end FirstOrder.Language

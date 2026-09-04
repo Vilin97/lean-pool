@@ -48,24 +48,10 @@ L-isomorphic. -/
 def isoSetoid (φ : L.Sentenceω) : Setoid ↥(ModelsOf φ) :=
   (structureIsoSetoid L).comap Subtype.val
 
-
-
-
-
 /-! ### Sentence-level predicates
 
 Stated ambiently, so that no Polish refinement of the model subtype appears in the
 definitions. -/
-
-
-
-/-- `φ` is thin on its countable models: no such perfect set. -/
-private def Sentenceω.IsThinOnNatModels (φ : L.Sentenceω) : Prop :=
-  IsThinOn (structureIsoSetoid L) (ModelsOf φ)
-
-
-
-
 
 /-! ### From a Polish refinement back to the ambient space
 
@@ -78,13 +64,5 @@ The two steps are ordered so that the delicate one never arises: coarsening is a
 **Cantor** antichain, where only continuity moves, and perfectness is then obtained in the
 ambient space.  Nothing here asserts that perfectness survives coarsening — it does not in
 general. -/
-
-
-
-
-
-
-
-
 
 end FirstOrder.Language

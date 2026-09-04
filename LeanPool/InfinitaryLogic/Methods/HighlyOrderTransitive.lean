@@ -34,10 +34,6 @@ namespace HighlyOrderTransitive
 
 variable {J J' : Type*} [LinearOrder J] [LinearOrder J']
 
-
-
-
-
 end HighlyOrderTransitive
 
 end FirstOrder

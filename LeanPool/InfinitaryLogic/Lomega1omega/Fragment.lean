@@ -51,10 +51,6 @@ namespace Fragment
 instance : Membership (Σ n, L.BoundedFormulaω Empty n) (Fragment L) :=
   ⟨fun A p => p ∈ A.toSet⟩
 
-theorem mem_def {A : Fragment L} {p : Σ n, L.BoundedFormulaω Empty n} :
-    p ∈ A ↔ p ∈ A.toSet :=
-  Iff.rfl
-
 /-- The full fragment: every formula. -/
 def top : Fragment L where
   toSet := Set.univ
@@ -116,25 +112,6 @@ instance : SetLike (Fragment L) (Σ n, L.BoundedFormulaω Empty n) where
 
 @[ext] theorem ext {A B : Fragment L} (h : ∀ p, p ∈ A ↔ p ∈ B) : A = B := SetLike.ext h
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /-! ### Countability of generated fragments: the component-path encoding -/
 
 /-- One component step, coded by a pair (tag, index). -/
@@ -158,7 +135,7 @@ private theorem componentPath_append (p : Σ n, L.BoundedFormulaω Empty n) (l�
   induction l₁ generalizing p with
   | nil => rfl
   | cons c l ih =>
-    show (componentStep p c).bind (componentPath · (l ++ l₂))
+    change (componentStep p c).bind (componentPath · (l ++ l₂))
       = ((componentStep p c).bind (componentPath · l)).bind (componentPath · l₂)
     cases componentStep p c with
     | none => rfl
@@ -245,12 +222,6 @@ theorem generatedSentence_countable (φ : L.Sentenceω) :
 theorem mem_generatedSentence (φ : L.Sentenceω) :
     (⟨0, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ (generatedSentence φ).toSet :=
   subset_generated _ rfl
-
-
-
-
-
-
 
 end Fragment
 

@@ -63,7 +63,7 @@ noncomputable instance (α : Ordinal.{0}) : OrderTop (Index α) where
     exact Order.lt_succ _⟩
   le_top x := by
     rw [← ToType.mk.symm.le_iff_le, OrderIso.symm_apply_apply]
-    show ((ToType.mk.symm x : Set.Iio (α + 2)) : Ordinal) ≤ α + 1
+    change ((ToType.mk.symm x : Set.Iio (α + 2)) : Ordinal) ≤ α + 1
     have hx : ((ToType.mk.symm x : Set.Iio (α + 2)) : Ordinal) < α + 2 :=
       (ToType.mk.symm x).2
     have heq : (α + 2 : Ordinal) = Order.succ (α + 1) := by
@@ -196,7 +196,7 @@ section RealizeHelpers
 /-- Constant terms realize to their values, at any valuation. -/
 private theorem realize_const {γ : Type} (v : γ → M) (n : ℕ) :
     (const n : (ladderLang α).Term γ).realize v = constVal α n := by
-  show Structure.funMap _ _ = _
+  change Structure.funMap _ _ = _
   congr 1
   exact funext fun i => i.elim0
 
@@ -220,7 +220,7 @@ private theorem realize_eAtom {γ : Type} {n : ℕ}
 private theorem realize_bvar1 (x : M) :
     (bvar 0 : (ladderLang α).Term (Empty ⊕ Fin 1)).realize
       (Sum.elim (Empty.elim : Empty → M) (Fin.snoc Fin.elim0 x)) = x := by
-  show (Fin.snoc (Fin.elim0 : Fin 0 → M) x : Fin 1 → M) (Fin.last 0) = x
+  change (Fin.snoc (Fin.elim0 : Fin 0 → M) x : Fin 1 → M) (Fin.last 0) = x
   exact Fin.snoc_last _ _
 
 end RealizeHelpers
@@ -235,7 +235,7 @@ theorem realize_ladderSentence_iff :
         Sentenceω.Realize (topC α) M ∧ Sentenceω.Realize (nestedC α) M ∧
         Sentenceω.Realize (limitC α) M ∧ Sentenceω.Realize (predC α) M ∧
         Sentenceω.Realize (extC α) M) := by
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
+    change BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
     rw [ladderSentence, BoundedFormulaω.realize_iInf]
     constructor
     · intro h
@@ -253,13 +253,13 @@ theorem realize_ladderSentence_iff :
   -- per-group semantic characterizations
   have hbaseIn : Sentenceω.Realize (baseInC α) M ↔
       ∀ n : ℕ, Level α ⊥ (constVal α n : M) := by
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
+    change BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
     rw [baseInC, BoundedFormulaω.realize_iInf]
     refine forall_congr' fun n => ?_
     rw [realize_levelAtom, realize_const]
   have hbaseOut : Sentenceω.Realize (baseOutC α) M ↔
       ∀ x : M, Level α ⊥ x → ∃ n, x = constVal α n := by
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
+    change BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
     rw [baseOutC, BoundedFormulaω.realize_all]
     refine forall_congr' fun x => ?_
     rw [BoundedFormulaω.realize_imp, realize_levelAtom, BoundedFormulaω.realize_iSup]
@@ -268,14 +268,14 @@ theorem realize_ladderSentence_iff :
     · rw [BoundedFormulaω.realize_equal, realize_const,
         realize_bvar1 x]
   have htop : Sentenceω.Realize (topC α) M ↔ ∀ x : M, Level α ⊤ x := by
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
+    change BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
     rw [topC, BoundedFormulaω.realize_all]
     refine forall_congr' fun x => ?_
     rw [realize_levelAtom,
       realize_bvar1 x]
   have hnested : Sentenceω.Realize (nestedC α) M ↔
       ∀ {i j : Index α}, i < j → ∀ x : M, Level α i x → Level α j x := by
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
+    change BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
     rw [nestedC, BoundedFormulaω.realize_ciInf]
     constructor
     · intro h i j hij x
@@ -292,7 +292,7 @@ theorem realize_ladderSentence_iff :
   have hlimit : Sentenceω.Realize (limitC α) M ↔
       ∀ {j : Index α}, Order.IsSuccLimit j → ∀ x : M,
         Level α j x → ∃ i < j, Level α i x := by
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
+    change BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
     rw [limitC, BoundedFormulaω.realize_ciInf]
     constructor
     · intro h j hj x
@@ -322,18 +322,18 @@ theorem realize_ladderSentence_iff :
   have hsn20 : ∀ x y : M, (Fin.snoc (Fin.snoc (Fin.elim0 : Fin 0 → M) x) y : Fin 2 → M) 0
       = x := by
     intro x y
-    show (Fin.snoc (Fin.snoc Fin.elim0 x) y : Fin 2 → M) (Fin.castSucc (Fin.last 0)) = x
+    change (Fin.snoc (Fin.snoc Fin.elim0 x) y : Fin 2 → M) (Fin.castSucc (Fin.last 0)) = x
     rw [Fin.snoc_castSucc]
     exact Fin.snoc_last _ _
   have hsn21 : ∀ x y : M, (Fin.snoc (Fin.snoc (Fin.elim0 : Fin 0 → M) x) y : Fin 2 → M) 1
       = y := by
     intro x y
-    show (Fin.snoc (Fin.snoc Fin.elim0 x) y : Fin 2 → M) (Fin.last 1) = y
+    change (Fin.snoc (Fin.snoc Fin.elim0 x) y : Fin 2 → M) (Fin.last 1) = y
     exact Fin.snoc_last _ _
   have hpred : Sentenceω.Realize (predC α) M ↔
       ∀ {i j : Index α}, i ⋖ j → ∀ x y : M,
         Level α j x → Edge α y x → Level α i y := by
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
+    change BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
     rw [predC, BoundedFormulaω.realize_ciInf]
     have hstep : ∀ (p : {p : Index α × Index α // p.1 ⋖ p.2}),
         (BoundedFormulaω.all (BoundedFormulaω.all
@@ -357,7 +357,7 @@ theorem realize_ladderSentence_iff :
       exact (hstep p).mpr (h p.2)
   have hext : Sentenceω.Realize (extC α) M ↔
       ∀ y z : M, (∀ x : M, Edge α x y ↔ Edge α x z) → y = z := by
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
+    change BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
     rw [extC, BoundedFormulaω.realize_all]
     refine forall_congr' fun y => ?_
     rw [BoundedFormulaω.realize_all]
@@ -369,21 +369,21 @@ theorem realize_ladderSentence_iff :
     have hsn30 : ∀ x : M,
         (Fin.snoc (Fin.snoc (Fin.snoc (Fin.elim0 : Fin 0 → M) y) z) x : Fin 3 → M) 0 = y := by
       intro x
-      show (Fin.snoc (Fin.snoc (Fin.snoc Fin.elim0 y) z) x : Fin 3 → M)
+      change (Fin.snoc (Fin.snoc (Fin.snoc Fin.elim0 y) z) x : Fin 3 → M)
         (Fin.castSucc (Fin.castSucc (Fin.last 0))) = y
       rw [Fin.snoc_castSucc, Fin.snoc_castSucc]
       exact Fin.snoc_last _ _
     have hsn31 : ∀ x : M,
         (Fin.snoc (Fin.snoc (Fin.snoc (Fin.elim0 : Fin 0 → M) y) z) x : Fin 3 → M) 1 = z := by
       intro x
-      show (Fin.snoc (Fin.snoc (Fin.snoc Fin.elim0 y) z) x : Fin 3 → M)
+      change (Fin.snoc (Fin.snoc (Fin.snoc Fin.elim0 y) z) x : Fin 3 → M)
         (Fin.castSucc (Fin.last 1)) = z
       rw [Fin.snoc_castSucc]
       exact Fin.snoc_last _ _
     have hsn32 : ∀ x : M,
         (Fin.snoc (Fin.snoc (Fin.snoc (Fin.elim0 : Fin 0 → M) y) z) x : Fin 3 → M) 2 = x := by
       intro x
-      show (Fin.snoc (Fin.snoc (Fin.snoc Fin.elim0 y) z) x : Fin 3 → M) (Fin.last 2) = x
+      change (Fin.snoc (Fin.snoc (Fin.snoc Fin.elim0 y) z) x : Fin 3 → M) (Fin.last 2) = x
       exact Fin.snoc_last _ _
     rw [BoundedFormulaω.realize_imp, BoundedFormulaω.realize_imp,
       BoundedFormulaω.realize_equal]

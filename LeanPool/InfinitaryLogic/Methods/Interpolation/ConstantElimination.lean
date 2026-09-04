@@ -127,7 +127,9 @@ theorem entails_genEx_of_entails
         ↔ @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 ψ Empty.elim Fin.elim0 :=
     fun ψ => ambient_realize_iff_wc (S := instM) ψ Empty.elim Fin.elim0
   -- Witness from `∃x φ(x)`.
-  have hφ : @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 (genEx j φc) Empty.elim Fin.elim0 :=
+  have hφ :
+      @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 (genEx j φc)
+        Empty.elim Fin.elim0 :=
     (bridge _).mp (hmodel _ (Set.mem_insert _ _))
   obtain ⟨x, hx⟩ := (realize_genEx base h j φc).mp hφ
   -- The `Γ`-part survives reinterpretation off `j`.
@@ -166,7 +168,7 @@ theorem entails_not_genEx_of_entails_not
         ↔ @BoundedFormulaω.Realize L[[ℕ]] M (wc base h) Empty 0 ψ Empty.elim Fin.elim0 :=
     fun ψ => ambient_realize_iff_wc (S := instM) ψ Empty.elim Fin.elim0
   -- Goal: `¬ ∃x σ(x)`.
-  show @Sentenceω.Realize L[[ℕ]] (genEx j σc).not M instM
+  change @Sentenceω.Realize L[[ℕ]] (genEx j σc).not M instM
   -- apply the negation lemma rather than unfolding `Sentenceω.Realize` first: unfolding leaves the
   -- goal in `SentenceInf.Realize`, which `rw` cannot key the alias-stated lemma against
   refine (BoundedFormulaω.realize_not (genEx j σc)).mpr ?_

@@ -28,21 +28,6 @@ open FirstOrder Structure
 
 variable {L : Language.{0, 0}} {M : Type} [L.Structure M] {lt : L.Relations 2}
 
-/-- **Derived injectivity**: a relation-preserving map from `ℚ` into a structure whose
-interpreted relation is irreflexive is injective — if `q < r` collided, preservation would
-put the collision point below itself. -/
-theorem RelPreserving.injective_of_irreflexive {f : ℚ → M} (hf : RelPreserving lt f)
-    (hirr : ∀ x : M, ¬ RelMap lt ![x, x]) : Function.Injective f := by
-  intro q r hqr
-  by_contra hne
-  rcases lt_or_gt_of_ne hne with hlt | hgt
-  · have h := hf q r hlt
-    rw [hqr] at h
-    exact hirr (f r) h
-  · have h := hf r q hgt
-    rw [hqr] at h
-    exact hirr (f r) h
-
 /-- **The descending sequence**: the negative rationals turn a relation-preserving map into
 an infinite strictly descending sequence for the interpreted relation. -/
 theorem RelPreserving.descending {f : ℚ → M} (hf : RelPreserving lt f) (n : ℕ) :

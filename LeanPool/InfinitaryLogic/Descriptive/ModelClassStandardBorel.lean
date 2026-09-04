@@ -26,21 +26,12 @@ namespace Language
 
 variable {L : Language.{u, v}} [L.IsRelational] [Countable (Σ l, L.Relations l)]
 
-/-- `ModelsOf φ` is clopenable in the structure space: there exists a finer Polish
-topology making it both open and closed. This follows from `ModelsOf φ` being
-measurable in a Polish + Borel space. -/
-theorem modelsOf_isClopenable (φ : L.Sentenceω) :
-    PolishSpace.IsClopenable (ModelsOf φ) :=
-  (modelsOf_measurableSet φ).isClopenable
-
 /-- The subtype of coded ℕ-models of φ is standard Borel: it inherits a
 standard Borel structure as a measurable subspace of the standard Borel
 structure space. -/
 instance modelsOf_standardBorel (φ : L.Sentenceω) :
     StandardBorelSpace ↥(ModelsOf φ) :=
   (modelsOf_measurableSet φ).standardBorel
-
-
 
 end Language
 

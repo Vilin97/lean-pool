@@ -253,10 +253,6 @@ def localStage (s₀ : LocalStage) : ℕ → LocalStage
   | 0 => s₀
   | k + 1 => (localStage s₀ k).succ
 
-
-
-
-
 /-! ### Projections consumed by the later local-colimit chunk -/
 
 /-- The **stage-`k` local language** `L_k`. -/
@@ -265,10 +261,6 @@ def Llocal (s₀ : LocalStage) (k : ℕ) : Language.{0, 0} := (localStage s₀ k
 /-- The **stage-`k` local family** `Γ_k`. -/
 def Γlocal (s₀ : LocalStage) (k : ℕ) : Set (Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) :=
   (localStage s₀ k).Gamma
-
-
-
-
 
 /-- The **stage-`k` → stage-`(k+1)` language inclusion**: the left injection of the Skolemizing sum.
 The later colimit's cocone is assembled from these. -/

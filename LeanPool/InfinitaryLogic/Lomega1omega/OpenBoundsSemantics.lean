@@ -138,7 +138,6 @@ theorem realize_relabel_insertLastBound_zero {n : ℕ} (φ : L.Formulaω (Fin (n
   have h := realize_relabel_insertLastBound (k := 0) φ v xs
   rwa [show (xs ∘ finSuccShift : Fin 0 → N) = Fin.elim0 from Fin.eq_elim0 _] at h
 
-
 /-- Term-level semantic roundtrip: evaluating a relabeled term with `Sum.elim xs Fin.elim0`
 equals evaluating the original term with `Sum.elim Empty.elim xs`. -/
 private theorem term_realize_openBounds {M : Type*} [L.Structure M]
@@ -167,13 +166,13 @@ theorem realize_openBounds {M : Type*} [L.Structure M] :
   | falsum => intro xs; rfl
   | equal t₁ t₂ =>
     intro xs
-    show (t₁.relabel (Sum.elim Empty.elim Sum.inl)).realize (Sum.elim xs Fin.elim0) =
+    change (t₁.relabel (Sum.elim Empty.elim Sum.inl)).realize (Sum.elim xs Fin.elim0) =
          (t₂.relabel (Sum.elim Empty.elim Sum.inl)).realize (Sum.elim xs Fin.elim0) ↔
          t₁.realize (Sum.elim Empty.elim xs) = t₂.realize (Sum.elim Empty.elim xs)
     rw [term_realize_openBounds, term_realize_openBounds]
   | rel R ts =>
     intro xs
-    show (Structure.RelMap R fun i =>
+    change (Structure.RelMap R fun i =>
          (Term.relabel (Sum.elim Empty.elim Sum.inl) (ts i)).realize (Sum.elim xs Fin.elim0)) ↔
          Structure.RelMap R fun i => (ts i).realize (Sum.elim Empty.elim xs)
     simp_rw [term_realize_openBounds]
@@ -192,7 +191,7 @@ theorem realize_openBounds {M : Type*} [L.Structure M] :
   | all φ ih =>
     intro xs
     -- `φ` is induction-bound, so it carries the inductive type and needs the qualified name
-    show Formulaω.Realize (((BoundedFormulaω.openBounds φ).relabel insertLastBound).all) xs ↔
+    change Formulaω.Realize (((BoundedFormulaω.openBounds φ).relabel insertLastBound).all) xs ↔
          (BoundedFormulaω.all φ).Realize Empty.elim xs
     -- `FormulaInf.Realize` is a plain definition upstream, not a reducible abbreviation, so a
     -- lemma stated at the bounded-formula level cannot be `rw`-keyed against this goal; both

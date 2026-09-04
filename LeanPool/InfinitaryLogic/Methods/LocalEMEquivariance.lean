@@ -63,7 +63,7 @@ private theorem locJSupport_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J]].T
   induction t with
   | var x => simp [locJRename, LHom.onTerm, locJSupport]
   | @func l f ts ih =>
-    show locJSupport Λ J (Term.func ((Λ.lhomWithConstantsMap (e : J → J)).onFunction f)
+    change locJSupport Λ J (Term.func ((Λ.lhomWithConstantsMap (e : J → J)).onFunction f)
       fun i => locJRename Λ J e (ts i)) = _
     rw [locJSupport, locJSupport, Finset.image_union, locJConstOf_lhomWithConstantsMap]
     congr 1
@@ -98,14 +98,14 @@ private theorem constantsToVars_locJRename (e : J ≃o J) {α : Type} (t : Λ[[J
   | @func l f ts ih =>
     rcases l with _ | l
     · rcases f with f' | j
-      · show Term.func f' (fun i => (locJRename Λ J e (ts i)).constantsToVars)
+      · change Term.func f' (fun i => (locJRename Λ J e (ts i)).constantsToVars)
           = Term.relabel _ (Term.func f' fun i => (ts i).constantsToVars)
         rw [Term.relabel]
         congr 1
         exact funext fun i => ih i
       · rfl
     · rcases f with f' | c
-      · show Term.func f' (fun i => (locJRename Λ J e (ts i)).constantsToVars)
+      · change Term.func f' (fun i => (locJRename Λ J e (ts i)).constantsToVars)
           = Term.relabel _ (Term.func f' fun i => (ts i).constantsToVars)
         rw [Term.relabel]
         congr 1
@@ -123,7 +123,7 @@ private theorem locDeepInterp_locJRename {M : Type} [Λ.Structure M] (a : ℕ �
   congr 1
   funext x
   rcases x with j | ee
-  · show a (d + deepRank J (S.image e) (e j)) = a (d + deepRank J S j)
+  · change a (d + deepRank J (S.image e) (e j)) = a (d + deepRank J S j)
     rw [deepRank_image_orderIso]
   · exact ee.elim
 
@@ -210,16 +210,6 @@ theorem LocalEMContext.carrierEquiv_mkClass (ctx : LocalEMContext Λ J (M := M))
     (e : J ≃o J) (t : Λ[[J]].Term Empty) :
     ctx.carrierEquiv e (ctx.mkClass (t := t)) = ctx.mkClass (t := locJRename Λ J e t) :=
   rfl
-
-/-- **The skeleton-class equation**: the descended automorphism sends the class of the skeleton
-constant `c_j` to the class of `c_{e j}`. -/
-private theorem LocalEMContext.carrierEquiv_const (ctx : LocalEMContext Λ J (M := M))
-    (e : J ≃o J) (j : J) :
-    ctx.carrierEquiv e
-        (ctx.mkClass (t := Term.func (Sum.inr j : Λ[[J]].Functions 0) Fin.elim0))
-      = ctx.mkClass (t := Term.func (Sum.inr (e j) : Λ[[J]].Functions 0) Fin.elim0) := by
-  rw [ctx.carrierEquiv_mkClass]
-  exact congrArg (fun t => ctx.mkClass (t := t)) (congrArg _ (funext fun i => i.elim0))
 
 /-- Equivariance of function interpretation under the language renaming induced by `e`: the
 targeted expanded-language fact (the base-reduct automorphism consumes its `Sum.inl` case). -/

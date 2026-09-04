@@ -38,7 +38,8 @@ universe u
 
 /-- The countable-sum core: a countable sum of cardinals each `≤ κ` is `≤ κ`, for infinite
 `κ`. -/
-private theorem sum_le_of_countable {ι : Type u} [Countable ι] {f : ι → Cardinal.{u}} {κ : Cardinal.{u}}
+private theorem sum_le_of_countable {ι : Type u} [Countable ι]
+    {f : ι → Cardinal.{u}} {κ : Cardinal.{u}}
     (hκ : Cardinal.aleph0 ≤ κ) (hf : ∀ i, f i ≤ κ) : Cardinal.sum f ≤ κ := by
   calc Cardinal.sum f ≤ Cardinal.sum (fun _ : ι => κ) := Cardinal.sum_le_sum _ _ hf
     _ = Cardinal.mk ι * κ := Cardinal.sum_const' _ _

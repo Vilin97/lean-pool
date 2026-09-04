@@ -53,7 +53,7 @@ theorem lopez_escobar {B : Set (StructureSpace L)}
     obtain ⟨d, hd, hdc⟩ := subset_pcClass .left T₀ hT₀ hc
     let : (graphLanguage (KLang L)).Structure ℕ := d.toStructure
     have hθ := hpos ℕ hd
-    show @Sentenceω.Realize L (θ₀.mapLanguage (sharedToBase L T₀ T₁)) ℕ c.toStructure
+    change @Sentenceω.Realize L (θ₀.mapLanguage (sharedToBase L T₀ T₁)) ℕ c.toStructure
     rw [← hdc]
     exact (realize_sharedToBase T₀ T₁ θ₀ d).mp hθ
   · -- (5b) backward: a code outside `B` carries a right model, on which `θ₀` fails

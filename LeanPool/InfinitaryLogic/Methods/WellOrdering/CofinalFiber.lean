@@ -27,7 +27,7 @@ open Cardinal Ordinal
 
 /-- **The cofinal-fiber lemma**: a countably-labelled assignment on the ordinals takes some
 label unboundedly often below `ω₁ = (Cardinal.aleph 1).ord`. -/
-theorem exists_unbounded_fiber {ι : Type} [Countable ι] [Nonempty ι]
+theorem exists_unbounded_fiber {ι : Type} [Countable ι] [_nonemptyι : Nonempty ι]
     (f : Ordinal.{0} → ι) :
     ∃ i : ι, ∀ β : Ordinal.{0}, β < (Cardinal.aleph 1).ord →
       ∃ α : Ordinal.{0}, β ≤ α ∧ α < (Cardinal.aleph 1).ord ∧ f α = i := by

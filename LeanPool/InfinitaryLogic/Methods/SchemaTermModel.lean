@@ -48,7 +48,8 @@ def schemaEqSentence (t u : (localColim s₀)[[ℕ]].Term Empty) :
       ((schemaSupport t u).orderEmbOfFin rfl)).mapLanguage
     (((localColim s₀)[[ℕ]]).lhomWithConstants ℕ)
 
-/-- `schemaEqSentence t u` is a schema-universe member (its de-substituted atom is in `ΓEMlocal`). -/
+/-- `schemaEqSentence t u` is a schema-universe member (its de-substituted atom is in
+  `ΓEMlocal`). -/
 private theorem schemaEqSentence_mem_universe (t u : (localColim s₀)[[ℕ]].Term Empty) :
     (⟨schemaEqSentence t u, hasFiniteConstSupport_mapLanguage_templateSentence _ _⟩ :
       FSentence (L'' := localColim s₀) (J := ℕ)) ∈ schemaFSentenceUniverse s₀ :=
@@ -161,7 +162,8 @@ theorem realize_schemaEqSentence_iff (σ h : ℕ → M) (t u : (localColim s₀)
     (locDeTermFin_realize_constInterp_nat (S := schemaSupport t u) σ u Finset.subset_union_right))
 
 /-- **Symmetry.** `t ≈ u → u ≈ t`: a body realizing `t = u` and `¬(u = t)` contradicts `Eq.symm`. -/
-private theorem schemaTermEq_symm {t u : (localColim s₀)[[ℕ]].Term Empty} (h : SchemaTermEq hM t u) :
+private theorem schemaTermEq_symm {t u : (localColim s₀)[[ℕ]].Term Empty} (h : SchemaTermEq
+  hM t u) :
     SchemaTermEq hM u t := by
   rcases (schemaCompletionTheorySpec hM).complete_on_universe _ (schemaEqSentence_mem_universe u t)
     with hpos | hneg
@@ -201,7 +203,8 @@ private theorem schemaTermEq_trans {t u v : (localColim s₀)[[ℕ]].Term Empty}
     have hb := hbody (schemaEqSentence u v)
       (by rw [Finset.mem_insert]; exact Or.inr (Finset.mem_insert_self _ _))
     have hc := hbody (schemaEqSentence t v).not (by
-      rw [Finset.mem_insert, Finset.mem_insert]; exact Or.inr (Or.inr (Finset.mem_singleton_self _)))
+      rw [Finset.mem_insert, Finset.mem_insert]; exact Or.inr (Or.inr
+        (Finset.mem_singleton_self _)))
     rw [realize_schemaEqSentence_iff] at ha hb
     rw [realizeWith_not, realize_schemaEqSentence_iff] at hc
     exact hc (ha.trans hb)
@@ -347,8 +350,6 @@ abbrev SchemaTermCarrier.mk (t : (localColim s₀)[[ℕ]].Term Empty) :
     SchemaTermCarrier (s₀ := s₀) (M := M) hM :=
   Quotient.mk (schemaTermSetoid hM) t
 
-
-
 /-- Two terms have the same class iff the completed theory contains their equality sentence. -/
 theorem SchemaTermCarrier.mk_eq_mk_iff {t u : (localColim s₀)[[ℕ]].Term Empty} :
     SchemaTermCarrier.mk hM t = SchemaTermCarrier.mk hM u ↔ SchemaTermEq hM t u := by
@@ -391,7 +392,7 @@ theorem schemaTerm_realize_eq_mk (t : (localColim s₀)[[ℕ]].Term Empty) :
   induction t with
   | var x => exact x.elim
   | func f ts ih =>
-    show Structure.funMap f (fun i => (ts i).realize Empty.elim) = _
+    change Structure.funMap f (fun i => (ts i).realize Empty.elim) = _
     rw [funext ih]
     exact schemaTerm_funMap_mk hM f ts
 
@@ -403,7 +404,7 @@ theorem schemaTerm_relMap_mk_iff {l : ℕ} (R : (localColim s₀).Relations l)
         (Sum.inl R : (localColim s₀)[[ℕ]].Relations l)
         (fun i => SchemaTermCarrier.mk hM (ts i)) ↔
       SchemaTermRel hM R ts := by
-  show SchemaTermRel hM R (fun i => (SchemaTermCarrier.mk hM (ts i)).out) ↔ _
+  change SchemaTermRel hM R (fun i => (SchemaTermCarrier.mk hM (ts i)).out) ↔ _
   constructor
   · exact schemaTermRel_congr hM R fun i => SchemaTermCarrier.mk_out_eq hM (ts i)
   · exact schemaTermRel_congr hM R fun i =>

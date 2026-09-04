@@ -130,7 +130,7 @@ theorem baseFunctionsIn_instConst_subset (c : ℕ) (φ : L[[ℕ]].BoundedFormula
     BoundedFormulaω.functionsIn_subst (fun _ : Fin 1 => constTerm (L' := L) c) φ.openBounds
   have hmem := hsub hs
   rw [BoundedFormulaω.functionsIn_openBounds] at hmem
-  show (⟨s.1, Sum.inl s.2⟩ : Σ n, L[[ℕ]].Functions n) ∈ (BoundedFormulaω.all φ).functionsIn
+  change (⟨s.1, Sum.inl s.2⟩ : Σ n, L[[ℕ]].Functions n) ∈ (BoundedFormulaω.all φ).functionsIn
   rcases hmem with h | h
   · exact h
   · exfalso
@@ -145,7 +145,7 @@ theorem baseFunctionsIn_instConst_subset (c : ℕ) (φ : L[[ℕ]].BoundedFormula
 theorem baseRelationsIn_instConst_subset (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1) :
     (instConst c φ).baseRelationsIn ⊆ (BoundedFormulaω.all φ).baseRelationsIn := by
   have h1 : (instConst c φ).relationsIn = (BoundedFormulaω.all φ).relationsIn := by
-    show ((φ.openBounds).subst _).relationsIn = _
+    change ((φ.openBounds).subst _).relationsIn = _
     rw [relationsIn_subst_eq, relationsIn_openBounds_eq]; rfl
   intro s hs
   simp only [BoundedFormulaω.baseRelationsIn, Set.mem_ofPred_eq, h1] at hs ⊢

@@ -57,7 +57,8 @@ theorem Term.functionsIn_subst (tf : α → L.Term β) (t : L.Term α) :
     rw [Set.insert_subset_iff]
     refine ⟨Set.mem_union_left _ (Set.mem_insert _ _), Set.iUnion_subset fun i => ?_⟩
     exact (ih i).trans (Set.union_subset_union
-      ((Set.subset_iUnion (fun i => (ts i).functionsIn) i).trans (Set.subset_insert _ _)) subset_rfl)
+      ((Set.subset_iUnion (fun i => (ts i).functionsIn) i).trans (Set.subset_insert _ _))
+        subset_rfl)
 
 private theorem BoundedFormulaω.functionsIn_castLE {m n : ℕ} (h : m ≤ n)
     (φ : L.BoundedFormulaω α m) : (φ.castLE h).functionsIn = φ.functionsIn := by
@@ -116,7 +117,8 @@ theorem BoundedFormulaω.functionsIn_subst (tf : α → L.Term β) :
       (φ.subst tf).functionsIn ⊆ φ.functionsIn ∪ ⋃ a, (tf a).functionsIn := by
   intro k φ
   induction φ with
-  | falsum => simp only [BoundedFormulaω.subst, BoundedFormulaω.functionsIn]; exact Set.empty_subset _
+  | falsum => simp only [BoundedFormulaω.subst, BoundedFormulaω.functionsIn]; exact
+    Set.empty_subset _
   | equal t₁ t₂ =>
     simp only [BoundedFormulaω.subst, BoundedFormulaω.functionsIn]
     refine Set.union_subset ?_ ?_ <;>
@@ -149,11 +151,13 @@ theorem BoundedFormulaω.functionsIn_subst (tf : α → L.Term β) :
   | iSup φs ih =>
     simp only [BoundedFormulaω.subst, BoundedFormulaω.functionsIn]
     exact Set.iUnion_subset fun i => (ih i).trans
-      (Set.union_subset_union_left _ (Set.subset_iUnion (fun i => BoundedFormulaω.functionsIn (φs i)) i))
+      (Set.union_subset_union_left _ (Set.subset_iUnion (fun i =>
+        BoundedFormulaω.functionsIn (φs i)) i))
   | iInf φs ih =>
     simp only [BoundedFormulaω.subst, BoundedFormulaω.functionsIn]
     exact Set.iUnion_subset fun i => (ih i).trans
-      (Set.union_subset_union_left _ (Set.subset_iUnion (fun i => BoundedFormulaω.functionsIn (φs i)) i))
+      (Set.union_subset_union_left _ (Set.subset_iUnion (fun i =>
+        BoundedFormulaω.functionsIn (φs i)) i))
 
 theorem BoundedFormulaω.functionsIn_openBounds :
     ∀ {n : ℕ} (φ : L.BoundedFormulaω Empty n),
@@ -178,39 +182,33 @@ theorem Term.functionsIn_finite (t : L.Term α) : t.functionsIn.Finite := by
   | var x => simp [Term.functionsIn]
   | func f ts ih => exact (Set.finite_iUnion ih).insert _
 
-
-
-
-
 /-- Negation does not change the mentioned function symbols (`not` is `imp · ⊥`). -/
 theorem BoundedFormulaω.functionsIn_not {n : ℕ} (φ : L.BoundedFormulaω α n) :
     (φ.not).functionsIn = φ.functionsIn := by
-  show φ.functionsIn ∪ (BoundedFormulaω.falsum : L.BoundedFormulaω α n).functionsIn = _
+  change φ.functionsIn ∪ (BoundedFormulaω.falsum : L.BoundedFormulaω α n).functionsIn = _
   simp only [BoundedFormulaω.functionsIn, Set.union_empty]
 
 /-- Existential quantification (`¬∀¬`) does not change the mentioned function symbols. -/
 theorem BoundedFormulaω.functionsIn_ex {n : ℕ} (φ : L.BoundedFormulaω α (n + 1)) :
     (φ.ex).functionsIn = φ.functionsIn := by
-  show (φ.not.all.not).functionsIn = _
+  change (φ.not.all.not).functionsIn = _
   rw [BoundedFormulaω.functionsIn_not]
-  show (φ.not).functionsIn = _
+  change (φ.not).functionsIn = _
   rw [BoundedFormulaω.functionsIn_not]
 
 /-- Negation does not change the mentioned relation symbols. -/
 theorem BoundedFormulaω.relationsIn_not {n : ℕ} (φ : L.BoundedFormulaω α n) :
     (φ.not).relationsIn = φ.relationsIn := by
-  show φ.relationsIn ∪ (BoundedFormulaω.falsum : L.BoundedFormulaω α n).relationsIn = _
+  change φ.relationsIn ∪ (BoundedFormulaω.falsum : L.BoundedFormulaω α n).relationsIn = _
   simp only [BoundedFormulaω.relationsIn, Set.union_empty]
 
 /-- Existential quantification does not change the mentioned relation symbols. -/
 theorem BoundedFormulaω.relationsIn_ex {n : ℕ} (φ : L.BoundedFormulaω α (n + 1)) :
     (φ.ex).relationsIn = φ.relationsIn := by
-  show (φ.not.all.not).relationsIn = _
+  change (φ.not.all.not).relationsIn = _
   rw [BoundedFormulaω.relationsIn_not]
-  show (φ.not).relationsIn = _
+  change (φ.not).relationsIn = _
   rw [BoundedFormulaω.relationsIn_not]
-
-
 
 /-- A finite existential block does not change the mentioned relation symbols. -/
 theorem BoundedFormulaω.relationsIn_existsBlock {n : ℕ} :
@@ -219,8 +217,6 @@ theorem BoundedFormulaω.relationsIn_existsBlock {n : ℕ} :
   | 0, _ => rfl
   | _ + 1, φ => (relationsIn_existsBlock φ.ex).trans (BoundedFormulaω.relationsIn_ex φ)
 
-
-
 /-- A finite universal block does not change the mentioned relation symbols. -/
 theorem BoundedFormulaω.relationsIn_forallBlock {n : ℕ} :
     ∀ {k : ℕ} (φ : L.BoundedFormulaω α (n + k)),
@@ -228,24 +224,18 @@ theorem BoundedFormulaω.relationsIn_forallBlock {n : ℕ} :
   | 0, _ => rfl
   | _ + 1, φ => relationsIn_forallBlock φ.all
 
-
-
 /-- The true formula mentions no relation symbols. -/
 private theorem BoundedFormulaω.relationsIn_top {n : ℕ} :
     (⊤ : L.BoundedFormulaω α n).relationsIn = ∅ :=
   Set.union_empty ∅
 
-
-
 /-- Binary conjunction collects both sides' relation symbols. -/
 theorem BoundedFormulaω.relationsIn_and {n : ℕ} (φ ψ : L.BoundedFormulaω α n) :
     (φ.and ψ).relationsIn = φ.relationsIn ∪ ψ.relationsIn := by
-  show ((φ.imp ψ.not).not).relationsIn = _
+  change ((φ.imp ψ.not).not).relationsIn = _
   rw [BoundedFormulaω.relationsIn_not]
-  show φ.relationsIn ∪ (ψ.not).relationsIn = _
+  change φ.relationsIn ∪ (ψ.not).relationsIn = _
   rw [BoundedFormulaω.relationsIn_not]
-
-
 
 /-- An `Encodable`-indexed conjunction collects the branches' relation symbols. -/
 theorem BoundedFormulaω.relationsIn_einf {ι : Type*} [Encodable ι] {n : ℕ}
@@ -277,7 +267,7 @@ private theorem Term.realize_congr_functionsIn {M : Type} (S S' : L.Structure M)
       @Term.realize L M S γ v t = @Term.realize L M S' γ v t
   | .var _, _, _ => rfl
   | .func f ts, hf, v => by
-    show @Structure.funMap L M S _ f _ = @Structure.funMap L M S' _ f _
+    change @Structure.funMap L M S _ f _ = @Structure.funMap L M S' _ f _
     rw [hf ⟨_, f⟩ (Set.mem_insert _ _)]
     exact congrArg _ (funext fun i => Term.realize_congr_functionsIn S S' (ts i)
       (fun p hp x => hf p (Set.mem_insert_of_mem _ (Set.mem_iUnion.mpr ⟨i, hp⟩)) x) v)
@@ -295,12 +285,12 @@ theorem BoundedFormulaω.realize_congr_symbolsIn {M : Type} (S S' : L.Structure 
       @BoundedFormulaω.Realize L M S α n φ v xs ↔ @BoundedFormulaω.Realize L M S' α n φ v xs
   | _, .falsum, _, _, _, _ => Iff.rfl
   | _, .equal t₁ t₂, hf, _, v, xs => by
-    show @Term.realize L M S _ _ t₁ = @Term.realize L M S _ _ t₂
+    change @Term.realize L M S _ _ t₁ = @Term.realize L M S _ _ t₂
       ↔ @Term.realize L M S' _ _ t₁ = @Term.realize L M S' _ _ t₂
     rw [Term.realize_congr_functionsIn S S' t₁ (fun p hp => hf p (Set.mem_union_left _ hp)),
       Term.realize_congr_functionsIn S S' t₂ (fun p hp => hf p (Set.mem_union_right _ hp))]
   | _, .rel R ts, hf, hr, v, xs => by
-    show @Structure.RelMap L M S _ R _ ↔ @Structure.RelMap L M S' _ R _
+    change @Structure.RelMap L M S _ R _ ↔ @Structure.RelMap L M S' _ R _
     rw [show (fun i => @Term.realize L M S _ _ (ts i))
         = (fun i => @Term.realize L M S' _ _ (ts i)) from funext fun i =>
           Term.realize_congr_functionsIn S S' (ts i)
@@ -535,19 +525,19 @@ theorem BoundedFormulaω.universalSigned_stripConsts {α : Type} (s : Bool) :
     | Sum.inr R => exact nomatch R
   | imp φ ψ ihφ ihψ =>
     intro h
-    show universalSigned (!s) _ ∧ universalSigned s _ ↔ _
+    change universalSigned (!s) _ ∧ universalSigned s _ ↔ _
     exact and_congr (ihφ (!s) _) (ihψ s _)
   | all φ ih =>
     intro h
-    show s = true ∧ universalSigned s _ ↔ _
+    change s = true ∧ universalSigned s _ ↔ _
     exact and_congr_right fun _ => ih s _
   | iSup φs ih =>
     intro h
-    show (∀ i, universalSigned s _) ↔ _
+    change (∀ i, universalSigned s _) ↔ _
     exact forall_congr' fun i => ih i s _
   | iInf φs ih =>
     intro h
-    show (∀ i, universalSigned s _) ↔ _
+    change (∀ i, universalSigned s _) ↔ _
     exact forall_congr' fun i => ih i s _
 
 /-- The `withConstants` inclusion is a left inverse of formula stripping. -/

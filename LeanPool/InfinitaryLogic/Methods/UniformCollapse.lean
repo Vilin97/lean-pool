@@ -81,7 +81,7 @@ private theorem Term.onTerm_uniformCollapse_eq {φ : L.Sentenceω} {α : Type} :
             (t.restrictSymbols (BoundedFormulaω.relationsIn φ) hF)
   | .var x, _ => rfl
   | .func f ts, h => by
-    show Term.func ((uniformCollapse φ).onFunction f)
+    change Term.func ((uniformCollapse φ).onFunction f)
         (fun i => (uniformCollapse φ).onTerm (ts i)) = _
     rw [show (uniformCollapse φ).onFunction f
         = Sum.inl ⟨f, h (Set.mem_insert _ _)⟩ from dite_eq_left (h (Set.mem_insert _ _))]
@@ -99,12 +99,12 @@ private theorem BoundedFormulaω.mapLanguage_uniformCollapse_eq {φ : L.Sentence
               (uniformLanguage φ).BoundedFormulaω α n)
   | _, .falsum, _, _ => rfl
   | _, .equal t u, hF, _ => by
-    show BoundedFormulaω.equal ((uniformCollapse φ).onTerm t) ((uniformCollapse φ).onTerm u) = _
+    change BoundedFormulaω.equal ((uniformCollapse φ).onTerm t) ((uniformCollapse φ).onTerm u) = _
     rw [Term.onTerm_uniformCollapse_eq t (fun _ hx => hF (Set.mem_union_left _ hx)),
       Term.onTerm_uniformCollapse_eq u (fun _ hx => hF (Set.mem_union_right _ hx))]
     rfl
   | _, .rel Rl ts, hF, hR => by
-    show BoundedFormulaω.rel ((uniformCollapse φ).onRelation Rl)
+    change BoundedFormulaω.rel ((uniformCollapse φ).onRelation Rl)
         (fun i => (uniformCollapse φ).onTerm (ts i)) = _
     rw [show (uniformCollapse φ).onRelation Rl
         = Sum.inl ⟨Rl, hR rfl⟩ from dite_eq_left (hR rfl)]
@@ -112,7 +112,7 @@ private theorem BoundedFormulaω.mapLanguage_uniformCollapse_eq {φ : L.Sentence
     exact Term.onTerm_uniformCollapse_eq (ts i)
       (fun _ hx => hF (Set.mem_iUnion.mpr ⟨i, hx⟩))
   | _, .imp ψ₁ ψ₂, hF, hR => by
-    show BoundedFormulaω.imp (ψ₁.mapLanguage (uniformCollapse φ))
+    change BoundedFormulaω.imp (ψ₁.mapLanguage (uniformCollapse φ))
         (ψ₂.mapLanguage (uniformCollapse φ)) = _
     rw [BoundedFormulaω.mapLanguage_uniformCollapse_eq ψ₁
         (fun _ hx => hF (Set.mem_union_left _ hx))
@@ -122,17 +122,17 @@ private theorem BoundedFormulaω.mapLanguage_uniformCollapse_eq {φ : L.Sentence
         (fun _ hx => hR (Set.mem_union_right _ hx))]
     rfl
   | _, .all ψ, hF, hR => by
-    show BoundedFormulaω.all (ψ.mapLanguage (uniformCollapse φ)) = _
+    change BoundedFormulaω.all (ψ.mapLanguage (uniformCollapse φ)) = _
     rw [BoundedFormulaω.mapLanguage_uniformCollapse_eq ψ hF hR]
     rfl
   | _, .iSup ψs, hF, hR => by
-    show BoundedFormulaω.iSup (fun i => (ψs i).mapLanguage (uniformCollapse φ)) = _
+    change BoundedFormulaω.iSup (fun i => (ψs i).mapLanguage (uniformCollapse φ)) = _
     refine congrArg _ (funext fun i => ?_)
     exact BoundedFormulaω.mapLanguage_uniformCollapse_eq (ψs i)
       (fun _ hx => hF (Set.mem_iUnion.mpr ⟨i, hx⟩))
       (fun _ hx => hR (Set.mem_iUnion.mpr ⟨i, hx⟩))
   | _, .iInf ψs, hF, hR => by
-    show BoundedFormulaω.iInf (fun i => (ψs i).mapLanguage (uniformCollapse φ)) = _
+    change BoundedFormulaω.iInf (fun i => (ψs i).mapLanguage (uniformCollapse φ)) = _
     refine congrArg _ (funext fun i => ?_)
     exact BoundedFormulaω.mapLanguage_uniformCollapse_eq (ψs i)
       (fun _ hx => hF (Set.mem_iUnion.mpr ⟨i, hx⟩))
@@ -165,7 +165,7 @@ private theorem hasArbLargeModels_mapLanguage_uniformCollapse {φ : L.Sentenceω
       (Empty.elim : Empty → M) Fin.elim0
     rw [BoundedFormulaω.mapLanguage_restrictSymbols] at h
     exact h.mp hφM
-  show BoundedFormulaω.Realize (φ.mapLanguage (uniformCollapse φ)) Empty.elim Fin.elim0
+  change BoundedFormulaω.Realize (φ.mapLanguage (uniformCollapse φ)) Empty.elim Fin.elim0
   rw [BoundedFormulaω.mapLanguage_uniformCollapse_eq φ (subset_refl _) (subset_refl _)]
   exact (BoundedFormulaω.realize_mapLanguage LHom.sumInl _ Empty.elim Fin.elim0).mpr h0
 

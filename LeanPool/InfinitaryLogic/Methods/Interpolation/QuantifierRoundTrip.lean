@@ -29,7 +29,7 @@ variable {L : Language.{0, 0}} {M : Type}
 /-- The constant `c_c` realizes to its interpretation `h c`. -/
 private theorem realize_constTerm (base : L.Structure M) (h : ℕ → M) (c : ℕ) (v : Empty → M) :
     @Term.realize L[[ℕ]] M (wc base h) Empty v (constTerm c) = h c := by
-  show @Structure.funMap L[[ℕ]] M (wc base h) 0 (Sum.inr c) _ = h c
+  change @Structure.funMap L[[ℕ]] M (wc base h) 0 (Sum.inr c) _ = h c
   rw [wc_funMap_inr]
 
 /-- Realizing the constant instance `ψ(c)` is realizing `ψ` at the constant's interpretation. -/
@@ -72,7 +72,7 @@ theorem realize_genEx_instConst_iff_ex (c : ℕ) (ψ : L[[ℕ]].BoundedFormulaω
     (M : Type) [S : L[[ℕ]].Structure M] :
     @Sentenceω.Realize L[[ℕ]] (genEx c (instConst c ψ)) M S
       ↔ @Sentenceω.Realize L[[ℕ]] ψ.ex M S := by
-  show @BoundedFormulaω.Realize L[[ℕ]] M S Empty 0 (genEx c (instConst c ψ)) Empty.elim Fin.elim0
+  change @BoundedFormulaω.Realize L[[ℕ]] M S Empty 0 (genEx c (instConst c ψ)) Empty.elim Fin.elim0
     ↔ @BoundedFormulaω.Realize L[[ℕ]] M S Empty 0 ψ.ex Empty.elim Fin.elim0
   rw [ambient_realize_iff_wc (S := S) (genEx c (instConst c ψ)) Empty.elim Fin.elim0,
     ambient_realize_iff_wc (S := S) ψ.ex Empty.elim Fin.elim0]

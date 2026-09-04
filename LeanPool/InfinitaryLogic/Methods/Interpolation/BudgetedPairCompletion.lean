@@ -36,7 +36,8 @@ variable {F₁ F₂ : Set (Σ n, L.Functions n)} {R₁ R₂ : Set (Σ n, L.Relat
 /-- **The completion endpoint.**  From a labelled root member, a Henkin-complete superset of the
 root pair.
 
-Stated with finite support of `r₂` rather than of `r₂.not`; the two are equal, but the former is what
+Stated with finite support of `r₂` rather than of `r₂.not`; the two are equal, but the
+former is what
 an interpolation consumer has to hand. -/
 theorem exists_henkinComplete_budgetedPairRoot {r₁ r₂ : L[[ℕ]].Sentenceω}
     (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁).Finite)

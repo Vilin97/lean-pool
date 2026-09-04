@@ -75,7 +75,8 @@ variable {M : Type} [(graphLanguage L).Structure M]
 /-- Totality realizes to: every argument tuple has an output related by `G_f`. -/
 theorem realize_graphTotality {n : ℕ} (f : L.Functions n) :
     Sentenceω.Realize (graphTotality f) M ↔
-      ∀ ws : Fin n → M, ∃ y : M, RelMap (L := graphLanguage L) (GraphRelation.graph f) (Fin.snoc ws y) := by
+      ∀ ws : Fin n → M, ∃ y : M,
+        RelMap (L := graphLanguage L) (GraphRelation.graph f) (Fin.snoc ws y) := by
   have htuple : ∀ (ws : Fin n → M) (ys : Fin 1 → M),
       (fun i => Term.realize
           -- the sentence semantics supplies the empty tuple as `default`; it is definitionally
@@ -93,9 +94,9 @@ theorem realize_graphTotality {n : ℕ} (f : L.Functions n) :
       exact Fin.append_right _ _ 0
     | cast j =>
       rw [Fin.snoc_castSucc, Fin.snoc_castSucc]
-      show Fin.append (Fin.append Fin.elim0 ws) ys (Fin.castAdd 1 (Fin.natAdd 0 j)) = ws j
+      change Fin.append (Fin.append Fin.elim0 ws) ys (Fin.castAdd 1 (Fin.natAdd 0 j)) = ws j
       rw [Fin.append_left, Fin.append_right]
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [graphTotality, BoundedFormulaω.realize_forallBlock]
   refine forall_congr' fun ws => ?_
   rw [BoundedFormulaω.realize_existsBlock]
@@ -127,20 +128,20 @@ theorem realize_graphFunctionality {n : ℕ} (f : L.Functions n) :
     cases i using Fin.lastCases with
     | last =>
       rw [Fin.snoc_last, Fin.snoc_last]
-      show Fin.append Fin.elim0 us (Fin.natAdd 0 (Fin.natAdd n b)) = us (Fin.natAdd n b)
+      change Fin.append Fin.elim0 us (Fin.natAdd 0 (Fin.natAdd n b)) = us (Fin.natAdd n b)
       exact Fin.append_right _ _ _
     | cast j =>
       rw [Fin.snoc_castSucc, Fin.snoc_castSucc]
-      show Fin.append Fin.elim0 us (Fin.natAdd 0 (Fin.castAdd 2 j)) = us (Fin.castAdd 2 j)
+      change Fin.append Fin.elim0 us (Fin.natAdd 0 (Fin.castAdd 2 j)) = us (Fin.castAdd 2 j)
       exact Fin.append_right _ _ _
   have hvar : ∀ (us : Fin (n + 2) → M) (b : Fin 2),
       Term.realize (Sum.elim (Empty.elim : Empty → M) (Fin.append default us))
         (Term.var (Sum.inr (Fin.natAdd 0 (Fin.natAdd n b))) :
           (graphLanguage L).Term (Empty ⊕ Fin (0 + (n + 2)))) = us (Fin.natAdd n b) := by
     intro us b
-    show Fin.append Fin.elim0 us (Fin.natAdd 0 (Fin.natAdd n b)) = us (Fin.natAdd n b)
+    change Fin.append Fin.elim0 us (Fin.natAdd 0 (Fin.natAdd n b)) = us (Fin.natAdd n b)
     exact Fin.append_right _ _ _
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [graphFunctionality, BoundedFormulaω.realize_forallBlock]
   constructor
   · intro h ws y z hy hz
@@ -163,9 +164,11 @@ theorem realize_graphFunctionality {n : ℕ} (f : L.Functions n) :
 /-- The bundle realizes iff both gates realize for every symbol of `F`. -/
 theorem realize_graphAxioms_iff (F : Set (Σ n, L.Functions n)) [Countable ↥F] :
     Sentenceω.Realize (graphAxioms F) M ↔
-      ∀ p : ↥F, Sentenceω.Realize (graphTotality p.1.2) M ∧ Sentenceω.Realize (graphFunctionality p.1.2) M := by
+      ∀ p : ↥F,
+        Sentenceω.Realize (graphTotality p.1.2) M ∧
+          Sentenceω.Realize (graphFunctionality p.1.2) M := by
   let : Encodable ↥F := Encodable.ofCountable _
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [graphAxioms, BoundedFormulaω.realize_einf]
   exact forall_congr' fun p => BoundedFormulaω.realize_and _ _
 
@@ -216,7 +219,7 @@ private theorem relationsIn_graphTotality {n : ℕ} (f : L.Functions n) :
 private theorem relationsIn_graphFunctionality {n : ℕ} (f : L.Functions n) :
     (graphFunctionality f).relationsIn = {⟨n + 1, GraphRelation.graph f⟩} := by
   rw [graphFunctionality, BoundedFormulaω.relationsIn_forallBlock]
-  show ({⟨n + 1, GraphRelation.graph f⟩} ∪ ({⟨n + 1, GraphRelation.graph f⟩} ∪ ∅) :
+  change ({⟨n + 1, GraphRelation.graph f⟩} ∪ ({⟨n + 1, GraphRelation.graph f⟩} ∪ ∅) :
     Set (Σ k, (graphLanguage L).Relations k)) = {⟨n + 1, GraphRelation.graph f⟩}
   rw [Set.union_empty, Set.union_self]
 
@@ -239,10 +242,5 @@ theorem relationsIn_graphAxioms (F : Set (Σ n, L.Functions n)) [Countable ↥F]
     exact ⟨p.1, p.2, rfl⟩
   · rintro ⟨s, hs, rfl⟩
     exact ⟨⟨s, hs⟩, rfl⟩
-
-/-- No function symbol occurs in the graph axioms (the graph language is relational). -/
-private theorem functionsIn_graphAxioms (F : Set (Σ n, L.Functions n)) [Countable ↥F] :
-    (graphAxioms F).functionsIn = ∅ :=
-  BoundedFormulaω.functionsIn_of_isRelational _
 
 end FirstOrder.Language

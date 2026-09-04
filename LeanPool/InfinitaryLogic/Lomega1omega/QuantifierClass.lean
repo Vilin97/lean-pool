@@ -48,16 +48,10 @@ def universalSigned : ∀ {n : ℕ}, Bool → L.BoundedFormulaω α n → Prop
 /-- `φ` is **universal** (`∀₁`): every quantifier occurrence is a positive `∀`. -/
 abbrev IsUniversal {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := universalSigned true φ
 
-/-- `φ` is **existential** (`∃₁`): no quantifier occurrence is a positive `∀`, i.e. every one is an
-existential. -/
-abbrev IsExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := universalSigned false φ
-
 /-! ## Constructor equations -/
 
 @[simp] theorem universalSigned_falsum {n : ℕ} (s : Bool) :
     universalSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α n) := trivial
-
-
 
 @[simp] theorem universalSigned_equal {n : ℕ} (s : Bool) (t₁ t₂ : L.Term (α ⊕ Fin n)) :
     universalSigned s (BoundedFormulaω.equal t₁ t₂) := trivial
@@ -80,43 +74,7 @@ abbrev IsExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := universa
 
 /-! ## The acceptance equations -/
 
-/-- Negation **exchanges** the two classes. -/
-@[simp] theorem universalSigned_not {n : ℕ} (s : Bool) (φ : L.BoundedFormulaω α n) :
-    universalSigned s φ.not ↔ universalSigned (!s) φ := by
-  show universalSigned (!s) φ ∧ universalSigned s
-    (BoundedFormulaω.falsum : L.BoundedFormulaω α n) ↔ _
-  simp
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-theorem not_isUniversal_ex {n : ℕ} (φ : L.BoundedFormulaω α (n + 1)) :
-    ¬ IsUniversal φ.ex := by
-  show ¬ universalSigned true (φ.not.all).not
-  simp
-
 /-! ## The derived connectives -/
-
-
-
-
-
-
-
-
-
-
 
 /-! ## Stability under the variable operations -/
 
@@ -127,18 +85,18 @@ private theorem universalSigned_castLE (s : Bool) :
   | _, _, _, .equal _ _ => Iff.rfl
   | _, _, _, .rel _ _ => Iff.rfl
   | _, _, h, .imp φ ψ => by
-    show universalSigned (!s) (φ.castLE h) ∧ universalSigned s (ψ.castLE h) ↔ _
+    change universalSigned (!s) (φ.castLE h) ∧ universalSigned s (ψ.castLE h) ↔ _
     rw [universalSigned_castLE _ h φ, universalSigned_castLE s h ψ]
     exact Iff.rfl
   | _, _, h, .all φ => by
-    show s = true ∧ universalSigned s (φ.castLE (Nat.succ_le_succ h)) ↔ _
+    change s = true ∧ universalSigned s (φ.castLE (Nat.succ_le_succ h)) ↔ _
     rw [universalSigned_castLE s (Nat.succ_le_succ h) φ]
     exact Iff.rfl
   | _, _, h, .iSup φs => by
-    show (∀ i, universalSigned s ((φs i).castLE h)) ↔ _
+    change (∀ i, universalSigned s ((φs i).castLE h)) ↔ _
     exact forall_congr' fun i => universalSigned_castLE s h (φs i)
   | _, _, h, .iInf φs => by
-    show (∀ i, universalSigned s ((φs i).castLE h)) ↔ _
+    change (∀ i, universalSigned s ((φs i).castLE h)) ↔ _
     exact forall_congr' fun i => universalSigned_castLE s h (φs i)
 
 /-- **Quantifier class is invariant under language maps.**  `mapLanguage` rewrites terms and symbol
@@ -152,16 +110,16 @@ theorem universalSigned_mapLanguage {L' : Language.{0, 0}} (g : L →ᴸ L') (s 
   | equal => exact Iff.rfl
   | rel => exact Iff.rfl
   | imp φ ψ ihφ ihψ =>
-    show universalSigned (!s) _ ∧ universalSigned s _ ↔ _
+    change universalSigned (!s) _ ∧ universalSigned s _ ↔ _
     exact and_congr (ihφ (!s)) (ihψ s)
   | all φ ih =>
-    show s = true ∧ universalSigned s _ ↔ _
+    change s = true ∧ universalSigned s _ ↔ _
     exact and_congr_right fun _ => ih s
   | iSup φs ih =>
-    show (∀ i, universalSigned s _) ↔ _
+    change (∀ i, universalSigned s _) ↔ _
     exact forall_congr' fun i => ih i s
   | iInf φs ih =>
-    show (∀ i, universalSigned s _) ↔ _
+    change (∀ i, universalSigned s _) ↔ _
     exact forall_congr' fun i => ih i s
 
 theorem universalSigned_relabel (s : Bool) (g : α → β ⊕ Fin n) :
@@ -173,17 +131,17 @@ theorem universalSigned_relabel (s : Bool) (g : α → β ⊕ Fin n) :
   | equal => exact Iff.rfl
   | rel => exact Iff.rfl
   | imp φ ψ ihφ ihψ =>
-    show universalSigned (!s) _ ∧ universalSigned s _ ↔ _
+    change universalSigned (!s) _ ∧ universalSigned s _ ↔ _
     exact and_congr (ihφ (!s)) (ihψ s)
   | all φ ih =>
-    show s = true ∧ universalSigned s _ ↔ _
+    change s = true ∧ universalSigned s _ ↔ _
     rw [universalSigned_castLE]
     exact and_congr_right fun _ => ih s
   | iSup φs ih =>
-    show (∀ i, universalSigned s _) ↔ _
+    change (∀ i, universalSigned s _) ↔ _
     exact forall_congr' fun i => ih i s
   | iInf φs ih =>
-    show (∀ i, universalSigned s _) ↔ _
+    change (∀ i, universalSigned s _) ↔ _
     exact forall_congr' fun i => ih i s
 
 theorem universalSigned_subst (s : Bool) :
@@ -193,18 +151,18 @@ theorem universalSigned_subst (s : Bool) :
   | _, .equal _ _, _ => Iff.rfl
   | _, .rel _ _, _ => Iff.rfl
   | _, .imp φ ψ, tf => by
-    show universalSigned (!s) (φ.subst tf) ∧ universalSigned s (ψ.subst tf) ↔ _
+    change universalSigned (!s) (φ.subst tf) ∧ universalSigned s (ψ.subst tf) ↔ _
     rw [universalSigned_subst _ φ tf, universalSigned_subst s ψ tf]
     exact Iff.rfl
   | _, .all φ, tf => by
-    show s = true ∧ universalSigned s (φ.subst tf) ↔ _
+    change s = true ∧ universalSigned s (φ.subst tf) ↔ _
     rw [universalSigned_subst s φ tf]
     exact Iff.rfl
   | _, .iSup φs, tf => by
-    show (∀ i, universalSigned s ((φs i).subst tf)) ↔ _
+    change (∀ i, universalSigned s ((φs i).subst tf)) ↔ _
     exact forall_congr' fun i => universalSigned_subst s (φs i) tf
   | _, .iInf φs, tf => by
-    show (∀ i, universalSigned s ((φs i).subst tf)) ↔ _
+    change (∀ i, universalSigned s ((φs i).subst tf)) ↔ _
     exact forall_congr' fun i => universalSigned_subst s (φs i) tf
 
 end BoundedFormulaω

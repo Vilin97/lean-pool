@@ -49,7 +49,8 @@ theorem toStructure_encodeViaEquiv_eq {M : Type*} [L.Structure M] {α : Type*}
 
 /-- The encoded structure via an equivalence satisfies the same sentences. -/
 theorem encodeViaEquiv_models {M : Type w} [L.Structure M] {α : Type w}
-    [Countable α] {φ : L.Sentenceω} (e : M ≃ α) (hφ : Sentenceω.Realize φ M) :
+    [_countableα : Countable α] {φ : L.Sentenceω} (e : M ≃ α)
+    (hφ : Sentenceω.Realize φ M) :
     @Sentenceω.Realize L φ α (encodeViaEquiv e).toStructure := by
   rw [toStructure_encodeViaEquiv_eq]
   let : L.Structure α := Equiv.inducedStructure e

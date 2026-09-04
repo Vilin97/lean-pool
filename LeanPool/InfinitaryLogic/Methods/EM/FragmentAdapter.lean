@@ -51,7 +51,6 @@ what cardinality amplification for `MorleyHanfTransfer` eventually needs;
 the residual step is extracting an indiscernible source sequence of length
 `I ≥ ℶ_ω₁` from a large model (the Erdős–Rado half, not addressed here). -/
 
-
 /-- **Generalized `realize_templateSentence`.**
 
 Like `realize_templateSentence` (`InfinitaryLogic/Methods/EM/Realization.lean:97`),
@@ -75,17 +74,12 @@ theorem realize_templateSentence_of_structure
             Fin.elim0 : L[[J]].Term Empty).realize (Empty.elim : Empty → N)) := by
   let : L.Structure N := (L.lhomWithConstants J).reduct N
   have : (L.lhomWithConstants J).IsExpansionOn N := LHom.isExpansionOn_reduct _ _
-  show BoundedFormulaω.Realize _ Empty.elim Fin.elim0 ↔ _
+  change BoundedFormulaω.Realize _ Empty.elim Fin.elim0 ↔ _
   rw [Lomega1omegaTemplate.templateSentence, BoundedFormulaω.realize_subst]
   exact (realize_openBounds _ _).trans
         (BoundedFormulaω.realize_mapLanguage _ _ _ _)
 
-
-
-
-
 /-! ### Morley–Hanf-oriented corollaries -/
-
 
 /-- The 2-ary Lω₁ω disequality formula `x₀ ≠ x₁`. -/
 def disEqFormula : L.BoundedFormulaω Empty 2 :=
@@ -105,10 +99,6 @@ def morleySeed (φ : L.Sentenceω) : ℕ → Σ n, L.BoundedFormulaω Empty n :=
   | 0 => ⟨0, φ⟩
   | 1 => ⟨2, disEqFormula⟩
   | _ + 2 => ⟨0, φ⟩
-
-
-
-
 
 /-- **The Morley seed needs no extraction**: ANY pairwise-distinct sequence is fully
 `Lω₁ω`-indiscernible on `Set.range (morleySeed φ)` — the arity-`0` members ignore their tuples,
@@ -144,91 +134,10 @@ theorem morleySeed_indiscernibleOn {M : Type*} [L.Structure M] (φ : L.Sentence�
     rw [show (a ∘ s : Fin 0 → M) = Fin.elim0 from funext fun p => p.elim0,
       show (a ∘ t : Fin 0 → M) = Fin.elim0 from funext fun p => p.elim0]
 
-
 /-! ### Restricted-indiscernibility variants
 
 These `_on` theorems take `IsLomega1omegaIndiscernibleOn a (Set.range s)`
 instead of the full `IsLomega1omegaIndiscernible a`, and state their
 conclusions against `(templateOfSeq a).truth` rather than `h.template.truth`. -/
-
-/-- **Finite satisfiability of the template theory**, as the named property.
-
-`Nonempty M` comes from the source sequence: `Infinite I` gives `Nonempty I`, and `a` carries
-it into `M`.  So no inhabitation hypothesis is needed here either. -/
-theorem IsLomega1omegaIndiscernibleOn.templateTheoryOfSeq_isFinitelySatisfiable
-    {I : Type w} [LinearOrder I] [Infinite I]
-    {M : Type} [L.Structure M] {a : I → M}
-    (s : ℕ → Σ n, L.BoundedFormulaω Empty n)
-    (h : IsLomega1omegaIndiscernibleOn a (Set.range s))
-    {J : Type u} [LinearOrder J] :
-    Theoryω.IsFinitelySatisfiable
-      ((templateOfSeq a : Lomega1omegaTemplate L).templateTheoryOfSeq s J) := by
-  intro F hFsub hFfinite
-  obtain ⟨σ, hσ⟩ := h.templateTheoryOfSeq_finitelySatisfiable s hFfinite hFsub
-  let : (constantsOn J).Structure M := constantsOn.structure σ
-  exact ⟨M, inferInstance, ⟨a (Classical.arbitrary I)⟩, hσ⟩
-
-/-- Compact-oracle adapter under restricted indiscernibility. -/
-theorem IsLomega1omegaIndiscernibleOn.templateTheoryOfSeq_model_of_compact
-    {I : Type w} [LinearOrder I] [Infinite I]
-    {M : Type} [L.Structure M] {a : I → M}
-    (s : ℕ → Σ n, L.BoundedFormulaω Empty n)
-    (h : IsLomega1omegaIndiscernibleOn a (Set.range s))
-    {J : Type u} [LinearOrder J]
-    (hCompact : Theoryω.OrdinaryCompactness L[[J]]) :
-    Theoryω.IsSatisfiable
-      ((templateOfSeq a : Lomega1omegaTemplate L).templateTheoryOfSeq s J) :=
-  hCompact _ (h.templateTheoryOfSeq_isFinitelySatisfiable s)
-
-
-/-- **EM stretching (sentence form, compact oracle, restricted source).** -/
-private theorem IsLomega1omegaIndiscernibleOn.stretch_restricted_of_compact
-    {I : Type w} [LinearOrder I] [Infinite I]
-    {M : Type} [L.Structure M] {a : I → M}
-    (s : ℕ → Σ n, L.BoundedFormulaω Empty n)
-    (h : IsLomega1omegaIndiscernibleOn a (Set.range s))
-    {J : Type u} [LinearOrder J]
-    (hCompact : Theoryω.OrdinaryCompactness L[[J]]) :
-    ∃ (N : Type) (_ : L[[J]].Structure N),
-      ∀ (i : ℕ) (t : Fin (s i).1 ↪o J),
-        Sentenceω.Realize (Lomega1omegaTemplate.templateSentence (s i).2 t) N ↔
-          (templateOfSeq a : Lomega1omegaTemplate L).truth (s i).2 := by
-  obtain ⟨N, _, _, hModel⟩ :=
-    h.templateTheoryOfSeq_model_of_compact s hCompact
-  refine ⟨N, inferInstance, ?_⟩
-  intro i t
-  have hmem : ⟨(s i).1, (s i).2⟩ ∈ Set.range s := ⟨i, rfl⟩
-  by_cases htruth : (templateOfSeq a : Lomega1omegaTemplate L).truth (s i).2
-  · refine ⟨fun _ => htruth, fun _ => ?_⟩
-    exact hModel _ ⟨(s i).1, (s i).2, t, hmem, Or.inl ⟨htruth, rfl⟩⟩
-  · refine ⟨fun hreal => ?_, fun hT => absurd hT htruth⟩
-    exact absurd hreal
-      (hModel _ ⟨(s i).1, (s i).2, t, hmem, Or.inr ⟨htruth, rfl⟩⟩)
-
-
-/-- **EM stretching (sequence form, compact oracle, restricted source).** -/
-theorem IsLomega1omegaIndiscernibleOn.stretch_restricted_sequence_of_compact
-    {I : Type w} [LinearOrder I] [Infinite I]
-    {M : Type} [L.Structure M] {a : I → M}
-    (s : ℕ → Σ n, L.BoundedFormulaω Empty n)
-    (h : IsLomega1omegaIndiscernibleOn a (Set.range s))
-    {J : Type u} [LinearOrder J]
-    (hCompact : Theoryω.OrdinaryCompactness L[[J]]) :
-    ∃ (N : Type) (_ : L[[J]].Structure N) (b : J → N),
-      letI : L.Structure N := (L.lhomWithConstants J).reduct N
-      ∀ (i : ℕ) (t : Fin (s i).1 ↪o J),
-        ((s i).2).Realize (Empty.elim : Empty → N) (b ∘ t) ↔
-          (templateOfSeq a : Lomega1omegaTemplate L).truth (s i).2 := by
-  obtain ⟨N, _inst, hBase⟩ :=
-    h.stretch_restricted_of_compact s hCompact
-  let b : J → N := fun j =>
-    (Term.func (Sum.inr j : L[[J]].Functions 0) Fin.elim0 : L[[J]].Term Empty).realize
-      (Empty.elim : Empty → N)
-  refine ⟨N, inferInstance, b, ?_⟩
-  let : L.Structure N := (L.lhomWithConstants J).reduct N
-  intro i t
-  have hBridge :=
-    realize_templateSentence_of_structure (L := L) (J := J) (N := N) (s i).2 t
-  exact hBridge.symm.trans (hBase i t)
 
 end FirstOrder.Language

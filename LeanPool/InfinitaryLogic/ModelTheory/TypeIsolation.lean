@@ -99,8 +99,6 @@ theorem realize_isolatingFormula_iff
     · rw [dite_eq_right h]
       exact (exists_separator (M := M) fun he => h he.symm).choose_spec.1 a htp
 
-
-
 /-! ## Universe regression
 
 These instantiate the characterization at a nonzero universe and at universe zero. They are

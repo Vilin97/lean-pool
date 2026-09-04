@@ -21,7 +21,7 @@ like Henkin constants, as ordinary auxiliary constants with no rank insertion).
 * `exists_insertNth_slot` — an unmarked rational has a slot at which inserting it keeps the
   marking enumeration strictly monotone (via the initial-segment characterization of the
   below-`q₀` marks).
-* `StarWitness.add_sentence` — the generic closure step: a sentence realized by the witness
+* `StarWitness.addSentence` — the generic closure step: a sentence realized by the witness
   whose rationals are already marked extends the remainder.
 * `StarWitness.mark_rat` — the composite rational-marking operation: an unmarked rational is
   re-pointed to an engine-provided chain point (`GapWitness.exists_insertNth`) at the strict-
@@ -152,7 +152,7 @@ private theorem exists_insertNth_slot {m : ℕ} {mark : Fin m → ℚ} (hm : Str
 
 /-- **Adding a realized, already-covered sentence**: a sentence realized by the witness whose
 mentioned rationals are all marked extends the remainder without touching the marking. -/
-def StarWitness.add_sentence {φ : L.Sentenceω} {lt : L.Relations 2}
+def StarWitness.addSentence {φ : L.Sentenceω} {lt : L.Relations 2}
     {Γ : Set L[[ℕ]].Sentenceω} {α : Ordinal.{0}} (W : StarWitness φ lt Γ α)
     {χ : L[[ℕ]].Sentenceω}
     (hreal : @Sentenceω.Realize L[[ℕ]] χ W.M (wc W.inst W.h))

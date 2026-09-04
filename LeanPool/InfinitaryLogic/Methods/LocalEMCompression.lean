@@ -65,37 +65,6 @@ private theorem locJExpand_func_inr {k : ℕ} (s : Fin k ↪o J) {α : Type} (i�
       = Term.func (Sum.inr (s i₀) : Λ[[J]].Functions 0) (fun i => locJExpand Λ J s (ts i)) :=
   rfl
 
-
-
-/-- The support of an expansion is the image of the code's support. -/
-private theorem locJSupport_locJExpand {k : ℕ} (s : Fin k ↪o J) {α : Type}
-    (u : Λ[[Fin k]].Term α) :
-    locJSupport Λ J (locJExpand Λ J s u) = (locJSupport Λ (Fin k) u).image s := by
-  induction u with
-  | var x => simp [locJExpand, LHom.onTerm, locJSupport]
-  | @func l f ts ih =>
-    show locJSupport Λ J (Term.func ((Λ.lhomWithConstantsMap (s : Fin k → J)).onFunction f)
-      fun i => locJExpand Λ J s (ts i)) = _
-    rw [locJSupport, locJSupport, Finset.image_union]
-    congr 1
-    · ext x
-      simp only [Finset.mem_biUnion, Finset.mem_image, Finset.mem_univ, true_and]
-      constructor
-      · rintro ⟨i, hx⟩
-        rw [ih i] at hx
-        obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hx
-        exact ⟨y, ⟨i, hy⟩, rfl⟩
-      · rintro ⟨y, ⟨i, hy⟩, rfl⟩
-        exact ⟨i, by rw [ih i]; exact Finset.mem_image_of_mem _ hy⟩
-    · rcases l with _ | l
-      · rcases f with f' | j
-        · rfl
-        · simp only [locJConstOf]
-          rfl
-      · rcases f with f' | c
-        · rfl
-        · exact c.elim
-
 /-- **Round trip 1**: expanding along `S`'s own increasing enumeration recovers the term. -/
 theorem locJExpand_compress (S : Finset J) (t : Λ[[J]].Term Empty)
     (h : locJSupport Λ J t ⊆ S) :
@@ -115,37 +84,6 @@ theorem locJExpand_compress (S : Finset J) (t : Λ[[J]].Term Empty)
     · rcases f with f' | c
       · simp only [locJCompress]
         rw [locJExpand_func_inl]
-        exact congrArg _ (funext fun i => ih i _)
-      · exact c.elim
-
-/-- **Round trip 2**: compressing an expansion along `S`'s enumeration recovers the code. -/
-private theorem locJCompress_expand (S : Finset J) (u : Λ[[Fin S.card]].Term Empty)
-    (h : locJSupport Λ J (locJExpand Λ J (S.orderEmbOfFin rfl) u) ⊆ S) :
-    locJCompress Λ J S (locJExpand Λ J (S.orderEmbOfFin rfl) u) h = u := by
-  induction u with
-  | var x => exact x.elim
-  | @func l f ts ih =>
-    rcases l with _ | l
-    · rcases f with f' | i₀
-      · show locJCompress Λ J S (Term.func (Sum.inl f' : Λ[[J]].Functions 0)
-            (fun i => locJExpand Λ J (S.orderEmbOfFin rfl) (ts i))) h
-          = Term.func (Sum.inl f') ts
-        simp only [locJCompress]
-        exact congrArg _ (funext fun i => i.elim0)
-      · have hrank := deepRank_orderEmbOfFin J S rfl i₀
-        show locJCompress Λ J S (Term.func
-            (Sum.inr (S.orderEmbOfFin rfl i₀) : Λ[[J]].Functions 0)
-            (fun i => locJExpand Λ J (S.orderEmbOfFin rfl) (ts i))) h
-          = Term.func (Sum.inr i₀) ts
-        simp only [locJCompress]
-        refine congrArg₂ (fun (c : Fin S.card) args => Term.func
-          (show Λ[[Fin S.card]].Functions 0 from Sum.inr c) args)
-          (Fin.ext hrank) (funext fun i => i.elim0)
-    · rcases f with f' | c
-      · show locJCompress Λ J S (Term.func (Sum.inl f' : Λ[[J]].Functions (l + 1))
-            (fun i => locJExpand Λ J (S.orderEmbOfFin rfl) (ts i))) h
-          = Term.func (Sum.inl f') ts
-        simp only [locJCompress]
         exact congrArg _ (funext fun i => ih i _)
       · exact c.elim
 

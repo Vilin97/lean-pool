@@ -72,13 +72,13 @@ theorem realize_existsBlock :
     ∀ {k : ℕ} (φ : L.BoundedFormulaω α (n + k)),
       (existsBlock φ).Realize v xs ↔ ∃ ys : Fin k → M, φ.Realize v (Fin.append xs ys)
   | 0, φ => by
-    show φ.Realize v xs ↔ _
+    change φ.Realize v xs ↔ _
     constructor
     · exact fun h => ⟨Fin.elim0, by rwa [append_fin_zero]⟩
     · rintro ⟨ys, hy⟩
       rwa [append_fin_zero] at hy
   | k + 1, φ => by
-    show (existsBlock φ.ex).Realize v xs ↔ _
+    change (existsBlock φ.ex).Realize v xs ↔ _
     rw [realize_existsBlock φ.ex]
     constructor
     · rintro ⟨ys, hy⟩
@@ -96,7 +96,7 @@ theorem realize_forallBlock :
     ∀ {k : ℕ} (φ : L.BoundedFormulaω α (n + k)),
       (forallBlock φ).Realize v xs ↔ ∀ ys : Fin k → M, φ.Realize v (Fin.append xs ys)
   | 0, φ => by
-    show φ.Realize v xs ↔ _
+    change φ.Realize v xs ↔ _
     constructor
     · intro h ys
       rwa [append_fin_zero]
@@ -104,7 +104,7 @@ theorem realize_forallBlock :
       have := h Fin.elim0
       rwa [append_fin_zero] at this
   | k + 1, φ => by
-    show (forallBlock φ.all).Realize v xs ↔ _
+    change (forallBlock φ.all).Realize v xs ↔ _
     rw [realize_forallBlock φ.all]
     constructor
     · intro h zs

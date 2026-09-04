@@ -113,7 +113,7 @@ private theorem gandy_harrington_of_category_route
   intro a b hfab
   by_contra hne
   apply hψ_anti a b hne
-  show r.r (φ (ψ a)) (φ (ψ b))
+  change r.r (φ (ψ a)) (φ (ψ b))
   rw [show φ (ψ a) = φ (ψ b) from hfab]
 
 /-- `MycielskiCantorHypothesis` holds: proved by the level-scheduled Cantor scheme in

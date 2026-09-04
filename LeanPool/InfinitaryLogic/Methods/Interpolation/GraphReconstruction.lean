@@ -78,8 +78,6 @@ theorem reconstruct_relMap_base (hAx : Sentenceω.Realize (graphAxioms F) M) {n 
       RelMap (L := graphLanguage L) (GraphRelation.base R) v :=
   Iff.rfl
 
-
-
 /-- Graph-expanding a reconstruction preserves the graph relations of `F`. -/
 private theorem graphExpansion_reconstruct_relMap_graph (hAx : Sentenceω.Realize (graphAxioms F) M)
     {n : ℕ} (f : L.Functions n) (h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F)
@@ -131,19 +129,6 @@ section RoundTrip
 
 variable {M : Type} [Nonempty M] [L.Structure M]
 variable (F : Set (Σ n, L.Functions n)) [Countable ↥F]
-
-
-
-/-- Reconstructing the graph expansion recovers `funMap` on every symbol of `F`. -/
-private theorem reconstruct_graphExpansion_funMap {n : ℕ} (f : L.Functions n)
-    (h : (⟨n, f⟩ : Σ n, L.Functions n) ∈ F) (v : Fin n → M) :
-    letI := graphExpansion L M
-    ((reconstructStructure F (graphExpansion_realizes_graphAxioms F M)).funMap f v =
-      funMap f v) := by
-  let := graphExpansion L M
-  refine (graphValue_unique (graphExpansion_realizes_graphAxioms F M) f h v (funMap f v)
-    ?_).symm
-  rw [graphExpansion_relMap_graph, Fin.init_snoc, Fin.snoc_last]
 
 end RoundTrip
 

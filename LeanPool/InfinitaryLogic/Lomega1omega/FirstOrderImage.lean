@@ -32,12 +32,6 @@ def BoundedFormulaω.IsFirstOrder (φ : L.BoundedFormulaω α n) : Prop :=
 
 namespace BoundedFormulaω
 
-
-
-
-
-
-
 @[simp] theorem isFirstOrder_imp_iff {φ ψ : L.BoundedFormulaω α n} :
     (φ.imp ψ).IsFirstOrder ↔ φ.IsFirstOrder ∧ ψ.IsFirstOrder := by
   constructor

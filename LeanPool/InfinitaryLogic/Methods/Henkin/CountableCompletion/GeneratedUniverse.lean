@@ -107,8 +107,6 @@ def GenU (r₁ r₂ : L[[ℕ]].Sentenceω) : Set L[[ℕ]].Sentenceω :=
 
 variable {r₁ r₂ : L[[ℕ]].Sentenceω}
 
-
-
 theorem root₁_mem : r₁ ∈ GenU r₁ r₂ :=
   .base (Or.inl (Or.inl (Set.mem_insert _ _)))
 
@@ -198,7 +196,7 @@ private theorem uPath_append (p : L[[ℕ]].Sentenceω) (l₁ l₂ : List (ℕ ×
   induction l₁ generalizing p with
   | nil => rfl
   | cons c l ih =>
-    show (uStep p c).bind (uPath · (l ++ l₂))
+    change (uStep p c).bind (uPath · (l ++ l₂))
       = ((uStep p c).bind (uPath · l)).bind (uPath · l₂)
     cases uStep p c with
     | none => rfl
@@ -327,7 +325,9 @@ theorem genU_finite_support (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁)
       exact ⟨i, (constTermS_jConsts (g i) hmem).symm ▸ rfl⟩
   | imp_negleft _ ih => rw [sentenceJConsts_not]; exact ih.subset (sentenceJConsts_imp_left _ _)
   | imp_right _ ih => exact ih.subset (sentenceJConsts_imp_right _ _)
-  | negimp_left _ ih => rw [sentenceJConsts_not] at ih; exact ih.subset (sentenceJConsts_imp_left _ _)
+  | negimp_left _ ih =>
+    rw [sentenceJConsts_not] at ih
+    exact ih.subset (sentenceJConsts_imp_left _ _)
   | negimp_right _ ih =>
     rw [sentenceJConsts_not] at ih ⊢
     exact ih.subset (sentenceJConsts_imp_right _ _)
@@ -351,33 +351,5 @@ theorem genU_finite_support (hr₁ : (sentenceJConsts (L' := L) (J := ℕ) r₁)
 induction principle for the generated universe. (The current paired construction carries its
 side-membership bound as an explicit invariant instead of instantiating this principle, so
 `genU_le` presently has no in-tree consumer; it is the library-level minimality statement.) -/
-private theorem genU_le {P : Set L[[ℕ]].Sentenceω} (hseed : seed r₁ r₂ ⊆ P)
-    (himp_negleft : ∀ {φ ψ : L[[ℕ]].Sentenceω}, φ.imp ψ ∈ P → φ.not ∈ P)
-    (himp_right : ∀ {φ ψ : L[[ℕ]].Sentenceω}, φ.imp ψ ∈ P → ψ ∈ P)
-    (hnegimp_left : ∀ {φ ψ : L[[ℕ]].Sentenceω}, (φ.imp ψ).not ∈ P → φ ∈ P)
-    (hnegimp_right : ∀ {φ ψ : L[[ℕ]].Sentenceω}, (φ.imp ψ).not ∈ P → ψ.not ∈ P)
-    (hiInf : ∀ {φs : ℕ → L[[ℕ]].Sentenceω} (k), BoundedFormulaω.iInf φs ∈ P → φs k ∈ P)
-    (hnegiInf : ∀ {φs : ℕ → L[[ℕ]].Sentenceω} (k),
-      (BoundedFormulaω.iInf φs).not ∈ P → (φs k).not ∈ P)
-    (hiSup : ∀ {φs : ℕ → L[[ℕ]].Sentenceω} (k), BoundedFormulaω.iSup φs ∈ P → φs k ∈ P)
-    (hnegiSup : ∀ {φs : ℕ → L[[ℕ]].Sentenceω} (k),
-      (BoundedFormulaω.iSup φs).not ∈ P → (φs k).not ∈ P)
-    (hall : ∀ {φ : L[[ℕ]].BoundedFormulaω Empty 1} (c), φ.all ∈ P → instConst c φ ∈ P)
-    (hnegall : ∀ {φ : L[[ℕ]].BoundedFormulaω Empty 1} (c),
-      φ.all.not ∈ P → (instConst c φ).not ∈ P) :
-    GenU r₁ r₂ ⊆ P := by
-  intro p hp
-  induction hp with
-  | base h => exact hseed h
-  | imp_negleft _ ih => exact himp_negleft ih
-  | imp_right _ ih => exact himp_right ih
-  | negimp_left _ ih => exact hnegimp_left ih
-  | negimp_right _ ih => exact hnegimp_right ih
-  | iInf_comp k _ ih => exact hiInf k ih
-  | negiInf_comp k _ ih => exact hnegiInf k ih
-  | iSup_comp k _ ih => exact hiSup k ih
-  | negiSup_comp k _ ih => exact hnegiSup k ih
-  | all_inst c _ ih => exact hall c ih
-  | negall_inst c _ ih => exact hnegall c ih
 
 end FirstOrder.Language

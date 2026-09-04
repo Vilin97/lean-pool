@@ -67,10 +67,6 @@ argument to yield an isomorphism. -/
 def StabilizesCompletely (M : Type w) [L.Structure M] (α : Ordinal) : Prop :=
   ∀ n : ℕ, StabilizesForTuples (L := L) M α n
 
-
-
-
-
 omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
 /-- An isomorphism induces BF-equivalence at all ordinal levels. -/
 theorem equiv_implies_BFEquiv {M N : Type w} [L.Structure M] [L.Structure N]
@@ -169,10 +165,6 @@ theorem BFEquiv_upgrade_at_stabilization {M N : Type w} [L.Structure M] [L.Struc
     · exact @ih γ hγ n a b h hαγ
     · exact BFEquiv.monotone (le_of_lt (not_le.mp hαγ)) h
 
-
-
-
-
 omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
 /-- For countable M, there exists α < ω₁ where all tuple sizes self-stabilize
 (BFEquiv α n a a' ↔ BFEquiv (succ α) n a a' for all n and all a, a' : Fin n → M).
@@ -204,7 +196,8 @@ theorem exists_complete_self_stabilization (M : Type w) [L.Structure M] [Countab
   have hTriple : ∀ (t : Σ n, (Fin n → M) × (Fin n → M)),
       ∃ γ < (Ordinal.omega 1 : Ordinal.{0}),
         ∀ α, γ ≤ α → α < Ordinal.omega 1 → Order.succ α < Ordinal.omega 1 →
-          (BFEquiv (L := L) α t.1 t.2.1 t.2.2 ↔ BFEquiv (L := L) (Order.succ α) t.1 t.2.1 t.2.2) := by
+          (BFEquiv (L := L) α t.1 t.2.1 t.2.2 ↔ BFEquiv (L := L) (Order.succ α) t.1 t.2.1
+            t.2.2) := by
     intro ⟨n, a, a'⟩
     simp only
     by_cases hFail : ∃ β < (Ordinal.omega 1 : Ordinal.{0}), ¬BFEquiv (L := L) β n a a'
@@ -256,8 +249,6 @@ theorem exists_complete_self_stabilization (M : Type w) [L.Structure M] [Countab
   have hbound_le : boundOrd ⟨n, a, a'⟩ ≤ globalStab :=
     le_trans (Order.le_succ _) (hk ▸ le_ciSup hBdd k)
   exact hboundOrd_spec ⟨n, a, a'⟩ globalStab hbound_le hGlobalLt hSuccGlobalLt
-
-
 
 /-! ### Countable intersection and BFEquiv-to-PotentialIso lemmas -/
 
@@ -324,7 +315,7 @@ private theorem nonempty_iInter_of_antitone_of_nonempty {X : Type*} [Countable X
     rw [Cardinal.ord_aleph]
     by_cases hx : enum k ∈ S 0
     · exact hdepart_lt (enum k) hx
-    · show depart (enum k) < _
+    · change depart (enum k) < _
       simp only [depart]
       rw [dite_eq_right hx]
       exact Ordinal.omega_pos 1
@@ -440,23 +431,11 @@ theorem BFEquiv_below_omega1_implies_iso
   obtain ⟨P⟩ := BFEquiv_below_omega1_implies_potentialIso (L := L) h
   exact P.countable_toEquiv
 
-
-
-
-
 /-! ### Refinement Descent Lemmas
 
 These lemmas decompose refinement failures at n-tuples into refinement failures at
 (n+1)-tuples at strictly smaller ordinals. They are the key infrastructure for proving
 `per_tuple_stabilization_below_omega1` without relying on the `FormulaCode` bridge. -/
-
-
-
-
-
-
-
-
 
 /-! ### Conditional Pipeline (Code-free approach)
 
@@ -484,7 +463,8 @@ such splits.
 All other reasoning (descent lemmas, stabilization from countability, Scott rank bounds)
 is fully formalized. -/
 def CountableRefinementHypothesis (L : Language.{u, v})
-    [L.IsRelational] [Countable (Σ l, L.Relations l)] : Prop :=
+    [_isRelational : L.IsRelational]
+    [_countableRelations : Countable (Σ l, L.Relations l)] : Prop :=
   ∀ (M : Type w) [L.Structure M] [Countable M] (n : ℕ) (a : Fin n → M),
     Set.Countable {ε : Ordinal.{0} | ε < Ordinal.omega 1 ∧
       ∃ (N : Type w) (_ : L.Structure N) (_ : Countable N) (b : Fin n → N),
@@ -633,7 +613,8 @@ theorem BFEquiv_stabilization_implies_equiv {M N : Type w} [L.Structure M] [L.St
 
 /-- The stabilization ordinal for a structure M: the least ordinal where the Scott analysis
 stabilizes. We fix the ordinal universe to 0 for consistency with our BFEquiv definitions. -/
-noncomputable def stabilizationOrdinal (M : Type w) [L.Structure M] [Countable M] :
+noncomputable def stabilizationOrdinal (M : Type w) [L.Structure M]
+    [_countableM : Countable M] :
     Ordinal.{0} :=
   sInf {α : Ordinal.{0} | StabilizesAt (L := L) M α}
 
@@ -646,10 +627,8 @@ noncomputable def scottSentence (M : Type w) [L.Structure M] [Countable M] : L.F
     (stabilizationOrdinal (L := L) M)
 
 /-- Realize a formula with no free variables as a sentence in a structure. -/
-def Formulaω.realize_as_sentence (φ : L.Formulaω (Fin 0)) (N : Type w) [L.Structure N] : Prop :=
+def Formulaω.realizeAsSentence (φ : L.Formulaω (Fin 0)) (N : Type w) [L.Structure N] : Prop :=
   φ.Realize (Fin.elim0 : Fin 0 → N)
-
-
 
 /-! ### Conditional Scott Sentence Pipeline
 
@@ -668,7 +647,7 @@ theorem exists_stabilization_of
   constructor
   · exact BFEquiv_stabilization_implies_equiv hstab
   · intro ⟨e⟩
-    show BFEquiv0 (L := L) M N α
+    change BFEquiv0 (L := L) M N α
     unfold BFEquiv0
     rw [← comp_fin_elim0 e]
     exact equiv_implies_BFEquiv e α 0 Fin.elim0
@@ -701,19 +680,13 @@ theorem scottSentence_characterizes_of
     (hcount : CountableRefinementHypothesis.{u, v, w} L)
     (M : Type w) [L.Structure M] [Countable M]
     (N : Type w) [L.Structure N] [Countable N] :
-    (scottSentence (L := L) M).realize_as_sentence N ↔ Nonempty (M ≃[L] N) := by
-  unfold scottSentence Formulaω.realize_as_sentence
+    (scottSentence (L := L) M).realizeAsSentence N ↔ Nonempty (M ≃[L] N) := by
+  unfold scottSentence Formulaω.realizeAsSentence
   have h := realize_scottFormula_iff_BFEquiv (L := L) (M := M) (N := N)
     (Fin.elim0 : Fin 0 → M) (Fin.elim0 : Fin 0 → N)
     (stabilizationOrdinal (L := L) M) (stabilizationOrdinal_lt_omega1_of hcount M)
   rw [h]
   exact stabilizationOrdinal_stabilizes_of hcount M N
-
-
-
-
-
-
 
 end Language
 

@@ -41,8 +41,6 @@ arities. -/
 def Lomega1omegaSmall (M : Type w) [L.Structure M] : Prop :=
   ∀ n, (RealizedInfinitaryTypes (L := L) M n).Countable
 
-
-
 /-- **Isomorphism transport for types**: an `L`-isomorphism carries the complete type of a
 tuple to the complete type of its image. -/
 private theorem infinitaryType_equiv {M N : Type w} [L.Structure M] [L.Structure N] (e : M ≃[L] N)

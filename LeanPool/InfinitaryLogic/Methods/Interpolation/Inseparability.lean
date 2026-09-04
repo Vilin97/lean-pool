@@ -60,5 +60,4 @@ theorem insepAt_witness_of_insepAt_genEx (c : ℕ) (φc : L[[ℕ]].Sentenceω)
   · exact entails_genEx_of_entails hcΓ hΓσ
   · exact entails_not_genEx_of_entails_not hcΔ hΔσ
 
-
 end FirstOrder.Language

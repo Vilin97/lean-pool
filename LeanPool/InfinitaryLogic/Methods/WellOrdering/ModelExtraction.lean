@@ -67,7 +67,7 @@ private theorem realize_ratLtAtom {M : Type} [inst : L[[ℕ]].Structure M] (q r 
     induction i using Fin.cases <;>
       simp [ratConstMap, ratConstTerm, Matrix.cons_val_zero, Matrix.cons_val_succ,
         Matrix.cons_val_fin_one]
-  show @RelMap L[[ℕ]] M inst 2 (Sum.inl lt)
+  change @RelMap L[[ℕ]] M inst 2 (Sum.inl lt)
       (fun i => Term.realize (Sum.elim (Empty.elim : Empty → M) (Fin.elim0 : Fin 0 → M))
         (constTermS (![ratConstIdx q, ratConstIdx r] i))) ↔ _
   rw [hfun]

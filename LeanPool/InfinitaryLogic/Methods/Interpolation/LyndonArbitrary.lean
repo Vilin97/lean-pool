@@ -113,6 +113,4 @@ theorem lyndon_interpolation (r₁ r₂ : L.Sentenceω) (h : Sentenceω.Entails 
       ((BoundedFormulaω.realize_imp _ _).mp hB
         (graphExpansion_realizes_graphAxioms r₂.functionsIn M))
 
-
-
 end FirstOrder.Language

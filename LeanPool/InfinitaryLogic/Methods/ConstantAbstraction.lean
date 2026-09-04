@@ -46,7 +46,7 @@ private theorem Term.realize_congr_instances (S S' : L.Structure M)
   induction t with
   | var x => rfl
   | func f ts ih =>
-    show @Structure.funMap L M S _ f _ = @Structure.funMap L M S' _ f _
+    change @Structure.funMap L M S _ f _ = @Structure.funMap L M S' _ f _
     rw [hf]
     exact congrArg _ (funext ih)
 
@@ -64,18 +64,18 @@ private theorem BoundedFormulaω.realize_congr_instances (S S' : L.Structure M)
   | falsum => intro v xs; exact Iff.rfl
   | equal t₁ t₂ =>
     intro v xs
-    show @Term.realize L M S _ _ t₁ = @Term.realize L M S _ _ t₂
+    change @Term.realize L M S _ _ t₁ = @Term.realize L M S _ _ t₂
       ↔ @Term.realize L M S' _ _ t₁ = @Term.realize L M S' _ _ t₂
     rw [Term.realize_congr_instances S S' hf, Term.realize_congr_instances S S' hf]
   | rel R ts =>
     intro v xs
-    show @Structure.RelMap L M S _ R _ ↔ @Structure.RelMap L M S' _ R _
+    change @Structure.RelMap L M S _ R _ ↔ @Structure.RelMap L M S' _ R _
     rw [show (fun i => @Term.realize L M S _ _ (ts i)) = (fun i => @Term.realize L M S' _ _ (ts i))
         from funext fun i => Term.realize_congr_instances S S' hf _ _]
     exact hr R _
   | imp φ ψ ihφ ihψ =>
     intro v xs
-    show (_ → _) ↔ (_ → _)
+    change (_ → _) ↔ (_ → _)
     -- apply the induction hypotheses rather than rewriting: they are stated through the reducible
     -- `BoundedFormulaω.Realize` alias, which `rw` cannot key against the unfolded goal
     exact imp_congr (ihφ v xs) (ihψ v xs)
@@ -104,8 +104,6 @@ private theorem BoundedFormulaω.realize_congr_instances (S S' : L.Structure M)
     @Structure.funMap L[[ℕ]] M (wc base h) 0 (Sum.inr k) x = h k :=
   rfl
 
-
-
 /-- The interpretation of the constant `c_k` by an ambient `L[[ℕ]]`-structure. -/
 def ambientConstMap (M : Type) [S : L[[ℕ]].Structure M] (k : ℕ) : M :=
   @Structure.funMap L[[ℕ]] M S 0 (Sum.inr k) Fin.elim0
@@ -123,7 +121,7 @@ theorem ambient_realize_iff_wc [S : L[[ℕ]].Structure M] {n : ℕ}
     · rfl
     · match l, k with
       | 0, k =>
-        show @Structure.funMap L[[ℕ]] M S 0 (Sum.inr k) x = ambientConstMap M k
+        change @Structure.funMap L[[ℕ]] M S 0 (Sum.inr k) x = ambientConstMap M k
         simp only [ambientConstMap]
         exact congrArg _ (Subsingleton.elim _ _)
       | (l + 1), k => exact isEmptyElim k
@@ -151,13 +149,13 @@ theorem Term.realize_congr_const (base : L.Structure M) {h h' : ℕ → M} {n : 
         = @Term.realize L[[ℕ]] M (wc base h') _ w (ts i) :=
       fun i => ih i fun k hk => hagree k (hmem i _ hk)
     rcases f with f | k
-    · show @Structure.funMap L[[ℕ]] M (wc base h) _ (Sum.inl f) _
+    · change @Structure.funMap L[[ℕ]] M (wc base h) _ (Sum.inl f) _
         = @Structure.funMap L[[ℕ]] M (wc base h') _ (Sum.inl f) _
       simp only [wc_funMap_inl]
       exact congrArg _ (funext hargs)
     · match l, k with
       | 0, k =>
-        show @Structure.funMap L[[ℕ]] M (wc base h) 0 (Sum.inr k) _
+        change @Structure.funMap L[[ℕ]] M (wc base h) 0 (Sum.inr k) _
           = @Structure.funMap L[[ℕ]] M (wc base h') 0 (Sum.inr k) _
         exact hagree k (by simp only [Term.functionsIn]; exact Set.mem_insert _ _)
       | (l + 1), k => exact isEmptyElim k
@@ -175,7 +173,7 @@ theorem BoundedFormulaω.realize_congr_const (base : L.Structure M) {h h' : ℕ 
   | falsum => intro _ v xs; exact Iff.rfl
   | equal t₁ t₂ =>
     intro hagree v xs
-    show @Term.realize L[[ℕ]] M (wc base h) _ _ t₁ = @Term.realize L[[ℕ]] M (wc base h) _ _ t₂
+    change @Term.realize L[[ℕ]] M (wc base h) _ _ t₁ = @Term.realize L[[ℕ]] M (wc base h) _ _ t₂
       ↔ @Term.realize L[[ℕ]] M (wc base h') _ _ t₁ = @Term.realize L[[ℕ]] M (wc base h') _ _ t₂
     rw [Term.realize_congr_const base t₁
         (fun k hk => hagree k (Set.mem_union_left _ hk)),
@@ -183,7 +181,9 @@ theorem BoundedFormulaω.realize_congr_const (base : L.Structure M) {h h' : ℕ 
         (fun k hk => hagree k (Set.mem_union_right _ hk))]
   | rel R ts =>
     intro hagree v xs
-    show @Structure.RelMap L[[ℕ]] M (wc base h) _ R _ ↔ @Structure.RelMap L[[ℕ]] M (wc base h') _ R _
+    change
+      @Structure.RelMap L[[ℕ]] M (wc base h) _ R _ ↔
+        @Structure.RelMap L[[ℕ]] M (wc base h') _ R _
     rw [show (fun i => @Term.realize L[[ℕ]] M (wc base h) _ (Sum.elim v xs) (ts i))
           = (fun i => @Term.realize L[[ℕ]] M (wc base h') _ (Sum.elim v xs) (ts i))
         from funext fun i => Term.realize_congr_const base (ts i)
@@ -193,7 +193,7 @@ theorem BoundedFormulaω.realize_congr_const (base : L.Structure M) {h h' : ℕ 
     · exact isEmptyElim e
   | imp φ ψ ihφ ihψ =>
     intro hagree v xs
-    show (_ → _) ↔ (_ → _)
+    change (_ → _) ↔ (_ → _)
     exact imp_congr (ihφ (fun k hk => hagree k (sentenceJConsts_imp_left _ _ hk)) v xs)
       (ihψ (fun k hk => hagree k (sentenceJConsts_imp_right _ _ hk)) v xs)
   | all φ ih =>
@@ -201,10 +201,12 @@ theorem BoundedFormulaω.realize_congr_const (base : L.Structure M) {h h' : ℕ 
     exact forall_congr' fun x => ih hagree v (Fin.snoc xs x)
   | iSup φs ih =>
     intro hagree v xs
-    exact exists_congr fun i => ih i (fun k hk => hagree k (sentenceJConsts_component_iSup _ i hk)) v xs
+    exact exists_congr fun i =>
+      ih i (fun k hk => hagree k (sentenceJConsts_component_iSup _ i hk)) v xs
   | iInf φs ih =>
     intro hagree v xs
-    exact forall_congr' fun i => ih i (fun k hk => hagree k (sentenceJConsts_component_iInf _ i hk)) v xs
+    exact forall_congr' fun i =>
+      ih i (fun k hk => hagree k (sentenceJConsts_component_iInf _ i hk)) v xs
 
 /-! ## Constant abstraction -/
 
@@ -248,14 +250,14 @@ theorem Term.realize_abstractConst (base : L.Structure M) (h : ℕ → M) (j : �
     · rfl
   | @func l f ts ih =>
     rcases f with f | k
-    · show @Structure.funMap L[[ℕ]] M (wc base h) _ (Sum.inl f) _
+    · change @Structure.funMap L[[ℕ]] M (wc base h) _ (Sum.inl f) _
         = @Structure.funMap L[[ℕ]] M (wc base (Function.update h j a)) _ (Sum.inl f) _
       simp only [wc_funMap_inl]
       exact congrArg _ (funext ih)
     · match l, k with
       | 0, k =>
         have : DecidableEq ((constantsOn ℕ).Functions 0) := inferInstanceAs (DecidableEq ℕ)
-        show @Term.realize L[[ℕ]] M (wc base h) _ (Sum.elim (fun _ => a) xs)
+        change @Term.realize L[[ℕ]] M (wc base h) _ (Sum.elim (fun _ => a) xs)
             (Term.abstractConst j (Term.func (Sum.inr k) Fin.elim0))
           = @Structure.funMap L[[ℕ]] M (wc base (Function.update h j a)) 0 (Sum.inr k) _
         by_cases hk : (k : ℕ) = j
@@ -263,13 +265,13 @@ theorem Term.realize_abstractConst (base : L.Structure M) (h : ℕ → M) (j : �
               = (Term.var (Sum.inl 0) : L[[ℕ]].Term (Fin 1 ⊕ Fin n)) := by
             simp only [Term.abstractConst]; rw [ite_eq_left hk]
           rw [habs]
-          show (Sum.elim (fun _ => a) xs) (Sum.inl (0 : Fin 1)) = Function.update h j a (k : ℕ)
+          change (Sum.elim (fun _ => a) xs) (Sum.inl (0 : Fin 1)) = Function.update h j a (k : ℕ)
           rw [Sum.elim_inl, hk, Function.update_self]
         · have habs : Term.abstractConst j (Term.func (Sum.inr k) Fin.elim0)
               = (Term.func (Sum.inr k) Fin.elim0 : L[[ℕ]].Term (Fin 1 ⊕ Fin n)) := by
             simp only [Term.abstractConst]; rw [ite_eq_right hk]
           rw [habs]
-          show h k = Function.update h j a (k : ℕ)
+          change h k = Function.update h j a (k : ℕ)
           have key : Function.update h j a (k : ℕ) = h (k : ℕ) :=
             Function.update_of_ne (α := ℕ) (a := (k : ℕ)) (a' := j) (fun heq => hk heq) a h
           exact key.symm
@@ -288,14 +290,14 @@ theorem BoundedFormulaω.realize_abstractConst (base : L.Structure M) (h : ℕ �
   | falsum => intro xs; exact Iff.rfl
   | equal t u =>
     intro xs
-    show @Term.realize L[[ℕ]] M (wc base h) _ _ (t.abstractConst j)
+    change @Term.realize L[[ℕ]] M (wc base h) _ _ (t.abstractConst j)
         = @Term.realize L[[ℕ]] M (wc base h) _ _ (u.abstractConst j)
       ↔ @Term.realize L[[ℕ]] M (wc base (Function.update h j a)) _ _ t
         = @Term.realize L[[ℕ]] M (wc base (Function.update h j a)) _ _ u
     rw [Term.realize_abstractConst base h j a xs t, Term.realize_abstractConst base h j a xs u]
   | rel R ts =>
     intro xs
-    show @Structure.RelMap L[[ℕ]] M (wc base h) _ R _
+    change @Structure.RelMap L[[ℕ]] M (wc base h) _ R _
       ↔ @Structure.RelMap L[[ℕ]] M (wc base (Function.update h j a)) _ R _
     rw [show (fun i => @Term.realize L[[ℕ]] M (wc base h) _
             (Sum.elim (fun _ => a) xs) ((ts i).abstractConst j))
@@ -307,7 +309,7 @@ theorem BoundedFormulaω.realize_abstractConst (base : L.Structure M) (h : ℕ �
     · exact isEmptyElim e
   | imp φ ψ ihφ ihψ =>
     intro xs
-    show (_ → _) ↔ (_ → _)
+    change (_ → _) ↔ (_ → _)
     exact imp_congr (ihφ xs) (ihψ xs)
   | all φ ih =>
     intro xs
@@ -463,7 +465,4 @@ theorem BoundedFormulaω.notMem_sentenceJConsts_abstractConst (j : ℕ) {n : ℕ
     j ∉ sentenceJConsts (L' := L) (J := ℕ) (φ.abstractConst j) :=
   BoundedFormulaω.notMem_functionsIn_abstractConst j φ
 
-
-
 end FirstOrder.Language
-

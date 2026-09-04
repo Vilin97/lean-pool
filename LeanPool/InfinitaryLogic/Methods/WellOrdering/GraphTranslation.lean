@@ -121,7 +121,7 @@ interpreted arbitrarily (the carrier must be nonempty — the undefinability pro
 theorem ordinalStructureFull_relMap (L : Language.{0, 0}) (α : Ordinal.{0})
     [Nonempty α.ToType] (lt : L.Relations 2) (x y : α.ToType) :
     @RelMap L α.ToType (ordinalStructureFull L α) 2 lt ![x, y] ↔ x < y := by
-  show ordRel α 2 ![x, y] ↔ x < y
+  change ordRel α 2 ![x, y] ↔ x < y
   simp [ordRel, Matrix.cons_val_zero, Matrix.cons_val_one]
 
 /-- **Undefinability of well-ordering (arbitrary language, weak form)**: no sentence has as

@@ -114,8 +114,6 @@ The paired family carries the invariant `support Γ ∪ support Δ ⊆ ↑A` —
 (supplied by the invariant whenever `c ∉ A`) is the one non-trivial move, and it is exactly
 constant abstraction. -/
 
-
-
 /-- **Fresh growth.** Enlarging the allowed-support budget by a constant `c` fresh for `Δ` preserves
 inseparability: a separator using `c` abstracts to `genEx c σ`, whose support lies back in `A`. Only
 the `Δ`-side (∀-generalization) needs the freshness; the `Γ`-side is `∃`-weakening. Under the family

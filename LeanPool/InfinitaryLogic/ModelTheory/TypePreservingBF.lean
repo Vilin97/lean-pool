@@ -68,7 +68,7 @@ theorem TypeAgree.forth {hsmall : Lomega1omegaSmall (L := L) M} {N : L.Substruct
       = Fin.snoc (fun i => (b i : M)) (b' : M) := Fin.comp_snoc _ _ _
   rw [hcomp] at hχN
   refine ⟨b', ?_⟩
-  show infinitaryType (L := L) M (Fin.snoc a a')
+  change infinitaryType (L := L) M (Fin.snoc a a')
     = infinitaryType (L := L) M (fun i => ((Fin.snoc b b' : Fin (n + 1) → N) i : M))
   have hsn : (fun i => ((Fin.snoc b b' : Fin (n + 1) → N) i : M))
       = Fin.snoc (fun i => (b i : M)) (b' : M) := Fin.comp_snoc _ _ _
@@ -89,7 +89,7 @@ theorem TypeAgree.back (hsmall : Lomega1omegaSmall (L := L) M) {N : L.Substructu
   rw [BoundedFormulaω.realize_ex] at hexa
   obtain ⟨a', ha'⟩ := hexa
   refine ⟨a', ?_⟩
-  show infinitaryType (L := L) M (Fin.snoc a a')
+  change infinitaryType (L := L) M (Fin.snoc a a')
     = infinitaryType (L := L) M (fun i => ((Fin.snoc b b' : Fin (n + 1) → N) i : M))
   have hsn : (fun i => ((Fin.snoc b b' : Fin (n + 1) → N) i : M))
       = Fin.snoc (fun i => (b i : M)) (b' : M) := Fin.comp_snoc _ _ _
@@ -107,13 +107,13 @@ private theorem TypeAgree.sameAtomicType {N : L.Substructure M} {n : ℕ} {a : F
     have hM := hab.realize_iff
       (BoundedFormulaω.equal (Term.var (Sum.inr i)) (Term.var (Sum.inr j)))
     simp only [BoundedFormulaω.realize_equal, Term.realize_var, Sum.elim_inr] at hM
-    show a i = a j ↔ b i = b j
+    change a i = a j ↔ b i = b j
     exact hM.trans ⟨fun h => Subtype.ext h, fun h => congrArg _ h⟩
   | rel R f =>
     have hM := hab.realize_iff
       (BoundedFormulaω.rel R fun k => Term.var (Sum.inr (f k)))
     simp only [BoundedFormulaω.realize_rel, Term.realize_var, Sum.elim_inr] at hM
-    show Structure.RelMap R (a ∘ f) ↔ Structure.RelMap R (b ∘ f)
+    change Structure.RelMap R (a ∘ f) ↔ Structure.RelMap R (b ∘ f)
     refine hM.trans ?_
     exact N.subtype.map_rel R (b ∘ f)
 
@@ -156,10 +156,6 @@ theorem bfEquiv_all_of_companion {hsmall : Lomega1omegaSmall (L := L) M}
     BFEquiv (L := L) α 0 (Fin.elim0 : Fin 0 → M) (Fin.elim0 : Fin 0 → N) :=
   bfEquiv_all_of_typeAgree (fun _ _ hab a' => hab.forth hAe a')
     (fun _ _ hab b' => hab.back hsmall b') α Fin.elim0 Fin.elim0 (typeAgree_elim0 N)
-
-
-
-
 
 end Language
 

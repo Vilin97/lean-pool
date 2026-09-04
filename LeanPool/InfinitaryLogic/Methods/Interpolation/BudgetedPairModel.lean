@@ -19,7 +19,8 @@ This is the countermodel that contradicts `r₁ ⊨ r₂` in the final interpola
 * `[L.IsRelational]` enters **here**, as the quotient term model requires it; the completion step
   does not.
 * Relation-symbol countability is inherited from the completion step and is consumed only there.
-* Both labelled roots are read off with the **positive** truth direction, matching how the family was
+* Both labelled roots are read off with the **positive** truth direction, matching how the family
+  was
   seeded; the negative direction of the truth lemma is discarded, so no polarity argument is needed.
 -/
 

@@ -28,7 +28,8 @@ open Cardinal
 variable {α : Ordinal.{0}} {M : Type} [(ladderLang α).Structure M]
 
 /-- The level bound: in any ladder model, `|U_i| ≤ ℶ_{idxVal i}`. -/
-private theorem mk_level_le_beth [Countable (Index α)] (h : IsLadderModel α (M := M)) (i : Index α) :
+private theorem mk_level_le_beth [Countable (Index α)] (h : IsLadderModel α (M := M)) (i :
+  Index α) :
     Cardinal.mk {x : M // Level α i x} ≤ Cardinal.beth (idxVal i) := by
   induction i using WellFoundedLT.induction with
   | _ i IH =>

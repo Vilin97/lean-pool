@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
 import LeanPool.InfinitaryLogic.Karp.PotentialIso
+import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.Reindex
 import LeanPool.InfinitaryLogic.Scott.AtomicDiagram
 import LeanPool.InfinitaryLogic.Scott.BackAndForth
-import LeanPool.InfinitaryLogic.Mathlib.ModelTheory.Infinitary.QuantifierRank
 /-!
 # Karp's theorem at a common branching carrier
 
@@ -76,8 +76,6 @@ quantifier over index types is here, outside the syntax, rather than inside ever
 infinitary node. -/
 def InfEquivW (L : Language.{u, v}) (M N : Type w) [L.Structure M] [L.Structure N] : Prop :=
   ∀ ι : Type w, InfEquivAt L ι M N
-
-
 
 section KarpAtCarrier
 
@@ -245,25 +243,11 @@ private theorem infEquivAt_implies_potentialIso (cM : IndexCoding M κ) (cN : In
       exact (hψ x).2 (hx x)
     exact hM ((hmem χ).mpr hN)
 
-/-- **Karp's theorem at any sufficiently large common carrier.**
-
-Agreement in *one* carrier admitting codings of both structures already characterizes
-potential isomorphism. The structures may live in different universes. -/
-private theorem karp_theorem_at (cM : IndexCoding M κ) (cN : IndexCoding N κ) :
-    Nonempty (PotentialIso L M N) ↔ InfEquivAt L κ M N :=
-  ⟨fun ⟨P⟩ => P.infEquivAt _, infEquivAt_implies_potentialIso cM cN⟩
-
 end KarpAtCarrier
 
 section KarpCanonical
 
 variable [L.IsRelational] {M N : Type w} [L.Structure M] [L.Structure N]
-
-/-- **Karp's theorem at the sum carrier**: the canonical specialization of
-`karp_theorem_at`, obtained by feeding it the two sum injections. -/
-private theorem karp_theorem_on_sum :
-    Nonempty (PotentialIso L M N) ↔ InfEquivAt L (M ⊕ N) M N :=
-  karp_theorem_at (.sumInl M N) (.sumInr M N)
 
 /-- **Karp's theorem** (Keisler–Knight 2004, Theorem 1.2.1): potential isomorphism is equivalent to
 agreement on all `L∞ω` sentences branching over carriers in the structures' universe.
@@ -292,18 +276,12 @@ section AgreementQR
 
 variable [L.IsRelational] {M : Type w} {N : Type w'} [L.Structure M] [L.Structure N]
 
-
-
 omit [L.IsRelational] in
 /-- `Fin.snoc` distributes into `Fin.append` on the right component. -/
 private theorem snoc_append_eq_append_snoc {γ : Type*} {n k : ℕ}
     (v : Fin n → γ) (xs : Fin k → γ) (x : γ) :
     Fin.snoc (Fin.append v xs) x = Fin.append v (Fin.snoc xs x) :=
   (Fin.append_snoc v xs x).symm
-
-
-
-
 
 end AgreementQR
 

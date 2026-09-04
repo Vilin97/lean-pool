@@ -46,8 +46,6 @@ noncomputable def idxOf (β : Ordinal.{0}) (h : β < α + 2) : Index α :=
 theorem idxVal_idxOf (β : Ordinal.{0}) (h : β < α + 2) : idxVal (idxOf (α := α) β h) = β := by
   rw [idxVal, idxOf, OrderIso.symm_apply_apply]
 
-
-
 theorem idxVal_lt_idxVal_iff {i j : Index α} : idxVal i < idxVal j ↔ i < j := by
   rw [idxVal, idxVal, show ((ToType.mk.symm i : Set.Iio (α + 2)) : Ordinal)
       < (ToType.mk.symm j : Set.Iio (α + 2)) ↔ ToType.mk.symm i < ToType.mk.symm j from
@@ -57,8 +55,6 @@ theorem idxVal_lt_idxVal_iff {i j : Index α} : idxVal i < idxVal j ↔ i < j :=
 theorem idxVal_le_idxVal_iff {i j : Index α} : idxVal i ≤ idxVal j ↔ i ≤ j := by
   rw [← not_lt, ← not_lt, not_iff_not]
   exact idxVal_lt_idxVal_iff
-
-
 
 @[simp]
 theorem idxVal_bot : idxVal (⊥ : Index α) = 0 := by

@@ -110,8 +110,6 @@ private theorem ConsistencyProperty.MaximalConsistent.neg_imp_mem
   obtain ⟨h1, h2⟩ := C.C1_neg_imp S hmax.consistent φ ψ h
   exact ⟨hmax.mem_of_union_consistent h1, hmax.mem_of_union_consistent h2⟩
 
-
-
 /-- In a maximal consistent set, if ⋀ᵢ φᵢ ∈ S, then φₖ ∈ S for all k. -/
 theorem ConsistencyProperty.MaximalConsistent.iInf_mem
     {C : ConsistencyProperty L} {S : Set L.Sentenceω}
@@ -177,10 +175,6 @@ theorem ConsistencyPropertyEq.MaximalConsistent.all_mem
     (h : (φ.relabel (Sum.inr : Fin 1 → Empty ⊕ Fin 1)).all ∈ S)
     (t : L.Term Empty) : φ.subst (fun _ => t) ∈ S :=
   hmax.mem_of_union_consistent (C.C7_all S hmax.consistent φ h t)
-
-
-
-
 
 /-- Direct universal instantiation: if `∀x.φ ∈ S*`, then `φ(t) ∈ S*` for all closed terms t.
 Uses `openBounds` to convert the bound variable to a free variable for substitution. -/
@@ -891,8 +885,6 @@ decreasing_by
     | exact depth_openBounds_subst_lt _
 
 /-! ### Model Existence from Truth Lemma -/
-
-
 
 end Language
 

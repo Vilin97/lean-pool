@@ -46,16 +46,12 @@ theorem comp {A : Fragment L} {f : N ↪[L] M} {g : P ↪[L] N}
   exact (Iff.of_eq (congrArg (φ.Realize Empty.elim)
     (funext fun i => rfl))).trans (h1.trans h2)
 
-
-
 /-- Sentence transport: for a fragment sentence, truth agrees between the two structures. -/
 theorem realize_sentence_iff {A : Fragment L} {f : N ↪[L] M} (h : AElementary A f)
     {φ : L.Sentenceω} (hφ : (⟨0, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ A.toSet) :
     Sentenceω.Realize φ M ↔ Sentenceω.Realize φ N := by
   have := h φ hφ Fin.elim0
   rwa [show (⇑f ∘ Fin.elim0 : Fin 0 → M) = Fin.elim0 from funext fun i => i.elim0] at this
-
-
 
 end AElementary
 
@@ -79,7 +75,7 @@ theorem aElementary_of_tarskiVaught {A : Fragment L} (f : N ↪[L] M)
   | falsum => exact fun _ _ => Iff.rfl
   | equal t u =>
     intro _ a
-    show t.realize (Sum.elim Empty.elim (⇑f ∘ a)) = u.realize (Sum.elim Empty.elim (⇑f ∘ a))
+    change t.realize (Sum.elim Empty.elim (⇑f ∘ a)) = u.realize (Sum.elim Empty.elim (⇑f ∘ a))
       ↔ t.realize (Sum.elim Empty.elim a) = u.realize (Sum.elim Empty.elim a)
     rw [h_elim a, HomClass.realize_term, HomClass.realize_term]
     exact f.injective.eq_iff
@@ -89,7 +85,7 @@ theorem aElementary_of_tarskiVaught {A : Fragment L} (f : N ↪[L] M)
         = fun i => f ((ts i).realize (Sum.elim Empty.elim a)) := by
       funext i
       rw [h_elim a, HomClass.realize_term]
-    show Structure.RelMap R (fun i => (ts i).realize (Sum.elim Empty.elim (⇑f ∘ a)))
+    change Structure.RelMap R (fun i => (ts i).realize (Sum.elim Empty.elim (⇑f ∘ a)))
       ↔ Structure.RelMap R (fun i => (ts i).realize (Sum.elim Empty.elim a))
     rw [hts]
     exact f.map_rel R _

@@ -46,7 +46,8 @@ private theorem dilateFun_strictMono {a c : K} (hc : 0 < c) : StrictMono (dilate
       have := mul_lt_mul_of_pos_left (sub_lt_sub_right hzw a) hc
       linarith
 
-private theorem dilateFun_surjective {a c : K} (hc : 0 < c) : Function.Surjective (dilateFun a c) := by
+private theorem dilateFun_surjective {a c : K} (hc : 0 < c) :
+    Function.Surjective (dilateFun a c) := by
   intro w
   rcases le_or_gt w a with hw | hw
   · exact ⟨w, by rw [dilateFun, ite_eq_left hw]⟩
@@ -66,12 +67,12 @@ private noncomputable def dilateAbove (a x y : K) (hx : a < x) (hy : a < y) : K 
 
 private theorem dilateAbove_apply_of_le {a x y : K} (hx : a < x) (hy : a < y) {z : K} (hz : z ≤ a) :
     dilateAbove a x y hx hy z = z := by
-  show dilateFun a _ z = z
+  change dilateFun a _ z = z
   rw [dilateFun, ite_eq_left hz]
 
 private theorem dilateAbove_apply_point {a x y : K} (hx : a < x) (hy : a < y) :
     dilateAbove a x y hx hy x = y := by
-  show dilateFun a _ x = y
+  change dilateFun a _ x = y
   rw [dilateFun, ite_eq_right (not_le.mpr hx), div_mul_cancel₀ _ (sub_ne_zero.mpr hx.ne')]
   ring
 
@@ -90,7 +91,7 @@ theorem HighlyOrderTransitive.of_field (K : Type*) [Field K] [LinearOrder K]
     · refine ⟨OrderIso.addRight (t 0 - s 0), fun i => ?_⟩
       have h0 : i = 0 := Fin.ext (by omega)
       subst h0
-      show s 0 + (t 0 - s 0) = t 0
+      change s 0 + (t 0 - s 0) = t 0
       ring
     · have hax : t (Fin.castSucc (Fin.last m)) < e' (s (Fin.last (m + 1))) := by
         rw [← he'' (Fin.last m)]
@@ -99,11 +100,11 @@ theorem HighlyOrderTransitive.of_field (K : Type*) [Field K] [LinearOrder K]
         t.lt_iff_lt.mpr (Fin.castSucc_lt_last _)
       refine ⟨e'.trans (dilateAbove _ _ _ hax hay), fun i => ?_⟩
       rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
-      · show dilateAbove _ _ _ hax hay (e' (s (Fin.castSucc j))) = t (Fin.castSucc j)
+      · change dilateAbove _ _ _ hax hay (e' (s (Fin.castSucc j))) = t (Fin.castSucc j)
         rw [he'' j]
         exact dilateAbove_apply_of_le hax hay
           (t.le_iff_le.mpr (Fin.castSucc_le_castSucc_iff.mpr (Fin.le_last j)))
-      · show dilateAbove _ _ _ hax hay (e' (s (Fin.last (m + 1)))) = t (Fin.last (m + 1))
+      · change dilateAbove _ _ _ hax hay (e' (s (Fin.last (m + 1)))) = t (Fin.last (m + 1))
         exact dilateAbove_apply_point hax hay
 
 end FirstOrder

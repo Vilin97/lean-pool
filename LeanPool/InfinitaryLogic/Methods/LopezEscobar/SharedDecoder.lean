@@ -109,7 +109,8 @@ theorem realize_sharedToBase (T₀ T₁ : (n : ℕ) → Set ((Fin n → Bool) ×
     @Sentenceω.Realize (sharedLang L T₀ T₁) θ₀ ℕ
         (@LHom.reduct (sharedLang L T₀ T₁) (graphLanguage (KLang L))
           (symbSublangIncl _ _) ℕ d.toStructure) ↔
-      @Sentenceω.Realize L (θ₀.mapLanguage (sharedToBase L T₀ T₁)) ℕ (codeReduct d).toStructure := by
+      @Sentenceω.Realize L (θ₀.mapLanguage (sharedToBase L T₀ T₁)) ℕ
+        (codeReduct d).toStructure := by
   let : (sharedLang L T₀ T₁).Structure ℕ :=
     @LHom.reduct (sharedLang L T₀ T₁) (graphLanguage (KLang L))
       (symbSublangIncl _ _) ℕ d.toStructure

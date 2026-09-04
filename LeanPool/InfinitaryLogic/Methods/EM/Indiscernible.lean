@@ -52,8 +52,6 @@ def IsLomega1omegaIndiscernibleOn (a : I → M)
       φ.Realize (Empty.elim : Empty → M) (a ∘ s) ↔
       φ.Realize (Empty.elim : Empty → M) (a ∘ t)
 
-
-
 /-- Restricting an `On`-indiscernible sequence to a sub-order preserves
 restricted indiscernibility on the same family. -/
 theorem IsLomega1omegaIndiscernibleOn.restrict {a : I → M}
@@ -64,15 +62,6 @@ theorem IsLomega1omegaIndiscernibleOn.restrict {a : I → M}
   intro n φ hφ s t hs ht
   exact h hφ (e ∘ s) (e ∘ t) (e.strictMono.comp hs) (e.strictMono.comp ht)
 
-/-- Reindexing an `On`-indiscernible sequence by an order isomorphism
-preserves restricted indiscernibility on the same family. -/
-theorem IsLomega1omegaIndiscernibleOn.reindex {a : I → M}
-    {Γ : Set (Σ n, L.BoundedFormulaω Empty n)}
-    (h : IsLomega1omegaIndiscernibleOn (L := L) a Γ)
-    {J : Type*} [LinearOrder J] (e : J ≃o I) :
-    IsLomega1omegaIndiscernibleOn (L := L) (a ∘ e) Γ :=
-  h.restrict e.toOrderEmbedding
-
 /-- Monotonicity: shrinking the formula family preserves restricted
 indiscernibility. -/
 theorem IsLomega1omegaIndiscernibleOn.mono {a : I → M}
@@ -82,51 +71,12 @@ theorem IsLomega1omegaIndiscernibleOn.mono {a : I → M}
   intro n φ hφ s t hs ht
   exact h (hΓ hφ) s t hs ht
 
-/-- Restricted form of the calling-convention lemma: the restricted
-indiscernibility hypothesis restated with the formula preceding the tuples. -/
-theorem IsLomega1omegaIndiscernibleOn.iff_realize {a : I → M}
-    {Γ : Set (Σ n, L.BoundedFormulaω Empty n)}
-    (h : IsLomega1omegaIndiscernibleOn (L := L) a Γ)
-    {n : ℕ} (φ : L.BoundedFormulaω Empty n) (hφ : ⟨n, φ⟩ ∈ Γ)
-    {s t : Fin n → I} (hs : StrictMono s) (ht : StrictMono t) :
-    letI := ‹L.Structure M›
-    φ.Realize (Empty.elim : Empty → M) (a ∘ s) ↔
-    φ.Realize (Empty.elim : Empty → M) (a ∘ t) :=
-  h hφ s t hs ht
-
 /-- Restricting an indiscernible sequence to a sub-order. -/
 theorem IsLomega1omegaIndiscernible.restrict {a : I → M}
     (h : IsLomega1omegaIndiscernible (L := L) a)
     {J : Type*} [LinearOrder J] (e : J ↪o I) :
     IsLomega1omegaIndiscernible (L := L) (a ∘ e) :=
   fun n φ s hs t ht => h n φ (e ∘ s) (e.strictMono.comp hs) (e ∘ t) (e.strictMono.comp ht)
-
-
-
-/-- The indiscernibility hypothesis, restated with the formula `φ` preceding the
-tuples (a more natural calling convention than the universal form used by the
-underlying definition). -/
-theorem IsLomega1omegaIndiscernible.iff_realize {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    {n : ℕ} (φ : L.BoundedFormulaω Empty n)
-    {s t : Fin n → I} (hs : StrictMono s) (ht : StrictMono t) :
-    letI := ‹L.Structure M›
-    φ.Realize (Empty.elim : Empty → M) (a ∘ s) ↔
-    φ.Realize (Empty.elim : Empty → M) (a ∘ t) :=
-  h n φ s hs t ht
-
-
-
-/-- Pre-composing an indiscernible sequence by an order isomorphism yields an
-indiscernible sequence. A direct corollary of `restrict` via
-`OrderIso.toOrderEmbedding`. -/
-theorem IsLomega1omegaIndiscernible.reindex {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    {J : Type*} [LinearOrder J] (e : J ≃o I) :
-    IsLomega1omegaIndiscernible (L := L) (a ∘ e) :=
-  h.restrict e.toOrderEmbedding
-
-
 
 end Indiscernible
 

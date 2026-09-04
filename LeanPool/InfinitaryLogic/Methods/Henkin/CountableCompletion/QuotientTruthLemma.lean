@@ -34,7 +34,8 @@ used anywhere.  Every step is driven by a *constructive* `HenkinComplete` field:
 
 ## The `all` case (depth-measure recursion)
 
-The quantifier cases are handled by **well-founded recursion on an ordinal depth measure**, mirroring
+The quantifier cases are handled by **well-founded recursion on an ordinal depth measure**,
+mirroring
 the shape of the legacy `Methods/Henkin/Construction.lean` truth lemma: from `(all body) ∈ S` the
 `all_inst` field yields, for every constant `c`, the sentence `instConst c body =
 (body.openBounds).subst (fun _ => constTerm c)`, whose depth is strictly smaller than that of
@@ -51,7 +52,8 @@ variable {L : Language.{0, 0}} [L.IsRelational] {U S : Set L[[ℕ]].Sentenceω}
 /-! ## The `Empty ⊕ Fin 0` sentence-term bridge
 
 Sentence atomics `equal t u` / `rel R ts` carry terms in `L[[ℕ]].Term (Empty ⊕ Fin 0)`.  Since both
-`Empty` and `Fin 0` are uninhabited, every such term is ground; we collapse it to `L[[ℕ]].Term Empty`
+`Empty` and `Fin 0` are uninhabited, every such term is ground; we collapse it to
+`L[[ℕ]].Term Empty`
 (a re-statement of the private helpers in `Methods/Henkin/Construction.lean`). -/
 
 /-- Collapse a sentence-atomic term (variables in the uninhabited `Empty ⊕ Fin 0`) to a closed
@@ -92,7 +94,7 @@ theorem realize_closeBy (hsc : HenkinComplete U S) (φ : L[[ℕ]].BoundedFormula
     @Sentenceω.Realize L[[ℕ]] (closeBy φ τ) (QModel hsc) (qModelStructure hsc)
       ↔ @BoundedFormulaω.Realize L[[ℕ]] (QModel hsc) (qModelStructure hsc) Empty n φ Empty.elim
           (fun i => qmk hsc (constTerm (τ i))) := by
-  show @BoundedFormulaω.Realize L[[ℕ]] (QModel hsc) (qModelStructure hsc) Empty 0 (closeBy φ τ)
+  change @BoundedFormulaω.Realize L[[ℕ]] (QModel hsc) (qModelStructure hsc) Empty 0 (closeBy φ τ)
       Empty.elim Fin.elim0 ↔ _
   rw [closeBy, BoundedFormulaω.realize_subst]
   rw [show (fun i => Term.realize (Empty.elim : Empty → QModel hsc) (constTerm (τ i)))
@@ -169,7 +171,7 @@ private theorem truth_both (hsc : HenkinComplete U S) :
   | .equal t₁ t₂ => by
       refine ⟨fun hmem => ?_, fun hmem => ?_⟩
       · -- positive: `equal t₁ t₂ ∈ S` gives the equality of classes
-        show t₁.realize (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0)
+        change t₁.realize (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0)
             = t₂.realize (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0)
         rw [Term.realize_toGround t₁, Term.realize_toGround t₂,
           qterm_realize_eq_mk hsc t₁.toGround, qterm_realize_eq_mk hsc t₂.toGround,
@@ -180,7 +182,7 @@ private theorem truth_both (hsc : HenkinComplete U S) :
           simp only [constEq, constTermS_qtConst_toGround]
         rw [heq]; exact hmem
       · -- negative: `(equal t₁ t₂).not ∈ S` gives the disequality of classes
-        show ¬ t₁.realize (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0)
+        change ¬ t₁.realize (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0)
             = t₂.realize (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0)
         rw [Term.realize_toGround t₁, Term.realize_toGround t₂,
           qterm_realize_eq_mk hsc t₁.toGround, qterm_realize_eq_mk hsc t₂.toGround,
@@ -198,7 +200,7 @@ private theorem truth_both (hsc : HenkinComplete U S) :
           funext i; rw [hg]; exact (constTermS_qtConst_toGround (ts i)).symm
         refine ⟨fun hmem => ?_, fun hmem => ?_⟩
         · -- positive: `rel (Sum.inl R) ts ∈ S` gives `RelMap`
-          show (qModelStructure hsc).RelMap (Sum.inl R)
+          change (qModelStructure hsc).RelMap (Sum.inl R)
               (fun i => (ts i).realize (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0))
           have hval : (fun i => (ts i).realize
                 (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0))
@@ -210,7 +212,7 @@ private theorem truth_both (hsc : HenkinComplete U S) :
           refine relMap_of_mem hsc R g ?_
           rw [relInst, ← hts]; exact hmem
         · -- negative: `(rel (Sum.inl R) ts).not ∈ S` gives `¬ RelMap`
-          show ¬ (qModelStructure hsc).RelMap (Sum.inl R)
+          change ¬ (qModelStructure hsc).RelMap (Sum.inl R)
               (fun i => (ts i).realize (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0))
           have hval : (fun i => (ts i).realize
                 (Sum.elim (Empty.elim : Empty → QModel hsc) Fin.elim0))
@@ -269,24 +271,6 @@ private theorem truth_both (hsc : HenkinComplete U S) :
       | exact depth_lt_iSup _
       | exact depth_lt_iInf _
       | exact depth_instConst_lt _ _
-
-/-- **Forward truth lemma, positive polarity** (open form).  If the constant closure `closeBy φ τ`
-belongs to `S`, then `φ` is realized in `QModel hsc` at the classes of the constants `τ`.  A thin
-`realize_closeBy` wrapper over the sentence-level engine `truth_both`. -/
-private theorem truth_pos (hsc : HenkinComplete U S) {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n)
-    (τ : Fin n → ℕ) (hmem : closeBy φ τ ∈ S) :
-    @BoundedFormulaω.Realize L[[ℕ]] (QModel hsc) (qModelStructure hsc) Empty n φ Empty.elim
-      (fun i => qmk hsc (constTerm (τ i))) :=
-  (realize_closeBy hsc φ τ).mp ((truth_both hsc (closeBy φ τ)).1 hmem)
-
-/-- **Forward truth lemma, negative polarity** (open form).  If the negation of the constant closure
-`closeBy φ τ` belongs to `S`, then `φ` is *not* realized in `QModel hsc` at the classes of the
-constants `τ`. -/
-private theorem truth_neg (hsc : HenkinComplete U S) {n : ℕ} (φ : L[[ℕ]].BoundedFormulaω Empty n)
-    (τ : Fin n → ℕ) (hmem : (closeBy φ τ).not ∈ S) :
-    ¬ @BoundedFormulaω.Realize L[[ℕ]] (QModel hsc) (qModelStructure hsc) Empty n φ Empty.elim
-      (fun i => qmk hsc (constTerm (τ i))) :=
-  fun hreal => (truth_both hsc (closeBy φ τ)).2 hmem ((realize_closeBy hsc φ τ).mpr hreal)
 
 /-! ## The consumer model-existence theorem -/
 

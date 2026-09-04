@@ -42,7 +42,7 @@ private theorem modelsOf_mem_iff_of_equiv (φ : L.Sentenceω) {c d : StructureSp
     (e : @Language.Equiv L ℕ ℕ c.toStructure d.toStructure) :
     c ∈ ModelsOf φ ↔ d ∈ ModelsOf φ := by
   let : L.Structure ℕ := c.toStructure
-  show @BoundedFormulaω.Realize L ℕ c.toStructure Empty 0 φ Empty.elim Fin.elim0
+  change @BoundedFormulaω.Realize L ℕ c.toStructure Empty 0 φ Empty.elim Fin.elim0
     ↔ @BoundedFormulaω.Realize L ℕ d.toStructure Empty 0 φ Empty.elim Fin.elim0
   have h := @BoundedFormulaω.realize_equiv L ℕ ℕ c.toStructure d.toStructure e Empty 0 φ
     Empty.elim Fin.elim0
@@ -59,14 +59,10 @@ private theorem modelsOf_measurable_invariant (φ : L.Sentenceω) :
     MeasurableSet (ModelsOf φ) ∧ IsomorphismInvariant (ModelsOf φ) :=
   ⟨modelsOf_measurableSet φ, isomorphismInvariant_modelsOf φ⟩
 
-variable [Countable (Σ l, L.Relations l)]
-
-/-- **López-Escobar, easy direction** (countable relational vocabularies): every
-`L_ω₁ω`-sentence defines an isomorphism-invariant BOREL class of coded countable structures —
-here `MeasurableSet` is Borel for the Polish topology, by the `BorelSpace (StructureSpace L)`
-instance, which is what the countable-relations hypothesis activates. (The converse — invariant
-Borel classes are `L_ω₁ω`-definable — is `lopez_escobar`; the two directions are packaged as
-`lopezEscobar_iff`.) -/
+/-- **López-Escobar, easy direction**: every `L_ω₁ω`-sentence defines a product-measurable,
+isomorphism-invariant class of coded countable structures. For countable relational vocabularies,
+this is a Borel class for the Polish topology. The converse is `lopez_escobar`; the two directions
+are packaged as `lopezEscobar_iff`. -/
 theorem lopezEscobar_easy (φ : L.Sentenceω) :
     MeasurableSet (ModelsOf φ) ∧ IsomorphismInvariant (ModelsOf φ) :=
   modelsOf_measurable_invariant φ

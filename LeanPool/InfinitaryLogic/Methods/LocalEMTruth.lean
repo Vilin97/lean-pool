@@ -12,7 +12,8 @@ This file assembles the pieces the restricted local truth lemma consumes, in two
 **The generic truth kernel** (`section TruthKernel`, over any `[Λ.Structure M]`): the eventual-deep-
 truth predicate `LocalEMContext.eventualDeepTruth`, the carrier substitution bridge
 `realize_term_mkClass`, the atom cases `eventualDeepTruth_equal_iff`/`_rel_iff`, the 0-1 decidedness
-law `eventualDeepTruth_decided`, the `imp`/`falsum` connective cases (`eventually_imp_iff_imp_eventually`,
+law `eventualDeepTruth_decided`, the `imp`/`falsum` connective cases
+(`eventually_imp_iff_imp_eventually`,
 `eventualDeepTruth_falsum_iff`, `eventualDeepTruth_imp_iff`), and the `all`-case class/snoc bridge
 `mkClass_snoc`. Ported from `EMTermModel.lean:820–1115`. These are generic over `Λ` (they touch only
 the generic quotient structure + realize bridges), so no `localColim`-specific plumbing is needed.
@@ -21,7 +22,8 @@ the generic quotient structure + realize bridges), so no `localColim`-specific p
 truth lemma's `all` case (`∀ψ`) needs, in the source model, the Hilbert-choice witness of `¬ψ` as an
 actual closed term of `(localColim s₀)[[J]]`, together with the semantic "witness universality" it
 delivers. This part builds exactly that transport, mirroring the
-`skWitnessTerm`/`deepInterp_skWitness`/`skWitness_universal` chain of `EMTermModel.lean` but over the
+`skWitnessTerm`/`deepInterp_skWitness`/`skWitness_universal` chain of `EMTermModel.lean` but
+over the
 **countable** local tower:
 
 * `locSkWitnessTerm` — the colimit-level witness term for a stage-`k` universal `∀ψ ∈ Γlocal s₀ k`,
@@ -33,7 +35,8 @@ delivers. This part builds exactly that transport, mirroring the
   on the deep interpretations of the arguments (the `localColimStructure`/`localStageStructure`/
   `localSkolemStructure` funMap coherence is fully definitional, so this is `rfl` after unfolding);
 * `locSkWitness_universal` — the Skolem-axiom transport: if `ψ` holds at the deep tuple extended by
-  the witness's deep value, then it holds at *every* `M`-element. Powered by `localSkolem_funMap_spec`
+  the witness's deep value, then it holds at *every* `M`-element. Powered by
+  `localSkolem_funMap_spec`
   (in `LocalSkolem.lean`) and the realization transport `realize_map_LlocalInclusion`.
 
 This is the local analogue of `EMTermModel.lean:114–180`. It is a pure file (imports
@@ -54,16 +57,20 @@ section TruthKernel
 
 variable (Λ : Language.{0, 0}) (J : Type) [LinearOrder J] {M : Type} [Λ.Structure M]
 
-/-- **Eventual deep truth** of a base-language formula `φ` on a tuple of closed argument terms over a
-support `S`: `φ` holds in `M` on the deep interpretations of the terms, for all sufficiently deep `d`.
-The right-hand side of the restricted truth lemma. Local analogue of `EMContext.eventualDeepTruth`. -/
+/-- **Eventual deep truth** of a base-language formula `φ` on a tuple of closed argument
+terms over a
+support `S`: `φ` holds in `M` on the deep interpretations of the terms, for all sufficiently
+deep `d`.
+The right-hand side of the restricted truth lemma. Local analogue of
+  `EMContext.eventualDeepTruth`. -/
 def LocalEMContext.eventualDeepTruth (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (φ : Λ.BoundedFormulaω Empty n) (ts : Fin n → Λ[[J]].Term Empty) (S : Finset J) : Prop :=
   ∀ᶠ d in Filter.atTop, φ.Realize Empty.elim fun i => locDeepInterp Λ J ctx.a d S (ts i)
 
 /-- **Carrier-side term substitution**: realizing a term in the local EM term model under the
 assignment `Sum.elim Empty.elim (mkClass ∘ ts)` gives the class of the substituted closed term. By
-induction on the term, using `funMap_mkClass`. Local analogue of `EMContext.realize_term_mkClass`. -/
+induction on the term, using `funMap_mkClass`. Local analogue of
+  `EMContext.realize_term_mkClass`. -/
 private theorem LocalEMContext.realize_term_mkClass (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (ts : Fin n → Λ[[J]].Term Empty)
     (t : Λ[[J]].Term (Empty ⊕ Fin n)) :
@@ -78,11 +85,12 @@ private theorem LocalEMContext.realize_term_mkClass (ctx : LocalEMContext Λ J (
     have hargs : (fun j => @Term.realize (Λ[[J]]) ctx.Carrier ctx.structure _
           (Sum.elim Empty.elim fun i => ctx.mkClass (t := ts i)) (args j))
         = (fun j => ctx.mkClass (t := (args j).subst (Sum.elim (fun e => e.elim) ts))) := funext ih
-    show @Structure.funMap (Λ[[J]]) ctx.Carrier ctx.structure _ f _ = _
+    change @Structure.funMap (Λ[[J]]) ctx.Carrier ctx.structure _ f _ = _
     rw [hargs, ctx.funMap_mkClass]
     rfl
 
-/-- **Truth lemma, equality-atom case**: realizing a base-language equality atom in the local EM term
+/-- **Truth lemma, equality-atom case**: realizing a base-language equality atom in the
+local EM term
 model on a tuple of term-classes is equivalent to its eventual deep truth. Carrier side via
 `realize_term_mkClass`; quotient side via `Quotient.eq`; deep side via
 `eventually_locDeepInterp_superset_iff` and `locDeepInterp_onTerm_subst`. -/
@@ -96,7 +104,8 @@ theorem LocalEMContext.eventualDeepTruth_equal_iff (ctx : LocalEMContext Λ J (M
     @BoundedFormulaω.Realize (Λ[[J]]) ctx.Carrier ctx.structure Empty n
         ((BoundedFormulaω.equal t₁ t₂).mapLanguage (lhomWithConstants Λ J))
         Empty.elim (fun i => ctx.mkClass (t := ts i)) ↔
-      LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (BoundedFormulaω.equal t₁ t₂) ts S := by
+      LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (BoundedFormulaω.equal t₁ t₂)
+        ts S := by
   have hcarrier : @BoundedFormulaω.Realize (Λ[[J]]) ctx.Carrier ctx.structure Empty n
         ((BoundedFormulaω.equal t₁ t₂).mapLanguage (lhomWithConstants Λ J))
         Empty.elim (fun i => ctx.mkClass (t := ts i))
@@ -120,14 +129,15 @@ theorem LocalEMContext.eventualDeepTruth_equal_iff (ctx : LocalEMContext Λ J (M
     refine Filter.eventually_congr (Filter.Eventually.of_forall fun d => ?_)
     rw [BoundedFormulaω.realize_equal, ← locDeepInterp_onTerm_subst, ← locDeepInterp_onTerm_subst]
   rw [hcarrier, hcommon]
-  show Quotient.mk ctx.setoid _ = Quotient.mk ctx.setoid _ ↔ _
+  change Quotient.mk ctx.setoid _ = Quotient.mk ctx.setoid _ ↔ _
   rw [Quotient.eq]
-  show LocalEMEq Λ J ctx.a _ _ ↔ _
+  change LocalEMEq Λ J ctx.a _ _ ↔ _
   unfold LocalEMEq
   exact Filter.eventually_congr (eventually_locDeepInterp_superset_iff Λ J ctx.a ctx.hind
     (ctx.atom_mem _ _ _ Finset.subset_union_left Finset.subset_union_right) hS)
 
-/-- **Truth lemma, relation-atom case**: realizing a base-language relation atom in the local EM term
+/-- **Truth lemma, relation-atom case**: realizing a base-language relation atom in the
+local EM term
 model on a tuple of term-classes is equivalent to its eventual deep truth. Carrier side via
 `realize_term_mkClass`; then `relMap_mkClass_iff`; deep side via `locDeepInterp_onTerm_subst`. -/
 theorem LocalEMContext.eventualDeepTruth_rel_iff (ctx : LocalEMContext Λ J (M := M)) {n l : ℕ}
@@ -171,10 +181,13 @@ theorem LocalEMContext.eventualDeepTruth_rel_iff (ctx : LocalEMContext Λ J (M :
     (fun i => ((lhomWithConstants Λ J).onTerm (args i)).subst
       (Sum.elim (fun e => e.elim) ts)) hS
 
-/-- **0-1 law for eventual deep truth** (the unlock for the truth lemma's `imp`/connective cases): if
+/-- **0-1 law for eventual deep truth** (the unlock for the truth lemma's `imp`/connective
+cases): if
 the de-substituted formula `locDeForm S φ ts` lies in the tail-indiscernible family `Γ`, then `φ`'s
-eventual deep truth is *decided*. The value is eventually constant because tail indiscernibility makes
-all sufficiently-deep consecutive tuples agree on the single arity-`S.card` formula. Local analogue of
+eventual deep truth is *decided*. The value is eventually constant because tail
+indiscernibility makes
+all sufficiently-deep consecutive tuples agree on the single arity-`S.card` formula. Local
+analogue of
 `EMContext.eventualDeepTruth_decided`. -/
 theorem LocalEMContext.eventualDeepTruth_decided (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (φ : Λ.BoundedFormulaω Empty n)
@@ -183,7 +196,8 @@ theorem LocalEMContext.eventualDeepTruth_decided (ctx : LocalEMContext Λ J (M :
     (hmem : (⟨S.card, locDeForm Λ J S φ ts hsub⟩ :
         Σ n, Λ.BoundedFormulaω Empty n) ∈ ctx.Γ) :
     (∀ᶠ d in Filter.atTop, φ.Realize Empty.elim fun i => locDeepInterp Λ J ctx.a d S (ts i)) ∨
-      (∀ᶠ d in Filter.atTop, ¬ φ.Realize Empty.elim fun i => locDeepInterp Λ J ctx.a d S (ts i)) := by
+      (∀ᶠ d in Filter.atTop, ¬ φ.Realize Empty.elim fun i => locDeepInterp Λ J ctx.a d S (ts
+        i)) := by
   obtain ⟨N, hN⟩ := ctx.hind hmem
   have hmono : ∀ d : ℕ, StrictMono (fun i : Fin S.card => d + (i : ℕ)) :=
     fun d _ _ hii' => Nat.add_lt_add_left hii' d
@@ -216,12 +230,14 @@ private theorem eventually_imp_iff_imp_eventually {α : Type*} {f : Filter α} {
 Immediate from `Filter.eventually_const` (`atTop` on `ℕ` is `NeBot`). -/
 theorem LocalEMContext.eventualDeepTruth_falsum_iff (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (ts : Fin n → Λ[[J]].Term Empty) (S : Finset J) :
-    LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (BoundedFormulaω.falsum) ts S ↔ False := by
+    LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (BoundedFormulaω.falsum) ts S ↔
+      False := by
   simp only [LocalEMContext.eventualDeepTruth, BoundedFormulaω.realize_falsum]
   exact Filter.eventually_const
 
 /-- **Truth lemma, imp case** (eventual-deep-truth side): the eventual deep truth of `φ ⟹ ψ` is the
-implication of their eventual deep truths, *provided* `φ`'s eventual deep truth is decided (supplied by
+implication of their eventual deep truths, *provided* `φ`'s eventual deep truth is decided
+(supplied by
 `eventualDeepTruth_decided`). Local analogue of `EMContext.eventualDeepTruth_imp_iff`. -/
 theorem LocalEMContext.eventualDeepTruth_imp_iff (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (φ ψ : Λ.BoundedFormulaω Empty n)
@@ -259,7 +275,8 @@ section WitnessTransport
 variable (s₀ : LocalStage) (J : Type) [LinearOrder J]
 
 /-- The **colimit-level local Skolem-witness term** for a stage-`k` universal `∀ψ ∈ Γlocal s₀ k`:
-the local Skolem symbol `skolemNeedSymbol h` (witnessing `∃ xₙ, ¬ψ`), in the `localSkolem` summand of
+the local Skolem symbol `skolemNeedSymbol h` (witnessing `∃ xₙ, ¬ψ`), in the `localSkolem`
+summand of
 `Llocal s₀ (k+1)`, included through `LlocalInclusion s₀ (k+1)` and then `lhomWithConstants`, applied
 to the closed argument terms `ts`. Local analogue of `skWitnessTerm`. -/
 def locSkWitnessTerm {k n : ℕ} {ψ : (Llocal s₀ k).BoundedFormulaω Empty (n + 1)}
@@ -293,58 +310,6 @@ theorem locJSupport_locSkWitnessTerm {k n : ℕ}
 section Semantic
 
 variable {M : Type} [s₀.Lang.Structure M] [Nonempty M] (a : ℕ → M)
-
-/-- **Deep value of the local Skolem-witness term**: it is exactly the Hilbert-choice value for `¬ψ`
-on the deep interpretations of the arguments (read in the source model's stage-`k` structure). The
-`localColimStructure`/`localStageStructure`/`localSkolemStructure` funMap coherence is fully
-definitional, so this is `rfl` after the term/funMap unfolding. Local analogue of
-`deepInterp_skWitness`. -/
-private theorem locDeepInterp_skWitness (d : ℕ) (S : Finset J) {k n : ℕ}
-    {ψ : (Llocal s₀ k).BoundedFormulaω Empty (n + 1)}
-    (h : (⟨n, .all ψ⟩ : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) ∈ Γlocal s₀ k)
-    (ts : Fin n → (localColim s₀)[[J]].Term Empty) :
-    letI : (Llocal s₀ k).Structure M := localStageStructure s₀ k
-    letI : (localColim s₀).Structure M := localColimStructure s₀
-    locDeepInterp (localColim s₀) J a d S (locSkWitnessTerm s₀ J h ts)
-      = Classical.epsilon (fun b => ψ.not.Realize (Empty.elim : Empty → M)
-          (Fin.snoc (fun i => locDeepInterp (localColim s₀) J a d S (ts i)) b)) := by
-  let : (Llocal s₀ k).Structure M := localStageStructure s₀ k
-  let : (localColim s₀).Structure M := localColimStructure s₀
-  rw [locSkWitnessTerm, locDeepInterp_func]; rfl
-
-/-- **Local Skolem-witness universality** (the contrapositive Skolem axiom, transported to the deep
-tuple): if the body `ψ` holds at the deep interpretation of its Skolem-witness term (for `¬ψ`), then
-it holds at *every* `M`-element. The Skolem input consumed inline by the `all` case of the local
-truth lemma. Local analogue of `skWitness_universal`. -/
-theorem locSkWitness_universal (d : ℕ) (S : Finset J) {k n : ℕ}
-    {ψ : (Llocal s₀ k).BoundedFormulaω Empty (n + 1)}
-    (h : (⟨n, .all ψ⟩ : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) ∈ Γlocal s₀ k)
-    (ts : Fin n → (localColim s₀)[[J]].Term Empty) :
-    letI : (localColim s₀).Structure M := localColimStructure s₀
-    (ψ.mapLanguage (LlocalInclusion s₀ k)).Realize (Empty.elim : Empty → M)
-        (Fin.snoc (fun i => locDeepInterp (localColim s₀) J a d S (ts i))
-          (locDeepInterp (localColim s₀) J a d S (locSkWitnessTerm s₀ J h ts))) →
-      ∀ x : M, (ψ.mapLanguage (LlocalInclusion s₀ k)).Realize (Empty.elim : Empty → M)
-          (Fin.snoc (fun i => locDeepInterp (localColim s₀) J a d S (ts i)) x) := by
-  let : (localColim s₀).Structure M := localColimStructure s₀
-  let : (Llocal s₀ k).Structure M := localStageStructure s₀ k
-  simp only [realize_map_LlocalInclusion]
-  intro hψw x
-  by_contra hcon
-  have hex : ∃ b, (ψ.not).Realize (Empty.elim : Empty → M)
-      (Fin.snoc (fun i => locDeepInterp (localColim s₀) J a d S (ts i)) b) :=
-    ⟨x, by rw [BoundedFormulaω.realize_not]; exact hcon⟩
-  have hspec : (ψ.not).Realize (Empty.elim : Empty → M)
-      (Fin.snoc (fun i => locDeepInterp (localColim s₀) J a d S (ts i))
-        (Structure.funMap (L := localSkolem (Llocal s₀ k) (skolemNeed (Γlocal s₀ k)))
-          (skolemNeedSymbol h) (fun i => locDeepInterp (localColim s₀) J a d S (ts i)))) :=
-    localSkolem_funMap_spec (skolemNeedSymbol h) _ hex
-  rw [show Structure.funMap (L := localSkolem (Llocal s₀ k) (skolemNeed (Γlocal s₀ k)))
-        (skolemNeedSymbol h) (fun i => locDeepInterp (localColim s₀) J a d S (ts i))
-      = locDeepInterp (localColim s₀) J a d S (locSkWitnessTerm s₀ J h ts) from
-      (locDeepInterp_skWitness s₀ J a d S h ts).symm,
-    BoundedFormulaω.realize_not] at hspec
-  exact hspec hψw
 
 end Semantic
 

@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
 import LeanPool.InfinitaryLogic.Lomega1omega.Theory
-import LeanPool.InfinitaryLogic.Scott.Height
+import LeanPool.InfinitaryLogic.Scott.Height.CanonicalSentence
+import LeanPool.InfinitaryLogic.Scott.Height.Defs
 import LeanPool.InfinitaryLogic.Scott.RefinementCount
 /-!
 # Counting Models
@@ -93,17 +94,6 @@ theorem bounded_scottHeight_iso_eq_BFEquiv
     Nonempty (M ≃[L] N) ↔
     BFEquiv (L := L) α 0 (Fin.elim0 : Fin 0 → M) (Fin.elim0 : Fin 0 → N) :=
   bounded_scottHeight_iso_eq_BFEquiv_of countableRefinementHypothesis hα hbound hM hN
-
-omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
-/-- Placeholder for the full Morley counting theorem (the number of isomorphism
-classes of countable models of an Lω₁ω sentence is either at most ℵ₁ or exactly 2^ℵ₀).
-
-The conditional version is proved as `FirstOrder.Language.morley_counting`
-(in `ModelTheory/MorleyCounting.lean`). -/
-private theorem morley_counting_dichotomy
-    (_φ : L.Sentenceω) :
-    True := by  -- Schematic: see docstring for the actual mathematical content
-  trivial
 
 end Language
 

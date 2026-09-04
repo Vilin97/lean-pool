@@ -52,139 +52,11 @@ def iSupAlong (c : IndexCoding ι κ) (φs : ι → L.BoundedFormulaInf κ α n)
     L.BoundedFormulaInf κ α n :=
   .iSup (c.pad ⊥ φs)
 
-/-- Transport a formula along a coding of its carrier. Together with `reindex_id` and
-`reindex_trans` this makes carrier transport functorial; `realize_reindex` (in
-`Infinitary/Semantics.lean`) shows it is semantics-preserving. -/
-def reindex (c : IndexCoding ι κ) : ∀ {n}, L.BoundedFormulaInf ι α n → L.BoundedFormulaInf κ α n
-  | _, .falsum => .falsum
-  | _, .equal t₁ t₂ => .equal t₁ t₂
-  | _, .rel R ts => .rel R ts
-  | _, .imp φ ψ => (reindex c φ).imp (reindex c ψ)
-  | _, .all φ => (reindex c φ).all
-  | _, .iSup φs => iSupAlong c fun i ↦ reindex c (φs i)
-  | _, .iInf φs => iInfAlong c fun i ↦ reindex c (φs i)
-
 section ReindexEqs
 
 variable (c : IndexCoding ι κ)
 
-
-
-
-
-
-
-@[simp]
-private theorem reindex_imp (φ ψ : L.BoundedFormulaInf ι α n) :
-    reindex c (φ.imp ψ) = (reindex c φ).imp (reindex c ψ) :=
-  rfl
-
-@[simp]
-private theorem reindex_all (φ : L.BoundedFormulaInf ι α (n + 1)) :
-    reindex c φ.all = (reindex c φ).all :=
-  rfl
-
-@[simp]
-private theorem reindex_iSup (φs : ι → L.BoundedFormulaInf ι α n) :
-    reindex c (.iSup φs) = iSupAlong c fun i ↦ reindex c (φs i) :=
-  rfl
-
-@[simp]
-private theorem reindex_iInf (φs : ι → L.BoundedFormulaInf ι α n) :
-    reindex c (.iInf φs) = iInfAlong c fun i ↦ reindex c (φs i) :=
-  rfl
-
-
-
-
-
-@[simp]
-private theorem reindex_top : reindex c (⊤ : L.BoundedFormulaInf ι α n) = ⊤ :=
-  rfl
-
-@[simp]
-private theorem reindex_bot : reindex c (⊥ : L.BoundedFormulaInf ι α n) = ⊥ :=
-  rfl
-
 end ReindexEqs
-
-/-- Reindexing along the identity coding is syntactically the identity. -/
-private theorem reindex_id : ∀ {n} (φ : L.BoundedFormulaInf ι α n), reindex (.id ι) φ = φ := by
-  intro n φ
-  induction φ with
-  | falsum => rfl
-  | equal t₁ t₂ => rfl
-  | rel R ts => rfl
-  | imp φ ψ ihφ ihψ => rw [reindex_imp, ihφ, ihψ]
-  | all φ ih => rw [reindex_all, ih]
-  | iSup φs ih => exact congrArg BoundedFormulaInf.iSup (funext fun i ↦ ih i)
-  | iInf φs ih => exact congrArg BoundedFormulaInf.iInf (funext fun i ↦ ih i)
-
-
-
-
-
-/-- Reindexing along a composite coding is the composite of the reindexings — syntactically,
-not merely up to semantic equivalence. This is the coherence law that lets carrier transports
-be chained; it follows from the generic pad laws `IndexCoding.pad_trans` and
-`IndexCoding.comp_pad`, with no decoder analysis. -/
-private theorem reindex_trans (c₁ : IndexCoding ι κ) (c₂ : IndexCoding κ μ) :
-    ∀ {n} (φ : L.BoundedFormulaInf ι α n),
-      reindex (c₁.trans c₂) φ = reindex c₂ (reindex c₁ φ) := by
-  intro n φ
-  induction φ with
-  | falsum => rfl
-  | equal t₁ t₂ => rfl
-  | rel R ts => rfl
-  | imp φ ψ ihφ ihψ => rw [reindex_imp, reindex_imp, reindex_imp, ihφ, ihψ]
-  | all φ ih => rw [reindex_all, reindex_all, reindex_all, ih]
-  | iSup φs ih =>
-    have h : ((c₁.trans c₂).pad ⊥ fun i ↦ reindex (c₁.trans c₂) (φs i)) =
-        c₂.pad ⊥ fun k ↦ reindex c₂ (c₁.pad ⊥ (fun i ↦ reindex c₁ (φs i)) k) :=
-      calc ((c₁.trans c₂).pad ⊥ fun i ↦ reindex (c₁.trans c₂) (φs i))
-          = c₂.pad ⊥ (c₁.pad ⊥ (reindex c₂ ∘ fun i ↦ reindex c₁ (φs i))) := by
-            rw [IndexCoding.pad_trans]
-            exact congrArg _ (congrArg _ (funext fun i ↦ ih i))
-        _ = c₂.pad ⊥ (reindex c₂ ∘ c₁.pad ⊥ fun i ↦ reindex c₁ (φs i)) := by
-            rw [IndexCoding.comp_pad, reindex_bot]
-        _ = c₂.pad ⊥ fun k ↦ reindex c₂ (c₁.pad ⊥ (fun i ↦ reindex c₁ (φs i)) k) := rfl
-    exact congrArg BoundedFormulaInf.iSup h
-  | iInf φs ih =>
-    have h : ((c₁.trans c₂).pad ⊤ fun i ↦ reindex (c₁.trans c₂) (φs i)) =
-        c₂.pad ⊤ fun k ↦ reindex c₂ (c₁.pad ⊤ (fun i ↦ reindex c₁ (φs i)) k) :=
-      calc ((c₁.trans c₂).pad ⊤ fun i ↦ reindex (c₁.trans c₂) (φs i))
-          = c₂.pad ⊤ (c₁.pad ⊤ (reindex c₂ ∘ fun i ↦ reindex c₁ (φs i))) := by
-            rw [IndexCoding.pad_trans]
-            exact congrArg _ (congrArg _ (funext fun i ↦ ih i))
-        _ = c₂.pad ⊤ (reindex c₂ ∘ c₁.pad ⊤ fun i ↦ reindex c₁ (φs i)) := by
-            rw [IndexCoding.comp_pad, reindex_top]
-        _ = c₂.pad ⊤ fun k ↦ reindex c₂ (c₁.pad ⊤ (fun i ↦ reindex c₁ (φs i)) k) := rfl
-    exact congrArg BoundedFormulaInf.iInf h
-
-/-- **Equivalence codings give genuine syntactic transport**: reindexing along an equivalence
-and back is the identity, syntactically. Instantiated at `Equiv.ulift`, this is the
-universe-lift operation on formulas together with its exact inverse — an arbitrary coding
-preserves semantics but pads; an equivalence coding round-trips. -/
-@[simp]
-private theorem reindex_ofEquiv_symm_reindex_ofEquiv (e : ι ≃ κ) (φ : L.BoundedFormulaInf ι α n) :
-    reindex (.ofEquiv e.symm) (reindex (.ofEquiv e) φ) = φ := by
-  rw [← reindex_trans, IndexCoding.ofEquiv_trans_ofEquiv_symm, reindex_id]
-
-/-- Carrier equivalences are actual syntax equivalences. In particular
-`reindexEquiv Equiv.ulift.symm` is the universe-lift operation on formulas, packaged with its
-exact syntactic inverse. -/
-private def reindexEquiv (e : ι ≃ κ) : L.BoundedFormulaInf ι α n ≃ L.BoundedFormulaInf κ α n where
-  toFun := reindex (.ofEquiv e)
-  invFun := reindex (.ofEquiv e.symm)
-  left_inv φ := reindex_ofEquiv_symm_reindex_ofEquiv e φ
-  right_inv φ := by simpa using reindex_ofEquiv_symm_reindex_ofEquiv e.symm φ
-
-/-- Recode a formula over an encodable carrier into `L_{ω₁ω}`. No choice is involved; for a
-merely `Countable` carrier, obtain an `Encodable` instance via `Encodable.ofCountable` first.
-This is the uniform, whole-formula conversion; the formula-sensitive conversion from an
-`IsCountable` proof is `ofCountable` in `Infinitary/Countability.lean`. -/
-def toOmega [Encodable ι] (φ : L.BoundedFormulaInf ι α n) : L.BoundedFormulaω α n :=
-  reindex (.ofEncodable ι) φ
 
 section Realize
 
@@ -223,54 +95,9 @@ theorem realize_iSupAlong {c : IndexCoding ι κ} {φs : ι → L.BoundedFormula
   · rintro ⟨i, hi⟩
     exact ⟨c.encode i, by rwa [IndexCoding.pad_encode]⟩
 
-/-- Carrier transport preserves realization. Being an iff, this transports semantic
-equivalence in both directions as well. -/
-@[simp]
-private theorem realize_reindex (c : IndexCoding ι κ) :
-    ∀ {n} (φ : L.BoundedFormulaInf ι α n) (v : α → M) (xs : Fin n → M),
-      (reindex c φ).Realize v xs ↔ φ.Realize v xs := by
-  intro n φ
-  induction φ with
-  | falsum => intro v xs; exact Iff.rfl
-  | equal t₁ t₂ => intro v xs; exact Iff.rfl
-  | rel R ts => intro v xs; exact Iff.rfl
-  | imp φ ψ ihφ ihψ =>
-    intro v xs
-    simp only [reindex_imp, realize_imp]
-    exact imp_congr (ihφ v xs) (ihψ v xs)
-  | all φ ih =>
-    intro v xs
-    simp only [reindex_all, realize_all]
-    exact forall_congr' fun y ↦ ih v (Fin.snoc xs y)
-  | iSup φs ih =>
-    intro v xs
-    simp only [reindex_iSup, realize_iSupAlong]
-    exact exists_congr fun i ↦ ih i v xs
-  | iInf φs ih =>
-    intro v xs
-    simp only [reindex_iInf, realize_iInfAlong]
-    exact forall_congr' fun i ↦ ih i v xs
-
-
-
 end Realize
 
 end BoundedFormulaInf
-
-/-- Reindexing fixes the image of the finitary embedding: the finitary embedding at carrier
-`κ` factors through ANY coding into `κ`. This replaces the embedding-triangle lemma of a
-two-inductive design, and is syntactic. -/
-@[simp]
-private theorem BoundedFormulaInf.reindex_toInf (c : IndexCoding ι κ) :
-    ∀ {n} (φ : L.BoundedFormula α n),
-      BoundedFormulaInf.reindex c (BoundedFormula.toInf φ) = BoundedFormula.toInf φ := by
-  intro n φ
-  induction φ with
-  | falsum => rfl
-  | equal t₁ t₂ => rfl
-  | rel R ts => rfl
-  | imp φ ψ ihφ ihψ => exact congrArg₂ BoundedFormulaInf.imp ihφ ihψ
-  | all φ ih => exact congrArg BoundedFormulaInf.all ih
 
 end Language
 

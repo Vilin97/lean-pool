@@ -80,7 +80,7 @@ The proof uses back at level succ ε to find an M-witness mw, then self-stabiliz
 show the original and new M-witnesses are equivalent at all levels ≥ α₀. -/
 private theorem chain_step
     {M : Type w} [L.Structure M]
-    {N : Type w} [L.Structure N] [Countable N]
+    {N : Type w} [L.Structure N] [_countableN : Countable N]
     {α₀ : Ordinal.{0}} (hstab : SelfStabilizesCompletely (L := L) M α₀)
     {n : ℕ} {a : Fin n → M} {b : Fin n → N} {m : M} {m' : N}
     {ε : Ordinal.{0}} (hε : α₀ ≤ ε)
@@ -171,7 +171,8 @@ theorem countableRefinementHypothesis : CountableRefinementHypothesis.{u, v, w} 
   set γ := ⨆ k : ℕ, (α₀ + (↑k : Ordinal.{0}))
   have hγ_lt : γ < Ordinal.omega 1 := by
     exact Ordinal.iSup_lt_omega_one fun k => by rw [← Cardinal.ord_aleph]; exact hα_k_lt k
-  apply Set.Countable.mono (s₂ := Set.Iio γ) _ (InfinitaryLogic.setCountable_Iio_of_lt_omega1 γ hγ_lt)
+  apply Set.Countable.mono (s₂ := Set.Iio γ) _ (InfinitaryLogic.setCountable_Iio_of_lt_omega1
+    γ hγ_lt)
   intro ε ⟨_, N, instN, instCN, b, hBF, hNot⟩
   simp only [Set.mem_Iio]
   by_contra hge; push Not at hge
@@ -184,51 +185,16 @@ theorem countableRefinementHypothesis : CountableRefinementHypothesis.{u, v, w} 
 Each theorem below is a one-liner applying `countableRefinementHypothesis` to the
 corresponding `_of` variant in Sentence.lean. -/
 
-
-
-/-- Per-tuple stabilization below ω₁. -/
-theorem per_tuple_stabilization_below_omega1
-    {M : Type w} [L.Structure M] [Countable M]
-    (n : ℕ) (a : Fin n → M) :
-    ∃ γ < (Ordinal.omega 1 : Ordinal.{0}),
-      ∀ α, γ ≤ α → α < Ordinal.omega 1 → Order.succ α < Ordinal.omega 1 →
-        ∀ (N : Type w) [L.Structure N] [Countable N] (b : Fin n → N),
-          (BFEquiv (L := L) α n a b ↔ BFEquiv (L := L) (Order.succ α) n a b) :=
-  per_tuple_stabilization_below_omega1_of countableRefinementHypothesis n a
-
 /-- Complete stabilization below ω₁. -/
 theorem exists_complete_stabilization (M : Type w) [L.Structure M] [Countable M] :
     ∃ α < (Ordinal.omega 1 : Ordinal.{0}), StabilizesCompletely (L := L) M α :=
   exists_complete_stabilization_of countableRefinementHypothesis M
 
-/-- Existence of a stabilization ordinal (BFEquiv0 characterizes isomorphism). -/
-theorem exists_stabilization (M : Type w) [L.Structure M] [Countable M] :
-    ∃ α < (Ordinal.omega 1 : Ordinal.{0}), StabilizesAt (L := L) M α :=
-  exists_stabilization_of countableRefinementHypothesis M
-
-/-- The stabilization ordinal is below ω₁. -/
-theorem stabilizationOrdinal_lt_omega1' (M : Type w) [L.Structure M] [Countable M] :
-    stabilizationOrdinal (L := L) M < Ordinal.omega 1 :=
-  stabilizationOrdinal_lt_omega1_of countableRefinementHypothesis M
-
-/-- The characterization property holds at stabilizationOrdinal. -/
-theorem stabilizationOrdinal_stabilizes (M : Type w) [L.Structure M] [Countable M] :
-    StabilizesAt (L := L) M (stabilizationOrdinal (L := L) M) :=
-  stabilizationOrdinal_stabilizes_of countableRefinementHypothesis M
-
-
-
 /-- The Scott sentence of M characterizes M up to isomorphism among countable structures. -/
 theorem scottSentence_characterizes (M : Type w) [L.Structure M] [Countable M]
     (N : Type w) [L.Structure N] [Countable N] :
-    (scottSentence (L := L) M).realize_as_sentence N ↔ Nonempty (M ≃[L] N) :=
+    (scottSentence (L := L) M).realizeAsSentence N ↔ Nonempty (M ≃[L] N) :=
   scottSentence_characterizes_of countableRefinementHypothesis M N
-
-
-
-
-
-
 
 end Language
 

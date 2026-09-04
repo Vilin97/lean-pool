@@ -120,23 +120,6 @@ end BoundedFormulaInf
 
 namespace BoundedFormula
 
-/-- The finitary embedding preserves realization, at every carrier. -/
-@[simp]
-private theorem realize_toInf {M : Type w} [L.Structure M] :
-    ∀ {n} (φ : L.BoundedFormula α n) (v : α → M) (xs : Fin n → M),
-      (toInf (ι := ι) φ).Realize v xs ↔ φ.Realize v xs := by
-  intro n φ
-  induction φ with
-  | falsum | equal | rel => intro v xs; exact Iff.rfl
-  | imp φ ψ ihφ ihψ =>
-    intro v xs
-    simpa only [toInf, BoundedFormulaInf.realize_imp, BoundedFormula.realize_imp] using
-      imp_congr (ihφ v xs) (ihψ v xs)
-  | all φ ih =>
-    intro v xs
-    simpa only [toInf, BoundedFormulaInf.realize_all, BoundedFormula.realize_all] using
-      forall_congr' fun y ↦ ih v (Fin.snoc xs y)
-
 end BoundedFormula
 
 /-- Realization of an `L_{∞ω}` formula (no free bound variables). -/
@@ -146,17 +129,6 @@ def FormulaInf.Realize {M : Type w} [L.Structure M] (φ : L.FormulaInf ι α) (v
 section AllsExs
 
 variable {M : Type w} [L.Structure M]
-
-@[simp]
-private theorem BoundedFormulaInf.realize_alls {φ : L.BoundedFormulaInf ι α n} {v : α → M} :
-    φ.alls.Realize v ↔ ∀ xs : Fin n → M, φ.Realize v xs := by
-  induction n with
-  | zero => exact Unique.forall_iff.symm
-  | succ n ih =>
-    simp only [BoundedFormulaInf.alls, ih, BoundedFormulaInf.realize_all]
-    exact ⟨fun h xs => Fin.snoc_init_self xs ▸ h _ _, fun h xs x => h (Fin.snoc xs x)⟩
-
-
 
 end AllsExs
 

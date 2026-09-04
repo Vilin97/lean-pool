@@ -48,8 +48,4 @@ variable {L : Language.{0, 0}}
 /-- The rational constant `d_q` as a closed `L[[ℕ]]`-term. -/
 def ratConstTerm (q : ℚ) : L[[ℕ]].Term Empty := constTerm (ratConstIdx q)
 
-
-
-
-
 end FirstOrder.Language

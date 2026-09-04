@@ -93,11 +93,11 @@ theorem lyndonInsepAt_imp_dichotomy {φ ψ : L[[ℕ]].Sentenceω} (hmem : φ.imp
   refine ⟨(σ₁.not).imp σ₂, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact baseFunctionsIn_imp_subset (by rw [baseFunctionsIn_not]; exact hbf₁) hbf₂
   · refine baseRelationsInSigned_imp_subset ?_ hbp₂
-    show baseRelationsInSigned false σ₁.not ⊆ P
+    change baseRelationsInSigned false σ₁.not ⊆ P
     rw [baseRelationsInSigned_not]
     exact hbp₁
   · refine baseRelationsInSigned_imp_subset ?_ hbn₂
-    show baseRelationsInSigned true σ₁.not ⊆ N
+    change baseRelationsInSigned true σ₁.not ⊆ N
     rw [baseRelationsInSigned_not]
     exact hbn₁
   · exact sentenceJConsts_imp_subset (by rw [sentenceJConsts_not]; exact hsupp₁) hsupp₂

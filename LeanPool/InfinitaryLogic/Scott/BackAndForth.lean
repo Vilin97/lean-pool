@@ -137,11 +137,6 @@ theorem BFEquiv.zero (a : Fin n → M) (b : Fin n → N) :
   simp only [BFEquiv, Ordinal.limitRecOn_zero]
 
 omit [L.IsRelational] in
-private theorem BFEquiv.zero_iff_sameAtomicType (a : Fin n → M) (b : Fin n → N) :
-    BFEquiv (L := L) 0 n a b ↔ SameAtomicType (L := L) (M := M) (N := N) a b :=
-  BFEquiv.zero a b
-
-omit [L.IsRelational] in
 theorem BFEquiv.succ (α : Ordinal) (a : Fin n → M) (b : Fin n → N) :
     BFEquiv (L := L) (Order.succ α) n a b ↔
       BFEquiv (L := L) α n a b ∧
@@ -194,8 +189,6 @@ theorem BFEquiv.back {α : Ordinal} {a : Fin n → M} {b : Fin n → N}
     (h : BFEquiv (L := L) (Order.succ α) n a b) (n' : N) :
     ∃ m : M, BFEquiv (L := L) α (n + 1) (snoc a m) (snoc b n') :=
   ((BFEquiv.succ α a b).mp h).2.2 n'
-
-
 
 omit [L.IsRelational] in
 /-- BF-equivalence is reflexive at all levels. -/
@@ -262,84 +255,10 @@ Having a strategy implies BFEquiv, but the converse requires choosing coherent w
 Winning all finite back-and-forth games does not give an ω-round strategy. The Type-valued
 `BFStrategyT` below is genuinely stronger than `BFEquiv ω` because it carries witnesses. -/
 
-/-- Type-valued back-and-forth strategy at level k. Carries actual witnesses for extensions.
-
-At level 0: a proof that tuples have the same atomic type (as a subtype of Unit).
-At level k+1: strategy at level k, plus witness FUNCTIONS (not just existence) for forth/back.
-
-This is STRONGER than `BFEquiv k` because it provides computational witnesses, not just
-existence proofs. The converse `BFEquiv k → BFStrategyT k` requires Choice and loses coherence.
-
-We use a recursive `def` (not `inductive`) to avoid Lean's nested-inductive restrictions.
-The base case uses `{ _ : Unit // SameAtomicType a b }` to lift Prop to Type in a universe-
-polymorphic way (Subtype lives in the same universe as the carrier type). -/
-private def BFStrategyT (L : Language.{u, v}) [L.IsRelational] (M : Type w) (N : Type w')
-    [L.Structure M] [L.Structure N] : ℕ → (n : ℕ) → (Fin n → M) → (Fin n → N) → Type (max w w') :=
-  fun k => match k with
-  | 0 => fun _n a b => Subtype (fun _ : PUnit.{max w w' + 1} => SameAtomicType (L := L) a b)
-  | k + 1 => fun n a b =>
-    (BFStrategyT L M N k n a b) ×
-    (∀ m : M, (n' : N) × BFStrategyT L M N k (n + 1) (Fin.snoc a m) (Fin.snoc b n')) ×
-    (∀ n' : N, (m : M) × BFStrategyT L M N k (n + 1) (Fin.snoc a m) (Fin.snoc b n'))
-
-
-
-
-
-
-
 /-! ### Universe Lifting for BFEquiv
 
 BFEquiv is defined by `Ordinal.limitRecOn`, which is universe-specific. These lemmas
 transport BFEquiv between ordinal universes via `Ordinal.lift`. -/
-
-omit [L.IsRelational] in
-/-- Lift BFEquiv from `Ordinal.{0}` to `Ordinal.{w}` at a specific ordinal.
-If `BFEquiv β n a b` holds at `β : Ordinal.{0}`, then it holds at
-`Ordinal.lift β : Ordinal.{w}`. -/
-theorem BFEquiv.ofOrdinalLift
-    {M : Type w} [L.Structure M] {N : Type w} [L.Structure N]
-    {β : Ordinal.{0}} {n : ℕ} {a : Fin n → M} {b : Fin n → N}
-    (h : BFEquiv.{u, v, w, w, 0} (L := L) β n a b) :
-    BFEquiv.{u, v, w, w, w} (L := L) (Ordinal.lift.{w, 0} β) n a b := by
-  induction β using Ordinal.limitRecOn generalizing n a b with
-  | zero =>
-    rw [Ordinal.lift_zero, BFEquiv.zero] at *; exact h
-  | add_one γ ih =>
-    rw [← Order.succ_eq_add_one, Ordinal.lift_succ, BFEquiv.succ] at *
-    exact ⟨ih h.1,
-           fun m => let ⟨n', hn'⟩ := h.2.1 m; ⟨n', ih hn'⟩,
-           fun n' => let ⟨m, hm⟩ := h.2.2 n'; ⟨m, ih hm⟩⟩
-  | limit γ hγ ih =>
-    rw [BFEquiv.limit _ (Ordinal.isSuccLimit_lift.mpr hγ)]
-    intro δ hδ
-    obtain ⟨γ', hγ'lt, rfl⟩ := Ordinal.lt_lift_iff.mp hδ
-    exact ih γ' hγ'lt ((BFEquiv.limit γ hγ a b).mp h γ' hγ'lt)
-
-omit [L.IsRelational] in
-/-- Lower BFEquiv from `Ordinal.{w}` back to `Ordinal.{0}` at a specific ordinal.
-If `BFEquiv (Ordinal.lift β) n a b` holds at the lifted ordinal, then
-`BFEquiv β n a b` holds at the original. -/
-theorem BFEquiv.toOrdinalLift
-    {M : Type w} [L.Structure M] {N : Type w} [L.Structure N]
-    {β : Ordinal.{0}} {n : ℕ} {a : Fin n → M} {b : Fin n → N}
-    (h : BFEquiv.{u, v, w, w, w} (L := L) (Ordinal.lift.{w, 0} β) n a b) :
-    BFEquiv.{u, v, w, w, 0} (L := L) β n a b := by
-  induction β using Ordinal.limitRecOn generalizing n a b with
-  | zero =>
-    rw [Ordinal.lift_zero, BFEquiv.zero] at *; exact h
-  | add_one γ ih =>
-    rw [← Order.succ_eq_add_one, Ordinal.lift_succ, BFEquiv.succ] at h
-    rw [← Order.succ_eq_add_one, BFEquiv.succ]
-    exact ⟨ih h.1,
-           fun m => let ⟨n', hn'⟩ := h.2.1 m; ⟨n', ih hn'⟩,
-           fun n' => let ⟨m, hm⟩ := h.2.2 n'; ⟨m, ih hm⟩⟩
-  | limit γ hγ ih =>
-    rw [BFEquiv.limit _ hγ]
-    intro γ' hγ'lt
-    apply ih γ' hγ'lt
-    exact (BFEquiv.limit _ (Ordinal.isSuccLimit_lift.mpr hγ) a b).mp h
-      (Ordinal.lift γ') (Ordinal.lift_lt.mpr hγ'lt)
 
 end Language
 

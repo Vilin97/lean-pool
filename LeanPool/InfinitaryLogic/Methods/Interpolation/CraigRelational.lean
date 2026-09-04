@@ -8,7 +8,6 @@ import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
 import LeanPool.InfinitaryLogic.Methods.Interpolation.BaseOccurrenceProjections
 import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
-import LeanPool.InfinitaryLogic.Methods.Interpolation.RootGate
 import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
 /-!
 # Craig interpolation for `L_ω₁ω`, countable relational core (issue #8, Layer 1)
@@ -35,7 +34,8 @@ and with it the coverage hypothesis — is unnecessary (an audit correction).
 Assume no interpolant.  Then the mapped root pair `({r₁'}, {r₂'.not})` is inseparable at empty
 support: an empty-support separator would strip (`base_interpolant_of_empty_support_separator`) to a
 base interpolant `θ₀` with `r₁ ⊨ θ₀` and `{r₂.not} ⊨ θ₀.not`, and the latter is `θ₀ ⊨ r₂` by
-semantic contraposition — contradiction.  Feeding the inseparable root pair to `exists_paired_model_neg`
+semantic contraposition — contradiction.  Feeding the inseparable root pair to
+`exists_paired_model_neg`
 gives one model with `M ⊨ r₁` and `¬ M ⊨ r₂`; its base reduct contradicts `r₁ ⊨ r₂`.
 -/
 
@@ -44,9 +44,6 @@ namespace FirstOrder.Language
 open FirstOrder Structure
 
 variable {L : Language.{0, 0}}
-
-
-
 
 /-! ## The countable relational Craig theorem -/
 
@@ -93,7 +90,8 @@ theorem craig_interpolation_relational_countable [L.IsRelational]
   have hb1 : @Sentenceω.Realize L r₁ M _ :=
     (BoundedFormulaω.realize_mapLanguage (L.lhomWithConstants ℕ) r₁ Empty.elim Fin.elim0).mp hM1
   have hb2 : ¬ @Sentenceω.Realize L r₂ M _ := fun hc =>
-    hM2 ((BoundedFormulaω.realize_mapLanguage (L.lhomWithConstants ℕ) r₂ Empty.elim Fin.elim0).mpr hc)
+    hM2 ((BoundedFormulaω.realize_mapLanguage (L.lhomWithConstants ℕ) r₂ Empty.elim
+      Fin.elim0).mpr hc)
   exact hb2 (h M (fun ψ hψ => by rw [Set.mem_singleton_iff] at hψ; subst hψ; exact hb1))
 
 end FirstOrder.Language

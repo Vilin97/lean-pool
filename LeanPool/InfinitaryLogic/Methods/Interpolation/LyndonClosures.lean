@@ -58,8 +58,6 @@ def SentBndPol (F : Set (Σ n, L.Functions n)) (P N : Set (Σ n, L.Relations n))
 
 variable {F : Set (Σ n, L.Functions n)} {P N : Set (Σ n, L.Relations n)}
 
-
-
 /-- **Negation exchanges the polarity components** — the directional fact that replaces the
 unsigned `sentBnd_not_iff`.  It is *not* a same-class equivalence. -/
 theorem sentBndPol_not_iff {σ : L[[ℕ]].Sentenceω} :
@@ -184,8 +182,6 @@ theorem lyndonInsepAt_insert_of_entails {φ : L[[ℕ]].Sentenceω}
     LyndonInsepAt F P N A (insert φ Γ) Δ := by
   rintro ⟨σ, hbf, hbp, hbn, hsupp, hΓφσ, hΔσ⟩
   exact h ⟨σ, hbf, hbp, hbn, hsupp, Theoryω.Entails.cut hcons hΓφσ, hΔσ⟩
-
-
 
 /-! ## The one-sided closures: component selection (separator `⨆ σ`) -/
 

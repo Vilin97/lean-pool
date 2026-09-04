@@ -241,7 +241,7 @@ private theorem realize_instConst_ambient_iff (c : ℕ) (φ : L[[ℕ]].BoundedFo
     @Sentenceω.Realize L[[ℕ]] (instConst c φ) M S ↔
       @BoundedFormulaω.Realize L[[ℕ]] M S Empty 1 φ Empty.elim
         (fun _ => ambientConstMap (L := L) M c) := by
-  show @BoundedFormulaω.Realize L[[ℕ]] M S Empty 0 (instConst c φ) Empty.elim Fin.elim0 ↔ _
+  change @BoundedFormulaω.Realize L[[ℕ]] M S Empty 0 (instConst c φ) Empty.elim Fin.elim0 ↔ _
   rw [ambient_realize_iff_wc (S := S) (instConst c φ) Empty.elim Fin.elim0, realize_instConst,
     ambient_realize_iff_wc (S := S) φ Empty.elim (fun _ => ambientConstMap (L := L) M c)]
 
@@ -251,7 +251,7 @@ theorem all_entails_instConst (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
   have hall : @BoundedFormulaω.Realize L[[ℕ]] M S Empty 0 φ.all Empty.elim Fin.elim0 :=
     hmodel _ (Set.mem_singleton _)
   rw [BoundedFormulaω.realize_all] at hall
-  show @Sentenceω.Realize L[[ℕ]] (instConst c φ) M S
+  change @Sentenceω.Realize L[[ℕ]] (instConst c φ) M S
   rw [realize_instConst_ambient_iff]
   have hx := hall (ambientConstMap (L := L) M c)
   have hsnoc : (Fin.snoc Fin.elim0 (ambientConstMap (L := L) M c) : Fin 1 → M)
@@ -400,52 +400,9 @@ theorem instConst_not (c : ℕ) (φ : L[[ℕ]].BoundedFormulaω Empty 1) :
 
 /-! ## The finite inseparable-pair consistency family -/
 
-/-- **A family member**: a finite subset of the generated universe `GenU r₁ r₂` inseparable from
-`Δ` at some finite allowed support. This is the underlying condition set of the interpolation
-consistency property. -/
-def InsepFamilyMem (F : Set (Σ n, L.Functions n)) (R : Set (Σ n, L.Relations n))
-    (Δ : Set L[[ℕ]].Sentenceω) (r₁ r₂ : L[[ℕ]].Sentenceω) (Γ : Set L[[ℕ]].Sentenceω) : Prop :=
-  Γ.Finite ∧ Γ ⊆ GenU r₁ r₂ ∧ ∃ A : Finset ℕ, InsepAt F R A Γ Δ
-
 variable {F : Set (Σ n, L.Functions n)} {R : Set (Σ n, L.Relations n)}
   {Δ Γ : Set L[[ℕ]].Sentenceω} {r₁ r₂ : L[[ℕ]].Sentenceω}
 
-theorem InsepFamilyMem.finite (h : InsepFamilyMem F R Δ r₁ r₂ Γ) : Γ.Finite := h.1
-
-
-
-
-
 /-! ## The family closure lemmas (one per `ConsistencyPropertyEqOn` field) -/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 end FirstOrder.Language

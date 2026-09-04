@@ -96,7 +96,8 @@ private theorem qmk_constTerm_eq_iff (hsc : HenkinComplete U S) (a b : ℕ) :
 omit [L.IsRelational] in
 /-- **Coordinatewise relation congruence**: `S`-equal argument tuples give the same relation
 membership. Iterates the atomic one-coordinate congruence `HenkinComplete.rel_congr`. -/
-private theorem relInst_congr (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g g' : Fin l → ℕ)
+private theorem relInst_congr (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g g' :
+  Fin l → ℕ)
     (h : ∀ i, constEq (g i) (g' i) ∈ S) (hg : relInst R g ∈ S) : relInst R g' ∈ S := by
   suffices H : ∀ k : ℕ, relInst R (fun i : Fin l => if (i : ℕ) < k then g' i else g i) ∈ S by
     have hl := H l
@@ -133,7 +134,8 @@ private theorem relInst_congr (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relati
 
 omit [L.IsRelational] in
 /-- The tuple congruence as an iff (using equality symmetry for the reverse). -/
-private theorem relInst_congr_iff (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g g' : Fin l → ℕ)
+private theorem relInst_congr_iff (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g
+  g' : Fin l → ℕ)
     (h : ∀ i, constEq (g i) (g' i) ∈ S) : relInst R g ∈ S ↔ relInst R g' ∈ S :=
   ⟨relInst_congr hsc R g g' h,
     relInst_congr hsc R g' g fun i => HenkinComplete.eq_symm hsc _ _ (h i)⟩
@@ -162,7 +164,7 @@ noncomputable instance qModelStructure (hsc : HenkinComplete U S) :
 theorem qterm_realize_eq_mk (hsc : HenkinComplete U S) (t : L[[ℕ]].Term Empty) :
     @Term.realize L[[ℕ]] (QModel hsc) (qModelStructure hsc) Empty Empty.elim t = qmk hsc t := by
   obtain ⟨c, rfl⟩ := exists_eq_constTerm t
-  show @Structure.funMap L[[ℕ]] (QModel hsc) (qModelStructure hsc) 0 (Sum.inr c) _
+  change @Structure.funMap L[[ℕ]] (QModel hsc) (qModelStructure hsc) 0 (Sum.inr c) _
     = qmk hsc (constTerm c)
   rfl
 
@@ -171,7 +173,8 @@ theorem qterm_realize_eq_mk (hsc : HenkinComplete U S) (t : L[[ℕ]].Term Empty)
 /-- **`RelMap` of a constant tuple reflects to atomic membership.** Forward reflects through the
 representatives chosen by the relation map (via the tuple congruence); backward is the identity
 representative. -/
-private theorem relMap_qmk_iff (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g : Fin l → ℕ) :
+private theorem relMap_qmk_iff (hsc : HenkinComplete U S) {l : ℕ} (R : L.Relations l) (g :
+  Fin l → ℕ) :
     (qModelStructure hsc).RelMap (Sum.inl R) (fun i => qmk hsc (constTerm (g i)))
       ↔ relInst R g ∈ S := by
   constructor

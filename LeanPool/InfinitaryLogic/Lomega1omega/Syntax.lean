@@ -34,7 +34,8 @@ or explicit cast — their *absence* is the certification.
 - the scoped notation.
 
 `Bot`, `Top`, `Inhabited`, `not` and `ex` now come from Mathlib and are deliberately **not**
-redeclared. `BoundedFormulaInf.verum` plays the role of the old `top` and is definitionally equal to it
+redeclared. `BoundedFormulaInf.verum` plays the role of the old `top` and is definitionally equal
+to it
 (`not falsum` reduces to `imp falsum falsum`).
 -/
 
@@ -55,24 +56,31 @@ The constructors live in the `BoundedFormulaInf` namespace. Dot-notation on a
 `BoundedFormulaω.falsum` need these. Each is an `abbrev`, so it unfolds by `rfl`, and each is
 `@[match_pattern]`, so it may still be used in pattern position. -/
 
+/-- Falsity, as a qualified constructor name. -/
 @[match_pattern] abbrev falsum : L.BoundedFormulaω α n := BoundedFormulaInf.falsum
 
+/-- Equality, as a qualified constructor name. -/
 @[match_pattern] abbrev equal (t₁ t₂ : L.Term (α ⊕ Fin n)) : L.BoundedFormulaω α n :=
   BoundedFormulaInf.equal t₁ t₂
 
+/-- Relation application, as a qualified constructor name. -/
 @[match_pattern] abbrev rel {l : ℕ} (R : L.Relations l) (ts : Fin l → L.Term (α ⊕ Fin n)) :
     L.BoundedFormulaω α n :=
   BoundedFormulaInf.rel R ts
 
+/-- Implication, as a qualified constructor name. -/
 @[match_pattern] abbrev imp (φ ψ : L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
   BoundedFormulaInf.imp φ ψ
 
+/-- Universal quantification, as a qualified constructor name. -/
 @[match_pattern] abbrev all (φ : L.BoundedFormulaω α (n + 1)) : L.BoundedFormulaω α n :=
   BoundedFormulaInf.all φ
 
+/-- Countable disjunction, as a qualified constructor name. -/
 @[match_pattern] abbrev iSup (φs : ℕ → L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
   BoundedFormulaInf.iSup φs
 
+/-- Countable conjunction, as a qualified constructor name. -/
 @[match_pattern] abbrev iInf (φs : ℕ → L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
   BoundedFormulaInf.iInf φs
 
@@ -150,21 +158,22 @@ def esupWith {ι : Type*} (e : Encodable ι) (φs : ι → L.BoundedFormulaω α
     L.BoundedFormulaω α n :=
   @esup L α n ι e φs
 
-
-
-
-
 end BoundedFormulaω
 
 -- Notation
+/-- Implication notation for infinitary formulas. -/
 scoped[Lomega1omega] infixr:62 " ⟹ω " => FirstOrder.Language.BoundedFormulaω.imp
 
+/-- Universal-quantifier notation for infinitary formulas. -/
 scoped[Lomega1omega] prefix:110 "∀'ω " => FirstOrder.Language.BoundedFormulaω.all
 
+/-- Negation notation for infinitary formulas. -/
 scoped[Lomega1omega] prefix:arg "∼ω" => FirstOrder.Language.BoundedFormulaω.not
 
+/-- Existential-quantifier notation for infinitary formulas. -/
 scoped[Lomega1omega] prefix:110 "∃'ω " => FirstOrder.Language.BoundedFormulaω.ex
 
+/-- Biconditional notation for infinitary formulas. -/
 scoped[Lomega1omega] infixl:61 " ⇔ω " => FirstOrder.Language.BoundedFormulaω.iff
 
 /-! ## Facade transparency gates

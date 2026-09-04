@@ -27,7 +27,7 @@ of any `Conditional` file.
 
 namespace FirstOrder.Language
 
-open FirstOrder Structure Classical
+open FirstOrder Structure
 
 variable {L : Language.{0, 0}}
 
@@ -36,17 +36,19 @@ generating sets are interpreted by the sublanguage structure; the rest are fille
 (functions) / as `False` (relations). -/
 @[reducible] noncomputable def expandSymbStructureBase
     (F : Set (Σ n, L.Functions n)) (R : Set (Σ n, L.Relations n)) {M : Type} [Nonempty M]
-    [instM : (symbSublang (L := L) F R).Structure M] : L.Structure M where
-  funMap := fun {m} f xs =>
-    if h : (⟨m, f⟩ : Σ n, L.Functions n) ∈ F then
-      Structure.funMap (L := symbSublang (L := L) F R)
-        (⟨f, h⟩ : (symbSublang (L := L) F R).Functions m) xs
-    else Classical.arbitrary M
-  RelMap := fun {m} r xs =>
-    if h : (⟨m, r⟩ : Σ n, L.Relations n) ∈ R then
-      Structure.RelMap (L := symbSublang (L := L) F R)
-        (⟨r, h⟩ : (symbSublang (L := L) F R).Relations m) xs
-    else False
+    [instM : (symbSublang (L := L) F R).Structure M] : L.Structure M := by
+  classical
+  exact
+    { funMap := fun {m} f xs =>
+        if h : (⟨m, f⟩ : Σ n, L.Functions n) ∈ F then
+          Structure.funMap (L := symbSublang (L := L) F R)
+            (⟨f, h⟩ : (symbSublang (L := L) F R).Functions m) xs
+        else Classical.arbitrary M
+      RelMap := fun {m} r xs =>
+        if h : (⟨m, r⟩ : Σ n, L.Relations n) ∈ R then
+          Structure.RelMap (L := symbSublang (L := L) F R)
+            (⟨r, h⟩ : (symbSublang (L := L) F R).Relations m) xs
+        else False }
 
 /-- The reduct along `symbSublangIncl` recovers the original sublanguage structure. -/
 theorem reduct_expandSymbStructureBase
@@ -54,16 +56,17 @@ theorem reduct_expandSymbStructureBase
     [instM : (symbSublang (L := L) F R).Structure M] :
     @LHom.reduct (symbSublang (L := L) F R) L (symbSublangIncl F R) M (expandSymbStructureBase F R)
       = instM := by
+  classical
   apply Structure.ext
   · funext m f xs
-    show (expandSymbStructureBase F R).funMap ((symbSublangIncl F R).onFunction f) xs = _
-    show (if h : (⟨m, f.1⟩ : Σ n, L.Functions n) ∈ F then
+    change (expandSymbStructureBase F R).funMap ((symbSublangIncl F R).onFunction f) xs = _
+    change (if h : (⟨m, f.1⟩ : Σ n, L.Functions n) ∈ F then
         Structure.funMap (L := symbSublang (L := L) F R) (⟨f.1, h⟩ : _) xs
       else Classical.arbitrary M) = Structure.funMap f xs
     exact dite_eq_left f.2
   · funext m r xs
-    show (expandSymbStructureBase F R).RelMap ((symbSublangIncl F R).onRelation r) xs = _
-    show (if h : (⟨m, r.1⟩ : Σ n, L.Relations n) ∈ R then
+    change (expandSymbStructureBase F R).RelMap ((symbSublangIncl F R).onRelation r) xs = _
+    change (if h : (⟨m, r.1⟩ : Σ n, L.Relations n) ∈ R then
         Structure.RelMap (L := symbSublang (L := L) F R) (⟨r.1, h⟩ : _) xs
       else False) = Structure.RelMap r xs
     exact dite_eq_left r.2
@@ -78,16 +81,17 @@ theorem realize_restrictSymbols_expandSymbStructureBase
     @BoundedFormulaω.Realize (symbSublang (L := L) F R) M instM Empty n
         (φ.restrictSymbols hF hR) v xs
       ↔ @BoundedFormulaω.Realize L M (expandSymbStructureBase F R) Empty n φ v xs := by
+  classical
   let : L.Structure M := expandSymbStructureBase F R
   have : (symbSublangIncl F R).IsExpansionOn M := by
     constructor
     · intro m f xs
-      show (if h : (⟨m, f.1⟩ : Σ n, L.Functions n) ∈ F then
+      change (if h : (⟨m, f.1⟩ : Σ n, L.Functions n) ∈ F then
           Structure.funMap (L := symbSublang (L := L) F R) (⟨f.1, h⟩ : _) xs
         else Classical.arbitrary M) = _
       exact dite_eq_left f.2
     · intro m r xs
-      show (if h : (⟨m, r.1⟩ : Σ n, L.Relations n) ∈ R then
+      change (if h : (⟨m, r.1⟩ : Σ n, L.Relations n) ∈ R then
           Structure.RelMap (L := symbSublang (L := L) F R) (⟨r.1, h⟩ : _) xs
         else False) = _
       exact dite_eq_left r.2

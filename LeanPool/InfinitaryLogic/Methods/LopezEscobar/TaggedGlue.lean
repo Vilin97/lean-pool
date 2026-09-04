@@ -64,7 +64,7 @@ private theorem gluedStructure_agree_right (Sl Sr : (graphLanguage (KLang L)).St
   rcases hp with ⟨q, hq, rfl⟩ | ⟨q, hq, rfl⟩
   · rcases hq with ⟨r0, rfl⟩ | ⟨r0, rfl⟩
     · -- base `L`-relation: glue is `Sl`, and `Sl = Sr` on it via the shared base
-      show @Structure.RelMap _ M Sr r0.1 (GraphRelation.base (Sum.inl r0.2)) x
+      change @Structure.RelMap _ M Sr r0.1 (GraphRelation.base (Sum.inl r0.2)) x
         ↔ @Structure.RelMap _ M Sl r0.1 (GraphRelation.base (Sum.inl r0.2)) x
       rw [show @Structure.RelMap _ M Sr r0.1 (GraphRelation.base (Sum.inl r0.2)) x
           = @Structure.RelMap L M instL r0.1 r0.2 x from hSrExp.map_onRelation r0.2 x,

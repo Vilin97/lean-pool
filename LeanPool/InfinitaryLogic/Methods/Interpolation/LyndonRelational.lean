@@ -100,7 +100,8 @@ theorem lyndon_interpolation_relational_countable [L.IsRelational]
   have hb1 : @Sentenceω.Realize L r₁ M _ :=
     (BoundedFormulaω.realize_mapLanguage (L.lhomWithConstants ℕ) r₁ Empty.elim Fin.elim0).mp hM1
   have hb2 : ¬ @Sentenceω.Realize L r₂ M _ := fun hc =>
-    hM2 ((BoundedFormulaω.realize_mapLanguage (L.lhomWithConstants ℕ) r₂ Empty.elim Fin.elim0).mpr hc)
+    hM2 ((BoundedFormulaω.realize_mapLanguage (L.lhomWithConstants ℕ) r₂
+      Empty.elim Fin.elim0).mpr hc)
   exact hb2 (h M (fun ψ hψ => by rw [Set.mem_singleton_iff] at hψ; subst hψ; exact hb1))
 
 end FirstOrder.Language

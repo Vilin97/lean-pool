@@ -53,24 +53,9 @@ instance : Countable (Σ n, WitnessLang.Functions n) := by
   rintro ⟨_, x⟩ ⟨_, y⟩ h
   cases x <;> cases y <;> simp_all
 
-
-
 /-! ## Numeral terms -/
 
 variable {α : Type}
-
-/-- **The numeral terms**: `numTerm 0 = c`, `numTerm (n+1) = s (numTerm n)`. -/
-def numTerm (α : Type) : ℕ → WitnessLang.Term α
-  | 0 => Term.func WitnessFun.c Fin.elim0
-  | n + 1 => Term.func WitnessFun.s ![numTerm α n]
-
-
-
-
-
-
-
-
 
 /-! ## The common tagged language and its named embeddings -/
 
@@ -135,13 +120,5 @@ theorem leftFuns_inter_rightFuns : leftFuns L ∩ rightFuns L = ∅ :=
 /-- **Left/right witness relation symbols are disjoint.** -/
 theorem leftRels_inter_rightRels : leftRels L ∩ rightRels L = ∅ :=
   range_tag_disjoint fun _ _ _ h => Sum.inl_ne_inr (Sum.inr_injective h)
-
-
-
-
-
-
-
-
 
 end FirstOrder.Language

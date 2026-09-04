@@ -91,11 +91,11 @@ theorem realize_backTranslateFormula :
         @BoundedFormulaω.Realize (graphLanguage L) M (graphExpansion L M) α n θ v xs
   | _, .falsum, _, _ => Iff.rfl
   | _, .equal t u, v, xs => by
-    show (ungraphTerm t).realize _ = (ungraphTerm u).realize _ ↔ _
+    change (ungraphTerm t).realize _ = (ungraphTerm u).realize _ ↔ _
     rw [realize_ungraphTerm (graphExpansion L M) t, realize_ungraphTerm (graphExpansion L M) u]
     exact Iff.rfl
   | _, .rel (GraphRelation.base R₀) ts, v, xs => by
-    show RelMap R₀ _ ↔ (graphExpansion L M).RelMap (GraphRelation.base R₀) _
+    change RelMap R₀ _ ↔ (graphExpansion L M).RelMap (GraphRelation.base R₀) _
     rw [graphExpansion_relMap_base]
     rw [show (fun i => @Term.realize (graphLanguage L) M (graphExpansion L M) _
         (Sum.elim v xs) (ts i)) = fun i => (ungraphTerm (ts i)).realize (Sum.elim v xs) from
@@ -111,12 +111,12 @@ theorem realize_backTranslateFormula :
             (Sum.elim v xs) (ts j)) =
           @Term.realize (graphLanguage L) M (graphExpansion L M) _
             (Sum.elim v xs) (ts (Fin.last _))) := by
-      show (Term.func f (Fin.init fun i => ungraphTerm (ts i))).realize (Sum.elim v xs) =
+      change (Term.func f (Fin.init fun i => ungraphTerm (ts i))).realize (Sum.elim v xs) =
           (ungraphTerm (ts (Fin.last _))).realize (Sum.elim v xs) ↔ _
       rw [Term.realize_func, hinit,
         realize_ungraphTerm (graphExpansion L M) (ts (Fin.last _))]
     rw [hL]
-    show _ ↔ (graphExpansion L M).RelMap (GraphRelation.graph f) fun i =>
+    change _ ↔ (graphExpansion L M).RelMap (GraphRelation.graph f) fun i =>
       @Term.realize (graphLanguage L) M (graphExpansion L M) _ (Sum.elim v xs) (ts i)
     rw [graphExpansion_relMap_graph]
   | _, .imp φ ψ, v, xs =>
@@ -127,14 +127,6 @@ theorem realize_backTranslateFormula :
     forall_congr' fun x => realize_backTranslateFormula φ v (Fin.snoc xs x)
   | _, .iSup φs, v, xs => exists_congr fun i => realize_backTranslateFormula (φs i) v xs
   | _, .iInf φs, v, xs => forall_congr' fun i => realize_backTranslateFormula (φs i) v xs
-
-/-- **Acceptance corollary**: back-translating a relationalization is semantically the original
-formula, in every `L`-structure (no syntactic identity claimed). -/
-private theorem realize_backTranslate_relationalize {n : ℕ} (φ : L.BoundedFormulaω α n)
-    (v : α → M) (xs : Fin n → M) :
-    (backTranslateFormula (relationalizeFormula φ)).Realize v xs ↔ φ.Realize v xs :=
-  (realize_backTranslateFormula (relationalizeFormula φ) v xs).trans
-    (realize_relationalizeFormula φ v xs)
 
 end Semantics
 
@@ -148,32 +140,32 @@ private theorem functionsIn_backTranslateFormula :
       (backTranslateFormula θ).functionsIn = graphRelSym L ⁻¹' θ.relationsIn
   | _, .falsum => (Set.preimage_empty).symm
   | _, .equal t u => by
-    show (ungraphTerm t).functionsIn ∪ (ungraphTerm u).functionsIn = graphRelSym L ⁻¹' ∅
+    change (ungraphTerm t).functionsIn ∪ (ungraphTerm u).functionsIn = graphRelSym L ⁻¹' ∅
     rw [functionsIn_ungraphTerm_eq_empty, functionsIn_ungraphTerm_eq_empty,
       Set.union_empty, Set.preimage_empty]
   | _, .rel (GraphRelation.base R₀) ts => by
-    show (⋃ i, (ungraphTerm (ts i)).functionsIn) = graphRelSym L ⁻¹' {baseRelSym L ⟨_, R₀⟩}
+    change (⋃ i, (ungraphTerm (ts i)).functionsIn) = graphRelSym L ⁻¹' {baseRelSym L ⟨_, R₀⟩}
     rw [graphRelSym_preimage_base_singleton]
     simp [functionsIn_ungraphTerm_eq_empty]
   | _, .rel (GraphRelation.graph f) ts => by
-    show insert (⟨_, f⟩ : Σ n, L.Functions n) (⋃ i, (ungraphTerm _).functionsIn) ∪
+    change insert (⟨_, f⟩ : Σ n, L.Functions n) (⋃ i, (ungraphTerm _).functionsIn) ∪
         (ungraphTerm (ts (Fin.last _))).functionsIn =
       graphRelSym L ⁻¹' {graphRelSym L ⟨_, f⟩}
     rw [graphRelSym_preimage_graph_singleton, functionsIn_ungraphTerm_eq_empty, Set.union_empty]
     simp [functionsIn_ungraphTerm_eq_empty]
   | _, .imp φ ψ => by
-    show (backTranslateFormula φ).functionsIn ∪ (backTranslateFormula ψ).functionsIn = _
+    change (backTranslateFormula φ).functionsIn ∪ (backTranslateFormula ψ).functionsIn = _
     rw [functionsIn_backTranslateFormula φ, functionsIn_backTranslateFormula ψ,
       ← Set.preimage_union]
     rfl
   | _, .all φ => functionsIn_backTranslateFormula φ
   | _, .iSup φs => by
-    show (⋃ i, (backTranslateFormula (φs i)).functionsIn) = _
+    change (⋃ i, (backTranslateFormula (φs i)).functionsIn) = _
     rw [Set.iUnion_congr fun i => functionsIn_backTranslateFormula (φs i),
       ← Set.preimage_iUnion]
     rfl
   | _, .iInf φs => by
-    show (⋃ i, (backTranslateFormula (φs i)).functionsIn) = _
+    change (⋃ i, (backTranslateFormula (φs i)).functionsIn) = _
     rw [Set.iUnion_congr fun i => functionsIn_backTranslateFormula (φs i),
       ← Set.preimage_iUnion]
     rfl
@@ -186,24 +178,24 @@ private theorem relationsIn_backTranslateFormula :
   | _, .falsum => (Set.preimage_empty).symm
   | _, .equal t u => (Set.preimage_empty).symm
   | _, .rel (GraphRelation.base R₀) ts => by
-    show {(⟨_, R₀⟩ : Σ n, L.Relations n)} = baseRelSym L ⁻¹' {baseRelSym L ⟨_, R₀⟩}
+    change {(⟨_, R₀⟩ : Σ n, L.Relations n)} = baseRelSym L ⁻¹' {baseRelSym L ⟨_, R₀⟩}
     rw [baseRelSym_preimage_base_singleton]
   | _, .rel (GraphRelation.graph f) ts => by
-    show (∅ : Set (Σ n, L.Relations n)) = baseRelSym L ⁻¹' {graphRelSym L ⟨_, f⟩}
+    change (∅ : Set (Σ n, L.Relations n)) = baseRelSym L ⁻¹' {graphRelSym L ⟨_, f⟩}
     rw [baseRelSym_preimage_graph_singleton]
   | _, .imp φ ψ => by
-    show (backTranslateFormula φ).relationsIn ∪ (backTranslateFormula ψ).relationsIn = _
+    change (backTranslateFormula φ).relationsIn ∪ (backTranslateFormula ψ).relationsIn = _
     rw [relationsIn_backTranslateFormula φ, relationsIn_backTranslateFormula ψ,
       ← Set.preimage_union]
     rfl
   | _, .all φ => relationsIn_backTranslateFormula φ
   | _, .iSup φs => by
-    show (⋃ i, (backTranslateFormula (φs i)).relationsIn) = _
+    change (⋃ i, (backTranslateFormula (φs i)).relationsIn) = _
     rw [Set.iUnion_congr fun i => relationsIn_backTranslateFormula (φs i),
       ← Set.preimage_iUnion]
     rfl
   | _, .iInf φs => by
-    show (⋃ i, (backTranslateFormula (φs i)).relationsIn) = _
+    change (⋃ i, (backTranslateFormula (φs i)).relationsIn) = _
     rw [Set.iUnion_congr fun i => relationsIn_backTranslateFormula (φs i),
       ← Set.preimage_iUnion]
     rfl

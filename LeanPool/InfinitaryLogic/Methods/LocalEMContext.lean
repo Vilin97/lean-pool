@@ -70,7 +70,7 @@ theorem locJSupport_onTerm_subst_subset {n : ℕ} (t : Λ.Term (Empty ⊕ Fin n)
   | @func l f args ih =>
     have hjc : locJConstOf Λ J ((lhomWithConstants Λ J).onFunction f) = ∅ := by
       cases l <;> rfl
-    show locJSupport Λ J (Term.func ((lhomWithConstants Λ J).onFunction f) _) ⊆ _
+    change locJSupport Λ J (Term.func ((lhomWithConstants Λ J).onFunction f) _) ⊆ _
     rw [locJSupport, hjc, Finset.union_empty]
     exact Finset.biUnion_subset.mpr fun i _ => ih i
 
@@ -106,7 +106,7 @@ theorem locDeepInterp_eq_realize (d : ℕ) (S : Finset J) (t : Λ[[J]].Term Empt
     locDeepInterp Λ J a d S t =
       t.constantsToVars.realize (Sum.elim (fun j => a (d + deepRank J S j)) Empty.elim) := by
   let : (constantsOn J).Structure M := constantsOn.structure (fun j => a (d + deepRank J S j))
-  show t.realize Empty.elim = _
+  change t.realize Empty.elim = _
   exact (Term.realize_constantsToVars (t := t) (v := Empty.elim)).symm
 
 /-- **M-side term substitution**: the deep interpretation of a substituted term is the
@@ -119,7 +119,7 @@ private theorem locDeepInterp_subst (d : ℕ) (S : Finset J) {n : ℕ}
     locDeepInterp Λ J a d S (t.subst (Sum.elim (fun e => e.elim) ts)) =
       t.realize (Sum.elim Empty.elim fun i => locDeepInterp Λ J a d S (ts i)) := by
   let : (constantsOn J).Structure M := constantsOn.structure fun j => a (d + deepRank J S j)
-  show (t.subst (Sum.elim (fun e => e.elim) ts)).realize Empty.elim = _
+  change (t.subst (Sum.elim (fun e => e.elim) ts)).realize Empty.elim = _
   rw [Term.realize_subst]
   congr 1
   funext x
@@ -177,12 +177,14 @@ theorem locDeTermFin_realize_superset (d : ℕ) (S T : Finset J) (w : Λ[[J]].Te
   have hrv : (locDeTermFin Λ J S w hw).realize
         (fun i : Fin S.card => a (d + deepRank J T (S.orderEmbOfFin rfl i)))
       = (locDeTermPos Λ J S w).realize
-        (fun n => a (d + if h : n < S.card then deepRank J T (S.orderEmbOfFin rfl ⟨n, h⟩) else 0)) := by
+        (fun n => a (d + if h : n < S.card then deepRank J T (S.orderEmbOfFin rfl ⟨n, h⟩)
+          else 0)) := by
     rw [locDeTermFin]
     refine Term.realize_restrictVar
       (fun n => a (d + if h : n < S.card then deepRank J T (S.orderEmbOfFin rfl ⟨n, h⟩) else 0))
       (fun x => ?_)
-    simp only [dite_eq_left (Finset.mem_range.mp (locDeTermPos_varFinset_subset (Λ := Λ) (J := J) hw x.2))]
+    simp only [dite_eq_left (Finset.mem_range.mp (locDeTermPos_varFinset_subset (Λ := Λ) (J
+      := J) hw x.2))]
   rw [hrv, locDeepInterp_eq_realize, locDeTermPos, Term.realize_relabel]
   apply Term.realize_eq_of_eq_on_varFinset
   intro x hx
@@ -372,7 +374,8 @@ theorem eventually_locDeepInterp_superset_iff
   exact Iff.trans hb0.symm (Iff.trans hiff hbS)
 
 /-- **Relation support-independence** (the relation analogue of the previous *iff*): on the deep
-tail, the truth of `R` on the deep interpretations over the combined support `S₀` of the arguments is
+tail, the truth of `R` on the deep interpretations over the combined support `S₀` of the
+arguments is
 equivalent to its truth over any larger support `S ⊇ S₀`. Makes the quotient `RelMap` independent of
 the chosen common support. -/
 private theorem eventually_locRelMap_superset_iff
@@ -514,16 +517,19 @@ def LocalEMContext.mkClass (ctx : LocalEMContext Λ J (M := M)) (t : Λ[[J]].Ter
     ctx.Carrier :=
   Quotient.mk ctx.setoid t
 
-/-- A common support covering all argument representatives — the support over which a relation's deep
+/-- A common support covering all argument representatives — the support over which a
+relation's deep
 truth is read. -/
 private noncomputable def LocalEMContext.commonSupport (ctx : LocalEMContext Λ J (M := M)) {n : ℕ}
     (xs : Fin n → ctx.Carrier) : Finset J :=
   Finset.univ.biUnion fun i => locJSupport Λ J (Quotient.out (xs i))
 
 /-- The **local EM term-model structure** on the carrier: function symbols act by term formation
-`f([t̄]) := [func f t̄]` (skeleton constants are the arity-0 case), and a relation holds iff it holds
+`f([t̄]) := [func f t̄]` (skeleton constants are the arity-0 case), and a relation holds iff
+it holds
 in `M` on the deep interpretations for all sufficiently deep `d` (read over a common support of the
-arguments). Well-definedness is proved separately via the enlargement-invariance congruence engine. -/
+arguments). Well-definedness is proved separately via the enlargement-invariance congruence
+  engine. -/
 @[reducible] noncomputable def LocalEMContext.structure (ctx : LocalEMContext Λ J (M := M)) :
     Λ[[J]].Structure ctx.Carrier where
   funMap {_} f xs := Quotient.mk ctx.setoid (Term.func f fun i => Quotient.out (xs i))
@@ -558,7 +564,8 @@ theorem LocalEMContext.constMap_mkClass (ctx : LocalEMContext Λ J (M := M))
 /-- **Relation congruence on terms** (helper): changing a finite tuple of argument terms by
 `LocalEMEq`, all over a fixed covering support `T`, preserves the eventual deep truth of a relation.
 Combines the per-term equality invariance over `T` with `Filter.eventually_all`. -/
-private theorem LocalEMContext.eventually_relMap_congr_terms (ctx : LocalEMContext Λ J (M := M)) {l : ℕ}
+private theorem LocalEMContext.eventually_relMap_congr_terms (ctx : LocalEMContext Λ J (M :=
+  M)) {l : ℕ}
     (R : Λ.Relations l) {ts ts' : Fin l → Λ[[J]].Term Empty}
     (h : ∀ i, LocalEMEq Λ J ctx.a (ts i) (ts' i)) {T : Finset J}
     (hts : ∀ i, locJSupport Λ J (ts i) ⊆ T) (hts' : ∀ i, locJSupport Λ J (ts' i) ⊆ T) :
@@ -573,16 +580,18 @@ private theorem LocalEMContext.eventually_relMap_congr_terms (ctx : LocalEMConte
   exact Filter.eventually_congr (hcong.mono fun _ hd => Iff.of_eq (congrArg _ (funext hd)))
 
 /-- **Relation interpretation computes on classes** (well-definedness): the interpreted relation
-holds on a tuple of term-classes iff it holds in `M` on the deep interpretations for all sufficiently
+holds on a tuple of term-classes iff it holds in `M` on the deep interpretations for all
+sufficiently
 deep `d`, over *any* support `S` covering the arguments — independent of the representatives and of
-the chosen support. The relation analogue of `funMap_mkClass`, via a bridge support `T = S ∪ Sout`. -/
+the chosen support. The relation analogue of `funMap_mkClass`, via a bridge support `T = S ∪
+  Sout`. -/
 theorem LocalEMContext.relMap_mkClass_iff (ctx : LocalEMContext Λ J (M := M)) {l : ℕ}
     (R : Λ.Relations l) (ts : Fin l → Λ[[J]].Term Empty)
     {S : Finset J} (hS : (Finset.univ.biUnion fun i => locJSupport Λ J (ts i)) ⊆ S) :
     @Structure.RelMap (Λ[[J]]) ctx.Carrier ctx.structure l (Sum.inl R)
         (fun i => ctx.mkClass (t := ts i)) ↔
       ∀ᶠ d in Filter.atTop, Structure.RelMap R fun i => locDeepInterp Λ J ctx.a d S (ts i) := by
-  show (∀ᶠ d in Filter.atTop, Structure.RelMap R fun i =>
+  change (∀ᶠ d in Filter.atTop, Structure.RelMap R fun i =>
         locDeepInterp Λ J ctx.a d
           (Finset.univ.biUnion fun i => locJSupport Λ J (Quotient.out (ctx.mkClass (t := ts i))))
           (Quotient.out (ctx.mkClass (t := ts i)))) ↔ _
@@ -604,9 +613,11 @@ theorem LocalEMContext.relMap_mkClass_iff (ctx : LocalEMContext Λ J (M := M)) {
   have ha := Filter.eventually_congr
     (eventually_locRelMap_superset_iff Λ J ctx.a ctx.hind R (ts := rep)
       (ctx.rel_mem _ R rep fun i =>
-        Finset.subset_biUnion_of_mem (fun i => locJSupport Λ J (rep i)) (Finset.mem_univ i)) hSout_T)
+        Finset.subset_biUnion_of_mem (fun i => locJSupport Λ J (rep i)) (Finset.mem_univ i))
+          hSout_T)
   -- (b) swap reps for ts over T
-  have hb := LocalEMContext.eventually_relMap_congr_terms (Λ := Λ) (J := J) ctx R hrep_eq hrep_T hts_T
+  have hb := LocalEMContext.eventually_relMap_congr_terms (Λ := Λ) (J := J) ctx R hrep_eq
+    hrep_T hts_T
   -- (c) relate the ts-side over T and over S
   have hcT := Filter.eventually_congr
     (eventually_locRelMap_superset_iff Λ J ctx.a ctx.hind R (ts := ts)
@@ -628,7 +639,8 @@ the skeleton-constant inclusion (a base function/relation symbol acts as its `Su
 
 /-- **Map-language plumbing**: the skeleton-constant inclusion `Λ → Λ[[J]]` is an expansion of the
 carrier's base structure to its term-model `[[J]]`-structure (definitional, as the `[[J]]`-structure
-interprets `Sum.inl` symbols by the base reduct). Lets `realize_mapLanguage` transfer realizations of
+interprets `Sum.inl` symbols by the base reduct). Lets `realize_mapLanguage` transfer
+realizations of
 base-language formulas. -/
 theorem LocalEMContext.lhomWithConstants_isExpansionOn (ctx : LocalEMContext Λ J (M := M)) :
     @LHom.IsExpansionOn Λ (Λ[[J]])

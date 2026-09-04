@@ -85,7 +85,8 @@ private lemma ediam_cylinder_le (x : ℕ → Bool) (n : ℕ) :
   exact mem_cylinder_iff_dist_le.mp hyz
 
 /-- Every open neighborhood contains a cylinder around the point. -/
-private lemma exists_cylinder_subset {V : Set (ℕ → Bool)} (hV : IsOpen V) {x : ℕ → Bool} (hx : x ∈ V) :
+private lemma exists_cylinder_subset {V : Set (ℕ → Bool)} (hV : IsOpen V) {x : ℕ → Bool} (hx
+  : x ∈ V) :
     ∃ n, cylinder x n ⊆ V := by
   obtain ⟨s, ⟨z, n, rfl⟩, hxs, hsV⟩ :=
     (isTopologicalBasis_cylinders (fun _ : ℕ => Bool)).exists_subset_of_mem_open hx hV
@@ -136,7 +137,7 @@ private lemma exists_refines_box_subset {U : Set ((ℕ → Bool) × (ℕ → Boo
 /-- **Pair-killing fold**: a family of pointed cylinders can be refined so that all pairs of
 distinct indices from a given finite set of pairs have cylinder products inside a dense open
 subset of the square. -/
-private lemma exists_refines_forall_pairs {ι : Type*} [DecidableEq ι]
+private lemma exists_refines_forall_pairs {ι : Type*}
     {U : Set ((ℕ → Bool) × (ℕ → Bool))} (hUo : IsOpen U) (hUd : Dense U)
     (s : Finset (ι × ι)) (P : ι → (ℕ → Bool) × ℕ) :
     ∃ Q : ι → (ℕ → Bool) × ℕ, (∀ i, Refines (Q i) (P i)) ∧
@@ -184,7 +185,7 @@ private lemma mem_boolLists_of_length : ∀ {n : ℕ} {l : List Bool}, l.length 
   | _ + 1, [], h => by simp at h
   | n + 1, b :: l', h => by
     have hl' : l' ∈ boolLists n := mem_boolLists_of_length (Nat.succ_injective h)
-    show b :: l' ∈ (boolLists n).biUnion fun l => {false :: l, true :: l}
+    change b :: l' ∈ (boolLists n).biUnion fun l => {false :: l, true :: l}
     refine Finset.mem_biUnion.mpr ⟨l', hl', ?_⟩
     cases b <;> simp
 
@@ -193,14 +194,14 @@ variable (U : ℕ → Set ((ℕ → Bool) × (ℕ → Bool)))
 /-- Stage `m` of the construction: a pointed cylinder for every node, such that level-`m`
 nodes have depth at least `m` and all pairs of distinct level-`m` nodes have cylinder
 products inside `U k` for every `k < m`. -/
-structure Stage (m : ℕ) where
+private structure Stage (m : ℕ) where
   f : List Bool → (ℕ → Bool) × ℕ
   le_depth : ∀ l : List Bool, l.length = m → m ≤ (f l).2
   avoid : ∀ l₁ l₂ : List Bool, l₁.length = m → l₂.length = m → l₁ ≠ l₂ →
     ∀ k < m, cylinder (f l₁).1 (f l₁).2 ×ˢ cylinder (f l₂).1 (f l₂).2 ⊆ U k
 
 /-- The root stage: every node gets the full space. -/
-def base : Stage U 0 where
+private def base : Stage U 0 where
   f := fun _ => (fun _ => false, 0)
   le_depth := fun _ _ => Nat.zero_le _
   avoid := fun _ _ _ _ _ k hk => absurd hk (Nat.not_lt_zero k)
@@ -255,7 +256,7 @@ private lemma exists_step (hUo : ∀ k, IsOpen (U k)) (hUd : ∀ k, Dense (U k))
 
 variable (U) in
 /-- The full tower of stages, with each level refining the previous one. -/
-noncomputable def stages (hUo : ∀ k, IsOpen (U k)) (hUd : ∀ k, Dense (U k)) :
+private noncomputable def stages (hUo : ∀ k, IsOpen (U k)) (hUd : ∀ k, Dense (U k)) :
     ∀ m, Stage U m
   | 0 => base U
   | m + 1 => Classical.choose (exists_step hUo hUd (stages hUo hUd m))

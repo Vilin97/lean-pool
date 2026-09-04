@@ -32,12 +32,6 @@ namespace Language
 
 open Cardinal
 
-/-- **The Hanf number of every `L_{ω₁ω}` sentence is at most `ℶ_{ω₁}`** — `morley_hanf` through
-the universal property of `HanfNumber`. -/
-private theorem hanfNumber_le_beth_omega1 {L' : Language.{0, 0}} (φ : L'.Sentenceω) :
-    HanfNumber φ ≤ Cardinal.beth (Ordinal.omega 1) :=
-  hanfNumber_le_of_isHanfBound (morley_hanf φ)
-
 /-- **A global Hanf bound for the logic `L_{ω₁ω}`**: a cardinal that is a Hanf bound for every
 sentence of every language. -/
 def IsLomega1omegaHanfBound (κ : Cardinal) : Prop :=
@@ -106,20 +100,6 @@ theorem lt_Lomega1omegaHanfNumber_of_maximal_model
 theorem Lomega1omegaHanfNumber_le_beth_omega1 :
     Lomega1omegaHanfNumber ≤ Cardinal.beth (Ordinal.omega 1) :=
   Lomega1omegaHanfNumber_le_of_isHanfBound beth_omega1_isLomega1omegaHanfBound
-
-/-- **The Morley–Hanf theorem for countable theories**: every countable `L_{ω₁ω}`-theory with a
-model of size at least `ℶ_{ω₁}` has models of arbitrarily large cardinality — apply
-`morley_hanf` to the theory's conjunction (`Theoryω.conjunction`). -/
-private theorem morley_hanf_theory {L' : Language.{0, 0}} (T : L'.Theoryω) (hT : T.Countable)
-    (hM : ∃ (M : Type) (_ : L'.Structure M), T.Model M ∧
-      Cardinal.mk M ≥ Cardinal.beth (Ordinal.omega 1)) :
-    ∀ κ : Cardinal, ∃ (N : Type) (_ : L'.Structure N), T.Model N ∧ Cardinal.mk N ≥ κ := by
-  obtain ⟨M, instM, hTM, hsize⟩ := hM
-  have h := morley_hanf (T.conjunction hT)
-    ⟨M, instM, (Theoryω.realize_conjunction_iff T hT M).mpr hTM, hsize⟩
-  intro κ
-  obtain ⟨N, instN, hφN, hκ⟩ := h κ
-  exact ⟨N, instN, (Theoryω.realize_conjunction_iff T hT N).mp hφN, hκ⟩
 
 end Language
 

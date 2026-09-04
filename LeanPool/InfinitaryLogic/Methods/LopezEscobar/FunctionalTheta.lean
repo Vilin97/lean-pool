@@ -91,7 +91,7 @@ variable {M : Type} [inst : (MidLang L).Structure M]
 private theorem realize_app1 {α : Type} (f : (MidLang L).Functions 1)
     (t : (MidLang L).Term α) (v : α → M) :
     (Term.func f ![t]).realize v = Structure.funMap f ![t.realize v] := by
-  show Structure.funMap f _ = _
+  change Structure.funMap f _ = _
   congr 1
   funext i
   rw [Fin.eq_zero i]
@@ -113,7 +113,7 @@ private theorem realize_s_app {α : Type} (t : (MidLang L).Term α) (v : α → 
     (mNum L α n).realize v = numMap L M n := by
   induction n with
   | zero =>
-    show Structure.funMap _ _ = _
+    change Structure.funMap _ _ = _
     congr 1
     funext i
     exact i.elim0
@@ -132,7 +132,7 @@ private theorem realize_var_block {k : ℕ} (ws : Fin k → M) (j : Fin k) :
     Term.realize (Sum.elim (Empty.elim : Empty → M) (Fin.append Fin.elim0 ws))
       (Term.var (Sum.inr (Fin.natAdd 0 j)) : (MidLang L).Term (Empty ⊕ Fin (0 + k))) =
       ws j := by
-  show Fin.append Fin.elim0 ws (Fin.natAdd 0 j) = ws j
+  change Fin.append Fin.elim0 ws (Fin.natAdd 0 j) = ws j
   exact Fin.append_right _ _ j
 
 end Semantics
@@ -167,7 +167,7 @@ theorem realize_omegaAxioms :
       (Function.Injective (sMap L M) ∧
         (∀ x : M, sMap L M x ≠ numMap L M 0) ∧
         Function.Surjective (numMap L M)) := by
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [omegaAxioms, BoundedFormulaω.realize_and, BoundedFormulaω.realize_and,
     BoundedFormulaω.realize_forallBlock, BoundedFormulaω.realize_forallBlock,
     BoundedFormulaω.realize_forallBlock]
@@ -177,8 +177,7 @@ theorem realize_omegaAxioms :
     · have h := hinj ![x, y]
       rw [BoundedFormulaω.realize_imp, BoundedFormulaω.realize_equal,
         BoundedFormulaω.realize_equal] at h
-      simp only [realize_s_app, 
-        ] at h
+      simp only [realize_s_app] at h
       exact h hxy
     · have h := hne ![x]
       rw [BoundedFormulaω.realize_not, BoundedFormulaω.realize_equal] at h
@@ -241,7 +240,7 @@ noncomputable def bitAxiom : (MidLang L).Sentenceω :=
 theorem realize_bitAxiom {M : Type} [inst : (MidLang L).Structure M] :
     Sentenceω.Realize (bitAxiom L) M ↔
       ∀ x : M, fMap L M x = numMap L M 0 ∨ fMap L M x = numMap L M 1 := by
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [bitAxiom, BoundedFormulaω.realize_forallBlock]
   -- the sentence semantics supplies the empty tuple as `default` rather than `Fin.elim0`; the two
   -- are definitionally equal, so `realize_var_block` still proves the evaluation, but only after
@@ -281,7 +280,7 @@ theorem realize_codeAxiom [Countable (Σ l, L.Relations l)]
             (fun i => numMap L M (q.2 i)) ↔
           fMap L M (numMap L M (queryEmbedding (L := L) q)) = numMap L M 1) := by
   let : Encodable (RelQuery L) := queryEncodable
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [codeAxiom, BoundedFormulaω.realize_einf]
   refine forall_congr' fun q => ?_
   rw [BoundedFormulaω.realize_iff]
@@ -308,7 +307,7 @@ theorem realize_defaultAxiom [Countable (Σ l, L.Relations l)]
         fMap L M (numMap L M n) = numMap L M 0 := by
   let : Encodable {n : ℕ // n ∉ Set.range (queryEmbedding (L := L))} :=
     Encodable.ofCountable _
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [defaultAxiom, BoundedFormulaω.realize_einf]
   constructor
   · intro h n hn
@@ -343,7 +342,7 @@ private theorem realize_treeAtom {M : Type} [inst : (MidLang L).Structure M] (n 
     Sentenceω.Realize (treeAtom L n σ τ) M ↔
       @Structure.RelMap (MidLang L) M inst (2 * n) (Sum.inr (WitnessRel.tree n))
         (treeTuple L M n σ τ) := by
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [treeAtom]
   refine Iff.of_eq (congrArg
     (@Structure.RelMap (MidLang L) M inst (2 * n) (Sum.inr (WitnessRel.tree n))) ?_)
@@ -373,7 +372,7 @@ theorem realize_treeDiagram {M : Type} [inst : (MidLang L).Structure M]
             (treeTuple L M n σ τ) ↔ (σ, τ) ∈ T n) := by
   classical
   let : Encodable (Σ n, (Fin n → Bool) × (Fin n → ℕ)) := Encodable.ofCountable _
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [treeDiagram, BoundedFormulaω.realize_einf]
   constructor
   · intro h n σ τ
@@ -415,7 +414,7 @@ theorem realize_pathAxiom {M : Type} [inst : (MidLang L).Structure M] :
     Sentenceω.Realize (pathAxiom L) M ↔
       ∀ n : ℕ, @Structure.RelMap (MidLang L) M inst (2 * n) (Sum.inr (WitnessRel.tree n))
         (pathTuple L M n) := by
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [pathAxiom, BoundedFormulaω.realize_iInf]
   refine forall_congr' fun n => ?_
   refine Iff.of_eq (congrArg
@@ -491,7 +490,7 @@ theorem realize_functionalTheta [Countable (Σ l, L.Relations l)]
       (Sentenceω.Realize (omegaAxioms L) M ∧ Sentenceω.Realize (bitAxiom L) M ∧
         Sentenceω.Realize (codeAxiom L) M ∧ Sentenceω.Realize (defaultAxiom L) M ∧
         Sentenceω.Realize (treeDiagram L T) M ∧ Sentenceω.Realize (pathAxiom L) M) := by
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [functionalTheta]
   simp only [BoundedFormulaω.realize_and]
   rfl

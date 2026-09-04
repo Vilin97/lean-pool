@@ -79,7 +79,7 @@ private theorem pcClass_subset_of_invariant_superset {B W : Set (StructureSpace 
     have hOnRel : (sideEmb L side).onRelation (Sum.inl R)
         = (Sum.inl R : (KLang L).Relations l) := by cases side <;> rfl
     rw [codeReduct_toStructure]
-    show @Structure.RelMap (graphLanguage (KLang L)) ℕ Nstar l (GraphRelation.base (Sum.inl R)) v
+    change @Structure.RelMap (graphLanguage (KLang L)) ℕ Nstar l (GraphRelation.base (Sum.inl R)) v
       ↔ @Structure.RelMap (KLang L) ℕ Kstar l ((sideEmb L side).onRelation (Sum.inl R)) v
     rw [hOnRel]
     exact (reconstruct_relMap_base hAx (Sum.inl R) v).symm
@@ -92,12 +92,12 @@ private theorem pcClass_subset_of_invariant_superset {B W : Set (StructureSpace 
           (fun i : Fin m => ĝ (i : ℕ)) := by
       funext i
       by_cases hi : (i : ℕ) < m
-      · show (if (i : ℕ) < m then @fMap L ℕ Mstar (@numMap L ℕ Mstar (i : ℕ)) else _)
+      · change (if (i : ℕ) < m then @fMap L ℕ Mstar (@numMap L ℕ Mstar (i : ℕ)) else _)
             = (if h : (i : ℕ) < m
               then @numMap L ℕ Mstar (cond ((fun j : Fin m =>
                 queryCode (pulledCode L ℕ) (j : ℕ)) ⟨(i : ℕ), h⟩) 1 0) else _)
         rw [ite_eq_left hi, dite_eq_left hi]
-        show @fMap L ℕ Mstar (@numMap L ℕ Mstar (i : ℕ))
+        change @fMap L ℕ Mstar (@numMap L ℕ Mstar (i : ℕ))
           = @numMap L ℕ Mstar (cond (queryCode (pulledCode L ℕ) (i : ℕ)) 1 0)
         by_cases hq : queryCode (pulledCode L ℕ) (i : ℕ) = true
         · rw [hq]
@@ -108,12 +108,14 @@ private theorem pcClass_subset_of_invariant_superset {B W : Set (StructureSpace 
           · exact h0
           · exact absurd ((fBit_eq_queryCode homega hcode hdef (i : ℕ)).mp h1)
               (by rw [hq]; simp)
-      · show (if (i : ℕ) < m then _
+      · change (if (i : ℕ) < m then _
               else @gMap L ℕ Mstar (@numMap L ℕ Mstar ((i : ℕ) - m)))
             = (if h : (i : ℕ) < m then _
               else @numMap L ℕ Mstar ((fun j : Fin m => ĝ (j : ℕ)) ⟨(i : ℕ) - m, by omega⟩))
         rw [ite_eq_right hi, dite_eq_right hi]
-        show @gMap L ℕ Mstar (@numMap L ℕ Mstar ((i : ℕ) - m)) = @numMap L ℕ Mstar (ĝ ((i : ℕ) - m))
+        change
+          @gMap L ℕ Mstar (@numMap L ℕ Mstar ((i : ℕ) - m)) =
+            @numMap L ℕ Mstar (ĝ ((i : ℕ) - m))
         rw [hg]
     have hp := hpath m
     rw [hpt] at hp

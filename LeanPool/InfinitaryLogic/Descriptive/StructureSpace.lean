@@ -66,8 +66,6 @@ abbrev StructureSpaceOn (L : Language.{u, v}) (α : Type*) := RelQueryOn L α �
 does the relation hold on that tuple? -/
 def StructureSpace (L : Language.{u, v}) := StructureSpaceOn L ℕ
 
-
-
 namespace StructureSpaceOn
 
 variable {α : Type*}
@@ -88,7 +86,7 @@ theorem relMap_toStructure [L.IsRelational] (c : StructureSpaceOn L α)
 
 /-- Encode an L-structure on carrier α into a code.
 Takes an explicit structure instance rather than using the typeclass. -/
-noncomputable def ofStructure [L.IsRelational]
+noncomputable def ofStructure [_isRelational : L.IsRelational]
     (inst : L.Structure α) : StructureSpaceOn L α :=
   fun ⟨⟨_, R⟩, v⟩ => @decide _ (Classical.dec (@Structure.RelMap _ _ inst _ R v))
 
@@ -98,8 +96,6 @@ theorem toStructure_ofStructure [L.IsRelational]
     @Structure.RelMap _ _ (ofStructure inst).toStructure _ R v ↔
     @Structure.RelMap _ _ inst _ R v := by
   simp only [relMap_toStructure, ofStructure, decide_eq_true_eq]
-
-
 
 end StructureSpaceOn
 
@@ -129,8 +125,6 @@ theorem toStructure_ofStructure [L.IsRelational]
     @Structure.RelMap _ _ (ofStructure inst).toStructure _ R v ↔
     @Structure.RelMap _ _ inst _ R v := by
   simp only [relMap_toStructure, ofStructure, StructureSpaceOn.ofStructure, decide_eq_true_eq]
-
-
 
 end StructureSpace
 

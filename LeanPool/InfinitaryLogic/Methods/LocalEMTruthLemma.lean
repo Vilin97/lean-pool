@@ -73,25 +73,6 @@ section TruthReadiness
 
 variable (Λ : Language.{0, 0}) (J : Type) [LinearOrder J] {M : Type} [Λ.Structure M]
 
-/-- **`⋁`/`⋀`-completeness of a `LocalEMContext`'s eventual deep truth**: the genuinely non-formal
-residual for the countable connectives — a uniform `iSup`-witness and a uniform `iInf`-cutoff.
-Since `atTop` on `ℕ` is not countably complete, neither follows from tail indiscernibility +
-decidedness; they are the infinitary analogue of the consistency-property `C3`/`C4` rules for
-`⋁`/`⋀`, packaged as a separate `Prop` mixin (not core `LocalEMContext` fields, so the
-quotient/congruence/atom API is untouched). The truth lemma takes `hc : ctx.OmegaComplete`;
-producing such a context is later work. Local analogue of `EMContext.OmegaComplete`. -/
-structure LocalEMContext.OmegaComplete (ctx : LocalEMContext Λ J (M := M)) : Prop where
-  /-- Eventual deep truth of `⋁φs` provides a single component witness. -/
-  iSup_complete : ∀ {m : ℕ} (φs : ℕ → Λ.BoundedFormulaω Empty m)
-    (ts : Fin m → Λ[[J]].Term Empty) (S : Finset J),
-    LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (BoundedFormulaω.iSup φs) ts S →
-      ∃ i, LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (φs i) ts S
-  /-- Eventual deep truth of all components provides eventual deep truth of `⋀φs`. -/
-  iInf_complete : ∀ {m : ℕ} (φs : ℕ → Λ.BoundedFormulaω Empty m)
-    (ts : Fin m → Λ[[J]].Term Empty) (S : Finset J),
-    (∀ i, LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (φs i) ts S) →
-      LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (BoundedFormulaω.iInf φs) ts S
-
 /-- **`Γ`-restricted, support-covered `⋁`/`⋀`-completeness**: like `OmegaComplete`, but the
 uniform `iSup`-witness and uniform `iInf`-cutoff are demanded only at disjunctions/conjunctions
 that are **members of the family** `Γ'`, and only at argument tuples whose skeleton support is
@@ -122,17 +103,9 @@ structure LocalEMContext.OmegaCompleteOn (ctx : LocalEMContext Λ J (M := M))
     (∀ i, LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (φs i) ts S) →
       LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (BoundedFormulaω.iInf φs) ts S
 
-/-- **Compatibility adapter**: global completeness restricts to any family and any covering —
-existing `OmegaComplete` producers serve every `OmegaCompleteOn` consumer by dropping the
-membership and the covering. -/
-private theorem LocalEMContext.OmegaComplete.toOmegaCompleteOn {ctx : LocalEMContext Λ J (M := M)}
-    (hc : ctx.OmegaComplete) (Γ' : Set (Σ n, Λ.BoundedFormulaω Empty n)) :
-    LocalEMContext.OmegaCompleteOn (Λ := Λ) (J := J) ctx Γ' :=
-  ⟨fun φs _ ts S _ h => hc.iSup_complete φs ts S h,
-   fun φs _ ts S _ h => hc.iInf_complete φs ts S h⟩
-
 /-- The easy `iSup` direction: a single component's eventual deep truth gives the disjunction's. -/
-private theorem LocalEMContext.eventualDeepTruth_iSup_of_exists (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
+private theorem LocalEMContext.eventualDeepTruth_iSup_of_exists (ctx : LocalEMContext Λ J (M
+  := M)) {m : ℕ}
     (φs : ℕ → Λ.BoundedFormulaω Empty m)
     (ts : Fin m → Λ[[J]].Term Empty) (S : Finset J)
     (h : ∃ i, LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (φs i) ts S) :
@@ -142,7 +115,8 @@ private theorem LocalEMContext.eventualDeepTruth_iSup_of_exists (ctx : LocalEMCo
   exact hi.mono fun _ hd => ⟨i, hd⟩
 
 /-- The easy `iInf` direction: the conjunction's eventual deep truth gives every component's. -/
-private theorem LocalEMContext.eventualDeepTruth_iInf_forall (ctx : LocalEMContext Λ J (M := M)) {m : ℕ}
+private theorem LocalEMContext.eventualDeepTruth_iInf_forall (ctx : LocalEMContext Λ J (M :=
+  M)) {m : ℕ}
     (φs : ℕ → Λ.BoundedFormulaω Empty m)
     (ts : Fin m → Λ[[J]].Term Empty) (S : Finset J)
     (h : LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx (BoundedFormulaω.iInf φs) ts S)
@@ -157,24 +131,6 @@ Over a covered support, eventual deep truth is eventual truth of the **de-substi
 formula** on consecutive `ctx.a`-tuples — and de-substitution commutes syntactically with the
 countable connectives. Together these turn the support-covered Ω-clauses into pure statements
 about the source sequence (`LocalEMOmegaHomogeneous` below). -/
-
-/-- **deForm normal form for eventual deep truth**: over a covered support, the eventual deep
-truth of `φ` on `ts`/`S` is the eventual truth of the de-substituted `locDeForm S φ ts` on the
-consecutive deep tuples `k ↦ ctx.a (d + k)`. Pointwise `realize_locDeForm`. -/
-private theorem LocalEMContext.eventualDeepTruth_iff_eventual_locDeForm
-    (ctx : LocalEMContext Λ J (M := M)) {n : ℕ} (φ : Λ.BoundedFormulaω Empty n)
-    (ts : Fin n → Λ[[J]].Term Empty) (S : Finset J)
-    (hsub : ∀ i, locJSupport Λ J (ts i) ⊆ S) :
-    LocalEMContext.eventualDeepTruth (Λ := Λ) (J := J) ctx φ ts S ↔
-      ∀ᶠ d in Filter.atTop,
-        (locDeForm Λ J S φ ts hsub).Realize Empty.elim
-          (fun k : Fin S.card => ctx.a (d + (k : ℕ))) :=
-  Filter.eventually_congr (Filter.Eventually.of_forall fun d =>
-    (realize_locDeForm Λ J ctx.a d S φ ts hsub).symm)
-
-
-
-
 
 /-- **Decidedness of a formula's eventual deep truth** (the named output of
 `eventualDeepTruth_decided`): either it holds eventually, or it fails eventually. Local analogue of
@@ -394,21 +350,6 @@ private theorem LocalEMContext.TLReady_mapLang_of_Γlocal_succ
       · rw [Fin.snoc_last]; exact Finset.subset_union_right
       · rw [Fin.snoc_castSucc]; exact (hcov j).trans Finset.subset_union_left
     exact ih hχ'mem (Fin.snoc ts u) (T ∪ locJSupport (localColim s₀) J u) hcov'
-
-/-- **The successor-stage family supplies support-uniform `TLReadyStage`** (this chunk's readiness
-endpoint, modulo the deForm-closure mixin `hclosed`): every `Γlocal s₀ (k + 1)` formula is
-`truthLemmaStage`-ready. Wraps `TLReady_mapLang_of_Γlocal_succ` over the enlarged supports `T ⊇ S`
-(each still covers `ts`). Local analogue of `EMContext.TLReadyStage_of_GammaStar`. -/
-private theorem LocalEMContext.TLReadyStage_of_Γlocal_succ
-    (ctx : LocalEMContext (localColim s₀) J (M := M)) {k : ℕ}
-    (hclosed : LocalEMContext.DeFormClosedForColim (s₀ := s₀) (J := J) ctx)
-    {n : ℕ} (ψ : (Llocal s₀ (k + 1)).BoundedFormulaω Empty n)
-    (hψ : (⟨n, ψ⟩ : Σ n, (Llocal s₀ (k + 1)).BoundedFormulaω Empty n) ∈ Γlocal s₀ (k + 1))
-    (ts : Fin n → (localColim s₀)[[J]].Term Empty) (S : Finset J)
-    (hcov : ∀ i, locJSupport (localColim s₀) J (ts i) ⊆ S) :
-    LocalEMContext.TLReadyStage s₀ J ctx (k + 1) ψ ts S :=
-  fun T hST => LocalEMContext.TLReady_mapLang_of_Γlocal_succ s₀ J ctx hclosed ψ hψ ts T
-    (fun i => (hcov i).trans hST)
 
 /-- **Formula-level cocone coherence for the truth lemma's lift**: mapping a stage-`k` formula one
 stage up (along `LlocalHom`) and then into the colimit is the direct colimit image. The formula
@@ -652,7 +593,8 @@ theorem LocalEMContext.truthLemmaStage_of_skolemUniversal
       BoundedFormulaω.realize_iInf]
     constructor
     · intro h
-      exact hc.iInf_complete (fun i => BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k + 1)) (φs i))
+      exact hc.iInf_complete (fun i => BoundedFormulaω.mapLanguage (LlocalInclusion s₀ (k +
+        1)) (φs i))
         (toLocalColimFormula_mem_ΓlocalColim s₀ hmem) ts S hsub
         fun i => (ih i (bfSubformulas_subset_Γlocal_succ s₀ hmem (Set.mem_range_self i)) ts S hsub
           fun T hT => (hready T hT) i).mp (h i)
@@ -733,7 +675,7 @@ theorem LocalEMContext.truthLemmaStage_of_skolemUniversal
         ((ih hbodymem (Fin.snoc ts (locSkWitnessTerm s₀ J hmem ts)) S hsnocw hready_wS).mp hcarw)
     · intro heDT
       refine Quotient.ind (fun u => ?_)
-      show (φ₀.mapLanguage (lhomWithConstants (localColim s₀) J)).Realize Empty.elim
+      change (φ₀.mapLanguage (lhomWithConstants (localColim s₀) J)).Realize Empty.elim
           (Fin.snoc (fun i => ctx.mkClass (t := ts i)) (ctx.mkClass (t := u)))
       rw [LocalEMContext.mkClass_snoc (Λ := localColim s₀) (J := J) ctx ts u]
       have hready_wSj : LocalEMContext.TLReadyStage s₀ J ctx (k + 1) ψ₀
@@ -792,48 +734,6 @@ end StagedTruthLemma
 section StagedTruthLemmaCanonical
 
 variable (s₀ : LocalStage) (J : Type) [LinearOrder J] {M : Type} [s₀.Lang.Structure M] [Nonempty M]
-
-/-- **The staged local truth lemma** over the canonical `localColimStructure` — the original
-endpoint, now a wrapper supplying `localSkolemUniversalForColim_canonical` to the generic core. -/
-theorem LocalEMContext.truthLemmaStage :
-    letI : (localColim s₀).Structure M := localColimStructure s₀
-    ∀ (ctx : LocalEMContext (localColim s₀) J (M := M)),
-      LocalEMContext.OmegaCompleteForColim s₀ J ctx →
-      ∀ (k : ℕ) {n : ℕ} (ψ : (Llocal s₀ (k + 1)).BoundedFormulaω Empty n),
-        (⟨n, ψ⟩ : Σ n, (Llocal s₀ (k + 1)).BoundedFormulaω Empty n) ∈ Γlocal s₀ (k + 1) →
-        ∀ (ts : Fin n → (localColim s₀)[[J]].Term Empty) (S : Finset J),
-          (∀ i, locJSupport (localColim s₀) J (ts i) ⊆ S) →
-          LocalEMContext.TLReadyStage s₀ J ctx (k + 1) ψ ts S →
-          (@BoundedFormulaω.Realize ((localColim s₀)[[J]]) ctx.Carrier ctx.structure Empty n
-              ((ψ.mapLanguage (LlocalInclusion s₀ (k + 1))).mapLanguage
-                (lhomWithConstants (localColim s₀) J))
-              Empty.elim (fun i => ctx.mkClass (t := ts i)) ↔
-            LocalEMContext.eventualDeepTruth (Λ := localColim s₀) (J := J) ctx
-              (ψ.mapLanguage (LlocalInclusion s₀ (k + 1))) ts S) := by
-  let : (localColim s₀).Structure M := localColimStructure s₀
-  exact LocalEMContext.truthLemmaStage_of_skolemUniversal s₀ J
-    (localSkolemUniversalForColim_canonical s₀)
-
-/-- **Stage-agnostic lift corollary** over the canonical `localColimStructure` — the original
-endpoint, now a wrapper around the generic core. -/
-theorem LocalEMContext.truthLemmaStage_of_mem :
-    letI : (localColim s₀).Structure M := localColimStructure s₀
-    ∀ (ctx : LocalEMContext (localColim s₀) J (M := M)),
-      LocalEMContext.OmegaCompleteForColim s₀ J ctx →
-      ∀ (k : ℕ) {n : ℕ} (ψ : (Llocal s₀ k).BoundedFormulaω Empty n),
-        (⟨n, ψ⟩ : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) ∈ Γlocal s₀ k →
-        ∀ (ts : Fin n → (localColim s₀)[[J]].Term Empty) (S : Finset J),
-          (∀ i, locJSupport (localColim s₀) J (ts i) ⊆ S) →
-          LocalEMContext.TLReadyStage s₀ J ctx k ψ ts S →
-          (@BoundedFormulaω.Realize ((localColim s₀)[[J]]) ctx.Carrier ctx.structure Empty n
-              ((ψ.mapLanguage (LlocalInclusion s₀ k)).mapLanguage
-                (lhomWithConstants (localColim s₀) J))
-              Empty.elim (fun i => ctx.mkClass (t := ts i)) ↔
-            LocalEMContext.eventualDeepTruth (Λ := localColim s₀) (J := J) ctx
-              (ψ.mapLanguage (LlocalInclusion s₀ k)) ts S) := by
-  let : (localColim s₀).Structure M := localColimStructure s₀
-  exact LocalEMContext.truthLemmaStage_of_mem_of_skolemUniversal s₀ J
-    (localSkolemUniversalForColim_canonical s₀)
 
 end StagedTruthLemmaCanonical
 

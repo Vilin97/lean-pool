@@ -76,14 +76,6 @@ theorem BoundedFormulaω.not_ne_self {L' : Language.{0, 0}} {α : Type} {n : ℕ
   simp only [BoundedFormulaω.not, BoundedFormulaInf.not] at this
   cases φ <;> simp_all <;> omega
 
-/-- A negation in the base diagram is the lifted root (atoms are relation-shaped). -/
-private theorem not_mem_baseDiagram_elim {φ : L.Sentenceω} {lt : L.Relations 2}
-    {χ : L[[ℕ]].Sentenceω} (h : χ.not ∈ baseDiagram φ lt) :
-    χ.not = φ.mapLanguage (L.lhomWithConstants ℕ) := by
-  rcases mem_baseDiagram_elim h with heq | ⟨q, r, _, heq⟩
-  · exact heq
-  · exact absurd heq (by simp [BoundedFormulaω.not, BoundedFormulaInf.not, ratLtAtom, relInst])
-
 /-- The constant support of a positive diagram atom. -/
 theorem sentenceJConsts_ratLtAtom (lt : L.Relations 2) (q r : ℚ) :
     sentenceJConsts (L' := L) (J := ℕ) (ratLtAtom lt q r) =

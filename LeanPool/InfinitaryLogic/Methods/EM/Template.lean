@@ -60,97 +60,11 @@ namespace Lomega1omegaTemplate
 
 variable {N : Type*} [L.Structure N] {J : Type*} [LinearOrder J]
 
-/-- A sequence `b : J → N` realizes a template `T` if for every formula `φ` and
-every strictly increasing `n`-tuple `t : Fin n → J`, the truth value of `φ` on
-`b ∘ t` agrees with `T.truth φ`. -/
-private def RealizesOn (T : Lomega1omegaTemplate L) (b : J → N) : Prop :=
-  ∀ {n : ℕ} (φ : L.BoundedFormulaω Empty n) {t : Fin n → J} (_ : StrictMono t),
-    T.truth φ ↔ φ.Realize (Empty.elim : Empty → N) (b ∘ t)
-
 end Lomega1omegaTemplate
-
-/-- Template associated with a bare sequence `a : I → M` — same body as
-`IsLomega1omegaIndiscernible.template` but without the indiscernibility
-hypothesis (the existing definition discards that hypothesis in its data
-anyway). Used by the restricted-indiscernibility API (`_on` variants). -/
-def templateOfSeq {I : Type w} [LinearOrder I] {M : Type*} [L.Structure M]
-    (a : I → M) : Lomega1omegaTemplate L where
-  truth {n} φ :=
-    letI := ‹L.Structure M›
-    ∃ s : Fin n → I, StrictMono s ∧ φ.Realize (Empty.elim : Empty → M) (a ∘ s)
 
 namespace IsLomega1omegaIndiscernible
 
 variable {I : Type w} [LinearOrder I] {M : Type*} [L.Structure M]
-
-/-- The template induced by an indiscernible sequence: the truth value at `φ`
-is the existential statement that some strictly increasing `n`-tuple in `I`
-makes `φ` true. By indiscernibility (see `template_truth_iff`) this is
-equivalent to "every such tuple makes `φ` true", and to "any specific witness
-makes `φ` true". -/
-def template {a : I → M}
-    (_ : IsLomega1omegaIndiscernible (L := L) a) :
-    Lomega1omegaTemplate L where
-  truth {n} φ :=
-    letI := ‹L.Structure M›
-    ∃ s : Fin n → I, StrictMono s ∧ φ.Realize (Empty.elim : Empty → M) (a ∘ s)
-
-
-
-/-- Well-definedness of `template`: the template's value at `φ` equals the
-truth value of `φ` on any specific strictly increasing tuple. This is the
-existential-vs-universal collapse provided by indiscernibility. -/
-theorem template_truth_iff {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    {n : ℕ} (φ : L.BoundedFormulaω Empty n)
-    {s : Fin n → I} (hs : StrictMono s) :
-    letI := ‹L.Structure M›
-    h.template.truth φ ↔ φ.Realize (Empty.elim : Empty → M) (a ∘ s) := by
-  refine ⟨?_, fun hφ => ⟨s, hs, hφ⟩⟩
-  rintro ⟨t, ht, hφ⟩
-  exact (h.iff_realize φ ht hs).mp hφ
-
-/-- An indiscernible sequence realizes its own template. -/
-private theorem realizesTemplate {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a) :
-    h.template.RealizesOn a := by
-  intro n φ t ht
-  exact h.template_truth_iff φ ht
-
-/-- Restricting an indiscernible sequence to a sub-order along an order
-embedding `e : J ↪o I` produces a sequence that realizes the **same** template
-as the original. (The template object is built from `h`, not `h.restrict e`.) -/
-private theorem realizesTemplate_restrict {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    {J : Type*} [LinearOrder J] (e : J ↪o I) :
-    h.template.RealizesOn (a ∘ e) := by
-  intro n φ t ht
-  -- `e ∘ t : Fin n → I` is strictly increasing, so we can use it as a witness.
-  have heT : StrictMono (e ∘ t) := e.strictMono.comp ht
-  have := h.template_truth_iff φ heT
-  simpa [Function.comp_assoc] using this
-
-
-
-/-- Reindexing an indiscernible sequence by an order isomorphism produces a
-template equal to the original. (Restricting along a non-surjective order
-embedding generally does *not* produce an equal template — only the realisation
-direction is preserved; see `realizesTemplate_restrict`.) -/
-private theorem template_reindex {a : I → M}
-    (h : IsLomega1omegaIndiscernible (L := L) a)
-    {J : Type*} [LinearOrder J] (e : J ≃o I) :
-    (h.reindex e).template = h.template := by
-  ext n φ
-  refine ⟨?_, ?_⟩
-  · rintro ⟨s, hs, hφ⟩
-    refine ⟨e ∘ s, e.strictMono.comp hs, ?_⟩
-    simpa [Function.comp_assoc] using hφ
-  · rintro ⟨t, ht, hφ⟩
-    refine ⟨e.symm ∘ t, e.symm.strictMono.comp ht, ?_⟩
-    have hcomp : (a ∘ e) ∘ (e.symm ∘ t) = a ∘ t := by
-      funext i
-      simp [Function.comp]
-    simpa [hcomp] using hφ
 
 end IsLomega1omegaIndiscernible
 
@@ -159,24 +73,6 @@ end IsLomega1omegaIndiscernible
 namespace IsLomega1omegaIndiscernibleOn
 
 variable {I : Type w} [LinearOrder I] {M : Type*} [L.Structure M]
-
-/-- Restricted `template_truth_iff`: the `templateOfSeq`'s value at a
-formula `φ ∈ Γ` equals the truth value of `φ` on any strictly-increasing
-tuple, provided the source sequence is restricted-indiscernible on `Γ`.
-
-This mirrors `IsLomega1omegaIndiscernible.template_truth_iff` but uses the
-weaker `IsLomega1omegaIndiscernibleOn` hypothesis and compares against
-`templateOfSeq a` (the hypothesis-free template). -/
-theorem templateOfSeq_truth_iff {a : I → M}
-    {Γ : Set (Σ n, L.BoundedFormulaω Empty n)}
-    (h : IsLomega1omegaIndiscernibleOn (L := L) a Γ)
-    {n : ℕ} {φ : L.BoundedFormulaω Empty n} (hφ : ⟨n, φ⟩ ∈ Γ)
-    {s : Fin n → I} (hs : StrictMono s) :
-    (templateOfSeq (L := L) a).truth φ ↔
-      φ.Realize (Empty.elim : Empty → M) (a ∘ s) := by
-  refine ⟨?_, fun hR => ⟨s, hs, hR⟩⟩
-  rintro ⟨t, ht, hR⟩
-  exact (h.iff_realize φ hφ ht hs).mp hR
 
 end IsLomega1omegaIndiscernibleOn
 

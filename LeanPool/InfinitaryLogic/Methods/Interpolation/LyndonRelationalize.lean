@@ -52,8 +52,6 @@ variable {L : Language.{0, 0}} {α β : Type}
 
 /-! ## Symbol-range disjointness -/
 
-
-
 /-! ## Gate 1: the atomic calculus — term graphs are positive-only -/
 
 /-- **The term-graph signed identity**, both signs at once (the recursion needs both): positive
@@ -66,25 +64,21 @@ private theorem relationsInSigned_termGraphAux :
         relationsInSigned false (termGraphAux t ρ y) = ∅
   | _, .var z, ρ, y => by
     refine ⟨?_, rfl⟩
-    show relationsInSigned true (BoundedFormulaω.equal (ρ z) y) = _
+    change relationsInSigned true (BoundedFormulaω.equal (ρ z) y) = _
     rw [relationsInSigned_equal, Term.functionsIn, Set.image_empty]
   | m, .func f ts, ρ, y => by
     constructor
-    · show relationsInSigned true (BoundedFormulaω.existsBlock _) = _
+    · change relationsInSigned true (BoundedFormulaω.existsBlock _) = _
       rw [relationsInSigned_existsBlock, relationsInSigned_and, relationsInSigned_einf,
         Set.iUnion_congr fun i => (relationsInSigned_termGraphAux (ts i) _ _).1]
-      show (⋃ i, graphRelSym L '' (ts i).functionsIn) ∪ {graphRelSym L ⟨_, f⟩} = _
+      change (⋃ i, graphRelSym L '' (ts i).functionsIn) ∪ {graphRelSym L ⟨_, f⟩} = _
       rw [← Set.image_iUnion, Set.union_singleton, ← Set.image_insert_eq]
       rfl
-    · show relationsInSigned false (BoundedFormulaω.existsBlock _) = _
+    · change relationsInSigned false (BoundedFormulaω.existsBlock _) = _
       rw [relationsInSigned_existsBlock, relationsInSigned_and, relationsInSigned_einf,
         Set.iUnion_congr fun i => (relationsInSigned_termGraphAux (ts i) _ _).2]
-      show (⋃ _i : Fin _, (∅ : Set (Σ n, GraphRelation L n))) ∪ ∅ = ∅
+      change (⋃ _i : Fin _, (∅ : Set (Σ n, GraphRelation L n))) ∪ ∅ = ∅
       rw [Set.iUnion_empty, Set.union_empty]
-
-
-
-
 
 /-- **The equality atom's translation is positive-only**, with exactly the two terms' graph
 relations. -/
@@ -93,11 +87,11 @@ private theorem relationsInSigned_equalGraph {n : ℕ} (t u : L.Term (α ⊕ Fin
         graphRelSym L '' (t.functionsIn ∪ u.functionsIn) ∧
       relationsInSigned false (equalGraph t u) = ∅ := by
   constructor
-  · show relationsInSigned true (BoundedFormulaω.existsBlock _) = _
+  · change relationsInSigned true (BoundedFormulaω.existsBlock _) = _
     rw [relationsInSigned_existsBlock, relationsInSigned_and,
       (relationsInSigned_termGraphAux t _ _).1, (relationsInSigned_termGraphAux u _ _).1,
       Set.image_union]
-  · show relationsInSigned false (BoundedFormulaω.existsBlock _) = _
+  · change relationsInSigned false (BoundedFormulaω.existsBlock _) = _
     rw [relationsInSigned_existsBlock, relationsInSigned_and,
       (relationsInSigned_termGraphAux t _ _).2, (relationsInSigned_termGraphAux u _ _).2,
       Set.union_self]
@@ -110,16 +104,16 @@ private theorem relationsInSigned_relGraph {n k : ℕ} (R : L.Relations k)
         graphRelSym L '' (⋃ i, (ts i).functionsIn) ∪ {baseRelSym L ⟨k, R⟩} ∧
       relationsInSigned false (relGraph R ts) = ∅ := by
   constructor
-  · show relationsInSigned true (BoundedFormulaω.existsBlock _) = _
+  · change relationsInSigned true (BoundedFormulaω.existsBlock _) = _
     rw [relationsInSigned_existsBlock, relationsInSigned_and, relationsInSigned_einf,
       Set.iUnion_congr fun i => (relationsInSigned_termGraphAux (ts i) _ _).1,
       relationsInSigned_rel, Set.image_iUnion, ite_eq_left rfl]
     rfl
-  · show relationsInSigned false (BoundedFormulaω.existsBlock _) = _
+  · change relationsInSigned false (BoundedFormulaω.existsBlock _) = _
     rw [relationsInSigned_existsBlock, relationsInSigned_and, relationsInSigned_einf,
       Set.iUnion_congr fun i => (relationsInSigned_termGraphAux (ts i) _ _).2,
       relationsInSigned_rel]
-    show (⋃ _i : Fin _, (∅ : Set (Σ n, GraphRelation L n))) ∪
+    change (⋃ _i : Fin _, (∅ : Set (Σ n, GraphRelation L n))) ∪
       (if false then {(⟨k, GraphRelation.base R⟩ : Σ l, GraphRelation L l)} else ∅) = ∅
     rw [Set.iUnion_empty, ite_eq_right (by simp), Set.union_empty]
 
@@ -142,16 +136,6 @@ private theorem preimage_baseRelSym_relationsInSigned_graphAxioms (s : Bool)
     exact relationsInSigned_subset_relationsIn s _ hp
   exact absurd (Set.mem_preimage.mpr hmem)
     (by rw [preimage_baseRelSym_graphRelSym_image F]; exact Set.notMem_empty p)
-
-/-- Intersection form of the same fact. -/
-private theorem relationsInSigned_graphAxioms_inter_base (s : Bool) (F : Set (Σ n, L.Functions n))
-    [Countable ↥F] :
-    relationsInSigned s (graphAxioms F) ∩ Set.range (baseRelSym L) = ∅ := by
-  rw [Set.eq_empty_iff_forall_notMem]
-  rintro q ⟨hq, p, rfl⟩
-  have h1 : p ∈ baseRelSym L ⁻¹' relationsInSigned s (graphAxioms F) := hq
-  rw [preimage_baseRelSym_relationsInSigned_graphAxioms s F] at h1
-  exact h1
 
 /-! ## Gate 2: base-polarity preservation (the stop/go equation) -/
 
@@ -219,14 +203,6 @@ private theorem mem_relationsInSigned_relationalizeFormula (s : Bool) (p : Σ n,
     · rintro ⟨-, ⟨i, rfl⟩, hi⟩
       exact Set.mem_iUnion.mpr ⟨i, (mem_relationsInSigned_relationalizeFormula s p (φs i)).mpr hi⟩
 
-
-
-
-
-
-
-
-
 /-! ## Gate 3: back-translation -/
 
 /-- **The back-translation signed identity, membership form**: a base symbol occurs with sign `s`
@@ -238,15 +214,15 @@ private theorem mem_relationsInSigned_backTranslateFormula (s : Bool) (p : Σ n,
       p ∈ relationsInSigned s (backTranslateFormula θ) ↔
         baseRelSym L p ∈ relationsInSigned s θ
   | _, .falsum => by
-    show p ∈ relationsInSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α _) ↔ _
+    change p ∈ relationsInSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α _) ↔ _
     rw [relationsInSigned_falsum, relationsInSigned_falsum]
     exact iff_of_false (Set.notMem_empty _) (Set.notMem_empty _)
   | _, .equal t u => by
-    show p ∈ relationsInSigned s (BoundedFormulaω.equal (ungraphTerm t) (ungraphTerm u)) ↔ _
+    change p ∈ relationsInSigned s (BoundedFormulaω.equal (ungraphTerm t) (ungraphTerm u)) ↔ _
     rw [relationsInSigned_equal, relationsInSigned_equal]
     exact iff_of_false (Set.notMem_empty _) (Set.notMem_empty _)
   | _, .rel (GraphRelation.base R₀) ts => by
-    show p ∈ relationsInSigned s (BoundedFormulaω.rel R₀ fun i => ungraphTerm (ts i)) ↔ _
+    change p ∈ relationsInSigned s (BoundedFormulaω.rel R₀ fun i => ungraphTerm (ts i)) ↔ _
     rw [relationsInSigned_rel, relationsInSigned_rel]
     cases s with
     | true =>
@@ -259,7 +235,7 @@ private theorem mem_relationsInSigned_backTranslateFormula (s : Bool) (p : Σ n,
       exact iff_of_false (Set.notMem_empty _) (Set.notMem_empty _)
   | _, .rel (GraphRelation.graph f) ts => by
     -- the graph atom back-translates to an equality: empty in both signs
-    show p ∈ relationsInSigned s (BoundedFormulaω.equal _ _) ↔ _
+    change p ∈ relationsInSigned s (BoundedFormulaω.equal _ _) ↔ _
     rw [relationsInSigned_equal, relationsInSigned_rel]
     cases s with
     | true =>
@@ -271,7 +247,7 @@ private theorem mem_relationsInSigned_backTranslateFormula (s : Bool) (p : Σ n,
       rw [ite_eq_right (by simp)]
       exact iff_of_false (Set.notMem_empty _) (Set.notMem_empty _)
   | _, .imp φ ψ => by
-    show p ∈ relationsInSigned s ((backTranslateFormula φ).imp (backTranslateFormula ψ)) ↔ _
+    change p ∈ relationsInSigned s ((backTranslateFormula φ).imp (backTranslateFormula ψ)) ↔ _
     rw [relationsInSigned_imp, relationsInSigned_imp]
     constructor
     · rintro (h | h)
@@ -281,11 +257,11 @@ private theorem mem_relationsInSigned_backTranslateFormula (s : Bool) (p : Σ n,
       · exact Or.inl ((mem_relationsInSigned_backTranslateFormula (!s) p φ).mpr h)
       · exact Or.inr ((mem_relationsInSigned_backTranslateFormula s p ψ).mpr h)
   | _, .all φ => by
-    show p ∈ relationsInSigned s (backTranslateFormula φ).all ↔ _
+    change p ∈ relationsInSigned s (backTranslateFormula φ).all ↔ _
     rw [relationsInSigned_all, relationsInSigned_all]
     exact mem_relationsInSigned_backTranslateFormula s p φ
   | _, .iSup φs => by
-    show p ∈ relationsInSigned s (BoundedFormulaω.iSup fun i => backTranslateFormula (φs i)) ↔ _
+    change p ∈ relationsInSigned s (BoundedFormulaω.iSup fun i => backTranslateFormula (φs i)) ↔ _
     rw [relationsInSigned_iSup, relationsInSigned_iSup]
     constructor
     · rintro ⟨-, ⟨i, rfl⟩, hi⟩
@@ -293,7 +269,7 @@ private theorem mem_relationsInSigned_backTranslateFormula (s : Bool) (p : Σ n,
     · rintro ⟨-, ⟨i, rfl⟩, hi⟩
       exact Set.mem_iUnion.mpr ⟨i, (mem_relationsInSigned_backTranslateFormula s p (φs i)).mpr hi⟩
   | _, .iInf φs => by
-    show p ∈ relationsInSigned s (BoundedFormulaω.iInf fun i => backTranslateFormula (φs i)) ↔ _
+    change p ∈ relationsInSigned s (BoundedFormulaω.iInf fun i => backTranslateFormula (φs i)) ↔ _
     rw [relationsInSigned_iInf, relationsInSigned_iInf]
     constructor
     · rintro ⟨-, ⟨i, rfl⟩, hi⟩
@@ -322,10 +298,6 @@ theorem negativeRelationsIn_backTranslateFormula {n : ℕ}
   relationsInSigned_backTranslateFormula false θ
 
 /-! ## The base-polarity identities for Craig's graph roots -/
-
-
-
-
 
 /-- Preimage form of the graph-antecedent identity — the shape the endpoint consumes, so that no
 `Sigma`/definitional-equality friction leaks into the assembly. -/

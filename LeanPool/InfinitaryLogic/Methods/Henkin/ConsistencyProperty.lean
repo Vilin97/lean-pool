@@ -90,10 +90,6 @@ structure ConsistencyProperty (L : Language.{u, v}) where
     chain ⊆ sets → IsChain (· ⊆ ·) chain → chain.Nonempty →
     ⋃₀ chain ∈ sets
 
-/-- A set of sentences is consistent with respect to a consistency property. -/
-def ConsistencyProperty.Consistent (C : ConsistencyProperty L) (S : Set L.Sentenceω) : Prop :=
-  S ∈ C.sets
-
 /-- A consistency property with equality and quantifier axioms (C0)-(C7).
 
 This extends `ConsistencyProperty` with the conditions needed for the Henkin

@@ -44,7 +44,7 @@ private theorem LocalEMContext.codeTypes_subsingleton (ctx : LocalEMContext Λ J
   rintro p ⟨a, ha, rfl⟩ q ⟨b, hb, rfl⟩
   obtain ⟨e, he⟩ := ctx.exists_carrierEquiv_of_tupleCode_eq hJ (ha.trans hb.symm)
   ext ψ
-  show ψ.Realize Empty.elim a ↔ ψ.Realize Empty.elim b
+  change ψ.Realize Empty.elim a ↔ ψ.Realize Empty.elim b
   have h1 := ctx.realize_carrierEquiv e ψ Empty.elim a
   rwa [show (⇑(ctx.carrierEquiv e) ∘ Empty.elim : Empty → ctx.Carrier) = Empty.elim from
       funext fun x => x.elim,

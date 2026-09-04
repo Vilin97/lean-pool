@@ -46,34 +46,10 @@ injective, and `Fin m → ℕ` is countable. -/
 instance instCountableFinOrderEmbNat (m : ℕ) : Countable (Fin m ↪o ℕ) :=
   (DFunLike.coe_injective (F := Fin m ↪o ℕ) (α := Fin m) (β := fun _ => ℕ)).countable
 
-/-- **The schema sentence universe.** Over the base language `(localColim s₀)[[ℕ]]` (`ℕ` the
-canonical indiscernible-sequence positions), the set of `templateSentence φ t` — "`φ` holds on
-the constants `d_{t 0}, …, d_{t (m-1)}`" — as `⟨m, φ⟩` ranges over the colimit atom/connective
-family `ΓEMlocal s₀` and `t` over the increasing `ℕ`-tuples of length `m`. This is the countable
-decision list of the ω-stage completion; its `iSup`/`iInf` witnesses stay inside it because
-`ΓEMlocal ⊇ ΓlocalColim` is component-closed. -/
-private def schemaSentenceUniverse (s₀ : LocalStage) : Set ((localColim s₀)[[ℕ]].Sentenceω) :=
-  ⋃ (mφ ∈ ΓEMlocal s₀), Set.range fun t : Fin mφ.1 ↪o ℕ =>
-    Lomega1omegaTemplate.templateSentence mφ.2 t
-
-/-- **Checkpoint 1.** The schema sentence universe is countable — a countable union (over the
-countable seed family `ΓEMlocal s₀`) of ranges of maps out of the countable tuple types. This is
-what makes the ω-enumeration of the completion possible. -/
-private theorem schemaSentenceUniverse_countable : (schemaSentenceUniverse s₀).Countable :=
-  (ΓEMlocal_countable s₀).biUnion fun _ _ => Set.countable_range _
-
 /-- A canonical length-`m` increasing `ℕ`-tuple: the inclusion `Fin m ↪ ℕ` by value, which is
 strictly monotone. Used to base-point the schema universe. -/
 def stdTuple (m : ℕ) : Fin m ↪o ℕ :=
   OrderEmbedding.ofStrictMono (fun i => (i : ℕ)) fun _ _ h => h
-
-/-- The schema sentence universe is nonempty: the seed family is nonempty
-(`ΓEMlocal_nonempty`) and every arity admits the standard tuple, so the corresponding
-`templateSentence` is a member. Supplies the base point the enumeration in checkpoint 3 needs. -/
-private theorem schemaSentenceUniverse_nonempty : (schemaSentenceUniverse s₀).Nonempty := by
-  obtain ⟨mφ, hmφ⟩ := ΓEMlocal_nonempty s₀
-  exact ⟨Lomega1omegaTemplate.templateSentence mφ.2 (stdTuple mφ.1),
-    Set.mem_biUnion hmφ ⟨stdTuple mφ.1, rfl⟩⟩
 
 /-! ## Checkpoint 2, step 1: the template-realization bridge
 
@@ -93,7 +69,8 @@ variable {L'' : Language.{0, 0}} {J : Type} [LinearOrder J] {M : Type} [L''.Stru
 Marker double expansion `((L''[[J]])[[ℕ]])` along the Henkin inclusion, realizes under a skeleton
 interpretation `σ : J → M` and any Henkin interpretation `h : ℕ → M` iff `ψ` holds on the tuple
 `i ↦ σ (t i)`. Composes `sentenceRealize_iff_realizeWith`, `realize_mapLanguage` (the Henkin
-inclusion is an expansion, `withConstants_expansion`), and the existing `realize_templateSentence`. -/
+inclusion is an expansion, `withConstants_expansion`), and the existing
+  `realize_templateSentence`. -/
 theorem realizeWith_templateSentence (σ : J → M) (h : ℕ → M)
     {n : ℕ} (ψ : L''.BoundedFormulaω Empty n) (t : Fin n ↪o J) :
     realizeWith σ h
@@ -104,7 +81,7 @@ theorem realizeWith_templateSentence (σ : J → M) (h : ℕ → M)
   let : (constantsOn J).Structure M := constantsOn.structure σ
   let : (constantsOn ℕ).Structure M := constantsOn.structure h
   rw [← sentenceRealize_iff_realizeWith]
-  show Sentenceω.Realize _ M ↔ _
+  change Sentenceω.Realize _ M ↔ _
   rw [Sentenceω.realize_def]
   rw [BoundedFormulaω.realize_mapLanguage ((L''[[J]]).lhomWithConstants ℕ)
     (Lomega1omegaTemplate.templateSentence ψ t)]
@@ -141,7 +118,8 @@ private theorem markerHenkinConsistent_empty
   obtain ⟨_, _, _, _, _, e, _⟩ :=
     markerStage_homogeneous (L' := L'') M hM β hβ (J := J)
       (m := 0) (ar := Fin.elim0) (fun p => p.elim0) (fun p => p.elim0)
-  exact ⟨β, le_refl β, hβ, e, fun σ _ _ => ⟨fun _ => Classical.arbitrary M, fun τ hτ => by simp at hτ⟩⟩
+  exact ⟨β, le_refl β, hβ, e, fun σ _ _ => ⟨fun _ => Classical.arbitrary M, fun τ hτ => by
+    simp at hτ⟩⟩
 
 end EmptyBase
 
@@ -159,7 +137,6 @@ only the *constant* symbols, never all of `functionsIn`. -/
 section FunctionsInMapLanguage
 
 variable {L L' : Language.{0, 0}} (g : L →ᴸ L')
-
 
 end FunctionsInMapLanguage
 
@@ -400,7 +377,8 @@ private theorem schemaCompletionStage_decides (n : ℕ) :
 
 /-- **Stage `n` witnesses a positive `iSup`**: if `(ρ n).1` is `iSup φs` and lands positively in
 stage `n+1`, some component `φs k` is present too. -/
-private theorem schemaCompletionStage_witness (n : ℕ) {φs : ℕ → ((localColim s₀)[[ℕ]])[[ℕ]].Sentenceω}
+private theorem schemaCompletionStage_witness (n : ℕ) {φs : ℕ → ((localColim
+  s₀)[[ℕ]])[[ℕ]].Sentenceω}
     (hiSup : (ρ n).1 = BoundedFormulaω.iSup φs)
     (hpos : (ρ n).1 ∈ (schemaCompletionStage ρ hM (n + 1)).1) :
     ∃ k, φs k ∈ (schemaCompletionStage ρ hM (n + 1)).1 := by

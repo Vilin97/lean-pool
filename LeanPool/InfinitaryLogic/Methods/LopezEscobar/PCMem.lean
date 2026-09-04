@@ -26,12 +26,4 @@ def baseGraphEmb : L →ᴸ graphLanguage (KLang L) where
   onFunction {_} f := isEmptyElim f
   onRelation {_} R := GraphRelation.base (Sum.inl R)
 
-
-
-
-
-
-
-
-
 end FirstOrder.Language

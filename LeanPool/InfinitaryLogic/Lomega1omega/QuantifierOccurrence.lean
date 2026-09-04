@@ -11,7 +11,8 @@ import LeanPool.InfinitaryLogic.Lomega1omega.QuantifierClass
 separator budgets need the dual, positive question: "**does** a quantifier of this sign occur?".
 
 Defining occurrence as `¬ IsUniversal` / `¬ IsExistential` would work extensionally but makes every
-budget calculation a double-negation exercise.  So occurrence is given its own signed recursion, with
+budget calculation a double-negation exercise. So occurrence is given its own signed recursion,
+with
 exact constructor equations, and the two are then related by an exact bridge:
 
 ```
@@ -43,9 +44,6 @@ def hasQuantSigned : ∀ {n : ℕ}, Bool → L.BoundedFormulaω α n → Prop
   | _, s, .iSup φs => ∃ i, hasQuantSigned s (φs i)
   | _, s, .iInf φs => ∃ i, hasQuantSigned s (φs i)
 
-/-- A universal quantifier occurs in `φ`. -/
-private abbrev HasUniversal {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := hasQuantSigned true φ
-
 /-- An existential quantifier occurs in `φ`. -/
 abbrev HasExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := hasQuantSigned false φ
 
@@ -53,8 +51,6 @@ abbrev HasExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := hasQuan
 
 @[simp] theorem hasQuantSigned_falsum {n : ℕ} (s : Bool) :
     ¬ hasQuantSigned s (BoundedFormulaω.falsum : L.BoundedFormulaω α n) := id
-
-
 
 @[simp] theorem hasQuantSigned_equal {n : ℕ} (s : Bool) (t₁ t₂ : L.Term (α ⊕ Fin n)) :
     ¬ hasQuantSigned s (BoundedFormulaω.equal t₁ t₂) := id
@@ -77,22 +73,18 @@ abbrev HasExistential {n : ℕ} (φ : L.BoundedFormulaω α n) : Prop := hasQuan
 /-- Negation **exchanges** the two occurrence notions. -/
 @[simp] theorem hasQuantSigned_not {n : ℕ} (s : Bool) (φ : L.BoundedFormulaω α n) :
     hasQuantSigned s φ.not ↔ hasQuantSigned (!s) φ := by
-  show hasQuantSigned (!s) φ ∨ hasQuantSigned s
+  change hasQuantSigned (!s) φ ∨ hasQuantSigned s
     (BoundedFormulaω.falsum : L.BoundedFormulaω α n) ↔ _
   simp
 
-
-
 @[simp] theorem hasQuantSigned_and {n : ℕ} (s : Bool) (φ ψ : L.BoundedFormulaω α n) :
     hasQuantSigned s (φ.and ψ) ↔ hasQuantSigned s φ ∨ hasQuantSigned s ψ := by
-  show hasQuantSigned s ((φ.imp ψ.not).not) ↔ _
+  change hasQuantSigned s ((φ.imp ψ.not).not) ↔ _
   simp
-
-
 
 @[simp] theorem hasQuantSigned_ex {n : ℕ} (s : Bool) (φ : L.BoundedFormulaω α (n + 1)) :
     hasQuantSigned s φ.ex ↔ s = false ∨ hasQuantSigned s φ := by
-  show hasQuantSigned s ((φ.not.all).not) ↔ _
+  change hasQuantSigned s ((φ.not.all).not) ↔ _
   simp only [hasQuantSigned_not, hasQuantSigned_all]
   cases s <;> simp
 
@@ -123,8 +115,6 @@ theorem universalSigned_iff_not_hasQuantSigned :
 theorem isUniversal_iff_not_hasExistential {n : ℕ} (φ : L.BoundedFormulaω α n) :
     IsUniversal φ ↔ ¬ HasExistential φ := universalSigned_iff_not_hasQuantSigned true φ
 
-
-
 /-! ## Stability under the variable operations -/
 
 theorem hasQuantSigned_relabel (s : Bool) (g : α → β ⊕ Fin n) :
@@ -150,18 +140,18 @@ theorem hasQuantSigned_openBounds (s : Bool) :
   | _, .equal _ _ => Iff.rfl
   | _, .rel _ _ => Iff.rfl
   | _, .imp φ ψ => by
-    show hasQuantSigned (!s) (φ.openBounds) ∨ hasQuantSigned s (ψ.openBounds) ↔ _
+    change hasQuantSigned (!s) (φ.openBounds) ∨ hasQuantSigned s (ψ.openBounds) ↔ _
     rw [hasQuantSigned_openBounds _ φ, hasQuantSigned_openBounds s ψ]
     exact Iff.rfl
   | _, .all φ => by
-    show s = true ∨ hasQuantSigned s ((φ.openBounds).relabel insertLastBound) ↔ _
+    change s = true ∨ hasQuantSigned s ((φ.openBounds).relabel insertLastBound) ↔ _
     rw [hasQuantSigned_relabel, hasQuantSigned_openBounds s φ]
     exact Iff.rfl
   | _, .iSup φs => by
-    show (∃ i, hasQuantSigned s ((φs i).openBounds)) ↔ _
+    change (∃ i, hasQuantSigned s ((φs i).openBounds)) ↔ _
     exact exists_congr fun i => hasQuantSigned_openBounds s (φs i)
   | _, .iInf φs => by
-    show (∃ i, hasQuantSigned s ((φs i).openBounds)) ↔ _
+    change (∃ i, hasQuantSigned s ((φs i).openBounds)) ↔ _
     exact exists_congr fun i => hasQuantSigned_openBounds s (φs i)
 
 end BoundedFormulaω
@@ -176,9 +166,6 @@ variable {L : Language.{0, 0}}
 
 /-- A quantifier of sign `s` occurs somewhere in the set — the *source* of a separator budget. -/
 def HasQuantSigned (s : Bool) (T : Set L.Sentenceω) : Prop := ∃ σ ∈ T, hasQuantSigned s σ
-
-/-- A universal quantifier occurs somewhere in `T`. -/
-private abbrev HasUniversal (T : Set L.Sentenceω) : Prop := HasQuantSigned true T
 
 /-- An existential quantifier occurs somewhere in `T`. -/
 private abbrev HasExistential (T : Set L.Sentenceω) : Prop := HasQuantSigned false T

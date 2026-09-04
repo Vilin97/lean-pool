@@ -236,7 +236,7 @@ private theorem relationsIn_relGraph {k : ℕ} (R : L.Relations k) (ts : Fin k �
   rw [relGraph, BoundedFormulaω.relationsIn_existsBlock, BoundedFormulaω.relationsIn_and,
     BoundedFormulaω.relationsIn_einf,
     Set.iUnion_congr fun i => relationsIn_termGraphAux (ts i) _ _]
-  show (⋃ i, graphRelSym L '' (ts i).functionsIn) ∪ {⟨k, GraphRelation.base R⟩} = _
+  change (⋃ i, graphRelSym L '' (ts i).functionsIn) ∪ {⟨k, GraphRelation.base R⟩} = _
   rw [relSym, Set.image_singleton, Set.union_comm, ← Set.image_iUnion]
   rfl
 
@@ -249,23 +249,23 @@ theorem relationsIn_relationalizeFormula :
   | _, .falsum => (relSym_empty (L := L)).symm
   | _, .equal t u => by
     rw [relationalizeFormula_equal, relationsIn_equalGraph]
-    show _ = relSym L (t.functionsIn ∪ u.functionsIn) ∅
+    change _ = relSym L (t.functionsIn ∪ u.functionsIn) ∅
     rw [relSym, Set.image_empty, Set.empty_union]
   | _, .rel R ts => relationsIn_relGraph R ts
   | _, .imp φ ψ => by
     rw [relationalizeFormula_imp]
-    show (relationalizeFormula φ).relationsIn ∪ (relationalizeFormula ψ).relationsIn = _
+    change (relationalizeFormula φ).relationsIn ∪ (relationalizeFormula ψ).relationsIn = _
     rw [relationsIn_relationalizeFormula φ, relationsIn_relationalizeFormula ψ]
     exact (relSym_union _ _ _ _).symm
   | _, .all φ => relationsIn_relationalizeFormula φ
   | _, .iSup φs => by
     rw [relationalizeFormula_iSup]
-    show (⋃ i, (relationalizeFormula (φs i)).relationsIn) = _
+    change (⋃ i, (relationalizeFormula (φs i)).relationsIn) = _
     rw [Set.iUnion_congr fun i => relationsIn_relationalizeFormula (φs i)]
     exact (relSym_iUnion _ _).symm
   | _, .iInf φs => by
     rw [relationalizeFormula_iInf]
-    show (⋃ i, (relationalizeFormula (φs i)).relationsIn) = _
+    change (⋃ i, (relationalizeFormula (φs i)).relationsIn) = _
     rw [Set.iUnion_congr fun i => relationsIn_relationalizeFormula (φs i)]
     exact (relSym_iUnion _ _).symm
 

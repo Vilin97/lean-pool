@@ -41,8 +41,6 @@ instance instSMulPermStructureSpace : SMul (Equiv.Perm ℕ) (StructureSpace L) w
     (R : Σ l, L.Relations l) (v : Fin R.1 → ℕ) :
     (σ • c) ⟨R, v⟩ = c ⟨R, ⇑σ⁻¹ ∘ v⟩ := rfl
 
-
-
 /-- **Action invariance** of a class of coded structures. -/
 def ActionInvariant (B : Set (StructureSpace L)) : Prop :=
   ∀ (σ : Equiv.Perm ℕ) (c : StructureSpace L), c ∈ B ↔ σ • c ∈ B

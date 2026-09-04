@@ -51,7 +51,7 @@ namespace LopezStd
 /-- Decode a `{0,1}`-valued numeral back to a bit. -/
 def decodeBit (m : ℕ) : Bool := decide (m = 1)
 
-@[simp] theorem decodeBit_cond (b : Bool) : decodeBit (cond b 1 0) = b := by
+theorem decodeBit_cond (b : Bool) : decodeBit (cond b 1 0) = b := by
   cases b <;> rfl
 
 /-- The first-half `Fin (2n)` index of `i : Fin n`. -/
@@ -122,7 +122,7 @@ private theorem gMap_std (x : ℕ) : @gMap L ℕ (standardMid c g T) x = g x := 
 private theorem treeTuple_firstIdx (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) (i : Fin n) :
     @treeTuple L ℕ (standardMid c g T) n σ τ (firstIdx n i) = cond (σ i) 1 0 := by
   have h : ((firstIdx n i : Fin (2 * n)) : ℕ) < n := i.2
-  show (if h : ((firstIdx n i : Fin (2 * n)) : ℕ) < n
+  change (if h : ((firstIdx n i : Fin (2 * n)) : ℕ) < n
       then @numMap L ℕ (standardMid c g T) (cond (σ ⟨_, h⟩) 1 0)
       else @numMap L ℕ (standardMid c g T) (τ ⟨_, _⟩)) = _
   rw [dite_eq_left h, numMap_std]
@@ -131,20 +131,20 @@ private theorem treeTuple_firstIdx (n : ℕ) (σ : Fin n → Bool) (τ : Fin n �
 private theorem treeTuple_secondIdx (n : ℕ) (σ : Fin n → Bool) (τ : Fin n → ℕ) (i : Fin n) :
     @treeTuple L ℕ (standardMid c g T) n σ τ (secondIdx n i) = τ i := by
   have h : ¬ ((secondIdx n i : Fin (2 * n)) : ℕ) < n := by
-    show ¬ n + (i : ℕ) < n; omega
-  show (if h : ((secondIdx n i : Fin (2 * n)) : ℕ) < n
+    change ¬ n + (i : ℕ) < n; omega
+  change (if h : ((secondIdx n i : Fin (2 * n)) : ℕ) < n
       then @numMap L ℕ (standardMid c g T) (cond (σ ⟨_, h⟩) 1 0)
       else @numMap L ℕ (standardMid c g T) (τ ⟨((secondIdx n i : Fin (2 * n)) : ℕ) - n, _⟩)) = _
   rw [dite_eq_right h, numMap_std]
   congr 1
   apply Fin.ext
-  show n + (i : ℕ) - n = (i : ℕ)
+  change n + (i : ℕ) - n = (i : ℕ)
   omega
 
 private theorem pathTuple_firstIdx (n : ℕ) (i : Fin n) :
     @pathTuple L ℕ (standardMid c g T) n (firstIdx n i) = cond (queryCode c (i : ℕ)) 1 0 := by
   have h : ((firstIdx n i : Fin (2 * n)) : ℕ) < n := i.2
-  show (if ((firstIdx n i : Fin (2 * n)) : ℕ) < n
+  change (if ((firstIdx n i : Fin (2 * n)) : ℕ) < n
       then @fMap L ℕ (standardMid c g T) (@numMap L ℕ (standardMid c g T) _)
       else _) = _
   rw [ite_eq_left h, numMap_std, fMap_std]
@@ -153,13 +153,13 @@ private theorem pathTuple_firstIdx (n : ℕ) (i : Fin n) :
 private theorem pathTuple_secondIdx (n : ℕ) (i : Fin n) :
     @pathTuple L ℕ (standardMid c g T) n (secondIdx n i) = g (i : ℕ) := by
   have h : ¬ ((secondIdx n i : Fin (2 * n)) : ℕ) < n := by
-    show ¬ n + (i : ℕ) < n; omega
-  show (if ((secondIdx n i : Fin (2 * n)) : ℕ) < n then _
+    change ¬ n + (i : ℕ) < n; omega
+  change (if ((secondIdx n i : Fin (2 * n)) : ℕ) < n then _
       else @gMap L ℕ (standardMid c g T)
         (@numMap L ℕ (standardMid c g T) (((secondIdx n i : Fin (2 * n)) : ℕ) - n))) = _
   rw [ite_eq_right h, numMap_std, gMap_std]
   congr 1
-  show n + (i : ℕ) - n = (i : ℕ)
+  change n + (i : ℕ) - n = (i : ℕ)
   omega
 
 /-! ### The standard model satisfies Θ -/
@@ -186,7 +186,7 @@ private theorem standardMid_models
     rw [realize_codeAxiom]
     intro q
     simp only [fMap_std, numMap_std]
-    show (c q = true) ↔ cond (queryCode c (queryEmbedding q)) 1 0 = 1
+    change (c q = true) ↔ cond (queryCode c (queryEmbedding q)) 1 0 = 1
     rw [queryCode_embedding]
     cases c q <;> simp
   · -- defaultAxiom
@@ -197,8 +197,8 @@ private theorem standardMid_models
   · -- treeDiagram
     rw [realize_treeDiagram]
     intro n σ τ
-    show wRel T (WitnessRel.tree n) (treeTuple L ℕ n σ τ) ↔ _
-    show ((fun i : Fin n => decodeBit (treeTuple L ℕ n σ τ (firstIdx n i))),
+    change wRel T (WitnessRel.tree n) (treeTuple L ℕ n σ τ) ↔ _
+    change ((fun i : Fin n => decodeBit (treeTuple L ℕ n σ τ (firstIdx n i))),
       (fun i : Fin n => treeTuple L ℕ n σ τ (secondIdx n i))) ∈ T n ↔ _
     rw [show (fun i : Fin n => decodeBit (treeTuple L ℕ n σ τ (firstIdx n i))) = σ from
         funext fun i => by rw [treeTuple_firstIdx, decodeBit_cond],
@@ -207,8 +207,8 @@ private theorem standardMid_models
   · -- pathAxiom
     rw [realize_pathAxiom]
     intro n
-    show wRel T (WitnessRel.tree n) (pathTuple L ℕ n)
-    show ((fun i : Fin n => decodeBit (pathTuple L ℕ n (firstIdx n i))),
+    change wRel T (WitnessRel.tree n) (pathTuple L ℕ n)
+    change ((fun i : Fin n => decodeBit (pathTuple L ℕ n (firstIdx n i))),
       (fun i : Fin n => pathTuple L ℕ n (secondIdx n i))) ∈ T n
     rw [show (fun i : Fin n => decodeBit (pathTuple L ℕ n (firstIdx n i)))
           = (fun i : Fin n => queryCode c (i : ℕ)) from
@@ -268,7 +268,7 @@ private theorem forwardCode_mem_modelsOf (side : PCSide)
       ((fun i : Fin n => queryCode c (i : ℕ)), (fun i : Fin n => g (i : ℕ))) ∈ T n) :
     forwardCode c g T ∈ ModelsOf (pcSentence L side T) := by
   let := standardK c g T
-  show @Sentenceω.Realize (graphLanguage (KLang L)) (pcSentence L side T) ℕ
+  change @Sentenceω.Realize (graphLanguage (KLang L)) (pcSentence L side T) ℕ
     (forwardCode c g T).toStructure
   rw [forwardCode_toStructure]
   exact graphExpansion_realizes_pcSentence side T (standardK_models_pc c g T side hbranch)
@@ -278,7 +278,7 @@ private theorem codeReduct_forwardCode :
   let := standardK c g T
   funext q
   rw [Bool.eq_iff_iff]
-  show (forwardCode c g T) ⟨⟨q.1.1, GraphRelation.base (Sum.inl q.1.2)⟩, q.2⟩ = true ↔ c q = true
+  change (forwardCode c g T) ⟨⟨q.1.1, GraphRelation.base (Sum.inl q.1.2)⟩, q.2⟩ = true ↔ c q = true
   rw [← StructureSpace.relMap_toStructure (forwardCode c g T)
       (GraphRelation.base (Sum.inl q.1.2)) q.2,
     forwardCode_toStructure]

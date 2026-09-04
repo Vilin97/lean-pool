@@ -225,8 +225,6 @@ theorem MarkerCofinalConsistent.mono {Sset Sset' : Set L'[[J]].Sentenceω}
     MarkerCofinalConsistent M Sset' :=
   fun F hFin hsub => h F hFin (hsub.trans hSS)
 
-
-
 /-- There is always an interpretation that is increasing on a given finite support into the
 range of a `(ℶ_α)⁺`-suborder — the suborder's domain is infinite, so it contains increasing
 tuples of every finite length. Supplies the "evaluation point" for the `C0` lemmas. -/
@@ -251,10 +249,6 @@ theorem exists_strictMonoOn_interp {α : Ordinal.{0}}
     dsimp only
     rw [dite_eq_left hj]
     exact ⟨_, rfl⟩
-
-
-
-
 
 /-- **The semantic extension scheme** behind the choice-free closure conditions: if a
 `trigger` sentence of `Sset` semantically entails a `new` sentence pointwise (under every
@@ -311,10 +305,6 @@ theorem MarkerCofinalConsistent.not_not {Sset : Set L'[[J]].Sentenceω}
     exact fun hreal => of_not_not fun hn =>
       (BoundedFormulaω.realize_not φ.not).mp hreal ((BoundedFormulaω.realize_not φ).mpr hn)
 
-
-
-
-
 end Certification
 
 /-! ## The ω₁-pigeonhole engine and the stated uniformization test -/
@@ -334,21 +324,6 @@ private theorem exists_uniform_of_cofinal_countable {K : Type} [Countable K]
   exact hβ k α ((Ordinal.le_iSup β k).trans hle) hα hP
 
 variable {L' : Language.{0, 0}} {J : Type} [LinearOrder J]
-
-/-- **The hard uniformization test** (deliberately a named statement, not a theorem): does
-a disjunction in a cofinally consistent set admit ONE disjunct whose adjunction stays
-cofinally consistent? Per finite subfragment `F` and level `α`, re-homogenizing the
-disjunct index (countably many colors, `≤ ℶ_α`) and pigeonholing the cofinal schedule
-(`exists_uniform_of_cofinal_countable`) produce a per-`F` disjunct `k(F)`; the open
-content is uniformizing over ALL finite `F ⊆ Sset` — a directed intersection of antitone
-nonempty subsets of `ℕ`, which is not automatic. If this holds, the Marker consistency
-property (`ConsistencyPropertyEq`'s `C4_iSup`) is mostly assembly; if it fails, the honest
-route is a finite-member consistency notion with its own Henkin/model-existence adapter
-(see the module docstring, including the `extension`-field obstruction). -/
-private def MarkerISupUniform (M : Type) [L'.Structure M] [LinearOrder M] : Prop :=
-  ∀ (Sset : Set L'[[J]].Sentenceω) (φs : ℕ → L'[[J]].Sentenceω),
-    MarkerCofinalConsistent M Sset → BoundedFormulaω.iSup φs ∈ Sset →
-    ∃ k, MarkerCofinalConsistent M (Sset ∪ {φs k})
 
 /-! ## Layer 3: the Henkin-witness substrate
 
@@ -383,22 +358,6 @@ def expJConstsIn {α : Type} {n : ℕ} (φ : ((L''[[J]])[[ℕ]]).BoundedFormula�
   {j | (⟨0, (Sum.inl (Sum.inr j) : ((L''[[J]])[[ℕ]]).Functions 0)⟩ :
       Σ n, ((L''[[J]])[[ℕ]]).Functions n) ∈ BoundedFormulaω.functionsIn φ}
 
-/-- **The forgetful/reduct lemma**: realizing the `mapLanguage`-image of an `L`-theory in a
-constant-expansion structure yields, by reduct, a model of the original theory. The Henkin
-construction will model the expanded theory over `(L'[[J]])[[ℕ]]`; the Marker endpoint
-needs the `L'[[J]]` original. -/
-private theorem Theoryω.model_reduct_of_expansion {L : Language.{0, 0}} {γ : Type} (T : L.Theoryω)
-    {N : Type} [L[[γ]].Structure N]
-    (h : ∀ τ ∈ T,
-      Sentenceω.Realize (BoundedFormulaω.mapLanguage (L.lhomWithConstants γ) τ) N) :
-    letI : L.Structure N := (L.lhomWithConstants γ).reduct N
-    Theoryω.Model T N := by
-  let : L.Structure N := (L.lhomWithConstants γ).reduct N
-  intro τ hτ
-  exact (BoundedFormulaω.realize_mapLanguage (L.lhomWithConstants γ) τ _ _).mp (h τ hτ)
-
-
-
 -- (The finite-member predicates `MarkerHenkinCert`/`MarkerHenkinConsistent` live in
 -- Layer 5 below, stated through the `realizeWith` API of Layer 4.)
 
@@ -432,21 +391,10 @@ def realizeWith (σ : J → M) (h : ℕ → M) {α : Type} {n : ℕ}
 
 /-! ### Constructor unfolds (term level) -/
 
-
-
 @[simp] theorem termValueWith_base (σ : J → M) (h : ℕ → M) {β : Type} {l : ℕ}
     (f : L''.Functions l) (ts : Fin l → ((L''[[J]])[[ℕ]]).Term β) (v : β → M) :
     termValueWith σ h (Term.func (Sum.inl (Sum.inl f)) ts) v =
       Structure.funMap f (fun i => termValueWith σ h (ts i) v) := rfl
-
-@[simp] theorem termValueWith_skeleton (σ : J → M) (h : ℕ → M) {β : Type} (j : J)
-    (ts : Fin 0 → ((L''[[J]])[[ℕ]]).Term β) (v : β → M) :
-    termValueWith σ h
-      (Term.func (Sum.inl (Sum.inr j) : ((L''[[J]])[[ℕ]]).Functions 0) ts) v = σ j := rfl
-
-
-
-
 
 /-! ### Constructor unfolds (formula level) -/
 
@@ -456,8 +404,6 @@ def baseRel {l : ℕ} : ((L''[[J]])[[ℕ]]).Relations l → L''.Relations l
   | Sum.inl (Sum.inl R) => R
   | Sum.inl (Sum.inr e) => e.elim
   | Sum.inr e => e.elim
-
-
 
 @[simp] theorem realizeWith_equal (σ : J → M) (h : ℕ → M) {α : Type} {n : ℕ}
     (t₁ t₂ : ((L''[[J]])[[ℕ]]).Term (α ⊕ Fin n)) (v : α → M) (xs : Fin n → M) :
@@ -684,10 +630,6 @@ private theorem expJConstsIn_component_iSup {α : Type} {n : ℕ}
   simp only [expJConstsIn, Set.mem_ofPred_eq, BoundedFormulaω.functionsIn] at hj ⊢
   exact Set.mem_iUnion.mpr ⟨k, hj⟩
 
-
-
-
-
 /-! ### Support lemmas for the expansion's Henkin constants (wrappers around the generic
 `sentenceJConsts` family, restated so `rw` matches the `henkinConstsIn` spelling) -/
 
@@ -706,10 +648,6 @@ private theorem henkinConstsIn_component_iSup {α : Type} {n : ℕ}
     henkinConstsIn (L'' := L'') (φs k) ⊆
       henkinConstsIn (L'' := L'') (BoundedFormulaω.iSup φs) :=
   sentenceJConsts_component_iSup φs k
-
-
-
-
 
 /-! ### The finite-member predicates -/
 
@@ -816,10 +754,6 @@ private theorem MarkerHenkinCert.insert_of_semantic {α : Ordinal.{0}}
     · exact hN.trans (hH trigger hmem)
     · exact hH τ hτ
 
-
-
-
-
 open scoped Classical in
 /-- The finite-member insertion scheme at the consistency level (uniform support preserved). -/
 private theorem MarkerHenkinConsistent.insert_of_semantic
@@ -856,14 +790,6 @@ theorem MarkerHenkinConsistent.not_not
     fun σ hk hreal => of_not_not fun hn =>
       (realizeWith_not σ hk φ.not _ _).mp hreal ((realizeWith_not σ hk φ _ _).mpr hn)
 
-
-
-
-
-
-
-
-
 /-! ### Layer 5b engine: re-homogenization
 
 The reusable machinery for the branch/index choice rules (`C1`, `C3'`, `C4`): color the
@@ -883,7 +809,8 @@ private noncomputable def tupleInterp (S : Finset J) (e : D ↪o M) (t : Fin S.c
     J → M :=
   fun j => if h : j ∈ S then e (t ((S.orderIsoOfFin rfl).symm ⟨j, h⟩)) else dflt
 
-private theorem tupleInterp_orderEmbOfFin (S : Finset J) (e : D ↪o M) (t : Fin S.card → D) (dflt : M)
+private theorem tupleInterp_orderEmbOfFin (S : Finset J) (e : D ↪o M)
+    (t : Fin S.card → D) (dflt : M)
     (i : Fin S.card) : tupleInterp S e t dflt (S.orderEmbOfFin rfl i) = e (t i) := by
   have hmem : S.orderEmbOfFin rfl i ∈ S := S.orderEmbOfFin_mem rfl i
   rw [tupleInterp, dite_eq_left hmem]
@@ -1086,8 +1013,6 @@ theorem MarkerHenkinConsistent.neg_iInf_choice
   obtain ⟨i, hi⟩ := hreal
   exact ⟨i, (realizeWith_not σ hk (φs i) _ _).mpr hi⟩
 
-
-
 /-! ### Layer 5c: the Henkin witness rule (C7)
 
 The one closure rule of a different shape: no re-homogenization, but a fresh Henkin constant.
@@ -1108,20 +1033,10 @@ theorem functionsIn_ex {α : Type} {m : ℕ}
     BoundedFormulaω.functionsIn φ.ex = BoundedFormulaω.functionsIn φ := by
   simp [BoundedFormulaω.functionsIn]
 
-
-
 omit [LinearOrder J] in
 private theorem henkinConstsIn_ex (φ : ((L''[[J]])[[ℕ]]).BoundedFormulaω Empty 1) :
     henkinConstsIn (L'' := L'') φ.ex = henkinConstsIn (L'' := L'') φ := by
   simp only [henkinConstsIn, sentenceJConsts, functionsIn_ex]
-
-
-
-
-
-
-
-
 
 omit [LinearOrder J] [LinearOrder M] in
 /-- **The semantic bridge**: realizing the witness sentence is realizing `φ` with the last
@@ -1132,8 +1047,10 @@ private theorem realizeWith_witness (σ : J → M) (h : ℕ → M)
       realizeWith σ h φ (Empty.elim : Empty → M) (Fin.snoc Fin.elim0 (h n)) := by
   let : (constantsOn J).Structure M := constantsOn.structure σ
   let : (constantsOn ℕ).Structure M := constantsOn.structure h
-  show ((φ.openBounds).subst (fun _ => henkinConst n)).Realize (Empty.elim : Empty → M) Fin.elim0 ↔
-    φ.Realize (Empty.elim : Empty → M) (Fin.snoc Fin.elim0 (h n))
+  change
+    ((φ.openBounds).subst (fun _ => henkinConst n)).Realize
+        (Empty.elim : Empty → M) Fin.elim0 ↔
+      φ.Realize (Empty.elim : Empty → M) (Fin.snoc Fin.elim0 (h n))
   rw [BoundedFormulaω.realize_subst]
   refine (realize_openBounds φ _).trans (iff_of_eq ?_)
   congr 1
@@ -1162,8 +1079,6 @@ theorem MarkerHenkinBody.witness {α : Ordinal.{0}} {S : Finset J}
   · exact (realizeWith_congr τ (fun _ _ => rfl)
       (fun m hm => Function.update_of_ne (ne_of_mem_of_not_mem hm (hn τ hτ)) x h) _ _).mpr
       (hh τ hτ)
-
-
 
 end Rehomogenize
 
@@ -1340,14 +1255,6 @@ theorem MarkerHenkinConsistent.eq_refl
       ((Term.functionsIn_finite t).union (Term.functionsIn_finite t))
   · rw [realizeWith_equal]
 
-
-
-
-
-
-
-
-
 /-! ## Layer 6c: the maximal finite-support theory (Zorn)
 
 The finite closure calculus (C0–C7) is turned into a complete theory over the finite-support
@@ -1376,21 +1283,7 @@ theorem MarkerConsistentFamily.mono {X X' : Set (FSentence (L'' := L'') (J := J)
     (hXX : X' ⊆ X) (h : MarkerConsistentFamily M X) : MarkerConsistentFamily M X' :=
   fun F hF => h F (hF.trans hXX)
 
-
-
-
-
 /-! ### Membership calculus of the maximal theory -/
-
-
-
-
-
-
-
-
-
-
 
 end FiniteClosure
 

@@ -113,7 +113,8 @@ private theorem modelsOfBoundedOn_measurableSet [Countable α]
       intro hc
       apply h
       let := StructureSpaceOn.toStructure c
-      simp [BoundedFormulaω.Realize, Term.realize] at hc
+      simp only [BoundedFormulaω.Realize, BoundedFormulaInf.realize_equal,
+        Term.realize] at hc
       exact hc
   | @rel _ l R ts =>
     choose xs' hxs' using fun i => Term.eq_var_of_isRelational (ts i)
@@ -137,7 +138,7 @@ private theorem modelsOfBoundedOn_measurableSet [Countable α]
       rwa [htup] at hrel
     · intro hc
       let := StructureSpaceOn.toStructure c
-      show @Structure.RelMap L α (StructureSpaceOn.toStructure c) l R
+      change @Structure.RelMap L α (StructureSpaceOn.toStructure c) l R
           (fun i => (ts i).realize (Sum.elim v xs))
       rw [StructureSpaceOn.relMap_toStructure, htup]
       exact hc

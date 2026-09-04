@@ -5,7 +5,8 @@ Authors: Cameron Freer
 -/
 import LeanPool.InfinitaryLogic.Methods.LopezEscobar.FunctionalTheta
 import LeanPool.InfinitaryLogic.Methods.LanguageMapOccurrence
-import LeanPool.InfinitaryLogic.Methods.LopezEscobar.RelationalizeSpike
+import LeanPool.InfinitaryLogic.Methods.LopezEscobar.WitnessLang
+import LeanPool.InfinitaryLogic.Methods.Interpolation.GraphReconstruction
 import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
 /-!
 # Assembly and graph translation: the PC sentence (issue #10, Unit 2b)
@@ -13,7 +14,8 @@ import LeanPool.InfinitaryLogic.Methods.SchemaCompletion
 The side-parametric functional sentence — `functionalTheta` mapped into the tagged `KLang`
 along the left or right witness embedding — and its relationalized PC form
 
-`pcSentence side T = graphAxioms (sideFunsSet side) ⊓ relationalizeFormula (functionalPCSentence side T)`.
+`pcSentence side T = graphAxioms (sideFunsSet side) ⊓ relationalizeFormula
+(functionalPCSentence side T)`.
 
 Acceptance gates (audit v2, Unit 2b):
 
@@ -33,7 +35,6 @@ namespace FirstOrder.Language
 open FirstOrder Structure Set
 
 variable {L : Language.{0, 0}}
-
 
 /-! ## Sides -/
 
@@ -129,12 +130,12 @@ theorem realize_pcSentence_iff {N : Type} [(graphLanguage (KLang L)).Structure N
     Sentenceω.Realize (pcSentence L side T) N ↔
       (Sentenceω.Realize (graphAxioms (sideFunsSet L side)) N ∧
         Sentenceω.Realize (relationalizeFormula (functionalPCSentence L side T)) N) := by
-  show BoundedFormulaω.Realize _ _ _ ↔ _
+  change BoundedFormulaω.Realize _ _ _ ↔ _
   rw [pcSentence, BoundedFormulaω.realize_and]
   rfl
 
 /-- **Gate (a)**: the graph expansion of a functional model satisfies the PC sentence. -/
-theorem graphExpansion_realizes_pcSentence {M : Type} [Nonempty M]
+theorem graphExpansion_realizes_pcSentence {M : Type} [_nonemptyM : Nonempty M]
     [instM : (KLang L).Structure M] (side : PCSide)
     (T : (n : ℕ) → Set ((Fin n → Bool) × (Fin n → ℕ)))
     (hreal : Sentenceω.Realize (functionalPCSentence L side T) M) :

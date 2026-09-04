@@ -90,10 +90,4 @@ theorem exists_model_relPreserving_isRelational [L.IsRelational]
         (insert (⟨2, lt⟩ : Σ n, L.Relations n) φ.relationsIn))
       ⟨lt, Set.mem_insert _ _⟩ ![f q, f r]).symm hpres
 
-
-
-
-
-
-
 end FirstOrder.Language

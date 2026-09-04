@@ -80,7 +80,9 @@ The certificate is no longer a separate field — it is carried by `code`, which
 `IsFamilyCode` subdomain.  `CodedFamily.infinitary` recovers it. -/
 structure CodedFamily {L : Language.{u, v}}
     (P : FamilyPresentation.{u, v, uCode, uIndex} L) (n : ℕ) where
+  /-- The certified family code. -/
   code : P.FamilyCode
+  /-- The formula family decoded from `code`. -/
   decode : P.Index code → L.BoundedFormulaω Empty n
   decoded_by_code : P.DecodesFamily n code decode
 
@@ -105,24 +107,16 @@ section Gates
 
 variable {M : Type} [L.Structure M] {v : Empty → M} {xs : Fin n → M}
 
-
-
-
-
 end Gates
 
 /-- **Gate 2.**  The arity is the parameter `n`; there is no independent arity field.  Stated as a
 type ascription that would not elaborate if the arity could drift. -/
 example (F : CodedFamily P n) : L.BoundedFormulaω Empty n := codedIInf F
 
-
-
 /-! ### Extensionality
 
 Functionality (`decodes_unique`) is what makes a coded family *determined by its code*.  Everything
 below is a consequence. -/
-
-
 
 /-- **Extensionality**: a coded family is its code.  The decoding law is a `Prop`, and the decoding
 is determined by the code, so nothing else can differ. -/
@@ -132,10 +126,6 @@ is determined by the code, so nothing else can differ. -/
   cases h
   cases P.decodes_unique hf hg
   rfl
-
-
-
-
 
 /-! ## The HF family view
 
@@ -156,9 +146,5 @@ def hfFamily (L : Language.{u, v}) : FamilyPresentation.{u, v, 0, 0} L where
   indexEncodable c := c.2.elim
   DecodesFamily _ c _ := c.2.elim
   decodes_unique {_} {c} {_} {_} _ _ := c.2.elim
-
-
-
-
 
 end FirstOrder.Language

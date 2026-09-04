@@ -120,23 +120,6 @@ private theorem appendLastOE_trans {J : Type*} [LinearOrder J]
   simp only [RelEmbedding.trans_apply, appendLastOE_coe]
   exact congrFun (Fin.comp_snoc (⇑e) (⇑s) x) i
 
-/-- The one-point order embedding `Fin 1 ↪o I` at `x` (strict monotonicity is vacuous). -/
-private def oneTupleOE (x : I) : Fin 1 ↪o I :=
-  OrderEmbedding.ofStrictMono (fun _ => x) fun a b hab =>
-    absurd (Subsingleton.elim a b) (ne_of_lt hab)
-
-
-
-/-- Arity-1 bridge: appending `b` above the one-point tuple at `a` is exactly the pair
-embedding of `a < b`. -/
-private theorem appendLastOE_oneTupleOE {a b : I} (h : a < b)
-    (hab : ∀ k, oneTupleOE a k < b) :
-    appendLastOE (oneTupleOE a) b hab = pairEmbed h := by
-  refine DFunLike.ext _ _ fun i => ?_
-  match i with
-  | ⟨0, _⟩ => rfl
-  | ⟨1, _⟩ => rfl
-
 end TupleUtils
 
 /-! ### Cardinal helpers: the tuple-domain bounds the tree port consumes -/
@@ -226,7 +209,7 @@ theorem NodeAt.restrict_trans {β : Ordinal.{0}} (h : NodeAt C n β)
   have : IsWellOrder δ.ToType (· < ·) := isWellOrder_lt
   have : IsWellOrder ε.ToType (· < ·) := isWellOrder_lt
   funext τ
-  show h ((τ.trans (initialSegOfLe hε).toOrderEmbedding).trans
+  change h ((τ.trans (initialSegOfLe hε).toOrderEmbedding).trans
         (initialSegOfLe hδ).toOrderEmbedding)
      = h (τ.trans (initialSegOfLe (hε.trans hδ)).toOrderEmbedding)
   refine congrArg h (DFunLike.ext _ _ fun k => ?_)
@@ -432,7 +415,7 @@ theorem yNode_restrict (G : (Fin (n + 2) ↪o Source lam) → C) (y : Source lam
   have : IsWellOrder β.ToType (· < ·) := isWellOrder_lt
   have : IsWellOrder δ.ToType (· < ·) := isWellOrder_lt
   funext τ
-  show colorAbove G y (fun k => yRep G y (Ordinal.typein (· < ·)
+  change colorAbove G y (fun k => yRep G y (Ordinal.typein (· < ·)
         ((τ.trans (initialSegOfLe hδ).toOrderEmbedding) k)))
      = colorAbove G y (fun k => yRep G y (Ordinal.typein (· < ·) (τ k)))
   refine congrArg (colorAbove G y) (funext fun k => ?_)
@@ -445,7 +428,7 @@ private theorem nodeRep_yNode (G : (Fin (n + 2) ↪o Source lam) → C) (y : Sou
   classical
   have hlt : Ordinal.typein (· < ·) x < β :=
     lt_of_lt_of_eq (Ordinal.typein_lt_type (· < ·) x) (Ordinal.type_toType β)
-  show nodeChosen G (Ordinal.typein (· < ·) x) ((yNode G y β).restrict (le_of_lt hlt))
+  change nodeChosen G (Ordinal.typein (· < ·) x) ((yNode G y β).restrict (le_of_lt hlt))
      = yRep G y (Ordinal.typein (· < ·) x)
   rw [yRep_eq, yNode_restrict]
 
@@ -551,7 +534,7 @@ private theorem nodeRep_restrict (G : (Fin (n + 2) ↪o Source lam) → C) {β :
     lt_of_lt_of_eq (Ordinal.typein_lt_type (· < ·) x) (Ordinal.type_toType δ)
   have hlx_lt : Ordinal.typein (· < ·) lx < β :=
     lt_of_lt_of_eq (Ordinal.typein_lt_type (· < ·) lx) (Ordinal.type_toType β)
-  show nodeChosen G (Ordinal.typein (· < ·) x) ((h.restrict hδ).restrict (le_of_lt hx_lt))
+  change nodeChosen G (Ordinal.typein (· < ·) x) ((h.restrict hδ).restrict (le_of_lt hx_lt))
      = nodeChosen G (Ordinal.typein (· < ·) lx) (h.restrict (le_of_lt hlx_lt))
   refine nodeChosen_congr G htx.symm ?_
   rw [NodeAt.restrict_trans h hδ (le_of_lt hx_lt)]
@@ -650,7 +633,7 @@ private theorem node_fact8 (G : (Fin (n + 2) ↪o Source lam) → C) {β : Ordin
     funext k
     rw [nodeRep_restrict G h (le_of_lt hx₂lt) (σ k), hσ k]
   have hcolval : (h.restrict (le_of_lt hx₂lt)) σ = h τ := by
-    show h (σ.trans (initialSegOfLe (le_of_lt hx₂lt)).toOrderEmbedding) = h τ
+    change h (σ.trans (initialSegOfLe (le_of_lt hx₂lt)).toOrderEmbedding) = h τ
     exact congrArg h (DFunLike.ext _ _ hσ)
   rw [hreps, hcolval] at hcol
   exact hcol
@@ -863,12 +846,12 @@ theorem exists_endHomogeneous_of_large
   have key := hf' s' (f' q) (f' q') (fun k => ⟨p k, rfl⟩) ⟨q, rfl⟩ ⟨q', rfl⟩ hx' hy'
   have e1 : (fun t : Fin (n + 2) ↪o Source lam => G (t.trans e))
         (appendLastOE s' (f' q) hx') = G (appendLastOE s x hx) := by
-    show G ((appendLastOE s' (f' q) hx').trans e) = G (appendLastOE s x hx)
+    change G ((appendLastOE s' (f' q) hx').trans e) = G (appendLastOE s x hx)
     rw [appendLastOE_trans]
     exact congrArg G (appendLastOE_congr (fun k => hs'e k) hq _ _)
   have e2 : (fun t : Fin (n + 2) ↪o Source lam => G (t.trans e))
         (appendLastOE s' (f' q') hy') = G (appendLastOE s y hy) := by
-    show G ((appendLastOE s' (f' q') hy').trans e) = G (appendLastOE s y hy)
+    change G ((appendLastOE s' (f' q') hy').trans e) = G (appendLastOE s y hy)
     rw [appendLastOE_trans]
     exact congrArg G (appendLastOE_congr (fun k => hs'e k) hq' _ _)
   calc G (appendLastOE s x hx)
@@ -882,60 +865,6 @@ end Endgame
 /-! ### Regression: the pair theorem's exact conclusion from the `n = 0` engine -/
 
 section Regression
-
-/-- The output order `(succ κ).ord.ToType` has no maximum for infinite `κ` (local copy of
-the scaffold's no-max lemma, avoiding an import of the induction scaffold). -/
-private theorem exists_gt_ordToType {κ : Cardinal.{0}} (hκ : Cardinal.aleph0 ≤ κ)
-    (x : (Order.succ κ).ord.ToType) : ∃ y : (Order.succ κ).ord.ToType, x < y := by
-  set d : Set.Iio (Order.succ κ).ord := Ordinal.ToType.mk.symm x
-  have hδ : d.1 < (Order.succ κ).ord := d.2
-  have hsucc : Order.succ d.1 < (Order.succ κ).ord := succ_lt_ord_of_lt hκ hδ
-  refine ⟨Ordinal.ToType.mk ⟨Order.succ d.1, hsucc⟩, ?_⟩
-  have hx : x = Ordinal.ToType.mk d := (Ordinal.ToType.mk.apply_symm_apply x).symm
-  rw [hx]
-  exact Ordinal.ToType.mk.lt_iff_lt.mpr
-    (show d < ⟨Order.succ d.1, hsucc⟩ from Order.lt_succ d.1)
-
-/-- **[REGRESSION]** The exact conclusion of `PairERGen.pairErdosRado_general_of_large`,
-re-derived from `exists_endHomogeneous_of_large` at `n = 0` plus the point pigeonhole:
-end-homogenize the pair coloring, pigeonhole the induced point color
-`p ↦ cR {f₀ p, f₀ (canonical point above p)}` (well-defined up to the choice of
-above-point by end-homogeneity), and re-well-order the large monochromatic fiber. -/
-private theorem pairER_from_endHomogeneous (κ : Cardinal.{0}) (hκ : Cardinal.aleph0 ≤ κ)
-    {C : Type} (hC : Cardinal.mk C ≤ κ)
-    {I : Type} [LinearOrder I] [WellFoundedLT I]
-    (hI : Order.succ ((2 : Cardinal.{0}) ^ κ) ≤ Cardinal.mk I)
-    (cR : (Fin 2 ↪o I) → C) :
-    ∃ (f : (Order.succ κ).ord.ToType ↪o I) (b : C),
-      ∀ {x y : (Order.succ κ).ord.ToType} (hxy : x < y),
-        cR (pairEmbed (f.strictMono hxy)) = b := by
-  obtain ⟨f₀, hf₀⟩ := exists_endHomogeneous_of_large κ hκ hC 0 hI cR
-  choose nxt hnxt using exists_gt_ordToType hκ
-  have hcard : Order.succ κ ≤ Cardinal.mk (Order.succ κ).ord.ToType := by
-    rw [Cardinal.mk_ord_toType]
-  obtain ⟨b, hb⟩ := exists_large_fiber_of_small_codomain hκ hcard hC
-    (fun z => cR (pairEmbed (f₀.strictMono (hnxt z))))
-  obtain ⟨iso⟩ := ordIso_ordToType_of_card_ge hb
-  have hg : StrictMono (fun z : (Order.succ κ).ord.ToType => f₀ (iso.symm z).val) := by
-    intro a b' hab
-    exact f₀.strictMono (iso.symm.lt_iff_lt.mpr hab)
-  refine ⟨OrderEmbedding.ofStrictMono _ hg, b, ?_⟩
-  intro x y hxy
-  have hpxy : (iso.symm x).val < (iso.symm y).val := iso.symm.lt_iff_lt.mpr hxy
-  -- End-homogeneity at the one-point prefix `f₀ (iso.symm x).val`: swap the canonical
-  -- above-point `f₀ (nxt _)` for `f₀ (iso.symm y).val`.
-  have hkey := hf₀ (oneTupleOE (f₀ (iso.symm x).val))
-      (f₀ (nxt (iso.symm x).val)) (f₀ (iso.symm y).val)
-      (fun _ => ⟨(iso.symm x).val, rfl⟩) ⟨nxt (iso.symm x).val, rfl⟩ ⟨(iso.symm y).val, rfl⟩
-      (fun _ => f₀.strictMono (hnxt (iso.symm x).val)) (fun _ => f₀.strictMono hpxy)
-  rw [appendLastOE_oneTupleOE (f₀.strictMono (hnxt (iso.symm x).val))
-        (fun _ => f₀.strictMono (hnxt (iso.symm x).val)),
-      appendLastOE_oneTupleOE (f₀.strictMono hpxy) (fun _ => f₀.strictMono hpxy)] at hkey
-  have hb_x : cR (pairEmbed (f₀.strictMono (hnxt (iso.symm x).val))) = b := (iso.symm x).2
-  calc cR (pairEmbed ((OrderEmbedding.ofStrictMono _ hg).strictMono hxy))
-      = cR (pairEmbed (f₀.strictMono hpxy)) := rfl
-    _ = cR (pairEmbed (f₀.strictMono (hnxt (iso.symm x).val))) := hkey.symm
-    _ = b := hb_x
 
 end Regression
 

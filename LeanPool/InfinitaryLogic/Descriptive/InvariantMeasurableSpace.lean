@@ -31,22 +31,6 @@ open MeasureTheory
 
 /-! ## The generic invariant σ-algebra -/
 
-/-- **The generic invariant σ-algebra.** For an `SMul G X` action and an explicitly supplied base
-`MeasurableSpace X`, the measurable `G`-invariant sets form a σ-algebra (a sub-σ-algebra of `m`).
-The base measurable space is explicit so specializing never triggers recursive instance search. -/
-@[reducible] def MeasurableSpace.smulInvariant (G : Type*) {X : Type*} [SMul G X]
-    (m : MeasurableSpace X) : MeasurableSpace X where
-  MeasurableSet' B := MeasurableSet[m] B ∧ ∀ (g : G) (x : X), x ∈ B ↔ g • x ∈ B
-  measurableSet_empty := ⟨m.measurableSet_empty, fun _ _ => by simp⟩
-  measurableSet_compl _ hB := ⟨hB.1.compl, fun g x => by
-    simp only [Set.mem_compl_iff, not_iff_not]; exact hB.2 g x⟩
-  measurableSet_iUnion _ hf := ⟨MeasurableSet.iUnion fun n => (hf n).1, fun g x => by
-    simp only [Set.mem_iUnion]
-    exact ⟨fun ⟨n, hn⟩ => ⟨n, ((hf n).2 g x).mp hn⟩,
-      fun ⟨n, hn⟩ => ⟨n, ((hf n).2 g x).mpr hn⟩⟩⟩
-
-
-
 namespace FirstOrder.Language
 
 variable {L : Language.{0, 0}}
@@ -64,8 +48,6 @@ theorem ActionInvariant.iUnion {f : ℕ → Set (StructureSpace L)}
   simp only [Set.mem_iUnion]
   exact ⟨fun ⟨n, hn⟩ => ⟨n, (h n σ c).mp hn⟩, fun ⟨n, hn⟩ => ⟨n, (h n σ c).mpr hn⟩⟩
 
-
-
 variable [L.IsRelational]
 
 /-- Isomorphism invariance is closed under complement. -/
@@ -79,18 +61,7 @@ theorem IsomorphismInvariant.iUnion {f : ℕ → Set (StructureSpace L)}
   simp only [Set.mem_iUnion]
   exact ⟨fun ⟨n, hn⟩ => ⟨n, (h n c d hcd).mp hn⟩, fun ⟨n, hn⟩ => ⟨n, (h n c d hcd).mpr hn⟩⟩
 
-private theorem isomorphismInvariant_empty : IsomorphismInvariant (∅ : Set (StructureSpace L)) :=
-  fun _ _ _ => by simp
-
 /-! ## The two named invariant σ-algebras -/
-
-/-- The σ-algebra of measurable **isomorphism-invariant** classes of coded structures. -/
-@[reducible] def isoInvariantMeasurableSpace : MeasurableSpace (StructureSpace L) where
-  MeasurableSet' B := MeasurableSet B ∧ IsomorphismInvariant B
-  measurableSet_empty := ⟨MeasurableSet.empty, isomorphismInvariant_empty⟩
-  measurableSet_compl _ hB := ⟨hB.1.compl, hB.2.compl⟩
-  measurableSet_iUnion _ hf := ⟨MeasurableSet.iUnion fun n => (hf n).1,
-    IsomorphismInvariant.iUnion fun n => (hf n).2⟩
 
 end FirstOrder.Language
 
@@ -98,36 +69,8 @@ namespace FirstOrder.Language
 
 variable {L : Language.{0, 0}}
 
-/-- The σ-algebra of measurable **action-invariant** classes, i.e. the generic invariant σ-algebra
-for the `S∞`-action on `StructureSpace L` over the product σ-algebra. Needs no relationality. -/
-@[reducible] def actionInvariantMeasurableSpace : MeasurableSpace (StructureSpace L) :=
-  MeasurableSpace.smulInvariant (Equiv.Perm ℕ)
-    (inferInstanceAs (MeasurableSpace (StructureSpace L)))
-
 /-! ## Membership iff lemmas -/
 
-/-- A class is `actionInvariantMeasurableSpace`-measurable iff it is measurable and
-action-invariant. -/
-private theorem measurableSet_actionInvariantMeasurableSpace {B : Set (StructureSpace L)} :
-    MeasurableSet[actionInvariantMeasurableSpace] B ↔ MeasurableSet B ∧ ActionInvariant B :=
-  Iff.rfl
-
-/-- A class is `isoInvariantMeasurableSpace`-measurable iff it is measurable and
-isomorphism-invariant. -/
-private theorem measurableSet_isoInvariantMeasurableSpace [L.IsRelational] {B : Set (StructureSpace L)} :
-    MeasurableSet[isoInvariantMeasurableSpace] B ↔ MeasurableSet B ∧ IsomorphismInvariant B :=
-  Iff.rfl
-
 /-! ## The two σ-algebras coincide -/
-
-/-- **The invariant σ-algebras coincide.** Action invariance and isomorphism invariance define the
-same measurable classes, by `actionInvariant_iff_isomorphismInvariant`. No Polishness or
-symbol-countability hypothesis is used. -/
-private theorem actionInvariantMeasurableSpace_eq_isoInvariantMeasurableSpace [L.IsRelational] :
-    (actionInvariantMeasurableSpace : MeasurableSpace (StructureSpace L)) =
-      isoInvariantMeasurableSpace := by
-  refine MeasurableSpace.ext fun B => ?_
-  rw [measurableSet_actionInvariantMeasurableSpace, measurableSet_isoInvariantMeasurableSpace,
-    actionInvariant_iff_isomorphismInvariant]
 
 end FirstOrder.Language

@@ -76,7 +76,7 @@ private theorem restr_succ (n : ℕ) (x : ℕ → Bool) :
       have := j.isLt
       omega
     rw [snoc_apply_eq _ _ j hjn]
-    show x (j : ℕ) = x n
+    change x (j : ℕ) = x n
     rw [hjn]
 
 private theorem restr_eq_restr_of_mem_cylinder {x y : ℕ → Bool} {N : ℕ}
@@ -97,22 +97,6 @@ private def LvlEdgeAt (m n : ℕ) (u v : Fin n → Bool) : Prop :=
     u j = (canonicalWord m).getD j false ∧ v j = (canonicalWord m).getD j false) ∧
   (∀ j : Fin n, (j : ℕ) = canonicalLen m → u j = false ∧ v j = true) ∧
   (∀ j : Fin n, canonicalLen m < (j : ℕ) → u j = v j)
-
-/-- The fresh cross pair at the level just past the canonical word. -/
-private theorem lvlEdgeAt_fresh (m n : ℕ) (h : canonicalLen m = n) :
-    LvlEdgeAt m (n + 1) (Fin.snoc (cvert m n) false) (Fin.snoc (cvert m n) true) := by
-  refine ⟨by omega, ?_, ?_, ?_⟩
-  · intro j hjm
-    have hjn : (j : ℕ) < n := by omega
-    rw [snoc_apply_lt _ _ j hjn, snoc_apply_lt _ _ j hjn]
-    exact ⟨rfl, rfl⟩
-  · intro j hjm
-    have hjn : (j : ℕ) = n := by omega
-    rw [snoc_apply_eq _ _ j hjn, snoc_apply_eq _ _ j hjn]
-    exact ⟨rfl, rfl⟩
-  · intro j hjm
-    have := j.isLt
-    exact absurd hjm (by omega)
 
 /-- Every level-`(n + 1)` edge is the fresh cross pair (when the word has length exactly
 `n`) or the `snoc` of a level-`n` edge by a common last bit. -/
@@ -184,17 +168,17 @@ private theorem lvlEdgeAt_restr {m n : ℕ} (h : canonicalLen m + 1 ≤ n) (x : 
   refine ⟨h, ?_, ?_, ?_⟩
   · intro j hjm
     constructor <;>
-    · show prependWord _ x (j : ℕ) = _
+    · change prependWord _ x (j : ℕ) = _
       rw [prependWord_apply_of_lt (by rw [hlen]; omega),
         List.getD_append _ _ _ _ (by rw [length_canonicalWord]; exact hjm)]
   · intro j hjm
     constructor <;>
-    · show prependWord _ x (j : ℕ) = _
+    · change prependWord _ x (j : ℕ) = _
       rw [prependWord_apply_of_lt (by rw [hlen]; omega), hjm,
         List.getD_append_right _ _ _ _ (by rw [length_canonicalWord])]
       simp [length_canonicalWord]
   · intro j hjm
-    show prependWord _ x (j : ℕ) = prependWord _ x (j : ℕ)
+    change prependWord _ x (j : ℕ) = prependWord _ x (j : ℕ)
     rw [prependWord_apply_of_le (by rw [hlen]; omega),
       prependWord_apply_of_le (by rw [hlen]; omega), hlen, hlen]
 
@@ -386,7 +370,7 @@ variable {α : Type*} [TopologicalSpace α] [PolishSpace α]
   [MeasurableSpace α] [BorelSpace α]
 variable {ι : Type*} [Countable ι] [DecidableEq ι]
 
-omit [BorelSpace α] in
+omit [BorelSpace α] [DecidableEq ι] in
 /-- **Witness extension**: given a positive analytic family whose tracked edge pairs are
 all witnessed at their current words, the family can be refined to a positive analytic
 subfamily with every tracked witness word properly extended. -/
@@ -505,7 +489,7 @@ private theorem precw_snoc {n : ℕ} (cw : (Fin n → Bool) × (Fin n → Bool) 
 /-- A stage of the fusion construction: a positive analytic family of level-`n` assignments
 whose members are uniformly close at every vertex and uniformly `g`-witnessed through the
 tracked word at every level edge. -/
-structure FusionStage (G : Set (α × α)) (g : (ℕ → ℕ) → α × α) (n : ℕ) where
+private structure FusionStage (G : Set (α × α)) (g : (ℕ → ℕ) → α × α) (n : ℕ) where
   fam : Set ((Fin n → Bool) → α)
   cw : (Fin n → Bool) × (Fin n → Bool) → List ℕ
   analytic : AnalyticSet fam
@@ -590,7 +574,7 @@ private theorem exists_fusionStage_succ [Nonempty α] (hG : AnalyticSet G) (hg :
               · simpa [hu] using h₁)
           refine ⟨w, hw.trans ?_⟩
           have hcv : combFun n φ₀ φ₁ v = (if u (Fin.last n) then φ₁ else φ₀) (Fin.init v) := by
-            show (if v (Fin.last n) then φ₁ else φ₀) (Fin.init v) = _
+            change (if v (Fin.last n) then φ₁ else φ₀) (Fin.init v) = _
             rw [hlast]
           rw [hcv]
           rfl
@@ -613,7 +597,7 @@ private theorem exists_fusionStage_succ [Nonempty α] (hG : AnalyticSet G) (hg :
               · simpa [hu] using h₁)
           refine ⟨w, hw.trans ?_⟩
           have hcv : combFun n φ₀ φ₁ v = (if u (Fin.last n) then φ₁ else φ₀) (Fin.init v) := by
-            show (if v (Fin.last n) then φ₁ else φ₀) (Fin.init v) = _
+            change (if v (Fin.last n) then φ₁ else φ₀) (Fin.init v) = _
             rw [hlast]
           rw [hcv]
           rfl
@@ -691,12 +675,12 @@ theorem exists_gsGraph_hom [Nonempty α] (hG : AnalyticSet G) (hg : Continuous g
   have hinit : ∀ (x : ℕ → Bool) (n : ℕ), Fin.init (restr (n + 1) x) = restr n x := by
     intro x n
     funext j
-    show x ↑(Fin.castSucc j) = x ↑j
+    change x ↑(Fin.castSucc j) = x ↑j
     simp
   have hstep : ∀ x n, dist (a x n) (a x (n + 1)) ≤ (1 / 2) ^ n := by
     intro x n
     obtain ⟨φ, hφ, heq⟩ := (hspec n).1 (φseq (n + 1)) (hφseq (n + 1)) (restr (n + 1) x)
-    show dist (φseq n (restr n x)) (φseq (n + 1) (restr (n + 1) x)) ≤ _
+    change dist (φseq n (restr n x)) (φseq (n + 1) (restr (n + 1) x)) ≤ _
     rw [heq, hinit]
     exact (S n).close _ (hφseq n) _ hφ _
   have hcauchy : ∀ x, CauchySeq (a x) := fun x =>
@@ -721,7 +705,7 @@ theorem exists_gsGraph_hom [Nonempty α] (hG : AnalyticSet G) (hg : Continuous g
       ((PiNat.isOpen_cylinder _ x N).mem_nhds (PiNat.self_mem_cylinder x N)) ?_
     intro y hy
     have heqa : a y N = a x N := by
-      show φseq N (restr N y) = φseq N (restr N x)
+      change φseq N (restr N y) = φseq N (restr N x)
       rw [restr_eq_restr_of_mem_cylinder hy]
     have h1 : dist (φlim y) (φlim x) ≤ dist (a y N) (φlim y) + dist (a x N) (φlim x) :=
       calc dist (φlim y) (φlim x)

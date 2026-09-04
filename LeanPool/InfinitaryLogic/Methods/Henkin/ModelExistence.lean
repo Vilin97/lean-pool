@@ -48,7 +48,8 @@ a consistent set like {c_i ≠ c_j | i ≠ j} for uncountably many constants can
 force any model to be uncountable.
 
 This is the fundamental model-building tool for infinitary logic. -/
-theorem model_existence [Countable (Σ l, L.Functions l)] [Countable (Σ l, L.Relations l)]
+theorem model_existence [Countable (Σ l, L.Functions l)]
+    [_countableRelations : Countable (Σ l, L.Relations l)]
     (C : ConsistencyPropertyEq L)
     (S : Set L.Sentenceω) (hS : S ∈ C.toConsistencyProperty.sets)
     (_hS_countable : S.Countable) :
@@ -59,8 +60,6 @@ theorem model_existence [Countable (Σ l, L.Functions l)] [Countable (Σ l, L.Re
   -- Step 2: Build the term model from S*
   exact ⟨TermModel C S' hmax, termModelStructure, inferInstance,
     fun φ hφ => (truthLemma φ).mp (hSS' hφ)⟩
-
-
 
 /-! ### Model existence over arbitrary (possibly uncountable) languages
 
@@ -76,10 +75,6 @@ So dropping the gate yields model existence over an arbitrary language; the term
 uncountable exactly when the language is. This is the cardinal-agnostic backend for the
 EM/Skolem-hull realizability project (Phase 3 spike of the Morley–Hanf plan). Output-size
 refinements (`#M ≥ #J`) are deferred — the goal here is modest (`∃ M, M ⊨ S`). -/
-
-
-
-
 
 end Language
 

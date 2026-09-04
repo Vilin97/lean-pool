@@ -56,8 +56,6 @@ theorem ratLtAtom_mem_baseDiagram (φ : L.Sentenceω) (lt : L.Relations 2) {q r 
     (h : q < r) : ratLtAtom lt q r ∈ baseDiagram φ lt :=
   Set.mem_insert_of_mem _ ⟨q, r, h, rfl⟩
 
-
-
 /-! ## The raw positive predicates -/
 
 variable {M : Type} [L.Structure M]

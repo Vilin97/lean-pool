@@ -57,7 +57,7 @@ symbols. -/
 theorem relationsIn_graphConsequent (r : L.Sentenceω) :
     ((graphAxioms r.functionsIn).imp (relationalizeFormula r)).relationsIn =
       relSym L r.functionsIn r.relationsIn := by
-  show (graphAxioms r.functionsIn).relationsIn ∪ (relationalizeFormula r).relationsIn = _
+  change (graphAxioms r.functionsIn).relationsIn ∪ (relationalizeFormula r).relationsIn = _
   rw [relationsIn_graphAxioms, relationsIn_relationalizeFormula]
   exact Set.union_eq_self_of_subset_left Set.subset_union_right
 
@@ -73,7 +73,7 @@ theorem entails_graphTranslation (r₁ r₂ : L.Sentenceω) (h : Sentenceω.Enta
   rw [Sentenceω.entails_iff]
   intro M instM neM hA
   obtain ⟨hAx₁, hr₁⟩ := (BoundedFormulaω.realize_and _ _).mp hA
-  show BoundedFormulaω.Realize _ _ _
+  change BoundedFormulaω.Realize _ _ _
   rw [BoundedFormulaω.realize_imp]
   intro hAx₂
   let : Countable ↥(r₁.functionsIn ∪ r₂.functionsIn) :=

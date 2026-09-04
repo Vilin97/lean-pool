@@ -109,7 +109,8 @@ private theorem modelsOfBounded_measurableSet
       intro hc
       apply h
       let := c.toStructure
-      simp [BoundedFormulaω.Realize, Term.realize] at hc
+      simp only [BoundedFormulaω.Realize, BoundedFormulaInf.realize_equal,
+        Term.realize] at hc
       exact hc
   | @rel _ l R ts =>
     -- Each term ts i is a variable; extract the variable index for each i
@@ -138,7 +139,7 @@ private theorem modelsOfBounded_measurableSet
       rwa [htup] at hrel
     · intro hc
       let := c.toStructure
-      show @Structure.RelMap L ℕ c.toStructure l R
+      change @Structure.RelMap L ℕ c.toStructure l R
           (fun i => (ts i).realize (Sum.elim v xs))
       rw [StructureSpace.relMap_toStructure, htup]
       exact hc

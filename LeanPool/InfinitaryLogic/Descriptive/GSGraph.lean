@@ -90,8 +90,6 @@ private theorem wordCylinder_subset_of_prefix {r s : List Bool} (h : r <+: s) :
   rw [← List.getD_append r t false n hn]
   exact hy n (by rw [List.length_append]; omega)
 
-
-
 private theorem continuous_prependWord (w : List Bool) : Continuous (prependWord w) := by
   refine continuous_pi fun n => ?_
   rcases lt_or_ge n w.length with hn | hn
@@ -172,11 +170,6 @@ def GSGraph (S : Set (List Bool)) (y z : ℕ → Bool) : Prop :=
 def DenseWords (S : Set (List Bool)) : Prop :=
   ∀ r : List Bool, ∃ s ∈ S, r <+: s
 
-/-- A set of words is sparse if it contains at most one word of each length. The graphs
-`G_S` for sparse `S` are acyclic, and the `G₀`-dichotomy holds for them. -/
-def SparseWords (S : Set (List Bool)) : Prop :=
-  ∀ ⦃s⦄, s ∈ S → ∀ ⦃t⦄, t ∈ S → s.length = t.length → s = t
-
 /-! ### A canonical dense and sparse set of words -/
 
 /-- An enumeration of all finite binary words. -/
@@ -188,7 +181,8 @@ private theorem wordEnum_encode (w : List Bool) : wordEnum (Encodable.encode w) 
 /-- Pad a word with `false` up to length `n`. -/
 private def padTo (w : List Bool) (n : ℕ) : List Bool := w ++ List.replicate (n - w.length) false
 
-private theorem length_padTo {w : List Bool} {n : ℕ} (h : w.length ≤ n) : (padTo w n).length = n := by
+private theorem length_padTo {w : List Bool} {n : ℕ} (h : w.length ≤ n) : (padTo w n).length
+  = n := by
   simp only [padTo, List.length_append, List.length_replicate]
   omega
 
@@ -223,11 +217,6 @@ theorem denseWords_canonicalS : DenseWords canonicalS := by
   refine ⟨canonicalWord (Encodable.encode r), ⟨_, rfl⟩, ?_⟩
   rw [canonicalWord, wordEnum_encode]
   exact prefix_padTo _ _
-
-theorem sparseWords_canonicalS : SparseWords canonicalS := by
-  rintro s ⟨m, rfl⟩ t ⟨n, rfl⟩ hlen
-  rw [length_canonicalWord, length_canonicalWord] at hlen
-  rw [canonicalLen_strictMono.injective hlen]
 
 /-! ### Miller's independence lemma (Prop. 6) -/
 

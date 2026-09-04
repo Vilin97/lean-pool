@@ -144,9 +144,9 @@ private theorem WOMem.extend_det {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt
   intro α hα
   obtain ⟨W⟩ := hS.star α hα
   rcases hS.mem_cases hσ with hσΓ | hσroot | ⟨q, r, _, hatom⟩
-  · exact ⟨W.add_sentence (hforce _ W.inst W.ne _ (W.realize_source (Or.inl hσΓ)))
+  · exact ⟨W.addSentence (hforce _ W.inst W.ne _ (W.realize_source (Or.inl hσΓ)))
       (W.hsupp_of_subset hσΓ hsub)⟩
-  · refine ⟨W.add_sentence
+  · refine ⟨W.addSentence
       (hforce _ W.inst W.ne _ (W.realize_source (Or.inr hσroot))) ?_⟩
     intro q hq
     rw [hσroot, sentenceJConsts_lift_eq_empty] at hsub
@@ -206,7 +206,9 @@ theorem WOMem.C2_not_not {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
     (ψ : L[[ℕ]].Sentenceω) (hσ : ψ.not.not ∈ S) : WOMem φ lt (S ∪ {ψ}) := by
   by_cases hb : ψ ∈ baseDiagram φ lt
   · exact hS.union_of_mem_base hb
-  · refine hS.extend_det hσ (fun q r h => by simp [BoundedFormulaω.not, BoundedFormulaInf.not, ratLtAtom, relInst] at h)
+  · refine hS.extend_det hσ
+      (fun q r h => by
+        simp [BoundedFormulaω.not, BoundedFormulaInf.not, ratLtAtom, relInst] at h)
       hb (negimp_left_mem (hS.subset_U hσ)) ?_ ?_
     · rw [sentenceJConsts_not, sentenceJConsts_not]
     · intro M inst _ h hr
@@ -222,7 +224,9 @@ theorem WOMem.C1_neg_imp {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
   · by_cases hb : ψ₁ ∈ baseDiagram φ lt
     · exact hS.union_of_mem_base hb
     · refine hS.extend_det hσ
-        (fun q r h => by simp [BoundedFormulaω.not, BoundedFormulaInf.not, ratLtAtom, relInst] at h) hb
+        (fun q r h => by
+          simp [BoundedFormulaω.not, BoundedFormulaInf.not, ratLtAtom, relInst] at h)
+        hb
         (negimp_left_mem (hS.subset_U hσ)) ?_ ?_
       · rw [sentenceJConsts_not]
         exact sentenceJConsts_imp_left ψ₁ ψ₂
@@ -234,7 +238,9 @@ theorem WOMem.C1_neg_imp {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
   · by_cases hb : ψ₂.not ∈ baseDiagram φ lt
     · exact hS.union_of_mem_base hb
     · refine hS.extend_det hσ
-        (fun q r h => by simp [BoundedFormulaω.not, BoundedFormulaInf.not, ratLtAtom, relInst] at h) hb
+        (fun q r h => by
+          simp [BoundedFormulaω.not, BoundedFormulaInf.not, ratLtAtom, relInst] at h)
+        hb
         (negimp_right_mem (hS.subset_U hσ)) ?_ ?_
       · rw [sentenceJConsts_not, sentenceJConsts_not]
         exact sentenceJConsts_imp_right ψ₁ ψ₂
@@ -263,7 +269,9 @@ theorem WOMem.C4_neg_iSup {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
   by_cases hb : (φs k).not ∈ baseDiagram φ lt
   · exact hS.union_of_mem_base hb
   · refine hS.extend_det hσ
-      (fun q r h => by simp [BoundedFormulaω.not, BoundedFormulaInf.not, ratLtAtom, relInst] at h) hb
+      (fun q r h => by
+        simp [BoundedFormulaω.not, BoundedFormulaInf.not, ratLtAtom, relInst] at h)
+      hb
       (negiSup_comp_mem k (hS.subset_U hσ)) ?_ ?_
     · rw [sentenceJConsts_not, sentenceJConsts_not]
       exact sentenceJConsts_component_iSup φs k
@@ -342,10 +350,10 @@ theorem WOMem.C1_imp {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
     let : L[[ℕ]].Structure W.M := wc W.inst W.h
     have hreal := W.realize_source hsrcloc
     by_cases hψ₁ : @Sentenceω.Realize L[[ℕ]] ψ₁ W.M (wc W.inst W.h)
-    · refine ⟨false, ⟨W.add_sentence ?_ ?_⟩⟩
+    · refine ⟨false, ⟨W.addSentence ?_ ?_⟩⟩
       · exact (BoundedFormulaω.realize_imp ψ₁ ψ₂).mp hreal hψ₁
       · exact fun q hq => hsub q (sentenceJConsts_imp_right ψ₁ ψ₂) W hsrcloc hq
-    · refine ⟨true, ⟨W.add_sentence ((BoundedFormulaω.realize_not ψ₁).mpr hψ₁) ?_⟩⟩
+    · refine ⟨true, ⟨W.addSentence ((BoundedFormulaω.realize_not ψ₁).mpr hψ₁) ?_⟩⟩
       · intro q hq
         rw [Bool.cond_true, sentenceJConsts_not] at hq
         exact hsub q (sentenceJConsts_imp_left ψ₁ ψ₂) W hsrcloc hq
@@ -380,7 +388,7 @@ theorem WOMem.C4_iSup {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
     let : L[[ℕ]].Structure W.M := wc W.inst W.h
     have hreal := W.realize_source hsrcloc
     obtain ⟨k, hk⟩ := (BoundedFormulaω.realize_iSup φs).mp hreal
-    refine ⟨k, ⟨W.add_sentence hk ?_⟩⟩
+    refine ⟨k, ⟨W.addSentence hk ?_⟩⟩
     intro q hq
     rcases hsrcloc with hloc | hloc
     · exact W.mark_cover ⟨_, hloc, sentenceJConsts_component_iSup φs k hq⟩
@@ -416,7 +424,7 @@ theorem WOMem.C3_neg_iInf {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
     rw [BoundedFormulaω.realize_iInf] at h1
     push Not at h1
     obtain ⟨k, hk⟩ := h1
-    refine ⟨k, ⟨W.add_sentence ((BoundedFormulaω.realize_not (φs k)).mpr hk) ?_⟩⟩
+    refine ⟨k, ⟨W.addSentence ((BoundedFormulaω.realize_not (φs k)).mpr hk) ?_⟩⟩
     intro q hq
     rw [sentenceJConsts_not] at hq
     have hsubk := sentenceJConsts_component_iInf φs k hq
@@ -462,7 +470,7 @@ private theorem WOMem.extend_constEq {S : Set L[[ℕ]].Sentenceω} (hS : WOMem �
   refine hS.extend hab (constEq_mem a b) (Set.Finite.subset hS.rem_support hsupp) ?_
   intro α hα
   obtain ⟨W⟩ := hS.star α hα
-  refine ⟨W.add_sentence ((realize_constEq_wc (base := W.inst) (h := W.h) a b).mpr
+  refine ⟨W.addSentence ((realize_constEq_wc (base := W.inst) (h := W.h) a b).mpr
     (hval α hα W)) ?_⟩
   intro q hq
   obtain ⟨χ, hχ, hcχ⟩ := by
@@ -558,7 +566,7 @@ theorem WOMem.eq_refl {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S) (c : �
   · obtain ⟨q₀, rfl⟩ := hcr
     obtain ⟨W⟩ := hS.star _ (add_one_lt_omega1 (add_lt_omega1 hα hα))
     obtain ⟨W', hq₀, -⟩ := W.mark_rat (lt_add_one _) q₀
-    refine ⟨W'.add_sentence
+    refine ⟨W'.addSentence
       ((realize_constEq_wc (base := W'.inst) (h := W'.h) _ _).mpr rfl) ?_⟩
     intro q hq
     have := sentenceJConsts_constEq_subset _ _ hq
@@ -566,7 +574,7 @@ theorem WOMem.eq_refl {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S) (c : �
       rcases this with h | h <;> exact ratConstIdx_injective h
     exact hqq ▸ hq₀
   · obtain ⟨W⟩ := hS.star α hα
-    refine ⟨W.add_sentence
+    refine ⟨W.addSentence
       ((realize_constEq_wc (base := W.inst) (h := W.h) _ _).mpr rfl) ?_⟩
     intro q hq
     have := sentenceJConsts_constEq_subset _ _ hq
@@ -618,12 +626,12 @@ theorem WOMem.all_inst {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
     · obtain ⟨q₀, hq₀c⟩ := hcr
       obtain ⟨W⟩ := hS.star _ (add_one_lt_omega1 (add_lt_omega1 hα hα))
       obtain ⟨W', hq₀, -⟩ := W.mark_rat (lt_add_one _) q₀
-      refine ⟨W'.add_sentence (hforce W' hsrcloc) (hsupp W' hsrcloc ?_)⟩
+      refine ⟨W'.addSentence (hforce W' hsrcloc) (hsupp W' hsrcloc ?_)⟩
       intro q hq
       have : q = q₀ := ratConstIdx_injective (hq.trans hq₀c.symm)
       exact this ▸ hq₀
     · obtain ⟨W⟩ := hS.star α hα
-      refine ⟨W.add_sentence (hforce W hsrcloc) (hsupp W hsrcloc ?_)⟩
+      refine ⟨W.addSentence (hforce W hsrcloc) (hsupp W hsrcloc ?_)⟩
       intro q hq
       exact absurd ⟨q, hq⟩ hcr
 
@@ -677,8 +685,8 @@ theorem WOMem.neg_all_witness {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S)
     have hdef : (Fin.snoc (default : Fin 0 → W.M) v : Fin 1 → W.M) = fun _ => v :=
       snoc_elim0_eq_const v
     rw [hdef] at hv
-    refine ⟨(W.update_nonrat hcr hcΓ v).add_sentence ?_ ?_⟩
-    · show @Sentenceω.Realize L[[ℕ]] ((instConst c ψ).not) W.M
+    refine ⟨(W.update_nonrat hcr hcΓ v).addSentence ?_ ?_⟩
+    · change @Sentenceω.Realize L[[ℕ]] ((instConst c ψ).not) W.M
         (wc W.inst (Function.update W.h c v))
       let : L[[ℕ]].Structure W.M := wc W.inst (Function.update W.h c v)
       -- normalize the empty tuple to `Fin.elim0` first, the spelling the downstream lemmas use
@@ -803,7 +811,7 @@ theorem WOMem.rel_congr {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S) (l : 
           rcases hmem with h' | h'
           · exact (ratConstIdx_injective h') ▸ ⟨iq, hiq⟩
           · exact (ratConstIdx_injective h') ▸ ⟨ir, hir⟩
-      exact StarCondition.mono le_self_add ⟨W₂.add_sentence htgt hcov⟩
+      exact StarCondition.mono le_self_add ⟨W₂.addSentence htgt hcov⟩
     · -- remainder source: ordinary equality congruence at the same witness
       have hrel : relInst R g ∈ (S \ baseDiagram φ lt) := ⟨hσ, hbrel⟩
       obtain ⟨W⟩ := hS.star α hα
@@ -822,7 +830,7 @@ theorem WOMem.rel_congr {S : Set L[[ℕ]].Sentenceω} (hS : WOMem φ lt S) (l : 
         refine (realize_relInst_wc (base := W.inst) (h := W.h) R _).mpr ?_
         rw [htup]
         exact (realize_relInst_wc (base := W.inst) (h := W.h) R g).mp hsrcreal
-      refine ⟨W.add_sentence htgt ?_⟩
+      refine ⟨W.addSentence htgt ?_⟩
       intro q' hq'
       rw [sentenceJConsts_relInst_eq] at hq'
       obtain ⟨j, hj⟩ := hq'

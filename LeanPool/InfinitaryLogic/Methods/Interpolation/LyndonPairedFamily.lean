@@ -96,16 +96,6 @@ theorem lyndonInsepAt_insert_right_of_shared_constEq_entails {φ : L[[ℕ]].Sent
   lyndonInsepAt_swap
     (lyndonInsepAt_insert_of_shared_constEq_entails a b hσA hΓσ hcons (lyndonInsepAt_swap h))
 
-
-
-
-
-
-
-
-
-
-
 /-! ## The paired family -/
 
 /-- **A polarity-refined paired family member**: a symmetrically support-budgeted, `GenU`-bounded,
@@ -122,8 +112,6 @@ def LyndonPairedMem (F₁ : Set (Σ n, L.Functions n)) (P₁ N₁ : Set (Σ n, L
     S = Γ ∪ Δ ∧ LyndonInsepAt (F₁ ∩ F₂) (P₁ ∩ N₂) (N₁ ∩ P₂) A Γ Δ
 
 variable {rL rR : L[[ℕ]].Sentenceω}
-
-
 
 /-! ### The two coordinate-growth constructors -/
 

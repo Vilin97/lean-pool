@@ -67,8 +67,6 @@ theorem RelIndependent.mono {G : Set (α × α)} {A B : Set α} (hBA : B ⊆ A)
 private def relNbhd (G : Set (α × α)) (C : Set α) : Set α :=
   {x | ∃ y ∈ C, (x, y) ∈ G ∨ (y, x) ∈ G}
 
-
-
 private theorem RelIndependent.disjoint_relNbhd {G : Set (α × α)} {A : Set α}
     (hA : RelIndependent G A) : Disjoint A (relNbhd G A) := by
   rw [Set.disjoint_left]
@@ -220,7 +218,7 @@ private theorem rel_of_relIndependent_compl (r : Setoid α) {C : Set α}
 /-- **The seed**: if a Borel equivalence relation has uncountably many classes, then the
 full family of assignments is not small for the complement graph — a countable capture
 family of independent (hence single-class) Borel sets would make the quotient countable. -/
-theorem not_smallFam_univ {ι : Type*} [Nonempty ι] (r : Setoid α)
+theorem not_smallFam_univ {ι : Type*} [_nonemptyι : Nonempty ι] (r : Setoid α)
     (hunc : ¬ Countable (Quotient r)) :
     ¬ SmallFam {p : α × α | ¬ r.r p.1 p.2} (univ : Set (ι → α)) := by
   rintro ⟨C, hC, hcap⟩

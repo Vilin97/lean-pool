@@ -44,8 +44,6 @@ variable {L : Language.{0, 0}}
 def ratSupport (Γ : Set L[[ℕ]].Sentenceω) : Set ℚ :=
   {q | ∃ χ ∈ Γ, ratConstIdx q ∈ sentenceJConsts (L' := L) (J := ℕ) χ}
 
-
-
 /-! ## The star witness -/
 
 /-- **The (*) witness at level `α`**: an approximating model realizing the root and the finite
@@ -56,6 +54,7 @@ structure StarWitness (φ : L.Sentenceω) (lt : L.Relations 2) (Γ : Set L[[ℕ]
     (α : Ordinal.{0}) : Type 1 where
   /-- the approximating model -/
   M : Type
+  /-- the base-language structure on the approximating model -/
   inst : L.Structure M
   ne : Nonempty M
   /-- the constant interpretation -/
@@ -87,15 +86,11 @@ theorem StarCondition.mono {φ : L.Sentenceω} {lt : L.Relations 2}
   obtain ⟨W⟩ := h
   exact ⟨{ W with witness := @GapWitness.mono L W.M W.inst lt α β hβ _ _ W.witness }⟩
 
-
-
 /-! ## Atomic realization at the controlled expansion -/
 
 section AtomicRealize
 
 variable {M : Type} {base : L.Structure M} {h : ℕ → M}
-
-
 
 /-- A constant relation instance realizes at the controlled expansion to the base relation on
 the constant values. -/

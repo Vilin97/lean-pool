@@ -24,7 +24,8 @@ in Lω₁ω (countable infinitary logic with countable conjunctions/disjunctions
 
 - `Theoryω.Model.empty`: The empty theory has every structure as a model.
 - `Theoryω.Model.mono`: Models are monotone: if T ⊆ T' and M ⊨ T', then M ⊨ T.
-- `LomegaEquiv.refl`, `LomegaEquiv.symm`, `LomegaEquiv.trans`: LomegaEquiv is an equivalence relation.
+- `LomegaEquiv.refl`, `LomegaEquiv.symm`, `LomegaEquiv.trans`: `LomegaEquiv` is an equivalence
+  relation.
 - `LomegaEquiv.of_equiv`: Isomorphic structures are Lω₁ω-equivalent.
 
 ## References
@@ -95,10 +96,6 @@ instead; at `A = HF` the two coincide, and nowhere else. -/
 def IsFinitelySatisfiable (T : L.Theoryω) : Prop :=
   ∀ T₀ ⊆ T, T₀.Finite → T₀.IsSatisfiable
 
-
-
-
-
 /-- Satisfiability in a fixed carrier universe is monotone under shrinking the theory. -/
 theorem IsSatisfiableIn.mono {T T' : L.Theoryω} (h : T ⊆ T')
     (hT' : IsSatisfiableIn.{u, v, w} T') : IsSatisfiableIn.{u, v, w} T := by
@@ -109,51 +106,6 @@ theorem IsSatisfiable.mono {T T' : L.Theoryω} (h : T ⊆ T') (hT' : T'.IsSatisf
     T.IsSatisfiable := by
   obtain ⟨M, inst, ne, hM⟩ := hT'
   exact ⟨M, inst, ne, hM.mono h⟩
-
-/-- **Ordinary compactness for `L`**: finite satisfiability implies satisfiability, for every
-theory.
-
-Named as a property of the language because it is repeatedly assumed as a hypothesis — the EM
-and Morley–Hanf pipelines each carried this predicate written out in full, which obscured that
-they were assuming the same thing.  "Ordinary" marks the contrast with
-`AFinitelySatisfiable`: this quantifies over *externally finite* subtheories, so for `Lω₁ω` it
-is a strong assumption that generally fails, and it is supplied as an oracle rather than
-proved. -/
-def OrdinaryCompactness (L : Language.{u, v}) : Prop :=
-  ∀ T : L.Theoryω, T.IsFinitelySatisfiable → T.IsSatisfiable
-
-open Classical in
-/-- **A countable theory as one sentence**: the countable conjunction of an enumeration (a
-tautology for the empty theory). Realization is exactly theory modelhood
-(`realize_conjunction_iff`), so single-sentence results transport to countable theories. -/
-noncomputable def conjunction (T : L.Theoryω) (hT : T.Countable) : L.Sentenceω :=
-  if h : T.Nonempty then BoundedFormulaω.iInf (hT.exists_eq_range h).choose
-  else BoundedFormulaω.imp BoundedFormulaω.falsum BoundedFormulaω.falsum
-
-/-- Realizing the conjunction of a countable theory is modeling the theory. -/
-theorem realize_conjunction_iff (T : L.Theoryω) (hT : T.Countable)
-    (M : Type w) [L.Structure M] :
-    Sentenceω.Realize (T.conjunction hT) M ↔ T.Model M := by
-  classical
-  rw [Theoryω.conjunction]
-  split_ifs with h
-  · have hrange : T = Set.range (hT.exists_eq_range h).choose :=
-      (hT.exists_eq_range h).choose_spec
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0 ↔ _
-    rw [BoundedFormulaω.realize_iInf]
-    constructor
-    · intro hall σ hσ
-      rw [hrange] at hσ
-      obtain ⟨n, rfl⟩ := hσ
-      exact hall n
-    · intro hmodel n
-      exact hmodel _ (hrange.symm.subset (Set.mem_range_self n))
-  · rw [Set.not_nonempty_iff_eq_empty] at h
-    subst h
-    refine iff_of_true ?_ (Model.empty M)
-    show BoundedFormulaω.Realize _ (Empty.elim : Empty → M) Fin.elim0
-    rw [BoundedFormulaω.realize_imp]
-    exact fun hf => hf
 
 end Theoryω
 

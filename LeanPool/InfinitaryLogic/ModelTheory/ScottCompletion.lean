@@ -5,7 +5,7 @@ Authors: Cameron Freer
 -/
 import LeanPool.InfinitaryLogic.ModelTheory.ArbitraryStabilization
 import LeanPool.InfinitaryLogic.ModelTheory.TypePreservingBF
-import LeanPool.InfinitaryLogic.ModelTheory.SmallModels
+import LeanPool.InfinitaryLogic.Methods.UniformCollapse
 import LeanPool.InfinitaryLogic.Scott.Height.CanonicalSentence
 import LeanPool.InfinitaryLogic.Karp.CarrierTheorem
 /-!
@@ -50,10 +50,10 @@ variable {N : Type} [L.Structure N] [Countable N]
 source at every ordinal — `scottHeight` supplies complete stabilization, and the
 arbitrary-target kernel upgrades it. -/
 private theorem realize_canonicalScottSentence_iff_bfEquiv_all {P : Type} [L.Structure P] :
-    (canonicalScottSentence (L := L) N).realize_as_sentence P ↔
+    (canonicalScottSentence (L := L) N).realizeAsSentence P ↔
       ∀ β : Ordinal.{0},
         BFEquiv (L := L) β 0 (Fin.elim0 : Fin 0 → N) (Fin.elim0 : Fin 0 → P) := by
-  unfold canonicalScottSentence Formulaω.realize_as_sentence
+  unfold canonicalScottSentence Formulaω.realizeAsSentence
   rw [realize_scottFormula_iff_BFEquiv _ _ _ (scottHeight_lt_omega1 N)]
   constructor
   · intro h β
@@ -70,7 +70,7 @@ private noncomputable def canonicalScottSentenceω (N : Type) [L.Structure N] [C
 omit [L.IsRelational] in
 private theorem realize_canonicalScottSentenceω_iff {P : Type} [L.Structure P] :
     Sentenceω.Realize (canonicalScottSentenceω (L := L) N) P ↔
-      (canonicalScottSentence (L := L) N).realize_as_sentence P := by
+      (canonicalScottSentence (L := L) N).realizeAsSentence P := by
   have h := BoundedFormulaω.realize_relabel_sumInr (M := P)
     (φ := (canonicalScottSentence (L := L) N : L.BoundedFormulaω (Fin 0) 0))
     (xs := (Fin.elim0 : Fin 0 → P))
