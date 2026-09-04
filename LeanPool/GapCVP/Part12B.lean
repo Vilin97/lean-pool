@@ -940,7 +940,7 @@ private theorem paperSourcePreprocessing_polynomiallyBoundedFoldStates :
   simp only [GapCVP.OutputBoundedDependentRecordFold.PolynomiallyBoundedFoldStates,
       decide_eq_true_eq]
   intro input count seed hparse stage hstage
-  have seedBound := sourceAtomicFoldSeed_length_le
+  have seedBound := GapCVP.CNFTypedRecordWorkerTM.parsedUnaryFold_seed_length_le
     input count seed hparse
   have countBound := parsedUnaryFold_count_le_length
     input count seed hparse

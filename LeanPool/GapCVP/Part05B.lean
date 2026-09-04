@@ -18,12 +18,6 @@ namespace GapCVP
 
 open GapCVP.TraceGolf (oneStep rebound)
 
-namespace CNFSourcePairPrefixWorkerTM
-
-open Computability Turing GapCVP.BinaryEncoding GapCVP.CNFUnaryPairIndexTM
-
-end CNFSourcePairPrefixWorkerTM
-
 namespace CNFSourcePairPrefixWorkerTotalCert
 
 open Computability Turing GapCVP.SourceTotalStructuralDecoder GapCVP.CNFUnaryPairIndexTM
@@ -171,46 +165,27 @@ private def sourcePairPrefix_failureTrace
       (some (Turing.haltList actualSourcePairPrefixMachine []))
       (input.length + first.length + second.length +
         output.length + 1) := by
-  induction input generalizing first second output with
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (sourcePairPrefix_failure_input_step bit input
-          first second output)
-      have hrest := ih first second output
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_comm, Nat.add_left_comm,
-          Nat.reduceAdd,
-          Nat.add_assoc] using EvalsToInTime.trans actualSourcePairPrefixMachine.step _ _ _ _ _
-              hfirst hrest
-  | nil =>
-      induction first generalizing second output with
-      | cons bit first ih =>
-          have hfirst := oneStep _ _ (sourcePairPrefix_failure_first_step bit first
-              second output)
-          have hrest := ih second output
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.length_cons, zero_add,
-              Nat.add_comm,
-              Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-              EvalsToInTime.trans actualSourcePairPrefixMachine.step _ _ _ _ _ hfirst hrest
-      | nil =>
-          induction second generalizing output with
-          | cons bit second ih =>
-              have hfirst := oneStep _ _ (sourcePairPrefix_failure_second_step bit
-                  second output)
-              have hrest := ih output
-              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, List.length_cons,
-                  zero_add, Nat.add_comm,
-                  Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-                  EvalsToInTime.trans actualSourcePairPrefixMachine.step _ _ _ _ _ hfirst hrest
-          | nil =>
-              induction output with
-              | cons bit output ih =>
-                  have hfirst := oneStep _ _ (sourcePairPrefix_failure_output_step bit output)
-                  simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero,
-                      List.length_cons, zero_add, Nat.add_comm,
-                      Nat.add_left_comm, Nat.reduceAdd] using EvalsToInTime.trans
-                          actualSourcePairPrefixMachine.step _ _ _ _ _ hfirst ih
-              | nil =>
-                  simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using
-                      oneStep _ _ sourcePairPrefix_failure_finish
+  have hinput := TraceGolf.sweep actualSourcePairPrefixMachine.step
+    (fun current => sourcePairPrefixConfiguration 5 current first second output)
+    (fun bit remaining => sourcePairPrefix_failure_input_step bit remaining first second output)
+    input
+  have hfirst := TraceGolf.sweep actualSourcePairPrefixMachine.step
+    (fun current => sourcePairPrefixConfiguration 5 [] current second output)
+    (fun bit remaining => sourcePairPrefix_failure_first_step bit remaining second output)
+    first
+  have hsecond := TraceGolf.sweep actualSourcePairPrefixMachine.step
+    (fun current => sourcePairPrefixConfiguration 5 [] [] current output)
+    (fun bit remaining => sourcePairPrefix_failure_second_step bit remaining output)
+    second
+  have houtput := TraceGolf.sweep actualSourcePairPrefixMachine.step
+    (fun current => sourcePairPrefixConfiguration 5 [] [] [] current)
+    sourcePairPrefix_failure_output_step output
+  have hfinish := oneStep _ _ sourcePairPrefix_failure_finish
+  have h01 := EvalsToInTime.trans actualSourcePairPrefixMachine.step _ _ _ _ _ hinput hfirst
+  have h012 := EvalsToInTime.trans actualSourcePairPrefixMachine.step _ _ _ _ _ h01 hsecond
+  have h0123 := EvalsToInTime.trans actualSourcePairPrefixMachine.step _ _ _ _ _ h012 houtput
+  have hfull := EvalsToInTime.trans actualSourcePairPrefixMachine.step _ _ _ _ _ h0123 hfinish
+  exact rebound hfull (by omega)
 
 private def sourcePairPrefix_firstMissingTrace
     (count : ℕ) (first second output : List Bool) :

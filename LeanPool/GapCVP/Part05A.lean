@@ -129,99 +129,59 @@ private def unaryPair_failureTrace
       (input.length + first.length + second.length +
         matchedFirst.length + matchedSecond.length +
         base.length + outer.length + scratch.length + 1) := by
-  induction input generalizing first second matchedFirst
-      matchedSecond base outer scratch with
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (unaryPair_failure_input_step bit input first second
-          matchedFirst matchedSecond base outer scratch)
-      have hrest := ih first second matchedFirst matchedSecond
-        base outer scratch
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_comm, Nat.add_left_comm,
-          Nat.reduceAdd,
-          Nat.add_assoc] using EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
-              hfirst hrest
-  | nil =>
-      induction first generalizing second matchedFirst matchedSecond
-          base outer scratch with
-      | cons bit first ih =>
-          have hfirst := oneStep _ _ (unaryPair_failure_first_step bit first second
-              matchedFirst matchedSecond base outer scratch)
-          have hrest := ih second matchedFirst matchedSecond
-            base outer scratch
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.length_cons, zero_add,
-              Nat.add_comm,
-              Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-              EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst hrest
-      | nil =>
-          induction second generalizing matchedFirst matchedSecond
-              base outer scratch with
-          | cons bit second ih =>
-              have hfirst := oneStep _ _ (unaryPair_failure_second_step bit second
-                  matchedFirst matchedSecond base outer scratch)
-              have hrest := ih matchedFirst matchedSecond
-                base outer scratch
-              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, List.length_cons,
-                  zero_add, Nat.add_comm,
-                  Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-                  EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst hrest
-          | nil =>
-              induction matchedFirst generalizing matchedSecond
-                  base outer scratch with
-              | cons bit matchedFirst ih =>
-                  have hfirst := oneStep _ _ (unaryPair_failure_matchedFirst_step bit
-                      matchedFirst matchedSecond base outer scratch)
-                  have hrest := ih matchedSecond base outer scratch
-                  simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero,
-                      List.length_cons, zero_add, Nat.add_comm,
-                      Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-                      EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst hrest
-              | nil =>
-                  induction matchedSecond generalizing
-                      base outer scratch with
-                  | cons bit matchedSecond ih =>
-                      have hfirst := oneStep _ _ (unaryPair_failure_matchedSecond_step bit
-                          matchedSecond base outer scratch)
-                      have hrest := ih base outer scratch
-                      simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero,
-                          List.length_cons, zero_add, Nat.add_comm,
-                          Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-                          EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst
-                              hrest
-                  | nil =>
-                      induction base generalizing outer scratch with
-                      | cons bit base ih =>
-                          have hfirst := oneStep _ _ (unaryPair_failure_base_step bit
-                              base outer scratch)
-                          have hrest := ih outer scratch
-                          simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero,
-                              List.length_cons, zero_add, Nat.add_comm,
-                              Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-                              EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst
-                                  hrest
-                      | nil =>
-                          induction outer generalizing scratch with
-                          | cons bit outer ih =>
-                              have hfirst := oneStep _ _ (unaryPair_failure_outer_step bit
-                                  outer scratch)
-                              have hrest := ih scratch
-                              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero,
-                                  List.length_cons, zero_add, Nat.add_comm,
-                                  Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-                                  EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
-                                      hfirst hrest
-                          | nil =>
-                              induction scratch with
-                              | cons bit scratch ih =>
-                                  have hfirst := oneStep _ _ (unaryPair_failure_scratch_step
-                                      bit scratch)
-                                  simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero,
-                                      List.length_cons, zero_add, Nat.add_comm,
-                                      Nat.add_left_comm, Nat.reduceAdd] using EvalsToInTime.trans
-                                          actualUnaryPairIndexMachine.step _ _ _ _ _ hfirst ih
-                              | nil =>
-                                  simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero,
-                                      zero_add] using
-                                      oneStep _ _ unaryPair_failure_finish
+  have hinput := TraceGolf.sweep actualUnaryPairIndexMachine.step
+    (fun current => unaryPairConfiguration 11 current first second matchedFirst matchedSecond
+      base outer [] scratch)
+    (fun bit remaining => unaryPair_failure_input_step bit remaining first second matchedFirst
+      matchedSecond base outer scratch)
+    input
+  have hfirst := TraceGolf.sweep actualUnaryPairIndexMachine.step
+    (fun current => unaryPairConfiguration 11 [] current second matchedFirst matchedSecond
+      base outer [] scratch)
+    (fun bit remaining => unaryPair_failure_first_step bit remaining second matchedFirst
+      matchedSecond base outer scratch)
+    first
+  have hsecond := TraceGolf.sweep actualUnaryPairIndexMachine.step
+    (fun current => unaryPairConfiguration 11 [] [] current matchedFirst matchedSecond
+      base outer [] scratch)
+    (fun bit remaining => unaryPair_failure_second_step bit remaining matchedFirst matchedSecond
+      base outer scratch)
+    second
+  have hmatchedFirst := TraceGolf.sweep actualUnaryPairIndexMachine.step
+    (fun current => unaryPairConfiguration 11 [] [] [] current matchedSecond base outer [] scratch)
+    (fun bit remaining => unaryPair_failure_matchedFirst_step bit remaining matchedSecond
+      base outer scratch)
+    matchedFirst
+  have hmatchedSecond := TraceGolf.sweep actualUnaryPairIndexMachine.step
+    (fun current => unaryPairConfiguration 11 [] [] [] [] current base outer [] scratch)
+    (fun bit remaining => unaryPair_failure_matchedSecond_step bit remaining base outer scratch)
+    matchedSecond
+  have hbase := TraceGolf.sweep actualUnaryPairIndexMachine.step
+    (fun current => unaryPairConfiguration 11 [] [] [] [] [] current outer [] scratch)
+    (fun bit remaining => unaryPair_failure_base_step bit remaining outer scratch)
+    base
+  have houter := TraceGolf.sweep actualUnaryPairIndexMachine.step
+    (fun current => unaryPairConfiguration 11 [] [] [] [] [] [] current [] scratch)
+    (fun bit remaining => unaryPair_failure_outer_step bit remaining scratch)
+    outer
+  have hscratch := TraceGolf.sweep actualUnaryPairIndexMachine.step
+    (fun current => unaryPairConfiguration 11 [] [] [] [] [] [] [] [] current)
+    unaryPair_failure_scratch_step scratch
+  have hfinish := oneStep _ _ unaryPair_failure_finish
+  have h01 := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ hinput hfirst
+  have h012 := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ h01 hsecond
+  have h0123 := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
+    h012 hmatchedFirst
+  have h01234 := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
+    h0123 hmatchedSecond
+  have h012345 := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _ h01234 hbase
+  have h0123456 := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
+    h012345 houter
+  have h01234567 := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
+    h0123456 hscratch
+  have hfull := EvalsToInTime.trans actualUnaryPairIndexMachine.step _ _ _ _ _
+    h01234567 hfinish
+  exact rebound hfull (by omega)
 
 private def unaryPair_firstMissingTrace
     (count : ℕ)

@@ -40,6 +40,44 @@ def oneStep {α : Type*} {step : α → Option α} (source target : α)
   evals_in_steps := transition
   steps_le_m := Nat.le_refl 1
 
+/-- Repeatedly composes supplied one-step traces while consuming a list. -/
+def sweepTrace {α β : Type*} (step : α → Option α)
+    (configuration : List β → α)
+    (transition : ∀ symbol remaining,
+      EvalsToInTime step (configuration (symbol :: remaining))
+        (some (configuration remaining)) 1)
+    (symbols : List β) :
+    EvalsToInTime step (configuration symbols) (some (configuration [])) symbols.length := by
+  induction symbols with
+  | nil =>
+      simpa only [List.length_nil] using EvalsToInTime.refl step (configuration [])
+  | cons symbol symbols ih =>
+      simpa only [List.length_cons] using
+        EvalsToInTime.trans step _ _ _ _ _ (transition symbol symbols) ih
+
+/-- Repeatedly applies a one-step transition while consuming a list. -/
+def sweep {α β : Type*} (step : α → Option α)
+    (configuration : List β → α)
+    (transition : ∀ symbol remaining,
+      step (configuration (symbol :: remaining)) = some (configuration remaining))
+    (symbols : List β) :
+    EvalsToInTime step (configuration symbols) (some (configuration [])) symbols.length := by
+  exact sweepTrace step configuration
+    (fun symbol remaining => oneStep _ _ (transition symbol remaining)) symbols
+
+/-- Consumes a list and then applies one final transition. -/
+def sweepThen {α β : Type*} (step : α → Option α)
+    (configuration : List β → α)
+    (transition : ∀ symbol remaining,
+      step (configuration (symbol :: remaining)) = some (configuration remaining))
+    (symbols : List β) {target : α}
+    (finish : step (configuration []) = some target) :
+    EvalsToInTime step (configuration symbols) (some target) (symbols.length + 1) := by
+  have hsweep := sweep step configuration transition symbols
+  have hfinish := oneStep _ _ finish
+  simpa only [Nat.add_comm] using
+    EvalsToInTime.trans step _ _ _ _ _ hsweep hfinish
+
 /-- GapCVP reduction support. -/
 def rebound {α : Type*} {step : α → Option α}
     {source : α} {target : Option α} {oldBudget newBudget : ℕ}

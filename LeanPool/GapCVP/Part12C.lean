@@ -1487,7 +1487,7 @@ private theorem paperVariableArityClauseOffset_polynomiallyBoundedFoldStates :
   simp only [GapCVP.OutputBoundedDependentRecordFold.PolynomiallyBoundedFoldStates,
       decide_eq_true_eq]
   intro input count seed parsed stage bounded
-  have seedBound := sourceAtomicFoldSeed_length_le
+  have seedBound := GapCVP.CNFTypedRecordWorkerTM.parsedUnaryFold_seed_length_le
     input count seed parsed
   have countBound := parsedUnaryFold_count_le_length
     input count seed parsed

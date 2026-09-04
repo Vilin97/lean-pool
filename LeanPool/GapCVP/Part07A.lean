@@ -444,7 +444,7 @@ private theorem sourceFourFamilyOriginalMarkerRotation_polynomiallyBoundedFoldSt
   simp only [GapCVP.OutputBoundedDependentRecordFold.PolynomiallyBoundedFoldStates,
       decide_eq_true_eq]
   intro input count seed hparse stage hstage
-  have hseed := sourceAtomicFoldSeed_length_le
+  have hseed := GapCVP.CNFTypedRecordWorkerTM.parsedUnaryFold_seed_length_le
     input count seed hparse
   have hcount := parsedUnaryFold_count_le_length
     input count seed hparse

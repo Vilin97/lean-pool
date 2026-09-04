@@ -44,7 +44,7 @@ private def sourceGridIndex_prefixTrace
       have hrest := ih (true :: counter)
       have hfull := EvalsToInTime.trans sourceCanonicalUnaryGridIndexMachine.step
         1 (count + 1) _ _ _ hfirst hrest
-      rw [sourceFlatAtomic_trueCounter_append count counter] at hfull
+      rw [GapCVP.CNFUnaryPairIndexTotalCert.unaryPair_replicate_append_true count counter] at hfull
       simpa only [FinTM2.step, Fin.isValue, List.replicate_succ, List.cons_append, Nat.add_comm,
           Nat.add_left_comm,
           Nat.reduceAdd] using hfull
@@ -114,8 +114,8 @@ private def sourceGridIndex_copyTrace
       have hrest := ih (true :: scratch) (true :: output)
       have hfull := EvalsToInTime.trans sourceCanonicalUnaryGridIndexMachine.step
         1 (count + 1) _ _ _ hfirst hrest
-      rw [sourceFlatAtomic_trueCounter_append count scratch,
-        sourceFlatAtomic_trueCounter_append count output] at hfull
+      rw [GapCVP.CNFUnaryPairIndexTotalCert.unaryPair_replicate_append_true count scratch,
+        GapCVP.CNFUnaryPairIndexTotalCert.unaryPair_replicate_append_true count output] at hfull
       simpa only [FinTM2.step, Fin.isValue, List.replicate_succ, List.cons_append, Nat.add_comm,
           Nat.add_left_comm,
           Nat.reduceAdd] using hfull
@@ -139,8 +139,8 @@ private def sourceGridIndex_templateRestoreTrace
       have hrest := ih (true :: counter) (true :: output)
       have hfull := EvalsToInTime.trans sourceCanonicalUnaryGridIndexMachine.step
         1 (count + 1) _ _ _ hfirst hrest
-      rw [sourceFlatAtomic_trueCounter_append count counter,
-        sourceFlatAtomic_trueCounter_append count output] at hfull
+      rw [GapCVP.CNFUnaryPairIndexTotalCert.unaryPair_replicate_append_true count counter,
+        GapCVP.CNFUnaryPairIndexTotalCert.unaryPair_replicate_append_true count output] at hfull
       simpa only [FinTM2.step, Fin.isValue, List.replicate_succ, List.cons_append, Nat.add_comm,
           Nat.add_left_comm,
           Nat.reduceAdd] using hfull
@@ -213,7 +213,7 @@ private def sourceGridIndex_missingPrefixTrace
       have hrest := ih (true :: counter)
       have hfull := EvalsToInTime.trans sourceCanonicalUnaryGridIndexMachine.step
         1 (count + 1) _ _ _ hfirst hrest
-      rw [sourceFlatAtomic_trueCounter_append count counter] at hfull
+      rw [GapCVP.CNFUnaryPairIndexTotalCert.unaryPair_replicate_append_true count counter] at hfull
       simpa only [FinTM2.step, Fin.isValue, List.replicate_succ, List.cons_append, Nat.add_comm,
           Nat.add_left_comm,
           Nat.reduceAdd] using hfull
@@ -251,7 +251,7 @@ private noncomputable def sourceCanonicalUnaryGridIndex_totalTrace
       (sourceCanonicalUnaryGridIndexTimePolynomial.eval input.length) := by
   cases hread : readUnaryPrefix input with
   | none =>
-      have hshape := sourceFlatAtomic_readUnaryPrefix_none
+      have hshape := GapCVP.SourceInterpolationRowTM.readUnaryPrefix_none_eq_replicate
         input hread
       have hprefix := sourceGridIndex_missingPrefixTrace
         input.length []
@@ -272,7 +272,7 @@ private noncomputable def sourceCanonicalUnaryGridIndex_totalTrace
         omega)
   | some parsed =>
       obtain ⟨count, source⟩ := parsed
-      have hshape := sourceFlatAtomic_readUnaryPrefix_some
+      have hshape := GapCVP.SourceInterpolationRowTM.readUnaryPrefix_some_decompose
         input count source hread
       have hprefix := sourceGridIndex_prefixTrace
         count source [] [] [] []
@@ -1366,7 +1366,7 @@ theorem guardedRotation_readUnaryPrefix_some_reconstruct
     (input : List Bool) (count : ℕ) (tail : List Bool)
     (hread : readUnaryPrefix input = some (count, tail)) :
     input = List.replicate count true ++ false :: tail := by
-  exact GapCVP.SourceWholeOutputValidBranchRecordTM.sourceFlatAtomic_readUnaryPrefix_some
+  exact GapCVP.SourceInterpolationRowTM.readUnaryPrefix_some_decompose
     input count tail hread
 
 theorem guardedRotation_readLengthPrefixedWord_some_reconstruct

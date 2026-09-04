@@ -181,52 +181,23 @@ private def suffix_failureTrace
     EvalsToInTime suffixDecoderMachine.step (suffixConfiguration 5 input counter reversed output)
       (some (Turing.haltList suffixDecoderMachine output))
       (input.length + counter.length + reversed.length + 1) := by
-  induction input generalizing counter reversed output with
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (suffix_failure_drop_input bit input counter reversed output)
-      have hrest := ih counter reversed output
-      have hboth := EvalsToInTime.trans suffixDecoderMachine.step 1
-        (input.length + counter.length + reversed.length + 1)
-        _ _ _ hfirst hrest
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_comm, Nat.add_left_comm,
-          Nat.reduceAdd,
-          Nat.add_assoc] using hboth
-  | nil =>
-      induction counter generalizing reversed output with
-      | cons bit counter ih =>
-          have hfirst := oneStep _ _ (suffix_failure_drop_counter bit counter reversed output)
-          have hrest :
-              EvalsToInTime suffixDecoderMachine.step
-                (suffixConfiguration 5 [] counter reversed output)
-                (some (Turing.haltList suffixDecoderMachine output))
-                (counter.length + reversed.length + 1) := by
-            simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using ih reversed
-                output
-          have hboth := EvalsToInTime.trans suffixDecoderMachine.step 1
-            (counter.length + reversed.length + 1)
-            _ _ _ hfirst hrest
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.length_cons, zero_add,
-              Nat.add_comm,
-              Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using hboth
-      | nil =>
-          induction reversed generalizing output with
-          | cons bit reversed ih =>
-              have hfirst := oneStep _ _ (suffix_failure_drop_reversed bit reversed output)
-              have hrest :
-                  EvalsToInTime suffixDecoderMachine.step
-                    (suffixConfiguration 5 [] [] reversed output)
-                    (some (Turing.haltList suffixDecoderMachine output))
-                    (reversed.length + 1) := by
-                simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using ih
-                    output
-              have hboth := EvalsToInTime.trans suffixDecoderMachine.step 1 (reversed.length + 1)
-                _ _ _ hfirst hrest
-              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, List.length_cons,
-                  zero_add, Nat.add_comm,
-                  Nat.add_left_comm, Nat.reduceAdd] using hboth
-          | nil =>
-              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using
-                  oneStep _ _ (suffix_failure_finish output)
+  have hinput := TraceGolf.sweep suffixDecoderMachine.step
+    (fun current => suffixConfiguration 5 current counter reversed output)
+    (fun bit remaining => suffix_failure_drop_input bit remaining counter reversed output)
+    input
+  have hcounter := TraceGolf.sweep suffixDecoderMachine.step
+    (fun current => suffixConfiguration 5 [] current reversed output)
+    (fun bit remaining => suffix_failure_drop_counter bit remaining reversed output)
+    counter
+  have hreversed := TraceGolf.sweep suffixDecoderMachine.step
+    (fun current => suffixConfiguration 5 [] [] current output)
+    (fun bit remaining => suffix_failure_drop_reversed bit remaining output)
+    reversed
+  have hfinish := oneStep _ _ (suffix_failure_finish output)
+  have h01 := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ hinput hcounter
+  have h012 := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ h01 hreversed
+  have hfull := EvalsToInTime.trans suffixDecoderMachine.step _ _ _ _ _ h012 hfinish
+  exact rebound hfull (by omega)
 
 private def suffix_missingPrefixTrace
     (count : ℕ) (counter reversed output : List Bool) :
@@ -742,34 +713,18 @@ private def variable_failureTrace
       (some (Turing.haltList variableClauseMachine
         (false :: List.replicate count true)))
       (input.length + counter.length + 1) := by
-  induction input generalizing counter count with
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (variable_failure_drop_input bit input counter count)
-      have hrest := ih counter count
-      have hboth := EvalsToInTime.trans variableClauseMachine.step 1
-        (input.length + counter.length + 1)
-        _ _ _ hfirst hrest
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_comm, Nat.add_left_comm,
-          Nat.reduceAdd,
-          Nat.add_assoc] using hboth
-  | nil =>
-      induction counter generalizing count with
-      | cons bit counter ih =>
-          have hfirst := oneStep _ _ (variable_failure_drop_counter bit counter count)
-          have hrest :
-              EvalsToInTime variableClauseMachine.step (variableConfiguration 6 [] counter count)
-                (some (Turing.haltList variableClauseMachine
-                  (false :: List.replicate count true)))
-                (counter.length + 1) := by
-            simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using ih count
-          have hboth := EvalsToInTime.trans variableClauseMachine.step 1 (counter.length + 1)
-            _ _ _ hfirst hrest
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.length_cons, zero_add,
-              Nat.add_comm,
-              Nat.add_left_comm, Nat.reduceAdd] using hboth
-      | nil =>
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using
-              oneStep _ _ (variable_failure_finish count)
+  have hinput := TraceGolf.sweep variableClauseMachine.step
+    (fun current => variableConfiguration 6 current counter count)
+    (fun bit remaining => variable_failure_drop_input bit remaining counter count)
+    input
+  have hcounter := TraceGolf.sweep variableClauseMachine.step
+    (fun current => variableConfiguration 6 [] current count)
+    (fun bit remaining => variable_failure_drop_counter bit remaining count)
+    counter
+  have hfinish := oneStep _ _ (variable_failure_finish count)
+  have hfirst := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hinput hcounter
+  have hfull := EvalsToInTime.trans variableClauseMachine.step _ _ _ _ _ hfirst hfinish
+  exact rebound hfull (by omega)
 
 private def variableScanPhase (payload : Bool) (position : Fin 3) : Fin 7 :=
   if payload then variablePayloadLabel position

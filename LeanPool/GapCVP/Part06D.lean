@@ -638,7 +638,7 @@ private theorem sourceOriginalIndexedClauseSuffix_polynomiallyBoundedFoldStates 
   simp only [GapCVP.OutputBoundedDependentRecordFold.PolynomiallyBoundedFoldStates,
       decide_eq_true_eq]
   intro input count seed hparse stage _
-  have hseed := sourceAtomicFoldSeed_length_le
+  have hseed := GapCVP.CNFTypedRecordWorkerTM.parsedUnaryFold_seed_length_le
     input count seed hparse
   have hiterate : ∀ number : ℕ,
       ((clauseSuffix^[number]) seed).length ≤ seed.length := by
@@ -1274,7 +1274,7 @@ private theorem sourceAnchoredGridRecord_polynomiallyBoundedFoldStates
   simp only [GapCVP.OutputBoundedDependentRecordFold.PolynomiallyBoundedFoldStates,
       decide_eq_true_eq]
   intro input count seed hparse stage hstage
-  have hseed := sourceAtomicFoldSeed_length_le
+  have hseed := GapCVP.CNFTypedRecordWorkerTM.parsedUnaryFold_seed_length_le
     input count seed hparse
   have hcount := parsedUnaryFold_count_le_length
     input count seed hparse
@@ -2134,7 +2134,7 @@ private theorem fiveFamilyOriginalBitTail_polynomiallyBoundedFoldStates :
   simp only [GapCVP.OutputBoundedDependentRecordFold.PolynomiallyBoundedFoldStates,
       decide_eq_true_eq]
   intro input count seed hparse stage _
-  have hseed := sourceAtomicFoldSeed_length_le
+  have hseed := GapCVP.CNFTypedRecordWorkerTM.parsedUnaryFold_seed_length_le
     input count seed hparse
   simpa only [Polynomial.eval_X, ge_iff_le] using
       (fiveFamilyOriginalBitTail_iterate_length_le seed stage).trans hseed

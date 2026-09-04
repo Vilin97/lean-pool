@@ -274,17 +274,12 @@ private def sourceIntegerMultiplication_failureInputTrace
       (some (sourceIntegerMultiplicationConfiguration 7
         [] left right restore output))
       (input.length + 1) := by
-  induction input with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using
-          oneStep _ _ (sourceIntegerMultiplication_failure_input_finish left right restore output)
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (sourceIntegerMultiplication_failure_input_step
-          bit input left right restore output)
-      have hfull := EvalsToInTime.trans sourceUnaryIntegerMultiplicationMachine.step
-        _ _ _ _ _ hfirst ih
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_assoc, Nat.reduceAdd]
-          using hfull
+  exact TraceGolf.sweepThen sourceUnaryIntegerMultiplicationMachine.step
+    (fun current => sourceIntegerMultiplicationConfiguration 6
+      current left right restore output)
+    (fun bit remaining => sourceIntegerMultiplication_failure_input_step
+      bit remaining left right restore output)
+    input (sourceIntegerMultiplication_failure_input_finish left right restore output)
 
 private def sourceIntegerMultiplication_failureLeftTrace
     (left right restore output : List Bool) :
@@ -294,17 +289,12 @@ private def sourceIntegerMultiplication_failureLeftTrace
       (some (sourceIntegerMultiplicationConfiguration 8
         [] [] right restore output))
       (left.length + 1) := by
-  induction left with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using
-          oneStep _ _ (sourceIntegerMultiplication_failure_left_finish right restore output)
-  | cons bit left ih =>
-      have hfirst := oneStep _ _ (sourceIntegerMultiplication_failure_left_step
-          bit left right restore output)
-      have hfull := EvalsToInTime.trans sourceUnaryIntegerMultiplicationMachine.step
-        _ _ _ _ _ hfirst ih
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_assoc, Nat.reduceAdd]
-          using hfull
+  exact TraceGolf.sweepThen sourceUnaryIntegerMultiplicationMachine.step
+    (fun current => sourceIntegerMultiplicationConfiguration 7
+      [] current right restore output)
+    (fun bit remaining => sourceIntegerMultiplication_failure_left_step
+      bit remaining right restore output)
+    left (sourceIntegerMultiplication_failure_left_finish right restore output)
 
 private def sourceIntegerMultiplication_failureRightTrace
     (right restore output : List Bool) :
@@ -314,17 +304,12 @@ private def sourceIntegerMultiplication_failureRightTrace
       (some (sourceIntegerMultiplicationConfiguration 9
         [] [] [] restore output))
       (right.length + 1) := by
-  induction right with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using
-          oneStep _ _ (sourceIntegerMultiplication_failure_right_finish restore output)
-  | cons bit right ih =>
-      have hfirst := oneStep _ _ (sourceIntegerMultiplication_failure_right_step
-          bit right restore output)
-      have hfull := EvalsToInTime.trans sourceUnaryIntegerMultiplicationMachine.step
-        _ _ _ _ _ hfirst ih
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_assoc, Nat.reduceAdd]
-          using hfull
+  exact TraceGolf.sweepThen sourceUnaryIntegerMultiplicationMachine.step
+    (fun current => sourceIntegerMultiplicationConfiguration 8
+      [] [] current restore output)
+    (fun bit remaining => sourceIntegerMultiplication_failure_right_step
+      bit remaining restore output)
+    right (sourceIntegerMultiplication_failure_right_finish restore output)
 
 private def sourceIntegerMultiplication_failureRestoreTrace
     (restore output : List Bool) :
@@ -334,17 +319,11 @@ private def sourceIntegerMultiplication_failureRestoreTrace
       (some (sourceIntegerMultiplicationConfiguration 10
         [] [] [] [] output))
       (restore.length + 1) := by
-  induction restore with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using
-          oneStep _ _ (sourceIntegerMultiplication_failure_restore_finish output)
-  | cons bit restore ih =>
-      have hfirst := oneStep _ _ (sourceIntegerMultiplication_failure_restore_step
-          bit restore output)
-      have hfull := EvalsToInTime.trans sourceUnaryIntegerMultiplicationMachine.step
-        _ _ _ _ _ hfirst ih
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_assoc, Nat.reduceAdd]
-          using hfull
+  exact TraceGolf.sweepThen sourceUnaryIntegerMultiplicationMachine.step
+    (fun current => sourceIntegerMultiplicationConfiguration 9 [] [] [] current output)
+    (fun bit remaining => sourceIntegerMultiplication_failure_restore_step
+      bit remaining output)
+    restore (sourceIntegerMultiplication_failure_restore_finish output)
 
 private def sourceIntegerMultiplication_failureOutputTrace
     (output : List Bool) :
@@ -354,17 +333,10 @@ private def sourceIntegerMultiplication_failureOutputTrace
       (some (Turing.haltList
         sourceUnaryIntegerMultiplicationMachine []))
       (output.length + 1) := by
-  induction output with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using
-          oneStep _ _ sourceIntegerMultiplication_failure_finish
-  | cons bit output ih =>
-      have hfirst := oneStep _ _ (sourceIntegerMultiplication_failure_output_step
-          bit output)
-      have hfull := EvalsToInTime.trans sourceUnaryIntegerMultiplicationMachine.step
-        _ _ _ _ _ hfirst ih
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_assoc, Nat.reduceAdd]
-          using hfull
+  exact TraceGolf.sweepThen sourceUnaryIntegerMultiplicationMachine.step
+    (fun current => sourceIntegerMultiplicationConfiguration 10 [] [] [] [] current)
+    sourceIntegerMultiplication_failure_output_step output
+    sourceIntegerMultiplication_failure_finish
 
 private def sourceIntegerMultiplication_failureTrace
     (input left right restore output : List Bool) :

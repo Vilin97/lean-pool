@@ -82,54 +82,23 @@ private def payload_failureTrace
     EvalsToInTime payloadDecoderMachine.step (payloadConfiguration 4 input counter reversed output)
       (some (Turing.haltList payloadDecoderMachine (false :: output)))
       (input.length + counter.length + reversed.length + 1) := by
-  induction input generalizing counter reversed output with
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (payload_failure_drop_input bit input counter reversed output)
-      have hrest := ih counter reversed output
-      have hboth := EvalsToInTime.trans payloadDecoderMachine.step 1
-        (input.length + counter.length + reversed.length + 1)
-        _ _ _ hfirst hrest
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_comm, Nat.add_left_comm,
-          Nat.reduceAdd,
-          Nat.add_assoc] using hboth
-  | nil =>
-      induction counter generalizing reversed output with
-      | cons bit counter ih =>
-          have hfirst := oneStep _ _ (payload_failure_drop_counter bit counter reversed output)
-          have hrest :
-              EvalsToInTime payloadDecoderMachine.step
-                (payloadConfiguration 4 [] counter reversed output)
-                (some (Turing.haltList payloadDecoderMachine
-                  (false :: output)))
-                (counter.length + reversed.length + 1) := by
-            simpa only [FinTM2.step, Fin.isValue, List.length_nil, zero_add] using ih reversed
-                output
-          have hboth := EvalsToInTime.trans payloadDecoderMachine.step 1
-            (counter.length + reversed.length + 1)
-            _ _ _ hfirst hrest
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.length_cons, zero_add,
-              Nat.add_comm,
-              Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using hboth
-      | nil =>
-          induction reversed generalizing output with
-          | cons bit reversed ih =>
-              have hfirst := oneStep _ _ (payload_failure_drop_reversed bit reversed output)
-              have hrest :
-                  EvalsToInTime payloadDecoderMachine.step
-                    (payloadConfiguration 4 [] [] reversed output)
-                    (some (Turing.haltList payloadDecoderMachine
-                      (false :: output)))
-                    (reversed.length + 1) := by
-                simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using ih
-                    output
-              have hboth := EvalsToInTime.trans payloadDecoderMachine.step 1 (reversed.length + 1)
-                _ _ _ hfirst hrest
-              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, List.length_cons,
-                  zero_add, Nat.add_comm,
-                  Nat.add_left_comm, Nat.reduceAdd] using hboth
-          | nil =>
-              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using
-                  oneStep _ _ (payload_failure_finish output)
+  have hinput := TraceGolf.sweep payloadDecoderMachine.step
+    (fun current => payloadConfiguration 4 current counter reversed output)
+    (fun bit remaining => payload_failure_drop_input bit remaining counter reversed output)
+    input
+  have hcounter := TraceGolf.sweep payloadDecoderMachine.step
+    (fun current => payloadConfiguration 4 [] current reversed output)
+    (fun bit remaining => payload_failure_drop_counter bit remaining reversed output)
+    counter
+  have hreversed := TraceGolf.sweep payloadDecoderMachine.step
+    (fun current => payloadConfiguration 4 [] [] current output)
+    (fun bit remaining => payload_failure_drop_reversed bit remaining output)
+    reversed
+  have hfinish := oneStep _ _ (payload_failure_finish output)
+  have hfirst := EvalsToInTime.trans payloadDecoderMachine.step _ _ _ _ _ hinput hcounter
+  have hsecond := EvalsToInTime.trans payloadDecoderMachine.step _ _ _ _ _ hfirst hreversed
+  have hfull := EvalsToInTime.trans payloadDecoderMachine.step _ _ _ _ _ hsecond hfinish
+  exact rebound hfull (by omega)
 
 private def payload_missingPrefixTrace
     (count : ℕ) (counter reversed output : List Bool) :

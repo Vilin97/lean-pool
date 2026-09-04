@@ -34,212 +34,9 @@ private def certifiedNatural_liftStep
   oneStep first next
     ((certifiedNatural_step_eq_old first hphase).trans hstep)
 
-private def certifiedNatural_cleanupTrace
-    (outcome : EncodedWordOrdering)
-    (input firstCounter firstReversed secondCounter secondReversed
-      firstForward secondForward source sourcePrefix output : List Bool) :
-    EvalsToInTime delimitedNaturalComparisonMachine.step
-      (naturalCompareConfiguration 7 outcome
-        input firstCounter firstReversed secondCounter secondReversed
-        firstForward secondForward source sourcePrefix output)
-      (some (naturalCompareConfiguration 8 outcome
-        input [] [] [] [] [] [] source sourcePrefix output))
-      (firstCounter.length + firstReversed.length +
-        secondCounter.length + secondReversed.length +
-        firstForward.length + secondForward.length + 1) := by
-  induction firstCounter with
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_cleanup_firstCounter outcome bit
-          input remaining firstReversed secondCounter secondReversed
-          firstForward secondForward source sourcePrefix output)
-      exact rebound (EvalsToInTime.trans
-          delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst ih)
-        (by simp only [List.length_cons, add_le_add_iff_right, Order.add_one_le_iff,
-            add_lt_add_iff_right,
-                lt_add_iff_pos_right, Order.lt_one_iff])
-  | nil =>
-      induction firstReversed with
-      | cons bit remaining ih =>
-          have hfirst := certifiedNatural_liftStep
-            (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-                Fin.reduceEq,
-                    not_false_eq_true])
-            (delimitedCompare_cleanup_firstReversed outcome bit
-              input remaining secondCounter secondReversed
-              firstForward secondForward source sourcePrefix output)
-          exact rebound (EvalsToInTime.trans
-              delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst ih)
-            (by simp only [List.length_nil, zero_add, List.length_cons, add_le_add_iff_right,
-                Order.add_one_le_iff,
-                    add_lt_add_iff_right, lt_add_iff_pos_right, Order.lt_one_iff])
-      | nil =>
-          induction secondCounter with
-          | cons bit remaining ih =>
-              have hfirst := certifiedNatural_liftStep
-                (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq,
-                    Option.some.injEq, Fin.reduceEq,
-                        not_false_eq_true])
-                (delimitedCompare_cleanup_secondCounter outcome bit
-                  input remaining secondReversed firstForward secondForward
-                  source sourcePrefix output)
-              exact rebound (EvalsToInTime.trans
-                  delimitedNaturalComparisonMachine.step
-                    _ _ _ _ _ hfirst ih)
-                (by simp only [List.length_nil, add_zero, zero_add, List.length_cons,
-                    add_le_add_iff_right, Order.add_one_le_iff,
-                        add_lt_add_iff_right, lt_add_iff_pos_right, Order.lt_one_iff])
-          | nil =>
-              induction secondReversed with
-              | cons bit remaining ih =>
-                  have hfirst := certifiedNatural_liftStep
-                    (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq,
-                        Option.some.injEq, Fin.reduceEq,
-                            not_false_eq_true])
-                    (delimitedCompare_cleanup_secondReversed outcome bit
-                      input remaining firstForward secondForward
-                      source sourcePrefix output)
-                  exact rebound (EvalsToInTime.trans
-                      delimitedNaturalComparisonMachine.step
-                        _ _ _ _ _ hfirst ih)
-                    (by simp only [List.length_nil, add_zero, zero_add, List.length_cons,
-                        add_le_add_iff_right, Order.add_one_le_iff,
-                            add_lt_add_iff_right, lt_add_iff_pos_right, Order.lt_one_iff])
-              | nil =>
-                  induction firstForward with
-                  | cons bit remaining ih =>
-                      have hfirst := certifiedNatural_liftStep
-                        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq,
-                            Option.some.injEq, Fin.reduceEq,
-                                not_false_eq_true])
-                        (delimitedCompare_cleanup_firstForward outcome bit
-                          input remaining secondForward
-                          source sourcePrefix output)
-                      exact rebound (EvalsToInTime.trans
-                          delimitedNaturalComparisonMachine.step
-                            _ _ _ _ _ hfirst ih)
-                        (by simp only [List.length_nil, add_zero, zero_add, List.length_cons,
-                            add_le_add_iff_right, Order.add_one_le_iff,
-                                add_lt_add_iff_right, lt_add_iff_pos_right, Order.lt_one_iff])
-                  | nil =>
-                      induction secondForward with
-                      | cons bit remaining ih =>
-                          have hfirst := certifiedNatural_liftStep
-                            (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq,
-                                Option.some.injEq, Fin.reduceEq,
-                                    not_false_eq_true])
-                            (delimitedCompare_cleanup_secondForward
-                              outcome bit input remaining
-                              source sourcePrefix output)
-                          exact rebound (EvalsToInTime.trans
-                              delimitedNaturalComparisonMachine.step
-                                _ _ _ _ _ hfirst ih)
-                            (by simp only [List.length_nil, add_zero, zero_add, List.length_cons,
-                                Std.le_refl])
-                      | nil =>
-                          simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration,
-                              List.length_nil, add_zero, zero_add] using
-                              certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-                                (delimitedCompare_cleanup_finish outcome input source sourcePrefix
-                                    output)
 
-private def certifiedNatural_trailingTrace
-    (outcome : EncodedWordOrdering)
-    (input source sourcePrefix output : List Bool) :
-    EvalsToInTime delimitedNaturalComparisonMachine.step
-      (naturalCompareConfiguration 8 outcome
-        input [] [] [] [] [] [] source sourcePrefix output)
-      (some (naturalCompareConfiguration 9 outcome
-        [] [] [] [] [] [] []
-        (input.reverse ++ source)
-        (List.replicate input.length true ++ sourcePrefix) output))
-      (input.length + 1) := by
-  induction input generalizing source sourcePrefix with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.reverse_nil,
-          List.nil_append,
-          List.length_nil, List.replicate_zero, zero_add] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_trailing_finish outcome source sourcePrefix output)
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_trailing_step outcome bit
-          remaining source sourcePrefix output)
-      have hrest := ih (source := bit :: source)
-        (sourcePrefix := true :: sourcePrefix)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.reverse_cons,
-          List.append_assoc,
-          List.cons_append, List.nil_append, List.length_cons, List.replicate_succ, Nat.add_assoc,
-              Nat.reduceAdd,
-          replicate_append_bit_cons] using EvalsToInTime.trans
-              delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
 
-private def certifiedNatural_sourceTrace
-    (outcome : EncodedWordOrdering)
-    (source sourcePrefix output : List Bool) :
-    EvalsToInTime delimitedNaturalComparisonMachine.step
-      (naturalCompareConfiguration 10 outcome
-        [] [] [] [] [] [] [] source sourcePrefix output)
-      (some (naturalCompareConfiguration 11 outcome
-        [] [] [] [] [] [] [] [] sourcePrefix
-        (false :: (source.reverse ++ output))))
-      (source.length + 1) := by
-  induction source generalizing output with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.reverse_nil,
-          List.nil_append,
-          List.length_nil, zero_add] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_source_finish outcome sourcePrefix output)
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_source_step outcome bit
-          remaining sourcePrefix output)
-      have hrest := ih (output := bit :: output)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.reverse_cons,
-          List.append_assoc,
-          List.cons_append, List.nil_append, List.length_cons, Nat.add_assoc, Nat.reduceAdd] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
 
-private def certifiedNatural_prefixTrace
-    (outcome : EncodedWordOrdering)
-    (sourcePrefix output : List Bool) :
-    EvalsToInTime delimitedNaturalComparisonMachine.step
-      (naturalCompareConfiguration 11 outcome
-        [] [] [] [] [] [] [] [] sourcePrefix output)
-      (some (Turing.haltList delimitedNaturalComparisonMachine
-        (List.replicate sourcePrefix.length true ++ output)))
-      (sourcePrefix.length + 1) := by
-  induction sourcePrefix generalizing output with
-  | nil =>
-      simpa only [delimitedNaturalComparisonMachine, Fin.isValue, FinTM2.step,
-          naturalCompareConfiguration,
-          haltList, List.length_nil, List.replicate_zero, List.nil_append, eq_mpr_eq_cast, cast_eq,
-              dite_eq_ite, zero_add,
-          delimitedPairComparisonMachine] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-              (delimitedCompare_prefix_finish outcome output)
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_prefix_step outcome bit remaining output)
-      have hrest := ih (output := true :: output)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.length_cons,
-          List.replicate_succ,
-          List.cons_append, Nat.add_assoc, Nat.reduceAdd,
-              SourceStructuralDecoder.replicate_true_append_cons] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
 
 private def certifiedNatural_finishTrace
     (outcome : EncodedWordOrdering)
@@ -256,51 +53,18 @@ private def certifiedNatural_finishTrace
         secondCounter.length + secondReversed.length +
         firstForward.length + secondForward.length +
         3 * input.length + source.length + sourcePrefix.length + 5) := by
-  have hcleanup := certifiedNatural_cleanupTrace outcome
-    input firstCounter firstReversed secondCounter secondReversed
-    firstForward secondForward source sourcePrefix output
-  have htrailing := certifiedNatural_trailingTrace outcome
-    input source sourcePrefix output
-  have houtcome := certifiedNatural_liftStep
-    (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-        Fin.reduceEq,
-            not_false_eq_true])
-    (delimitedCompare_outcome_step outcome
-      (input.reverse ++ source)
-      (List.replicate input.length true ++ sourcePrefix) output)
-  have hsource := certifiedNatural_sourceTrace outcome
-    (input.reverse ++ source)
-    (List.replicate input.length true ++ sourcePrefix)
-    (encodedWordOrderingWord outcome ++ output)
-  have hprefix :
-      EvalsToInTime delimitedNaturalComparisonMachine.step
-        (naturalCompareConfiguration 11 outcome
-          [] [] [] [] [] [] [] []
-          (List.replicate input.length true ++ sourcePrefix)
-          (false ::
-            ((input.reverse ++ source).reverse ++
-              (encodedWordOrderingWord outcome ++ output))))
-        (some (Turing.haltList delimitedNaturalComparisonMachine
-          (delimitedCompareRestoredWord outcome
-            input source sourcePrefix output)))
-        ((List.replicate input.length true ++ sourcePrefix).length + 1) := by
-    simpa only [FinTM2.step, Fin.isValue, List.reverse_append, List.reverse_reverse,
-        List.append_assoc,
-        delimitedCompareRestoredWord, List.length_append, List.length_replicate] using
-        certifiedNatural_prefixTrace outcome (List.replicate input.length true ++ sourcePrefix)
-          (false :: ((input.reverse ++ source).reverse ++ (encodedWordOrderingWord outcome ++
-              output)))
-  have hfirst := EvalsToInTime.trans
-    delimitedNaturalComparisonMachine.step _ _ _ _ _ hcleanup htrailing
-  have hsecond := EvalsToInTime.trans
-    delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst houtcome
-  have hthird := EvalsToInTime.trans
-    delimitedNaturalComparisonMachine.step _ _ _ _ _ hsecond hsource
-  have hfull := EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hthird hprefix
-  apply rebound hfull
-  simp only [List.length_append, List.length_reverse,
-    List.length_replicate]
-  omega
+  change EvalsToInTime delimitedNaturalComparisonMachine.step
+    (delimitedCompareConfiguration 7 outcome input firstCounter firstReversed
+      secondCounter secondReversed firstForward secondForward source sourcePrefix output)
+    (some (Turing.haltList delimitedPairComparisonMachine
+      (delimitedCompareRestoredWord outcome input source sourcePrefix output)))
+    (firstCounter.length + firstReversed.length +
+      secondCounter.length + secondReversed.length +
+      firstForward.length + secondForward.length +
+      3 * input.length + source.length + sourcePrefix.length + 5)
+  exact DelimitedCompareTrace.finish delimitedNaturalComparisonMachine.step
+    certifiedNatural_liftStep outcome input firstCounter firstReversed secondCounter
+    secondReversed firstForward secondForward source sourcePrefix output
 
 private def certifiedNatural_firstPrefixTrace
     (outcome : EncodedWordOrdering) (count : ℕ)
@@ -317,31 +81,9 @@ private def certifiedNatural_firstPrefixTrace
         (false :: (List.replicate count true ++ source))
         (List.replicate (count + 1) true ++ sourcePrefix) output))
       (count + 1) := by
-  induction count generalizing firstCounter source sourcePrefix with
-  | zero =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.replicate_zero,
-          List.nil_append,
-          zero_add, List.replicate_one, List.cons_append] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_firstPrefix_delimiter outcome tail firstCounter firstReversed
-                secondCounter secondReversed
-              firstForward secondForward source sourcePrefix output)
-  | succ count ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_firstPrefix_true outcome
-          (List.replicate count true ++ false :: tail)
-          firstCounter firstReversed secondCounter secondReversed
-          firstForward secondForward source sourcePrefix output)
-      have hrest := ih (firstCounter := true :: firstCounter)
-        (source := true :: source)
-        (sourcePrefix := true :: sourcePrefix)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.replicate_succ,
-          List.cons_append,
-          Nat.add_assoc, Nat.reduceAdd, replicate_append_bit_cons] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
+  exact DelimitedCompareTrace.firstPrefix delimitedNaturalComparisonMachine.step
+    certifiedNatural_liftStep outcome count tail firstCounter firstReversed secondCounter
+    secondReversed firstForward secondForward source sourcePrefix output
 
 private def certifiedNatural_firstMissingPrefixTrace
     (outcome : EncodedWordOrdering) (count : ℕ)
@@ -358,74 +100,9 @@ private def certifiedNatural_firstMissingPrefixTrace
         (List.replicate count true ++ source)
         (List.replicate count true ++ sourcePrefix) output))
       (count + 1) := by
-  induction count generalizing firstCounter source sourcePrefix with
-  | zero =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.replicate_zero,
-          List.nil_append,
-          zero_add] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_firstPrefix_missing outcome firstCounter firstReversed secondCounter
-                secondReversed firstForward
-              secondForward source sourcePrefix output)
-  | succ count ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_firstPrefix_true outcome
-          (List.replicate count true)
-          firstCounter firstReversed secondCounter secondReversed
-          firstForward secondForward source sourcePrefix output)
-      have hrest := ih (firstCounter := true :: firstCounter)
-        (source := true :: source)
-        (sourcePrefix := true :: sourcePrefix)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.replicate_succ,
-          List.cons_append,
-          Nat.add_assoc, Nat.reduceAdd, replicate_append_bit_cons] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
-
-private def certifiedNatural_firstPayloadTrace
-    (outcome : EncodedWordOrdering)
-    (payload tail firstReversed secondCounter secondReversed
-      firstForward secondForward source sourcePrefix output : List Bool) :
-    EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 1 outcome
-        (payload ++ tail) (List.replicate payload.length true)
-        firstReversed secondCounter secondReversed
-        firstForward secondForward source sourcePrefix output)
-      (some (naturalCompareConfiguration 2 outcome
-        tail [] (payload.reverse ++ firstReversed)
-        secondCounter secondReversed firstForward secondForward
-        (payload.reverse ++ source)
-        (List.replicate payload.length true ++ sourcePrefix) output))
-      (payload.length + 1) := by
-  induction payload generalizing firstReversed source sourcePrefix with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.nil_append,
-          List.length_nil,
-          List.replicate_zero, List.reverse_nil, zero_add] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_firstPayload_finish outcome tail firstReversed secondCounter
-                secondReversed firstForward
-              secondForward source sourcePrefix output)
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_firstPayload_step outcome bit true
-          (remaining ++ tail) (List.replicate remaining.length true)
-          firstReversed secondCounter secondReversed
-          firstForward secondForward source sourcePrefix output)
-      have hrest := ih
-        (firstReversed := bit :: firstReversed)
-        (source := bit :: source)
-        (sourcePrefix := true :: sourcePrefix)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.cons_append,
-          List.length_cons,
-          List.replicate_succ, List.reverse_cons, List.append_assoc, List.nil_append,
-              Nat.add_assoc, Nat.reduceAdd,
-          replicate_append_bit_cons] using EvalsToInTime.trans
-              delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
+  exact DelimitedCompareTrace.firstMissingPrefix delimitedNaturalComparisonMachine.step
+    certifiedNatural_liftStep outcome count firstCounter firstReversed secondCounter secondReversed
+    firstForward secondForward source sourcePrefix output
 
 private def certifiedNatural_firstPartialPayloadTrace
     (outcome : EncodedWordOrdering)
@@ -442,32 +119,9 @@ private def certifiedNatural_firstPartialPayloadTrace
         (payload.reverse ++ source)
         (List.replicate payload.length true ++ sourcePrefix) output))
       payload.length := by
-  induction payload generalizing firstReversed source sourcePrefix with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.replicate_zero, List.nil_append,
-          List.reverse_nil] using
-          EvalsToInTime.refl delimitedNaturalComparisonMachine.step
-            (naturalCompareConfiguration 1 outcome [] remainingCounter firstReversed secondCounter
-                secondReversed firstForward
-              secondForward source sourcePrefix output)
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_firstPayload_step outcome bit true
-          remaining
-          (List.replicate remaining.length true ++ remainingCounter)
-          firstReversed secondCounter secondReversed
-          firstForward secondForward source sourcePrefix output)
-      have hrest := ih (firstReversed := bit :: firstReversed)
-        (source := bit :: source)
-        (sourcePrefix := true :: sourcePrefix)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.length_cons,
-          List.replicate_succ,
-          List.cons_append, List.reverse_cons, List.append_assoc, List.nil_append,
-              replicate_append_bit_cons] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
+  exact DelimitedCompareTrace.firstPartialPayload delimitedNaturalComparisonMachine.step
+    certifiedNatural_liftStep outcome payload remainingCounter firstReversed secondCounter
+    secondReversed firstForward secondForward source sourcePrefix output
 
 private def certifiedNatural_secondPrefixTrace
     (outcome : EncodedWordOrdering) (count : ℕ)
@@ -484,31 +138,9 @@ private def certifiedNatural_secondPrefixTrace
         (false :: (List.replicate count true ++ source))
         (List.replicate (count + 1) true ++ sourcePrefix) output))
       (count + 1) := by
-  induction count generalizing secondCounter source sourcePrefix with
-  | zero =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.replicate_zero,
-          List.nil_append,
-          zero_add, List.replicate_one, List.cons_append] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_secondPrefix_delimiter outcome tail firstCounter firstReversed
-                secondCounter secondReversed
-              firstForward secondForward source sourcePrefix output)
-  | succ count ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_secondPrefix_true outcome
-          (List.replicate count true ++ false :: tail)
-          firstCounter firstReversed secondCounter secondReversed
-          firstForward secondForward source sourcePrefix output)
-      have hrest := ih (secondCounter := true :: secondCounter)
-        (source := true :: source)
-        (sourcePrefix := true :: sourcePrefix)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.replicate_succ,
-          List.cons_append,
-          Nat.add_assoc, Nat.reduceAdd, replicate_append_bit_cons] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
+  exact DelimitedCompareTrace.secondPrefix delimitedNaturalComparisonMachine.step
+    certifiedNatural_liftStep outcome count tail firstCounter firstReversed secondCounter
+    secondReversed firstForward secondForward source sourcePrefix output
 
 private def certifiedNatural_secondMissingPrefixTrace
     (outcome : EncodedWordOrdering) (count : ℕ)
@@ -525,74 +157,9 @@ private def certifiedNatural_secondMissingPrefixTrace
         (List.replicate count true ++ source)
         (List.replicate count true ++ sourcePrefix) output))
       (count + 1) := by
-  induction count generalizing secondCounter source sourcePrefix with
-  | zero =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.replicate_zero,
-          List.nil_append,
-          zero_add] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_secondPrefix_missing outcome firstCounter firstReversed secondCounter
-                secondReversed
-              firstForward secondForward source sourcePrefix output)
-  | succ count ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_secondPrefix_true outcome
-          (List.replicate count true)
-          firstCounter firstReversed secondCounter secondReversed
-          firstForward secondForward source sourcePrefix output)
-      have hrest := ih (secondCounter := true :: secondCounter)
-        (source := true :: source)
-        (sourcePrefix := true :: sourcePrefix)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.replicate_succ,
-          List.cons_append,
-          Nat.add_assoc, Nat.reduceAdd, replicate_append_bit_cons] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
-
-private def certifiedNatural_secondPayloadTrace
-    (outcome : EncodedWordOrdering)
-    (payload tail firstCounter firstReversed secondReversed
-      firstForward secondForward source sourcePrefix output : List Bool) :
-    EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 3 outcome
-        (payload ++ tail) firstCounter firstReversed
-        (List.replicate payload.length true) secondReversed
-        firstForward secondForward source sourcePrefix output)
-      (some (naturalCompareConfiguration 4 outcome
-        tail firstCounter firstReversed []
-        (payload.reverse ++ secondReversed)
-        firstForward secondForward
-        (payload.reverse ++ source)
-        (List.replicate payload.length true ++ sourcePrefix) output))
-      (payload.length + 1) := by
-  induction payload generalizing secondReversed source sourcePrefix with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.nil_append,
-          List.length_nil,
-          List.replicate_zero, List.reverse_nil, zero_add] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_secondPayload_finish outcome tail firstCounter firstReversed
-                secondReversed firstForward
-              secondForward source sourcePrefix output)
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_secondPayload_step outcome bit true
-          (remaining ++ tail) firstCounter firstReversed
-          (List.replicate remaining.length true) secondReversed
-          firstForward secondForward source sourcePrefix output)
-      have hrest := ih (secondReversed := bit :: secondReversed)
-        (source := bit :: source)
-        (sourcePrefix := true :: sourcePrefix)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.cons_append,
-          List.length_cons,
-          List.replicate_succ, List.reverse_cons, List.append_assoc, List.nil_append,
-              Nat.add_assoc, Nat.reduceAdd,
-          replicate_append_bit_cons] using EvalsToInTime.trans
-              delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
+  exact DelimitedCompareTrace.secondMissingPrefix delimitedNaturalComparisonMachine.step
+    certifiedNatural_liftStep outcome count firstCounter firstReversed secondCounter secondReversed
+    firstForward secondForward source sourcePrefix output
 
 private def certifiedNatural_secondPartialPayloadTrace
     (outcome : EncodedWordOrdering)
@@ -611,32 +178,9 @@ private def certifiedNatural_secondPartialPayloadTrace
         (payload.reverse ++ source)
         (List.replicate payload.length true ++ sourcePrefix) output))
       payload.length := by
-  induction payload generalizing secondReversed source sourcePrefix with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.replicate_zero, List.nil_append,
-          List.reverse_nil] using
-          EvalsToInTime.refl delimitedNaturalComparisonMachine.step
-            (naturalCompareConfiguration 3 outcome [] firstCounter firstReversed remainingCounter
-                secondReversed firstForward
-              secondForward source sourcePrefix output)
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_secondPayload_step outcome bit true
-          remaining firstCounter firstReversed
-          (List.replicate remaining.length true ++ remainingCounter)
-          secondReversed firstForward secondForward
-          source sourcePrefix output)
-      have hrest := ih (secondReversed := bit :: secondReversed)
-        (source := bit :: source)
-        (sourcePrefix := true :: sourcePrefix)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.length_cons,
-          List.replicate_succ,
-          List.cons_append, List.reverse_cons, List.append_assoc, List.nil_append,
-              replicate_append_bit_cons] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
+  exact DelimitedCompareTrace.secondPartialPayload delimitedNaturalComparisonMachine.step
+    certifiedNatural_liftStep outcome payload remainingCounter firstCounter firstReversed
+    secondReversed firstForward secondForward source sourcePrefix output
 
 private def certifiedNatural_firstRecordTrace
     (outcome : EncodedWordOrdering)
@@ -653,183 +197,10 @@ private def certifiedNatural_firstRecordTrace
         (List.replicate (lengthPrefixedWord payload).length true ++
           sourcePrefix) output))
       (2 * payload.length + 2) := by
-  have hprefix := certifiedNatural_firstPrefixTrace outcome
-    payload.length (payload ++ tail) [] firstReversed
-    secondCounter secondReversed firstForward secondForward
-    source sourcePrefix output
-  simp only [List.append_nil] at hprefix
-  have hpayload := certifiedNatural_firstPayloadTrace outcome
-    payload tail firstReversed secondCounter secondReversed
-    firstForward secondForward
-    (false :: (List.replicate payload.length true ++ source))
-    (List.replicate (payload.length + 1) true ++ sourcePrefix) output
-  have hfull := EvalsToInTime.trans
-    delimitedNaturalComparisonMachine.step _ _ _ _ _ hprefix hpayload
-  have hsource :
-      payload.reverse ++
-        (false :: (List.replicate payload.length true ++ source)) =
-      (lengthPrefixedWord payload).reverse ++ source := by
-    simp only [lengthPrefixedWord, List.reverse_append, List.reverse_cons, List.reverse_replicate,
-        List.append_assoc, List.cons_append, List.nil_append]
-  have hmarkers :
-      List.replicate payload.length true ++
-        (List.replicate (payload.length + 1) true ++ sourcePrefix) =
-      List.replicate (lengthPrefixedWord payload).length true ++
-        sourcePrefix := by
-    have hlength :
-        payload.length + (payload.length + 1) =
-          (lengthPrefixedWord payload).length := by
-      simp only [lengthPrefixedWord, List.length_append, List.length_replicate, List.length_cons]
-    rw [← List.append_assoc, ← List.replicate_add, hlength]
-  rw [hsource, hmarkers] at hfull
-  have hcast :
-      EvalsToInTime delimitedNaturalComparisonMachine.step
-        (naturalCompareConfiguration 0 outcome
-          (lengthPrefixedWord payload ++ tail)
-          [] firstReversed secondCounter secondReversed
-          firstForward secondForward source sourcePrefix output)
-        (some (naturalCompareConfiguration 2 outcome
-          tail [] (payload.reverse ++ firstReversed)
-          secondCounter secondReversed firstForward secondForward
-          ((lengthPrefixedWord payload).reverse ++ source)
-          (List.replicate (lengthPrefixedWord payload).length true ++
-            sourcePrefix) output))
-        ((payload.length + 1) + (payload.length + 1)) := by
-    simpa only [lengthPrefixedWord, List.append_assoc,
-      List.cons_append] using hfull
-  exact rebound hcast (by omega)
+  exact DelimitedCompareTrace.firstRecord delimitedNaturalComparisonMachine.step
+    certifiedNatural_liftStep outcome payload tail firstReversed secondCounter secondReversed
+    firstForward secondForward source sourcePrefix output
 
-private def certifiedNatural_secondRecordTrace
-    (outcome : EncodedWordOrdering)
-    (payload tail firstCounter firstReversed secondReversed
-      firstForward secondForward source sourcePrefix output : List Bool) :
-    EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 2 outcome
-        (lengthPrefixedWord payload ++ tail)
-        firstCounter firstReversed [] secondReversed
-        firstForward secondForward source sourcePrefix output)
-      (some (naturalCompareConfiguration 4 outcome
-        tail firstCounter firstReversed []
-        (payload.reverse ++ secondReversed)
-        firstForward secondForward
-        ((lengthPrefixedWord payload).reverse ++ source)
-        (List.replicate (lengthPrefixedWord payload).length true ++
-          sourcePrefix) output))
-      (2 * payload.length + 2) := by
-  have hprefix := certifiedNatural_secondPrefixTrace outcome
-    payload.length (payload ++ tail) firstCounter firstReversed []
-    secondReversed firstForward secondForward source sourcePrefix output
-  simp only [List.append_nil] at hprefix
-  have hpayload := certifiedNatural_secondPayloadTrace outcome
-    payload tail firstCounter firstReversed secondReversed
-    firstForward secondForward
-    (false :: (List.replicate payload.length true ++ source))
-    (List.replicate (payload.length + 1) true ++ sourcePrefix) output
-  have hfull := EvalsToInTime.trans
-    delimitedNaturalComparisonMachine.step _ _ _ _ _ hprefix hpayload
-  have hsource :
-      payload.reverse ++
-        (false :: (List.replicate payload.length true ++ source)) =
-      (lengthPrefixedWord payload).reverse ++ source := by
-    simp only [lengthPrefixedWord, List.reverse_append, List.reverse_cons, List.reverse_replicate,
-        List.append_assoc, List.cons_append, List.nil_append]
-  have hmarkers :
-      List.replicate payload.length true ++
-        (List.replicate (payload.length + 1) true ++ sourcePrefix) =
-      List.replicate (lengthPrefixedWord payload).length true ++
-        sourcePrefix := by
-    have hlength :
-        payload.length + (payload.length + 1) =
-          (lengthPrefixedWord payload).length := by
-      simp only [lengthPrefixedWord, List.length_append, List.length_replicate, List.length_cons]
-    rw [← List.append_assoc, ← List.replicate_add, hlength]
-  rw [hsource, hmarkers] at hfull
-  have hcast :
-      EvalsToInTime delimitedNaturalComparisonMachine.step
-        (naturalCompareConfiguration 2 outcome
-          (lengthPrefixedWord payload ++ tail)
-          firstCounter firstReversed [] secondReversed
-          firstForward secondForward source sourcePrefix output)
-        (some (naturalCompareConfiguration 4 outcome
-          tail firstCounter firstReversed []
-          (payload.reverse ++ secondReversed)
-          firstForward secondForward
-          ((lengthPrefixedWord payload).reverse ++ source)
-          (List.replicate (lengthPrefixedWord payload).length true ++
-            sourcePrefix) output))
-        ((payload.length + 1) + (payload.length + 1)) := by
-    simpa only [lengthPrefixedWord, List.append_assoc,
-      List.cons_append] using hfull
-  exact rebound hcast (by omega)
-
-private def certifiedNatural_reverseFirstTrace
-    (outcome : EncodedWordOrdering)
-    (input firstCounter firstReversed secondCounter secondReversed
-      firstForward secondForward source sourcePrefix output : List Bool) :
-    EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 4 outcome
-        input firstCounter firstReversed secondCounter secondReversed
-        firstForward secondForward source sourcePrefix output)
-      (some (naturalCompareConfiguration 5 outcome
-        input firstCounter [] secondCounter secondReversed
-        (firstReversed.reverse ++ firstForward) secondForward
-        source sourcePrefix output))
-      (firstReversed.length + 1) := by
-  induction firstReversed generalizing firstForward with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.reverse_nil,
-          List.nil_append,
-          List.length_nil, zero_add] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_reverseFirst_finish outcome input firstCounter secondCounter
-                secondReversed firstForward
-              secondForward source sourcePrefix output)
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_reverseFirst_step outcome bit
-          input firstCounter remaining secondCounter secondReversed
-          firstForward secondForward source sourcePrefix output)
-      have hrest := ih (firstForward := bit :: firstForward)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.reverse_cons,
-          List.append_assoc,
-          List.cons_append, List.nil_append, List.length_cons, Nat.add_assoc, Nat.reduceAdd] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
-
-private def certifiedNatural_reverseSecondTrace
-    (outcome : EncodedWordOrdering)
-    (input firstCounter firstReversed secondCounter secondReversed
-      firstForward secondForward source sourcePrefix output : List Bool) :
-    EvalsToInTime delimitedNaturalComparisonMachine.step (naturalCompareConfiguration 5 outcome
-        input firstCounter firstReversed secondCounter secondReversed
-        firstForward secondForward source sourcePrefix output)
-      (some (naturalCompareConfiguration 6 outcome
-        input firstCounter firstReversed secondCounter []
-        firstForward (secondReversed.reverse ++ secondForward)
-        source sourcePrefix output))
-      (secondReversed.length + 1) := by
-  induction secondReversed generalizing secondForward with
-  | nil =>
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.reverse_nil,
-          List.nil_append,
-          List.length_nil, zero_add] using
-          certifiedNatural_liftStep (by simp [delimitedCompareConfiguration])
-            (delimitedCompare_reverseSecond_finish outcome input firstCounter firstReversed
-                secondCounter firstForward
-              secondForward source sourcePrefix output)
-  | cons bit remaining ih =>
-      have hfirst := certifiedNatural_liftStep
-        (by simp only [delimitedCompareConfiguration, Fin.isValue, ne_eq, Option.some.injEq,
-            Fin.reduceEq,
-                not_false_eq_true])
-        (delimitedCompare_reverseSecond_step outcome bit
-          input firstCounter firstReversed secondCounter remaining
-          firstForward secondForward source sourcePrefix output)
-      have hrest := ih (secondForward := bit :: secondForward)
-      simpa only [FinTM2.step, Fin.isValue, naturalCompareConfiguration, List.reverse_cons,
-          List.append_assoc,
-          List.cons_append, List.nil_append, List.length_cons, Nat.add_assoc, Nat.reduceAdd] using
-          EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hrest
 
 private def certifiedNatural_validTrace
     (first second suffix : List Bool) :
@@ -844,69 +215,35 @@ private def certifiedNatural_validTrace
       (24 *
         ((lengthPrefixedWord first ++
           lengthPrefixedWord second ++ suffix).length + 1) + 24) := by
+  change EvalsToInTime delimitedNaturalComparisonMachine.step
+    (delimitedCompareConfiguration 0 .invalid
+      (lengthPrefixedWord first ++ lengthPrefixedWord second ++ suffix)
+      [] [] [] [] [] [] [] [] [])
+    (some (Turing.haltList delimitedPairComparisonMachine
+      (sourcePreservingDelimitedNaturalComparisonWord
+        (lengthPrefixedWord first ++ lengthPrefixedWord second ++ suffix))))
+    (24 * ((lengthPrefixedWord first ++
+      lengthPrefixedWord second ++ suffix).length + 1) + 24)
   let firstCode := lengthPrefixedWord first
   let secondCode := lengthPrefixedWord second
   let saved := secondCode.reverse ++ firstCode.reverse
-  let prefixMarkers :=
-    List.replicate secondCode.length true ++
-      List.replicate firstCode.length true
-  have hfirst :
-      EvalsToInTime delimitedNaturalComparisonMachine.step
-        (naturalCompareConfiguration 0 .invalid
-          (lengthPrefixedWord first ++
-            lengthPrefixedWord second ++ suffix)
-          [] [] [] [] [] [] [] [] [])
-        (some (naturalCompareConfiguration 2 .invalid
-          (lengthPrefixedWord second ++ suffix)
-          [] first.reverse [] [] [] [] firstCode.reverse
-          (List.replicate firstCode.length true) []))
-        (2 * first.length + 2) := by
-    simpa [firstCode, List.append_assoc] using
-      certifiedNatural_firstRecordTrace .invalid first
-        (lengthPrefixedWord second ++ suffix)
-        [] [] [] [] [] [] [] []
-  have hsecond :
-      EvalsToInTime delimitedNaturalComparisonMachine.step
-        (naturalCompareConfiguration 2 .invalid
-          (lengthPrefixedWord second ++ suffix)
-          [] first.reverse [] [] [] [] firstCode.reverse
-          (List.replicate firstCode.length true) [])
-        (some (naturalCompareConfiguration 4 .invalid
-          suffix [] first.reverse [] second.reverse [] []
-          saved prefixMarkers []))
-        (2 * second.length + 2) := by
-    simpa [firstCode, secondCode, saved, prefixMarkers] using
-      certifiedNatural_secondRecordTrace .invalid second suffix
-        [] first.reverse [] [] []
-        firstCode.reverse (List.replicate firstCode.length true) []
-  have hreverseFirst :
-      EvalsToInTime delimitedNaturalComparisonMachine.step
-        (naturalCompareConfiguration 4 .invalid
-          suffix [] first.reverse [] second.reverse [] []
-          saved prefixMarkers [])
-        (some (naturalCompareConfiguration 5 .invalid
-          suffix [] [] [] second.reverse first []
-          saved prefixMarkers []))
-        (first.length + 1) := by
-    simpa using certifiedNatural_reverseFirstTrace .invalid
-      suffix [] first.reverse [] second.reverse [] []
-      saved prefixMarkers []
-  have hreverseSecond :
-      EvalsToInTime delimitedNaturalComparisonMachine.step
-        (naturalCompareConfiguration 5 .invalid
-          suffix [] [] [] second.reverse first []
-          saved prefixMarkers [])
-        (some (naturalCompareConfiguration 6 .invalid
-          suffix [] [] [] [] first second saved prefixMarkers []))
-        (second.length + 1) := by
-    simpa using certifiedNatural_reverseSecondTrace .invalid
-      suffix [] [] [] second.reverse first []
-      saved prefixMarkers []
+  let prefixMarkers := List.replicate secondCode.length true ++
+    List.replicate firstCode.length true
   have hcompare := naturalCompareWordsTraceInitial
     first second suffix [] [] [] [] saved prefixMarkers []
-  have hfinish := certifiedNatural_finishTrace
-    (littleEndianNaturalOrdering first second)
-    suffix [] [] [] [] [] [] saved prefixMarkers []
+  change @EvalsToInTime delimitedPairComparisonMachine.Cfg
+      delimitedNaturalComparisonMachine.step
+      (delimitedCompareConfiguration 6 .invalid
+        suffix [] [] [] [] first second saved prefixMarkers [])
+      (some (delimitedCompareConfiguration 7
+        (littleEndianNaturalOrdering first second)
+        suffix [] [] [] [] [] [] saved prefixMarkers []))
+      (first.length + second.length + 1) at hcompare
+  have hassembly := DelimitedCompareTrace.validAssembly
+    delimitedNaturalComparisonMachine.step certifiedNatural_liftStep
+    first second suffix [] [] (littleEndianNaturalOrdering first second)
+    (first.length + second.length + 1)
+    (by simpa only [firstCode, secondCode, saved, prefixMarkers] using hcompare)
   have hprefixLength :
       suffix.length + prefixMarkers.length =
         (lengthPrefixedWord first ++
@@ -928,20 +265,10 @@ private def certifiedNatural_validTrace
     rw [hprefixLength]
     simp [saved, firstCode, secondCode, lengthPrefixedWord,
       List.reverse_append, List.append_assoc]
-  rw [hrestored] at hfinish
-  have h01 := EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ hfirst hsecond
-  have h012 := EvalsToInTime.trans
-    delimitedNaturalComparisonMachine.step _ _ _ _ _ h01 hreverseFirst
-  have h0123 := EvalsToInTime.trans
-    delimitedNaturalComparisonMachine.step _ _ _ _ _ h012 hreverseSecond
-  have h01234 := EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ h0123
-      hcompare
-  have hfull := EvalsToInTime.trans delimitedNaturalComparisonMachine.step _ _ _ _ _ h01234 hfinish
-  apply rebound hfull
-  simp only [saved, prefixMarkers, firstCode, secondCode,
-    List.length_append, List.length_reverse,
-    List.length_replicate, List.length_nil,
-    lengthPrefixedWord_length]
+  rw [← hrestored]
+  apply rebound hassembly
+  simp only [List.length_append, List.length_reverse, List.length_replicate,
+    List.length_nil, lengthPrefixedWord_length]
   omega
 
 private def certifiedNatural_missingFirstTrace (count : ℕ) :

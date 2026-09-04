@@ -34,66 +34,33 @@ private def rationalRadius_failureTrace
       (some (Turing.haltList rationalRadiusMachine [false]))
       (rationalRadiusFailureMeasure
         input base outer restore output + 1) := by
-  induction input generalizing base outer restore output with
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (rationalRadius_failure_input_step
-          bit input base outer restore output)
-      have hrest := ih base outer restore output
-      have hfull := EvalsToInTime.trans rationalRadiusMachine.step _ _ _ _ _ hfirst hrest
-      exact rebound hfull (by
-        simp only [rationalRadiusFailureMeasure, List.length_cons, add_le_add_iff_right,
-            Order.add_one_le_iff,
-            add_lt_add_iff_right, lt_add_iff_pos_right, Order.lt_one_iff])
-  | nil =>
-      induction base generalizing outer restore output with
-      | cons bit base ih =>
-          have hfirst := oneStep _ _ (rationalRadius_failure_base_step
-              bit base outer restore output)
-          have hrest := ih outer restore output
-          have hfull := EvalsToInTime.trans rationalRadiusMachine.step _ _ _ _ _ hfirst hrest
-          exact rebound hfull (by
-            simp only [rationalRadiusFailureMeasure, List.length_nil, zero_add, List.length_cons,
-                add_le_add_iff_right,
-                Order.add_one_le_iff, add_lt_add_iff_right, lt_add_iff_pos_right,
-                    Order.lt_one_iff])
-      | nil =>
-          induction outer generalizing restore output with
-          | cons bit outer ih =>
-              have hfirst := oneStep _ _ (rationalRadius_failure_outer_step
-                  bit outer restore output)
-              have hrest := ih restore output
-              have hfull := EvalsToInTime.trans rationalRadiusMachine.step _ _ _ _ _ hfirst hrest
-              exact rebound hfull (by
-                simp only [rationalRadiusFailureMeasure, List.length_nil, add_zero, zero_add,
-                    List.length_cons,
-                    add_le_add_iff_right, Order.add_one_le_iff, add_lt_add_iff_right,
-                        lt_add_iff_pos_right, Order.lt_one_iff])
-          | nil =>
-              induction restore generalizing output with
-              | cons bit restore ih =>
-                  have hfirst := oneStep _ _ (rationalRadius_failure_restore_step
-                      bit restore output)
-                  have hrest := ih output
-                  have hfull := EvalsToInTime.trans
-                    rationalRadiusMachine.step _ _ _ _ _ hfirst hrest
-                  exact rebound hfull (by
-                    simp only [rationalRadiusFailureMeasure, List.length_nil, add_zero, zero_add,
-                        List.length_cons,
-                        add_le_add_iff_right, Order.add_one_le_iff, add_lt_add_iff_right,
-                            lt_add_iff_pos_right, Order.lt_one_iff])
-              | nil =>
-                  induction output with
-                  | nil =>
-                      simpa only [FinTM2.step, Fin.isValue, rationalRadiusFailureMeasure,
-                          List.length_nil, add_zero, zero_add] using
-                          oneStep _ _ rationalRadius_failure_finish
-                  | cons bit output ih =>
-                      have hfirst := oneStep _ _ (rationalRadius_failure_output_step bit output)
-                      have hfull := EvalsToInTime.trans
-                        rationalRadiusMachine.step _ _ _ _ _ hfirst ih
-                      exact rebound hfull (by
-                        simp only [rationalRadiusFailureMeasure, List.length_nil, add_zero,
-                            zero_add, List.length_cons, Std.le_refl])
+  have hinput := TraceGolf.sweep rationalRadiusMachine.step
+    (fun current => rationalRadiusConfiguration 6 current base outer restore output)
+    (fun bit remaining => rationalRadius_failure_input_step
+      bit remaining base outer restore output)
+    input
+  have hbase := TraceGolf.sweep rationalRadiusMachine.step
+    (fun current => rationalRadiusConfiguration 6 [] current outer restore output)
+    (fun bit remaining => rationalRadius_failure_base_step bit remaining outer restore output)
+    base
+  have houter := TraceGolf.sweep rationalRadiusMachine.step
+    (fun current => rationalRadiusConfiguration 6 [] [] current restore output)
+    (fun bit remaining => rationalRadius_failure_outer_step bit remaining restore output)
+    outer
+  have hrestore := TraceGolf.sweep rationalRadiusMachine.step
+    (fun current => rationalRadiusConfiguration 6 [] [] [] current output)
+    (fun bit remaining => rationalRadius_failure_restore_step bit remaining output)
+    restore
+  have houtput := TraceGolf.sweep rationalRadiusMachine.step
+    (fun current => rationalRadiusConfiguration 6 [] [] [] [] current)
+    rationalRadius_failure_output_step output
+  have hfinish := oneStep _ _ rationalRadius_failure_finish
+  have h01 := EvalsToInTime.trans rationalRadiusMachine.step _ _ _ _ _ hinput hbase
+  have h012 := EvalsToInTime.trans rationalRadiusMachine.step _ _ _ _ _ h01 houter
+  have h0123 := EvalsToInTime.trans rationalRadiusMachine.step _ _ _ _ _ h012 hrestore
+  have h01234 := EvalsToInTime.trans rationalRadiusMachine.step _ _ _ _ _ h0123 houtput
+  have hfull := EvalsToInTime.trans rationalRadiusMachine.step _ _ _ _ _ h01234 hfinish
+  exact rebound hfull (by simp only [rationalRadiusFailureMeasure]; omega)
 
 private def rationalRadius_copyTrace
     (count : ℕ) (outer restore output : List Bool) :
@@ -607,12 +574,6 @@ noncomputable def constructiveCanonicalSourceMarkerComputable :
   rw [← hfunctions]
   exact validatedPreservedFormulaComputable
 
-theorem sourceAtomicFoldSeed_length_le
-    (input : List Bool) (count : ℕ) (seed : List Bool)
-    (hparse : parseUnaryBoundedFold input = some (count, seed)) :
-    seed.length ≤ input.length := by
-  exact GapCVP.CNFTypedRecordWorkerTM.parsedUnaryFold_seed_length_le input count seed hparse
-
 end SourceWholeOutputAssemblyTM
 
 namespace SourceWholeOutputValidBranchRecordTM
@@ -682,7 +643,7 @@ private theorem sourceFlatAtomicRecordStep_polynomiallyBoundedFoldStates :
   simp only [GapCVP.OutputBoundedDependentRecordFold.PolynomiallyBoundedFoldStates,
       decide_eq_true_eq]
   intro input count seed hparse stage hstage
-  have hseed := sourceAtomicFoldSeed_length_le
+  have hseed := GapCVP.CNFTypedRecordWorkerTM.parsedUnaryFold_seed_length_le
     input count seed hparse
   have hiterate : ∀ number : ℕ,
       ((sourceFlatAtomicRecordStep^[number]) seed).length ≤
@@ -1007,31 +968,6 @@ private theorem sourceFlatAtomic_failure_finish :
       some (Turing.haltList sourceFlatAtomicRecordMachine []) := by
   sourceFlatAtomicStepTac
 
-private def sourceFlatAtomicSweepTrace
-    {Configuration : Type*}
-    (step : Configuration → Option Configuration)
-    (configuration : List Bool → Configuration)
-    (hstep : ∀ (bit : Bool) (remaining : List Bool),
-      step (configuration (bit :: remaining)) =
-        some (configuration remaining))
-    (symbols : List Bool) :
-    EvalsToInTime step (configuration symbols)
-      (some (configuration []))
-      symbols.length := by
-  induction symbols with
-  | nil =>
-      simpa only [List.length_nil] using EvalsToInTime.refl step (configuration [])
-  | cons bit symbols ih =>
-      have hfirst : EvalsToInTime step
-          (configuration (bit :: symbols))
-          (some (configuration symbols)) 1 := {
-        steps := 1
-        evals_in_steps := hstep bit symbols
-        steps_le_m := Nat.le_refl 1
-      }
-      have hfull := EvalsToInTime.trans step _ _ _ _ _ hfirst ih
-      simpa only [List.length_cons] using hfull
-
 private def sourceFlatAtomicFailureBudget
     (input counter payload pending output : List Bool) : ℕ :=
   input.length + counter.length + payload.length +
@@ -1044,35 +980,35 @@ private def sourceFlatAtomic_failureTrace
       (some (Turing.haltList sourceFlatAtomicRecordMachine []))
       (sourceFlatAtomicFailureBudget
         input counter payload pending output) := by
-  have hinput := sourceFlatAtomicSweepTrace
+  have hinput := TraceGolf.sweep
     sourceFlatAtomicRecordMachine.step
     (fun current => sourceFlatAtomicConfiguration 5
       current counter payload pending output)
     (fun bit remaining => sourceFlatAtomic_failure_input_step
       bit remaining counter payload pending output)
     input
-  have hcounter := sourceFlatAtomicSweepTrace
+  have hcounter := TraceGolf.sweep
     sourceFlatAtomicRecordMachine.step
     (fun current => sourceFlatAtomicConfiguration 5
       [] current payload pending output)
     (fun bit remaining => sourceFlatAtomic_failure_counter_step
       bit remaining payload pending output)
     counter
-  have hpayload := sourceFlatAtomicSweepTrace
+  have hpayload := TraceGolf.sweep
     sourceFlatAtomicRecordMachine.step
     (fun current => sourceFlatAtomicConfiguration 5
       [] [] current pending output)
     (fun bit remaining => sourceFlatAtomic_failure_payload_step
       bit remaining pending output)
     payload
-  have hpending := sourceFlatAtomicSweepTrace
+  have hpending := TraceGolf.sweep
     sourceFlatAtomicRecordMachine.step
     (fun current => sourceFlatAtomicConfiguration 5
       [] [] [] current output)
     (fun bit remaining => sourceFlatAtomic_failure_pending_step
       bit remaining output)
     pending
-  have houtput := sourceFlatAtomicSweepTrace
+  have houtput := TraceGolf.sweep
     sourceFlatAtomicRecordMachine.step
     (fun current => sourceFlatAtomicConfiguration 5
       [] [] [] [] current)
@@ -1088,13 +1024,6 @@ private def sourceFlatAtomic_failureTrace
   exact rebound hfull (by
     simp only [sourceFlatAtomicFailureBudget]
     omega)
-
-/-- Internal support shared across GapCVP continuation modules. -/
-theorem sourceFlatAtomic_trueCounter_append
-    (count : ℕ) (counter : List Bool) :
-    List.replicate count true ++ true :: counter =
-      List.replicate (count + 1) true ++ counter := by
-  exact GapCVP.CNFUnaryPairIndexTotalCert.unaryPair_replicate_append_true count counter
 
 private def sourceFlatAtomic_prefixTrace
     (count : ℕ)
@@ -1117,7 +1046,7 @@ private def sourceFlatAtomic_prefixTrace
       have hrest := ih (true :: counter)
       have hfull := EvalsToInTime.trans sourceFlatAtomicRecordMachine.step
         1 (count + 1) _ _ _ hfirst hrest
-      rw [sourceFlatAtomic_trueCounter_append count counter] at hfull
+      rw [GapCVP.CNFUnaryPairIndexTotalCert.unaryPair_replicate_append_true count counter] at hfull
       simpa only [FinTM2.step, Fin.isValue, List.replicate_succ, List.cons_append, Nat.add_comm,
           Nat.add_left_comm,
           Nat.reduceAdd] using hfull
@@ -1214,6 +1143,12 @@ private def sourceFlatAtomic_restoreTrace
           List.nil_append,
           List.length_cons, Nat.add_comm, Nat.add_left_comm, Nat.reduceAdd] using hfull
 
+private theorem sourceFlatAtomicDescriptor_reconstruct
+    (record pending : List Bool) :
+    List.replicate record.length true ++ false :: (record ++ pending) =
+      sourceFlatAtomicDescriptor record ++ pending := by
+  simp only [sourceFlatAtomicDescriptor, lengthPrefixedWord, List.append_assoc, List.cons_append]
+
 private def sourceFlatAtomic_validTrace
     (record pending : List Bool) :
     EvalsToInTime sourceFlatAtomicRecordMachine.step (Turing.initList sourceFlatAtomicRecordMachine
@@ -1241,31 +1176,12 @@ private def sourceFlatAtomic_validTrace
   have hsecond := EvalsToInTime.trans sourceFlatAtomicRecordMachine.step _ _ _ _ _ hfirst hemit
   have hthird := EvalsToInTime.trans sourceFlatAtomicRecordMachine.step _ _ _ _ _ hsecond hpending
   have hfull := EvalsToInTime.trans sourceFlatAtomicRecordMachine.step _ _ _ _ _ hthird hrestore
-  have hinput :
-      List.replicate record.length true ++
-          false :: (record ++ pending) =
-        sourceFlatAtomicDescriptor record ++ pending := by
-    simp only [sourceFlatAtomicDescriptor, lengthPrefixedWord, List.append_assoc, List.cons_append]
-  rw [hinput] at hfull
+  rw [sourceFlatAtomicDescriptor_reconstruct] at hfull
   exact rebound hfull (by
     simp only [List.length_reverse, sourceFlatAtomicDescriptor, lengthPrefixedWord,
         List.append_assoc,
         List.cons_append, List.length_append, List.length_replicate, List.length_cons]
     omega)
-
-/-- Internal support shared across GapCVP continuation modules. -/
-theorem sourceFlatAtomic_readUnaryPrefix_some
-    (input : List Bool) (count : ℕ) (tail : List Bool)
-    (hread : readUnaryPrefix input = some (count, tail)) :
-    input = List.replicate count true ++ false :: tail := by
-  exact GapCVP.SourceInterpolationRowTM.readUnaryPrefix_some_decompose input count tail hread
-
-/-- Internal support shared across GapCVP continuation modules. -/
-theorem sourceFlatAtomic_readUnaryPrefix_none
-    (input : List Bool)
-    (hread : readUnaryPrefix input = none) :
-    input = List.replicate input.length true := by
-  exact GapCVP.SourceInterpolationRowTM.readUnaryPrefix_none_eq_replicate input hread
 
 private def sourceFlatAtomic_missingPrefixTrace
     (count : ℕ) (counter payload pending output : List Bool) :
@@ -1286,7 +1202,7 @@ private def sourceFlatAtomic_missingPrefixTrace
       have hrest := ih (true :: counter)
       have hfull := EvalsToInTime.trans sourceFlatAtomicRecordMachine.step
         1 (count + 1) _ _ _ hfirst hrest
-      rw [sourceFlatAtomic_trueCounter_append count counter] at hfull
+      rw [GapCVP.CNFUnaryPairIndexTotalCert.unaryPair_replicate_append_true count counter] at hfull
       simpa only [FinTM2.step, Fin.isValue, List.replicate_succ, List.cons_append, Nat.add_comm,
           Nat.add_left_comm,
           Nat.reduceAdd] using hfull
@@ -1337,6 +1253,11 @@ private def sourceFlatAtomic_truncatedPayloadTrace
 private noncomputable def sourceFlatAtomicTimePolynomial : Polynomial ℕ :=
   8 * Polynomial.X + 16
 
+private theorem sourceFlatAtomicTimePolynomial_eval (inputLength : ℕ) :
+    sourceFlatAtomicTimePolynomial.eval inputLength = 8 * inputLength + 16 := by
+  simp only [sourceFlatAtomicTimePolynomial, Polynomial.eval_add, Polynomial.eval_mul,
+    Polynomial.eval_ofNat, Polynomial.eval_X]
+
 private noncomputable def sourceFlatAtomic_totalTrace (input : List Bool) :
     EvalsToInTime sourceFlatAtomicRecordMachine.step
       (Turing.initList sourceFlatAtomicRecordMachine input)
@@ -1345,7 +1266,7 @@ private noncomputable def sourceFlatAtomic_totalTrace (input : List Bool) :
       (sourceFlatAtomicTimePolynomial.eval input.length) := by
   cases hprefix : readUnaryPrefix input with
   | none =>
-      have hshape := sourceFlatAtomic_readUnaryPrefix_none
+      have hshape := GapCVP.SourceInterpolationRowTM.readUnaryPrefix_none_eq_replicate
         input hprefix
       have hscan := sourceFlatAtomic_missingPrefixTrace
         input.length [] [] [] []
@@ -1360,12 +1281,11 @@ private noncomputable def sourceFlatAtomic_totalTrace (input : List Bool) :
       rw [houtput]
       exact rebound hfull (by
         simp only [sourceFlatAtomicFailureBudget, List.length_nil, zero_add, add_zero,
-            sourceFlatAtomicTimePolynomial,
-            Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat, Polynomial.eval_X]
+          sourceFlatAtomicTimePolynomial_eval]
         omega)
   | some parsed =>
       obtain ⟨count, tail⟩ := parsed
-      have hshape := sourceFlatAtomic_readUnaryPrefix_some
+      have hshape := GapCVP.SourceInterpolationRowTM.readUnaryPrefix_some_decompose
         input count tail hprefix
       by_cases hcomplete : count ≤ tail.length
       · have hread :
@@ -1384,9 +1304,7 @@ private noncomputable def sourceFlatAtomic_totalTrace (input : List Bool) :
           simp only [sourceFlatAtomicRecordStep, hread]
         rw [houtput]
         exact rebound hphysical (by
-          simp only [sourceFlatAtomicTimePolynomial, Polynomial.eval_add, Polynomial.eval_mul,
-              Polynomial.eval_ofNat,
-              Polynomial.eval_X, Nat.reduceLeDiff]
+          simp only [sourceFlatAtomicTimePolynomial_eval, Nat.reduceLeDiff]
           omega)
       · have hshort : tail.length < count := by omega
         let missing : ℕ := count - tail.length - 1
@@ -1413,10 +1331,7 @@ private noncomputable def sourceFlatAtomic_totalTrace (input : List Bool) :
         rw [houtput]
         exact rebound hfull (by
           simp only [sourceFlatAtomicFailureBudget, List.length_nil, List.length_replicate,
-              zero_add,
-              List.length_reverse, add_zero, sourceFlatAtomicTimePolynomial, Polynomial.eval_add,
-                  Polynomial.eval_mul,
-              Polynomial.eval_ofNat, Polynomial.eval_X]
+            zero_add, List.length_reverse, add_zero, sourceFlatAtomicTimePolynomial_eval]
           have hlength := congrArg List.length hshape
           simp only [List.length_append,
             List.length_replicate, List.length_cons] at hlength

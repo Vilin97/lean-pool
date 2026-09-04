@@ -30,47 +30,26 @@ private def flatAdjacentRecord_failureTrace
       (flatAdjacentRecordConfiguration 6 input first second counter)
       (some (Turing.haltList actualFlatAdjacentRecordSwapMachine []))
       (input.length + first.length + second.length + counter.length + 1) := by
-  induction input generalizing first second counter with
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (flatAdjacentRecord_failure_input
-          bit input first second counter)
-      have hrest := ih first second counter
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_comm, Nat.add_left_comm,
-          Nat.reduceAdd,
-          Nat.add_assoc] using EvalsToInTime.trans actualFlatAdjacentRecordSwapMachine.step _ _ _ _
-              _ hfirst hrest
-  | nil =>
-      induction first generalizing second counter with
-      | cons bit first ih =>
-          have hfirst := oneStep _ _ (flatAdjacentRecord_failure_first
-              bit first second counter)
-          have hrest := ih second counter
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.length_cons, zero_add,
-              Nat.add_comm,
-              Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-              EvalsToInTime.trans actualFlatAdjacentRecordSwapMachine.step _ _ _ _ _ hfirst hrest
-      | nil =>
-          induction second generalizing counter with
-          | cons bit second ih =>
-              have hfirst := oneStep _ _ (flatAdjacentRecord_failure_second bit second counter)
-              have hrest := ih counter
-              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, List.length_cons,
-                  zero_add, Nat.add_comm,
-                  Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-                  EvalsToInTime.trans actualFlatAdjacentRecordSwapMachine.step _ _ _ _ _ hfirst
-                      hrest
-          | nil =>
-              induction counter with
-              | nil =>
-                  simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using
-                      oneStep _ _ flatAdjacentRecord_failure_finish
-              | cons bit counter ih =>
-                  have hfirst := oneStep _ _ (flatAdjacentRecord_failure_counter bit counter)
-                  simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero,
-                      List.length_cons, zero_add, Nat.add_comm,
-                      Nat.add_left_comm, Nat.reduceAdd] using
-                      EvalsToInTime.trans actualFlatAdjacentRecordSwapMachine.step _ _ _ _ _ hfirst
-                          ih
+  have hinput := TraceGolf.sweep actualFlatAdjacentRecordSwapMachine.step
+    (fun current => flatAdjacentRecordConfiguration 6 current first second counter)
+    (fun bit remaining => flatAdjacentRecord_failure_input bit remaining first second counter)
+    input
+  have hfirst := TraceGolf.sweep actualFlatAdjacentRecordSwapMachine.step
+    (fun current => flatAdjacentRecordConfiguration 6 [] current second counter)
+    (fun bit remaining => flatAdjacentRecord_failure_first bit remaining second counter)
+    first
+  have hsecond := TraceGolf.sweep actualFlatAdjacentRecordSwapMachine.step
+    (fun current => flatAdjacentRecordConfiguration 6 [] [] current counter)
+    (fun bit remaining => flatAdjacentRecord_failure_second bit remaining counter)
+    second
+  have hcounter := TraceGolf.sweepThen actualFlatAdjacentRecordSwapMachine.step
+    (fun current => flatAdjacentRecordConfiguration 6 [] [] [] current)
+    flatAdjacentRecord_failure_counter counter flatAdjacentRecord_failure_finish
+  have h01 := EvalsToInTime.trans actualFlatAdjacentRecordSwapMachine.step _ _ _ _ _ hinput hfirst
+  have h012 := EvalsToInTime.trans actualFlatAdjacentRecordSwapMachine.step _ _ _ _ _ h01 hsecond
+  have hfull := EvalsToInTime.trans actualFlatAdjacentRecordSwapMachine.step _ _ _ _ _
+    h012 hcounter
+  exact rebound hfull (by omega)
 
 private def flatAdjacentRecord_firstPrefixTrace
     (count : ℕ) (tail first second counter : List Bool) :

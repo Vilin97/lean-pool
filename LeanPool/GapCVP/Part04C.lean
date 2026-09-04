@@ -18,12 +18,6 @@ namespace GapCVP
 
 open GapCVP.TraceGolf (oneStep rebound)
 
-namespace CNFPolynomialRowMarkerTM
-
-open Computability Turing GapCVP.BinaryEncoding GapCVP.SourceFormulaStructuralDecoder
-
-end CNFPolynomialRowMarkerTM
-
 namespace CLStructuralCNFOutputMachinesUnconditional
 
 open Computability Turing GapCVP.BinaryEncoding GapCVP.CNFSortingDedup

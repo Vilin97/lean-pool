@@ -30,17 +30,9 @@ open GapCVP.CLTableauSimulationCert GapCVP.CLFullTableauEmitter
 abbrev PairedInputBlock (tm : Turing.FinTM2) :=
   Fin (blockSize tm) → PairedInputTag
 
-instance instFintypePairedInputBlock
-    (tm : Turing.FinTM2) : Fintype (PairedInputBlock tm) := by
-  infer_instance
-
 /-- GapCVP reduction support. -/
 abbrev PhaseMaskBlock (tm : Turing.FinTM2) :=
   Fin (blockSize tm) → Bool
-
-instance instFintypePhaseMaskBlock
-    (tm : Turing.FinTM2) : Fintype (PhaseMaskBlock tm) := by
-  infer_instance
 
 /-- GapCVP reduction support. -/
 def pairedInputBlockAt (tm : Turing.FinTM2)

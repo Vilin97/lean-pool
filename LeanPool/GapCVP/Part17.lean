@@ -1097,115 +1097,47 @@ private theorem paperVariableArityFinitePPhysicalRoutedOutput_eq_sourceMap
     (input : List Bool) :
     paperFinitePPhysicalRoutedOutput p cell input =
       paperVariableArityFinitePSourceMap p hp input := by
-  cases decoded : decodeThreeCNF input with
-  | none =>
-      have canonical : constructiveCanonicalSourceMarker input = false := by
-        simp only [constructiveCanonicalSourceMarker, decoded]
-      have empty :
-          physicalCanonicalNormalizedEmptyGuard input =
-            false := by
-        simp only [physicalCanonicalNormalizedEmptyGuard, canonical, Bool.false_and]
-      have nonempty :
-          physicalCanonicalNormalizedNonemptyGuard input =
-            false := by
-        simp only [physicalCanonicalNormalizedNonemptyGuard, canonical, Bool.false_and]
-      unfold paperVariableArityFinitePSourceMap
-      rw [paperVariableArityFinitePSourceInstance_of_decode_none
-        p hp input decoded]
-      simp only [paperFinitePPhysicalRoutedOutput,
-        empty, Bool.false_eq_true, ↓reduceIte, nonempty]
-      rfl
-  | some formula =>
-      by_cases canonical : encodeThreeCNF formula = input
-      · subst input
-        by_cases empty :
-            paperSourceNormalizedClauses formula = []
-        · have emptyGuard :
-              physicalCanonicalNormalizedEmptyGuard
-                (encodeThreeCNF formula) = true := by
-            simp only [physicalCanonicalNormalizedEmptyGuard, constructiveCanonicalSourceMarker,
-                decodeThreeCNF_encode,
-                decide_true, physicalNormalizedEmptyMarker,
-                    paperVariableArityPhysicalNormalizedNonemptyMarker_valid, empty, ne_eq,
-                not_true_eq_false, decide_false, Bool.not_false, Bool.and_self]
-          unfold paperVariableArityFinitePSourceMap
-          rw [paperVariableArityFinitePSourceInstance_of_normalized_empty
-            p hp (encodeThreeCNF formula) formula (by simp only [decodeThreeCNF_encode]) rfl empty]
-          simp only [paperFinitePPhysicalRoutedOutput,
-            emptyGuard, ↓reduceIte]
-          rfl
-        · have emptyGuard :
-              physicalCanonicalNormalizedEmptyGuard
-                (encodeThreeCNF formula) = false := by
-            simp only [physicalCanonicalNormalizedEmptyGuard, constructiveCanonicalSourceMarker,
-                decodeThreeCNF_encode,
-                decide_true, physicalNormalizedEmptyMarker,
-                    paperVariableArityPhysicalNormalizedNonemptyMarker_valid, ne_eq, empty,
-                not_false_eq_true, Bool.not_true, Bool.and_false]
-          have nonemptyGuard :
-              physicalCanonicalNormalizedNonemptyGuard
-                (encodeThreeCNF formula) = true := by
-            simp only [physicalCanonicalNormalizedNonemptyGuard, constructiveCanonicalSourceMarker,
-                decodeThreeCNF_encode,
-                decide_true, paperVariableArityPhysicalNormalizedNonemptyMarker_valid, ne_eq,
-                    empty, not_false_eq_true,
-                Bool.and_self]
-          cases consistent :
-              (physicalFormulaSystem
-                (encodeThreeCNF formula).length
-                formula).effectiveReducedConsistent with
-          | false =>
-              have finitePInconsistent :
-                  (paperFinitePPhysicalSystem
-                    (encodeThreeCNF formula).length
-                    formula).effectiveReducedConsistent = false := by
-                simpa only [paperFinitePPhysicalSystem] using consistent
-              unfold paperVariableArityFinitePSourceMap
-              rw [paperVariableArityFinitePSourceInstance_of_inconsistent
-                p hp (encodeThreeCNF formula) formula
-                (by simp only [decodeThreeCNF_encode]) rfl empty finitePInconsistent]
-              simp only [paperFinitePPhysicalRoutedOutput,
-                emptyGuard, Bool.false_eq_true, ↓reduceIte,
-                nonemptyGuard,
-                paperVariableArityExactPhysicalConsistencyGuard_encode,
-                consistent]
-              rfl
-          | true =>
-              have finitePConsistent :
-                  (paperFinitePPhysicalSystem
-                    (encodeThreeCNF formula).length
-                    formula).effectiveReducedConsistent = true := by
-                simpa only [paperFinitePPhysicalSystem,
-                    Core.BinaryAffineSystem.effectiveReducedConsistent_iff] using
-                    consistent
-              unfold paperVariableArityFinitePSourceMap
-              rw [paperVariableArityFinitePSourceInstance_of_consistent
-                p hp (encodeThreeCNF formula) formula
-                (by simp only [decodeThreeCNF_encode]) rfl empty finitePConsistent]
-              simp only [paperFinitePPhysicalRoutedOutput,
-                emptyGuard, Bool.false_eq_true, ↓reduceIte,
-                nonemptyGuard,
-                paperVariableArityExactPhysicalConsistencyGuard_encode,
-                consistent]
-              exact paperVariableArityFinitePPhysicalStructuralOutput_valid
-                p hp cell formula
-      · have sourceGuard :
-            constructiveCanonicalSourceMarker input = false := by
-          simp only [constructiveCanonicalSourceMarker, decoded, canonical, decide_false]
-        have emptyGuard :
-            physicalCanonicalNormalizedEmptyGuard input =
-              false := by
-          simp only [physicalCanonicalNormalizedEmptyGuard, sourceGuard, Bool.false_and]
-        have nonemptyGuard :
-            physicalCanonicalNormalizedNonemptyGuard input =
-              false := by
-          simp only [physicalCanonicalNormalizedNonemptyGuard, sourceGuard, Bool.false_and]
-        unfold paperVariableArityFinitePSourceMap
-        rw [paperVariableArityFinitePSourceInstance_of_noncanonical
-          p hp input formula decoded canonical]
-        simp only [paperFinitePPhysicalRoutedOutput,
-          emptyGuard, Bool.false_eq_true, ↓reduceIte, nonemptyGuard]
-        rfl
+  unfold paperFinitePPhysicalRoutedOutput
+  apply physicalRoutedOutput_eq_sourceMap
+    (paperFinitePPhysicalStructuralOutput p cell)
+    (paperVariableArityFinitePSourceMap p hp)
+    finitePCanonicalNoWord
+  · intro source decode
+    unfold paperVariableArityFinitePSourceMap
+    rw [paperVariableArityFinitePSourceInstance_of_decode_none p hp source decode]
+    rfl
+  · intro source formula decode noncanonical
+    unfold paperVariableArityFinitePSourceMap
+    rw [paperVariableArityFinitePSourceInstance_of_noncanonical
+      p hp source formula decode noncanonical]
+    rfl
+  · intro formula empty
+    unfold paperVariableArityFinitePSourceMap
+    rw [paperVariableArityFinitePSourceInstance_of_normalized_empty
+      p hp (encodeThreeCNF formula) formula
+      (by simp only [decodeThreeCNF_encode]) rfl empty]
+    rfl
+  · intro formula nonempty inconsistent
+    have finitePInconsistent :
+        (paperFinitePPhysicalSystem (encodeThreeCNF formula).length
+          formula).effectiveReducedConsistent = false := by
+      simpa only [paperFinitePPhysicalSystem] using inconsistent
+    unfold paperVariableArityFinitePSourceMap
+    rw [paperVariableArityFinitePSourceInstance_of_inconsistent
+      p hp (encodeThreeCNF formula) formula
+      (by simp only [decodeThreeCNF_encode]) rfl nonempty finitePInconsistent]
+    rfl
+  · intro formula nonempty consistent
+    have finitePConsistent :
+        (paperFinitePPhysicalSystem (encodeThreeCNF formula).length
+          formula).effectiveReducedConsistent = true := by
+      simpa only [paperFinitePPhysicalSystem,
+        Core.BinaryAffineSystem.effectiveReducedConsistent_iff] using consistent
+    unfold paperVariableArityFinitePSourceMap
+    rw [paperVariableArityFinitePSourceInstance_of_consistent
+      p hp (encodeThreeCNF formula) formula
+      (by simp only [decodeThreeCNF_encode]) rfl nonempty finitePConsistent]
+    exact paperVariableArityFinitePPhysicalStructuralOutput_valid p hp cell formula
 
 @[irreducible] private noncomputable def paperVariableArityFinitePSourceMapMachine
     (p : ℚ) (hp : 1 ≤ p) :

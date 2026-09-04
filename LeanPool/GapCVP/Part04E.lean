@@ -18,12 +18,6 @@ namespace GapCVP
 
 open GapCVP.TraceGolf (oneStep rebound)
 
-namespace CNFTypedRecordWorkerTM
-
-open Turing GapCVP.CL GapCVP.OutputBoundedDependentRecordFold
-
-end CNFTypedRecordWorkerTM
-
 namespace OutputBoundedDependentRecordFold
 
 open Turing

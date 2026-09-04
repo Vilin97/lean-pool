@@ -36,25 +36,17 @@ private def cappedUnaryMinimum_successTrace
       (some (Turing.haltList actualCappedUnaryMinimumMachine
         output))
       (input.length + first.length + 1) := by
-  induction input generalizing first with
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (cappedUnaryMinimum_success_input bit input first output)
-      have hrest := ih first
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_comm, Nat.add_left_comm,
-          Nat.reduceAdd,
-          Nat.add_assoc] using EvalsToInTime.trans actualCappedUnaryMinimumMachine.step _ _ _ _ _
-              hfirst hrest
-  | nil =>
-      induction first with
-      | nil =>
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using
-              oneStep _ _ (cappedUnaryMinimum_success_finish output)
-      | cons bit first ih =>
-          have hfirst := oneStep _ _ (cappedUnaryMinimum_success_first bit first output)
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.length_cons, zero_add,
-              Nat.add_comm,
-              Nat.add_left_comm, Nat.reduceAdd] using EvalsToInTime.trans
-                  actualCappedUnaryMinimumMachine.step _ _ _ _ _ hfirst ih
+  have hinput := TraceGolf.sweep actualCappedUnaryMinimumMachine.step
+    (fun current => cappedUnaryMinimumConfiguration 2 current first output)
+    (fun bit remaining => cappedUnaryMinimum_success_input bit remaining first output)
+    input
+  have hfirst := TraceGolf.sweepThen actualCappedUnaryMinimumMachine.step
+    (fun current => cappedUnaryMinimumConfiguration 2 [] current output)
+    (fun bit remaining => cappedUnaryMinimum_success_first bit remaining output)
+    first (cappedUnaryMinimum_success_finish output)
+  exact rebound
+    (EvalsToInTime.trans actualCappedUnaryMinimumMachine.step _ _ _ _ _ hinput hfirst)
+    (by omega)
 
 private def cappedUnaryMinimum_failureTrace
     (input first output : List Bool) :
@@ -62,34 +54,20 @@ private def cappedUnaryMinimum_failureTrace
       (cappedUnaryMinimumConfiguration 3 input first output)
       (some (Turing.haltList actualCappedUnaryMinimumMachine []))
       (input.length + first.length + output.length + 1) := by
-  induction input generalizing first output with
-  | cons bit input ih =>
-      have hfirst := oneStep _ _ (cappedUnaryMinimum_failure_input bit input first output)
-      have hrest := ih first output
-      simpa only [FinTM2.step, Fin.isValue, List.length_cons, Nat.add_comm, Nat.add_left_comm,
-          Nat.reduceAdd,
-          Nat.add_assoc] using EvalsToInTime.trans actualCappedUnaryMinimumMachine.step _ _ _ _ _
-              hfirst hrest
-  | nil =>
-      induction first generalizing output with
-      | cons bit first ih =>
-          have hfirst := oneStep _ _ (cappedUnaryMinimum_failure_first bit first output)
-          have hrest := ih output
-          simpa only [FinTM2.step, Fin.isValue, List.length_nil, List.length_cons, zero_add,
-              Nat.add_comm,
-              Nat.add_left_comm, Nat.reduceAdd, Nat.add_assoc] using
-              EvalsToInTime.trans actualCappedUnaryMinimumMachine.step _ _ _ _ _ hfirst hrest
-      | nil =>
-          induction output with
-          | nil =>
-              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using
-                  oneStep _ _ cappedUnaryMinimum_failure_finish
-          | cons bit output ih =>
-              have hfirst := oneStep _ _ (cappedUnaryMinimum_failure_output bit output)
-              simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, List.length_cons,
-                  zero_add, Nat.add_comm,
-                  Nat.add_left_comm, Nat.reduceAdd] using EvalsToInTime.trans
-                      actualCappedUnaryMinimumMachine.step _ _ _ _ _ hfirst ih
+  have hinput := TraceGolf.sweep actualCappedUnaryMinimumMachine.step
+    (fun current => cappedUnaryMinimumConfiguration 3 current first output)
+    (fun bit remaining => cappedUnaryMinimum_failure_input bit remaining first output)
+    input
+  have hfirst := TraceGolf.sweep actualCappedUnaryMinimumMachine.step
+    (fun current => cappedUnaryMinimumConfiguration 3 [] current output)
+    (fun bit remaining => cappedUnaryMinimum_failure_first bit remaining output)
+    first
+  have houtput := TraceGolf.sweepThen actualCappedUnaryMinimumMachine.step
+    (fun current => cappedUnaryMinimumConfiguration 3 [] [] current)
+    cappedUnaryMinimum_failure_output output cappedUnaryMinimum_failure_finish
+  have h01 := EvalsToInTime.trans actualCappedUnaryMinimumMachine.step _ _ _ _ _ hinput hfirst
+  have hfull := EvalsToInTime.trans actualCappedUnaryMinimumMachine.step _ _ _ _ _ h01 houtput
+  exact rebound hfull (by omega)
 
 private def cappedUnaryMinimum_firstTrace
     (count : ℕ) (tail first output : List Bool) :

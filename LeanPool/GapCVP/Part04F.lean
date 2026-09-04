@@ -197,50 +197,28 @@ private def flatLiteralRecord_invalidTrace
       (some (Turing.haltList actualFlatLiteralRecordWorker []))
       (input.length + count.length + reversed.length +
         markers.length + 1) := by
-  induction count generalizing input reversed markers with
-  | cons bit count ih =>
-      have hfirst := oneStep _ _ (flatLiteralRecord_invalid_count sign bit
-          input count reversed markers)
-      have hrest := ih input reversed markers
-      exact rebound (EvalsToInTime.trans
-          actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest)
-        (by simp only [List.length_cons, add_le_add_iff_right, Order.add_one_le_iff,
-            add_lt_add_iff_right,
-                add_lt_add_iff_left, lt_add_iff_pos_right, Order.lt_one_iff])
-  | nil =>
-      induction reversed generalizing input markers with
-      | cons bit reversed ih =>
-          have hfirst := oneStep _ _ (flatLiteralRecord_invalid_reversed sign bit
-              input reversed markers)
-          have hrest := ih input markers
-          exact rebound (EvalsToInTime.trans
-              actualFlatLiteralRecordWorker.step _ _ _ _ _ hfirst hrest)
-            (by simp only [List.length_nil, add_zero, List.length_cons, add_le_add_iff_right,
-                Order.add_one_le_iff,
-                    add_lt_add_iff_right, add_lt_add_iff_left, lt_add_iff_pos_right,
-                        Order.lt_one_iff])
-      | nil =>
-          induction markers generalizing input with
-          | cons bit markers ih =>
-              have hfirst := oneStep _ _ (flatLiteralRecord_invalid_markers sign bit input markers)
-              have hrest := ih input
-              exact rebound (EvalsToInTime.trans
-                  actualFlatLiteralRecordWorker.step _ _ _ _ _
-                  hfirst hrest)
-                (by simp only [List.length_nil, add_zero, List.length_cons, add_le_add_iff_right,
-                    Order.add_one_le_iff,
-                        add_lt_add_iff_left, lt_add_iff_pos_right, Order.lt_one_iff])
-          | nil =>
-              induction input with
-              | nil =>
-                  simpa only [FinTM2.step, Fin.isValue, List.length_nil, add_zero, zero_add] using
-                      oneStep _ _ (flatLiteralRecord_invalid_finish sign)
-              | cons bit input ih =>
-                  have hfirst := oneStep _ _ (flatLiteralRecord_invalid_input sign bit input)
-                  exact rebound (EvalsToInTime.trans
-                      actualFlatLiteralRecordWorker.step _ _ _ _ _
-                      hfirst ih)
-                    (by simp only [List.length_nil, add_zero, List.length_cons, Std.le_refl])
+  have hcount := TraceGolf.sweep actualFlatLiteralRecordWorker.step
+    (fun current => flatLiteralRecordConfiguration 7 sign input current reversed markers [] [])
+    (fun bit remaining => flatLiteralRecord_invalid_count
+      sign bit input remaining reversed markers)
+    count
+  have hreversed := TraceGolf.sweep actualFlatLiteralRecordWorker.step
+    (fun current => flatLiteralRecordConfiguration 7 sign input [] current markers [] [])
+    (fun bit remaining => flatLiteralRecord_invalid_reversed sign bit input remaining markers)
+    reversed
+  have hmarkers := TraceGolf.sweep actualFlatLiteralRecordWorker.step
+    (fun current => flatLiteralRecordConfiguration 7 sign input [] [] current [] [])
+    (fun bit remaining => flatLiteralRecord_invalid_markers sign bit input remaining)
+    markers
+  have hinput := TraceGolf.sweep actualFlatLiteralRecordWorker.step
+    (fun current => flatLiteralRecordConfiguration 7 sign current [] [] [] [] [])
+    (flatLiteralRecord_invalid_input sign) input
+  have hfinish := oneStep _ _ (flatLiteralRecord_invalid_finish sign)
+  have h01 := EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ hcount hreversed
+  have h012 := EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ h01 hmarkers
+  have h0123 := EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ h012 hinput
+  have hfull := EvalsToInTime.trans actualFlatLiteralRecordWorker.step _ _ _ _ _ h0123 hfinish
+  exact rebound hfull (by omega)
 
 private def flatLiteralRecord_truncatedPayloadTrace
     (sign : Bool) (payload : List Bool) (count : ℕ)
