@@ -12,13 +12,6 @@ noncomputable section
 
 namespace QuantumParallelRepetition
 
-/-- The local matrix norm instance used while elaborating part nine. -/
-noncomputable local instance matrixComplexContinuousENormPartNine
-    {m n : Type*} [Fintype m] [Fintype n] :
-    ContinuousENorm (Matrix m n ℂ) :=
-  @SeminormedAddGroup.toContinuousENorm (Matrix m n ℂ)
-    (Matrix.normedAddCommGroup.toSeminormedAddCommGroup.toSeminormedAddGroup)
-
 open scoped ComplexOrder Matrix BigOperators InnerProductSpace
 open Complex Matrix Finset
 
@@ -784,21 +777,6 @@ theorem unconditionalMatchedVerifierEffect_tensor_complement_posSemidef
       (effect ⊗ₖ (1 : Matrix t t ℂ))).PosSemidef := by
   rw [unconditionalMatchedVerifierEffect_tensor_complement]
   exact complement.kronecker Matrix.PosSemidef.one
-
-theorem unconditionalMatchedVerifierEffect_tensor_norm_le_one
-    {s t : Type*} [Fintype s] [Fintype t]
-    [DecidableEq s] [DecidableEq t]
-    (effect : Matrix s s ℂ)
-    (positive : effect.PosSemidef)
-    (complement : (1 - effect).PosSemidef) :
-    ‖Matrix.toEuclideanCLM (n := s × t) (𝕜 := ℂ)
-        (effect ⊗ₖ (1 : Matrix t t ℂ))‖ ≤ 1 := by
-  exact matrixEffectCLM_norm_le_one
-    (effect ⊗ₖ (1 : Matrix t t ℂ))
-    (unconditionalMatchedVerifierEffect_tensor_posSemidef
-      effect positive)
-    (unconditionalMatchedVerifierEffect_tensor_complement_posSemidef
-      effect complement)
 
 theorem unconditionalMatchedVerifierEffect_tensor_quadratic
     {s t : Type*} [Fintype s] [Fintype t]
@@ -3664,7 +3642,7 @@ def unconditionalSourcePhysicalCleanedFullLocalIndexEquiv
       heq_eq_eq, true_and, and_true]
     exact finProdFinEquiv.apply_symm_apply packed
 
-@[simp] theorem unconditionalSourcePhysicalCleanedSelectedHistoryEquiv_hit
+private theorem unconditionalSourcePhysicalCleanedSelectedHistoryEquiv_hit
     {L : ℕ} (j : Fin L) (β : Type*) (f : Fin (L + 1) → β) :
     (unconditionalSourcePhysicalCleanedSelectedHistoryEquiv
       j β f).1 = f j.castSucc := by
@@ -4308,7 +4286,8 @@ theorem unconditionalActualCanonicalCleanedHistorySymm_eq_direct
     j β).injective
   rw [Equiv.apply_symm_apply]
   apply Prod.ext
-  · exact
+  · rw [unconditionalSourcePhysicalCleanedSelectedHistoryEquiv_hit]
+    exact
       (directDSVSelectedCopyLocalHistoryEquiv_hit
         j selected before later).symm
   · apply Prod.ext
@@ -6303,7 +6282,7 @@ theorem unconditionalActualSelectedBranchLocalAction_norm
         (unconditionalMixedConjugateSelectedBranchUnitary
           (τ := τ) U V).property)
   have squared : ‖toLp 2 (M.mulVec (ofLp z))‖ ^ 2 = ‖z‖ ^ 2 := by
-    rw [rectangular_matrix_mulVec_norm_sq, gram]
+    rw [rectangularMatrix_norm_sq, gram]
     simp only [quadraticExpectation, map_one, one_apply_eq_self, inner_self_eq_norm_sq_to_K,
       coe_algebraMap, ← ofReal_pow, ofReal_re]
   change ‖toLp 2 (M.mulVec (ofLp z))‖ = ‖z‖

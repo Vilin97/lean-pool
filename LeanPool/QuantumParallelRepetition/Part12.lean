@@ -12,13 +12,6 @@ noncomputable section
 
 namespace QuantumParallelRepetition
 
-/-- The local matrix norm instance used while elaborating part twelve. -/
-noncomputable local instance matrixComplexContinuousENormPartTwelve
-    {m n : Type*} [Fintype m] [Fintype n] :
-    ContinuousENorm (Matrix m n ℂ) :=
-  @SeminormedAddGroup.toContinuousENorm (Matrix m n ℂ)
-    (Matrix.normedAddCommGroup.toSeminormedAddCommGroup.toSeminormedAddGroup)
-
 open scoped ComplexOrder Matrix BigOperators InnerProductSpace
 open Complex Matrix Finset
 

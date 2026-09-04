@@ -13,13 +13,6 @@ noncomputable section
 
 namespace QuantumParallelRepetition
 
-/-- The local matrix norm instance used while elaborating part four. -/
-noncomputable local instance matrixComplexContinuousENormPartFour
-    {m n : Type*} [Fintype m] [Fintype n] :
-    ContinuousENorm (Matrix m n ℂ) :=
-  @SeminormedAddGroup.toContinuousENorm (Matrix m n ℂ)
-    (Matrix.normedAddCommGroup.toSeminormedAddCommGroup.toSeminormedAddGroup)
-
 open scoped ComplexOrder Matrix BigOperators InnerProductSpace
 open Complex Matrix Finset
 
@@ -3515,7 +3508,7 @@ theorem repeatedStrategy_exists_divisor_greedy_conditioning
     apply greedy_terminal_of_log_cost hθ hη_one
     exact hlog.trans (sourceRate_mul_lt_divisorStopping hq hqn hη)
   apply repeatedStrategy_exists_greedy_conditioning
-    G n S hθ hη hη_one (Nat.div_le_self n q) (le_refl _) hterminal
+    G n S hη_one (Nat.div_le_self n q) (le_refl _) hterminal
 
 theorem divisor_greedy_card_mul_lt
     {n q : ℕ} (hq : 0 < q)
@@ -3736,7 +3729,7 @@ theorem repeatedStrategy_exists_conditioning
     (S : Strategy (G.repeat n))
     {η : ℝ} {q : ℕ}
     (hwin : 0 < S.winProbability)
-    (hη : 0 < η) (hη_one : η ≤ 1)
+    (hη_one : η ≤ 1)
     (hq : q ≤ n)
     (hterminal : (1 - η) ^ q < S.winProbability) :
     ∃ C : Finset (Fin n),
@@ -3749,7 +3742,7 @@ theorem repeatedStrategy_exists_conditioning
         (repeatedCoordinateWin G n) C < η := by
   obtain ⟨C, hC, hmass, hfailure⟩ :=
     repeatedStrategy_exists_greedy_conditioning G n S
-      hwin hη hη_one hq (le_refl _) hterminal
+      hη_one hq (le_refl _) hterminal
   have hremaining : 0 < (Finset.univ \ C).card := by
     rw [remainingCoordinates_card]
     omega

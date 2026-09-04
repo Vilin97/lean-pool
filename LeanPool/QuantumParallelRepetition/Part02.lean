@@ -3194,8 +3194,7 @@ private def markedTotalVariation (left right : Finset α) : ℝ :=
 theorem sharedPermutation_disagreement_probability_le_two_mul_tv
     (rank : α ≃ Fin (Fintype.card α))
     (left right : Finset α)
-    (hleft : left.Nonempty) (hright : right.Nonempty)
-    (_equal_card : left.card = right.card) :
+    (hleft : left.Nonempty) (hright : right.Nonempty) :
     uniformPermutationProbability
       (fun permutation : Equiv.Perm α =>
         markedFirst rank left hleft permutation ≠
@@ -4336,8 +4335,7 @@ theorem rationalMarked_inter
 
 theorem rationalMarked_inter_card
     (denominator : ℕ) (left right : ι → ℕ)
-    (hleft : (∑ i, left i) = denominator)
-    (_hright : (∑ i, right i) = denominator) :
+    (hleft : (∑ i, left i) = denominator) :
     (rationalMarked denominator left ∩
       rationalMarked denominator right).card =
         ∑ i : ι, min (left i) (right i) := by
@@ -4388,7 +4386,7 @@ theorem rationalMarked_markedTotalVariation_eq
       (((rationalMarked denominator left ∩
         rationalMarked denominator right).card : ℕ) : ℝ) =
         ∑ i : ι, (min (left i) (right i) : ℝ)
-    rw [rationalMarked_inter_card denominator left right hleft hright,
+    rw [rationalMarked_inter_card denominator left right hleft,
       Nat.cast_sum]
     simp only [Nat.cast_min]
   have hdisjoint : Disjoint (L \ R) (R \ L) := by
@@ -4479,8 +4477,6 @@ theorem uniformPermutationProbability_mono
 
 theorem rationalPermutationOutput_disagreement_le_two_mul_tv
     (denominator : ℕ) (left right : ι → ℕ)
-    (hleft : (∑ i, left i) = denominator)
-    (hright : (∑ i, right i) = denominator)
     (nonempty_left : (rationalMarked denominator left).Nonempty)
     (nonempty_right : (rationalMarked denominator right).Nonempty) :
     uniformPermutationProbability
@@ -4514,11 +4510,6 @@ theorem rationalPermutationOutput_disagreement_le_two_mul_tv
         (rationalMarked denominator left)
         (rationalMarked denominator right) := by
       apply sharedPermutation_disagreement_probability_le_two_mul_tv
-      calc
-        (rationalMarked denominator left).card = denominator :=
-          rationalMarked_card denominator left hleft
-        _ = (rationalMarked denominator right).card :=
-          (rationalMarked_card denominator right hright).symm
 
 theorem rationalPermutationOutput_disagreement_le_two_mul_finiteTotalVariation
     (denominator : ℕ) (positive : 0 < denominator)
@@ -4547,8 +4538,7 @@ theorem rationalPermutationOutput_disagreement_le_two_mul_finiteTotalVariation
         (rationalMarked denominator left)
         (rationalMarked denominator right) :=
           rationalPermutationOutput_disagreement_le_two_mul_tv
-            denominator left right hleft hright
-            nonempty_left nonempty_right
+            denominator left right nonempty_left nonempty_right
     _ = 2 * finiteTotalVariation
         (fun i => (left i : ℝ) / denominator)
         (fun i => (right i : ℝ) / denominator) := by
@@ -5078,50 +5068,6 @@ section
 open WithLp
 open scoped BigOperators ComplexOrder MatrixOrder
 
-private def dSVUniformDensityPolarConjugateSwap
-    {d : ℕ} (v : EuclideanSpace ℂ (Fin d × Fin d)) :
-    EuclideanSpace ℂ (Fin d × Fin d) :=
-  toLp 2 (fun q : Fin d × Fin d => star (v (q.2, q.1)))
-
-theorem dSVUniformDensityPolarConjugateSwap_norm
-    {d : ℕ} (v : EuclideanSpace ℂ (Fin d × Fin d)) :
-    ‖dSVUniformDensityPolarConjugateSwap v‖ = ‖v‖ := by
-  have squares :
-      ‖dSVUniformDensityPolarConjugateSwap v‖ ^ 2 =
-        ‖v‖ ^ 2 := by
-    rw [EuclideanSpace.norm_sq_eq, EuclideanSpace.norm_sq_eq,
-      Fintype.sum_prod_type, Fintype.sum_prod_type]
-    simp only [dSVUniformDensityPolarConjugateSwap,
-      norm_star]
-    exact Finset.sum_comm
-  nlinarith [norm_nonneg
-    (dSVUniformDensityPolarConjugateSwap v), norm_nonneg v]
-
-private def dSVUniformDensityPolarConjugateSwapTarget
-    {d : ℕ} (ξ : BipartiteUnitVector d) :
-    BipartiteUnitVector d :=
-  ⟨dSVUniformDensityPolarConjugateSwap ξ.val, by
-    rw [dSVUniformDensityPolarConjugateSwap_norm]
-    exact ξ.property⟩
-
-theorem dSVUniformDensityPolarConjugateSwap_coefficient
-    {d : ℕ} (ξ : BipartiteUnitVector d) :
-    targetCoefficientMatrix
-        (dSVUniformDensityPolarConjugateSwapTarget ξ) =
-      (targetCoefficientMatrix ξ).conjTranspose := by
-  ext b a
-  rfl
-
-theorem dSVUniformDensityPolarConjugateSwap_reducedDensity
-    {d : ℕ} (ξ : BipartiteUnitVector d) :
-    targetReducedDensity
-        (dSVUniformDensityPolarConjugateSwapTarget ξ) =
-      dSVSoftBobLeftReducedDensity ξ := by
-  unfold targetReducedDensity
-    dSVSoftBobLeftReducedDensity
-  rw [dSVUniformDensityPolarConjugateSwap_coefficient]
-  simp only [conjTranspose_conjTranspose]
-
 /--
 The DSV uniform density polar left schmidt coefficient construction used in the quantum
 parallel-repetition argument.
@@ -5138,10 +5084,10 @@ theorem exists_proofDSVUniformDensityPolarLeftCanonicalSchmidt
       ξ.val = schmidtVector
         (dSVUniformDensityPolarLeftSchmidtCoefficient ξ)
         A (dSVUniformDensityThresholdLeftBobBasis ξ) := by
-  let χ := dSVUniformDensityPolarConjugateSwapTarget ξ
+  let χ := dSVUniformLeftDensityConjugateSwap ξ
   have density : targetReducedDensity χ =
       dSVSoftBobLeftReducedDensity ξ :=
-    dSVUniformDensityPolarConjugateSwap_reducedDensity ξ
+    dSVUniformLeftDensityConjugateSwap_density ξ
   obtain ⟨V, decomposition⟩ :=
     exists_proofTargetCanonicalSpectralSchmidtDecomposition χ
   have canonical_basis :
@@ -6429,41 +6375,6 @@ theorem purifiedStrategy_winProbability
   unfold Strategy.winProbability
   simp_rw [purifiedStrategy_outcomeProbability]
 
-theorem rectangular_matrix_mulVec_norm_sq
-    {d e : Type*} [Fintype d] [Fintype e] [DecidableEq d]
-    (K : Matrix e d ℂ) (z : EuclideanSpace ℂ d) :
-    ‖toLp 2 (K.mulVec (ofLp z))‖ ^ 2 =
-      quadraticExpectation
-        (Matrix.toEuclideanCLM (n := d) (𝕜 := ℂ)
-          (K.conjTranspose * K)) z := by
-  calc
-    ‖toLp 2 (K.mulVec (ofLp z))‖ ^ 2 =
-        (⟪toLp 2 (K.mulVec (ofLp z)),
-          toLp 2 (K.mulVec (ofLp z))⟫_ℂ).re :=
-      norm_sq_eq_re_inner (𝕜 := ℂ)
-        (toLp 2 (K.mulVec (ofLp z)))
-    _ = (star (K.mulVec (ofLp z)) ⬝ᵥ
-          K.mulVec (ofLp z)).re := by
-      rw [EuclideanSpace.inner_eq_star_dotProduct]
-      change
-        (K.mulVec (ofLp z) ⬝ᵥ star (K.mulVec (ofLp z))).re = _
-      rw [dotProduct_comm]
-    _ = (star (ofLp z) ⬝ᵥ
-          (K.conjTranspose * K).mulVec (ofLp z)).re := by
-      rw [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec,
-        Matrix.mulVec_mulVec]
-    _ = quadraticExpectation
-          (Matrix.toEuclideanCLM (n := d) (𝕜 := ℂ)
-            (K.conjTranspose * K)) z := by
-      unfold quadraticExpectation
-      rw [EuclideanSpace.inner_eq_star_dotProduct]
-      change
-        (star (ofLp z) ⬝ᵥ
-            (K.conjTranspose * K).mulVec (ofLp z)).re =
-          ((K.conjTranspose * K).mulVec (ofLp z) ⬝ᵥ
-            star (ofLp z)).re
-      rw [dotProduct_comm]
-
 /-- The matrix representation of finite local purification joint. -/
 def finiteLocalPurificationJointMatrix
     {X Y A B eA eB : Type*}
@@ -6516,7 +6427,7 @@ theorem finiteLocalPurificationVector_norm_sq
           ((KA.conjTranspose * KA) ⊗ₖ
             (KB.conjTranspose * KB)))).re := by
   unfold finiteLocalPurificationVector
-  rw [rectangular_matrix_mulVec_norm_sq,
+  rw [rectangularMatrix_norm_sq,
     finiteLocalPurificationJointMatrix_gram]
   exact strategyPurificationVector_quadratic S
     (KA.conjTranspose * KA) (KB.conjTranspose * KB)
@@ -6545,7 +6456,7 @@ theorem dSVUniformDensityMixedProtocolLocalAction_norm
       (Matrix.mem_unitaryGroup_iff'.mp unitary)
   have squared :
       ‖toLp 2 (M.mulVec (ofLp z))‖ ^ 2 = ‖z‖ ^ 2 := by
-    rw [rectangular_matrix_mulVec_norm_sq, gram]
+    rw [rectangularMatrix_norm_sq, gram]
     simp only [quadraticExpectation, map_one, one_apply_eq_self, inner_self_eq_norm_sq_to_K,
       coe_algebraMap, ← ofReal_pow, ofReal_re]
   change ‖toLp 2 (M.mulVec (ofLp z))‖ = ‖z‖

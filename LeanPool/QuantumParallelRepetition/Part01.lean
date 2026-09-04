@@ -11,13 +11,7 @@ import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.SpecificCodomains.Pi
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.PicardGroup
-import Mathlib.RingTheory.SimpleRing.Principal
-import Mathlib.RingTheory.TotallySplit
 import Mathlib.Tactic.NormNum.RealSqrt
-import Mathlib.Topology.Order.Hom.Esakia
 
 /-! # Quantum parallel repetition, part 01 -/
 
@@ -437,19 +431,6 @@ theorem matrixEffectCLM_complement_isPositive
     (E : Matrix d d ℂ) (hE : (1 - E).PosSemidef) :
     (1 - Matrix.toEuclideanCLM (n := d) (𝕜 := ℂ) E).IsPositive := by
   simpa only [map_sub, map_one] using matrixEffectCLM_isPositive (1 - E) hE
-
-theorem matrixEffectCLM_norm_le_one
-    {d : Type*} [Fintype d] [DecidableEq d]
-    (E : Matrix d d ℂ) (hE : E.PosSemidef)
-    (h_complement : (1 - E).PosSemidef) :
-    ‖Matrix.toEuclideanCLM (n := d) (𝕜 := ℂ) E‖ ≤ 1 := by
-  have h_positive := matrixEffectCLM_isPositive E hE
-  have h_nonneg :
-      0 ≤ Matrix.toEuclideanCLM (n := d) (𝕜 := ℂ) E :=
-    (ContinuousLinearMap.nonneg_iff_isPositive _).mpr h_positive
-  apply (CStarAlgebra.norm_le_one_iff_of_nonneg _ h_nonneg).mpr
-  exact (ContinuousLinearMap.le_def _ _).mpr
-    (matrixEffectCLM_complement_isPositive E h_complement)
 
 namespace Strategy
 
@@ -1002,8 +983,6 @@ def failureMass [DecidableEq ι]
 
 theorem exists_greedy_stopping [Fintype ι] [DecidableEq ι]
     (mass : Finset ι → ℝ) {θ η : ℝ} {T : ℕ}
-    (_hθ : 0 < θ)
-    (_hη : 0 < η)
     (hη_one : η ≤ 1)
     (hT : T ≤ Fintype.card ι)
     (hempty : mass ∅ = 1)
@@ -1082,8 +1061,6 @@ theorem exists_greedy_stopping [Fintype ι] [DecidableEq ι]
 theorem exists_conditioned_win_set [Fintype ι] [DecidableEq ι]
     (law : FiniteEventLaw Ω) (wins : ι → Ω → Bool)
     {θ η : ℝ} {T : ℕ}
-    (hθ : 0 < θ)
-    (hη : 0 < η)
     (hη_one : η ≤ 1)
     (hT : T ≤ Fintype.card ι)
     (hwin : θ ≤ law.eventMass (winEvent wins Finset.univ))
@@ -1104,7 +1081,7 @@ theorem exists_conditioned_win_set [Fintype ι] [DecidableEq ι]
     intro D
     exact hwin.trans (law.allWinMass_le_partial wins D)
   obtain ⟨D, hD, hp, hstop⟩ :=
-    exists_greedy_stopping mass hθ hη hη_one hT hempty hfloor
+    exists_greedy_stopping mass hη_one hT hempty hfloor
       h_terminal
   refine ⟨D, hD, hp, ?_⟩
   simpa only [failureMass, Finset.sum_sub_distrib, Finset.sum_const, nsmul_eq_mul,
@@ -1228,8 +1205,6 @@ theorem repeatedStrategy_exists_greedy_conditioning
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     {θ η : ℝ} {T : ℕ}
-    (hθ : 0 < θ)
-    (hη : 0 < η)
     (hη_one : η ≤ 1)
     (hT : T ≤ n)
     (hwin : θ ≤ S.winProbability)
@@ -1260,7 +1235,7 @@ theorem repeatedStrategy_exists_greedy_conditioning
   exact FiniteEventLaw.exists_conditioned_win_set
     (strategyEventLaw (G.repeat n) S)
     (repeatedCoordinateWin G n)
-    hθ hη hη_one h_card h_full h_terminal
+    hη_one h_card h_full h_terminal
 
 end StrategyEventLaw
 

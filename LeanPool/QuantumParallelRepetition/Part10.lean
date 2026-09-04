@@ -12,13 +12,6 @@ noncomputable section
 
 namespace QuantumParallelRepetition
 
-/-- The local matrix norm instance used while elaborating part ten. -/
-noncomputable local instance matrixComplexContinuousENormPartTen
-    {m n : Type*} [Fintype m] [Fintype n] :
-    ContinuousENorm (Matrix m n ℂ) :=
-  @SeminormedAddGroup.toContinuousENorm (Matrix m n ℂ)
-    (Matrix.normedAddCommGroup.toSeminormedAddCommGroup.toSeminormedAddGroup)
-
 open scoped ComplexOrder Matrix BigOperators InnerProductSpace
 open Complex Matrix Finset
 
@@ -1430,7 +1423,7 @@ theorem unconditionalActualFairSelectedLocalAction_norm_sq
         (unconditionalMixedConjugateSelectedBranchUnitary
           (τ := τ) U V).property)
   change ‖toLp 2 (M.mulVec (ofLp z))‖ ^ 2 = ‖z‖ ^ 2
-  rw [rectangular_matrix_mulVec_norm_sq, gram]
+  rw [rectangularMatrix_norm_sq, gram]
   simp only [quadraticExpectation, map_one, one_apply_eq_self, inner_self_eq_norm_sq_to_K,
     coe_algebraMap, ← ofReal_pow, ofReal_re]
 
@@ -2390,7 +2383,7 @@ theorem pdfQuantitativeGreedyConditioning
       (above_exponential.trans_le realized)
   obtain ⟨D, selected, floor, positive, remaining, failure⟩ :=
     repeatedStrategy_exists_conditioning G n S
-      winning threshold threshold_lt_one.le legal terminal
+      winning threshold_lt_one.le legal terminal
   have strict_card : (D.card : ℝ) < d * (n : ℝ) / τ :=
     pdfGreedyCard_lt_of_ceil D.card n τ d selected
   have half_rate : d * (n : ℝ) / τ ≤ (n : ℝ) / 2 := by

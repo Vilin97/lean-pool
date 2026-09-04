@@ -12,13 +12,6 @@ noncomputable section
 
 namespace QuantumParallelRepetition
 
-/-- The local matrix norm instance used while elaborating part eight. -/
-noncomputable local instance matrixComplexContinuousENormPartEight
-    {m n : Type*} [Fintype m] [Fintype n] :
-    ContinuousENorm (Matrix m n ℂ) :=
-  @SeminormedAddGroup.toContinuousENorm (Matrix m n ℂ)
-    (Matrix.normedAddCommGroup.toSeminormedAddCommGroup.toSeminormedAddGroup)
-
 open scoped ComplexOrder Matrix BigOperators InnerProductSpace
 open Complex Matrix Finset
 
@@ -2098,19 +2091,15 @@ theorem exactLocallySampleableLaw_psi_ne_zero_of_ne_zero
     exactUnnormalizedPsi
       G n S D t.2.2.2 t.2.1 t.2.2.1 ≠ 0 := by
   classical
-  have coordinate :=
-    exactLocallySampleableLaw_coordinate_eq_of_ne_zero
-      G n S D t supported
-  have accepted :=
-    exactLocallySampleableLaw_accepted_of_ne_zero
-      G n S D t supported
+  have coordinate := exactLocallySampleableLaw_coordinate_eq_of_ne_zero
+    G n S D t supported
+  have accepted := exactLocallySampleableLaw_accepted_of_ne_zero
+    G n S D t supported
   intro zero
   apply supported
-  have source :=
-    exactLocallySampleableLaw_eq_fair_born
-      G n S D t.2.2.2 t.2.1 t.2.2.1
-  have tuple :
-      t =
+  have source := exactLocallySampleableLaw_eq_fair_born
+    G n S D t.2.2.2 t.2.1 t.2.2.1
+  have tuple : t =
         (t.2.2.2.seed.coordinate, t.2.1, t.2.2.1, t.2.2.2) := by
     rcases t with ⟨i, x, y, r⟩
     simpa only [Prod.mk.injEq, and_true] using coordinate
@@ -2210,14 +2199,6 @@ private def pOVMChangeDecidableEq
     · subst j
       simpa only [↓reduceIte] using completed
     · simpa only [same, ↓reduceIte] using completed
-
-/-- Changing the decidable-equality implementation of a POVM preserves every effect. -/
-@[simp] theorem pOVMChangeDecidableEq_effect
-    {C d : Type*} [Fintype C] [Fintype d]
-    (source target : DecidableEq d)
-    (P : @POVM C d inferInstance inferInstance source) (c : C) :
-    (pOVMChangeDecidableEq source target P).effect c =
-      @POVM.effect C d inferInstance inferInstance source P c := rfl
 
 private def exactSourceAlicePaddedPOVM
     [DecidableEq A]
