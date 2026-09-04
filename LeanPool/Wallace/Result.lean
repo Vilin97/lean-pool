@@ -149,7 +149,7 @@ theorem addSubmonoid_isWallace
     (hcompact : CountablyCompactSpace P)
     {a : F} (ha : a ∈ P) (hneg : -a ∉ P) :
     IsWallaceSemigroup P := by
-  letI : CountablyCompactSpace P := hcompact
+  let : CountablyCompactSpace P := hcompact
   refine ⟨inferInstance, inferInstance, inferInstance, inferInstance, ?_⟩
   exact ⟨⟨a, ha⟩, not_isAddUnit_of_neg_not_mem P ha hneg⟩
 

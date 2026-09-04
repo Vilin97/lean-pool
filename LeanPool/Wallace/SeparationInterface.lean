@@ -93,7 +93,7 @@ theorem initial_isTopologicalAddGroup (C : SeparationPackage I) :
 
 theorem initial_t2Space (C : SeparationPackage I) :
     @T2Space (I →₀ ℤ) C.initialTopology := by
-  letI : TopologicalSpace (I →₀ ℤ) := C.initialTopology
+  let : TopologicalSpace (I →₀ ℤ) := C.initialTopology
   exact C.evaluation_injective.isEmbedding_induced.t2Space
 
 /-- The prepared subsequence converges to its prescribed basis point in the initial topology. -/
@@ -103,7 +103,7 @@ theorem prepared_tendsto_basis (C : SeparationPackage I) (c : C.Code) :
       (C.ultrafilter c)
       (@nhds (I →₀ ℤ) C.initialTopology
         (Finsupp.single (C.codeIndex c) (1 : ℤ))) := by
-  letI : TopologicalSpace (I →₀ ℤ) := C.initialTopology
+  let : TopologicalSpace (I →₀ ℤ) := C.initialTopology
   have hinducing : IsInducing C.evaluation := ⟨rfl⟩
   refine hinducing.tendsto_nhds_iff.mpr ?_
   refine tendsto_pi_nhds.2 fun x ↦ ?_
@@ -112,7 +112,7 @@ theorem prepared_tendsto_basis (C : SeparationPackage I) (c : C.Code) :
 /-- The package supplies the exact free-ultrafilter limit property used by the cone argument. -/
 theorem positiveCone_hasWallaceLimitProperty (C : SeparationPackage I) :
     @HasWallaceLimitProperty (I →₀ ℤ) C.initialTopology _ (positiveCone I) := by
-  letI : TopologicalSpace (I →₀ ℤ) := C.initialTopology
+  let : TopologicalSpace (I →₀ ℤ) := C.initialTopology
   intro s hs _hscone
   let encoded : InjectiveSequence' (I →₀ ℤ) := ⟨s, hs⟩
   let c : C.Code := C.codeEquiv.symm encoded

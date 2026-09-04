@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 
-import Mathlib
+import Mathlib.Analysis.Normed.Field.Lemmas
+import Mathlib.NumberTheory.NumberField.Basic
+import Mathlib.Tactic.DeriveFintype
 
 /-!
 # Finite combinatorics used in the Wallace construction
@@ -101,7 +103,7 @@ theorem equationSolution_spec {B : Finset G} {q : ℤ} {c : B → ℤ}
     (h : ∃ x : G, q • x + ∑ b, c b • (b : G) = 0) :
     q • equationSolution B q c + ∑ b, c b • (b : G) = 0 := by
   classical
-  simp only [equationSolution, dif_pos h]
+  simp only [equationSolution, dite_eq_left h]
   exact Classical.choose_spec h
 
 /-- A concrete finite set containing every forbidden point. -/
@@ -130,7 +132,7 @@ theorem forbidden_mem_forbiddenFinset [IsAddTorsionFree G]
   rw [hxeq]
   exact Finset.mem_image.mpr ⟨(q, c), Finset.mem_product.mpr ⟨hqmem, hcmem⟩, rfl⟩
 
-theorem boundedIndependent_insert_of_not_forbidden [IsAddTorsionFree G] [DecidableEq G]
+theorem boundedIndependent_insert_of_not_forbidden [DecidableEq G]
     {M : ℕ} {Y : Finset G} {x : G}
     (hY : BoundedIndependent M Y) (hxY : x ∉ Y)
     (hx : ¬ Forbidden M Y x) : BoundedIndependent M (insert x Y) := by
@@ -337,7 +339,7 @@ noncomputable def deletionIndependenceBound (r Q : ℕ) : ℕ :=
 From an adequately bounded-independent finite set `X`, delete at most `|A|` points so that no
 bounded relation uses both `A` and the retained set.  The threshold and the conclusion—including
 the sharp deletion count `|X \ Y| ≤ |A|`—are the ones in the paper. -/
-theorem bounded_deletion [IsAddTorsionFree G] [DecidableEq G]
+theorem bounded_deletion [DecidableEq G]
     (r Q : ℕ) (A X : Finset G) (hAr : A.card ≤ r)
     (hX : BoundedIndependent (deletionIndependenceBound r Q) X) :
     ∃ Y : Finset G, Y ⊆ X ∧ (X \ Y).card ≤ A.card ∧ MixedRelationFree Q A Y := by
@@ -370,9 +372,9 @@ theorem bounded_deletion [IsAddTorsionFree G] [DecidableEq G]
     if z ∈ insert (point i) Y then c i z else 0
   have hcNBound (i : Fin (s + 1)) (z : G) : Int.natAbs (cN i z) ≤ Q := by
     by_cases hz : z ∈ insert (point i) Y
-    · rw [show cN i z = c i z by simp only [cN, if_pos hz]]
+    · rw [show cN i z = c i z by simp only [cN, ite_eq_left hz]]
       exact hcQ i z hz
-    · rw [show cN i z = 0 by simp only [cN, if_neg hz]]
+    · rw [show cN i z = 0 by simp only [cN, ite_eq_right hz]]
       simp
   have hcNPoint (i : Fin (s + 1)) : cN i (point i) ≠ 0 := by
     simpa [cN] using hcx i
@@ -383,7 +385,7 @@ theorem bounded_deletion [IsAddTorsionFree G] [DecidableEq G]
     congr 1
     apply Finset.sum_congr rfl
     intro z hz
-    rw [show cN i z = c i z by simp only [cN, if_pos hz]]
+    rw [show cN i z = c i z by simp only [cN, ite_eq_left hz]]
   let k : G → ℤ := fun z ↦ ∑ i, coeff i * cN i z
   have hkBound : ∀ z ∈ X,
       Int.natAbs (k z) ≤ deletionIndependenceBound r Q := by
@@ -462,7 +464,7 @@ theorem bounded_deletion [IsAddTorsionFree G] [DecidableEq G]
             symm
             apply Finset.sum_subset (hinsertX i)
             intro z hzX hznot
-            have hcz : cN i z = 0 := by simp only [cN, if_neg hznot]
+            have hcz : cN i z = 0 := by simp only [cN, ite_eq_right hznot]
             simp [hcz]
       _ = ∑ i, coeff i •
           (∑ z ∈ insert (point i) Y, cN i z • z) := by

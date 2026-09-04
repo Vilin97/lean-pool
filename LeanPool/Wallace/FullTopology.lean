@@ -123,7 +123,7 @@ theorem initial_isTopologicalAddGroup (C : FullCharacterPackage G) :
 
 theorem initial_t2Space (C : FullCharacterPackage G) :
     @T2Space G C.initialTopology := by
-  letI : TopologicalSpace G := C.initialTopology
+  let : TopologicalSpace G := C.initialTopology
   exact C.evaluation_injective.isEmbedding_induced.t2Space
 
 /-- The selected subsequence converges to its prescribed point in the initial topology. -/
@@ -132,7 +132,7 @@ theorem prepared_tendsto_limitPoint (C : FullCharacterPackage G) (c : C.Code) :
       (fun n ↦ (C.codeEquiv c).1 (C.subsequence c n))
       (C.ultrafilter c)
       (@nhds G C.initialTopology (C.limitPoint c)) := by
-  letI : TopologicalSpace G := C.initialTopology
+  let : TopologicalSpace G := C.initialTopology
   have hinducing : IsInducing C.evaluation := ⟨rfl⟩
   refine hinducing.tendsto_nhds_iff.mpr ?_
   refine tendsto_pi_nhds.2 fun j ↦ ?_
@@ -154,17 +154,17 @@ theorem hasNonzeroLimitProperty (C : FullCharacterPackage G) :
 
 theorem initial_countablyCompactSpace (C : FullCharacterPackage G) :
     @CountablyCompactSpace G C.initialTopology := by
-  letI : TopologicalSpace G := C.initialTopology
-  letI : T2Space G := C.initial_t2Space
+  let : TopologicalSpace G := C.initialTopology
+  let : T2Space G := C.initial_t2Space
   exact countablyCompact_of_nonzero_ultrafilter_limits
     C.hasNonzeroLimitProperty
 
 theorem initial_noInjectiveConvergentSequences (C : FullCharacterPackage G) :
     ∀ s : ℕ → G, Function.Injective s →
       ¬ ∃ x : G, Tendsto s atTop (@nhds G C.initialTopology x) := by
-  letI : TopologicalSpace G := C.initialTopology
-  letI : IsTopologicalAddGroup G := C.initial_isTopologicalAddGroup
-  letI : T2Space G := C.initial_t2Space
+  let : TopologicalSpace G := C.initialTopology
+  let : IsTopologicalAddGroup G := C.initial_isTopologicalAddGroup
+  let : T2Space G := C.initial_t2Space
   exact no_injective_sequence_converges_of_nonzeroLimitProperty
     C.hasNonzeroLimitProperty
 
@@ -173,8 +173,8 @@ theorem initial_onlyEventuallyConstantConvergentSequences
     ∀ (s : ℕ → G) (x : G),
       Tendsto s atTop (@nhds G C.initialTopology x) →
         ∀ᶠ n in atTop, s n = x := by
-  letI : TopologicalSpace G := C.initialTopology
-  letI : T2Space G := C.initial_t2Space
+  let : TopologicalSpace G := C.initialTopology
+  let : T2Space G := C.initial_t2Space
   intro s x hs
   exact eventually_eq_limit_of_no_injective_sequence_converges
     C.initial_noInjectiveConvergentSequences hs
@@ -183,7 +183,7 @@ theorem initial_onlyEventuallyConstantConvergentSequences
 circle. -/
 theorem initial_totallyBounded (C : FullCharacterPackage G) :
     @TotallyBounded G C.initialUniformSpace Set.univ := by
-  letI : UniformSpace G := C.initialUniformSpace
+  let : UniformSpace G := C.initialUniformSpace
   have hinducing : IsUniformInducing C.evaluation := ⟨rfl⟩
   have htarget : TotallyBounded
       (Set.univ : Set (C.CharacterIndex → UnitAddCircle)) :=

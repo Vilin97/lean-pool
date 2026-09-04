@@ -29,7 +29,7 @@ variable {G : Type*} [AddCommGroup G]
 a product of circles. -/
 theorem initial_t35Space (C : FullCharacterPackage G) :
     @T35Space G C.initialTopology := by
-  letI : TopologicalSpace G := C.initialTopology
+  let : TopologicalSpace G := C.initialTopology
   exact C.evaluation_injective.isEmbedding_induced.t35Space
 
 end FullCharacterPackage
@@ -58,15 +58,15 @@ theorem continuumPositiveCone_isCommutativeTychonoffWallace :
         @IsWallaceSemigroup (positiveCone ContinuumIndex) topology _ := by
   let C : SeparationPackage ContinuumIndex := continuumFullSeparationPackage
   let ambientTopology : TopologicalSpace ContinuumFreeGroup := C.initialTopology
-  letI : TopologicalSpace ContinuumFreeGroup := ambientTopology
-  letI : IsTopologicalAddGroup ContinuumFreeGroup := C.initial_isTopologicalAddGroup
-  letI : T2Space ContinuumFreeGroup := C.initial_t2Space
-  letI : T35Space ContinuumFreeGroup := C.initial_t35Space
-  letI : Infinite ContinuumIndex := continuumIndex_infinite
+  let : TopologicalSpace ContinuumFreeGroup := ambientTopology
+  let : IsTopologicalAddGroup ContinuumFreeGroup := C.initial_isTopologicalAddGroup
+  let : T2Space ContinuumFreeGroup := C.initial_t2Space
+  let : T35Space ContinuumFreeGroup := C.initial_t35Space
+  let : Infinite ContinuumIndex := continuumIndex_infinite
   let coneTopology : TopologicalSpace (positiveCone ContinuumIndex) :=
     TopologicalSpace.induced
       (fun z : positiveCone ContinuumIndex ↦ (z : ContinuumFreeGroup)) ambientTopology
-  letI : TopologicalSpace (positiveCone ContinuumIndex) := coneTopology
+  let : TopologicalSpace (positiveCone ContinuumIndex) := coneTopology
   let i : ContinuumIndex := Classical.choice inferInstance
   have hwallace : IsWallaceSemigroup (positiveCone ContinuumIndex) :=
     positiveCone_isWallace_of_limitProperty ContinuumIndex i

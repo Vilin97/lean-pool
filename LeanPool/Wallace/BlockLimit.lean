@@ -35,7 +35,7 @@ theorem tendsto_blockOf_atTop
     have heq : {n : ℕ | blockOf N hN n < L} =
         ⋃ l ∈ Set.Iio L, {n : ℕ | blockOf N hN n = l} := by
       ext n
-      simp only [Set.mem_setOf_eq, Set.mem_iUnion, exists_prop]
+      simp only [Set.mem_ofPred_eq, Set.mem_iUnion, exists_prop]
       constructor
       · intro hn
         exact ⟨blockOf N hN n, hn, rfl⟩
@@ -44,7 +44,7 @@ theorem tendsto_blockOf_atTop
     rw [heq]
     exact (Set.finite_Iio L).biUnion fun l _hl ↦ blockFiber_finite N hN l
   have hcompl : {n : ℕ | ¬ blockOf N hN n < L} ∈ (cofinite : Filter ℕ) := by
-    simpa only [Set.compl_setOf] using hfinite.compl_mem_cofinite
+    simpa only [Set.compl_ofPred] using hfinite.compl_mem_cofinite
   have hlarge : {n : ℕ | L ≤ blockOf N hN n} ∈ (cofinite : Filter ℕ) := by
     simpa only [not_lt] using hcompl
   exact hp hlarge

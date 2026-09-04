@@ -6,6 +6,7 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 
 import LeanPool.Wallace.RationalLocalSetup
 import LeanPool.Wallace.LocalFusion
+import Mathlib.Data.Finsupp.Encodable
 
 /-!
 # The unconditional local fusion for the rational direct sum
@@ -49,7 +50,7 @@ def localEnumeration (x : ContinuumRationalGroup) : ℕ → LocalGroup x := by
 
 theorem localEnumeration_surjective (x : ContinuumRationalGroup) :
     Function.Surjective (localEnumeration x) := by
-  letI : Countable (localCarrier x) :=
+  let : Countable (localCarrier x) :=
     (closure_countable blockSize blockSize_pos independenceBound x).to_subtype
   exact Classical.choose_spec (exists_surjective_nat (LocalGroup x))
 

@@ -36,7 +36,7 @@ theorem exists_disjoint_refinement_countable
         ∀ i, refined i ⊆ family i ∧ (family i \ refined i).Finite := by
   let rank : ι → ℕ := Classical.choose (exists_injective_nat ι)
   have hrank : Function.Injective rank := Classical.choose_spec (exists_injective_nat ι)
-  letI : LinearOrder ι := LinearOrder.lift' rank hrank
+  let : LinearOrder ι := LinearOrder.lift' rank hrank
   have hpred (i : ι) : (Set.Iio i).Finite := by
     have heq : Set.Iio i = rank ⁻¹' Set.Iio (rank i) := by
       ext j

@@ -21,8 +21,7 @@ universe u v
 
 /-- Bounded independence is reflected by an injective additive homomorphism. -/
 theorem boundedIndependent_of_image
-    {G : Type u} {H : Type v} [AddCommGroup G] [AddCommGroup H]
-    [DecidableEq G] [DecidableEq H]
+    {G : Type u} {H : Type v} [AddCommGroup G] [AddCommGroup H] [DecidableEq H]
     (f : G →+ H) (hf : Function.Injective f)
     {M : ℕ} {X : Finset G}
     (himage : BoundedIndependent M (X.image f)) :

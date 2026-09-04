@@ -27,6 +27,7 @@ open FiniteCombinatorics
 
 variable {G : Type u} [AddCommGroup G] [DecidableEq G]
 
+omit [DecidableEq G] in
 /-- A short-relation-free old/new pair is disjoint as soon as the height bound contains `1`. -/
 theorem disjoint_of_mixedRelationFree {A Y : Finset G} {Q : ℕ} (hQ : 1 ≤ Q)
     (hfree : MixedRelationFree Q A Y) : Disjoint A Y := by
@@ -62,7 +63,7 @@ private theorem unionCoefficient_of_mem
     (a : Fin (A ∪ Y).card → ℤ) {x : G} (hx : x ∈ A ∪ Y) :
     unionCoefficient A Y a x = a ((unionEquiv A Y).symm ⟨x, hx⟩) := by
   classical
-  simp only [unionCoefficient, dif_pos hx]
+  simp only [unionCoefficient, dite_eq_left hx]
 
 omit [AddCommGroup G] in
 private theorem unionCoefficient_tuple
@@ -134,13 +135,13 @@ private theorem sum_stageTarget_eq_sum_old
                 ∑ x ∈ A, unionCoefficient A Y a x • old x := by
             apply Finset.sum_congr rfl
             intro x hx
-            rw [if_pos hx]
+            rw [ite_eq_left hx]
           have hsumY :
               (∑ x ∈ Y, unionCoefficient A Y a x •
                 (if x ∈ A then old x else 0)) = 0 := by
             apply Finset.sum_eq_zero
             intro y hy
-            rw [if_neg (hYA y hy), smul_zero]
+            rw [ite_eq_right (hYA y hy), smul_zero]
           rw [hsumA, hsumY, add_zero]
 
 /-- Bounded deletion makes the finite fusion target compatible with every relation up to `Q`. -/

@@ -57,7 +57,6 @@ theorem ofBlockPositions_block (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (l : ℕ)
     (ofBlockPositions N hN).block l = TriangularPreprocess.blockPositions N hN l :=
   rfl
 
-@[simp]
 theorem ofBlockPositions_card (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (l : ℕ) :
     ((ofBlockPositions N hN).block l).card = N l :=
   TriangularPreprocess.blockPositions_card N hN l
@@ -100,7 +99,7 @@ theorem missingRatio_mono (B : BlockSystem) {A C : Set ℕ} (hAC : A ⊆ C) (l :
 theorem missingRatio_inter_le (B : BlockSystem) (A C : Set ℕ) (l : ℕ) :
     B.missingRatio (A ∩ C) l ≤ B.missingRatio A l + B.missingRatio C l := by
   classical
-  letI (n : ℕ) : Decidable (n ∈ A ∩ C) := Classical.propDecidable _
+  let (n : ℕ) : Decidable (n ∈ A ∩ C) := Classical.propDecidable _
   have hsubset :
       (B.block l).filter (fun n ↦ n ∉ A ∩ C) ⊆
         (B.block l).filter (fun n ↦ n ∉ A) ∪
@@ -154,7 +153,7 @@ theorem densityFilter_le_cofinite (B : BlockSystem) (a : Set ℕ) :
   classical
   rw [le_cofinite_iff_compl_singleton_mem]
   intro n
-  letI (k : ℕ) : Decidable (k ∈ ({n} : Set ℕ)ᶜ) := Classical.propDecidable _
+  let (k : ℕ) : Decidable (k ∈ ({n} : Set ℕ)ᶜ) := Classical.propDecidable _
   rw [mem_densityFilter_iff]
   unfold IsLarge
   apply tendsto_congr' ?_ |>.mpr tendsto_const_nhds
@@ -187,7 +186,7 @@ theorem densityFilter_neBot (B : BlockSystem) {a : Set ℕ} (ha : a.Infinite) :
     exact Filter.mem_bot
   rw [mem_densityFilter_iff] at hempty
   unfold IsLarge at hempty
-  haveI : NeBot (atTop ⊓ Filter.principal a) := by
+  have : NeBot (atTop ⊓ Filter.principal a) := by
     rw [← Nat.cofinite_eq_atTop]
     exact ha.cofinite_inf_principal_neBot
   have hone_tendsto :
@@ -204,7 +203,7 @@ theorem exists_free_ultrafilter_le_densityFilter
     (B : BlockSystem) {a : Set ℕ} (ha : a.Infinite) :
     ∃ p : Ultrafilter ℕ,
       (p : Filter ℕ) ≤ B.densityFilter a ∧ (p : Filter ℕ) ≤ cofinite := by
-  letI : (B.densityFilter a).NeBot := B.densityFilter_neBot ha
+  let : (B.densityFilter a).NeBot := B.densityFilter_neBot ha
   exact exists_free_ultrafilter_le_filter (B.densityFilter a)
     (B.densityFilter_le_cofinite a)
 
@@ -225,7 +224,7 @@ def disjointize [Preorder ι] (family : ι → Set α) (j : ι) : Set α :=
 
 theorem disjointize_subset [Preorder ι] (family : ι → Set α) (j : ι) :
     disjointize family j ⊆ family j :=
-  Set.diff_subset
+  Set.sdiff_subset
 
 /-- Disjointization makes any linearly enumerated family pairwise disjoint; no
 almost-disjointness assumption is needed for this part. -/

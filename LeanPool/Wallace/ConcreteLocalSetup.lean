@@ -62,7 +62,7 @@ def refinedLabel (x : ContinuumFreeGroup) : RelevantCode N hN M x → Set ℕ :=
 theorem refinedLabel_pairwise (x : ContinuumFreeGroup) :
     Pairwise fun a b : RelevantCode N hN M x ↦
       Disjoint (refinedLabel N hN M x a) (refinedLabel N hN M x b) := by
-  letI : Countable (RelevantCode N hN M x) := relevantCode_countable N hN M x
+  let : Countable (RelevantCode N hN M x) := relevantCode_countable N hN M x
   exact (Classical.choose_spec
     (exists_disjoint_refinement_countable
       (fun a : RelevantCode N hN M x ↦ label a.1)
@@ -71,7 +71,7 @@ theorem refinedLabel_pairwise (x : ContinuumFreeGroup) :
 theorem label_diff_refinedLabel_finite
     (x : ContinuumFreeGroup) (a : RelevantCode N hN M x) :
     (label a.1 \ refinedLabel N hN M x a).Finite := by
-  letI : Countable (RelevantCode N hN M x) := relevantCode_countable N hN M x
+  let : Countable (RelevantCode N hN M x) := relevantCode_countable N hN M x
   exact (Classical.choose_spec
     (exists_disjoint_refinement_countable
       (fun a : RelevantCode N hN M x ↦ label a.1)
@@ -166,7 +166,7 @@ theorem closureInclusion_localDifference
     closureInclusion N hN M x (localDifference N hN M x a n) =
       prepared N hN M a.1 n - codeBasisVector a.1 := by
   classical
-  letI : DecidablePred (closure N hN M x : ContinuumIndex → Prop) :=
+  let : DecidablePred (closure N hN M x : ContinuumIndex → Prop) :=
     fun _ ↦ Classical.propDecidable _
   rw [closureInclusion_apply]
   change Finsupp.embDomain

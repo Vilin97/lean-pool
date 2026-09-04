@@ -5,7 +5,7 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 
 import LeanPool.Wallace.TriangularPreprocess
-import Mathlib.Data.Rat.Cardinal
+import Mathlib.SetTheory.Cardinal.Rat
 
 /-!
 # Triangular preprocessing for the rational direct sum
@@ -41,7 +41,6 @@ abbrev RationalInjectiveSequences :=
 def RationalSupportedBelow (s : ℕ → ContinuumRationalGroup) (i : ContinuumIndex) : Prop :=
   ∀ n j, j ∈ (s n).support → j < i
 
-@[simp]
 theorem mk_continuumIndex : #ContinuumIndex = 𝔠 :=
   TriangularPreprocess.mk_continuumIndex
 
@@ -49,7 +48,7 @@ theorem continuumIndex_infinite : Infinite ContinuumIndex :=
   TriangularPreprocess.continuumIndex_infinite
 
 theorem mk_continuumRationalGroup : #ContinuumRationalGroup = 𝔠 := by
-  letI : Infinite ContinuumIndex := continuumIndex_infinite
+  let : Infinite ContinuumIndex := continuumIndex_infinite
   change #(ContinuumIndex →₀ ℚ) = 𝔠
   rw [Cardinal.mk_finsupp_of_infinite, mk_continuumIndex, Cardinal.mkRat]
   exact max_eq_left Cardinal.aleph0_le_continuum

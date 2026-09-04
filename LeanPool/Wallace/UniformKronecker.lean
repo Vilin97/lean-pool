@@ -347,7 +347,7 @@ private theorem exists_finite_frequency_approximation_of_compact
       _ = dist (c.sum fun a z ↦ z • UnitAddTorus.mFourier a)
             (complexifyDistanceFunction g.1) := by rw [dist_eq_norm]
       _ < δ := by simpa only [dist_comm] using hgP
-  letI : Fintype T := hTfin.fintype
+  let : Fintype T := hTfin.fintype
   choose coeff hcoeff using fun g : T ↦ hpoly ⟨g.1, hTA g.2⟩
   let S : Finset (Fin m → ℤ) := Finset.univ.biUnion fun g : T ↦ (coeff g).support
   refine ⟨S, fun f hfA ↦ ?_⟩
@@ -437,7 +437,7 @@ private noncomputable def annihilatorHaarMeasure {m : ℕ}
 private instance annihilatorHaar_isProbability {m : ℕ}
     (R : AddSubgroup (Fin m → ℤ)) :
     MeasureTheory.IsProbabilityMeasure (annihilatorHaarMeasure R) := by
-  letI : CompactSpace (integerAnnihilator R) :=
+  let : CompactSpace (integerAnnihilator R) :=
     isCompact_iff_compactSpace.mp (isClosed_integerAnnihilator R).isCompact
   constructor
   change MeasureTheory.Measure.addHaarMeasure (⊤ : PositiveCompacts (integerAnnihilator R))
@@ -453,7 +453,7 @@ private theorem integral_mFourier_translate {m : ℕ}
       UnitAddTorus.mFourier a x *
         ∫ h : integerAnnihilator R, UnitAddTorus.mFourier a h.1
           ∂(annihilatorHaarMeasure R) := by
-  letI : CompactSpace (integerAnnihilator R) :=
+  let : CompactSpace (integerAnnihilator R) :=
     isCompact_iff_compactSpace.mp (isClosed_integerAnnihilator R).isCompact
   rw [← MeasureTheory.integral_const_mul]
   apply MeasureTheory.integral_congr_ae
@@ -467,7 +467,7 @@ private theorem integral_mFourier_eq_zero_of_not_mem {m : ℕ}
     (R : AddSubgroup (Fin m → ℤ)) {a : Fin m → ℤ} (ha : a ∉ R) :
     (∫ h : integerAnnihilator R, UnitAddTorus.mFourier a h.1
         ∂(annihilatorHaarMeasure R)) = 0 := by
-  letI : CompactSpace (integerAnnihilator R) :=
+  let : CompactSpace (integerAnnihilator R) :=
     isCompact_iff_compactSpace.mp (isClosed_integerAnnihilator R).isCompact
   obtain ⟨x, hxR, hxa⟩ := exists_mem_integerAnnihilator_not_annihilate R ha
   let xR : integerAnnihilator R := ⟨x, hxR⟩
@@ -476,7 +476,7 @@ private theorem integral_mFourier_eq_zero_of_not_mem {m : ℕ}
   let K : PositiveCompacts (integerAnnihilator R) := ⊤
   have hmeasure : annihilatorHaarMeasure R =
       MeasureTheory.Measure.addHaarMeasure K := rfl
-  letI : (annihilatorHaarMeasure R).IsAddLeftInvariant := by
+  let : (annihilatorHaarMeasure R).IsAddLeftInvariant := by
     rw [hmeasure]
     infer_instance
   have hinv : (∫ h : integerAnnihilator R,
@@ -503,7 +503,7 @@ private theorem integral_mFourier_eq_one_of_mem {m : ℕ}
     (R : AddSubgroup (Fin m → ℤ)) {a : Fin m → ℤ} (ha : a ∈ R) :
     (∫ h : integerAnnihilator R, UnitAddTorus.mFourier a h.1
         ∂(annihilatorHaarMeasure R)) = 1 := by
-  letI : CompactSpace (integerAnnihilator R) :=
+  let : CompactSpace (integerAnnihilator R) :=
     isCompact_iff_compactSpace.mp (isClosed_integerAnnihilator R).isCompact
   have hone : ∀ h : integerAnnihilator R, UnitAddTorus.mFourier a h.1 = 1 := by
     intro h
@@ -528,7 +528,7 @@ private theorem integral_fourierPolynomial_translate {m : ℕ}
         ∂(annihilatorHaarMeasure R)) =
       c.sum fun a z ↦ filteredFourierTerm R a z x := by
   classical
-  letI : CompactSpace (integerAnnihilator R) :=
+  let : CompactSpace (integerAnnihilator R) :=
     isCompact_iff_compactSpace.mp (isClosed_integerAnnihilator R).isCompact
   rw [Finsupp.sum_of_support_subset c (s := c.support) Subset.rfl _ (by
     intro a _ha
@@ -543,9 +543,9 @@ private theorem integral_fourierPolynomial_translate {m : ℕ}
     simp_rw [ContinuousMap.smul_apply, smul_eq_mul]
     rw [MeasureTheory.integral_const_mul, integral_mFourier_translate R a x]
     by_cases haR : a ∈ R
-    · rw [filteredFourierTerm, if_pos haR,
+    · rw [filteredFourierTerm, ite_eq_left haR,
         integral_mFourier_eq_one_of_mem R haR, mul_one]
-    · rw [filteredFourierTerm, if_neg haR,
+    · rw [filteredFourierTerm, ite_eq_right haR,
         integral_mFourier_eq_zero_of_not_mem R haR, mul_zero, mul_zero]
   · intro a _ha
     apply MeasureTheory.Integrable.const_mul
@@ -567,7 +567,7 @@ theorem infDist_integerAnnihilator_lt_of_finite_relations {m : ℕ} {δ : ℝ} (
     (ht : ∀ a ∈ S, a ∈ R → torusRelationMap t a = 0) :
     Metric.infDist t (integerAnnihilator R) ≤ 4 * δ := by
   classical
-  letI : CompactSpace (integerAnnihilator R) :=
+  let : CompactSpace (integerAnnihilator R) :=
     isCompact_iff_compactSpace.mp (isClosed_integerAnnihilator R).isCompact
   obtain ⟨c, hcS, hc⟩ := hS R
   let P : C(UnitAddTorus (Fin m), ℂ) := c.sum fun a z ↦ z • UnitAddTorus.mFourier a
@@ -582,11 +582,11 @@ theorem infDist_integerAnnihilator_lt_of_finite_relations {m : ℕ} {δ : ℝ} (
     intro a ha
     have haS : a ∈ S := hcS ha
     by_cases haR : a ∈ R
-    · simp only [filteredFourierTerm, if_pos haR]
+    · simp only [filteredFourierTerm, ite_eq_left haR]
       have hat : torusRelationMap t a = 0 := ht a haS haR
       rw [mFourier_eq_toCircle_relation, hat, AddCircle.toCircle_zero]
       simp [UnitAddTorus.mFourier]
-    · simp only [filteredFourierTerm, if_neg haR]
+    · simp only [filteredFourierTerm, ite_eq_right haR]
   have hdistInvariant : ∀ h : integerAnnihilator R,
       annihilatorDistance R (t + h.1) = annihilatorDistance R t := by
     intro h

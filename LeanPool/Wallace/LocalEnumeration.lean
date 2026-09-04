@@ -5,6 +5,7 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 
 import LeanPool.Wallace.ConcreteClosure
+import Mathlib.Data.Finsupp.Encodable
 
 /-!
 # Enumeration of a countable local free group
@@ -27,7 +28,7 @@ def groupEnumeration (x : ContinuumFreeGroup) :
 
 theorem groupEnumeration_surjective (x : ContinuumFreeGroup) :
     Function.Surjective (groupEnumeration N hN M x) := by
-  letI : Countable (closure N hN M x) := (closure_countable N hN M x).to_subtype
+  let : Countable (closure N hN M x) := (closure_countable N hN M x).to_subtype
   exact Classical.choose_spec (exists_surjective_nat (closure N hN M x →₀ ℤ))
 
 end

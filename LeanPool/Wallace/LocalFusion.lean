@@ -350,12 +350,14 @@ def nextFusionState
       (S.pastRetained ∪
           (chosenFusionStep fresh enumeration x hfresh_card hfresh_independent l S).retained).card
           ≤ S.pastRetained.card +
-            (chosenFusionStep fresh enumeration x hfresh_card hfresh_independent l S).retained.card :=
+            (chosenFusionStep fresh enumeration x hfresh_card hfresh_independent
+              l S).retained.card :=
         Finset.card_union_le _ _
       _ ≤ FusionSchedule.accumulatedSize l + FusionSchedule.blockSize l := by
         apply Nat.add_le_add S.pastRetained_card_le
         exact (Finset.card_le_card
-          (chosenFusionStep fresh enumeration x hfresh_card hfresh_independent l S).retained_subset).trans
+          (chosenFusionStep fresh enumeration x hfresh_card
+            hfresh_independent l S).retained_subset).trans
             (hfresh_card l)
       _ = FusionSchedule.accumulatedSize (l + 1) :=
         (FusionSchedule.accumulatedSize_succ l).symm
@@ -416,7 +418,8 @@ theorem fusionStates_pastRetained_mono : Monotone fun l ↦
 
 /-- The fully scheduled run associated with a chosen initial character. -/
 def scheduledRun (henumeration : Function.Surjective enumeration) : FusionRun G where
-  character := fun l ↦ (states fresh enumeration x hfresh_card hfresh_independent initial l).character
+  character := fun l ↦
+    (states fresh enumeration x hfresh_card hfresh_independent initial l).character
   guardSet := fun l ↦ stageGuard enumeration x l
     (states fresh enumeration x hfresh_card hfresh_independent initial l)
   retained := fun l ↦ (step fresh enumeration x hfresh_card hfresh_independent initial l).retained
@@ -433,15 +436,17 @@ def scheduledRun (henumeration : Function.Surjective enumeration) : FusionRun G 
     change dist
       ((states fresh enumeration x hfresh_card hfresh_independent initial l).character g)
       ((step fresh enumeration x hfresh_card hfresh_independent initial l).next g) ≤ _
-    exact (step fresh enumeration x hfresh_card hfresh_independent initial l).protected_closeness g hg
+    exact
+      (step fresh enumeration x hfresh_card hfresh_independent initial l).protected_closeness g hg
   retained_at_stage := by
     intro l g hg
     change ‖(step fresh enumeration x hfresh_card hfresh_independent initial l).next g‖ ≤ _
     exact (step fresh enumeration x hfresh_card hfresh_independent initial l).retained_small g hg
   retained_protected := by
     intro l g hg k hlk
-    have hgNext : g ∈
-        (states fresh enumeration x hfresh_card hfresh_independent initial (l + 1)).pastRetained := by
+    have hgNext :
+        g ∈ (states fresh enumeration x hfresh_card hfresh_independent
+          initial (l + 1)).pastRetained := by
       change g ∈
         (states fresh enumeration x hfresh_card hfresh_independent initial l).pastRetained ∪
           (step fresh enumeration x hfresh_card hfresh_independent initial l).retained

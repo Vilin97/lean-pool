@@ -119,7 +119,7 @@ theorem eventually_eq_limit_of_no_injective_sequence_converges
     ∀ᶠ n in atTop, s n = x := by
   by_cases hfinite : (Set.range s).Finite
   · let A : Set X := Set.range s \ {x}
-    have hA : A.Finite := hfinite.diff
+    have hA : A.Finite := hfinite.sdiff
     have hAc : IsClosed A := hA.isClosed
     have hxA : x ∈ Aᶜ := by simp [A]
     have hnhds : Aᶜ ∈ nhds x := hAc.isOpen_compl.mem_nhds hxA

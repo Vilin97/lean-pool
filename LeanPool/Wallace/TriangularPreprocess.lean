@@ -37,7 +37,6 @@ abbrev ContinuumFreeGroup := ContinuumIndex →₀ ℤ
 abbrev InjectiveSequences :=
   {s : ℕ → ContinuumFreeGroup // Function.Injective s}
 
-@[simp]
 theorem mk_continuumIndex : #ContinuumIndex = 𝔠 := by
   exact Cardinal.mk_ord_toType 𝔠
 
@@ -46,7 +45,7 @@ theorem continuumIndex_infinite : Infinite ContinuumIndex := by
     simpa only [mk_continuumIndex] using Cardinal.aleph0_le_continuum
 
 theorem mk_continuumFreeGroup : #ContinuumFreeGroup = 𝔠 := by
-  letI : Infinite ContinuumIndex := continuumIndex_infinite
+  let : Infinite ContinuumIndex := continuumIndex_infinite
   change #(ContinuumIndex →₀ ℤ) = 𝔠
   rw [Cardinal.mk_finsupp_of_infinite, mk_continuumIndex, Cardinal.mk_int]
   exact max_eq_left Cardinal.aleph0_le_continuum
@@ -340,13 +339,13 @@ theorem blockSelectionStates_boundedIndependent
       by_cases hl : l = block n
       · subst l
         simp only [blockSelectionStep]
-        simp
+        simp only [Function.update_self]
         exact boundedIndependent_insert_of_not_forbidden ih
           (nextBlockIndex_not_mem_values u hu M block n
             (blockSelectionStates u hu M block n))
           (nextBlockIndex_not_forbidden u hu M block n
             (blockSelectionStates u hu M block n))
-      · simp [blockSelectionStep, hl]
+      · simp only [blockSelectionStep, ne_eq, hl, not_false_eq_true, Function.update_of_ne]
         exact ih
 
 theorem blockSelectionStates_values_mono_succ
@@ -527,7 +526,7 @@ theorem exists_boundedIndependent_subsequence_for_sizes
   refine ⟨φ, hφ, fun l => ⟨blockPositions_card N hN l, ?_⟩⟩
   have hfinset : (hfinite l).toFinset = blockPositions N hN l := by
     ext n
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, mem_blockPositions_iff]
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, mem_blockPositions_iff]
   simpa only [hfinset] using hind l
 
 /-! ## The paper's shifted coded sequences -/

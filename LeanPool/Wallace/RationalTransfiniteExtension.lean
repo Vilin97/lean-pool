@@ -6,6 +6,7 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 
 import LeanPool.Wallace.RationalTriangularPreprocess
 import Mathlib.Algebra.Category.Grp.Injective
+import Mathlib.Topology.Instances.AddCircle.Real
 
 /-!
 # Transfinite extension for the rational direct sum
@@ -164,7 +165,7 @@ theorem globalCoordinate_codeIndex_of_not_mem
   rw [globalCoordinate_eq]
   simp only [coordinateStep, hc, dite_false]
   let hex : ∃ d : E.Code, E.codeIndex d = E.codeIndex c := ⟨c, rfl⟩
-  rw [dif_pos hex]
+  rw [dite_eq_left hex]
   have hchosen : Classical.choose hex = c := by
     apply E.codeIndex.injective
     exact Classical.choose_spec hex
