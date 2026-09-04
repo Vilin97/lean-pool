@@ -6995,12 +6995,7 @@ projects:
     branch: algebraic number theory
     entry_module: LeanPool.FltRegular
     authors:
-      - Riccardo Brasca
-      - Ruben Van de Velde
-      - Andrew Yang
-      - Chris Birkbeck
-      - Alex J. Best
-      - Eric Rodriguez
+      - FltRegular contributors
     source:
       title: Fermat's Last Theorem for regular primes
       authors:
