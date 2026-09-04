@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 -/
 
-import LeanPool.Wallace.Main
+import LeanPool.Wallace.FullTopologyMain
 import Mathlib.Topology.Separation.CompletelyRegular
 
 /-!

@@ -4086,7 +4086,6 @@ import LeanPool.Wallace.GlobalAssembly
 import LeanPool.Wallace.InitialCharacter
 import LeanPool.Wallace.LocalEnumeration
 import LeanPool.Wallace.LocalFusion
-import LeanPool.Wallace.Main
 import LeanPool.Wallace.MathlibFoundations
 import LeanPool.Wallace.NontrivialSequences
 import LeanPool.Wallace.PackageTransport
