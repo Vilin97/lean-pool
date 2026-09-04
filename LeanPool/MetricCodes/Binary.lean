@@ -169,8 +169,7 @@ theorem scaled_binomialEntropy_identity
   rw [MetricCodes.Johnson.binaryEntropy_eq_binEntropy_div_log,
     Real.binEntropy, Real.log_inv, Real.log_inv,
     hblog, hcomplog]
-  field_simp [ha.ne']
-  ; ring
+  field_simp [ha.ne']; ring
 
 theorem tendsto_logb_choose_of_ratio
     {N K : ℕ → ℕ} {a b : ℝ}
@@ -856,8 +855,7 @@ theorem centered_diagonal_limit_algebra
     rw [hzero]
     ring
   rw [hcenter]
-  field_simp [hz, ha, ha']
-  ; ring
+  field_simp [hz, ha, ha']; ring
 
 theorem tendsto_threshold_ceil
     {d a b g u : ℝ}
@@ -2376,7 +2374,7 @@ theorem johnsonLowerRaiseAt_commutator {n : ℕ}
           MetricCodes.Boolean.raiseAt a (MetricCodes.Boolean.lowerAt a f) S := by
       rw [MetricCodes.Boolean.lowerAt_raiseAt_self,
         MetricCodes.Boolean.raiseAt_lowerAt_self]
-      by_cases ha : a ∈ S <;> simp [ha] ; ring
+      by_cases ha : a ∈ S <;> simp [ha]; ring
 
 theorem johnsonLowerAt_lowerAt_self {n : ℕ}
     (f : MetricCodes.Boolean.Function n) (a : Fin n) :
@@ -2492,7 +2490,7 @@ theorem johnsonMiddleRaw_isHarmonic {n j : ℕ}
         hmembership, hraise, hzero]
       simp only [Pi.sub_apply, Pi.smul_apply,
         smul_eq_mul, Pi.zero_apply, mul_zero, sub_zero]
-      field_simp [hden] ; simp only [sub_self, mul_zero]
+      field_simp [hden]; simp only [sub_self, mul_zero]
 
 private def johnsonUpperRaw {n : ℕ} (j : ℕ)
     (a : Fin n) (f : MetricCodes.Boolean.Function n) :
@@ -4556,7 +4554,7 @@ theorem sum_geometricAxis_on_subset {n w : ℕ}
         ← Finset.sum_sub_distrib]
       apply Finset.sum_congr rfl
       intro a _
-      by_cases ha : a ∈ S <;> simp [ha] ; ring
+      by_cases ha : a ∈ S <;> simp [ha]; ring
     _ = _ := by
       rw [sum_coordinateIndicator_on_subset x S,
         MetricCodes.Boolean.sum_mem_indicator]
@@ -4630,7 +4628,7 @@ theorem johnsonAxisMembership_smul {n w : ℕ}
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro a _
-  by_cases ha : a ∈ S <;> simp [ha] ; ring
+  by_cases ha : a ∈ S <;> simp [ha]; ring
 
 theorem johnsonDot_fintype_weighted_sum_right
     {n : ℕ} {ι : Type*} [Fintype ι]
@@ -6599,8 +6597,7 @@ theorem clebschClosedCenteredExpectation_eq_johnsonDiagonal
         (w : ℝ) / (n : ℝ) *
           ((p + q + source.val : ℕ) : ℝ) := by
         rw [clebschFirstMoment_eq hsupport hcomplement]
-        field_simp [hnorm, hden.ne']
-        ; ring
+        field_simp [hnorm, hden.ne']; ring
     _ = _ := clebschCenteredExpectation_eq_johnsonDiagonal
       h hstrict source
 
@@ -8055,7 +8052,7 @@ theorem johnsonAdjacentRawScalar_sq_degree_factored
     (P := (p : ℝ)) (Q := (q : ℝ))
     (T := (target.val : ℝ))
     hNC hw hC hgap hgapplus
-  convert halgebra using 1 ; push_cast ; ring
+  convert halgebra using 1; push_cast; ring
 
 
 theorem johnsonLowerOffDiagonalScalar_fourthPower

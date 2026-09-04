@@ -3959,7 +3959,7 @@ theorem traceOperator_polarization_harmonicLift {r n : ℕ}
       intro k _
       rw [pderiv_polarization_harmonicLift b i j k,
         map_add, pderiv_polarization_harmonicLift a i j k]
-      split_ifs <;> simp ; abel
+      split_ifs <;> simp; abel
     _ = polarization r n i j (traceOperator r n a b p) +
         (if a = i then traceOperator r n j b p else 0) +
         (if b = i then traceOperator r n a j p else 0) := by
@@ -5640,7 +5640,7 @@ theorem leadingMinor_isHomogeneous {r n : ℕ}
         isotropicVariable h (minorIndex k (π i)) (minorIndex k i))
       (fun _ => 1)
       (fun i _ => isotropicVariable_isHomogeneous h
-        (minorIndex k (π i)) (minorIndex k i)) using 1 ; simp
+        (minorIndex k (π i)) (minorIndex k i)) using 1; simp
   simpa only [map_intCast] using hprod.C_mul (((Equiv.Perm.sign π : ℤ) : ℂ))
 
 theorem rowDerivation_leadingMinor_upper {r n : ℕ}

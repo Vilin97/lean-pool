@@ -6710,7 +6710,7 @@ theorem iteratedArbitraryRowAxialRaise_isHomogeneous
       have h := ih (raiseWeight lam row)
         (arbitraryRowAxialRaise lam row k p)
         (arbitraryRowAxialRaise_isHomogeneous lam row k p hp)
-      convert h using 1 ; omega
+      convert h using 1; omega
 
 end ArbitraryRowSameAxisSchedule
 

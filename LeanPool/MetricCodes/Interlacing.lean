@@ -2164,7 +2164,7 @@ theorem arbitraryRowAxialRaise_sub_leading_mul_mem_lowerAxisIdeal
       Finset.mem_powerset.mp (Finset.mem_erase.mp hS).2
     exact nonemptyMickelssonWeightedPathTerm_mem_lowerAxisIdeal
       lam row k S hnon hsub p
-  convert hrest using 1 ; ring
+  convert hrest using 1; ring
 
 theorem arbitraryRowAxialRaise_sub_leading_mul_mem_lowerAxisGramIdeal
     {r n : ℕ} (lam : Fin (r + 1) → ℕ)
@@ -2252,7 +2252,7 @@ theorem arbitraryRowAxialRaise_not_mem_lowerAxisGramIdeal
         lowerAxisGramIdeal k row := by
     have hsubtract :=
       (lowerAxisGramIdeal k row).sub_mem hraise hdifference
-    convert hsubtract using 1 ; ring
+    convert hsubtract using 1; ring
   have haxis : MvPolynomial.X (variableIndex row k) * p ∈
       lowerAxisGramIdeal k row :=
     (C_mul_mem_ideal_iff (lowerAxisGramIdeal k row)
@@ -9318,7 +9318,7 @@ theorem arbitraryRowAxialRaise_harmonicBranch_sub_adjacent_mem_gram_of_pathExcha
   have hsum := (youngGramRadialIdeal (r + 1) (n + 1)).add_mem
     ((youngGramRadialIdeal (r + 1) (n + 1)).add_mem hsource (hexchange p))
     htarget
-  convert hsum using 1 ; module
+  convert hsum using 1; module
 
 end AllRankRawForwardAxisRange
 
@@ -9543,7 +9543,7 @@ theorem arbitraryRowSameAxisHarmonicRaise_reverseBranch_eq_of_pathExchange
       ((raised : PolynomialSpace (r + 1) (n + 1)) -
         coefficient • (target : PolynomialSpace (r + 1) (n + 1))) ∈ _
     convert (youngGramRadialIdeal (r + 1) (n + 1)).add_mem
-      hproject hraw using 1 ; module
+      hproject hraw using 1; module
   exact sub_eq_zero.mp
     (harmonicYoung_eq_zero_of_mem_youngGramRadialIdeal
       (raiseWeight low row) (raised - coefficient • target) hdiff)

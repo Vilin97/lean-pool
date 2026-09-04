@@ -1887,8 +1887,7 @@ theorem shifted_square_pair_ratio_eq_pairFactor
     ring
   rw [hbase]
   unfold Weyl.pairFactor
-  field_simp [hindex, hsum]
-  ; ring
+  field_simp [hindex, hsum]; ring
 
 end HigherWeylShiftedSquarePairNormalization
 
@@ -2277,7 +2276,7 @@ theorem orthogonalCompleteSymmetricCoefficient_descend_commonDenominator
           ((n : ℤ) + z + (r : ℤ) - 1 - ((k + q : ℕ) : ℤ))) := by
     convert Finset.prod_range_add
       (fun q : ℕ => ((n : ℤ) + z + (r : ℤ) - 1 - (q : ℤ)))
-      k (L - k) using 1 ;
+      k (L - k) using 1;
       simp [Nat.add_sub_of_le hk]
   rw [hsplit]
   have hdesc := orthogonalCompleteSymmetricCoefficient_descend
@@ -2941,7 +2940,7 @@ theorem orthogonalJacobiTrudiMatrix_entry_of_real_transport
       shiftedSquare n lam i := rfl
   rw [hz] at htransport
   rw [Polynomial.eval_mul]
-  convert htransport using 1 ; push_cast ; ring
+  convert htransport using 1; push_cast; ring
 
 theorem orthogonalJacobiTrudiMatrix_entry_eq_rowScale_columnPolynomial
     {r n : ℕ} (hn : 2 * r + 4 ≤ n)

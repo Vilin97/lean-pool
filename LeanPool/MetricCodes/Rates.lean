@@ -502,7 +502,7 @@ theorem inverse_zero_fibre_boundary
       (a * (1 - a) - u * (1 - u)) /
         (a * (1 - a) * (1 + r)) =
         δ / (2 * a * (1 - a)) := by
-    field_simp [ha0.ne', haone.ne', hplus] ;
+    field_simp [ha0.ne', haone.ne', hplus];
       nlinarith only [hvariancea, hvarianceu]
   have hspectral :
       1 - MetricCodes.Johnson.spectralLimit a 0 0 u =
@@ -2236,8 +2236,7 @@ theorem normalizedMu_zero
         0 =
       muLimit a b g u := by
   unfold normalizedMu muLimit MetricCodes.Johnson.centeredEta at *
-  field_simp [hz]
-  ; ring
+  field_simp [hz]; ring
 
 private theorem tendsto_pointwise_div
     {f g : ℕ → ℝ} {a b : ℝ}
@@ -2666,8 +2665,7 @@ private theorem centered_edge_limit_algebra
         (a * (1 - a)) =
       Real.sqrt R / (2 * z ^ 2 * (1 - m ^ 2)) := by
   rw [hcenter]
-  field_simp [hz, ha, hc]
-  ; ring
+  field_simp [hz, ha, hc]; ring
 
 theorem tendsto_johnsonEdge
     {d a b g u : ℝ}
@@ -3304,8 +3302,7 @@ theorem eventually_topEigenvalue_gt
         S - 2 * E / ((m : ℝ) + 1) := by
     dsimp [S, E]
     rw [spectralLimit_eq_hatted h]
-    field_simp [hden.ne']
-    ; ring
+    field_simp [hden.ne']; ring
   have hbelow :
       s <
         (((m : ℝ) + 1) * hattedDiagonalLimit a b g u +
@@ -3477,7 +3474,7 @@ theorem exists_zero_fibre_feasible
       (a * (1 - a) - u * (1 - u)) /
           (a * (1 - a) * (1 + 2 * Real.sqrt (u * (1 - u)))) <
         d / (2 * a * (1 - a)) := by
-    convert hquot using 1 ; ring
+    convert hquot using 1; ring
   linarith
 
 theorem rateSet_nonempty_of_interior

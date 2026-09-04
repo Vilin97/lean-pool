@@ -469,7 +469,7 @@ theorem lower_raise_sub_raise_lower (f : Function n)
       (if a ∈ S then (0 : ℝ) else f S) -
           (if a ∈ S then f S else 0) =
         f S - 2 * (if a ∈ S then f S else 0) := by
-    by_cases ha : a ∈ S <;> simp [ha] ; ring
+    by_cases ha : a ∈ S <;> simp [ha]; ring
   simp_rw [hterm, Finset.sum_sub_distrib]
   rw [← Finset.mul_sum, sum_mem_indicator]
   simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
@@ -2294,7 +2294,7 @@ theorem hammingAxis_inner {n : ℕ} (hn : 0 < n)
         rw [sum_sign_mul_eq_hammingDist]
     _ = MetricCodes.hammingCorrelation x y := by
         unfold MetricCodes.hammingCorrelation
-        field_simp [hsne, hn'.ne'] ; nlinarith [hs]
+        field_simp [hsne, hn'.ne']; nlinarith [hs]
 
 theorem character_insert
     (x : BinaryWord n) (a : Fin n) (S : Finset (Fin n))
@@ -2575,7 +2575,7 @@ theorem lower_harmonicEmbedding {k : ℕ}
     smul_smul, smul_smul, harmonicNormFactor_succ,
     Real.sqrt_mul hfactor.le]
   congr 1
-  field_simp [hfactorne, hcoefficientne] ;
+  field_simp [hfactorne, hcoefficientne];
     nlinarith [Real.sq_sqrt hcoefficient.le]
 
 private def hammingSourceChannelCoefficient
@@ -3002,7 +3002,7 @@ theorem hammingAdjacentChannel_isLevel
   by_cases hdelete : target.val + 1 = source.val
   · have hsource :
         IsLevel ((k + target.val) + 1) f := by
-      convert hf using 1 ; omega
+      convert hf using 1; omega
     simpa only [hammingAdjacentChannel, hdelete, ↓reduceIte, deleteChannel, Nat.cast_add] using
       (hsource.lowerAt a).smul (Real.sqrt (k + source.val : ℝ))⁻¹
   · by_cases hadd : source.val + 1 = target.val
@@ -3390,7 +3390,7 @@ theorem hammingInsertionChannelSquare_mul_sqrt_choose
       ((n : ℝ) - (i : ℝ) - (k : ℝ))))
     he hd hb ha hN hcross.symm
   unfold hammingInsertionChannelSquare MetricCodes.hammingJacobiEntry
-  convert hradical using 1 ; ring_nf
+  convert hradical using 1; ring_nf
 
 theorem hammingSourceChannelCoefficient_eq_deletion
     {n k L : ℕ} (hn : 0 < n)
@@ -5274,8 +5274,7 @@ theorem spectralMarginPolynomial_improvement_zero {a : ℝ}
   have hden' : 1 - a * 2 ≠ 0 := by
     simpa only [ne_eq, mul_comm] using hden
   unfold spectralMarginPolynomial improvementSlope
-  field_simp [hden, hden']
-  ; ring
+  field_simp [hden, hden']; ring
 
 theorem eventually_hammingGamma_improvement {a : ℝ}
     (ha : 0 < a) (ha' : a < (1 : ℝ) / 2) :
@@ -5967,8 +5966,7 @@ theorem eventually_topEigenvalue_gt {a b s : ℝ}
       ((m : ℝ) / ((m : ℝ) + 1)) * MetricCodes.hammingGamma a b =
         MetricCodes.hammingGamma a b -
           MetricCodes.hammingGamma a b / ((m : ℝ) + 1) := by
-    field_simp [hden.ne']
-    ; ring
+    field_simp [hden.ne']; ring
   have hbelow :
       s < ((m : ℝ) / ((m : ℝ) + 1)) * MetricCodes.hammingGamma a b := by
     rw [hidentity]
@@ -7155,8 +7153,7 @@ theorem centered_coordinate_inner_sum {n w : ℕ}
     _ = ((MetricCodes.wordSupport (x : BinaryWord n) ∩
           MetricCodes.wordSupport (y : BinaryWord n)).card : ℝ) -
         (w : ℝ) ^ 2 / (n : ℝ) := by
-      field_simp [hn']
-      ; ring
+      field_simp [hn']; ring
 
 /-- The geometric axis used in the Johnson-code argument. -/
 def geometricAxis {n w : ℕ} (x : JohnsonSphere n w) : MetricCodes.Ambient n :=
@@ -8474,8 +8471,7 @@ theorem zero_fibre_spectral_algebra
   have hfour : 4 * s ^ 2 ≠ 0 := by
     exact mul_ne_zero (by norm_num) (pow_ne_zero 2 hs)
   rw [hzsq]
-  field_simp [hm, hs, hplus, hplus', hplus'', hfour, hzsqne]
-  ; ring
+  field_simp [hm, hs, hplus, hplus', hplus'', hfour, hzsqne]; ring
 
 theorem spectralLimit_zero_fibre_boundary {α u : ℝ}
     (hu : 0 < u) (hua : u < α)
@@ -8561,8 +8557,7 @@ theorem spectralLimit_zero_fibre_boundary {α u : ℝ}
         (α * (1 - α) *
           (1 + 2 * Real.sqrt (u * (1 - u)))) := by
       dsimp [z, m, s]
-      field_simp [hmraw, hA, hfourA, hplusraw]
-      ; ring
+      field_simp [hmraw, hA, hfourA, hplusraw]; ring
 
 /-- The asymptotic threshold used in the Johnson-code argument. -/
 def asymptoticThreshold (δ α : ℝ) : ℝ :=
@@ -8813,7 +8808,7 @@ theorem mrrwObjective_endpoint {δ : ℝ}
       unfold mrrwG MetricCodes.Hamming.classicalRate
         MetricCodes.Hamming.classicalParameter
       rw [hroot]
-      congr 1 ; ring
+      congr 1; ring
 
 theorem mrrwG_variance {u : ℝ}
     (hu : u ≤ (1 : ℝ) / 2) :

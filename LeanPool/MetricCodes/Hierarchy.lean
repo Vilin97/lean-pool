@@ -317,8 +317,7 @@ theorem eventually_topEigenvalue_gt {a b s : ℝ}
   have hidentity :
       ((m : ℝ) / ((m : ℝ) + 1)) * g =
         g - g / ((m : ℝ) + 1) := by
-    field_simp [hden.ne']
-    ; ring
+    field_simp [hden.ne']; ring
   have hbelow :
       s < ((m : ℝ) / ((m : ℝ) + 1)) * g := by
     rw [hidentity]
@@ -3556,7 +3555,7 @@ theorem tendsto_scaleCoordinate_sq_div_atTop {c : ℝ} (hc : 0 < c) :
         (fun u : ℝ => u⁻¹ ^ 2 + 4 * c ^ 2 * (u⁻¹ + 1))
         atTop (𝓝 (4 * c ^ 2)) := by
     convert (hinv.pow 2).add
-      ((hinv.add tendsto_const_nhds).const_mul (4 * c ^ 2)) using 1 ;
+      ((hinv.add tendsto_const_nhds).const_mul (4 * c ^ 2)) using 1;
       norm_num
   have hroot : Real.sqrt (4 * c ^ 2) = 2 * c := by
     rw [show (4 : ℝ) * c ^ 2 = (2 * c) ^ 2 by ring,
@@ -3566,7 +3565,7 @@ theorem tendsto_scaleCoordinate_sq_div_atTop {c : ℝ} (hc : 0 < c) :
         (fun u : ℝ =>
           (Real.sqrt (u⁻¹ ^ 2 + 4 * c ^ 2 * (u⁻¹ + 1)) - u⁻¹) / 2)
         atTop (𝓝 c) := by
-    convert (hinside.sqrt.sub hinv).div_const 2 using 1 ;
+    convert (hinside.sqrt.sub hinv).div_const 2 using 1;
       simp [hroot]
   apply hlimit.congr'
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with u hu
@@ -3661,7 +3660,7 @@ theorem tendsto_spectralAtom_atTop_half :
         Real.sqrt (1 + u⁻¹) / (u⁻¹ + 2)) atTop (nhds ((1 : ℝ) / 2)) := by
     convert ((tendsto_const_nhds (x := (1 : ℝ))).add hinv).sqrt.div
       (hinv.add_const 2) (by norm_num : (0 : ℝ) + 2 ≠ 0) using 1 <;>
-      norm_num ; rfl
+      norm_num; rfl
   apply hnormal.congr'
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with u hu
   unfold spectralAtom
@@ -3698,7 +3697,7 @@ theorem tendsto_retainedQuadraticResidueFactor_atTop
     convert ((hq.const_mul (z * (1 + z))).sub_const (c ^ 2)).div
       ((hq.const_mul (z * (1 + z))).sub_const 1)
       (by norm_num : ((z * (1 + z)) * 0 - 1 : ℝ) ≠ 0) using 1 <;>
-      norm_num ; rfl
+      norm_num; rfl
   apply hnormal.congr'
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with u hu
   have hquad : (u * (1 + u)) ≠ 0 := by
@@ -5336,12 +5335,12 @@ theorem tendsto_quadratic_residue_ratio_of_degree_ratio
         (v k / u k) * (u k)⁻¹)
       atTop (𝓝 (-d ^ 2)) := by
     convert ((tendsto_const_nhds.mul (hinv.pow 2)).sub
-      (hd.pow 2)).sub (hd.mul hinv) using 1 ; norm_num
+      (hd.pow 2)).sub (hd.mul hinv) using 1; norm_num
   have hden : Tendsto
       (fun k => x * ((u k)⁻¹) ^ 2 - 1 - (u k)⁻¹)
       atTop (𝓝 (-1)) := by
     convert ((tendsto_const_nhds.mul (hinv.pow 2)).sub
-      tendsto_const_nhds).sub hinv using 1 ; norm_num
+      tendsto_const_nhds).sub hinv using 1; norm_num
   have hlimit := hnum.div hden (by norm_num : (-1 : ℝ) ≠ 0)
   have hvalue : -d ^ 2 / (-1 : ℝ) = d ^ 2 := by ring
   rw [hvalue] at hlimit
