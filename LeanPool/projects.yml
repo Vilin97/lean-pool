@@ -1,4 +1,62 @@
 projects:
+  - slug: sphere-packing
+    title: Sharp asymptotic upper bounds for sphere packing
+    summary: >-
+      Formalizes the sharp high-dimensional asymptotics of the unrestricted
+      Cohn--Elkies linear program and bridges them to sphere-packing density.
+      The development constructs radial test functions through Mellin,
+      saddle-point, and harmonic analysis, proves radialization preserves the
+      unrestricted optimum, and certifies the exact natural- and base-two
+      exponential rates.
+    branch: discrete geometry and harmonic analysis
+    entry_module: LeanPool.SpherePacking
+    authors:
+      - OpenAI
+      - Sidharth Hariharan
+      - Gareth Ma
+      - Dean Cureton
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs/tree/94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - PackingBounds.sharpFullCohnElkiesManuscriptConclusions
+    main_results:
+      - declaration: PackingBounds.FullMain.exact_limit
+        informal: >-
+          The d-th root of the unrestricted Cohn--Elkies linear-program bound
+          converges to the sharp constant sqrt(e / (2 pi)).
+      - declaration: PackingBounds.FullMain.exact_binary_exponent
+        informal: >-
+          The base-two logarithm of the unrestricted linear-program bound,
+          divided by dimension, converges to
+          -1/2 log_2(2 pi / e).
+      - declaration: PackingBounds.PackingBridge.sphere_packing_sharp_asymptotic_upper
+        informal: >-
+          There is a vanishing error sequence such that, in every positive
+          dimension, sphere-packing density is at most
+          (sqrt(e / (2 pi)) plus that error) to the dimension.
+      - declaration: PackingBounds.sharpFullCohnElkiesManuscriptConclusions
+        informal: >-
+          Packages the complete sharp asymptotic conclusions for the
+          unrestricted program, including quotient-root, natural-logarithmic,
+          and base-two limits, vanishing-error formulas, a universal bound for
+          all admissible functions, and a certified decimal exponent interval.
+    tags:
+      - sphere-packing
+      - discrete-geometry
+      - harmonic-analysis
+      - linear-programming-bounds
+    msc:
+      - "52C17"
+      - "41A60"
+      - "42A38"
   - slug: zeta-zeros
     title: Simple zeros of the Riemann zeta function
     summary: >-
