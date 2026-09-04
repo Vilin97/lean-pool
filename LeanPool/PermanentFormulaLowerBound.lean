@@ -8,51 +8,18 @@ module
 
 public import Mathlib.Algebra.MvPolynomial.PDeriv
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
+import Mathlib.Data.Fintype.CardEmbedding
 public import Mathlib.Data.Nat.BitIndices
+import Mathlib.FieldTheory.IntermediateField.Adjoin.Algebra
 public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+public import Mathlib.LinearAlgebra.Matrix.MvPolynomial
 public import Mathlib.LinearAlgebra.Matrix.Permanent
+import Mathlib.LinearAlgebra.Vandermonde
+import Mathlib.Logic.Equiv.Embedding
+import Mathlib.RingTheory.AlgebraicIndependent.AlgebraicClosure
 public import Mathlib.RingTheory.AlgebraicIndependent.Basic
-public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.WittVector.IsPoly
-public import Mathlib.Tactic.ENatToNat
-public import Mathlib.Tactic.ReduceModChar
-public import Mathlib.CategoryTheory.Category.Basic
-public import Mathlib.Algebra.AffineMonoid.UniqueSums
-public import Mathlib.Algebra.Order.Floor.Extended
-public import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Algebra.Order.Ring.Star
-public import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.SpecialFunctions.Bernstein
-public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.Combinatorics.Enumerative.DyckWord
-public import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-public import Mathlib.Data.NNRat.Floor
-public import Mathlib.Data.Nat.Choose.Multinomial
-public import Mathlib.Geometry.Euclidean.Altitude
-public import Mathlib.NumberTheory.Chebyshev
-public import Mathlib.NumberTheory.Height.NumberField
-public import Mathlib.NumberTheory.Height.Projectivization
-public import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.RingTheory.PiTensorProduct
-public import Mathlib.RingTheory.PicardGroup
-public import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.Tactic.NormNum.Irrational
-public import Mathlib.Tactic.NormNum.IsCoprime
-public import Mathlib.Tactic.NormNum.IsSquare
-public import Mathlib.Tactic.NormNum.LegendreSymbol
-public import Mathlib.Tactic.NormNum.ModEq
-public import Mathlib.Tactic.NormNum.NatFib
-public import Mathlib.Tactic.NormNum.NatLog
-public import Mathlib.Tactic.NormNum.NatSqrt
-public import Mathlib.Tactic.NormNum.Ordinal
-public import Mathlib.Tactic.NormNum.Parity
-public import Mathlib.Tactic.NormNum.Prime
-public import Mathlib.Tactic.NormNum.RealSqrt
-public import Mathlib.Tactic.Polynomial.Basic
-public import Mathlib.Topology.Sheaves.Init
-public import Std.Tactic.BVDecide.Normalize.Prop
+import Mathlib.RingTheory.AlgebraicIndependent.TranscendenceBasis
+public import Mathlib.RingTheory.Localization.FractionRing
 
 /-!
 # Quartic-over-logarithmic lower bound for rational permanent formulas
