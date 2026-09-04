@@ -139,7 +139,7 @@ theorem realizesInsertionEdge_terminal {n : ℕ}
     Lemma43ArbitraryBase.terminal_zMinus
       (terminalCommonLaw β) (terminalCommonLaw_Ioi_zero β hβ)
       (b := (1 : ℝ)) (c := γ (Fin.last n)) (d := β (Fin.last n))
-      one_pos (hγ (Fin.last n)) (hβ (Fin.last n))
+      one_pos
   have hAM : Lemma43.A νM (β (Fin.last n)) = 0 := by
     have hIci : νM (Ici 0) = 0 := by
       have htr : ENNReal.toReal (νM (Ici 0)) = 0 := by

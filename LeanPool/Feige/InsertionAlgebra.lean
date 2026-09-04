@@ -23,7 +23,7 @@ variable {A B F w θ : ℕ → ℝ} {p : ℝ}
 
 /-- The insertion-position weight. -/
 def insertionWeight (θ : ℕ → ℝ) (j : ℕ) : ℝ :=
-  θ j - θ (j + 1)
+  chainMass θ j
 
 /-- Averaged mass placed at the lower state `Cⱼ`. -/
 def insertedLowerMass (B w θ : ℕ → ℝ) (j : ℕ) : ℝ :=
@@ -175,7 +175,7 @@ theorem inserted_pair_total (j : ℕ)
     (hF : ∀ r, F r = A r + θ r * w r) :
     insertedLowerMass B w θ j + insertedUpperMass A θ j =
       F j - F (j + 1) := by
-  simp only [insertedLowerMass, insertedUpperMass, insertionWeight]
+  simp only [insertedLowerMass, insertedUpperMass, insertionWeight, chainMass]
   rw [hB j, hB (j + 1), hF j, hF (j + 1)]
   ring
 
@@ -243,7 +243,8 @@ section Weights
 /-- The insertion-position weights are nonnegative when `θ` decreases. -/
 theorem insertionWeight_nonneg {θ : ℕ → ℝ} (hθ : Antitone θ) (j : ℕ) :
     0 ≤ insertionWeight θ j := by
-  exact sub_nonneg.mpr (hθ (Nat.le_succ j))
+  simpa only [insertionWeight, chainMass] using
+    sub_nonneg.mpr (hθ (Nat.le_succ j))
 
 /-- The insertion-position weights telescope from `θ 0` to `θ k`. -/
 theorem sum_insertionWeight (θ : ℕ → ℝ) (k : ℕ) :

@@ -54,7 +54,7 @@ theorem euclideanSimplexLinearForm_ne_zero_of_sum_pos
 
 /-- The weighted form evaluated at the standard-simplex volume centroid. -/
 theorem euclideanSimplexLinearForm_centroid
-    {n : ℕ} (_hn : 0 < n) (y : Fin n → ℝ) :
+    {n : ℕ} (y : Fin n → ℝ) :
     euclideanSimplexLinearForm y (Grunbaum.simplexCentroid n) =
       (∑ i, y i) / ((n : ℝ) + 1) := by
   rw [euclideanSimplexLinearForm_apply]
@@ -69,7 +69,7 @@ theorem one_le_euclideanSimplexLinearForm_centroid
     1 ≤ euclideanSimplexLinearForm y
       (Grunbaum.simplexFullBody d).centroid := by
   rw [Grunbaum.simplexFullBody_centroid,
-    euclideanSimplexLinearForm_centroid (Nat.succ_pos d)]
+    euclideanSimplexLinearForm_centroid]
   exact (le_div_iff₀ (by positivity :
     0 < (((d + 1 : ℕ) : ℝ) + 1))).2 (by simpa using hsum)
 

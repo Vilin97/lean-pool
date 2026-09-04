@@ -36,11 +36,11 @@ theorem universalCalibration_dirichletK_of_twoPointRejectionBound
   have hZint : ∀ i, Integrable (Z i) μ :=
     meanOneNormalize_integrable Y hYint
   have hZmean : ∀ i, (∫ ω, Z i ω ∂μ) = 1 :=
-    meanOneNormalize_mean Y hYint hYnonneg
+    meanOneNormalize_mean Y
   have hZnonneg : ∀ i ω, 0 ≤ Z i ω :=
     meanOneNormalize_nonneg Y hYnonneg
   have hZindep : iIndepFun Z μ :=
-    meanOneNormalize_iIndepFun Y hYmeas hYindep
+    meanOneNormalize_iIndepFun Y hYindep
   let hmarginal : ∀ i, IsProbabilityMeasure (marginal i) :=
     fun i ↦ Measure.isProbabilityMeasure_map (hZmeas i).aemeasurable
   have hmarginalInt :
@@ -60,7 +60,7 @@ theorem universalCalibration_dirichletK_of_twoPointRejectionBound
   let hcoordinateLatent : ∀ i, IsProbabilityMeasure
       (meanOneAugmentedLatent (marginal i)) :=
     fun i ↦ meanOneAugmentedLatent_isProbability
-      (hmarginalInt i) (hmarginalMean i) (hmarginalSupport i)
+      (hmarginalInt i) (hmarginalMean i)
   let : IsProbabilityMeasure latent := by
     unfold latent
     infer_instance
@@ -72,7 +72,7 @@ theorem universalCalibration_dirichletK_of_twoPointRejectionBound
       recursiveAugmentedKernel n ∘ₘ latent = Measure.pi marginal := by
     unfold latent
     exact pi_eq_recursiveMeanOneAugmented_mixture n marginal
-      hmarginalInt hmarginalMean hmarginalSupport
+      hmarginalInt hmarginalMean
   have hproduct :
       (Measure.pi marginal).real {y | dirichletK y ≤ α} ≤ α := by
     rw [← hmixture]

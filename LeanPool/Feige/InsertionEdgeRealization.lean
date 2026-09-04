@@ -214,7 +214,7 @@ theorem realizesInsertionEdge_interior {n : ℕ}
         rw [insertionCommonLaw_eq_withDensity]
       _ = stateLaw γold βold (insert changed S) :=
         insertionHighEndpointLaw_eq_stateLaw_insert
-          γold βold hγold hβold S changed hchanged
+          γold βold hγold hβold S changed
       _ = stateLaw γold βold (chainState σ j.succ) := by
         rw [chainState_succ]
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩

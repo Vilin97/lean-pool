@@ -201,13 +201,11 @@ theorem expandedTwoPointMixture_eq
         μ.restrict (Iio 1) + μ {1} • Measure.dirac 1 + μ.restrict (Ioi 1) := by abel
     _ = μ := restrict_below_add_atom_add_above μ
 
-/-- Version of the preceding theorem retaining the nonnegative-support
-hypothesis required by Theorem 2.1. -/
+/-- The two-point mixture formula at the canonical lower moment. -/
 theorem twoPointMixture_formula42
     {μ : Measure ℝ} [IsProbabilityMeasure μ]
     (hμ : Integrable (fun x : ℝ ↦ x) μ)
     (hmean : (∫ x : ℝ, x ∂μ) = 1)
-    (_hsupport : μ (Iio 0) = 0)
     (hM : 0 < belowMoment μ) :
     expandedTwoPointMixture μ (belowMoment μ) = μ :=
   expandedTwoPointMixture_eq hμ hmean hM
@@ -226,7 +224,6 @@ theorem eq_dirac_one_of_belowMoment_eq_zero
     {μ : Measure ℝ} [IsProbabilityMeasure μ]
     (hμ : Integrable (fun x : ℝ ↦ x) μ)
     (hmean : (∫ x : ℝ, x ∂μ) = 1)
-    (_hsupport : μ (Iio 0) = 0)
     (hM : belowMoment μ = 0) :
     μ = Measure.dirac 1 := by
   have hsub := integrable_sub_one hμ
@@ -286,14 +283,13 @@ its positive lower moment gives the two-point mixture formula. -/
 theorem twoPointMixture_dichotomy
     {μ : Measure ℝ} [IsProbabilityMeasure μ]
     (hμ : Integrable (fun x : ℝ ↦ x) μ)
-    (hmean : (∫ x : ℝ, x ∂μ) = 1)
-    (hsupport : μ (Iio 0) = 0) :
+    (hmean : (∫ x : ℝ, x ∂μ) = 1) :
     μ = Measure.dirac 1 ∨
       (0 < belowMoment μ ∧
         expandedTwoPointMixture μ (belowMoment μ) = μ) := by
   rcases (belowMoment_nonneg (μ := μ)).eq_or_lt with hzero | hpos
-  · exact Or.inl (eq_dirac_one_of_belowMoment_eq_zero hμ hmean hsupport hzero.symm)
-  · exact Or.inr ⟨hpos, twoPointMixture_formula42 hμ hmean hsupport hpos⟩
+  · exact Or.inl (eq_dirac_one_of_belowMoment_eq_zero hμ hmean hzero.symm)
+  · exact Or.inr ⟨hpos, twoPointMixture_formula42 hμ hmean hpos⟩
 
 end
 

@@ -57,7 +57,7 @@ bridge imply the sharp fixed-dimensional bound for the strict event
 `∑ Xᵢ < E(∑ Xᵢ) + 1`. -/
 theorem sharp_feige_of_calibration_and_largeSumBridge
     {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
-    {n : ℕ} (hn : 0 < n) (K : (Fin n → ℝ) → ℝ)
+    {n : ℕ} (K : (Fin n → ℝ) → ℝ)
     (hcal : CalibrationProperty μ K) (hbridge : LargeSumBridge K)
     (X : Fin n → Ω → ℝ)
     (hX_meas : ∀ i, Measurable (X i))
@@ -144,11 +144,11 @@ theorem sharp_feige_of_calibration_and_largeSumBridge
 /-- The two structural inputs imply that `sharpConstant n` is a valid
 fixed-dimensional lower bound. -/
 theorem sharpConstant_is_lowerBound_of_structural_inputs
-    {n : ℕ} (hn : 0 < n) (K : (Fin n → ℝ) → ℝ)
+    {n : ℕ} (K : (Fin n → ℝ) → ℝ)
     (hcal : UniversalCalibration K) (hbridge : LargeSumBridge K) :
     FixedDimensionalFeigeLowerBound n (sharpConstant n) := by
   intro Ω _ μ _ X hX_meas hX_int hX_indep hX_nonneg hX_mean
-  exact sharp_feige_of_calibration_and_largeSumBridge μ hn K
+  exact sharp_feige_of_calibration_and_largeSumBridge μ K
     (hcal Ω inferInstance μ inferInstance) hbridge X hX_meas hX_int
     hX_indep hX_nonneg hX_mean
 

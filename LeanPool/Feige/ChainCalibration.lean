@@ -158,11 +158,6 @@ theorem exact_chain_calibration' {α : ℝ} (hα : 0 ≤ α) :
   · intro _
     exact htK
 
-/-- The empty rejection set has zero mass and is calibrated for every
-nonnegative threshold. -/
-theorem calibration_empty {α : ℝ} (hα : 0 ≤ α) : (0 : ℝ) ≤ α :=
-  hα
-
 end CalibratedChain
 
 end Feige

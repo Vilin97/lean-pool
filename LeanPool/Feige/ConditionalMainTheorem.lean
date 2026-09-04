@@ -21,13 +21,13 @@ namespace Feige
 and the two geometric facts identifying and bounding the Dirichlet
 statistic. -/
 theorem sharp_unit_slack_feige_of_paper_inputs
-    {n : ℕ} (hn : 0 < n)
+    {n : ℕ}
     (hcal : UniversalCalibration
       (dirichletK : (Fin n → ℝ) → ℝ))
     (hid : SimplexExponentialIdentification n)
     (hcentroid : SimplexCentroidHalfspaceProperty (ι := Fin n)) :
     IsOptimalFixedDimensionalFeigeBound n (sharpConstant n) := by
-  exact sharpConstant_is_optimal_of_structural_inputs hn
+  exact sharpConstant_is_optimal_of_structural_inputs
     (dirichletK : (Fin n → ℝ) → ℝ) hcal
     (dirichletK_largeSumBridge_of_simplex hid hcentroid)
 

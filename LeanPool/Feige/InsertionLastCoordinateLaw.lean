@@ -146,8 +146,7 @@ theorem stateLaw_insert_last_eq_zMinus_old {n : ℕ}
         insertionHighEndpointLaw γ β hγ hβ
           (liftChainState S) (Fin.last n) :=
       (insertionHighEndpointLaw_eq_stateLaw_insert γ β hγ hβ
-        (liftChainState S) (Fin.last n)
-        (last_not_mem_liftChainState S)).symm
+        (liftChainState S) (Fin.last n)).symm
     _ = TransferStein.zMinusLaw
         (stateLaw (fun i : Fin n ↦ γ i.castSucc)
           (fun i : Fin n ↦ β i.castSucc) S)

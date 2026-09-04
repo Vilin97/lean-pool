@@ -61,7 +61,7 @@ parameter. -/
 theorem terminal_zMinus
     (μ : Measure ℝ) [IsProbabilityMeasure μ]
     (hpos : μ (Ioi 0) = 0) {b c d : ℝ}
-    (hb : 0 < b) (_hc : 0 < c) (_hd : 0 < d) :
+    (hb : 0 < b) :
     let νM := zMinusLaw μ b
     Lemma43.F νM = 0 ∧ Lemma43.theta νM c d = 0 := by
   dsimp only

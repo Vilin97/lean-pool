@@ -664,7 +664,7 @@ theorem insertionLowEndpointLaw_eq_stateLaw
 
 theorem insertionHighEndpointLaw_eq_stateLaw_insert
     (γ β : ι → ℝ) (hγ : ∀ i, 0 < γ i) (hβ : ∀ i, 0 < β i)
-    (S : Finset ι) (changed : ι) (_hj : changed ∉ S) :
+    (S : Finset ι) (changed : ι) :
     insertionHighEndpointLaw γ β hγ hβ S changed =
       stateLaw γ β (insert changed S) := by
   rw [insertionHighEndpointLaw, zMinusLaw_eq_conv_map_neg_mul]

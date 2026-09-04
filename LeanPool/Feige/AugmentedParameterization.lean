@@ -43,8 +43,7 @@ def AugmentedParamsNonnegative {n : ℕ}
     | Sum.inr q => 0 ≤ q.1.1 ∧ 1 < q.1.2
 
 theorem augmentedGamma_nonneg {n : ℕ}
-    {p : Fin n → AugmentedTwoPointParams}
-    (_hp : AugmentedParamsNonnegative p) :
+    {p : Fin n → AugmentedTwoPointParams} :
     ∀ i, 0 ≤ augmentedGamma (p i) := by
   intro i
   cases hpi : p i with

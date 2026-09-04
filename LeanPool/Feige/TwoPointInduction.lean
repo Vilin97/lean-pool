@@ -32,13 +32,6 @@ theorem productHighSetExpectation_one {m : ℕ} (p : Fin m → ℝ) :
   simp only [mul_one]
   exact sum_highSetMass p
 
-/-- A numerical tail-hybrid expectation.  Index `0` is the original product
-expectation, and the last index is the expectation on the fully constructed
-maximal chain. -/
-def tailHybridExpectation {m : ℕ} (H : Fin (m + 1) → ℝ)
-    (k : Fin (m + 1)) : ℝ :=
-  H k
-
 /-- The precise finite part of the local insertion hypothesis.  The witness
 `σ` is the final maximal chain, while `H` records the successive hybrid
 expectations obtained by the insertion choices. -/

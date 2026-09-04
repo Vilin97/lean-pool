@@ -20,7 +20,7 @@ Theorem 1.1, in every positive dimension. -/
 theorem sharp_unit_slack_feige_complete
     {n : ℕ} (hn : 0 < n) :
     IsOptimalFixedDimensionalFeigeBound n (sharpConstant n) := by
-  exact sharp_unit_slack_feige hn
+  exact sharp_unit_slack_feige
     (simplexCentroidHalfspaceProperty_fin hn)
 
 end Feige

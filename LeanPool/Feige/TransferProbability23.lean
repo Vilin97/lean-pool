@@ -362,14 +362,14 @@ theorem uProbability_zMinus_eq_derivative
 
 theorem vProbability_zPlus_eq_derivative
     (μ : Measure ℝ) [IsFiniteMeasure μ] {a c : ℝ}
-    (_ha : 0 < a) (hc : 0 < c) :
+    (hc : 0 < c) :
     vProbability (zPlusLaw μ a) c =
       c * ∫ z, transferPsiDeriv c z ∂zPlusLaw μ a :=
   vProbability_eq_derivative _ hc
 
 theorem vProbability_zMinus_eq_derivative
     (μ : Measure ℝ) [IsFiniteMeasure μ] {b c : ℝ}
-    (_hb : 0 < b) (hc : 0 < c) :
+    (hc : 0 < c) :
     vProbability (zMinusLaw μ b) c =
       c * ∫ z, transferPsiDeriv c z ∂zMinusLaw μ b :=
   vProbability_eq_derivative _ hc
@@ -450,7 +450,7 @@ theorem vPlus_eq_probability
   rw [integral_const_mul]
   have hscale : (c / a) * a = c := by field_simp
   rw [← mul_assoc, hscale, ← hnest]
-  exact (vProbability_zPlus_eq_derivative μ ha hc).symm
+  exact (vProbability_zPlus_eq_derivative μ hc).symm
 
 theorem vMinus_eq_probability
     (μ : Measure ℝ) [IsFiniteMeasure μ] {b c : ℝ}
@@ -476,7 +476,7 @@ theorem vMinus_eq_probability
   rw [integral_const_mul]
   have hscale : (c / b) * b = c := by field_simp
   rw [← mul_assoc, hscale, ← hnest]
-  exact (vProbability_zMinus_eq_derivative μ hb hc).symm
+  exact (vProbability_zMinus_eq_derivative μ hc).symm
 
 /-- The lower-test identity with `A±` expressed as expectations under the
 actual laws of `Z±` and `u±` as event probabilities. -/

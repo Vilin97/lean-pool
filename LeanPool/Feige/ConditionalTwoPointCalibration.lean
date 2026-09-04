@@ -44,12 +44,12 @@ theorem augmentedConditionalProduct_rejection_le
   rw [twoPointProductLaw_rejection
     (fun i ↦ augmentedGamma (p i))
     (fun i ↦ augmentedBeta (p i))
-    (augmentedGamma_nonneg hp)
+    augmentedGamma_nonneg
     (augmentedBeta_pos hp) α]
   exact htwo
     (fun i ↦ augmentedGamma (p i))
     (fun i ↦ augmentedBeta (p i))
-    (augmentedGamma_nonneg hp)
+    augmentedGamma_nonneg
     (augmentedGamma_le_one hp)
     (augmentedBeta_pos hp) hα
 

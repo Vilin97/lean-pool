@@ -99,9 +99,7 @@ theorem ae_latentParams_nonnegative
   simp [pairToParams, hpstrict, hp0, hpstrict.2]
 
 theorem ae_augmentedLatent_nonnegative
-    {μ : Measure ℝ} [IsProbabilityMeasure μ]
-    (_hμ : Integrable (fun x : ℝ ↦ x) μ)
-    (_hmean : (∫ x : ℝ, x ∂μ) = 1)
+    {μ : Measure ℝ} [SFinite μ]
     (hsupport : μ (Iio 0) = 0) :
     ∀ᵐ p ∂meanOneAugmentedLatent μ,
       AugmentedParamNonnegative p := by
@@ -140,11 +138,11 @@ theorem ae_recursiveAugmentedLatent_nonnegative
         (fun i => meanOneAugmentedLatent (μ (Fin.succ i)))
       let : ∀ i, IsProbabilityMeasure (latent i) :=
         fun i => meanOneAugmentedLatent_isProbability
-          (hμ i) (hmean i) (hsupport i)
+          (hμ i) (hmean i)
       have hhead :
           ∀ᵐ p ∂latent 0, AugmentedParamNonnegative p :=
         ae_augmentedLatent_nonnegative
-          (hμ 0) (hmean 0) (hsupport 0)
+          (hsupport 0)
       have htail :
           ∀ᵐ p ∂tail, AugmentedParamsNonnegative p :=
         ih (fun i => μ (Fin.succ i))

@@ -41,7 +41,7 @@ theorem strictGammaApprox_pos {m : ℕ} {γ : Fin m → ℝ}
   nlinarith [hγ i]
 
 theorem strictGammaApprox_le_one {m : ℕ} {γ : Fin m → ℝ}
-    (_hγ0 : ∀ i, 0 ≤ γ i) (hγ1 : ∀ i, γ i ≤ 1)
+    (hγ1 : ∀ i, γ i ≤ 1)
     (n : ℕ) (i : Fin m) :
     strictGammaApprox γ n i ≤ 1 := by
   unfold strictGammaApprox
@@ -171,7 +171,7 @@ theorem twoPointRejectionMass_le_add_delta
     _ ≤ α + δ := strictTwoPoint_rejectionMass_le_alpha
       (strictGammaApprox γ n) β
       (strictGammaApprox_pos hγ0 n)
-      (strictGammaApprox_le_one hγ0 hγ1 n)
+      (strictGammaApprox_le_one hγ1 n)
       hβ (by linarith)
 
 /-- Closed-boundary two-point rejection estimate. -/

@@ -268,11 +268,11 @@ def IsOptimalFixedDimensionalFeigeBound (n : ℕ) (c : ℝ) : Prop :=
 paper's unit-slack constant is not only valid but optimal; the sharpness
 construction in §1.2 supplies the reverse extremal statement. -/
 theorem sharpConstant_is_optimal_of_structural_inputs
-    {n : ℕ} (hn : 0 < n) (K : (Fin n → ℝ) → ℝ)
+    {n : ℕ} (K : (Fin n → ℝ) → ℝ)
     (hcal : UniversalCalibration K) (hbridge : LargeSumBridge K) :
     IsOptimalFixedDimensionalFeigeBound n (sharpConstant n) := by
   constructor
-  · exact sharpConstant_is_lowerBound_of_structural_inputs hn K hcal hbridge
+  · exact sharpConstant_is_lowerBound_of_structural_inputs K hcal hbridge
   · intro d hd
     exact fixedDimensionalLowerBound_le_sharpConstant hd
 

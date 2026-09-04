@@ -27,10 +27,6 @@ theorem normalizedExponentialSimplexMeasure_eq_uniform :
   unfold normalizedExponentialSimplexMeasure simplexUniformMeasure
     simplexRestrictedVolume
   rw [volume_fullSimplex_eq_factorial_inv (n := n)]
-  have hfac0 : (n.factorial : ℝ≥0∞) ≠ 0 := by
-    exact_mod_cast (Nat.factorial_pos n).ne'
-  have hfacTop : (n.factorial : ℝ≥0∞) ≠ ∞ := by
-    simp
   rw [inv_inv]
 
 /-- The normalized-coordinate map on real product coordinates. -/

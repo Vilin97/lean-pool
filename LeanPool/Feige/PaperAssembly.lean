@@ -21,10 +21,10 @@ namespace Feige
 /-- The `δ = 1` specialization of Theorem 1.1 with the probabilistic block
 fully discharged. -/
 theorem sharp_unit_slack_feige
-    {n : ℕ} (hn : 0 < n)
+    {n : ℕ}
     (hcentroid : SimplexCentroidHalfspaceProperty (ι := Fin n)) :
     IsOptimalFixedDimensionalFeigeBound n (sharpConstant n) := by
-  exact sharp_unit_slack_feige_of_paper_inputs hn
+  exact sharp_unit_slack_feige_of_paper_inputs
     VlassisThomas.exactCalibration
     (simplexExponentialIdentification n) hcentroid
 

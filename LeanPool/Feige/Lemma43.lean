@@ -153,7 +153,7 @@ theorem theta_plus_ge_theta_minus_of_fourPoint
     {a b c d uP uM vP vM : ℝ}
     (ha : 0 ≤ a) (hb : 0 ≤ b)
     (huP0 : 0 ≤ uP) (huM0 : 0 ≤ uM)
-    (_hvP0 : 0 ≤ vP) (hvM0 : 0 ≤ vM)
+    (hvM0 : 0 ≤ vM)
     (hwP : 0 < uP + vP) (hwM : 0 < uM + vM)
     (huP : ENNReal.ofReal uP = LikelihoodRatio.uIntegral
       (LikelihoodRatio.fPlus f a) d)
@@ -186,7 +186,7 @@ theorem theta_order
   unfold theta w
   exact theta_plus_ge_theta_minus_of_fourPoint hfmeas hflc ha hb
     ENNReal.toReal_nonneg ENNReal.toReal_nonneg
-    ENNReal.toReal_nonneg ENNReal.toReal_nonneg
+    ENNReal.toReal_nonneg
     (w_pos νP hc hd) (w_pos νM hc hd)
     huP huM hvP hvM
 

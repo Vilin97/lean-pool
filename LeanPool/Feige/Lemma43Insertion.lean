@@ -148,7 +148,7 @@ theorem terminal_insertion_conclusions
       (a := (1 : ℝ)) (b := (1 : ℝ)) one_pos one_pos hc hd
   obtain ⟨_hFminus, hθminus⟩ :=
     Lemma43ArbitraryBase.terminal_zMinus μ hpos
-      (b := (1 : ℝ)) (c := c) (d := d) one_pos hc hd
+      (b := (1 : ℝ)) (c := c) (d := d) one_pos
   refine
     ⟨insertionTransfer_eq_of_realizesInsertionEdge hreal hid, ?_⟩
   apply insertion_order_widths_of_realizesInsertionEdge hreal

@@ -57,8 +57,7 @@ theorem meanOneNormalize_nonneg
 
 theorem meanOneNormalize_mean
     [IsProbabilityMeasure μ]
-    (_hYint : ∀ i, Integrable (Y i) μ)
-    (_hYnonneg : ∀ i ω, 0 ≤ Y i ω) (i : Fin n) :
+    (i : Fin n) :
     (∫ ω, meanOneNormalize Y μ i ω ∂μ) = 1 := by
   unfold meanOneNormalize
   split_ifs with hm
@@ -67,7 +66,6 @@ theorem meanOneNormalize_mean
     rw [integral_const_mul, inv_mul_cancel₀ hm]
 
 theorem meanOneNormalize_iIndepFun
-    (_hYmeas : ∀ i, Measurable (Y i))
     (hYindep : iIndepFun Y μ) :
     iIndepFun (meanOneNormalize Y μ) μ := by
   have h := hYindep.comp
