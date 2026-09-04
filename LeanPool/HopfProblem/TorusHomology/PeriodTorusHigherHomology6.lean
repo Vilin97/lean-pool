@@ -247,7 +247,7 @@ private def PeriodTorusHigherHomology.periodTorusCircleHomeomorph (p : PeriodDom
 @[simp]
 private theorem
     PeriodTorusHigherHomology.periodTorusCircleHomeomorph_flatProjection (p : PeriodDomain)
-    (x : Elliptic.RealCoordinates) :
+    (x : RealPlane₄) :
     periodTorusCircleHomeomorph p (Elliptic.flatProjection p x) = coordinateProjection 4 x := by
   rw [periodTorusCircleHomeomorph, Homeomorph.trans_apply,
     Elliptic.flatTorusPeriodHomeomorph_symm_flatProjection, flatTorusCircleHomeomorph_mkQ]

@@ -920,7 +920,7 @@ private theorem
 attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private theorem PeriodFamily.Boundary.ellipticTriangle_mkQ (j : Elliptic.Kind)
-    (x : Elliptic.RealCoordinates) :
+    (x : RealPlane₄) :
     SpecialPeriods.triangleTorusHomeomorph (SpecialPeriods.Triangle.ellipticGenerator j)
         (standardLattice.mkQ x) =
       standardLattice.mkQ (Elliptic.flatLinear j x) := by

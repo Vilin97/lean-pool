@@ -108,14 +108,14 @@ private def Elliptic.Equivariant.Data.centralPeriod {j : Elliptic.Kind}
       (congrArg D.periods.point (Elliptic.familyRotation_zero j))⟩
 
 private theorem Elliptic.Equivariant.Data.periodEquiv_matrix {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates) :
+    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : RealPlane₄) :
     D.periods.periodEquiv z x = (D.periods.point z).val.matrix *ᵥ (fun i => (x i : ℂ)) := by
   rw [HolomorphicPeriodMap.periodEquiv_coordinates]
   ext i
   fin_cases i <;> simp [PeriodPoint.matrix, Matrix.mulVec, dotProduct, Fin.sum_univ_four]
 
 private theorem Elliptic.Equivariant.Data.periodEquiv_eq_periodEquiv {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates) :
+    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : RealPlane₄) :
     D.periods.periodEquiv z x = Elliptic.periodEquiv (D.periods.point z) x := by
   rw [D.periodEquiv_matrix, Elliptic.periodEquiv_matrix]
 
@@ -150,7 +150,7 @@ private theorem Elliptic.Equivariant.Data.matrix_covariance {j : Elliptic.Kind}
     rw [h, Matrix.mul_one]
 
 private theorem Elliptic.Equivariant.Data.periodEquiv_flatLinear {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates) :
+    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : RealPlane₄) :
     D.periods.periodEquiv (Elliptic.familyRotation j z) (Elliptic.flatLinear j x) =
       Elliptic.linearMatrix j (D.periods.point z) *ᵥ D.periods.periodEquiv z x := by
   rw [D.periodEquiv_matrix, Elliptic.flatLinear_complexCast, Matrix.mulVec_mulVec,

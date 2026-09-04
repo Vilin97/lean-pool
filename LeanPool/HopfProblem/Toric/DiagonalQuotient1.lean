@@ -113,7 +113,7 @@ private theorem
     DiagonalQuotient.t2Space_of_localTrivializations {E B F J : Type*} [TopologicalSpace E]
     [TopologicalSpace B] [TopologicalSpace F] [T2Space B] [T2Space F] (f : E → B)
     (hf : Continuous f) (U : J → TopologicalSpace.Opens B) (hU : TopologicalSpace.IsOpenCover U)
-    (h : ∀ i, (f ⁻¹' (U i : Set B)) ≃ₜ ((U i) × F)) (_hbase : ∀ i x, ((h i x).1 : B) = f x.val) :
+    (h : ∀ i, (f ⁻¹' (U i : Set B)) ≃ₜ ((U i) × F)) :
     T2Space E := by
   constructor
   intro x y hxy
@@ -385,7 +385,7 @@ private theorem DiagonalQuotient.spaceT2Space {G : Type*} {B : Type*} {F : Type*
     (hq : IsQuotientCoveringMap (baseQuotient G B) G) [ContinuousConstSMul G F]
     [T2Space (BaseSpace G B)] [T2Space F] : T2Space (Space G B F) :=
   t2Space_of_localTrivializations (projection G B F) (projection_continuous G B F) (patch hq)
-    (patch_cover hq) (patchHomeomorph hq) (patchHomeomorph_projection hq)
+    (patch_cover hq) (patchHomeomorph hq)
 
 private theorem DiagonalQuotient.baseT2Space {G : Type*} {B : Type*} [Group G] [MulAction G B]
     [TopologicalSpace B] (hq : IsQuotientCoveringMap (baseQuotient G B) G) [T2Space B]

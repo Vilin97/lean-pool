@@ -116,7 +116,7 @@ private def Elliptic.HigherHomology.fibreLinear (j : Elliptic.Kind) :
   ((fibreMatrix j).map (Int.castRingHom ℝ)).mulVecLin
 
 private def Elliptic.HigherHomology.splitRealCoordinates (j : Elliptic.Kind) :
-    Elliptic.RealCoordinates ≃L[ℝ] ℝ × FibreCoordinates :=
+    RealPlane₄ ≃L[ℝ] ℝ × FibreCoordinates :=
   LinearEquiv.toContinuousLinearEquiv
     { toFun := fun x =>
         ((j.twist 0 : ℝ) * x 0, fun i =>
@@ -153,7 +153,7 @@ private def Elliptic.HigherHomology.splitRealCoordinates (j : Elliptic.Kind) :
 
 @[simp]
 private theorem Elliptic.HigherHomology.splitRealCoordinates_apply (j : Elliptic.Kind)
-    (x : Elliptic.RealCoordinates) :
+    (x : RealPlane₄) :
     splitRealCoordinates j x =
       ((j.twist 0 : ℝ) * x 0, fun i =>
         x i.succ - ((j.twist 0 : ℝ) * x 0) * (j.twist i.succ : ℝ)) :=
@@ -183,7 +183,7 @@ private theorem Elliptic.HigherHomology.flatLinear_twist (j : Elliptic.Kind) :
   rw [Elliptic.flatLinear_realCast, j.matrix_fixes_twist]
 
 private theorem Elliptic.HigherHomology.splitRealCoordinates_flatAffine (j : Elliptic.Kind)
-    (x : Elliptic.RealCoordinates) :
+    (x : RealPlane₄) :
     splitRealCoordinates j (Elliptic.flatAffine j j.twist x) =
       ((splitRealCoordinates j x).1 + 1 / (j.order : ℝ),
         fibreLinear j (splitRealCoordinates j x).2) := by
@@ -244,7 +244,7 @@ private theorem
   PeriodTorusHigherHomology.torusMatrixMap_coordinateProjection (fibreMatrix j) k
 
 private theorem Elliptic.HigherHomology.twistBasisInvMatrix_real_mulVec (j : Elliptic.Kind)
-    (x : Elliptic.RealCoordinates) :
+    (x : RealPlane₄) :
     (twistBasisInvMatrix j).map (Int.castRingHom ℝ) *ᵥ x =
       Fin.cons (splitRealCoordinates j x).1 (splitRealCoordinates j x).2 := by
   ext i
@@ -267,7 +267,7 @@ private def Elliptic.HigherHomology.splitFlatTorusHomeomorph (j : Elliptic.Kind)
       (PeriodTorusHigherHomology.productTorusSuccHomeomorph 3))
 
 private theorem Elliptic.HigherHomology.splitFlatTorusHomeomorph_mkQ (j : Elliptic.Kind)
-    (x : Elliptic.RealCoordinates) :
+    (x : RealPlane₄) :
     splitFlatTorusHomeomorph j (standardLattice.mkQ x) =
       (((splitRealCoordinates j x).1 : AddCircle (1 : ℝ)),
         PeriodTorusHigherHomology.coordinateProjection 3 (splitRealCoordinates j x).2) := by
@@ -1792,7 +1792,7 @@ private theorem Elliptic.Equivariant.Data.mem_range_centralInclusion_iff {j : El
   rfl
 
 private theorem Elliptic.Equivariant.Data.centralInclusion_flatProjection {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (x : Elliptic.RealCoordinates) :
+    (D : Elliptic.Equivariant.Data j) (x : RealPlane₄) :
     D.centralInclusion (Elliptic.flatProjection D.centralPeriod.val x) =
       (SpecialPeriods.discZero, standardLattice.mkQ x) := by
   rw [Elliptic.flatProjection, D.centralInclusion_mkQ]
@@ -2606,7 +2606,7 @@ private theorem Elliptic.coinvariantMap_ker_eq_range (j : Kind) :
     exact coinvariantMap_difference j u
 
 private abbrev Elliptic.AffineAutomorphism :=
-  RealCoordinates ≃ᵃ[ℝ] RealCoordinates
+  RealPlane₄ ≃ᵃ[ℝ] RealPlane₄
 
 private theorem
     Elliptic.matrix_pow_pred_mul (j : Kind) : j.matrix ^ (j.order - 1) * j.matrix = 1 := by
@@ -2626,7 +2626,7 @@ private theorem Elliptic.realMatrix_mul_pow_pred_mo1973_22122 (j : Kind) :
   rw [← Matrix.map_pow, ← Matrix.map_mul, matrix_mul_pow_pred]
   simp
 
-private def Elliptic.flatLinearEquiv (j : Kind) : RealCoordinates ≃ₗ[ℝ] RealCoordinates
+private def Elliptic.flatLinearEquiv (j : Kind) : RealPlane₄ ≃ₗ[ℝ] RealPlane₄
     where
   __ := flatLinear j
   invFun x := (j.matrix.map (Int.castRingHom ℝ)) ^ (j.order - 1) *ᵥ x
@@ -2645,20 +2645,20 @@ private def Elliptic.flatLinearEquiv (j : Kind) : RealCoordinates ≃ₗ[ℝ] Re
         x
     rw [Matrix.mulVec_mulVec, realMatrix_mul_pow_pred_mo1973_22122, Matrix.one_mulVec]
 
-private def Elliptic.realCastAddHom : Lattice →+ RealCoordinates
+private def Elliptic.realCastAddHom : Lattice →+ RealPlane₄
     where
   toFun := realCast
   map_zero' := by ext k; simp [realCast]
   map_add' w z := by ext k; simp [realCast]
 
 private def Elliptic.integerTranslationHom : Multiplicative Lattice →* AffineAutomorphism :=
-  (AffineEquiv.constVAddHom ℝ RealCoordinates).comp realCastAddHom.toMultiplicative
+  (AffineEquiv.constVAddHom ℝ RealPlane₄).comp realCastAddHom.toMultiplicative
 
 private def Elliptic.integerTranslation (w : Lattice) : AffineAutomorphism :=
   integerTranslationHom (Multiplicative.ofAdd w)
 
 @[simp]
-private theorem Elliptic.integerTranslation_apply (w : Lattice) (x : RealCoordinates) :
+private theorem Elliptic.integerTranslation_apply (w : Lattice) (x : RealPlane₄) :
     integerTranslation w x = realCast w + x :=
   rfl
 
@@ -2703,23 +2703,23 @@ private def Elliptic.affineGenerator (j : Kind) (v : Lattice) : AffineAutomorphi
     rw [map_add, add_assoc]
 
 @[simp]
-private theorem Elliptic.affineGenerator_apply (j : Kind) (v : Lattice) (x : RealCoordinates) :
+private theorem Elliptic.affineGenerator_apply (j : Kind) (v : Lattice) (x : RealPlane₄) :
     affineGenerator j v x = flatAffine j v x :=
   rfl
 
 private theorem
-    Elliptic.affineAutomorphism_mul_apply (f g : AffineAutomorphism) (x : RealCoordinates) :
+    Elliptic.affineAutomorphism_mul_apply (f g : AffineAutomorphism) (x : RealPlane₄) :
     (f * g) x = f (g x) :=
   rfl
 
 private theorem Elliptic.affineAutomorphism_pow_apply (f : AffineAutomorphism) (n : ℕ)
-    (x : RealCoordinates) : (f ^ n) x = (f : RealCoordinates → RealCoordinates)^[n] x := by
+    (x : RealPlane₄) : (f ^ n) x = (f : RealPlane₄ → RealPlane₄)^[n] x := by
   induction n with
   | zero => rfl
   | succ n ih => rw [pow_succ', affineAutomorphism_mul_apply, ih, Function.iterate_succ_apply']
 
 private theorem Elliptic.affineGenerator_pow_apply (j : Kind) (v : Lattice) (n : ℕ)
-    (x : RealCoordinates) : (affineGenerator j v ^ n) x = (flatAffine j v)^[n] x :=
+    (x : RealPlane₄) : (affineGenerator j v ^ n) x = (flatAffine j v)^[n] x :=
   affineAutomorphism_pow_apply _ _ _
 
 private theorem Elliptic.affineGenerator_translation (j : Kind) (v w : Lattice) :
@@ -2772,7 +2772,7 @@ private theorem Elliptic.flatProjection_isCoveringMap (p : PeriodDomain) :
   exact hq.isCoveringMap.comp_homeomorph (periodEquiv p).toHomeomorph
 
 private def Elliptic.affineCoverProjection (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) : RealCoordinates → Surface j p v hv :=
+    (hv : AdmissibleTwist j v) : RealPlane₄ → Surface j p v hv :=
   surfaceProjection j p v hv ∘ flatProjection p.val
 
 private theorem
@@ -2786,7 +2786,7 @@ private theorem
   (surfaceProjection_surjective j p v hv).comp (flatProjection_surjective p.val)
 
 private theorem Elliptic.affineCoverProjection_eq_iff_flatCongruent (j : Kind) (p : FixedPeriod j)
-    (v : Lattice) (hv : AdmissibleTwist j v) (x y : RealCoordinates) :
+    (v : Lattice) (hv : AdmissibleTwist j v) (x y : RealPlane₄) :
     affineCoverProjection j p v hv x = affineCoverProjection j p v hv y ↔
       ∃ r : ℕ, r < j.order ∧ FlatCongruent x ((flatAffine j v)^[r] y) := by
   let := affineAction j p v hv.1
@@ -2811,7 +2811,7 @@ private theorem Elliptic.affineCoverProjection_eq_iff_flatCongruent (j : Kind) (
     exact ((flatProjection_eq_iff p.val _ _).mpr hxy).symm
 
 private theorem Elliptic.affineCoverProjection_eq_iff_translate (j : Kind) (p : FixedPeriod j)
-    (v : Lattice) (hv : AdmissibleTwist j v) (x y : RealCoordinates) :
+    (v : Lattice) (hv : AdmissibleTwist j v) (x y : RealPlane₄) :
     affineCoverProjection j p v hv x = affineCoverProjection j p v hv y ↔
       ∃ r : ℕ, r < j.order ∧ ∃ w : Lattice, x = realCast w + (flatAffine j v)^[r] y := by
   rw [affineCoverProjection_eq_iff_flatCongruent]
@@ -2825,7 +2825,7 @@ private theorem Elliptic.realCast_injective : Function.Injective realCast := by
   exact_mod_cast hi
 
 private theorem Elliptic.affineTranslate_unique (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (x : RealCoordinates) (r s : Fin j.order) (w z : Lattice)
+    (hv : AdmissibleTwist j v) (x : RealPlane₄) (r s : Fin j.order) (w z : Lattice)
     (h : realCast w + (flatAffine j v)^[r.val] x = realCast z + (flatAffine j v)^[s.val] x) :
     r = s ∧ w = z := by
   let := affineAction j p v hv.1
@@ -2866,7 +2866,7 @@ private def Elliptic.affineNormalForm (j : Kind) (v w : Lattice) (r : ℕ) : Aff
   integerTranslation w * affineGenerator j v ^ r
 
 private theorem
-    Elliptic.affineNormalForm_apply (j : Kind) (v w : Lattice) (r : ℕ) (x : RealCoordinates) :
+    Elliptic.affineNormalForm_apply (j : Kind) (v w : Lattice) (r : ℕ) (x : RealPlane₄) :
     affineNormalForm j v w r x = realCast w + (flatAffine j v)^[r] x := by
   rw [affineNormalForm, affineAutomorphism_mul_apply, integerTranslation_apply,
     affineGenerator_pow_apply]
@@ -2992,18 +2992,18 @@ private theorem Elliptic.deckGenerator_pow_order (j : Kind) (v : Lattice) (hv : 
   Subtype.ext (affineGenerator_pow_order j v hv)
 
 private instance Elliptic.affineDeckGroupMulAction (j : Kind) (v : Lattice) :
-    MulAction (AffineDeckGroup j v) RealCoordinates
+    MulAction (AffineDeckGroup j v) RealPlane₄
     where
   smul g x := (g : AffineAutomorphism) x
   one_smul _ := rfl
   mul_smul _ _ _ := rfl
 
 private instance Elliptic.affineDeckGroupContinuousConstSMul (j : Kind) (v : Lattice) :
-    ContinuousConstSMul (AffineDeckGroup j v) RealCoordinates where
+    ContinuousConstSMul (AffineDeckGroup j v) RealPlane₄ where
   continuous_const_smul g := affineAutomorphism_continuous g.val
 
 private theorem Elliptic.affineDeckGroup_eval_injective (j : Kind) (v : Lattice)
-    (hv : AdmissibleTwist j v) (x : RealCoordinates) :
+    (hv : AdmissibleTwist j v) (x : RealPlane₄) :
     Function.Injective (fun g : AffineDeckGroup j v => g • x) := by
   intro g h hgh
   obtain ⟨a, rfl⟩ := deckNormalForm_surjective j v hv.1 g
@@ -3014,12 +3014,12 @@ private theorem Elliptic.affineDeckGroup_eval_injective (j : Kind) (v : Lattice)
   exact congrArg (deckNormalForm j v) (Prod.ext hu.2 hu.1)
 
 private theorem Elliptic.affineDeckGroup_free (j : Kind) (v : Lattice) (hv : AdmissibleTwist j v) :
-    IsCancelSMul (AffineDeckGroup j v) RealCoordinates where
+    IsCancelSMul (AffineDeckGroup j v) RealPlane₄ where
   right_cancel' _ _ x hgh := affineDeckGroup_eval_injective j v hv x hgh
 
 private theorem
     Elliptic.affineCoverProjection_orbit_iff (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (x y : RealCoordinates) :
+    (hv : AdmissibleTwist j v) (x y : RealPlane₄) :
     affineCoverProjection j p v hv x = affineCoverProjection j p v hv y ↔
       x ∈ MulAction.orbit (AffineDeckGroup j v) y := by
   rw [affineCoverProjection_eq_iff_translate]
@@ -3046,24 +3046,24 @@ private theorem Elliptic.affineCoverProjection_isQuotientCoveringMap (j : Kind) 
 
 private def
     Elliptic.surfaceFundamentalGroupDeckOppositeEquiv (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (y : RealCoordinates) :
+    (hv : AdmissibleTwist j v) (y : RealPlane₄) :
     FundamentalGroup (Surface j p v hv) (affineCoverProjection j p v hv y) ≃*
       (AffineDeckGroup j v)ᵐᵒᵖ :=
   (affineCoverProjection_isQuotientCoveringMap j p v hv).fundamentalGroupEquiv ⟨y, rfl⟩
 
 private def Elliptic.surfaceFundamentalGroupDeckEquiv (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (y : RealCoordinates) :
+    (hv : AdmissibleTwist j v) (y : RealPlane₄) :
     FundamentalGroup (Surface j p v hv) (affineCoverProjection j p v hv y) ≃*
       AffineDeckGroup j v :=
   (surfaceFundamentalGroupDeckOppositeEquiv j p v hv y).trans
     (MulEquiv.inv' (AffineDeckGroup j v)).symm
 
 private theorem Elliptic.surfaceFundamentalGroupDeckEquiv_monodromy (j : Kind) (p : FixedPeriod j)
-    (v : Lattice) (hv : AdmissibleTwist j v) (y : RealCoordinates)
+    (v : Lattice) (hv : AdmissibleTwist j v) (y : RealPlane₄)
     (γ : FundamentalGroup (Surface j p v hv) (affineCoverProjection j p v hv y)) :
     (surfaceFundamentalGroupDeckEquiv j p v hv y γ)⁻¹ • y =
       ((affineCoverProjection_isQuotientCoveringMap j p v hv).isCoveringMap.monodromy γ ⟨y, rfl⟩ :
-        RealCoordinates) := by
+        RealPlane₄) := by
   let hq := affineCoverProjection_isQuotientCoveringMap j p v hv
   change ((hq.fundamentalGroupToMulOpposite ⟨y, rfl⟩ γ).unop⁻¹)⁻¹ • y = _
   rw [inv_inv]

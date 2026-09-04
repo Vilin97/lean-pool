@@ -65,7 +65,7 @@ private theorem ThreefoldOverlapMappingTorus.Elliptic.centralInclusion_surfaceRe
     (D.surfaceIntoFilling_comp_retraction v hv)
 
 private theorem ThreefoldOverlapMappingTorus.Elliptic.specialBoundaryToCentral_realCoordinates
-    (j : Elliptic.Kind) (t : ℝ) (x : Elliptic.RealCoordinates) :
+    (j : Elliptic.Kind) (t : ℝ) (x : RealPlane₄) :
     specialBoundaryToCentral j
         (MappingTorus.mk (Elliptic.flatTorusAffine j j.twist) (t, standardLattice.mkQ x)) =
       Elliptic.surfaceProjection j

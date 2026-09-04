@@ -1068,7 +1068,7 @@ private theorem SpecialPeriods.EllipticFilling.ellipticGenerator_dual_matrix (j 
   · exact SpecialPeriods.triangleDualRepresentation_generator₂_matrix
 
 private theorem SpecialPeriods.EllipticFilling.ellipticGenerator_torus_mkQ (j : Elliptic.Kind)
-    (x : Elliptic.RealCoordinates) :
+    (x : RealPlane₄) :
     SpecialPeriods.triangleTorusHomeomorph (SpecialPeriods.Triangle.ellipticGenerator j)
         (standardLattice.mkQ x) =
       standardLattice.mkQ (Elliptic.flatLinear j x) := by

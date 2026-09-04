@@ -128,7 +128,7 @@ private theorem
   rw [norm_pow, logMeridianRoot_norm]
 
 private def Elliptic.LogGauge.negativeLogFlat {j : Elliptic.Kind} (D : Elliptic.Equivariant.Data j)
-    (v : Lattice) (z : SpecialPeriods.Disc) (s : ℂ) : Elliptic.RealCoordinates :=
+    (v : Lattice) (z : SpecialPeriods.Disc) (s : ℂ) : RealPlane₄ :=
   (D.periods.periodEquiv z).symm (-s • periodVector D.periods v z)
 
 private theorem Elliptic.LogGauge.negativeLogFlat_rotation {j : Elliptic.Kind}
@@ -156,7 +156,7 @@ private theorem Elliptic.LogGauge.logMeridianComplex_continuous {j : Elliptic.Ki
     ((periodVector_holomorphic D.periods v).continuous.comp (logMeridianRoot_continuous j s₀ hs₀))
 
 private def Elliptic.LogGauge.logMeridianFlat {j : Elliptic.Kind} (D : Elliptic.Equivariant.Data j)
-    (v : Lattice) (s₀ : ℂ) (hs₀ : 0 < s₀.im) (t : (unitInterval)) : Elliptic.RealCoordinates :=
+    (v : Lattice) (s₀ : ℂ) (hs₀ : 0 < s₀.im) (t : (unitInterval)) : RealPlane₄ :=
   negativeLogFlat D v (logMeridianRoot j s₀ hs₀ t) (logMeridianParameter j s₀ t)
 
 private theorem Elliptic.LogGauge.logMeridianFlat_continuous {j : Elliptic.Kind}
@@ -294,19 +294,19 @@ private theorem Elliptic.LogGauge.fillingToTautological_logMeridian {j : Ellipti
   rfl
 
 private theorem Elliptic.affineCoverProjection_deck (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (y : RealCoordinates) (g : AffineDeckGroup j v) :
+    (hv : AdmissibleTwist j v) (y : RealPlane₄) (g : AffineDeckGroup j v) :
     affineCoverProjection j p v hv (g • y) = affineCoverProjection j p v hv y :=
   (affineCoverProjection_orbit_iff j p v hv _ _).mpr ⟨g, rfl⟩
 
 private def Elliptic.affineDeckPathLoop (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (y : RealCoordinates) (g : AffineDeckGroup j v)
+    (hv : AdmissibleTwist j v) (y : RealPlane₄) (g : AffineDeckGroup j v)
     (q : Path y (g • y)) :
     Path (affineCoverProjection j p v hv y) (affineCoverProjection j p v hv y) :=
   (q.map (affineCoverProjection_continuous j p v hv)).cast rfl
     (affineCoverProjection_deck j p v hv y g).symm
 
 private theorem Elliptic.affineDeckPathLoop_monodromy (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (y : RealCoordinates) (g : AffineDeckGroup j v)
+    (hv : AdmissibleTwist j v) (y : RealPlane₄) (g : AffineDeckGroup j v)
     (q : Path y (g • y)) :
     (affineCoverProjection_isQuotientCoveringMap j p v hv).isCoveringMap.monodromy
         (FundamentalGroup.fromPath ⟦affineDeckPathLoop j p v hv y g q⟧) ⟨y, rfl⟩ =
@@ -318,7 +318,7 @@ private theorem Elliptic.affineDeckPathLoop_monodromy (j : Kind) (p : FixedPerio
   rfl
 
 private theorem Elliptic.surfaceFundamentalGroupDeckEquiv_affineDeckPathLoop (j : Kind)
-    (p : FixedPeriod j) (v : Lattice) (hv : AdmissibleTwist j v) (y : RealCoordinates)
+    (p : FixedPeriod j) (v : Lattice) (hv : AdmissibleTwist j v) (y : RealPlane₄)
     (g : AffineDeckGroup j v) (q : Path y (g • y)) :
     surfaceFundamentalGroupDeckEquiv j p v hv y
         (FundamentalGroup.fromPath ⟦affineDeckPathLoop j p v hv y g q⟧) =
@@ -331,48 +331,48 @@ private theorem Elliptic.surfaceFundamentalGroupDeckEquiv_affineDeckPathLoop (j 
       (congrArg Subtype.val (affineDeckPathLoop_monodromy j p v hv y g q))
 
 private def Elliptic.affineGeneratorPathLoop (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (y : RealCoordinates) (q : Path y (flatAffine j v y)) :
+    (hv : AdmissibleTwist j v) (y : RealPlane₄) (q : Path y (flatAffine j v y)) :
     Path (affineCoverProjection j p v hv y) (affineCoverProjection j p v hv y) :=
   affineDeckPathLoop j p v hv y (deckGenerator j v) q
 
 private theorem Elliptic.surfaceFundamentalGroupDeckEquiv_affineGeneratorPathLoop (j : Kind)
-    (p : FixedPeriod j) (v : Lattice) (hv : AdmissibleTwist j v) (y : RealCoordinates)
+    (p : FixedPeriod j) (v : Lattice) (hv : AdmissibleTwist j v) (y : RealPlane₄)
     (q : Path y (flatAffine j v y)) :
     surfaceFundamentalGroupDeckEquiv j p v hv y
         (FundamentalGroup.fromPath ⟦affineGeneratorPathLoop j p v hv y q⟧) =
       (deckGenerator j v)⁻¹ :=
   surfaceFundamentalGroupDeckEquiv_affineDeckPathLoop j p v hv y (deckGenerator j v) q
 
-private def Elliptic.affineTranslationPath (y : RealCoordinates) (w : Lattice) :
+private def Elliptic.affineTranslationPath (y : RealPlane₄) (w : Lattice) :
     Path y (y + realCast w) :=
   Path.segment y (y + realCast w)
 
-private theorem Elliptic.affineTranslationPath_apply (y : RealCoordinates) (w : Lattice)
+private theorem Elliptic.affineTranslationPath_apply (y : RealPlane₄) (w : Lattice)
     (t : unitInterval) : affineTranslationPath y w t = y + (t : ℝ) • realCast w := by
   change AffineMap.lineMap y (y + realCast w) (t : ℝ) = _
   rw [AffineMap.lineMap_apply_module]
   module
 
-private theorem Elliptic.deckTranslationHom_smul (j : Kind) (v : Lattice) (y : RealCoordinates)
+private theorem Elliptic.deckTranslationHom_smul (j : Kind) (v : Lattice) (y : RealPlane₄)
     (w : Lattice) : deckTranslationHom j v (Multiplicative.ofAdd w) • y = y + realCast w :=
   add_comm _ _
 
 private def Elliptic.affineTranslationLoop (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (y : RealCoordinates) (w : Lattice) :
+    (hv : AdmissibleTwist j v) (y : RealPlane₄) (w : Lattice) :
     Path (affineCoverProjection j p v hv y) (affineCoverProjection j p v hv y) :=
   affineDeckPathLoop j p v hv y (deckTranslationHom j v (Multiplicative.ofAdd w))
     ((affineTranslationPath y w).cast rfl (deckTranslationHom_smul j v y w))
 
 @[simp]
 private theorem Elliptic.affineTranslationLoop_apply (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (hv : AdmissibleTwist j v) (y : RealCoordinates) (w : Lattice) (t : unitInterval) :
+    (hv : AdmissibleTwist j v) (y : RealPlane₄) (w : Lattice) (t : unitInterval) :
     affineTranslationLoop j p v hv y w t =
       affineCoverProjection j p v hv (y + (t : ℝ) • realCast w) := by
   change affineCoverProjection j p v hv (affineTranslationPath y w t) = _
   rw [affineTranslationPath_apply]
 
 private theorem Elliptic.surfaceFundamentalGroupDeckEquiv_affineTranslationLoop (j : Kind)
-    (p : FixedPeriod j) (v : Lattice) (hv : AdmissibleTwist j v) (y : RealCoordinates)
+    (p : FixedPeriod j) (v : Lattice) (hv : AdmissibleTwist j v) (y : RealPlane₄)
     (w : Lattice) :
     surfaceFundamentalGroupDeckEquiv j p v hv y
         (FundamentalGroup.fromPath ⟦affineTranslationLoop j p v hv y w⟧) =
@@ -386,7 +386,7 @@ private theorem Elliptic.surfaceFundamentalGroupDeckEquiv_affineTranslationLoop 
 
 private theorem Elliptic.LogGauge.fillingSurfaceRetraction_quotient_flat {j : Elliptic.Kind}
     (D : Elliptic.Equivariant.Data j) (v : Lattice) (hv : Elliptic.AdmissibleTwist j v)
-    (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates) :
+    (z : SpecialPeriods.Disc) (x : RealPlane₄) :
     D.fillingSurfaceRetraction v hv (D.quotient v hv (z, standardLattice.mkQ x)) =
       Elliptic.affineCoverProjection j D.centralPeriod v hv x := by
   apply D.centralFibreInclusion_injective v hv
@@ -418,7 +418,7 @@ theorem Elliptic.LogGauge.fundamentalGroup_cast_loop {Y : Type*} [TopologicalSpa
 private def
     Elliptic.LogGauge.retractedFlatLoop {j : Elliptic.Kind} (D : Elliptic.Equivariant.Data j)
     (v : Lattice) (hv : Elliptic.AdmissibleTwist j v) (z : SpecialPeriods.Disc)
-    (x : Elliptic.RealCoordinates)
+    (x : RealPlane₄)
     (γ :
       Path (D.quotient v hv (z, standardLattice.mkQ x))
         (D.quotient v hv (z, standardLattice.mkQ x))) :
@@ -473,12 +473,12 @@ private theorem Elliptic.LogGauge.standardLattice_mkQ_realCast (w : Lattice) :
 
 private def
     Elliptic.LogGauge.fibreTranslationFamily {j : Elliptic.Kind} (D : Elliptic.Equivariant.Data j)
-    (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates) (w : Lattice) (t : (unitInterval)) :
+    (z : SpecialPeriods.Disc) (x : RealPlane₄) (w : Lattice) (t : (unitInterval)) :
     D.TotalSpace :=
   (z, standardLattice.mkQ (x + (t : ℝ) • Elliptic.realCast w))
 
 private theorem Elliptic.LogGauge.fibreTranslationFamily_continuous {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates)
+    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : RealPlane₄)
     (w : Lattice) : Continuous (fibreTranslationFamily D z x w) :=
   continuous_const.prodMk
     (standardLattice.continuous_mkQ.comp
@@ -486,19 +486,19 @@ private theorem Elliptic.LogGauge.fibreTranslationFamily_continuous {j : Ellipti
 
 @[simp]
 private theorem Elliptic.LogGauge.fibreTranslationFamily_zero {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates)
+    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : RealPlane₄)
     (w : Lattice) : fibreTranslationFamily D z x w 0 = (z, standardLattice.mkQ x) := by
   simp [fibreTranslationFamily]
 
 @[simp]
 private theorem Elliptic.LogGauge.fibreTranslationFamily_one {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates)
+    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : RealPlane₄)
     (w : Lattice) : fibreTranslationFamily D z x w 1 = (z, standardLattice.mkQ x) := by
   change (z, standardLattice.mkQ (x + (1 : ℝ) • Elliptic.realCast w)) = (z, standardLattice.mkQ x)
   rw [one_smul, map_add, standardLattice_mkQ_realCast, add_zero]
 
 private theorem Elliptic.LogGauge.periodEquiv_fibreTranslation {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates)
+    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : RealPlane₄)
     (w : Lattice) (t : (unitInterval)) :
     D.periods.periodEquiv z (x + (t : ℝ) • Elliptic.realCast w) =
       D.periods.periodEquiv z x + (t : ℂ) • periodVector D.periods w z := by
@@ -506,7 +506,7 @@ private theorem Elliptic.LogGauge.periodEquiv_fibreTranslation {j : Elliptic.Kin
   rfl
 
 private theorem Elliptic.LogGauge.fibreTranslationFamily_complex_formula {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates)
+    (D : Elliptic.Equivariant.Data j) (z : SpecialPeriods.Disc) (x : RealPlane₄)
     (w : Lattice) (t : (unitInterval)) :
     fibreTranslationFamily D z x w t =
       D.periods.quotientMap
@@ -523,7 +523,7 @@ private theorem Elliptic.LogGauge.fibreTranslationFamily_complex_formula {j : El
 private def
     Elliptic.LogGauge.fibreTranslationLoop {j : Elliptic.Kind} (D : Elliptic.Equivariant.Data j)
     (v : Lattice) (hv : Elliptic.AdmissibleTwist j v) (z : SpecialPeriods.Disc)
-    (x : Elliptic.RealCoordinates) (w : Lattice) :
+    (x : RealPlane₄) (w : Lattice) :
     Path (D.quotient v hv (z, standardLattice.mkQ x)) (D.quotient v hv (z, standardLattice.mkQ x))
     where
   toFun t := D.quotient v hv (fibreTranslationFamily D z x w t)
@@ -534,14 +534,14 @@ private def
 
 private def Elliptic.LogGauge.fibreTranslationSurfaceLoop {j : Elliptic.Kind}
     (D : Elliptic.Equivariant.Data j) (v : Lattice) (hv : Elliptic.AdmissibleTwist j v)
-    (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates) (w : Lattice) :
+    (z : SpecialPeriods.Disc) (x : RealPlane₄) (w : Lattice) :
     Path (Elliptic.affineCoverProjection j D.centralPeriod v hv x)
       (Elliptic.affineCoverProjection j D.centralPeriod v hv x) :=
   retractedFlatLoop D v hv z x (fibreTranslationLoop D v hv z x w)
 
 private theorem Elliptic.LogGauge.fibreTranslationSurfaceLoop_eq {j : Elliptic.Kind}
     (D : Elliptic.Equivariant.Data j) (v : Lattice) (hv : Elliptic.AdmissibleTwist j v)
-    (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates) (w : Lattice) :
+    (z : SpecialPeriods.Disc) (x : RealPlane₄) (w : Lattice) :
     fibreTranslationSurfaceLoop D v hv z x w =
       Elliptic.affineTranslationLoop j D.centralPeriod v hv x w := by
   ext t
@@ -553,7 +553,7 @@ private theorem Elliptic.LogGauge.fibreTranslationSurfaceLoop_eq {j : Elliptic.K
 
 private theorem Elliptic.LogGauge.fibreTranslationSurfaceLoop_deck {j : Elliptic.Kind}
     (D : Elliptic.Equivariant.Data j) (v : Lattice) (hv : Elliptic.AdmissibleTwist j v)
-    (z : SpecialPeriods.Disc) (x : Elliptic.RealCoordinates) (w : Lattice) :
+    (z : SpecialPeriods.Disc) (x : RealPlane₄) (w : Lattice) :
     Elliptic.surfaceFundamentalGroupDeckEquiv j D.centralPeriod v hv x
         (FundamentalGroup.fromPath ⟦fibreTranslationSurfaceLoop D v hv z x w⟧) =
       Elliptic.deckTranslationHom j v (Multiplicative.ofAdd (-w)) := by
@@ -561,12 +561,12 @@ private theorem Elliptic.LogGauge.fibreTranslationSurfaceLoop_deck {j : Elliptic
   exact Elliptic.surfaceFundamentalGroupDeckEquiv_affineTranslationLoop j D.centralPeriod v hv x w
 
 private def Elliptic.LogGauge.fibreTranslationFamilyStar {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (z : BaseStar) (x : Elliptic.RealCoordinates) (w : Lattice)
+    (D : Elliptic.Equivariant.Data j) (z : BaseStar) (x : RealPlane₄) (w : Lattice)
     (t : (unitInterval)) : FamilyStar D.periods :=
   ⟨fibreTranslationFamily D z.1 x w t, z.2⟩
 
 private theorem Elliptic.LogGauge.gaugeMap_fibreTranslationFamilyStar_formula {j : Elliptic.Kind}
-    (D : Elliptic.Equivariant.Data j) (v : Lattice) (z : BaseStar) (x : Elliptic.RealCoordinates)
+    (D : Elliptic.Equivariant.Data j) (v : Lattice) (z : BaseStar) (x : RealPlane₄)
     (w : Lattice) (s : ℂ) (hs : CuspUniformization.exponential s = (z.1 : ℂ))
     (t : (unitInterval)) :
     (gaugeMap D.periods v (fibreTranslationFamilyStar D z x w t) : D.TotalSpace) =
@@ -600,7 +600,7 @@ private theorem
 
 private def Elliptic.LogGauge.fibreTranslationFillingPoint {j : Elliptic.Kind}
     (D : Elliptic.Equivariant.Data j) (v : Lattice) (hv : Elliptic.AdmissibleTwist j v)
-    (z : BaseStar) (x : Elliptic.RealCoordinates) (w : Lattice) (t : (unitInterval)) :
+    (z : BaseStar) (x : RealPlane₄) (w : Lattice) (t : (unitInterval)) :
     FillingStar D v hv :=
   fillingStarProject D v hv (fibreTranslationFamilyStar D z x w t)
 

@@ -227,7 +227,7 @@ private theorem PeriodFamily.Homology.pointFamilyFibreInclusion_homology_eq_norm
 
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.positiveLogFlat {j : Elliptic.Kind}
     (D : Elliptic.Equivariant.Data j) (v : Lattice) (z : SpecialPeriods.Disc) (s : ℂ) :
-    Elliptic.RealCoordinates :=
+    RealPlane₄ :=
   (D.periods.periodEquiv z).symm (s • Elliptic.LogGauge.periodVector D.periods v z)
 
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.positiveLogFlat_continuous
@@ -246,7 +246,7 @@ private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.positiveLogFlat
 
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.positiveLogFlatMap {j : Elliptic.Kind}
     (D : Elliptic.Equivariant.Data j) (v : Lattice) :
-    C(SpecialPeriods.Disc × ℂ, Elliptic.RealCoordinates) :=
+    C(SpecialPeriods.Disc × ℂ, RealPlane₄) :=
   ⟨fun p => positiveLogFlat D v p.1 p.2, positiveLogFlat_continuous D v⟩
 
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.positiveLogFlat_rotation
@@ -317,7 +317,7 @@ private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.nativeLogParame
   ring
 
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.nativeGaugeRealLift (j : Elliptic.Kind)
-    (τ : ℝ) : C(ℝ, Elliptic.RealCoordinates) :=
+    (τ : ℝ) : C(ℝ, RealPlane₄) :=
   (positiveLogFlatMap (SpecialPeriods.EllipticFilling.specialLocalData j) j.twist).comp
     ((nativeLogRoot j τ).prodMk (nativeLogParameter j τ))
 
@@ -347,7 +347,7 @@ private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.nativeGaugeCyli
       (nativeLogRoot_exponential j τ t)
 
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.linearGauge (j : Elliptic.Kind)
-    (v : Lattice) : C(ℝ, Elliptic.RealCoordinates) :=
+    (v : Lattice) : C(ℝ, RealPlane₄) :=
   ⟨fun t => (t / (j.order : ℝ)) • Elliptic.realCast v,
     (continuous_id.div_const (j.order : ℝ)).smul continuous_const⟩
 
@@ -362,8 +362,8 @@ private theorem
   rw [map_smul, Elliptic.flatLinear_realCast, hv, add_div, add_smul]
 
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeInterpolation (j : Elliptic.Kind)
-    (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates)) :
-    C(unitInterval × ℝ, Elliptic.RealCoordinates) :=
+    (v : Lattice) (a : C(ℝ, RealPlane₄)) :
+    C(unitInterval × ℝ, RealPlane₄) :=
   ⟨fun p => (1 - (p.1 : ℝ)) • a p.2 + (p.1 : ℝ) • linearGauge j v p.2,
     ((continuous_const.sub (continuous_subtype_val.comp continuous_fst)).smul
           (a.continuous.comp continuous_snd)).add
@@ -372,28 +372,28 @@ private def PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeInterpolation 
 
 @[simp]
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeInterpolation_zero
-    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates)) (t : ℝ) :
+    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, RealPlane₄)) (t : ℝ) :
     gaugeInterpolation j v a (0, t) = a t := by
   change (1 - (0 : ℝ)) • a t + (0 : ℝ) • linearGauge j v t = a t
   simp
 
 @[simp]
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeInterpolation_one
-    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates)) (t : ℝ) :
+    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, RealPlane₄)) (t : ℝ) :
     gaugeInterpolation j v a (1, t) = linearGauge j v t := by
   change (1 - (1 : ℝ)) • a t + (1 : ℝ) • linearGauge j v t = linearGauge j v t
   simp
 
 private def
     PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeInterpolationSlice (j : Elliptic.Kind)
-    (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates)) (s : unitInterval) :
-    C(ℝ, Elliptic.RealCoordinates) :=
+    (v : Lattice) (a : C(ℝ, RealPlane₄)) (s : unitInterval) :
+    C(ℝ, RealPlane₄) :=
   ⟨fun t => gaugeInterpolation j v a (s, t),
     (gaugeInterpolation j v a).continuous.comp (continuous_const.prodMk continuous_id)⟩
 
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeInterpolation_forward
     (j : Elliptic.Kind) (v : Lattice) (hv : j.matrix *ᵥ v = v)
-    (a : C(ℝ, Elliptic.RealCoordinates))
+    (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (s : unitInterval) (t : ℝ) :
@@ -411,7 +411,7 @@ private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeInterpolat
 attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeFibreCylinder
-    (a : C(ℝ, Elliptic.RealCoordinates)) : C(ℝ × RealTorus₄, RealTorus₄) :=
+    (a : C(ℝ, RealPlane₄)) : C(ℝ × RealTorus₄, RealTorus₄) :=
   ⟨fun p => p.2 + standardLattice.mkQ (a p.1),
     continuous_snd.add (standardLattice.continuous_mkQ.comp (a.continuous.comp continuous_fst))⟩
 
@@ -429,7 +429,7 @@ private theorem
 attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeFibreCylinder_forward
-    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates))
+    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (t : ℝ) (x : RealTorus₄) :
@@ -453,7 +453,7 @@ private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeFibreCylin
 attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeFibreCylinder_deck_one
-    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates))
+    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (p : ℝ × RealTorus₄) :
@@ -502,7 +502,7 @@ private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.fibreDeck_of_on
 attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeFibreCylinder_deck
-    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates))
+    (j : Elliptic.Kind) (v : Lattice) (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (k : ℤ) (p : ℝ × RealTorus₄) :
@@ -515,7 +515,7 @@ attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.interpolatedGaugeFibreCylinder_deck
     (j : Elliptic.Kind) (v : Lattice) (hv : j.matrix *ᵥ v = v)
-    (a : C(ℝ, Elliptic.RealCoordinates))
+    (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (s : unitInterval) (k : ℤ) (p : ℝ × RealTorus₄) :
@@ -530,7 +530,7 @@ attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeCylinderMap
     (D : PeriodFamily.Data ℂ SpecialPeriods.TriangleRegularPoint)
-    (L : C(ℝ, SpecialPeriods.TriangleRegularPoint)) (a : C(ℝ, Elliptic.RealCoordinates)) :
+    (L : C(ℝ, SpecialPeriods.TriangleRegularPoint)) (a : C(ℝ, RealPlane₄)) :
     C(ℝ × RealTorus₄, D.Space) :=
   PeriodFamily.Boundary.familyCylinderMap D L (gaugeFibreCylinder a)
 
@@ -538,7 +538,7 @@ attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeCylinderMap_deck
     (D : PeriodFamily.Data ℂ SpecialPeriods.TriangleRegularPoint) (j : Elliptic.Kind)
-    (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates))
+    (v : Lattice) (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (L : C(ℝ, SpecialPeriods.TriangleRegularPoint))
@@ -554,7 +554,7 @@ attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeBoundaryMap
     (D : PeriodFamily.Data ℂ SpecialPeriods.TriangleRegularPoint) (j : Elliptic.Kind)
-    (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates))
+    (v : Lattice) (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (L : C(ℝ, SpecialPeriods.TriangleRegularPoint))
@@ -567,7 +567,7 @@ attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeCylinderHomotopy
     (D : PeriodFamily.Data ℂ SpecialPeriods.TriangleRegularPoint) (j : Elliptic.Kind)
-    (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates))
+    (v : Lattice) (a : C(ℝ, RealPlane₄))
     (L : C(ℝ, SpecialPeriods.TriangleRegularPoint)) :
     (gaugeCylinderMap D L a).Homotopy (gaugeCylinderMap D L (linearGauge j v))
     where
@@ -597,7 +597,7 @@ attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeCylinderHomotopy_deck
     (D : PeriodFamily.Data ℂ SpecialPeriods.TriangleRegularPoint) (j : Elliptic.Kind)
-    (v : Lattice) (hv : j.matrix *ᵥ v = v) (a : C(ℝ, Elliptic.RealCoordinates))
+    (v : Lattice) (hv : j.matrix *ᵥ v = v) (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (L : C(ℝ, SpecialPeriods.TriangleRegularPoint))
@@ -614,7 +614,7 @@ attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeLinearizationHomotopy
     (D : PeriodFamily.Data ℂ SpecialPeriods.TriangleRegularPoint) (j : Elliptic.Kind)
-    (v : Lattice) (hv : j.matrix *ᵥ v = v) (a : C(ℝ, Elliptic.RealCoordinates))
+    (v : Lattice) (hv : j.matrix *ᵥ v = v) (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (L : C(ℝ, SpecialPeriods.TriangleRegularPoint))
@@ -631,7 +631,7 @@ attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private theorem PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeBoundaryMap_eq_of_mk
     (D : PeriodFamily.Data ℂ SpecialPeriods.TriangleRegularPoint) (j : Elliptic.Kind)
-    (v : Lattice) (a : C(ℝ, Elliptic.RealCoordinates))
+    (v : Lattice) (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (L : C(ℝ, SpecialPeriods.TriangleRegularPoint))
@@ -651,7 +651,7 @@ attribute [local instance] SpecialPeriods.triangleTorusAction
     SpecialPeriods.triangleTorusAction_continuous in
 private def PeriodFamily.Boundary.EllipticGaugeLinearization.gaugeLinearizationHomotopyOfMk
     (D : PeriodFamily.Data ℂ SpecialPeriods.TriangleRegularPoint) (j : Elliptic.Kind)
-    (v : Lattice) (hv : j.matrix *ᵥ v = v) (a : C(ℝ, Elliptic.RealCoordinates))
+    (v : Lattice) (hv : j.matrix *ᵥ v = v) (a : C(ℝ, RealPlane₄))
     (ha :
       ∀ t, Elliptic.flatLinear j (a (t + 1)) = a t + (1 / (j.order : ℝ)) • Elliptic.realCast v)
     (L : C(ℝ, SpecialPeriods.TriangleRegularPoint))

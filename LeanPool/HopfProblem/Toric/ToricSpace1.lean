@@ -2093,24 +2093,24 @@ private theorem CuspQuotient.exists_admissible_radius (C : ℂ → Matrix (Fin 2
   intro i j
   exact (hC i j).mono (Metric.ball_subset_ball ((min_le_right _ _).trans (half_le_self hr.le)))
 
-private abbrev ToricFan.Triangle.RealCoordinates :=
+private abbrev ToricFan.Triangle.RealPlane₄ :=
   Fin 3 → ℝ
 
 private def ToricFan.Triangle.coordinates (s : ToricFan.Triangle) :
-    RealCoordinates →ₗ[ℝ] RealCoordinates :=
+    RealPlane₄ →ₗ[ℝ] RealPlane₄ :=
   (s.dual.map (Int.castRingHom ℝ)).mulVecLin
 
 private def
-    ToricFan.Triangle.generate (s : ToricFan.Triangle) : RealCoordinates →ₗ[ℝ] RealCoordinates :=
+    ToricFan.Triangle.generate (s : ToricFan.Triangle) : RealPlane₄ →ₗ[ℝ] RealPlane₄ :=
   (s.rays.map (Int.castRingHom ℝ)).mulVecLin
 
-private theorem ToricFan.Triangle.coordinates_lower (a b : ℤ) (x : RealCoordinates) :
+private theorem ToricFan.Triangle.coordinates_lower (a b : ℤ) (x : RealPlane₄) :
     coordinates ⟨a, b, Bool.false⟩ x =
       ![(1 + (a : ℝ) + b) * x 2 - x 0 - x 1, x 0 - a * x 2, x 1 - b * x 2] := by
   ext i
   fin_cases i <;> simp [coordinates, dual, Matrix.mulVec, dotProduct, Fin.sum_univ_succ] <;> ring
 
-private theorem ToricFan.Triangle.coordinates_upper (a b : ℤ) (x : RealCoordinates) :
+private theorem ToricFan.Triangle.coordinates_upper (a b : ℤ) (x : RealPlane₄) :
     coordinates ⟨a, b, Bool.true⟩ x =
       ![((b : ℝ) + 1) * x 2 - x 1, ((a : ℝ) + 1) * x 2 - x 0,
         x 0 + x 1 - (1 + (a : ℝ) + b) * x 2] := by
@@ -2118,13 +2118,13 @@ private theorem ToricFan.Triangle.coordinates_upper (a b : ℤ) (x : RealCoordin
   fin_cases i <;> simp [coordinates, dual, Matrix.mulVec, dotProduct, Fin.sum_univ_succ] <;> ring
 
 private theorem
-    ToricFan.Triangle.coordinates_generate (s : ToricFan.Triangle) (x : RealCoordinates) :
+    ToricFan.Triangle.coordinates_generate (s : ToricFan.Triangle) (x : RealPlane₄) :
     s.coordinates (s.generate x) = x := by
   change (s.dual.map (Int.castRingHom ℝ)) *ᵥ ((s.rays.map (Int.castRingHom ℝ)) *ᵥ x) = x
   rw [Matrix.mulVec_mulVec, ← Matrix.map_mul, dual_rays]
   simp
 
-private def ToricFan.Triangle.cone (s : ToricFan.Triangle) : ConvexCone ℝ RealCoordinates
+private def ToricFan.Triangle.cone (s : ToricFan.Triangle) : ConvexCone ℝ RealPlane₄
     where
   carrier := {x | ∀ i, 0 ≤ s.coordinates x i}
   smul_mem' := by
@@ -2135,7 +2135,7 @@ private def ToricFan.Triangle.cone (s : ToricFan.Triangle) : ConvexCone ℝ Real
     simpa using add_nonneg (hx i) (hy i)
 
 @[simp]
-private theorem ToricFan.Triangle.mem_cone (s : ToricFan.Triangle) (x : RealCoordinates) :
+private theorem ToricFan.Triangle.mem_cone (s : ToricFan.Triangle) (x : RealPlane₄) :
     x ∈ s.cone ↔ ∀ i, 0 ≤ s.coordinates x i :=
   Iff.rfl
 
@@ -2249,7 +2249,7 @@ private theorem
     ((inclusion_eq_iff referenceTriangle s z _).mpr
         ⟨ToricCharts.torus_subset_overlap _ _ hz, rfl⟩).symm
 
-private def ToricSpace.positionPoint (y : Fin 2 → ℝ) : ToricFan.Triangle.RealCoordinates :=
+private def ToricSpace.positionPoint (y : Fin 2 → ℝ) : ToricFan.Triangle.RealPlane₄ :=
   ![y 0, y 1, 1]
 
 private theorem ToricSpace.generate_barycentric (s : ToricFan.Triangle)

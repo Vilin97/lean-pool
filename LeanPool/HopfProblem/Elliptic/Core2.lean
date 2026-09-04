@@ -81,7 +81,7 @@ private theorem Elliptic.familyCoveringManifold :
 
 attribute [local instance] Elliptic.familyCoveringChartedSpace Elliptic.familyCoveringManifold in
 private theorem Elliptic.familyPeriodEquiv_matrix (j : Kind) (z : SpecialPeriods.Disc)
-    (x : RealCoordinates) :
+    (x : RealPlane₄) :
     (familyPeriods j).periodEquiv z x =
       ((familyPeriods j).point z).val.matrix *ᵥ (fun i => (x i : ℂ)) := by
   rw [HolomorphicPeriodMap.periodEquiv_coordinates]
@@ -98,7 +98,7 @@ private theorem Elliptic.familyPeriods_matrix_covariance (j : Kind) (z : Special
 
 attribute [local instance] Elliptic.familyCoveringChartedSpace Elliptic.familyCoveringManifold in
 private theorem Elliptic.familyPeriodEquiv_flatLinear (j : Kind) (z : SpecialPeriods.Disc)
-    (x : RealCoordinates) :
+    (x : RealPlane₄) :
     (familyPeriods j).periodEquiv (familyRotation j z) (flatLinear j x) =
       linearMatrix j ((familyPeriods j).point z) *ᵥ (familyPeriods j).periodEquiv z x := by
   rw [familyPeriodEquiv_matrix, flatLinear_complexCast, Matrix.mulVec_mulVec,

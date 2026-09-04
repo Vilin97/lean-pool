@@ -138,9 +138,10 @@ private theorem RiemannMapping.discExtension_eqOn {U : Set ℂ} (f : ℂ → ℂ
   discExtension_coe f hf hz
 
 private theorem RiemannMapping.normalizedClass_nonempty {U : Set ℂ} (hUo : IsOpen U)
-    (hUc : IsSimplyConnected U) (hU : U ≠ Set.univ) {x₀ : ℂ} (hx₀ : x₀ ∈ U) :
+    (hUc : IsSimplyConnected U) (hU : U ≠ Set.univ) (x₀ : ℂ) :
     (normalizedClass U x₀).Nonempty := by
-  obtain ⟨f, hf₀, hf_inj, hfd⟩ := Complex.exists_map_unitDisc_injOn_deriv_ne_zero₀ hUo hUc hU hx₀
+  obtain ⟨f, hf₀, hf_inj, hfd⟩ :=
+    Complex.exists_map_unitDisc_injOn_deriv_ne_zero₀ hUo hUc hU x₀
   refine ⟨UniformOnFun.ofFun (compactSubsets U) (Complex.UnitDisc.coe ∘ f), ?_⟩
   refine ⟨fun z _ => (f z).property, ?_, ?_, hfd, ?_⟩
   · intro z hz w hw he
@@ -158,7 +159,7 @@ private theorem RiemannMapping.exists_bijOn_unitBall_deriv_ne_zero_map_eq_zero {
         Set.BijOn f U (Metric.ball 0 1) ∧ (∀ z ∈ U, deriv f z ≠ 0) ∧ f x₀ = 0 := by
   obtain ⟨f, hf, hmax⟩ :=
     exists_maximal_normalizedMap hUo hUc.isPathConnected.isConnected.isPreconnected hx₀
-      (normalizedClass_nonempty hUo hUc hU hx₀)
+      (normalizedClass_nonempty hUo hUc hU x₀)
   obtain ⟨hfmap, hfinj, hfdiff, hfderiv, hfzero⟩ := hf
   refine ⟨evaluation f, hfdiff, ⟨hfmap, hfinj, ?_⟩, hfderiv, hfzero⟩
   by_contra hsurj

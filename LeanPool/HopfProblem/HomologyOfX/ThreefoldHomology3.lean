@@ -2323,7 +2323,7 @@ private def ThreefoldHomology.SecondSource.nativeSourceClasses (x y : Lattice) :
       (threeCoordinates
         (PeriodFamily.Boundary.EllipticCapKernelWang.h1ShearCorrection Elliptic.Kind.three)
         (PeriodFamily.Boundary.EllipticCapKernelWang.h1ShearCorrection Elliptic.Kind.four) x y)
-  | some .four => ThreefoldHomology.CapElimination.ellipticOneClass .four (fourCoordinates x y)
+  | some .four => ThreefoldHomology.CapElimination.ellipticOneClass .four (fourCoordinates y)
 
 private theorem ThreefoldHomology.SecondSource.nativeSourceClasses_wang_three (x y : Lattice) :
     PeriodFamily.FlatTorus.singularH1Equiv
@@ -2349,8 +2349,8 @@ private theorem ThreefoldHomology.SecondSource.nativeSourceClasses_wang_four (x 
           (Option.some .four)) =
       fourWangVector
         (PeriodFamily.Boundary.EllipticCapKernelWang.h1ShearCorrection Elliptic.Kind.four)
-        (fourCoordinates x y) := by
-  have h := ThreefoldHomology.CapElimination.ellipticOneClass_wang .four (fourCoordinates x y)
+        (fourCoordinates y) := by
+  have h := ThreefoldHomology.CapElimination.ellipticOneClass_wang .four (fourCoordinates y)
   simpa only [Elliptic.HigherHomology.fibreNormIndex_four, Nat.cast_ofNat, Elliptic.Kind.twist,
     fourWangVector] using! h
 

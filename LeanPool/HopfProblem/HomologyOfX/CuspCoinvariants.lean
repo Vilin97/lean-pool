@@ -301,7 +301,7 @@ private def
     ThreefoldHomology.SecondSource.threeCoordinates (κ₃ κ₄ : ℤ) (x y : Lattice) : Fin 2 → ℤ :=
   ![x 3 + (x 1 - 2 * x 0) + (κ₄ * y 0 - y 3) + κ₃ * x 0, x 0]
 
-private def ThreefoldHomology.SecondSource.fourCoordinates (_x y : Lattice) : Fin 2 → ℤ :=
+private def ThreefoldHomology.SecondSource.fourCoordinates (y : Lattice) : Fin 2 → ℤ :=
   ![0, -y 0]
 
 private def ThreefoldHomology.SecondSource.cuspCoordinates (κ₄ : ℤ) (x y : Lattice) : Lattice :=
@@ -325,7 +325,7 @@ private theorem
 
 private theorem ThreefoldHomology.SecondSource.fourCoordinates_reconstruct (κ₄ : ℤ) (x y : Lattice)
     (h : TrianglePeriodFamilyHomologyLattice.deltaOne (x, y) = 0) :
-    fourWangVector κ₄ (fourCoordinates x y) - cuspCoordinates κ₄ x y = y := by
+    fourWangVector κ₄ (fourCoordinates y) - cuspCoordinates κ₄ x y = y := by
   have hy₁ := (kernel_coordinates x y h).2.1
   have hy₂ := (kernel_coordinates x y h).2.2
   ext i

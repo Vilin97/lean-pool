@@ -70,18 +70,15 @@ private theorem
     Elliptic.Kind.matrix_fixes_twist (j : Elliptic.Kind) : j.matrix *ᵥ j.twist = j.twist := by
   cases j <;> decide
 
-private abbrev Elliptic.RealCoordinates :=
-  Fin 4 → ℝ
+private def Elliptic.realCast (v : Lattice) : RealPlane₄ := fun i => (v i : ℝ)
 
-private def Elliptic.realCast (v : Lattice) : RealCoordinates := fun i => (v i : ℝ)
-
-private def Elliptic.flatLinear (j : Kind) : RealCoordinates →ₗ[ℝ] RealCoordinates :=
+private def Elliptic.flatLinear (j : Kind) : RealPlane₄ →ₗ[ℝ] RealPlane₄ :=
   (j.matrix.map (Int.castRingHom ℝ)).mulVecLin
 
-private def Elliptic.flatAffine (j : Kind) (v : Lattice) (x : RealCoordinates) : RealCoordinates :=
+private def Elliptic.flatAffine (j : Kind) (v : Lattice) (x : RealPlane₄) : RealPlane₄ :=
   flatLinear j x + (1 / (j.order : ℝ)) • realCast v
 
-private def Elliptic.FlatCongruent (x y : RealCoordinates) : Prop :=
+private def Elliptic.FlatCongruent (x y : RealPlane₄) : Prop :=
   ∃ v : Lattice, x - y = realCast v
 
 private def Elliptic.AdmissibleTwist (j : Kind) (v : Lattice) : Prop :=
@@ -91,14 +88,14 @@ private theorem Elliptic.mainTwist_admissible (j : Kind) : AdmissibleTwist j j.t
   refine ⟨j.matrix_fixes_twist, ?_⟩
   cases j <;> norm_num [Kind.twist, γ, ε, ε']
 
-private def Elliptic.periodEquiv (p : PeriodDomain) : RealCoordinates ≃L[ℝ] ComplexPlane₂ :=
+private def Elliptic.periodEquiv (p : PeriodDomain) : RealPlane₄ ≃L[ℝ] ComplexPlane₂ :=
   p.basis.equivFun.symm.toContinuousLinearEquiv
 
-private theorem Elliptic.periodEquiv_apply (p : PeriodDomain) (x : RealCoordinates) :
+private theorem Elliptic.periodEquiv_apply (p : PeriodDomain) (x : RealPlane₄) :
     periodEquiv p x = ∑ i, x i • p.basis i :=
   p.basis.equivFun_symm_apply x
 
-private theorem Elliptic.periodEquiv_matrix (p : PeriodDomain) (x : RealCoordinates) :
+private theorem Elliptic.periodEquiv_matrix (p : PeriodDomain) (x : RealPlane₄) :
     periodEquiv p x = p.val.matrix *ᵥ (fun i => (x i : ℂ)) := by
   rw [periodEquiv_apply]
   ext i
@@ -113,7 +110,7 @@ private theorem Elliptic.periodEquiv_realCast (p : PeriodDomain) (v : Lattice) :
   rw [periodEquiv_apply]
   simp only [realCast, Int.cast_smul_eq_zsmul]
 
-private theorem Elliptic.periodEquiv_mem_lattice_iff (p : PeriodDomain) (x : RealCoordinates) :
+private theorem Elliptic.periodEquiv_mem_lattice_iff (p : PeriodDomain) (x : RealPlane₄) :
     periodEquiv p x ∈ p.lattice ↔ ∃ v : Lattice, x = realCast v := by
   rw [p.lattice_eq_span_basis, Submodule.mem_span_range_iff_exists_fun]
   constructor
@@ -124,7 +121,7 @@ private theorem Elliptic.periodEquiv_mem_lattice_iff (p : PeriodDomain) (x : Rea
   · rintro ⟨v, rfl⟩
     exact ⟨v, (periodEquiv_realCast p v).symm⟩
 
-private def Elliptic.flatProjection (p : PeriodDomain) (x : RealCoordinates) : p.Torus :=
+private def Elliptic.flatProjection (p : PeriodDomain) (x : RealPlane₄) : p.Torus :=
   p.lattice.mkQ (periodEquiv p x)
 
 private theorem
@@ -135,7 +132,7 @@ private theorem Elliptic.flatProjection_surjective (p : PeriodDomain) :
     Function.Surjective (flatProjection p) :=
   p.lattice.mkQ_surjective.comp (periodEquiv p).surjective
 
-private theorem Elliptic.flatProjection_eq_iff (p : PeriodDomain) (x y : RealCoordinates) :
+private theorem Elliptic.flatProjection_eq_iff (p : PeriodDomain) (x y : RealPlane₄) :
     flatProjection p x = flatProjection p y ↔ FlatCongruent x y := by
   change
     (Submodule.Quotient.mk (periodEquiv p x) : p.Torus) =
@@ -145,7 +142,7 @@ private theorem Elliptic.flatProjection_eq_iff (p : PeriodDomain) (x y : RealCoo
   rfl
 
 @[simp]
-private theorem Elliptic.flatProjection_add (p : PeriodDomain) (x y : RealCoordinates) :
+private theorem Elliptic.flatProjection_add (p : PeriodDomain) (x y : RealPlane₄) :
     flatProjection p (x + y) = flatProjection p x + flatProjection p y := by
   simp only [flatProjection, map_add]
 
@@ -166,7 +163,7 @@ private theorem
 
 private theorem
     Elliptic.flatAffine_iterate (j : Kind) (v : Lattice) (hv : j.matrix *ᵥ v = v) (r : ℕ)
-    (x : RealCoordinates) :
+    (x : RealPlane₄) :
     (flatAffine j v)^[r] x =
       (j.matrix.map (Int.castRingHom ℝ)) ^ r *ᵥ x + ((r : ℝ) / (j.order : ℝ)) • realCast v := by
   induction r with
@@ -185,13 +182,13 @@ private theorem
     ring
 
 private theorem Elliptic.flatAffine_iterate_order (j : Kind) (v : Lattice) (hv : j.matrix *ᵥ v = v)
-    (x : RealCoordinates) : (flatAffine j v)^[j.order] x = x + realCast v := by
+    (x : RealPlane₄) : (flatAffine j v)^[j.order] x = x + realCast v := by
   rw [flatAffine_iterate j v hv, ← Matrix.map_pow, j.matrix_pow_order]
   have hm : (j.order : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt j.order_pos)
   simp [hm]
 
 private theorem Elliptic.flatAffine_iterate_order_congruent (j : Kind) (v : Lattice)
-    (hv : j.matrix *ᵥ v = v) (x : RealCoordinates) :
+    (hv : j.matrix *ᵥ v = v) (x : RealPlane₄) :
     FlatCongruent ((flatAffine j v)^[j.order] x) x := by
   refine ⟨v, ?_⟩
   rw [flatAffine_iterate_order j v hv]
@@ -199,11 +196,11 @@ private theorem Elliptic.flatAffine_iterate_order_congruent (j : Kind) (v : Latt
 
 @[simp]
 private theorem
-    Elliptic.flatLinear_gamma (j : Kind) (x : RealCoordinates) : flatLinear j x 0 = x 0 := by
+    Elliptic.flatLinear_gamma (j : Kind) (x : RealPlane₄) : flatLinear j x 0 = x 0 := by
   cases j <;> simp [flatLinear, Kind.matrix, A₁, A₂, Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
 
 private theorem
-    Elliptic.flatAffine_iterate_gamma (j : Kind) (v : Lattice) (r : ℕ) (x : RealCoordinates) :
+    Elliptic.flatAffine_iterate_gamma (j : Kind) (v : Lattice) (r : ℕ) (x : RealPlane₄) :
     (flatAffine j v)^[r] x 0 = x 0 + ((r : ℝ) / (j.order : ℝ)) * (γ v : ℝ) := by
   induction r with
   | zero => simp
@@ -215,7 +212,7 @@ private theorem
     ring
 
 private theorem Elliptic.flatAffine_iterate_not_congruent (j : Kind) (v : Lattice)
-    (hv : AdmissibleTwist j v) (r : ℕ) (hr : 0 < r) (hrm : r < j.order) (x : RealCoordinates) :
+    (hv : AdmissibleTwist j v) (r : ℕ) (hr : 0 < r) (hrm : r < j.order) (x : RealPlane₄) :
     ¬FlatCongruent ((flatAffine j v)^[r] x) x := by
   rintro ⟨w, hw⟩
   have hgamma := congrFun hw 0
@@ -240,7 +237,7 @@ private theorem Elliptic.flatAffine_iterate_not_congruent (j : Kind) (v : Lattic
     interval_cases r <;> norm_num at hint <;> omega
 
 private theorem Elliptic.bad_three_twist_has_fixed_point (v : Lattice) (hv : A₁ *ᵥ v = v)
-    (ha : (3 : ℤ) ∣ γ v) : ∃ x : RealCoordinates, FlatCongruent (flatAffine .three v x) x := by
+    (ha : (3 : ℤ) ∣ γ v) : ∃ x : RealPlane₄, FlatCongruent (flatAffine .three v x) x := by
   obtain ⟨h₁, h₂⟩ := (A₁_fixed_iff v).mp hv
   obtain ⟨m, hm⟩ := ha
   have hm' : (v 0 : ℝ) = 3 * (m : ℝ) := by exact_mod_cast hm
@@ -252,7 +249,7 @@ private theorem Elliptic.bad_three_twist_has_fixed_point (v : Lattice) (hv : A�
     ring
 
 private theorem Elliptic.bad_four_twist_has_square_fixed_point (v : Lattice) (hv : A₂ *ᵥ v = v)
-    (ha : Even (γ v)) : ∃ x : RealCoordinates, FlatCongruent ((flatAffine .four v)^[2] x) x := by
+    (ha : Even (γ v)) : ∃ x : RealPlane₄, FlatCongruent ((flatAffine .four v)^[2] x) x := by
   obtain ⟨h₁, h₂⟩ := (A₂_fixed_iff v).mp hv
   obtain ⟨m, hm⟩ := ha
   have hm' : (v 0 : ℝ) = 2 * (m : ℝ) := by
@@ -267,7 +264,7 @@ private theorem Elliptic.bad_four_twist_has_square_fixed_point (v : Lattice) (hv
 
 private theorem Elliptic.flatAffine_free_iff (j : Kind) (v : Lattice) (hv : j.matrix *ᵥ v = v) :
     (∀ r : ℕ,
-        0 < r → r < j.order → ∀ x : RealCoordinates, ¬FlatCongruent ((flatAffine j v)^[r] x) x) ↔
+        0 < r → r < j.order → ∀ x : RealPlane₄, ¬FlatCongruent ((flatAffine j v)^[r] x) x) ↔
       AdmissibleTwist j v := by
   constructor
   · intro hfree
@@ -402,14 +399,14 @@ private theorem Elliptic.linearMatrix_period_matrix (j : Kind) (p : FixedPeriod 
     simpa only [linearMatrix, Kind.matrix, Matrix.mul_assoc, hTA, Matrix.mul_one] using
       (congrArg (fun A => A * A₂.map (Int.castRingHom ℂ)) hm).symm
 
-private theorem Elliptic.flatLinear_complexCast (j : Kind) (x : RealCoordinates) :
+private theorem Elliptic.flatLinear_complexCast (j : Kind) (x : RealPlane₄) :
     (fun i => ((flatLinear j x) i : ℂ)) =
       (j.matrix.map (Int.castRingHom ℂ)) *ᵥ (fun i => (x i : ℂ)) := by
   ext i
   simp [flatLinear, Matrix.mulVec, dotProduct]
 
 private theorem
-    Elliptic.linearEquiv_periodEquiv (j : Kind) (p : FixedPeriod j) (x : RealCoordinates) :
+    Elliptic.linearEquiv_periodEquiv (j : Kind) (p : FixedPeriod j) (x : RealPlane₄) :
     linearEquiv j p (periodEquiv p.val x) = periodEquiv p.val (flatLinear j x) := by
   rw [linearEquiv_apply, periodEquiv_matrix, periodEquiv_matrix, flatLinear_complexCast,
     Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, linearMatrix_period_matrix]
@@ -425,7 +422,7 @@ private theorem Elliptic.linearBiholomorph_mkQ (j : Kind) (p : FixedPeriod j) (z
   rfl
 
 private theorem Elliptic.linearBiholomorph_flatProjection (j : Kind) (p : FixedPeriod j)
-    (x : RealCoordinates) :
+    (x : RealPlane₄) :
     linearBiholomorph j p (flatProjection p.val x) = flatProjection p.val (flatLinear j x) := by
   change linearBiholomorph j p (p.val.lattice.mkQ (periodEquiv p.val x)) = _
   rw [linearBiholomorph_mkQ, linearEquiv_periodEquiv]
@@ -456,12 +453,12 @@ private theorem Elliptic.affineBiholomorph_apply (j : Kind) (p : FixedPeriod j) 
 
 private theorem
     Elliptic.affineBiholomorph_flatProjection (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (x : RealCoordinates) :
+    (x : RealPlane₄) :
     affineBiholomorph j p v (flatProjection p.val x) = flatProjection p.val (flatAffine j v x) := by
   rw [affineBiholomorph_apply, linearBiholomorph_flatProjection, flatAffine, flatProjection_add]
 
 private theorem Elliptic.affineBiholomorph_iterate_flatProjection (j : Kind) (p : FixedPeriod j)
-    (v : Lattice) (r : ℕ) (x : RealCoordinates) :
+    (v : Lattice) (r : ℕ) (x : RealPlane₄) :
     (affineBiholomorph j p v)^[r] (flatProjection p.val x) =
       flatProjection p.val ((flatAffine j v)^[r] x) := by
   induction r with
@@ -476,7 +473,7 @@ private def Elliptic.affinePermutation (j : Kind) (p : FixedPeriod j) (v : Latti
 
 private theorem
     Elliptic.affinePermutation_pow_flatProjection (j : Kind) (p : FixedPeriod j) (v : Lattice)
-    (r : ℕ) (x : RealCoordinates) :
+    (r : ℕ) (x : RealPlane₄) :
     (affinePermutation j p v ^ r) (flatProjection p.val x) =
       flatProjection p.val ((flatAffine j v)^[r] x) := by
   rw [Equiv.Perm.coe_pow]
@@ -518,7 +515,7 @@ private theorem Elliptic.sum_zsmul_basisFun_mo1973_9836 (v : Lattice) :
   ext k
   simp [Pi.basisFun_apply, realCast, Pi.single_apply]
 
-private theorem Elliptic.standardLattice_mem_iff (x : RealCoordinates) :
+private theorem Elliptic.standardLattice_mem_iff (x : RealPlane₄) :
     x ∈ standardLattice ↔ ∃ v : Lattice, x = realCast v := by
   rw [standardLattice, Submodule.mem_span_range_iff_exists_fun]
   constructor
@@ -527,7 +524,7 @@ private theorem Elliptic.standardLattice_mem_iff (x : RealCoordinates) :
   · rintro ⟨v, rfl⟩
     exact ⟨v, sum_zsmul_basisFun_mo1973_9836 v⟩
 
-private theorem Elliptic.flatTorus_mkQ_eq_iff (x y : RealCoordinates) :
+private theorem Elliptic.flatTorus_mkQ_eq_iff (x y : RealPlane₄) :
     standardLattice.mkQ x = standardLattice.mkQ y ↔ FlatCongruent x y := by
   change (Submodule.Quotient.mk x : RealTorus₄) = Submodule.Quotient.mk y ↔ _
   rw [Submodule.Quotient.eq, standardLattice_mem_iff]
@@ -560,13 +557,13 @@ private def Elliptic.flatTorusPeriodHomeomorph (p : PeriodDomain) : RealTorus₄
     apply p.lattice.isQuotientMap_mkQ.continuous_iff.mpr
     exact standardLattice.continuous_mkQ.comp (periodEquiv p).symm.continuous
 
-private theorem Elliptic.flatTorusPeriodHomeomorph_mkQ (p : PeriodDomain) (x : RealCoordinates) :
+private theorem Elliptic.flatTorusPeriodHomeomorph_mkQ (p : PeriodDomain) (x : RealPlane₄) :
     flatTorusPeriodHomeomorph p (standardLattice.mkQ x) = flatProjection p x :=
   rfl
 
 @[simp]
 private theorem Elliptic.flatTorusPeriodHomeomorph_symm_flatProjection (p : PeriodDomain)
-    (x : RealCoordinates) :
+    (x : RealPlane₄) :
     (flatTorusPeriodHomeomorph p).symm (flatProjection p x) = standardLattice.mkQ x := by
   rw [← flatTorusPeriodHomeomorph_mkQ, Homeomorph.symm_apply_apply]
 
@@ -575,7 +572,7 @@ private def Elliptic.flatTorusAffine (j : Kind) (v : Lattice) : RealTorus₄ ≃
         (affineBiholomorph j (exampleFixedPeriod j) v).toHomeomorph).trans
     (flatTorusPeriodHomeomorph (exampleFixedPeriod j).val).symm
 
-private theorem Elliptic.flatTorusAffine_mkQ (j : Kind) (v : Lattice) (x : RealCoordinates) :
+private theorem Elliptic.flatTorusAffine_mkQ (j : Kind) (v : Lattice) (x : RealPlane₄) :
     flatTorusAffine j v (standardLattice.mkQ x) = standardLattice.mkQ (flatAffine j v x) := by
   change
     (flatTorusPeriodHomeomorph (exampleFixedPeriod j).val).symm
@@ -595,7 +592,7 @@ private theorem
     affineBiholomorph_flatProjection]
 
 private theorem Elliptic.flatTorusAffine_iterate_mkQ (j : Kind) (v : Lattice) (r : ℕ)
-    (x : RealCoordinates) :
+    (x : RealPlane₄) :
     (flatTorusAffine j v)^[r] (standardLattice.mkQ x) =
       standardLattice.mkQ ((flatAffine j v)^[r] x) := by
   induction r with
@@ -623,7 +620,7 @@ private def Elliptic.flatTorusPermutation (j : Kind) (v : Lattice) : Equiv.Perm 
   (flatTorusAffine j v).toEquiv
 
 private theorem Elliptic.flatTorusPermutation_pow_mkQ (j : Kind) (v : Lattice) (r : ℕ)
-    (x : RealCoordinates) :
+    (x : RealPlane₄) :
     (flatTorusPermutation j v ^ r) (standardLattice.mkQ x) =
       standardLattice.mkQ ((flatAffine j v)^[r] x) := by
   rw [Equiv.Perm.coe_pow]

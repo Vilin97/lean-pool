@@ -510,7 +510,7 @@ private def SpecialPeriods.Threefold.EllipticGeometry.pieceSurfaceRetractionFund
 
 private abbrev
     SpecialPeriods.Threefold.EllipticGeometry.attachingFlatBase (j : Elliptic.Kind) (s₀ : ℂ)
-    (hs₀ : 0 < s₀.im) : Elliptic.RealCoordinates :=
+    (hs₀ : 0 < s₀.im) : RealPlane₄ :=
   Elliptic.LogGauge.logMeridianFlat (SpecialPeriods.EllipticFilling.specialLocalData j) j.twist s₀
     hs₀ 0
 

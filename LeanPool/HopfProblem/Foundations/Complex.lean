@@ -655,7 +655,7 @@ private theorem _root_.Complex.UnitDisc.deriv_shift_comp_eq_zero (f : ℂ → Co
   exact mod_cast sub_ne_zero.mpr w.sq_norm_lt_one.ne'
 
 private theorem _root_.Complex.exists_map_unitDisc_injOn_deriv_ne_zero₀ {U : Set ℂ} (hUo : IsOpen U)
-    (hUc : IsSimplyConnected U) (hU : U ≠ Set.univ) {x : ℂ} (_hx : x ∈ U) :
+    (hUc : IsSimplyConnected U) (hU : U ≠ Set.univ) (x : ℂ) :
     ∃ f : ℂ → Complex.UnitDisc,
       f x = 0 ∧ Set.InjOn f U ∧ (∀ z ∈ U, deriv (Complex.UnitDisc.coe ∘ f) z ≠ 0) := by
   classical
@@ -688,7 +688,7 @@ private theorem _root_.Complex.exist_map_unitDisc_injOn_norm_deriv_gt_preserves_
       ((∀ z ∈ U, deriv (Complex.UnitDisc.coe ∘ f) z ≠ 0) →
         ∀ z ∈ U, deriv (Complex.UnitDisc.coe ∘ g) z ≠ 0) := by
   by_cases hdf₀ : deriv (Complex.UnitDisc.coe ∘ f) x = 0
-  · rcases Complex.exists_map_unitDisc_injOn_deriv_ne_zero₀ hUo hUc hU hx with ⟨g, hg₀, hg_inj, hdg⟩
+  · rcases Complex.exists_map_unitDisc_injOn_deriv_ne_zero₀ hUo hUc hU x with ⟨g, hg₀, hg_inj, hdg⟩
     refine ⟨g, hg₀, hg_inj, fun z hz ↦ ?_, ?_, fun _ => hdg⟩
     · exact (differentiableAt_of_deriv_ne_zero (hdg z hz)).differentiableWithinAt
     · simpa [hdf₀] using hdg x hx
