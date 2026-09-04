@@ -1,62 +1,55 @@
 projects:
-  - slug: sphere-packing
-    title: Sharp asymptotic upper bounds for sphere packing
+  - slug: long-gaps-between-primes
+    title: Improved long gaps between consecutive primes
     summary: >-
-      Formalizes the sharp high-dimensional asymptotics of the unrestricted
-      Cohn--Elkies linear program and bridges them to sphere-packing density.
-      The development constructs radial test functions through Mellin,
-      saddle-point, and harmonic analysis, proves radialization preserves the
-      unrestricted optimum, and certifies the exact natural- and base-two
-      exponential rates.
-    branch: discrete geometry and harmonic analysis
-    entry_module: LeanPool.SpherePacking
+      Formalizes the unconditional lower bound showing that, for all
+      sufficiently large X, the largest gap between consecutive primes below
+      X is at least a positive constant times
+      log X (log log X)^2 log log log log X / (log log log X)^2. The
+      development includes the short-translates sieve proposition, divisor
+      coefficient estimates, truncated product weights, moment bounds, and
+      the Erdos--Rankin covering argument used to derive the headline result.
+    branch: analytic number theory
+    entry_module: LeanPool.LongGapsBetweenPrimes
     authors:
       - OpenAI
-      - Sidharth Hariharan
-      - Gareth Ma
-      - Dean Cureton
     source:
-      title: Ten Advances in Mathematics and Theoretical Computer Science
+      title: Improved Long Gaps Between Primes
       authors:
         - OpenAI
-      url: https://github.com/openai/ten-proofs/tree/94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
-      github_repo: openai/ten-proofs
-      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+      url: https://cdn.openai.com/pdf/51126fac-1b68-4128-9666-c908bcc16033/long_gaps.pdf
+      github_repo: openai/LongGapsBetweenPrimes
+      commit: 03a1190d0bc5502d9f54eeb60ad3e45e22b0df0b
     license: Apache-2.0
     status: verified
-    provenance: mix
+    provenance: AI
     main_declarations:
-      - PackingBounds.sharpFullCohnElkiesManuscriptConclusions
+      - LongGapsBetweenPrimes.long_prime_gaps
     main_results:
-      - declaration: PackingBounds.FullMain.exact_limit
+      - declaration: LongGapsBetweenPrimes.long_prime_gaps
         informal: >-
-          The d-th root of the unrestricted Cohn--Elkies linear-program bound
-          converges to the sharp constant sqrt(e / (2 pi)).
-      - declaration: PackingBounds.FullMain.exact_binary_exponent
+          There are a positive constant c and a real threshold X0 such that
+          for every X at least X0, some pair of consecutive indexed primes
+          below X has gap greater than c times
+          log X (log log X)^2 log log log log X / (log log log X)^2.
+      - declaration: LongGapsBetweenPrimes.long_gap_theorem
         informal: >-
-          The base-two logarithm of the unrestricted linear-program bound,
-          divided by dimension, converges to
-          -1/2 log_2(2 pi / e).
-      - declaration: PackingBounds.PackingBridge.sphere_packing_sharp_asymptotic_upper
+          For all sufficiently large X, there are consecutive primes p < q
+          with q at most X and q - p at least a fixed positive multiple of
+          the improved long-gap scale.
+      - declaration: LongGapsBetweenPrimes.short_translates
         informal: >-
-          There is a vanishing error sequence such that, in every positive
-          dimension, sphere-packing density is at most
-          (sqrt(e / (2 pi)) plus that error) to the dimension.
-      - declaration: PackingBounds.sharpFullCohnElkiesManuscriptConclusions
-        informal: >-
-          Packages the complete sharp asymptotic conclusions for the
-          unrestricted program, including quotient-root, natural-logarithmic,
-          and base-two limits, vanishing-error formulas, a universal bound for
-          all admissible functions, and a certified decimal exponent interval.
+          For all sufficiently large x, every sufficiently sparse subset S
+          of an interval of length between x and x(log x)^2 has a translate
+          b + Q(x)t + S consisting entirely of composite numbers, with
+          1 <= t <= exp x.
     tags:
-      - sphere-packing
-      - discrete-geometry
-      - harmonic-analysis
-      - linear-programming-bounds
+      - analytic-number-theory
+      - prime-gaps
+      - sieve-theory
+      - erdos-rankin
     msc:
-      - "52C17"
-      - "41A60"
-      - "42A38"
+      - "11N05"
   - slug: zeta-zeros
     title: Simple zeros of the Riemann zeta function
     summary: >-
@@ -7043,3 +7036,61 @@ projects:
     msc:
       - "05C60"
       - "68R10"
+  - slug: sphere-packing
+    title: Sharp asymptotic upper bounds for sphere packing
+    summary: >-
+      Formalizes the sharp high-dimensional asymptotics of the unrestricted
+      Cohn--Elkies linear program and bridges them to sphere-packing density.
+      The development constructs radial test functions through Mellin,
+      saddle-point, and harmonic analysis, proves radialization preserves the
+      unrestricted optimum, and certifies the exact natural- and base-two
+      exponential rates.
+    branch: discrete geometry and harmonic analysis
+    entry_module: LeanPool.SpherePacking
+    authors:
+      - OpenAI
+      - Sidharth Hariharan
+      - Gareth Ma
+      - Dean Cureton
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs/tree/94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - PackingBounds.sharpFullCohnElkiesManuscriptConclusions
+    main_results:
+      - declaration: PackingBounds.FullMain.exact_limit
+        informal: >-
+          The d-th root of the unrestricted Cohn--Elkies linear-program bound
+          converges to the sharp constant sqrt(e / (2 pi)).
+      - declaration: PackingBounds.FullMain.exact_binary_exponent
+        informal: >-
+          The base-two logarithm of the unrestricted linear-program bound,
+          divided by dimension, converges to
+          -1/2 log_2(2 pi / e).
+      - declaration: PackingBounds.PackingBridge.sphere_packing_sharp_asymptotic_upper
+        informal: >-
+          There is a vanishing error sequence such that, in every positive
+          dimension, sphere-packing density is at most
+          (sqrt(e / (2 pi)) plus that error) to the dimension.
+      - declaration: PackingBounds.sharpFullCohnElkiesManuscriptConclusions
+        informal: >-
+          Packages the complete sharp asymptotic conclusions for the
+          unrestricted program, including quotient-root, natural-logarithmic,
+          and base-two limits, vanishing-error formulas, a universal bound for
+          all admissible functions, and a certified decimal exponent interval.
+    tags:
+      - sphere-packing
+      - discrete-geometry
+      - harmonic-analysis
+      - linear-programming-bounds
+    msc:
+      - "52C17"
+      - "41A60"
+      - "42A38"
