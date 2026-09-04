@@ -3469,7 +3469,7 @@ theorem sourceRate_mul_lt_divisorStopping
       mul_lt_mul_of_pos_left hcast hrate
     _ = η * ((n / q : ℕ) : ℝ) / 2 := by
       field_simp
-      ; ring
+      ring
     _ < η * ((n / q : ℕ) : ℝ) := by
       have hpositive : 0 < η * ((n / q : ℕ) : ℝ) :=
         mul_pos hη hT

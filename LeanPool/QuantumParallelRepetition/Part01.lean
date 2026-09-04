@@ -1606,7 +1606,7 @@ theorem scalar_resolvent_purification_integral
           (0 : ℝ) - (-(z ^ 2) / (z + 0)) := hftc
       _ = z := by
         field_simp
-        ; ring
+        ring
 
 end
 
@@ -4248,7 +4248,7 @@ theorem scalar_entropy_resolvent_integrable
   have hzone : 1 + s ≠ 0 := ne_of_gt (by linarith)
   have hzden : z + s ≠ 0 := ne_of_gt (by linarith)
   field_simp
-  ; ring
+  ring
 
 private def spectralEntropyKernel
     {d : Type*} [Fintype d] [DecidableEq d]
@@ -4591,7 +4591,7 @@ theorem scalar_entropy_resolvent_integral
       filter_upwards [eventually_gt_atTop (-z)] with t ht
       have hden : z + t ≠ 0 := ne_of_gt (by linarith)
       field_simp
-      ; ring
+      ring
     have hlog_limit :
         Tendsto (fun t : ℝ =>
           Real.log ((1 + t) / (z + t)))

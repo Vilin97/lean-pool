@@ -2325,9 +2325,9 @@ theorem exactReverseAliceContext_prefix_before_marked
               ⟨j, hj⟩).val < seed.leftCut.val := by
           simpa only [Fin.val_castSucc,
             exactReverseAliceContext_marked_rank] using hlt
-        convert hlt' using 1 ;
-          simp only [exactReverseAliceContext, exactReverseLeftRank] ;
-          congr 2
+        convert hlt' using 1
+        simp only [exactReverseAliceContext, exactReverseLeftRank]
+        congr 2
       · rintro ⟨hj, hlt⟩
         change j ∈ exactReverseLeftSide seed at hj
         refine ⟨hj, ?_⟩
@@ -2388,9 +2388,9 @@ theorem exactReverseBobContext_prefix_before_marked
               ⟨j, hj⟩).val < seed.rightCut.val := by
           simpa only [Fin.val_castSucc,
             exactReverseBobContext_marked_rank] using hlt
-        convert hlt' using 1 ;
-          simp only [exactReverseBobContext, exactReverseRightRank] ;
-          congr 2
+        convert hlt' using 1
+        simp only [exactReverseBobContext, exactReverseRightRank]
+        congr 2
       · rintro ⟨hj, hlt⟩
         change j ∈ exactReverseRightSide seed at hj
         refine ⟨hj, ?_⟩

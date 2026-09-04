@@ -7042,7 +7042,8 @@ theorem matrixLogEntropy_weighted_jensen_posSemidef
       (finitePurificationMatrix F M positive hM i -
         meanFinitePurificationMatrix F M positive hM)).smul
       (nonnegative i)
-  convert hgap.add hvariance using 1 ; module
+  convert hgap.add hvariance using 1
+  module
 
 section ConditionalJensen
 
