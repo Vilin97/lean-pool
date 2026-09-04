@@ -24,8 +24,8 @@ pair `(Γ, Δ)` with `Γ ⊆ SentBnd F₁ R₁`, `Δ ⊆ SentBnd F₂ R₂`, ins
   case-splits the trigger between `Γ` and `Δ`: the `Γ` case reuses the one-sided left closure; the
   `Δ` case dualizes it through `insepAt_swap`; the cross cases (`C0`, shared-equality/relation
   transfer) use the `PairedInseparability` gates.
-* `exists_paired_model` — from a root inseparable pair `{rL}` / `{rR}`, a single model realizing both
-  roots (over a countable relational vocabulary).
+* `exists_paired_model` — from a root inseparable pair `{rL}` / `{rR}`, a single model realizing
+  both roots (over a countable relational vocabulary).
 * `exists_paired_model_neg` — the public wrapper: instantiating `rR := r₂.not` yields a model with
   `M ⊨ r₁ ∧ ¬ M ⊨ r₂`.
 -/
@@ -100,7 +100,7 @@ theorem sentBnd_relInst_congr {l : ℕ} (Rr : L.Relations l) {g : Fin l → ℕ}
 
 private theorem mem_constTermS_jConsts (c : ℕ) :
     c ∈ Term.jConsts (L' := L) (constTermS (L := L) c) := by
-  show (⟨0, Sum.inr c⟩ : Σ n, L[[ℕ]].Functions n) ∈ (constTermS (L := L) c).functionsIn
+  change (⟨0, Sum.inr c⟩ : Σ n, L[[ℕ]].Functions n) ∈ (constTermS (L := L) c).functionsIn
   simp only [constTermS, Term.functionsIn, Set.iUnion_of_empty, Set.mem_insert_iff,
     Set.mem_empty_iff_false, or_false]
 
@@ -254,21 +254,407 @@ private theorem pairedInsep_insert_right {S Γ Δ : Set L[[ℕ]].Sentenceω} {A 
 
 /-! ## The paired inseparable-pair consistency property -/
 
+private structure CountableConnectiveClosureFields
+    (Family : Set L[[ℕ]].Sentenceω → Prop) : Prop where
+  iInf : ∀ S, Family S → ∀ φs : ℕ → L[[ℕ]].Sentenceω,
+    BoundedFormulaω.iInf φs ∈ S → ∀ k, Family (S ∪ {φs k})
+  negIInf : ∀ S, Family S → ∀ φs : ℕ → L[[ℕ]].Sentenceω,
+    (BoundedFormulaω.iInf φs).not ∈ S → ∃ k, Family (S ∪ {(φs k).not})
+  iSup : ∀ S, Family S → ∀ φs : ℕ → L[[ℕ]].Sentenceω,
+    BoundedFormulaω.iSup φs ∈ S → ∃ k, Family (S ∪ {φs k})
+  negISup : ∀ S, Family S → ∀ φs : ℕ → L[[ℕ]].Sentenceω,
+    (BoundedFormulaω.iSup φs).not ∈ S → ∀ k, Family (S ∪ {(φs k).not})
+
+private structure AtomicClosureFields
+    (Family : Set L[[ℕ]].Sentenceω → Prop) : Prop where
+  refl : ∀ S, Family S → ∀ c, Family (S ∪ {constEq c c})
+  symm : ∀ S, Family S → ∀ a b, constEq a b ∈ S → Family (S ∪ {constEq b a})
+  trans : ∀ S, Family S → ∀ a b d,
+    constEq a b ∈ S → constEq b d ∈ S → Family (S ∪ {constEq a d})
+  rel : ∀ S, Family S → ∀ l (R : L.Relations l) (g : Fin l → ℕ) i b,
+    relInst R g ∈ S → constEq (g i) b ∈ S →
+      Family (S ∪ {relInst R (Function.update g i b)})
+
+private structure QuantifierClosureFields
+    (Family : Set L[[ℕ]].Sentenceω → Prop) : Prop where
+  all : ∀ S, Family S → ∀ φ : L[[ℕ]].BoundedFormulaω Empty 1,
+    φ.all ∈ S → ∀ c, Family (S ∪ {instConst c φ})
+  negAll : ∀ S, Family S → ∀ φ : L[[ℕ]].BoundedFormulaω Empty 1,
+    φ.all.not ∈ S → ∃ c, Family (S ∪ {(instConst c φ).not})
+
+private theorem pairedInsep_countableConnectiveClosureFields
+    (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
+    (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
+    (rL rR : L[[ℕ]].Sentenceω) :
+    CountableConnectiveClosureFields (PairedInsepFamilyMem F₁ R₁ F₂ R₂ rL rR) := by
+  refine { iInf := ?_, negIInf := ?_, iSup := ?_, negISup := ?_ }
+  · intro S hS φs hmem k
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    rw [hSeq] at hmem
+    rcases hmem with hΓ | hΔ
+    · refine pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (iInf_comp_mem k (hΓU hΓ)) (sentBnd_component_iInf k (hΓS hΓ)) ?_
+        (insepAt_insert_of_entails
+          (entails_of_mem_of_entails hΓ (iInf_entails_component φs k)) hA)
+      exact support_insert_left
+        ((sentenceJConsts_component_iInf φs k).trans (support_mem_left hΓ hsupp)) hsupp
+    · refine pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (iInf_comp_mem k (hΔU hΔ)) (sentBnd_component_iInf k (hΔS hΔ)) ?_
+        (insepAt_insert_right_of_entails
+          (entails_of_mem_of_entails hΔ (iInf_entails_component φs k)) hA)
+      exact support_insert_right
+        ((sentenceJConsts_component_iInf φs k).trans (support_mem_right hΔ hsupp)) hsupp
+  · intro S hS φs hmem
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    rw [hSeq] at hmem
+    rcases hmem with hΓ | hΔ
+    · obtain ⟨k, hk⟩ := insepAt_neg_iInf_component φs hΓ hA
+      have hinfsupp :
+          sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.iInf φs) ⊆
+            (↑A : Set ℕ) := by
+        rw [← sentenceJConsts_not]
+        exact support_mem_left hΓ hsupp
+      have hns : sentenceJConsts (L' := L) (J := ℕ) (φs k).not ⊆ (↑A : Set ℕ) := by
+        rw [sentenceJConsts_not]
+        exact (sentenceJConsts_component_iInf φs k).trans hinfsupp
+      exact ⟨k, pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (negiInf_comp_mem k (hΓU hΓ))
+        (sentBnd_not_iff.mpr (sentBnd_component_iInf k (sentBnd_not_iff.mp (hΓS hΓ))))
+        (support_insert_left hns hsupp) hk⟩
+    · obtain ⟨k, hk⟩ := insepAt_neg_iInf_component φs hΔ (insepAt_swap hA)
+      have hinfsupp :
+          sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.iInf φs) ⊆
+            (↑A : Set ℕ) := by
+        rw [← sentenceJConsts_not]
+        exact support_mem_right hΔ hsupp
+      have hns : sentenceJConsts (L' := L) (J := ℕ) (φs k).not ⊆ (↑A : Set ℕ) := by
+        rw [sentenceJConsts_not]
+        exact (sentenceJConsts_component_iInf φs k).trans hinfsupp
+      exact ⟨k, pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (negiInf_comp_mem k (hΔU hΔ))
+        (sentBnd_not_iff.mpr (sentBnd_component_iInf k (sentBnd_not_iff.mp (hΔS hΔ))))
+        (support_insert_right hns hsupp) (insepAt_swap hk)⟩
+  · intro S hS φs hmem
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    rw [hSeq] at hmem
+    rcases hmem with hΓ | hΔ
+    · obtain ⟨k, hk⟩ := insepAt_iSup_component φs hΓ hA
+      refine ⟨k, pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (iSup_comp_mem k (hΓU hΓ)) (sentBnd_component_iSup k (hΓS hΓ)) ?_ hk⟩
+      exact support_insert_left
+        ((sentenceJConsts_component_iSup φs k).trans (support_mem_left hΓ hsupp)) hsupp
+    · obtain ⟨k, hk⟩ := insepAt_iSup_component φs hΔ (insepAt_swap hA)
+      refine ⟨k, pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (iSup_comp_mem k (hΔU hΔ)) (sentBnd_component_iSup k (hΔS hΔ)) ?_
+        (insepAt_swap hk)⟩
+      exact support_insert_right
+        ((sentenceJConsts_component_iSup φs k).trans (support_mem_right hΔ hsupp)) hsupp
+  · intro S hS φs hmem k
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    rw [hSeq] at hmem
+    rcases hmem with hΓ | hΔ
+    · have hsupsupp :
+          sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.iSup φs) ⊆
+            (↑A : Set ℕ) := by
+        rw [← sentenceJConsts_not]
+        exact support_mem_left hΓ hsupp
+      have hns : sentenceJConsts (L' := L) (J := ℕ) (φs k).not ⊆ (↑A : Set ℕ) := by
+        rw [sentenceJConsts_not]
+        exact (sentenceJConsts_component_iSup φs k).trans hsupsupp
+      exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (negiSup_comp_mem k (hΓU hΓ))
+        (sentBnd_not_iff.mpr (sentBnd_component_iSup k (sentBnd_not_iff.mp (hΓS hΓ))))
+        (support_insert_left hns hsupp)
+        (insepAt_insert_of_entails
+          (entails_of_mem_of_entails hΓ (neg_iSup_entails_neg_component φs k)) hA)
+    · have hsupsupp :
+          sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.iSup φs) ⊆
+            (↑A : Set ℕ) := by
+        rw [← sentenceJConsts_not]
+        exact support_mem_right hΔ hsupp
+      have hns : sentenceJConsts (L' := L) (J := ℕ) (φs k).not ⊆ (↑A : Set ℕ) := by
+        rw [sentenceJConsts_not]
+        exact (sentenceJConsts_component_iSup φs k).trans hsupsupp
+      exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (negiSup_comp_mem k (hΔU hΔ))
+        (sentBnd_not_iff.mpr (sentBnd_component_iSup k (sentBnd_not_iff.mp (hΔS hΔ))))
+        (support_insert_right hns hsupp)
+        (insepAt_insert_right_of_entails
+          (entails_of_mem_of_entails hΔ (neg_iSup_entails_neg_component φs k)) hA)
+
+private theorem pairedInsep_atomicClosureFields
+    (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
+    (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
+    (rL rR : L[[ℕ]].Sentenceω) :
+    AtomicClosureFields (PairedInsepFamilyMem F₁ R₁ F₂ R₂ rL rR) := by
+  refine { refl := ?_, symm := ?_, trans := ?_, rel := ?_ }
+  · intro S hS c
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    have hccsupp :
+        sentenceJConsts (L' := L) (J := ℕ) (constEq c c) ⊆
+          (↑(insert c A) : Set ℕ) := by
+      refine (sentenceJConsts_constEq_subset c c).trans ?_
+      rw [Finset.coe_insert]
+      exact Set.insert_subset_iff.mpr
+        ⟨Set.mem_insert c _, Set.singleton_subset_iff.mpr (Set.mem_insert c _)⟩
+    have hA' : InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) (insert c A) (insert (constEq c c) Γ) Δ := by
+      by_cases hcA : c ∈ A
+      · rw [Finset.insert_eq_self.mpr hcA]
+        exact insepAt_insert_of_entails (entails_constEq_refl c) hA
+      · exact insepAt_insert_of_entails (entails_constEq_refl c)
+          (insepAt_grow_fresh c
+            (fresh_right c (fun h => hcA (Finset.mem_coe.mp h)) hsupp) hA)
+    exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+      (eqRefl_mem c) (sentBnd_constEq c c)
+      (support_insert_left hccsupp
+        (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hA'
+  · intro S hS a b hmem
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    rw [hSeq] at hmem
+    have hbasupp : sentenceJConsts (L' := L) (J := ℕ) (constEq b a) ⊆ (↑A : Set ℕ) := by
+      rw [← sentenceJConsts_constEq_comm a b]
+      exact support_mem hmem hsupp
+    rcases hmem with hΓ | hΔ
+    · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (constEq_mem b a) (sentBnd_constEq b a) (support_insert_left hbasupp hsupp)
+        (insepAt_insert_of_entails (entails_constEq_symm hΓ) hA)
+    · exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (constEq_mem b a) (sentBnd_constEq b a) (support_insert_right hbasupp hsupp)
+        (insepAt_insert_right_of_entails (entails_constEq_symm hΔ) hA)
+  · intro S hS a b d hmem1 hmem2
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    rw [hSeq] at hmem1 hmem2
+    have haA : a ∈ (↑A : Set ℕ) :=
+      support_mem hmem1 hsupp (mem_sentenceJConsts_constEq_left a b)
+    have hdA : d ∈ (↑A : Set ℕ) :=
+      support_mem hmem2 hsupp (mem_sentenceJConsts_constEq_right b d)
+    have hadsupp : sentenceJConsts (L' := L) (J := ℕ) (constEq a d) ⊆ (↑A : Set ℕ) :=
+      (sentenceJConsts_constEq_subset a d).trans
+        (Set.insert_subset_iff.mpr ⟨haA, Set.singleton_subset_iff.mpr hdA⟩)
+    have habsupp : sentenceJConsts (L' := L) (J := ℕ) (constEq a b) ⊆ (↑A : Set ℕ) :=
+      support_mem hmem1 hsupp
+    have hbdsupp : sentenceJConsts (L' := L) (J := ℕ) (constEq b d) ⊆ (↑A : Set ℕ) :=
+      support_mem hmem2 hsupp
+    rcases hmem1 with h1Γ | h1Δ <;> rcases hmem2 with h2Γ | h2Δ
+    · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (constEq_mem a d) (sentBnd_constEq a d) (support_insert_left hadsupp hsupp)
+        (insepAt_insert_of_entails (entails_constEq_trans h1Γ h2Γ) hA)
+    · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (constEq_mem a d) (sentBnd_constEq a d) (support_insert_left hadsupp hsupp)
+        (insepAt_insert_of_shared_entails
+          (by rw [baseFunctionsIn_constEq]; exact Set.empty_subset _)
+          (by rw [baseRelationsIn_constEq]; exact Set.empty_subset _)
+          hbdsupp (Theoryω.entails_of_mem h2Δ)
+          (entails_constEq_trans (Set.mem_insert_of_mem _ h1Γ) (Set.mem_insert _ _)) hA)
+    · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (constEq_mem a d) (sentBnd_constEq a d) (support_insert_left hadsupp hsupp)
+        (insepAt_insert_of_shared_entails
+          (by rw [baseFunctionsIn_constEq]; exact Set.empty_subset _)
+          (by rw [baseRelationsIn_constEq]; exact Set.empty_subset _)
+          habsupp (Theoryω.entails_of_mem h1Δ)
+          (entails_constEq_trans (Set.mem_insert _ _) (Set.mem_insert_of_mem _ h2Γ)) hA)
+    · exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (constEq_mem a d) (sentBnd_constEq a d) (support_insert_right hadsupp hsupp)
+        (insepAt_swap <| insepAt_insert_of_entails
+          (entails_constEq_trans h1Δ h2Δ) (insepAt_swap hA))
+  · intro S hS l R g i b hmem1 hmem2
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    rw [hSeq] at hmem1 hmem2
+    have hconstsupp :
+        sentenceJConsts (L' := L) (J := ℕ) (constEq (g i) b) ⊆ (↑A : Set ℕ) :=
+      support_mem hmem2 hsupp
+    have hbA : b ∈ (↑A : Set ℕ) :=
+      hconstsupp (mem_sentenceJConsts_constEq_right (g i) b)
+    have hrelsupp : sentenceJConsts (L' := L) (J := ℕ) (relInst R g) ⊆ (↑A : Set ℕ) :=
+      support_mem hmem1 hsupp
+    have hupdsupp :
+        sentenceJConsts (L' := L) (J := ℕ) (relInst R (Function.update g i b)) ⊆
+          (↑A : Set ℕ) := by
+      rw [sentenceJConsts_relInst_eq]
+      intro k hk
+      obtain ⟨j, rfl⟩ := hk
+      by_cases hji : j = i
+      · subst hji
+        rw [Function.update_self]
+        exact hbA
+      · rw [Function.update_of_ne hji]
+        exact hrelsupp (by rw [sentenceJConsts_relInst_eq]; exact ⟨j, rfl⟩)
+    rcases hmem1 with h1Γ | h1Δ
+    · rcases hmem2 with h2Γ | h2Δ
+      · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+          (relInst_mem R (Function.update g i b))
+          (sentBnd_relInst_congr R (Function.update g i b) (hΓS h1Γ))
+          (support_insert_left hupdsupp hsupp)
+          (insepAt_insert_of_entails (entails_rel_congr R g i b h1Γ h2Γ) hA)
+      · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+          (relInst_mem R (Function.update g i b))
+          (sentBnd_relInst_congr R (Function.update g i b) (hΓS h1Γ))
+          (support_insert_left hupdsupp hsupp)
+          (insepAt_insert_of_shared_entails
+            (by rw [baseFunctionsIn_constEq]; exact Set.empty_subset _)
+            (by rw [baseRelationsIn_constEq]; exact Set.empty_subset _)
+            hconstsupp (Theoryω.entails_of_mem h2Δ)
+            (entails_rel_congr R g i b (Set.mem_insert_of_mem _ h1Γ)
+              (Set.mem_insert _ _)) hA)
+    · rcases hmem2 with h2Γ | h2Δ
+      · exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+          (relInst_mem R (Function.update g i b))
+          (sentBnd_relInst_congr R (Function.update g i b) (hΔS h1Δ))
+          (support_insert_right hupdsupp hsupp)
+          (insepAt_swap <| insepAt_insert_of_shared_entails
+            (by rw [baseFunctionsIn_constEq]; exact Set.empty_subset _)
+            (by rw [baseRelationsIn_constEq]; exact Set.empty_subset _)
+            hconstsupp (Theoryω.entails_of_mem h2Γ)
+            (entails_rel_congr R g i b (Set.mem_insert_of_mem _ h1Δ)
+              (Set.mem_insert _ _)) (insepAt_swap hA))
+      · exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+          (relInst_mem R (Function.update g i b))
+          (sentBnd_relInst_congr R (Function.update g i b) (hΔS h1Δ))
+          (support_insert_right hupdsupp hsupp)
+          (insepAt_swap <| insepAt_insert_of_entails
+            (entails_rel_congr R g i b h1Δ h2Δ) (insepAt_swap hA))
+
+private theorem pairedInsep_quantifierClosureFields
+    (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
+    (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
+    (rL rR : L[[ℕ]].Sentenceω)
+    (hrL : (sentenceJConsts (L' := L) (J := ℕ) rL).Finite)
+    (hrR : (sentenceJConsts (L' := L) (J := ℕ) rR).Finite) :
+    QuantifierClosureFields (PairedInsepFamilyMem F₁ R₁ F₂ R₂ rL rR) := by
+  refine { all := ?_, negAll := ?_ }
+  · intro S hS φ hmem c
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    rw [hSeq] at hmem
+    rcases hmem with hΓ | hΔ
+    · have hinstsupp : sentenceJConsts (L' := L) (J := ℕ) (instConst c φ) ⊆
+          (↑(insert c A) : Set ℕ) := by
+        refine (sentenceJConsts_instConst_subset c φ).trans ?_
+        rw [Finset.coe_insert]
+        exact Set.union_subset ((support_mem_left hΓ hsupp).trans (Set.subset_insert c _))
+          (Set.singleton_subset_iff.mpr (Set.mem_insert c _))
+      have hA' :
+          InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) (insert c A) (insert (instConst c φ) Γ) Δ := by
+        by_cases hcA : c ∈ A
+        · rw [Finset.insert_eq_self.mpr hcA]
+          exact insepAt_insert_of_entails
+            (entails_of_mem_of_entails hΓ (all_entails_instConst c φ)) hA
+        · exact insepAt_insert_of_entails
+            (entails_of_mem_of_entails hΓ (all_entails_instConst c φ))
+            (insepAt_grow_fresh c
+              (fresh_right c (fun h => hcA (Finset.mem_coe.mp h)) hsupp) hA)
+      exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (all_inst_mem c (hΓU hΓ)) (sentBnd_instConst c (hΓS hΓ))
+        (support_insert_left hinstsupp
+          (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hA'
+    · have hinstsupp : sentenceJConsts (L' := L) (J := ℕ) (instConst c φ) ⊆
+          (↑(insert c A) : Set ℕ) := by
+        refine (sentenceJConsts_instConst_subset c φ).trans ?_
+        rw [Finset.coe_insert]
+        exact Set.union_subset ((support_mem_right hΔ hsupp).trans (Set.subset_insert c _))
+          (Set.singleton_subset_iff.mpr (Set.mem_insert c _))
+      have hA' :
+          InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) (insert c A) Γ (insert (instConst c φ) Δ) := by
+        by_cases hcA : c ∈ A
+        · rw [Finset.insert_eq_self.mpr hcA]
+          exact insepAt_insert_right_of_entails
+            (entails_of_mem_of_entails hΔ (all_entails_instConst c φ)) hA
+        · exact insepAt_insert_right_of_entails
+            (entails_of_mem_of_entails hΔ (all_entails_instConst c φ))
+            (insepAt_grow_fresh c
+              (fresh_right c (fun h => hcA (Finset.mem_coe.mp h)) hsupp) hA)
+      exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (all_inst_mem c (hΔU hΔ)) (sentBnd_instConst c (hΔS hΔ))
+        (support_insert_right hinstsupp
+          (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hA'
+  · intro S hS φ hmem
+    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
+    rw [hSeq] at hmem
+    rcases hmem with hΓ | hΔ
+    · have hmemU : (BoundedFormulaω.all φ).not ∈ GenU rL rR := hΓU hΓ
+      have hφfin : (sentenceJConsts (L' := L) (J := ℕ) φ).Finite := by
+        have hx := genU_finite_support hrL hrR _ hmemU
+        rwa [sentenceJConsts_not, sentenceJConsts_all] at hx
+      obtain ⟨c, hc⟩ := (A.finite_toSet.union hφfin).exists_notMem
+      simp only [Set.mem_union, not_or] at hc
+      obtain ⟨hcA, hcφ⟩ := hc
+      have hAins :
+          InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) A (insert (BoundedFormulaω.all φ).not Γ) Δ := by
+        rw [Set.insert_eq_self.mpr hΓ]
+        exact hA
+      have hins := insepAt_not_instConst_of_insepAt_not_all c φ
+        (by rw [sentenceJConsts_not]; exact hcφ) (fresh_left c hcA hsupp)
+        (fresh_right c hcA hsupp) hAins
+      rw [instConst_not] at hins
+      have hinstsupp : sentenceJConsts (L' := L) (J := ℕ) ((instConst c φ).not) ⊆
+          (↑(insert c A) : Set ℕ) := by
+        rw [sentenceJConsts_not]
+        refine (sentenceJConsts_instConst_subset c φ).trans ?_
+        rw [Finset.coe_insert]
+        refine Set.union_subset ?_ (Set.singleton_subset_iff.mpr (Set.mem_insert c _))
+        refine (?_ : sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.all φ) ⊆
+          (↑A : Set ℕ)).trans (Set.subset_insert c _)
+        have hx := support_mem_left hΓ hsupp
+        rwa [sentenceJConsts_not] at hx
+      exact ⟨c, pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (negall_inst_mem c hmemU)
+        (sentBnd_not_iff.mpr (sentBnd_instConst c (sentBnd_not_iff.mp (hΓS hΓ))))
+        (support_insert_left hinstsupp
+          (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hins⟩
+    · have hmemU : (BoundedFormulaω.all φ).not ∈ GenU rL rR := hΔU hΔ
+      have hφfin : (sentenceJConsts (L' := L) (J := ℕ) φ).Finite := by
+        have hx := genU_finite_support hrL hrR _ hmemU
+        rwa [sentenceJConsts_not, sentenceJConsts_all] at hx
+      obtain ⟨c, hc⟩ := (A.finite_toSet.union hφfin).exists_notMem
+      simp only [Set.mem_union, not_or] at hc
+      obtain ⟨hcA, hcφ⟩ := hc
+      have hAins :
+          InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) A (insert (BoundedFormulaω.all φ).not Δ) Γ := by
+        rw [Set.insert_eq_self.mpr hΔ]
+        exact insepAt_swap hA
+      have hins := insepAt_not_instConst_of_insepAt_not_all c φ
+        (by rw [sentenceJConsts_not]; exact hcφ) (fresh_right c hcA hsupp)
+        (fresh_left c hcA hsupp) hAins
+      rw [instConst_not] at hins
+      have hins' := insepAt_swap hins
+      have hinstsupp : sentenceJConsts (L' := L) (J := ℕ) ((instConst c φ).not) ⊆
+          (↑(insert c A) : Set ℕ) := by
+        rw [sentenceJConsts_not]
+        refine (sentenceJConsts_instConst_subset c φ).trans ?_
+        rw [Finset.coe_insert]
+        refine Set.union_subset ?_ (Set.singleton_subset_iff.mpr (Set.mem_insert c _))
+        refine (?_ : sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.all φ) ⊆
+          (↑A : Set ℕ)).trans (Set.subset_insert c _)
+        have hx := support_mem_right hΔ hsupp
+        rwa [sentenceJConsts_not] at hx
+      exact ⟨c, pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
+        (negall_inst_mem c hmemU)
+        (sentBnd_not_iff.mpr (sentBnd_instConst c (sentBnd_not_iff.mp (hΔS hΔ))))
+        (support_insert_right hinstsupp
+          (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hins'⟩
+
+private theorem pairedInsep_sets_subset_generatedUniverse
+    (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
+    (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
+    (rL rR : L[[ℕ]].Sentenceω) (S : Set L[[ℕ]].Sentenceω)
+    (hS : PairedInsepFamilyMem F₁ R₁ F₂ R₂ rL rR S) : S ⊆ GenU rL rR := by
+  obtain ⟨Γ, Δ, _, _, _, hΓU, hΔU, _, _, _, hSeq, _⟩ := hS
+  rw [hSeq]
+  exact Set.union_subset hΓU hΔU
+
 /-- **The paired inseparable-pair consistency property.** The finite paired family over the
 generated universe `GenU rL rR`, with each `ConsistencyPropertyEqOn` closure field discharged by a
 `Γ`/`Δ` case split: the `Γ` case reuses the one-sided left closure, the `Δ` case dualizes it through
 `insepAt_swap`, and the cross cases use the `PairedInseparability` gates. The root finiteness
 hypotheses enter only in `neg_all_witness` (to choose a fresh witness). -/
-private def pairedInsepConsistencyProperty (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
+private def pairedInsepConsistencyProperty
+    (F₁ : Set (Σ n, L.Functions n)) (R₁ : Set (Σ n, L.Relations n))
     (F₂ : Set (Σ n, L.Functions n)) (R₂ : Set (Σ n, L.Relations n))
     (rL rR : L[[ℕ]].Sentenceω)
     (hrL : (sentenceJConsts (L' := L) (J := ℕ) rL).Finite)
     (hrR : (sentenceJConsts (L' := L) (J := ℕ) rR).Finite) :
     ConsistencyPropertyEqOn (GenU rL rR) where
   sets := {S | PairedInsepFamilyMem F₁ R₁ F₂ R₂ rL rR S}
-  subset_U := fun S hS => by
-    obtain ⟨Γ, Δ, A, _, _, hΓU, hΔU, _, _, _, hSeq, _⟩ := hS
-    rw [hSeq]; exact Set.union_subset hΓU hΔU
+  subset_U := pairedInsep_sets_subset_generatedUniverse F₁ R₁ F₂ R₂ rL rR
   C0_no_falsum := fun S hS hmem => by
     obtain ⟨Γ, Δ, A, _, _, _, _, _, _, _, hSeq, hA⟩ := hS
     rw [hSeq] at hmem
@@ -368,284 +754,26 @@ private def pairedInsepConsistencyProperty (F₁ : Set (Σ n, L.Functions n)) (R
         (negimp_left_mem (φ := φ) (ψ := (BoundedFormulaω.falsum : L[[ℕ]].Sentenceω)) (hΔU hΔ))
         (sentBnd_not_iff.mp (sentBnd_not_iff.mp (hΔS hΔ))) (support_insert_right hφsupp hsupp)
         (insepAt_insert_right_of_entails (entails_of_mem_of_entails hΔ (not_not_entails φ)) hA)
-  C3_iInf := fun S hS φs hmem k => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    rw [hSeq] at hmem
-    rcases hmem with hΓ | hΔ
-    · refine pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (iInf_comp_mem k (hΓU hΓ)) (sentBnd_component_iInf k (hΓS hΓ)) ?_
-        (insepAt_insert_of_entails (entails_of_mem_of_entails hΓ (iInf_entails_component φs k)) hA)
-      exact support_insert_left
-        ((sentenceJConsts_component_iInf φs k).trans (support_mem_left hΓ hsupp)) hsupp
-    · refine pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (iInf_comp_mem k (hΔU hΔ)) (sentBnd_component_iInf k (hΔS hΔ)) ?_
-        (insepAt_insert_right_of_entails (entails_of_mem_of_entails hΔ (iInf_entails_component φs k)) hA)
-      exact support_insert_right
-        ((sentenceJConsts_component_iInf φs k).trans (support_mem_right hΔ hsupp)) hsupp
-  C3_neg_iInf := fun S hS φs hmem => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    rw [hSeq] at hmem
-    rcases hmem with hΓ | hΔ
-    · obtain ⟨k, hk⟩ := insepAt_neg_iInf_component φs hΓ hA
-      have hinfsupp : sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.iInf φs) ⊆ (↑A : Set ℕ) := by
-        rw [← sentenceJConsts_not]; exact support_mem_left hΓ hsupp
-      have hns : sentenceJConsts (L' := L) (J := ℕ) (φs k).not ⊆ (↑A : Set ℕ) := by
-        rw [sentenceJConsts_not]; exact (sentenceJConsts_component_iInf φs k).trans hinfsupp
-      exact ⟨k, pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (negiInf_comp_mem k (hΓU hΓ))
-        (sentBnd_not_iff.mpr (sentBnd_component_iInf k (sentBnd_not_iff.mp (hΓS hΓ))))
-        (support_insert_left hns hsupp) hk⟩
-    · obtain ⟨k, hk⟩ := insepAt_neg_iInf_component φs hΔ (insepAt_swap hA)
-      have hinfsupp : sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.iInf φs) ⊆ (↑A : Set ℕ) := by
-        rw [← sentenceJConsts_not]; exact support_mem_right hΔ hsupp
-      have hns : sentenceJConsts (L' := L) (J := ℕ) (φs k).not ⊆ (↑A : Set ℕ) := by
-        rw [sentenceJConsts_not]; exact (sentenceJConsts_component_iInf φs k).trans hinfsupp
-      exact ⟨k, pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (negiInf_comp_mem k (hΔU hΔ))
-        (sentBnd_not_iff.mpr (sentBnd_component_iInf k (sentBnd_not_iff.mp (hΔS hΔ))))
-        (support_insert_right hns hsupp) (insepAt_swap hk)⟩
-  C4_iSup := fun S hS φs hmem => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    rw [hSeq] at hmem
-    rcases hmem with hΓ | hΔ
-    · obtain ⟨k, hk⟩ := insepAt_iSup_component φs hΓ hA
-      refine ⟨k, pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (iSup_comp_mem k (hΓU hΓ)) (sentBnd_component_iSup k (hΓS hΓ)) ?_ hk⟩
-      exact support_insert_left
-        ((sentenceJConsts_component_iSup φs k).trans (support_mem_left hΓ hsupp)) hsupp
-    · obtain ⟨k, hk⟩ := insepAt_iSup_component φs hΔ (insepAt_swap hA)
-      refine ⟨k, pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (iSup_comp_mem k (hΔU hΔ)) (sentBnd_component_iSup k (hΔS hΔ)) ?_ (insepAt_swap hk)⟩
-      exact support_insert_right
-        ((sentenceJConsts_component_iSup φs k).trans (support_mem_right hΔ hsupp)) hsupp
-  C4_neg_iSup := fun S hS φs hmem k => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    rw [hSeq] at hmem
-    rcases hmem with hΓ | hΔ
-    · have hsupsupp : sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.iSup φs) ⊆ (↑A : Set ℕ) := by
-        rw [← sentenceJConsts_not]; exact support_mem_left hΓ hsupp
-      have hns : sentenceJConsts (L' := L) (J := ℕ) (φs k).not ⊆ (↑A : Set ℕ) := by
-        rw [sentenceJConsts_not]; exact (sentenceJConsts_component_iSup φs k).trans hsupsupp
-      exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (negiSup_comp_mem k (hΓU hΓ))
-        (sentBnd_not_iff.mpr (sentBnd_component_iSup k (sentBnd_not_iff.mp (hΓS hΓ))))
-        (support_insert_left hns hsupp)
-        (insepAt_insert_of_entails
-          (entails_of_mem_of_entails hΓ (neg_iSup_entails_neg_component φs k)) hA)
-    · have hsupsupp : sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.iSup φs) ⊆ (↑A : Set ℕ) := by
-        rw [← sentenceJConsts_not]; exact support_mem_right hΔ hsupp
-      have hns : sentenceJConsts (L' := L) (J := ℕ) (φs k).not ⊆ (↑A : Set ℕ) := by
-        rw [sentenceJConsts_not]; exact (sentenceJConsts_component_iSup φs k).trans hsupsupp
-      exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (negiSup_comp_mem k (hΔU hΔ))
-        (sentBnd_not_iff.mpr (sentBnd_component_iSup k (sentBnd_not_iff.mp (hΔS hΔ))))
-        (support_insert_right hns hsupp)
-        (insepAt_insert_right_of_entails
-          (entails_of_mem_of_entails hΔ (neg_iSup_entails_neg_component φs k)) hA)
-  eq_refl := fun S hS c => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    have hccsupp : sentenceJConsts (L' := L) (J := ℕ) (constEq c c) ⊆ (↑(insert c A) : Set ℕ) := by
-      refine (sentenceJConsts_constEq_subset c c).trans ?_
-      rw [Finset.coe_insert]
-      exact Set.insert_subset_iff.mpr
-        ⟨Set.mem_insert c _, Set.singleton_subset_iff.mpr (Set.mem_insert c _)⟩
-    have hA' : InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) (insert c A) (insert (constEq c c) Γ) Δ := by
-      by_cases hcA : c ∈ A
-      · rw [Finset.insert_eq_self.mpr hcA]; exact insepAt_insert_of_entails (entails_constEq_refl c) hA
-      · exact insepAt_insert_of_entails (entails_constEq_refl c)
-          (insepAt_grow_fresh c (fresh_right c (fun h => hcA (Finset.mem_coe.mp h)) hsupp) hA)
-    exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS (eqRefl_mem c) (sentBnd_constEq c c)
-      (support_insert_left hccsupp (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hA'
-  eq_symm := fun S hS a b hmem => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    rw [hSeq] at hmem
-    have hbasupp : sentenceJConsts (L' := L) (J := ℕ) (constEq b a) ⊆ (↑A : Set ℕ) := by
-      rw [← sentenceJConsts_constEq_comm a b]; exact support_mem hmem hsupp
-    rcases hmem with hΓ | hΔ
-    · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS (constEq_mem b a)
-        (sentBnd_constEq b a) (support_insert_left hbasupp hsupp)
-        (insepAt_insert_of_entails (entails_constEq_symm hΓ) hA)
-    · exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS (constEq_mem b a)
-        (sentBnd_constEq b a) (support_insert_right hbasupp hsupp)
-        (insepAt_insert_right_of_entails (entails_constEq_symm hΔ) hA)
-  eq_trans := fun S hS a b d hmem1 hmem2 => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    rw [hSeq] at hmem1 hmem2
-    have haA : a ∈ (↑A : Set ℕ) := support_mem hmem1 hsupp (mem_sentenceJConsts_constEq_left a b)
-    have hdA : d ∈ (↑A : Set ℕ) := support_mem hmem2 hsupp (mem_sentenceJConsts_constEq_right b d)
-    have hadsupp : sentenceJConsts (L' := L) (J := ℕ) (constEq a d) ⊆ (↑A : Set ℕ) :=
-      (sentenceJConsts_constEq_subset a d).trans
-        (Set.insert_subset_iff.mpr ⟨haA, Set.singleton_subset_iff.mpr hdA⟩)
-    have habsupp : sentenceJConsts (L' := L) (J := ℕ) (constEq a b) ⊆ (↑A : Set ℕ) :=
-      support_mem hmem1 hsupp
-    have hbdsupp : sentenceJConsts (L' := L) (J := ℕ) (constEq b d) ⊆ (↑A : Set ℕ) :=
-      support_mem hmem2 hsupp
-    rcases hmem1 with h1Γ | h1Δ <;> rcases hmem2 with h2Γ | h2Δ
-    · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS (constEq_mem a d)
-        (sentBnd_constEq a d) (support_insert_left hadsupp hsupp)
-        (insepAt_insert_of_entails (entails_constEq_trans h1Γ h2Γ) hA)
-    · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS (constEq_mem a d)
-        (sentBnd_constEq a d) (support_insert_left hadsupp hsupp)
-        (insepAt_insert_of_shared_entails
-          (by rw [baseFunctionsIn_constEq]; exact Set.empty_subset _)
-          (by rw [baseRelationsIn_constEq]; exact Set.empty_subset _)
-          hbdsupp (Theoryω.entails_of_mem h2Δ)
-          (entails_constEq_trans (Set.mem_insert_of_mem _ h1Γ) (Set.mem_insert _ _)) hA)
-    · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS (constEq_mem a d)
-        (sentBnd_constEq a d) (support_insert_left hadsupp hsupp)
-        (insepAt_insert_of_shared_entails
-          (by rw [baseFunctionsIn_constEq]; exact Set.empty_subset _)
-          (by rw [baseRelationsIn_constEq]; exact Set.empty_subset _)
-          habsupp (Theoryω.entails_of_mem h1Δ)
-          (entails_constEq_trans (Set.mem_insert _ _) (Set.mem_insert_of_mem _ h2Γ)) hA)
-    · exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS (constEq_mem a d)
-        (sentBnd_constEq a d) (support_insert_right hadsupp hsupp)
-        (insepAt_swap (insepAt_insert_of_entails (entails_constEq_trans h1Δ h2Δ) (insepAt_swap hA)))
-  rel_congr := fun S hS l R g i b hmem1 hmem2 => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    rw [hSeq] at hmem1 hmem2
-    have hconstsupp : sentenceJConsts (L' := L) (J := ℕ) (constEq (g i) b) ⊆ (↑A : Set ℕ) :=
-      support_mem hmem2 hsupp
-    have hbA : b ∈ (↑A : Set ℕ) := hconstsupp (mem_sentenceJConsts_constEq_right (g i) b)
-    have hrelsupp : sentenceJConsts (L' := L) (J := ℕ) (relInst R g) ⊆ (↑A : Set ℕ) :=
-      support_mem hmem1 hsupp
-    have hupdsupp : sentenceJConsts (L' := L) (J := ℕ) (relInst R (Function.update g i b))
-        ⊆ (↑A : Set ℕ) := by
-      rw [sentenceJConsts_relInst_eq]
-      intro k hk
-      obtain ⟨j, rfl⟩ := hk
-      by_cases hji : j = i
-      · subst hji; rw [Function.update_self]; exact hbA
-      · rw [Function.update_of_ne hji]
-        exact hrelsupp (by rw [sentenceJConsts_relInst_eq]; exact ⟨j, rfl⟩)
-    rcases hmem1 with h1Γ | h1Δ
-    · rcases hmem2 with h2Γ | h2Δ
-      · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-          (relInst_mem R (Function.update g i b))
-          (sentBnd_relInst_congr R (Function.update g i b) (hΓS h1Γ))
-          (support_insert_left hupdsupp hsupp)
-          (insepAt_insert_of_entails (entails_rel_congr R g i b h1Γ h2Γ) hA)
-      · exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-          (relInst_mem R (Function.update g i b))
-          (sentBnd_relInst_congr R (Function.update g i b) (hΓS h1Γ))
-          (support_insert_left hupdsupp hsupp)
-          (insepAt_insert_of_shared_entails
-            (by rw [baseFunctionsIn_constEq]; exact Set.empty_subset _)
-            (by rw [baseRelationsIn_constEq]; exact Set.empty_subset _)
-            hconstsupp (Theoryω.entails_of_mem h2Δ)
-            (entails_rel_congr R g i b (Set.mem_insert_of_mem _ h1Γ) (Set.mem_insert _ _)) hA)
-    · rcases hmem2 with h2Γ | h2Δ
-      · exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-          (relInst_mem R (Function.update g i b))
-          (sentBnd_relInst_congr R (Function.update g i b) (hΔS h1Δ))
-          (support_insert_right hupdsupp hsupp)
-          (insepAt_swap (insepAt_insert_of_shared_entails
-            (by rw [baseFunctionsIn_constEq]; exact Set.empty_subset _)
-            (by rw [baseRelationsIn_constEq]; exact Set.empty_subset _)
-            hconstsupp (Theoryω.entails_of_mem h2Γ)
-            (entails_rel_congr R g i b (Set.mem_insert_of_mem _ h1Δ) (Set.mem_insert _ _))
-            (insepAt_swap hA)))
-      · exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-          (relInst_mem R (Function.update g i b))
-          (sentBnd_relInst_congr R (Function.update g i b) (hΔS h1Δ))
-          (support_insert_right hupdsupp hsupp)
-          (insepAt_swap (insepAt_insert_of_entails (entails_rel_congr R g i b h1Δ h2Δ) (insepAt_swap hA)))
-  all_inst := fun S hS φ hmem c => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    rw [hSeq] at hmem
-    rcases hmem with hΓ | hΔ
-    · have hinstsupp : sentenceJConsts (L' := L) (J := ℕ) (instConst c φ)
-          ⊆ (↑(insert c A) : Set ℕ) := by
-        refine (sentenceJConsts_instConst_subset c φ).trans ?_
-        rw [Finset.coe_insert]
-        exact Set.union_subset ((support_mem_left hΓ hsupp).trans (Set.subset_insert c _))
-          (Set.singleton_subset_iff.mpr (Set.mem_insert c _))
-      have hA' : InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) (insert c A) (insert (instConst c φ) Γ) Δ := by
-        by_cases hcA : c ∈ A
-        · rw [Finset.insert_eq_self.mpr hcA]
-          exact insepAt_insert_of_entails (entails_of_mem_of_entails hΓ (all_entails_instConst c φ)) hA
-        · exact insepAt_insert_of_entails (entails_of_mem_of_entails hΓ (all_entails_instConst c φ))
-            (insepAt_grow_fresh c (fresh_right c (fun h => hcA (Finset.mem_coe.mp h)) hsupp) hA)
-      exact pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (all_inst_mem c (hΓU hΓ)) (sentBnd_instConst c (hΓS hΓ))
-        (support_insert_left hinstsupp
-          (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hA'
-    · have hinstsupp : sentenceJConsts (L' := L) (J := ℕ) (instConst c φ)
-          ⊆ (↑(insert c A) : Set ℕ) := by
-        refine (sentenceJConsts_instConst_subset c φ).trans ?_
-        rw [Finset.coe_insert]
-        exact Set.union_subset ((support_mem_right hΔ hsupp).trans (Set.subset_insert c _))
-          (Set.singleton_subset_iff.mpr (Set.mem_insert c _))
-      have hA' : InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) (insert c A) Γ (insert (instConst c φ) Δ) := by
-        by_cases hcA : c ∈ A
-        · rw [Finset.insert_eq_self.mpr hcA]
-          exact insepAt_insert_right_of_entails
-            (entails_of_mem_of_entails hΔ (all_entails_instConst c φ)) hA
-        · exact insepAt_insert_right_of_entails
-            (entails_of_mem_of_entails hΔ (all_entails_instConst c φ))
-            (insepAt_grow_fresh c (fresh_right c (fun h => hcA (Finset.mem_coe.mp h)) hsupp) hA)
-      exact pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS
-        (all_inst_mem c (hΔU hΔ)) (sentBnd_instConst c (hΔS hΔ))
-        (support_insert_right hinstsupp
-          (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hA'
-  neg_all_witness := fun S hS φ hmem => by
-    obtain ⟨Γ, Δ, A, hΓfin, hΔfin, hΓU, hΔU, hΓS, hΔS, hsupp, hSeq, hA⟩ := hS
-    rw [hSeq] at hmem
-    rcases hmem with hΓ | hΔ
-    · have hmemU : (BoundedFormulaω.all φ).not ∈ GenU rL rR := hΓU hΓ
-      have hφfin : (sentenceJConsts (L' := L) (J := ℕ) φ).Finite := by
-        have hx := genU_finite_support hrL hrR _ hmemU
-        rwa [sentenceJConsts_not, sentenceJConsts_all] at hx
-      obtain ⟨c, hc⟩ := (A.finite_toSet.union hφfin).exists_notMem
-      simp only [Set.mem_union, not_or] at hc
-      obtain ⟨hcA, hcφ⟩ := hc
-      have hAins : InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) A (insert (BoundedFormulaω.all φ).not Γ) Δ := by
-        rw [Set.insert_eq_self.mpr hΓ]; exact hA
-      have hins := insepAt_not_instConst_of_insepAt_not_all c φ
-        (by rw [sentenceJConsts_not]; exact hcφ) (fresh_left c hcA hsupp) (fresh_right c hcA hsupp) hAins
-      rw [instConst_not] at hins
-      have hinstsupp : sentenceJConsts (L' := L) (J := ℕ) ((instConst c φ).not)
-          ⊆ (↑(insert c A) : Set ℕ) := by
-        rw [sentenceJConsts_not]
-        refine (sentenceJConsts_instConst_subset c φ).trans ?_
-        rw [Finset.coe_insert]
-        refine Set.union_subset ?_ (Set.singleton_subset_iff.mpr (Set.mem_insert c _))
-        refine (?_ : sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.all φ)
-          ⊆ (↑A : Set ℕ)).trans (Set.subset_insert c _)
-        have hx := support_mem_left hΓ hsupp
-        rwa [sentenceJConsts_not] at hx
-      exact ⟨c, pairedInsep_insert_left hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS (negall_inst_mem c hmemU)
-        (sentBnd_not_iff.mpr (sentBnd_instConst c (sentBnd_not_iff.mp (hΓS hΓ))))
-        (support_insert_left hinstsupp
-          (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hins⟩
-    · have hmemU : (BoundedFormulaω.all φ).not ∈ GenU rL rR := hΔU hΔ
-      have hφfin : (sentenceJConsts (L' := L) (J := ℕ) φ).Finite := by
-        have hx := genU_finite_support hrL hrR _ hmemU
-        rwa [sentenceJConsts_not, sentenceJConsts_all] at hx
-      obtain ⟨c, hc⟩ := (A.finite_toSet.union hφfin).exists_notMem
-      simp only [Set.mem_union, not_or] at hc
-      obtain ⟨hcA, hcφ⟩ := hc
-      have hAins : InsepAt (F₁ ∩ F₂) (R₁ ∩ R₂) A (insert (BoundedFormulaω.all φ).not Δ) Γ := by
-        rw [Set.insert_eq_self.mpr hΔ]; exact insepAt_swap hA
-      have hins := insepAt_not_instConst_of_insepAt_not_all c φ
-        (by rw [sentenceJConsts_not]; exact hcφ) (fresh_right c hcA hsupp) (fresh_left c hcA hsupp) hAins
-      rw [instConst_not] at hins
-      have hins' := insepAt_swap hins
-      have hinstsupp : sentenceJConsts (L' := L) (J := ℕ) ((instConst c φ).not)
-          ⊆ (↑(insert c A) : Set ℕ) := by
-        rw [sentenceJConsts_not]
-        refine (sentenceJConsts_instConst_subset c φ).trans ?_
-        rw [Finset.coe_insert]
-        refine Set.union_subset ?_ (Set.singleton_subset_iff.mpr (Set.mem_insert c _))
-        refine (?_ : sentenceJConsts (L' := L) (J := ℕ) (BoundedFormulaω.all φ)
-          ⊆ (↑A : Set ℕ)).trans (Set.subset_insert c _)
-        have hx := support_mem_right hΔ hsupp
-        rwa [sentenceJConsts_not] at hx
-      exact ⟨c, pairedInsep_insert_right hSeq hΓfin hΔfin hΓU hΔU hΓS hΔS (negall_inst_mem c hmemU)
-        (sentBnd_not_iff.mpr (sentBnd_instConst c (sentBnd_not_iff.mp (hΔS hΔ))))
-        (support_insert_right hinstsupp
-          (hsupp.trans (Finset.coe_subset.mpr (Finset.subset_insert c A)))) hins'⟩
-
+  C3_iInf :=
+    (pairedInsep_countableConnectiveClosureFields F₁ R₁ F₂ R₂ rL rR).iInf
+  C3_neg_iInf :=
+    (pairedInsep_countableConnectiveClosureFields F₁ R₁ F₂ R₂ rL rR).negIInf
+  C4_iSup :=
+    (pairedInsep_countableConnectiveClosureFields F₁ R₁ F₂ R₂ rL rR).iSup
+  C4_neg_iSup :=
+    (pairedInsep_countableConnectiveClosureFields F₁ R₁ F₂ R₂ rL rR).negISup
+  eq_refl :=
+    (pairedInsep_atomicClosureFields F₁ R₁ F₂ R₂ rL rR).refl
+  eq_symm :=
+    (pairedInsep_atomicClosureFields F₁ R₁ F₂ R₂ rL rR).symm
+  eq_trans :=
+    (pairedInsep_atomicClosureFields F₁ R₁ F₂ R₂ rL rR).trans
+  rel_congr :=
+    (pairedInsep_atomicClosureFields F₁ R₁ F₂ R₂ rL rR).rel
+  all_inst :=
+    (pairedInsep_quantifierClosureFields F₁ R₁ F₂ R₂ rL rR hrL hrR).all
+  neg_all_witness :=
+    (pairedInsep_quantifierClosureFields F₁ R₁ F₂ R₂ rL rR hrL hrR).negAll
 /-! ## The paired model endpoint -/
 
 /-- **Paired model existence.** From a root inseparable pair `{rL}` / `{rR}` (support-budgeted at

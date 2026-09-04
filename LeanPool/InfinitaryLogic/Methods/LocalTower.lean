@@ -7,11 +7,11 @@ import LeanPool.InfinitaryLogic.Methods.LocalSkolem
 /-!
 # The countable local Skolem tower `Llocal` / `Γlocal`
 
-`localSkolem L Γ` (in `LocalSkolem.lean`) adjoins a Skolem function symbol only for the formulas of a
-**countable** family `Γ`, and so stays countable. But one layer is not closed under its own witness
-formulas, so — exactly as `skolemStage`/`skolemColim` do for the *uncountable* full Skolemization —
-we iterate. The difference is that here the family `Γ` grows *in lock-step* with the language, so the
-language and the family are **mutually recursive**:
+`localSkolem L Γ` (in `LocalSkolem.lean`) adjoins a Skolem function symbol only for the
+formulas of a **countable** family `Γ`, and so stays countable. But one layer is not closed under
+its own witness formulas, so — exactly as `skolemStage`/`skolemColim` do for the *uncountable*
+full Skolemization — we iterate. Here the family `Γ` grows *in lock-step* with the language, so
+the language and the family are **mutually recursive**:
 
 * `L₀ = L`, `Γ₀` = the seed family;
 * `L_{k+1} = L_k.sum (localSkolem L_k (skolemNeed Γ_k))` — adjoin Skolem symbols for the
@@ -23,8 +23,9 @@ language and the family are **mutually recursive**:
   the language inclusion), the Skolem-witness bodies of the new symbols, and a reserved
   deForm-closure slot.
 
-The mutual recursion is packaged as a single `ℕ`-indexed sequence of `LocalStage` bundles (language +
-family + countability certificates), sidestepping dependent-recursion sprawl. The **deliverable of
+The mutual recursion is packaged as one `ℕ`-indexed sequence of `LocalStage` bundles
+(language plus family and countability certificates), sidestepping dependent-recursion sprawl.
+The **deliverable of
 this chunk** is that every stage is countable — both the language's symbol types and the family
 `Γ_k` — which is what keeps the eventual local colimit `L_Γ` countable (the fatal size problem that
 `localSkolem` was introduced to fix). The local colimit, its cocone inclusions, and the transported
@@ -46,14 +47,16 @@ private theorem sum_sigma_functions_countable {L L' : Language.{0, 0}}
     (h : Countable (Σ n, L.Functions n)) (h' : Countable (Σ n, L'.Functions n)) :
     Countable (Σ n, (L.sum L').Functions n) := by
   have := h; have := h'
-  exact (Equiv.sigmaSumDistrib (fun n => L.Functions n) (fun n => L'.Functions n)).injective.countable
+  exact
+    (Equiv.sigmaSumDistrib (fun n => L.Functions n) (fun n => L'.Functions n)).injective.countable
 
 /-- The full relation-symbol type of `L.sum L'` is countable when both summands' are. -/
 private theorem sum_sigma_relations_countable {L L' : Language.{0, 0}}
     (h : Countable (Σ n, L.Relations n)) (h' : Countable (Σ n, L'.Relations n)) :
     Countable (Σ n, (L.sum L').Relations n) := by
   have := h; have := h'
-  exact (Equiv.sigmaSumDistrib (fun n => L.Relations n) (fun n => L'.Relations n)).injective.countable
+  exact
+    (Equiv.sigmaSumDistrib (fun n => L.Relations n) (fun n => L'.Relations n)).injective.countable
 
 variable {L : Language.{0, 0}}
 
@@ -97,7 +100,8 @@ private def allNegBody : (Σ n, L.BoundedFormulaω Empty n) → Set (Σ n, L.Bou
   | _ => ∅
 
 /-- `allNegBody` is pointwise countable (a singleton on `∀`, empty otherwise). -/
-private theorem allNegBody_countable (p : Σ n, L.BoundedFormulaω Empty n) : (allNegBody p).Countable := by
+private theorem allNegBody_countable (p : Σ n, L.BoundedFormulaω Empty n) :
+    (allNegBody p).Countable := by
   obtain ⟨n, φ⟩ := p
   cases φ <;> first | exact Set.countable_singleton _ | exact Set.countable_empty
 
@@ -159,17 +163,16 @@ private def localSkWitnessSeed (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) :
 
 /-- The Skolem-witness seed is countable: it is the range of a map out of the (countable) local
 Skolem symbol type. -/
-private theorem localSkWitnessSeed_countable {Γ : Set (Σ n, L.BoundedFormulaω Empty n)} (hΓ : Γ.Countable) :
+private theorem localSkWitnessSeed_countable
+    {Γ : Set (Σ n, L.BoundedFormulaω Empty n)} (hΓ : Γ.Countable) :
     (localSkWitnessSeed Γ).Countable := by
   have := localSkolem_sigma_functions_countable Γ hΓ
   exact Set.countable_range _
 
-/-- **Reserved deForm-closure seed** (placeholder). The truth lemma's family must be closed under the
-*de-substituted* formulas `deForm S φ ts` of its members; but `deForm` is defined over a term-model
-carrier `J` (see `EMTermModel.deForm`), which does not exist at the pure language-tower level. So this
-slot is currently empty and will be filled once the local colimit and its term model are in place.
-It is named (not left implicit) so the closure and its countability certificate already route through
-it. -/
+/-- **Reserved deForm-closure seed** (placeholder). The truth lemma's family must be closed under
+the *de-substituted* formulas `deForm S φ ts` of its members; but `deForm` is defined over a
+term-model carrier `J` (see `EMTermModel.deForm`), which does not exist at the pure language-tower
+level. This named slot is empty until the local colimit and its term model are in place. -/
 private def deFormSeed (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) :
     Set (Σ n, (L.sum (localSkolem L Γ)).BoundedFormulaω Empty n) := ∅
 
@@ -191,16 +194,17 @@ private theorem localSeed_countable {Γ : Set (Σ n, L.BoundedFormulaω Empty n)
 /-! ### The successor family `Γ_{k+1}` -/
 
 /-- The **successor family**: the subformula/component closure (`setClosure bfSubformulas`) of the
-successor seed. Closing under `bfSubformulas` makes `Γ_{k+1}` closed under immediate subformulas and
-countable-connective components — the structural-induction requirement of the truth lemma — while the
-Skolem-witness and (reserved) deForm generators sit in the seed. -/
+successor seed. Closing under `bfSubformulas` makes `Γ_{k+1}` closed under immediate subformulas
+and countable-connective components — the structural-induction requirement of the truth lemma —
+while the Skolem-witness and (reserved) deForm generators sit in the seed. -/
 private def localGammaNext (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) :
     Set (Σ n, (L.sum (localSkolem L Γ)).BoundedFormulaω Empty n) :=
   setClosure bfSubformulas (localSeed Γ)
 
 /-- The successor family is countable when `Γ` is: `setClosure` of a countable seed under the
 pointwise-countable subformula step. -/
-private theorem localGammaNext_countable {Γ : Set (Σ n, L.BoundedFormulaω Empty n)} (hΓ : Γ.Countable) :
+private theorem localGammaNext_countable
+    {Γ : Set (Σ n, L.BoundedFormulaω Empty n)} (hΓ : Γ.Countable) :
     (localGammaNext Γ).Countable :=
   setClosure_countable bfSubformulas (localSeed_countable hΓ) bfSubformulas_countable
 
@@ -295,23 +299,11 @@ theorem liftGamma_mem_Γlocal_succ (s₀ : LocalStage) {k : ℕ}
     (Or.inl (Or.inl (Set.mem_image_of_mem _ (subset_skolemNeed _ hp))))
 
 /-- **Successor-stage closure**: every successor family is closed under immediate
-subformulas/components (it is a `setClosure bfSubformulas`). Stage `0` — the raw seed — need not
-be closed, hence the lift wrapper `bfSubformulas_lift_subset_Γlocal_succ` below. -/
+subformulas/components (it is a `setClosure bfSubformulas`). -/
 theorem bfSubformulas_subset_Γlocal_succ (s₀ : LocalStage) {k : ℕ}
     {p : Σ n, (Llocal s₀ (k + 1)).BoundedFormulaω Empty n} (hp : p ∈ Γlocal s₀ (k + 1)) :
     bfSubformulas p ⊆ Γlocal s₀ (k + 1) :=
   stepOne_subset_setClosure _ _ hp
-
-/-- **Lift-into-closure wrapper**: the subformulas/components of the lift of any stage-`k` member
-lie in the (subformula-closed) successor family. Working one stage up always makes closure
-available, even from the unclosed seed stage. -/
-private theorem bfSubformulas_lift_subset_Γlocal_succ (s₀ : LocalStage) {k : ℕ}
-    {p : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n} (hp : p ∈ Γlocal s₀ k) :
-    bfSubformulas (⟨p.1, p.2.mapLanguage (LlocalHom s₀ k)⟩ :
-        Σ n, (Llocal s₀ (k + 1)).BoundedFormulaω Empty n)
-      ⊆ Γlocal s₀ (k + 1) :=
-  bfSubformulas_subset_Γlocal_succ s₀ (liftGamma_mem_Γlocal_succ s₀ hp)
-
 /-- The lift of the **negated body** of a universal family member is in the successor family (the
 seed lifts the whole `skolemNeed` enlargement, not just `Γ_k`). Feeds the local truth lemma's
 `all` case, whose Skolemized body `¬ψ` lives one stage up. -/
@@ -322,16 +314,4 @@ theorem liftNegBody_mem_Γlocal_succ (s₀ : LocalStage) {k n : ℕ}
       Σ n, (Llocal s₀ (k + 1)).BoundedFormulaω Empty n) ∈ Γlocal s₀ (k + 1) :=
   localSeed_subset_localGammaNext _
     (Or.inl (Or.inl (Set.mem_image_of_mem _ (not_mem_skolemNeed_of_all_mem h))))
-
-/-- **Witness-body membership**: for every universal member `∀ψ` of the stage-`k` family, the local
-Skolem witness body of `¬ψ` (built from the `skolemNeed` symbol) lies in the successor family — the
-formula the rebased EM truth lemma's `all` case will need in its readiness data. -/
-theorem localSkolemWitnessFormula_mem_Γlocal_succ (s₀ : LocalStage) {k n : ℕ}
-    {ψ : (Llocal s₀ k).BoundedFormulaω Empty (n + 1)}
-    (h : (⟨n, .all ψ⟩ : Σ n, (Llocal s₀ k).BoundedFormulaω Empty n) ∈ Γlocal s₀ k) :
-    (⟨n, localSkolemWitnessFormula (skolemNeedSymbol h)⟩ :
-      Σ n, (Llocal s₀ (k + 1)).BoundedFormulaω Empty n) ∈ Γlocal s₀ (k + 1) :=
-  localSeed_subset_localGammaNext _
-    (Or.inl (Or.inr ⟨⟨n, skolemNeedSymbol h⟩, rfl⟩))
-
 end FirstOrder.Language

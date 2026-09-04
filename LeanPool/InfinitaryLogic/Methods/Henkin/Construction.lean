@@ -224,7 +224,7 @@ private theorem termEquiv_equivalence (C : ConsistencyPropertyEq L) (S : Set L.S
     exact hmax.mem_of_union_consistent (C.C5_eq_refl S hmax.consistent _)
   · -- Symmetry: from t₁ = t₂ ∈ S, derive t₂ = t₁ ∈ S via C6
     rename_i t₁ t₂
-    -- Helper: for any t : L.Term Empty, (t.relabel (Sum.inl ∘ Empty.elim)).subst σ = t.relabel Sum.inl
+    -- For empty-variable terms, relabeling then substituting agrees with direct relabeling.
     -- This holds because t has no variables (Empty), so relabel/subst only act on func nodes.
     have term_subst_empty : ∀ (t t' : L.Term Empty),
         (t.relabel (Sum.inl ∘ Empty.elim : Empty → Fin 1 ⊕ Fin 0)).subst
@@ -247,7 +247,7 @@ private theorem termEquiv_equivalence (C : ConsistencyPropertyEq L) (S : Set L.S
           (t.relabel (Sum.inl : Empty → Empty ⊕ Fin 0))
           (t₁.relabel (Sum.inl : Empty → Empty ⊕ Fin 0)) := by
       intro t
-      show BoundedFormulaω.equal
+      change BoundedFormulaω.equal
         ((Term.var (Sum.inl (0 : Fin 1))).subst
           (Sum.elim (Term.relabel Sum.inl ∘ fun _ => t) (Term.var ∘ Sum.inr)))
         ((t₁.relabel (Sum.inl ∘ Empty.elim)).subst
@@ -288,7 +288,7 @@ private theorem termEquiv_equivalence (C : ConsistencyPropertyEq L) (S : Set L.S
           (t₁.relabel (Sum.inl : Empty → Empty ⊕ Fin 0))
           (t.relabel (Sum.inl : Empty → Empty ⊕ Fin 0)) := by
       intro t
-      show BoundedFormulaω.equal
+      change BoundedFormulaω.equal
         ((t₁.relabel (Sum.inl ∘ Empty.elim)).subst
           (Sum.elim (Term.relabel Sum.inl ∘ fun _ => t) (Term.var ∘ Sum.inr)))
         ((Term.var (Sum.inl (0 : Fin 1))).subst
@@ -363,7 +363,7 @@ private theorem func_congr_step (f : L.Functions n) (args : Fin n → L.Term Emp
           else (args j).relabel (Sum.inl : Empty → Empty ⊕ Fin 0)))
         (Term.func f (fun j => (args j).relabel (Sum.inl : Empty → Empty ⊕ Fin 0))) := by
     intro s
-    show BoundedFormulaω.equal
+    change BoundedFormulaω.equal
       ((Term.func f (fun j =>
         if j = i then Term.var (Sum.inl (0 : Fin 1))
         else (args j).relabel (Sum.inl ∘ Empty.elim))).subst
@@ -406,7 +406,7 @@ private theorem func_congr_step (f : L.Functions n) (args : Fin n → L.Term Emp
   rw [hlhs] at hkey
   -- Now hkey : "f(update args i t) = f(args)" ∈ S, which is the symmetric version
   -- We need "f(args) = f(update args i t)" ∈ S, so use symmetry of termEquiv
-  -- termEquiv is defined as: termEquiv _ _ _ t₁ t₂ ↔ equal (t₁.relabel Sum.inl) (t₂.relabel Sum.inl) ∈ S
+  -- `termEquiv` identifies membership of the corresponding relabeled equality in `S`.
   -- hkey gives the reverse direction, so we use the symmetry from termEquiv_equivalence
   exact (termEquiv_equivalence C S hmax).symm hkey
 
@@ -443,7 +443,7 @@ private theorem func_congr (f : L.Functions n) (a b : Fin n → L.Term Empty)
     let args_k : Fin n → L.Term Empty := fun j => if j.val < k then b j else a j
     -- func_congr_step: func f args_k ~ func f (update args_k i (b i))
     have hab_i : termEquiv C S hmax (args_k i) (b i) := by
-      show termEquiv C S hmax (if (i : Fin n).val < k then b i else a i) (b i)
+      change termEquiv C S hmax (if (i : Fin n).val < k then b i else a i) (b i)
       simp only [show (i : Fin n).val = k from rfl, lt_irrefl, ite_false]
       exact hab ⟨k, hk'⟩
     have step := func_congr_step f args_k i (b i) hab_i
@@ -461,7 +461,7 @@ private theorem func_congr (f : L.Functions n) (a b : Fin n → L.Term Empty)
         rename_i hne
         have hne_val : j.val ≠ k := by
           intro h; exact hne (Fin.ext h)
-        show (if j.val < k then b j else a j) = (if j.val < k + 1 then b j else a j)
+        change (if j.val < k then b j else a j) = (if j.val < k + 1 then b j else a j)
         by_cases hjk : j.val < k
         · simp only [hjk, ite_true, Nat.lt_succ_of_lt hjk]
         · have hjk1 : ¬(j.val < k + 1) := by omega
@@ -488,7 +488,7 @@ private theorem rel_mem_of_update (R : L.Relations n) (args : Fin n → L.Term E
         if j = i then s.relabel (Sum.inl : Empty → Empty ⊕ Fin 0)
         else (args j).relabel (Sum.inl : Empty → Empty ⊕ Fin 0)) := by
     intro s
-    show BoundedFormulaω.rel R
+    change BoundedFormulaω.rel R
       (fun j => ((if j = i then Term.var (Sum.inl (0 : Fin 1))
         else (args j).relabel (Sum.inl ∘ Empty.elim)).subst
           (Sum.elim (Term.relabel Sum.inl ∘ fun _ => s) (Term.var ∘ Sum.inr)))) = _
@@ -542,7 +542,7 @@ private theorem rel_congr (R : L.Relations n) (a b : Fin n → L.Term Empty)
     let args_k : Fin n → L.Term Empty := fun j => if j.val < k then b j else a j
     -- Show args_k idx = a idx (since idx.val = k, not < k)
     have hab_idx : termEquiv C S hmax (args_k idx) (b idx) := by
-      show termEquiv C S hmax (if (idx : Fin n).val < k then b idx else a idx) (b idx)
+      change termEquiv C S hmax (if (idx : Fin n).val < k then b idx else a idx) (b idx)
       simp only [show (idx : Fin n).val = k from rfl, lt_irrefl, ite_false]
       exact hab ⟨k, hk'⟩
     -- Show Function.update args_k idx (b idx) = mixed (k+1)
@@ -557,7 +557,7 @@ private theorem rel_congr (R : L.Relations n) (a b : Fin n → L.Term Empty)
         simp only [show (idx : Fin n).val = k from rfl, Nat.lt_succ_iff, le_refl, ite_true]
       · rename_i hne
         have hne_val : j.val ≠ k := fun h => hne (Fin.ext h)
-        show ((if j.val < k then b j else a j).relabel _) =
+        change ((if j.val < k then b j else a j).relabel _) =
             ((if j.val < k + 1 then b j else a j).relabel _)
         congr 1
         by_cases hjk : j.val < k
@@ -576,7 +576,7 @@ private theorem rel_congr (R : L.Relations n) (a b : Fin n → L.Term Empty)
         rwa [hupdate]
       -- Need to go backwards: from update to args_k, using symmetry of termEquiv
       have hab_idx_sym : termEquiv C S hmax (b idx) (args_k idx) := by
-        show termEquiv C S hmax (b idx) (if (idx : Fin n).val < k then b idx else a idx)
+        change termEquiv C S hmax (b idx) (if (idx : Fin n).val < k then b idx else a idx)
         simp only [show (idx : Fin n).val = k from rfl, lt_irrefl, ite_false]
         exact (termEquiv_equivalence C S hmax).symm (hab ⟨k, hk'⟩)
       -- Function.update (Function.update args_k idx (b idx)) idx (args_k idx) = args_k
@@ -623,8 +623,9 @@ private theorem term_realize_eq_mk (t : L.Term Empty) :
     have h_eq : (fun i => (ts i).realize (Empty.elim : Empty → TermModel C S hmax)) =
         (fun i => TermModel.mk (ts i)) := funext ih
     rw [h_eq]
-    show termModelStructure.funMap f (fun i => TermModel.mk (ts i)) = TermModel.mk (Term.func f ts)
-    -- funMap is defined via Quotient.finLiftOn; when applied to reps, it gives the function applied to reps
+    change termModelStructure.funMap f (fun i => TermModel.mk (ts i)) =
+      TermModel.mk (Term.func f ts)
+    -- On representatives, `Quotient.finLiftOn` applies the underlying function.
     unfold termModelStructure TermModel.mk
     exact congr_fun (congr_fun (Quotient.finLiftOn_mk ts) _) _
 
@@ -677,7 +678,7 @@ private theorem Term.realize_toEmpty {M : Type*} [L.Structure M]
 /-- In the term model, `TermModel.mk a = TermModel.mk b ↔ termEquiv a b`. -/
 private theorem mk_eq_iff_termEquiv (a b : L.Term Empty) :
     TermModel.mk (hmax := hmax) a = TermModel.mk b ↔ termEquiv C S hmax a b := by
-  show Quotient.mk _ a = Quotient.mk _ b ↔ _
+  change Quotient.mk _ a = Quotient.mk _ b ↔ _
   exact Quotient.eq (r := termSetoid C S hmax)
 
 /-! ### Opening Bound Variables
@@ -763,7 +764,7 @@ theorem truthLemma :
   | .equal t₁ t₂ => by
     -- `SentenceInf.Realize` is a plain definition upstream, so bridge to the term equation with
     -- `show` rather than trying to rewrite with a bounded-formula realization lemma
-    show (BoundedFormulaω.equal t₁ t₂ ∈ S) ↔
+    change (BoundedFormulaω.equal t₁ t₂ ∈ S) ↔
       t₁.realize (Sum.elim (Empty.elim : Empty → TermModel C S hmax) Fin.elim0) =
         t₂.realize (Sum.elim (Empty.elim : Empty → TermModel C S hmax) Fin.elim0)
     constructor
@@ -783,16 +784,18 @@ theorem truthLemma :
   | .rel R ts => by
     -- Goal: rel R ts ∈ S ↔ Sentenceω.Realize (rel R ts) (TermModel C S hmax)
     -- RHS unfolds to RelMap R (fun i => (ts i).realize (Sum.elim Empty.elim Fin.elim0))
-    show (BoundedFormulaω.rel R ts ∈ S) ↔
+    change (BoundedFormulaω.rel R ts ∈ S) ↔
       Structure.RelMap R (fun i => (ts i).realize
         (Sum.elim (Empty.elim : Empty → TermModel C S hmax) Fin.elim0))
     -- Rewrite each term's realize to TermModel.mk (ts i).toEmpty
-    have hts : (fun i => (ts i).realize (Sum.elim (Empty.elim : Empty → TermModel C S hmax) Fin.elim0)) =
+    have hts :
+        (fun i => (ts i).realize
+          (Sum.elim (Empty.elim : Empty → TermModel C S hmax) Fin.elim0)) =
         (fun i => TermModel.mk ((ts i).toEmpty)) := by
       funext i; rw [Term.realize_toEmpty (ts i), term_realize_eq_mk]
     rw [hts]
     -- Unfold RelMap on the term model using finLiftOn_mk
-    show (BoundedFormulaω.rel R ts ∈ S) ↔
+    change (BoundedFormulaω.rel R ts ∈ S) ↔
       @Quotient.finLiftOn _ _ _ (fun _ => L.Term Empty) (termSetoidFamily C S hmax _)
         Prop (fun i => Quotient.mk _ ((ts i).toEmpty))
         (fun ts => BoundedFormulaω.rel R
@@ -815,12 +818,12 @@ theorem truthLemma :
     -- Strategy:
     --   Forward: all φ ∈ S → for each closed term t, (openBounds φ).subst t ∈ S
     --     → by IH, Sentenceω.Realize ((openBounds φ).subst t) TermModel
-    --     → by realize_subst + realize_openBounds, φ.Realize Empty.elim (snoc Fin.elim0 (TermModel.mk t))
+    --     → by realization lemmas, `φ` holds at `TermModel.mk t`
     --     → since every m = TermModel.mk t, we get the universal.
     --   Backward: by decidability, either all φ ∈ S or (all φ).not ∈ S.
     --     If (all φ).not ∈ S, by C7_neg_all_bound, ∃ t, ((openBounds φ).subst t).not ∈ S
     --     → by IH (contrapositive), ¬ Sentenceω.Realize ((openBounds φ).subst t) TermModel
-    --     → by realize_subst + realize_openBounds, ¬ φ.Realize Empty.elim (snoc Fin.elim0 (TermModel.mk t))
+    --     → by realization lemmas, `φ` fails at `TermModel.mk t`
     --     → contradicts the universal hypothesis.
     -- Helper: connect substitution realization with φ realization
     have realize_subst_openBounds : ∀ (t : L.Term Empty),
@@ -869,11 +872,15 @@ theorem truthLemma :
         have hnotin := (hmax.not_mem_iff _).mp ht
         -- By IH: membership ↔ realization, so ¬ realization
         have ih_subst := truthLemma ((φ.openBounds).subst (fun _ => t))
-        have hnotreal : ¬ Sentenceω.Realize ((φ.openBounds).subst (fun _ => t)) (TermModel C S hmax) :=
+        have hnotreal :
+            ¬ Sentenceω.Realize ((φ.openBounds).subst (fun _ => t))
+              (TermModel C S hmax) :=
           fun habs => hnotin (ih_subst.mpr habs)
         -- By realize_subst_openBounds, this contradicts hreal at TermModel.mk t
         exact absurd (hreal (TermModel.mk t))
-          (fun habs => hnotreal ((realize_subst_openBounds t).mpr (by rw [term_realize_eq_mk]; exact habs)))
+          (fun habs => hnotreal <| (realize_subst_openBounds t).mpr <| by
+            rw [term_realize_eq_mk]
+            exact habs)
 termination_by σ => σ.depth
 decreasing_by
   all_goals first

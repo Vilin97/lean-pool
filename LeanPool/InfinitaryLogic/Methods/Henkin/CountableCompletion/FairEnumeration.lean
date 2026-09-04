@@ -17,19 +17,13 @@ Branching / witness rules make a classical choice at the moment the request fire
 triggering sentence stays present, so re-processing is harmless. The union `S*` is never claimed
 to be in `C.sets` (Finding 1) — only that each closure target cohabits a later stage.
 
-Named lemmas exposed for the inseparable-pair instance and the limit proof: the schedule
-(`stage_mono`, `subset_stage`, `stage_subset_U`; stage-in-`C.sets` is automatic via the `SetIn`
-subtype), the firing API (`request_fires_after` — every request fires in a sweep after any given
-stage, via `beforeRequest`/`process_beforeRequest_eq_sweep`/`sweep_mono`), and finite-stage
-preservation (`finite_stage`).
-
 The remaining piece (the `HenkinComplete Sstar` acceptance theorem) is the per-field limit proof;
 it consumes `request_fires_after` plus per-request "what `process` adds" facts.
 -/
 
 namespace FirstOrder.Language
 
-open FirstOrder Structure Classical
+open FirstOrder Structure
 
 variable {L : Language.{0, 0}} {U : Set L[[ℕ]].Sentenceω}
 
@@ -86,8 +80,9 @@ variable {P : ConsistencyPropertyEqOn U}
 /-- Process a decomposition request: if the trigger `t` is present, add the target dictated by
 its outermost shape (the per-index rules use `idx`; the branching/witness rules choose
 classically). -/
-private noncomputable def processDecompose (S : SetIn P) (t : U) (idx : ℕ) : SetIn P :=
-  if hs : (t : L[[ℕ]].Sentenceω) ∈ S.1 then
+private noncomputable def processDecompose (S : SetIn P) (t : U) (idx : ℕ) : SetIn P := by
+  classical
+  exact if hs : (t : L[[ℕ]].Sentenceω) ∈ S.1 then
     match heq : (t : L[[ℕ]].Sentenceω) with
     | .imp (.imp φ ψ) .falsum =>
       -- C1' (also subsumes C2 double-negation when `ψ = falsum`): add `φ` or `ψ.not`.
@@ -98,7 +93,7 @@ private noncomputable def processDecompose (S : SetIn P) (t : U) (idx : ℕ) : S
       -- C3': choose a component whose negation stays consistent.
       have hmem : ((BoundedFormulaInf.iInf φs).imp BoundedFormulaInf.falsum) ∈ S.1 := heq ▸ hs
       let h := P.C3_neg_iInf S.1 S.2 φs hmem
-      ⟨S.1 ∪ {(φs h.choose).not}, h.choose_spec⟩
+      ⟨S.1 ∪ {(φs (Classical.choose h)).not}, Classical.choose_spec h⟩
     | .imp (.iSup φs) .falsum =>
       -- C4': every component's negation is consistent; add the `idx`-th.
       have hmem : ((BoundedFormulaInf.iSup φs).imp BoundedFormulaInf.falsum) ∈ S.1 := heq ▸ hs
@@ -107,7 +102,7 @@ private noncomputable def processDecompose (S : SetIn P) (t : U) (idx : ℕ) : S
       -- negated universal: choose a witness.
       have hmem : ((BoundedFormulaInf.all φ).imp BoundedFormulaInf.falsum) ∈ S.1 := heq ▸ hs
       let h := P.neg_all_witness S.1 S.2 φ hmem
-      ⟨S.1 ∪ {(instConst h.choose φ).not}, h.choose_spec⟩
+      ⟨S.1 ∪ {(instConst (Classical.choose h) φ).not}, Classical.choose_spec h⟩
     | .imp φ ψ =>
       -- C1: add whichever branch is consistent.
       have hmem : (BoundedFormulaInf.imp φ ψ) ∈ S.1 := heq ▸ hs
@@ -119,7 +114,7 @@ private noncomputable def processDecompose (S : SetIn P) (t : U) (idx : ℕ) : S
     | .iSup φs =>
       have hmem : (BoundedFormulaInf.iSup φs) ∈ S.1 := heq ▸ hs
       let h := P.C4_iSup S.1 S.2 φs hmem
-      ⟨S.1 ∪ {φs h.choose}, h.choose_spec⟩
+      ⟨S.1 ∪ {φs (Classical.choose h)}, Classical.choose_spec h⟩
     | .all φ =>
       have hmem : (BoundedFormulaInf.all φ) ∈ S.1 := heq ▸ hs
       ⟨S.1 ∪ {instConst idx φ}, P.all_inst S.1 S.2 φ hmem idx⟩
@@ -129,8 +124,9 @@ private noncomputable def processDecompose (S : SetIn P) (t : U) (idx : ℕ) : S
 /-- Process a `C1` request: inspects only the **outer** `imp` constructor (so it reduces on
 `φ.imp ψ` regardless of whether `φ`/`ψ` later specialize to the negation encoding — the field
 that a shape-dispatching `decompose` leaves stuck). -/
-private noncomputable def processImpC1 (S : SetIn P) (t : U) : SetIn P :=
-  if hs : (t : L[[ℕ]].Sentenceω) ∈ S.1 then
+private noncomputable def processImpC1 (S : SetIn P) (t : U) : SetIn P := by
+  classical
+  exact if hs : (t : L[[ℕ]].Sentenceω) ∈ S.1 then
     match heq : (t : L[[ℕ]].Sentenceω) with
     | .imp φ ψ =>
       have hmem : (BoundedFormulaInf.imp φ ψ) ∈ S.1 := heq ▸ hs
@@ -140,18 +136,26 @@ private noncomputable def processImpC1 (S : SetIn P) (t : U) : SetIn P :=
   else S
 
 /-- Process one request. -/
-private noncomputable def process (S : SetIn P) : Request U → SetIn P
-  | .decompose t idx => processDecompose S t idx
-  | .impC1 t => processImpC1 S t
-  | .eqRefl c => ⟨S.1 ∪ {constEq c c}, P.eq_refl S.1 S.2 c⟩
-  | .eqSymm a b =>
-    if h : constEq a b ∈ S.1 then ⟨S.1 ∪ {constEq b a}, P.eq_symm S.1 S.2 a b h⟩ else S
-  | .eqTrans a b d =>
-    if h : constEq a b ∈ S.1 ∧ constEq b d ∈ S.1 then
-      ⟨S.1 ∪ {constEq a d}, P.eq_trans S.1 S.2 a b d h.1 h.2⟩ else S
-  | .relCongr l R g i b =>
-    if h : relInst R g ∈ S.1 ∧ constEq (g i) b ∈ S.1 then
-      ⟨S.1 ∪ {relInst R (Function.update g i b)}, P.rel_congr S.1 S.2 l R g i b h.1 h.2⟩ else S
+private noncomputable def process (S : SetIn P) : Request U → SetIn P := by
+  classical
+  intro request
+  exact match request with
+    | .decompose t idx => processDecompose S t idx
+    | .impC1 t => processImpC1 S t
+    | .eqRefl c => ⟨S.1 ∪ {constEq c c}, P.eq_refl S.1 S.2 c⟩
+    | .eqSymm a b =>
+      if h : constEq a b ∈ S.1 then
+        ⟨S.1 ∪ {constEq b a}, P.eq_symm S.1 S.2 a b h⟩
+      else S
+    | .eqTrans a b d =>
+      if h : constEq a b ∈ S.1 ∧ constEq b d ∈ S.1 then
+        ⟨S.1 ∪ {constEq a d}, P.eq_trans S.1 S.2 a b d h.1 h.2⟩
+      else S
+    | .relCongr l R g i b =>
+      if h : relInst R g ∈ S.1 ∧ constEq (g i) b ∈ S.1 then
+        ⟨S.1 ∪ {relInst R (Function.update g i b)},
+          P.rel_congr S.1 S.2 l R g i b h.1 h.2⟩
+      else S
 
 /-- Processing only grows the set (`processDecompose`). -/
 private theorem subset_processDecompose (S : SetIn P) (t : U) (idx : ℕ) :
@@ -201,7 +205,8 @@ private theorem subset_sweep (S : SetIn P) (n : ℕ) : S.1 ⊆ (sweep e S n).1 :
   | succ n ih => exact ih.trans (subset_process (sweep e S n) (e (n + 1)))
 
 /-- **Stage monotonicity** (one step). -/
-private theorem stage_subset_succ (S₀ : SetIn P) (n : ℕ) : (stage e S₀ n).1 ⊆ (stage e S₀ (n + 1)).1 :=
+private theorem stage_subset_succ (S₀ : SetIn P) (n : ℕ) :
+    (stage e S₀ n).1 ⊆ (stage e S₀ (n + 1)).1 :=
   subset_sweep e (stage e S₀ n) n
 
 /-- **Stage monotonicity**. -/
@@ -213,11 +218,6 @@ private theorem stage_mono (S₀ : SetIn P) {m n : ℕ} (h : m ≤ n) :
     rcases Nat.lt_succ_iff_lt_or_eq.mp (Nat.lt_succ_of_le h) with h' | rfl
     · exact (ih (Nat.lt_succ_iff.mp h')).trans (stage_subset_succ e S₀ n)
     · exact subset_rfl
-
-/-- **`S₀ ⊆` every stage**. -/
-private theorem subset_stage (S₀ : SetIn P) (n : ℕ) : S₀.1 ⊆ (stage e S₀ n).1 :=
-  stage_mono e S₀ (Nat.zero_le n)
-
 /-- **Each stage lies in `U`**. -/
 private theorem stage_subset_U (S₀ : SetIn P) (n : ℕ) : (stage e S₀ n).1 ⊆ U :=
   P.subset_U _ (stage e S₀ n).2
@@ -252,7 +252,8 @@ private theorem process_beforeRequest_eq_sweep (S : SetIn P) (k : ℕ) :
   cases k <;> rfl
 
 /-- Sweeps are monotone in the number of requests processed. -/
-private theorem sweep_mono (S : SetIn P) {k n : ℕ} (h : k ≤ n) : (sweep e S k).1 ⊆ (sweep e S n).1 := by
+private theorem sweep_mono (S : SetIn P) {k n : ℕ} (h : k ≤ n) :
+    (sweep e S k).1 ⊆ (sweep e S n).1 := by
   induction n with
   | zero => rw [Nat.le_zero.mp h]
   | succ n ih =>
@@ -263,7 +264,8 @@ private theorem sweep_mono (S : SetIn P) {k n : ℕ} (h : k ≤ n) : (sweep e S 
 /-- **The firing consumer lemma** (fairness): for a surjective schedule, every request fires in
 some sweep after any given stage `m` — the pre-accumulator contains `stage m`, and the process
 output at the firing lands inside `stage (n+1)`. -/
-private theorem request_fires_after (he : Function.Surjective e) (S₀ : SetIn P) (r : Request U) (m : ℕ) :
+private theorem request_fires_after
+    (he : Function.Surjective e) (S₀ : SetIn P) (r : Request U) (m : ℕ) :
     ∃ n, m ≤ n ∧ ∃ acc : SetIn P,
       (stage e S₀ m).1 ⊆ acc.1 ∧ (process acc r).1 ⊆ (stage e S₀ (n + 1)).1 := by
   obtain ⟨k, rfl⟩ := he r
@@ -272,51 +274,14 @@ private theorem request_fires_after (he : Function.Surjective e) (S₀ : SetIn P
   rw [process_beforeRequest_eq_sweep]
   exact sweep_mono e (stage e S₀ (max m k)) (le_max_right m k)
 
-/-! ## Finite-stage preservation -/
-
-private theorem finite_processDecompose {S : SetIn P} (t : U) (idx : ℕ) (hS : S.1.Finite) :
-    (processDecompose S t idx).1.Finite := by
-  unfold processDecompose
-  split
-  · split <;> (try split) <;>
-      first | exact hS.union (Set.finite_singleton _) | exact hS
-  · exact hS
-
-private theorem finite_processImpC1 {S : SetIn P} (t : U) (hS : S.1.Finite) :
-    (processImpC1 S t).1.Finite := by
-  unfold processImpC1
-  split
-  · split <;> (try split) <;> first | exact hS.union (Set.finite_singleton _) | exact hS
-  · exact hS
-
-private theorem finite_process {S : SetIn P} (r : Request U) (hS : S.1.Finite) : (process S r).1.Finite := by
-  cases r with
-  | decompose t idx => exact finite_processDecompose t idx hS
-  | impC1 t => exact finite_processImpC1 t hS
-  | eqRefl c => exact hS.union (Set.finite_singleton _)
-  | eqSymm a b => simp only [process]; split_ifs <;> first | exact hS.union (Set.finite_singleton _) | exact hS
-  | eqTrans a b d => simp only [process]; split_ifs <;> first | exact hS.union (Set.finite_singleton _) | exact hS
-  | relCongr l R g i b =>
-    simp only [process]; split_ifs <;> first | exact hS.union (Set.finite_singleton _) | exact hS
-
-private theorem finite_sweep {S : SetIn P} (hS : S.1.Finite) (n : ℕ) : (sweep e S n).1.Finite := by
-  induction n with
-  | zero => exact finite_process (e 0) hS
-  | succ n ih => exact finite_process (e (n + 1)) ih
-
-/-- **Finite-stage preservation**: from a finite initial set, every stage is finite (documenting
-that the construction stays inside the finite-pair instance). -/
-private theorem finite_stage {S₀ : SetIn P} (hS₀ : S₀.1.Finite) (n : ℕ) : (stage e S₀ n).1.Finite := by
-  induction n with
-  | zero => exact hS₀
-  | succ n ih => exact finite_sweep e ih n
-
 /-! ## What each firing adds (process specs) -/
 
 private theorem spec_impC1 (acc : SetIn P) (φ ψ : L[[ℕ]].Sentenceω) (hU : (φ.imp ψ) ∈ U)
     (hmem : φ.imp ψ ∈ acc.1) :
-    φ.not ∈ (process acc (.impC1 ⟨φ.imp ψ, hU⟩)).1 ∨ ψ ∈ (process acc (.impC1 ⟨φ.imp ψ, hU⟩)).1 := by
-  show φ.not ∈ (processImpC1 acc ⟨φ.imp ψ, hU⟩).1 ∨ ψ ∈ (processImpC1 acc ⟨φ.imp ψ, hU⟩).1
+    φ.not ∈ (process acc (.impC1 ⟨φ.imp ψ, hU⟩)).1 ∨
+      ψ ∈ (process acc (.impC1 ⟨φ.imp ψ, hU⟩)).1 := by
+  change φ.not ∈ (processImpC1 acc ⟨φ.imp ψ, hU⟩).1 ∨
+    ψ ∈ (processImpC1 acc ⟨φ.imp ψ, hU⟩).1
   simp only [processImpC1, dite_eq_left hmem]
   split_ifs <;> [left; right] <;> exact Set.mem_union_right _ rfl
 
@@ -334,7 +299,7 @@ private theorem spec_negImp (acc : SetIn P) (φ ψ : L[[ℕ]].Sentenceω) (hU : 
 private theorem spec_iInf (acc : SetIn P) (φs : ℕ → L[[ℕ]].Sentenceω)
     (hU : (BoundedFormulaω.iInf φs) ∈ U) (idx : ℕ) (hmem : BoundedFormulaω.iInf φs ∈ acc.1) :
     φs idx ∈ (process acc (.decompose ⟨BoundedFormulaω.iInf φs, hU⟩ idx)).1 := by
-  show φs idx ∈ (processDecompose acc ⟨BoundedFormulaω.iInf φs, hU⟩ idx).1
+  change φs idx ∈ (processDecompose acc ⟨BoundedFormulaω.iInf φs, hU⟩ idx).1
   simp only [processDecompose, dite_eq_left hmem]
   exact Set.mem_union_right _ rfl
 
@@ -342,14 +307,14 @@ private theorem spec_negIInf (acc : SetIn P) (φs : ℕ → L[[ℕ]].Sentenceω)
     (hU : ((BoundedFormulaω.iInf φs).not) ∈ U) (idx : ℕ)
     (hmem : (BoundedFormulaω.iInf φs).not ∈ acc.1) :
     ∃ k, (φs k).not ∈ (process acc (.decompose ⟨(BoundedFormulaω.iInf φs).not, hU⟩ idx)).1 := by
-  show ∃ k, (φs k).not ∈ (processDecompose acc ⟨(BoundedFormulaω.iInf φs).not, hU⟩ idx).1
+  change ∃ k, (φs k).not ∈ (processDecompose acc ⟨(BoundedFormulaω.iInf φs).not, hU⟩ idx).1
   simp only [processDecompose, dite_eq_left hmem]
   exact ⟨_, Set.mem_union_right _ rfl⟩
 
 private theorem spec_iSup (acc : SetIn P) (φs : ℕ → L[[ℕ]].Sentenceω)
     (hU : (BoundedFormulaω.iSup φs) ∈ U) (idx : ℕ) (hmem : BoundedFormulaω.iSup φs ∈ acc.1) :
     ∃ k, φs k ∈ (process acc (.decompose ⟨BoundedFormulaω.iSup φs, hU⟩ idx)).1 := by
-  show ∃ k, φs k ∈ (processDecompose acc ⟨BoundedFormulaω.iSup φs, hU⟩ idx).1
+  change ∃ k, φs k ∈ (processDecompose acc ⟨BoundedFormulaω.iSup φs, hU⟩ idx).1
   simp only [processDecompose, dite_eq_left hmem]
   exact ⟨_, Set.mem_union_right _ rfl⟩
 
@@ -357,21 +322,21 @@ private theorem spec_negISup (acc : SetIn P) (φs : ℕ → L[[ℕ]].Sentenceω)
     (hU : ((BoundedFormulaω.iSup φs).not) ∈ U) (idx : ℕ)
     (hmem : (BoundedFormulaω.iSup φs).not ∈ acc.1) :
     (φs idx).not ∈ (process acc (.decompose ⟨(BoundedFormulaω.iSup φs).not, hU⟩ idx)).1 := by
-  show (φs idx).not ∈ (processDecompose acc ⟨(BoundedFormulaω.iSup φs).not, hU⟩ idx).1
+  change (φs idx).not ∈ (processDecompose acc ⟨(BoundedFormulaω.iSup φs).not, hU⟩ idx).1
   simp only [processDecompose, dite_eq_left hmem]
   exact Set.mem_union_right _ rfl
 
 private theorem spec_allInst (acc : SetIn P) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
     (hU : (φ.all) ∈ U) (idx : ℕ) (hmem : φ.all ∈ acc.1) :
     instConst idx φ ∈ (process acc (.decompose ⟨φ.all, hU⟩ idx)).1 := by
-  show instConst idx φ ∈ (processDecompose acc ⟨φ.all, hU⟩ idx).1
+  change instConst idx φ ∈ (processDecompose acc ⟨φ.all, hU⟩ idx).1
   simp only [processDecompose, dite_eq_left hmem]
   exact Set.mem_union_right _ rfl
 
 private theorem spec_negAll (acc : SetIn P) (φ : L[[ℕ]].BoundedFormulaω Empty 1)
     (hU : (φ.all.not) ∈ U) (idx : ℕ) (hmem : φ.all.not ∈ acc.1) :
     ∃ c, (instConst c φ).not ∈ (process acc (.decompose ⟨φ.all.not, hU⟩ idx)).1 := by
-  show ∃ c, (instConst c φ).not ∈ (processDecompose acc ⟨φ.all.not, hU⟩ idx).1
+  change ∃ c, (instConst c φ).not ∈ (processDecompose acc ⟨φ.all.not, hU⟩ idx).1
   simp only [processDecompose, dite_eq_left hmem]
   exact ⟨_, Set.mem_union_right _ rfl⟩
 
@@ -388,7 +353,8 @@ private theorem spec_eqTrans (acc : SetIn P) (a b d : ℕ)
   simp only [process, dite_eq_left (⟨h1, h2⟩ : constEq a b ∈ acc.1 ∧ constEq b d ∈ acc.1)]
   exact Set.mem_union_right _ rfl
 
-private theorem spec_relCongr (acc : SetIn P) (l : ℕ) (R : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
+private theorem spec_relCongr
+    (acc : SetIn P) (l : ℕ) (R : L.Relations l) (g : Fin l → ℕ) (i : Fin l)
     (b : ℕ) (h1 : relInst R g ∈ acc.1) (h2 : constEq (g i) b ∈ acc.1) :
     relInst R (Function.update g i b) ∈ (process acc (.relCongr l R g i b)).1 := by
   simp only [process, dite_eq_left (⟨h1, h2⟩ : relInst R g ∈ acc.1 ∧ constEq (g i) b ∈ acc.1)]
