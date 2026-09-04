@@ -31,6 +31,11 @@ open FirstOrder Structure
 
 variable {L : Language.{0, 0}}
 
+/-- A symbol-generated sublanguage of a relational language is relational. -/
+instance symbSublang_isRelational [h : L.IsRelational] (F : Set (Σ n, L.Functions n))
+    (R : Set (Σ n, L.Relations n)) : (symbSublang (L := L) F R).IsRelational :=
+  fun n => ⟨fun f => (h n).false f.1⟩
+
 /-- **Base expansion of a two-sorted sublanguage structure.** Function/relation symbols in the
 generating sets are interpreted by the sublanguage structure; the rest are filled in arbitrarily
 (functions) / as `False` (relations). -/

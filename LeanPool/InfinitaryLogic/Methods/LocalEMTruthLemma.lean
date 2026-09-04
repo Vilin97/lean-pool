@@ -729,12 +729,4 @@ theorem LocalEMContext.truthLemmaStage_of_mem_of_skolemUniversal
 
 end StagedTruthLemma
 
-/-! ### Canonical wrappers (the original theorem names, over `localColimStructure`) -/
-
-section StagedTruthLemmaCanonical
-
-variable (s₀ : LocalStage) (J : Type) [LinearOrder J] {M : Type} [s₀.Lang.Structure M] [Nonempty M]
-
-end StagedTruthLemmaCanonical
-
 end FirstOrder.Language

@@ -16,17 +16,12 @@ back-and-forth equivalence at all ordinal levels.
 
 - `PotentialIso`: A potential isomorphism between structures M and N is a family of
   finite partial maps containing the empty map and closed under extension in both directions.
-- `PotentialIso.ofExtensionFamily`: builds one from a relation-form extension family. A
-  producer-facing adapter, strictly below the BF-equivalence machinery.
-- `ExtensionPresentation`: the proof-relevant variant, for callers holding *states* rather than
-  a predicate.
-- `ExtensionPresentation.toPotentialIso`: its induced potential isomorphism, via the existential
-  image of the states and routed solely through `ofExtensionFamily`.
 
 ## Main Results
 
-- `potentialIso_iff_BFEquiv_all`: Potential isomorphism is equivalent to BF-equivalence
-  at all ordinal levels (for the empty tuple).
+- `PotentialIso.countable_toEquiv`: Potentially isomorphic countable structures are isomorphic.
+- `BFEquiv_all_implies_potentialIso`: Back-and-forth equivalence at every ordinal yields a
+  potential isomorphism.
 
 ## References
 
@@ -99,16 +94,6 @@ noncomputable def symm (p : PotentialIso L M N) : PotentialIso L N M where
     simpa [Set.mem_ofPred_eq] using p.back ⟨n, a, b⟩ (by simpa [Set.mem_ofPred_eq] using hq) n'
   back := fun ⟨n, b, a⟩ hq m => by
     simpa [Set.mem_ofPred_eq] using p.forth ⟨n, a, b⟩ (by simpa [Set.mem_ofPred_eq] using hq) m
-
-/-! ### Producer-facing adapters
-
-Two thin constructors for callers who have a back-and-forth system in hand and want the standard
-object.  Both build `family` directly and route through nothing else — no `BFEquiv`, no ordinal
-induction, no Scott formulas, no infinitary formula agreement.  In particular they sit *below*
-`implies_BFEquiv_all` in this file and below `Karp/CarrierTheorem.lean` in the import graph.
-
-Contrast `bfEquiv_all_of_extensionFamily`, which serves the opposite purpose: it consumes an
-extension family to produce formula-level agreement.  These produce the `PotentialIso` itself. -/
 
 end PotentialIso
 
@@ -330,8 +315,7 @@ contradiction argument.
 
 **Universe constraint**: The proof requires the ordinal universe to match the type universe
 `w` (via `Ordinal.bddAbove_of_small`). This is because the contradiction argument takes a
-supremum of ordinals indexed by `N : Type w`, which requires `Ordinal.{w}`. The forward
-direction (`PotentialIso.implies_BFEquiv_all`) is fully universe-polymorphic. -/
+supremum of ordinals indexed by `N : Type w`, which requires `Ordinal.{w}`. -/
 theorem BFEquiv_all_implies_potentialIso
     {M : Type w} [L.Structure M]
     {N : Type w} [L.Structure N]
@@ -372,45 +356,6 @@ theorem BFEquiv_all_implies_potentialIso
     have hbdd : BddAbove (Set.range αbad) := Ordinal.bddAbove_of_small
     obtain ⟨m₀, hm₀⟩ := BFEquiv.back (hfamily (Order.succ (⨆ m, αbad m))) n'
     exact hbad m₀ (BFEquiv.monotone (le_ciSup hbdd m₀) hm₀)
-
-/-! ## Proof-relevant presentations
-
-A second producer-facing adapter, for callers who build *states* (partial maps, finite
-approximations, game positions) rather than a predicate.  It exists so that certificates need not
-be flattened into a global relation by hand.
-
-`State` is proof-relevant on purpose: different certificates may present the same tuple pair, and
-nothing here quotients or picks canonical representatives.  This introduces **no** competing
-back-and-forth structure — its output is the existing `PotentialIso`, built through
-`ofExtensionFamily`, and the eventual isomorphism still comes only from
-`PotentialIso.countable_toEquiv`. -/
-
-/-- A back-and-forth system presented by states rather than by a predicate. -/
-structure ExtensionPresentation (L : Language.{u, v}) [L.IsRelational]
-    (M : Type w) (N : Type w') [L.Structure M] [L.Structure N] where
-  /-- The states at each tuple length. -/
-  State : ℕ → Type*
-  /-- The `M`-tuple a state presents. -/
-  left : ∀ {n}, State n → Fin n → M
-  /-- The `N`-tuple a state presents. -/
-  right : ∀ {n}, State n → Fin n → N
-  /-- A state over the empty tuple. -/
-  empty : State 0
-  /-- Every state presents an atomic-type-preserving pair. -/
-  compatible : ∀ {n} (s : State n), SameAtomicType (L := L) (left s) (right s)
-  /-- Forth, witnessed by a successor state. -/
-  forth : ∀ {n} (s : State n) (m : M), ∃ (n' : N) (s' : State (n + 1)),
-    left s' = Fin.snoc (left s) m ∧ right s' = Fin.snoc (right s) n'
-  /-- Back, witnessed by a successor state. -/
-  back : ∀ {n} (s : State n) (n' : N), ∃ (m : M) (s' : State (n + 1)),
-    left s' = Fin.snoc (left s) m ∧ right s' = Fin.snoc (right s) n'
-
-namespace ExtensionPresentation
-
-variable {M : Type w} [L.Structure M] {N : Type w'} [L.Structure N]
-variable (P : ExtensionPresentation L M N)
-
-end ExtensionPresentation
 
 end Language
 

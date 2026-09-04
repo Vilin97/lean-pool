@@ -18,29 +18,20 @@ source order `Source κ = (Order.succ (2 ^ κ)).ord.ToType` (the initial well-or
 successor of `2 ^ κ`) admits a `(Order.succ κ).ord`-indexed strict-mono suborder on which
 `cR` is constant. In partition-calculus notation: `(2 ^ κ)⁺ → (κ⁺)²_κ`.
 
-This is a fresh-namespace (`PairERGen`) port of the proven Bool/ℵ₀ theorem
-`FirstOrder.Combinatorics.erdos_rado_pair_omega1` from `Combinatorics/ErdosRado.lean`,
-with the renaming table `Bool → C`, `ℶ_1 → 2 ^ κ`, `ℵ_1 → Order.succ κ`,
-`ω_1 → (Order.succ κ).ord`. The legacy theorem's shape is recovered as the `κ = ℵ₀`
-specialization `erdos_rado_pair_omega1_from_general`. The consumers are the
-end-homogenization engine (`EndHomogeneousErdosRado.lean`) and the finite-arity induction
-(`FiniteArityErdosRadoInduction.lean`, culminating in the bounded
-`finiteArityErdosRadoBounded`), which need the color bound at `κ = ℶ_1` (colors = functions
-on continuum-indexed positions); the all-arity `FiniteArityErdosRadoOmega1` is false-shaped
-(statement audit 2026-07-07 — see its docstring).
+This file develops the canonical partition tree and extracts a live node of length at least
+`(Order.succ κ).ord`. The end-homogenization engine in
+`EndHomogeneousErdosRado.lean` consumes that node.
 
 ## Structure
 
 - **`CardinalHelpers`**: all cardinal arithmetic isolated — source cardinality,
   the level-count bound `#(β.ToType → C) ≤ 2 ^ κ` for `β < (succ κ).ord`, the
   counting-core product `succ κ * 2 ^ κ = 2 ^ κ`, and the subset order-iso lemma.
-- **EHMR canonical partition tree** (sections mirroring the source A–H): nodes are
+- **EHMR canonical partition tree**: nodes are
   recorded-color sequences `β.ToType → C`, reps are chosen minima of successor sets,
   the coverage `y`-path shows every source element is some node's chosen rep, counting
-  forces a live node of length `≥ (succ κ).ord`, and the resulting branch assembles
-  into a `CoherentMajorityBranch` feeding the chain + pigeonhole endgame.
-- **Headline**: `pairErdosRado_general`; regression: `erdos_rado_pair_omega1_from_general`;
-  abstract-source wrapper: `pairErdosRado_general_of_large`.
+  forces a live node of length `≥ (succ κ).ord`.
+- **Consumer interface**: `exists_live_node_ge`.
 -/
 
 universe u
@@ -228,14 +219,6 @@ theorem succ_mul_two_power (hκ : Cardinal.aleph0 ≤ κ) :
   exact max_eq_right (succ_le_two_power κ)
 
 end CardinalHelpers
-
-/-! ### Branch structures: `validFiber`, `CoherentMajorityBranch`, `EHMRBranch` -/
-
-section BranchStructures
-
-variable {κ : Cardinal.{0}} {C : Type}
-
-end BranchStructures
 
 /-! ### EHMR canonical-tree skeleton
 
@@ -666,23 +649,5 @@ theorem exists_live_node_ge [Nonempty C] (hκ : Cardinal.aleph0 ≤ κ)
     (not_le.mpr (Order.lt_succ ((2 : Cardinal.{0}) ^ κ)))
 
 end BranchExtraction
-
-/-! ### Assembly: EHMR branch → `CoherentMajorityBranch` -/
-
-section Assembly
-
-variable {κ : Cardinal.{0}} {C : Type}
-
-end Assembly
-
-/-! ### Chain + pigeonhole endgame -/
-
-section Endgame
-
-variable {κ : Cardinal.{0}} {C : Type}
-
-end Endgame
-
-/-! ### The headline, the regression specialization, and the abstract-source wrapper -/
 
 end FirstOrder.Combinatorics.PairERGen

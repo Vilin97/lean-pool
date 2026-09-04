@@ -103,12 +103,6 @@ def codedISup (F : CodedFamily P n) : L.BoundedFormulaω Empty n :=
 
 /-! ## Acceptance gates -/
 
-section Gates
-
-variable {M : Type} [L.Structure M] {v : Empty → M} {xs : Fin n → M}
-
-end Gates
-
 /-- **Gate 2.**  The arity is the parameter `n`; there is no independent arity field.  Stated as a
 type ascription that would not elaborate if the arity could drift. -/
 example (F : CodedFamily P n) : L.BoundedFormulaω Empty n := codedIInf F

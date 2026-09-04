@@ -220,12 +220,4 @@ theorem entails_not_genAll_of_entails_not_self
     fun δ hδ => (bridge _).mp (hmodel _ hδ)
   exact (@hyp M (wc base h) neM hΔ) hinst
 
-/-! ## Bounds for the countable conjunction of a theory -/
-
-section Conjunction
-
-variable {T : L[[ℕ]].Theoryω} {hT : T.Countable}
-
-end Conjunction
-
 end FirstOrder.Language

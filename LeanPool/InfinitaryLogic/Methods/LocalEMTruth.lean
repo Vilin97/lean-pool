@@ -307,12 +307,6 @@ theorem locJSupport_locSkWitnessTerm {k n : ℕ}
             ((LlocalInclusion s₀ (k + 1)).onFunction (Sum.inr (skolemNeedSymbol h)))) from rfl,
     hjc, Finset.union_empty]
 
-section Semantic
-
-variable {M : Type} [s₀.Lang.Structure M] [Nonempty M] (a : ℕ → M)
-
-end Semantic
-
 end WitnessTransport
 
 end FirstOrder.Language

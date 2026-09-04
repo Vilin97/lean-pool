@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
 import LeanPool.InfinitaryLogic.Methods.SkolemColimit
+import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 /-!
 # Staged set-closure (generic core for the Skolem-closed family `Γ*`)
 

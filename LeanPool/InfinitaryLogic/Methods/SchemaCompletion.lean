@@ -134,12 +134,6 @@ has finite constant support `image t` (and empty Henkin support) — regardless 
 function symbols the (possibly `iSup`-branching) `ψ` uses, because `HasFiniteConstSupport` bounds
 only the *constant* symbols, never all of `functionsIn`. -/
 
-section FunctionsInMapLanguage
-
-variable {L L' : Language.{0, 0}} (g : L →ᴸ L')
-
-end FunctionsInMapLanguage
-
 section HenkinLiftSupport
 
 variable {L'' : Language.{0, 0}} {J : Type}

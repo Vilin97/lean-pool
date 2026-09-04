@@ -118,19 +118,9 @@ theorem realize_ex {φ : L.BoundedFormulaInf ι α (n + 1)} :
 
 end BoundedFormulaInf
 
-namespace BoundedFormula
-
-end BoundedFormula
-
 /-- Realization of an `L_{∞ω}` formula (no free bound variables). -/
 def FormulaInf.Realize {M : Type w} [L.Structure M] (φ : L.FormulaInf ι α) (v : α → M) : Prop :=
   BoundedFormulaInf.Realize φ v default
-
-section AllsExs
-
-variable {M : Type w} [L.Structure M]
-
-end AllsExs
 
 /-- Realization of an `L_{∞ω}` sentence in a structure. -/
 def SentenceInf.Realize (φ : L.SentenceInf ι) (M : Type w) [L.Structure M] : Prop :=

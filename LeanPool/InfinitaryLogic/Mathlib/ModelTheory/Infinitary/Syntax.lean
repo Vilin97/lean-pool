@@ -116,10 +116,6 @@ protected def ex (φ : L.BoundedFormulaInf ι α (n + 1)) : L.BoundedFormulaInf 
 
 end BoundedFormulaInf
 
-namespace BoundedFormula
-
-end BoundedFormula
-
 end Language
 
 end FirstOrder

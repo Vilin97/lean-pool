@@ -52,12 +52,6 @@ def iSupAlong (c : IndexCoding ι κ) (φs : ι → L.BoundedFormulaInf κ α n)
     L.BoundedFormulaInf κ α n :=
   .iSup (c.pad ⊥ φs)
 
-section ReindexEqs
-
-variable (c : IndexCoding ι κ)
-
-end ReindexEqs
-
 section Realize
 
 variable {M : Type w} [L.Structure M] {v : α → M} {xs : Fin n → M}

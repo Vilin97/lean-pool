@@ -383,10 +383,6 @@ theorem mapLanguage_imp {L' : Language.{u, v}} (g : L →ᴸ L')
 
 end BoundedFormulaω
 
-namespace Formulaω
-
-end Formulaω
-
 /-! ### Closed-term substitution -/
 
 /-- Substituting a closed term into a term with no real variables reduces to the plain

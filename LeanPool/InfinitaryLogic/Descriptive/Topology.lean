@@ -27,9 +27,6 @@ namespace Language
 
 variable {L : Language.{u, v}}
 
--- Generic instance: StructureSpaceOn is abbrev, so TC sees through it.
-instance {α : Type*} : TopologicalSpace (StructureSpaceOn L α) := Pi.topologicalSpace
-
 /-- `StructureSpace L` inherits the product topology from `RelQuery L → Bool`.
 Since `Bool` has the discrete topology, this is the product of discrete spaces. -/
 instance : TopologicalSpace (StructureSpace L) := Pi.topologicalSpace

@@ -13,17 +13,11 @@ From any nonempty `graphLanguage L`-structure satisfying `graphAxioms F`, a full
 functionality), outside `F` an arbitrary element; every base relation is copied directly.
 
 The results are deliberately **localized to `F`** — global round-trip structure identities are
-false outside `F`, and nothing downstream needs them. The choice outside `F` is completely
-irrelevant to every consumer:
-
-* reconstructing a graph expansion preserves all base relations (definitionally) and `funMap`
-  on every symbol of `F` (`reconstruct_graphExpansion_funMap`);
-* graph-expanding a reconstruction preserves base relations (definitionally) and the graph
-  relations of `F` (`graphExpansion_reconstruct_relMap_graph`);
-* therefore formulas whose function support lies in `F` have identical semantics — the
-  consumer-shaped capstone `realize_relationalize_reconstruct`, proved from the
-  occurrence-aware congruence `realize_congr_symbolsIn`, the exact occurrence identity
-  `relationsIn_relationalizeFormula`, and Unit 4's `realize_relationalizeFormula`.
+false outside `F`, and nothing downstream needs them. Graph-expanding a reconstruction preserves
+the graph relations of `F`; therefore formulas whose function support lies in `F` have identical
+semantics. The consumer-shaped capstone `realize_relationalize_reconstruct` follows from the
+occurrence-aware congruence `realize_congr_symbolsIn`, the exact occurrence identity
+`relationsIn_relationalizeFormula`, and Unit 4's `realize_relationalizeFormula`.
 -/
 
 namespace FirstOrder.Language
@@ -122,14 +116,5 @@ theorem realize_relationalize_reconstruct {α : Type}
     (@realize_relationalizeFormula L α M (reconstructStructure F hAx) n φ v xs)
 
 end Reconstruct
-
-/-! ## Localized round-trip: reconstructing a graph expansion -/
-
-section RoundTrip
-
-variable {M : Type} [Nonempty M] [L.Structure M]
-variable (F : Set (Σ n, L.Functions n)) [Countable ↥F]
-
-end RoundTrip
 
 end FirstOrder.Language

@@ -70,7 +70,7 @@ private theorem bounded_scottHeight_iso_eq_BFEquiv_of
     (hbound : ∀ (M : Type w) [L.Structure M] [Countable M],
       Sentenceω.Realize φ M → scottHeight (L := L) M ≤ α)
     {M N : Type w} [L.Structure M] [L.Structure N] [Countable M] [Countable N]
-    (hM : Sentenceω.Realize φ M) (_hN : Sentenceω.Realize φ N) :
+    (hM : Sentenceω.Realize φ M) :
     Nonempty (M ≃[L] N) ↔
     BFEquiv (L := L) α 0 (Fin.elim0 : Fin 0 → M) (Fin.elim0 : Fin 0 → N) := by
   constructor
@@ -90,10 +90,10 @@ theorem bounded_scottHeight_iso_eq_BFEquiv
     (hbound : ∀ (M : Type w) [L.Structure M] [Countable M],
       Sentenceω.Realize φ M → scottHeight (L := L) M ≤ α)
     {M N : Type w} [L.Structure M] [L.Structure N] [Countable M] [Countable N]
-    (hM : Sentenceω.Realize φ M) (hN : Sentenceω.Realize φ N) :
+    (hM : Sentenceω.Realize φ M) (_hN : Sentenceω.Realize φ N) :
     Nonempty (M ≃[L] N) ↔
     BFEquiv (L := L) α 0 (Fin.elim0 : Fin 0 → M) (Fin.elim0 : Fin 0 → N) :=
-  bounded_scottHeight_iso_eq_BFEquiv_of countableRefinementHypothesis hα hbound hM hN
+  bounded_scottHeight_iso_eq_BFEquiv_of countableRefinementHypothesis hα hbound hM
 
 end Language
 

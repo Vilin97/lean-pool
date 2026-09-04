@@ -862,10 +862,4 @@ theorem exists_endHomogeneous_of_large
 
 end Endgame
 
-/-! ### Regression: the pair theorem's exact conclusion from the `n = 0` engine -/
-
-section Regression
-
-end Regression
-
 end FirstOrder.Combinatorics.EndHomogER

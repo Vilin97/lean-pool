@@ -27,9 +27,6 @@ namespace Language
 
 open MeasureTheory
 
--- Generic instance: StructureSpaceOn is abbrev, so TC sees through it automatically.
-instance {α : Type*} : MeasurableSpace (StructureSpaceOn L α) := MeasurableSpace.pi
-
 /-- The set of codes where a given relation query returns `true` is measurable (generic). -/
 theorem measurableSet_relHoldsOn {α : Type*} (q : RelQueryOn L α) :
     MeasurableSet {c : StructureSpaceOn L α | c q = true} := by

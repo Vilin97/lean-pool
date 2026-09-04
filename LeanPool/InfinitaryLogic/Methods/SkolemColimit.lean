@@ -3,32 +3,15 @@ Copyright (c) 2026 Cameron Freer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
-import LeanPool.InfinitaryLogic.Lomega1omega.Semantics
-import LeanPool.InfinitaryLogic.Lomega1omega.Operations
+import Mathlib.ModelTheory.Basic
 /-!
-# Iterated Skolemization: the staged language tower and its colimit `L^Sk`
+# Sequential colimits
 
-The bespoke Ehrenfeucht–Mostowski term model needs a language in which *every* formula's
-existential has a Skolem function (so the term-model truth lemma can witness nested `∃`'s). One
-layer (`skolem₁ω`) is not closed under its own witness formulas, so we iterate:
-
-* `L₀ = L`, `L_{k+1} = L_k.sum (skolem₁ω L_k)` (`skolemStage`);
-* the colimit `L^Sk = colim_k L_k` (next) is **Skolem-complete**: an `L^Sk`-formula lives at some
-  finite stage `k`, and its existential's Skolem function appears at stage `k+1`.
-
-This is *ambient* infrastructure: the family `Γ*` consumed by the truth lemma is a **countable**
-staged closure inside `L^Sk`. Caveat: the EM term model's `EMContext` also needs the **full atom
-diagram** over `L^Sk`, which *does* enumerate its continuum-many symbols — the reason for the
-countable family-restricted re-base (`localSkolem` and the `Llocal`/`Γlocal` tower in
-`LocalSkolem.lean`/`LocalTower.lean`); `skolemColim` is retained as exploratory infrastructure.
-
-For `L : Language.{0,0}` every stage stays in `Type 0` (`BoundedFormulaω Empty n` over a `{0,0}`
-language is `Type 0`), so the tower has no universe blowup.
+`DirectedColim` is the quotient of a sequence of types by its transition maps. The local Skolem
+tower uses this generic construction for its function and relation symbols.
 -/
 
 namespace FirstOrder.Language
-
-variable (L : Language.{0, 0})
 
 /-! ### Sequential colimit of types -/
 
@@ -48,15 +31,5 @@ theorem DirectedColim.incl_step {F : ℕ → Type} {φ : ∀ k, F k → F (k + 1
     DirectedColim.incl (φ := φ) (k + 1) (φ k x) = DirectedColim.incl (φ := φ) k x := by
   symm
   exact Quot.sound rfl
-
-/-! ### The colimit language `L^Sk` and the stage cocone -/
-
-/-! ### Stage structures on a fixed model -/
-
-section Structures
-
-variable {M : Type} [L.Structure M] [Nonempty M]
-
-end Structures
 
 end FirstOrder.Language
