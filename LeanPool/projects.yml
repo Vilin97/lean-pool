@@ -1,4 +1,55 @@
 projects:
+  - slug: long-gaps-between-primes
+    title: Improved long gaps between consecutive primes
+    summary: >-
+      Formalizes the unconditional lower bound showing that, for all
+      sufficiently large X, the largest gap between consecutive primes below
+      X is at least a positive constant times
+      log X (log log X)^2 log log log log X / (log log log X)^2. The
+      development includes the short-translates sieve proposition, divisor
+      coefficient estimates, truncated product weights, moment bounds, and
+      the Erdos--Rankin covering argument used to derive the headline result.
+    branch: analytic number theory
+    entry_module: LeanPool.LongGapsBetweenPrimes
+    authors:
+      - OpenAI
+    source:
+      title: Improved Long Gaps Between Primes
+      authors:
+        - OpenAI
+      url: https://cdn.openai.com/pdf/51126fac-1b68-4128-9666-c908bcc16033/long_gaps.pdf
+      github_repo: openai/LongGapsBetweenPrimes
+      commit: 03a1190d0bc5502d9f54eeb60ad3e45e22b0df0b
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LongGapsBetweenPrimes.long_prime_gaps
+    main_results:
+      - declaration: LongGapsBetweenPrimes.long_prime_gaps
+        informal: >-
+          There are a positive constant c and a real threshold X0 such that
+          for every X at least X0, some pair of consecutive indexed primes
+          below X has gap greater than c times
+          log X (log log X)^2 log log log log X / (log log log X)^2.
+      - declaration: LongGapsBetweenPrimes.long_gap_theorem
+        informal: >-
+          For all sufficiently large X, there are consecutive primes p < q
+          with q at most X and q - p at least a fixed positive multiple of
+          the improved long-gap scale.
+      - declaration: LongGapsBetweenPrimes.short_translates
+        informal: >-
+          For all sufficiently large x, every sufficiently sparse subset S
+          of an interval of length between x and x(log x)^2 has a translate
+          b + Q(x)t + S consisting entirely of composite numbers, with
+          1 <= t <= exp x.
+    tags:
+      - analytic-number-theory
+      - prime-gaps
+      - sieve-theory
+      - erdos-rankin
+    msc:
+      - "11N05"
   - slug: zeta-zeros
     title: Simple zeros of the Riemann zeta function
     summary: >-
