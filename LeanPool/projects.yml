@@ -20,6 +20,7 @@ projects:
       - Mauricio Collares
       - Rémy Degenne
       - Yaël Dillies
+      - Bhavik Mehta
       - Ben Eltschig
       - Sébastien Gouëzel
       - Kalle Kytölä
@@ -49,6 +50,11 @@ projects:
       url: https://github.com/teorth/pfr
       github_repo: teorth/pfr
       commit: 07839bddb1395c8808fa47db821ce2e4fff9362e
+    upstream_dependencies:
+      - title: AddCombi
+        github_repo: leanprover-community/add-combi
+        commit: 2d061f437c1ba00ba9b16d7cba1c7603ba4807a4
+        license: Apache-2.0
     license: Apache-2.0
     status: verified
     provenance: mix

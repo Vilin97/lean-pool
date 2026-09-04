@@ -16,8 +16,8 @@ public import LeanPool.PFR.WeakPFR
 /-!
 # Marton's conjecture: proofs
 
-Proofs of the statements of `PFRPalomar.Challenge`, obtained from the corresponding results of
-the `PFR` library.
+Proofs of the statements from the upstream `PFRPalomar.Challenge` module, which is not included
+in this import, obtained from the corresponding results of the `PFR` library.
 -/
 
 open scoped ZhangYeungPFR
