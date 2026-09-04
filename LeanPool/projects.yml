@@ -266,8 +266,9 @@ projects:
       Constructs a finitely presented group that is not sofic, resolving the
       question whether every group admits arbitrarily accurate finite
       permutation approximations. The development combines an explicit
-      finitely presented elementary group with property T, finite-model
-      expansion, and a local obstruction to sofic approximation.
+      elementary group with property T, a finite-table construction of a
+      finitely presented group, finite-model expansion, and a local obstruction
+      to sofic approximation.
     branch: geometric and combinatorial group theory
     entry_module: LeanPool.NonSoficGroup
     authors:

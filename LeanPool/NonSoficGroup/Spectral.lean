@@ -11,14 +11,13 @@ import all LeanPool.NonSoficGroup.Foundations
 import all Mathlib.Analysis.InnerProductSpace.Reproducing
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Algebra.Group.Pointwise.Finset.BigOperators
+import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 import Mathlib.Analysis.InnerProductSpace.GramMatrix
 import Mathlib.Data.Nat.Dist
+import Mathlib.Data.Finset.CastCard
 import Mathlib.Dynamics.FixedPoints.Topology
 import Mathlib.RepresentationTheory.Invariants
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Topology.Algebra.LinearMapCompletion
 
 /-!

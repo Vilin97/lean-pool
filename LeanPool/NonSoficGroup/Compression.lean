@@ -11,7 +11,6 @@ import all LeanPool.NonSoficGroup.Spectral
 import Mathlib.Algebra.Order.Field.GeomSum
 import Mathlib.Geometry.Group.Growth.LinearLowerBound
 import Mathlib.Tactic.Monotonicity.Lemmas
-import Mathlib.Topology.Sheaves.Presheaf
 
 /-!
 # Compression arguments for the non-sofic group construction
