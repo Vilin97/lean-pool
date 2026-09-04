@@ -13,6 +13,12 @@ import LeanPool.FltRegular.NumberTheory.Hilbert92
 import LeanPool.FltRegular.NumberTheory.RegularPrimes
 import LeanPool.FltRegular.NumberTheory.Unramified
 
+/-!
+# Hilbert's theorem 94
+
+This file proves the class-number divisibility result used in the regular-prime argument.
+-/
+
 @[expose] public section
 
 open scoped NumberField

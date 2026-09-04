@@ -11,6 +11,12 @@ public import Mathlib.Data.Int.ModEq
 public import Mathlib.Data.Nat.Prime.Defs
 import Mathlib.FieldTheory.Finite.Basic
 
+/-!
+# Reductions for Fermat's Last Theorem
+
+This file develops primitive and coprimality reductions used in the regular-prime argument.
+-/
+
 @[expose] public section
 
 open Int Finset

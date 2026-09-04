@@ -12,6 +12,13 @@ public import Mathlib.RingTheory.Henselian
 public import Mathlib.GroupTheory.FiniteAbelian.Basic
 public import Mathlib.LinearAlgebra.Dimension.Torsion.Finite
 
+/-!
+# Hilbert's theorem 92
+
+This file studies systems of relative units in cyclic extensions for the proof of
+Hilbert's theorem 92.
+-/
+
 @[expose] public section
 
 open scoped NumberField nonZeroDivisors

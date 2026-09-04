@@ -9,6 +9,12 @@ module
 public import Mathlib.RingTheory.ClassGroup.Basic
 import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
 
+/-!
+# Auxiliary lemmas for the second case
+
+Supporting ideal-theoretic and arithmetic lemmas used in the second case of Fermat's Last Theorem.
+-/
+
 @[expose] public section
 
 variable {K : Type*} {p : ℕ} [Field K] [CharZero K] {ζ : K}

@@ -8,6 +8,12 @@ module
 
 public import LeanPool.FltRegular.NumberTheory.CyclotomicRing
 
+/-!
+# Systems of units
+
+This file develops linearly independent systems of units in cyclotomic modules.
+-/
+
 @[expose] public section
 
 open FiniteDimensional

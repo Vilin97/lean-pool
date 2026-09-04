@@ -13,6 +13,12 @@ import Mathlib.Order.CompletePartialOrder
 public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 import Mathlib.NumberTheory.NumberField.Cyclotomic.Ideal
 
+/-!
+# The second case of Fermat's Last Theorem for regular primes
+
+This file states the second-case contradiction in the cyclotomic-number-field setting.
+-/
+
 @[expose] public section
 
 open scoped nonZeroDivisors NumberField
