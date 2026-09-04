@@ -10,9 +10,8 @@ public import LeanPool.EhrhartVolumeInequality.Variation
 public import Mathlib.MeasureTheory.Function.LpSpace.Basic
 import all LeanPool.EhrhartVolumeInequality.Variation
 import Mathlib.Analysis.Matrix.Order
+import Mathlib.Analysis.SpecialFunctions.PolarCoord
 import Mathlib.Geometry.Manifold.Sheaf.Basic
-import Mathlib.Topology.Algebra.ProperAction.Basic
-import Std.Tactic.BVDecide.Normalize.BitVec
 
 /-!
 # Ehrhart volume inequality: FourierAnalysis

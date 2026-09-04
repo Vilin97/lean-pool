@@ -16,37 +16,32 @@ import Mathlib.Analysis.BoxIntegral.UnitPartition
 import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 import Mathlib.Analysis.Calculus.Rademacher
-import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Complex.ValueDistribution.LogCounting.Basic
 import Mathlib.Analysis.Convex.Continuous
 import Mathlib.Analysis.Convex.Measure
 import Mathlib.Analysis.Fourier.AddCircleMulti
 import Mathlib.Analysis.InnerProductSpace.JointEigenspace
 import Mathlib.Analysis.SpecialFunctions.Choose
-import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-import Mathlib.Combinatorics.Enumerative.DyckWord
-import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.Data.Sym.Card
 import Mathlib.Geometry.Euclidean.Altitude
 import Mathlib.MeasureTheory.Integral.Layercake
+import Mathlib.MeasureTheory.Integral.ExpDecay
 import Mathlib.MeasureTheory.SpecificCodomains.Pi
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
-import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Finiteness.Lattice
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.PiTensorProduct
-import Mathlib.RingTheory.PicardGroup
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.TotallySplit
-import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Monotonicity.Lemmas
 import Mathlib.Tactic.NormNum.Irrational
@@ -64,10 +59,8 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Metrizable.ContinuousMap
-import Mathlib.Topology.Sheaves.Presheaf
 import Mathlib.Topology.UniformSpace.Ascoli
 import Mathlib.Topology.UniformSpace.Uniformizable
-import Std.Tactic.BVDecide.Normalize.Prop
 
 /-!
 # Ehrhart volume inequality: Foundations
@@ -3620,7 +3613,7 @@ private theorem normalizedVolume_centeredSimplex_eq_scale_mul (n : ℕ) :
 
 /-- The centered simplex has exactly the sharp normalized volume. -/
 public
-theorem normalizedVolume_centeredSimplex (n : ℕ) (_hn : 0 < n) :
+theorem normalizedVolume_centeredSimplex (n : ℕ) :
     normalizedVolume (centeredSimplex n) =
       sharpConstant n := by
   rw [normalizedVolume_centeredSimplex_eq_scale_mul n,
@@ -3825,7 +3818,7 @@ theorem exists_centeredBody_sharp (n : ℕ) (hn : 0 < n) :
     centered := barycenter_centeredSimplex n
     uniqueInteriorLatticePoint :=
       Ehrhart.Geometry.interiorLatticePoints_centeredSimplex n hn
-  }, normalizedVolume_centeredSimplex n hn⟩
+  }, normalizedVolume_centeredSimplex n⟩
 
 end SimplexVolume
 
