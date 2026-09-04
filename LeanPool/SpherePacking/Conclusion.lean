@@ -378,10 +378,6 @@ private theorem orthogonalAction_continuous {d : ℕ} (x : Ambient d) :
   exact (EuclideanSpace.equiv (Fin d) ℝ).symm.continuous.comp
     (continuous_subtype_val.matrix_mulVec continuous_const)
 
-private theorem continuous_orthogonalAction_apply {d : ℕ} (x : Ambient d) :
-    Continuous (fun U : OrthogonalGroup d => orthogonalAction U x) :=
-  orthogonalAction_continuous x
-
 private theorem orthogonalAction_joint_continuous (d : ℕ) :
     Continuous (fun p : OrthogonalGroup d × Ambient d =>
       orthogonalAction p.1 p.2) := by
@@ -783,7 +779,7 @@ private theorem radialSymmetrizationAverage_integrable {d : ℕ}
       f (orthogonalAction U⁻¹ x)) (radialOrthogonalHaar d) := by
   have hcontinuous : Continuous
       (fun U : OrthogonalGroup d ↦ f (orthogonalAction U⁻¹ x)) :=
-    f.continuous.comp ((continuous_orthogonalAction_apply x).comp continuous_inv)
+    f.continuous.comp ((orthogonalAction_continuous x).comp continuous_inv)
   simpa only [integrableOn_univ] using hcontinuous.continuousOn.integrableOn_compact isCompact_univ
 
 private theorem radialSymmetrizationAverage_comp_orthogonal {d : ℕ}
@@ -1146,13 +1142,6 @@ private theorem radialFourierCharacter_norm {d : ℕ}
   unfold radialFourierCharacter
   exact Complex.norm_exp_ofReal_mul_I _
 
-private noncomputable def radialFourierOrbitAverage
-    {d : ℕ} {G : Type*} [MeasurableSpace G]
-    (μ : Measure G)
-    (A : G → (Ambient d ≃ₗᵢ[ℝ] Ambient d))
-    (f : Schwartz d) (x : Ambient d) : ℂ :=
-  ∫ g : G, f (A g x) ∂μ
-
 private noncomputable def radialFourierOrbitKernel
     {d : ℕ} {G : Type*}
     (A : G → (Ambient d ≃ₗᵢ[ℝ] Ambient d))
@@ -1246,14 +1235,14 @@ private theorem radialFourierOrbitKernel_integrable
     rw [hconstant]
     exact integrable_const _
 
-private theorem radialFourierOrbitAverage_fourier
+private theorem orthogonalScalarAverage_fourier
     {d : ℕ} {G : Type*} [MeasurableSpace G]
     (μ : Measure G) [IsFiniteMeasure μ]
     (A : G → (Ambient d ≃ₗᵢ[ℝ] Ambient d))
     (f : Schwartz d) (ξ : Ambient d)
     (horbit :
       Measurable (fun p : G × Ambient d ↦ f (A p.1 p.2))) :
-    (𝓕 (radialFourierOrbitAverage μ A f) : Ambient d → ℂ) ξ =
+    (𝓕 (orthogonalScalarAverage μ A f) : Ambient d → ℂ) ξ =
       ∫ g : G, (𝓕 f : Schwartz d) (A g ξ) ∂μ := by
   have hprod :=
     radialFourierOrbitKernel_integrable μ A f ξ horbit
@@ -1264,7 +1253,7 @@ private theorem radialFourierOrbitAverage_fourier
             radialFourierCharacter ξ x * f (A g x)))
         (μ.prod volume) := hprod
   calc
-    (𝓕 (radialFourierOrbitAverage μ A f) : Ambient d → ℂ) ξ =
+    (𝓕 (orthogonalScalarAverage μ A f) : Ambient d → ℂ) ξ =
         ∫ x : Ambient d,
           radialFourierCharacter ξ x *
             (∫ g : G, f (A g x) ∂μ) := by
@@ -1321,9 +1310,9 @@ private theorem radialOrthogonalHaarOrbit_measurable
   rw [← heq]
   exact hcomposed
 
-private theorem radialOrthogonalHaar_radialFourierOrbitAverage_eq
+private theorem radialOrthogonalHaar_orthogonalScalarAverage_eq
     {d : ℕ} (f : Schwartz d) :
-    radialFourierOrbitAverage
+    orthogonalScalarAverage
         (radialOrthogonalHaar d)
         (fun U : OrthogonalGroup d ↦
           orthogonalLinearIsometry (U⁻¹)) f =
@@ -1332,7 +1321,7 @@ private theorem radialOrthogonalHaar_radialFourierOrbitAverage_eq
           f (orthogonalAction (U⁻¹) x)
             ∂radialOrthogonalHaar d := by
   funext x
-  simp only [radialFourierOrbitAverage,
+  simp only [orthogonalScalarAverage,
     orthogonalLinearIsometry_apply]
 
 private theorem radialOrthogonalHaar_fourier_average
@@ -1344,11 +1333,11 @@ private theorem radialOrthogonalHaar_fourier_average
       ∫ U : OrthogonalGroup d,
         (𝓕 f : Schwartz d) (orthogonalAction (U⁻¹) ξ)
           ∂radialOrthogonalHaar d := by
-  have h := radialFourierOrbitAverage_fourier
+  have h := orthogonalScalarAverage_fourier
     (radialOrthogonalHaar d)
     (fun U : OrthogonalGroup d ↦ orthogonalLinearIsometry (U⁻¹))
     f ξ (radialOrthogonalHaarOrbit_measurable f)
-  rw [radialOrthogonalHaar_radialFourierOrbitAverage_eq] at h
+  rw [radialOrthogonalHaar_orthogonalScalarAverage_eq] at h
   simpa only [orthogonalLinearIsometry_apply] using h
 
 private theorem fourier_radialSymmetrizationAverage
@@ -1929,9 +1918,8 @@ private theorem IsUnrestrictedAdmissible.radialSymmetrization_admissible
     (radialSymmetrization_apply f)
     (radialSymmetrization_fourier_average_apply_for_admissibility f)
 
-private theorem IsUnrestrictedAdmissible.quotient_radialSymmetrization
-    {d : ℕ} {f : Schwartz d}
-    (_hf : IsUnrestrictedAdmissible f) :
+private theorem quotient_radialSymmetrization
+    {d : ℕ} (f : Schwartz d) :
     quotient (radialSymmetrization f) = quotient f := by
   exact quotient_eq_of_radialSymmetrizationAverage
     (radialSymmetrization_apply f)
@@ -1980,7 +1968,7 @@ private theorem FullAdmissible.quotient_radialization {d : ℕ}
     SpherePacking.Alternative.quotient
         (SpherePacking.Alternative.radialSymmetrization f.function) =
       SpherePacking.Alternative.quotient f.function
-  exact f.toAlternative.quotient_radialSymmetrization
+  exact SpherePacking.Alternative.quotient_radialSymmetrization f.function
 
 private theorem exists_radial_admissible_of_full {d : ℕ}
     (f : FullAdmissible d) :
@@ -2162,89 +2150,10 @@ private theorem SharpFullCohnElkiesManuscriptConclusions.ofRadial :
       hradial.base_two_vanishing_exponential_error
     exact ⟨err, herr, by simpa only [fullLinearProgram_eq_radial] using hformula⟩
 
-private theorem SharpFullCohnElkiesManuscriptConclusions.components :
-    Tendsto
-        (fun d : ℕ =>
-          sInf {q : ℝ | ∃ f : FullAdmissible d,
-            fullQuotient f ^ ((d : ℝ)⁻¹) = q} /
-            Real.sqrt (d : ℝ))
-        atTop (𝓝 (1 / Real.pi)) ∧
-      (∃ err : ℕ → ℝ,
-        Tendsto err atTop (𝓝 0) ∧
-        ∀ d : ℕ, 0 < d →
-          sInf {q : ℝ | ∃ f : FullAdmissible d,
-            fullQuotient f ^ ((d : ℝ)⁻¹) = q} =
-            (1 / Real.pi + err d) * Real.sqrt (d : ℝ)) ∧
-      Tendsto
-        (fun d : ℕ => (fullLinearProgram d) ^ ((d : ℝ)⁻¹))
-        atTop (𝓝 (Real.sqrt (Real.exp 1 / (2 * Real.pi)))) ∧
-      Tendsto
-        (fun d : ℕ => Real.log (fullLinearProgram d) / (d : ℝ))
-        atTop
-        (𝓝 ((1 / 2 : ℝ) * Real.log (Real.exp 1 / (2 * Real.pi)))) ∧
-      (∃ err : ℕ → ℝ,
-        Tendsto err atTop (𝓝 0) ∧
-        (∀ᶠ d : ℕ in atTop,
-          fullLinearProgram d =
-            (Real.sqrt (Real.exp 1 / (2 * Real.pi)) + err d) ^ d)) ∧
-      (∃ δ : ℕ → ℝ,
-        Tendsto δ atTop (𝓝 0) ∧
-        (∀ d : ℕ, 0 ≤ δ d) ∧
-        (∀ᶠ d : ℕ in atTop, ∀ f : FullAdmissible d,
-          (2 : ℝ) ^ d / CohnElkies.unitBallVolume d *
-            (Real.sqrt (Real.exp 1 / (2 * Real.pi)) - δ d) ^ d ≤
-              fullQuotient f)) ∧
-      0 < (1 / 2 : ℝ) * Real.logb 2 (2 * Real.pi / Real.exp 1) ∧
-      (1 / 2 : ℝ) * Real.logb 2 (2 * Real.pi / Real.exp 1) ∈
-        Set.Ioo
-          (0.604400544291677695341677307053 : ℝ)
-          0.604400544291677695341677307054 ∧
-      Tendsto
-        (fun d : ℕ => Real.logb 2 (fullLinearProgram d) / (d : ℝ))
-        atTop
-        (𝓝 (-((1 / 2 : ℝ) * Real.logb 2 (2 * Real.pi / Real.exp 1)))) ∧
-      (∃ err : ℕ → ℝ,
-        Tendsto err atTop (𝓝 0) ∧
-        (∀ᶠ d : ℕ in atTop,
-          fullLinearProgram d =
-            (2 : ℝ) ^
-              (-((1 / 2 : ℝ) *
-                  Real.logb 2 (2 * Real.pi / Real.exp 1) + err d) *
-                (d : ℝ)))) :=
-  ⟨SharpFullCohnElkiesManuscriptConclusions.ofRadial.root_before_infimum,
-    SharpFullCohnElkiesManuscriptConclusions.ofRadial.root_before_infimum_vanishing_error,
-    SharpFullCohnElkiesManuscriptConclusions.ofRadial.linear_program_root,
-    SharpFullCohnElkiesManuscriptConclusions.ofRadial.natural_logarithmic_rate,
-    SharpFullCohnElkiesManuscriptConclusions.ofRadial.natural_vanishing_exponential_error,
-    SharpFullCohnElkiesManuscriptConclusions.ofRadial.universal_nonnegative_delta,
-    SharpFullCohnElkiesManuscriptConclusions.ofRadial.base_two_exponent_positive,
-    SharpFullCohnElkiesManuscriptConclusions.ofRadial.base_two_decimal_certificate,
-    SharpFullCohnElkiesManuscriptConclusions.ofRadial.base_two_logarithmic_rate,
-    SharpFullCohnElkiesManuscriptConclusions.ofRadial.base_two_vanishing_exponential_error⟩
-
 public
 theorem sharpFullCohnElkiesManuscriptConclusions :
     SharpFullCohnElkiesManuscriptConclusions :=
-  { root_before_infimum :=
-      SharpFullCohnElkiesManuscriptConclusions.components.1
-    root_before_infimum_vanishing_error :=
-      SharpFullCohnElkiesManuscriptConclusions.components.2.1
-    linear_program_root :=
-      SharpFullCohnElkiesManuscriptConclusions.components.2.2.1
-    natural_logarithmic_rate :=
-      SharpFullCohnElkiesManuscriptConclusions.components.2.2.2.1
-    natural_vanishing_exponential_error :=
-      SharpFullCohnElkiesManuscriptConclusions.components.2.2.2.2.1
-    universal_nonnegative_delta :=
-      SharpFullCohnElkiesManuscriptConclusions.components.2.2.2.2.2.1
-    base_two_exponent_positive :=
-      SharpFullCohnElkiesManuscriptConclusions.components.2.2.2.2.2.2.1
-    base_two_decimal_certificate :=
-      SharpFullCohnElkiesManuscriptConclusions.components.2.2.2.2.2.2.2.1
-    base_two_logarithmic_rate :=
-      SharpFullCohnElkiesManuscriptConclusions.components.2.2.2.2.2.2.2.2.1
-    base_two_vanishing_exponential_error :=
-      SharpFullCohnElkiesManuscriptConclusions.components.2.2.2.2.2.2.2.2.2 }
+  SharpFullCohnElkiesManuscriptConclusions.ofRadial
 
 end PackingBounds
 

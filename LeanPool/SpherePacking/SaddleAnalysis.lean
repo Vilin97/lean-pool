@@ -1358,10 +1358,8 @@ private theorem tendsto_saddleNegativeRelativeGammaTailMajorant
   · norm_num
 
 private theorem eventually_saddleNegative_relativeGammaTail_lt_half
-    {ε : ℝ} (hε : 0 < ε)
     (C K Kε : ℝ)
     (hC : 0 ≤ C)
-    (hK : 0 ≤ K)
     (hKε : 0 ≤ Kε) :
     ∀ᶠ ℓ : ℝ in atTop,
       ∀ y : ℝ,
@@ -1375,8 +1373,6 @@ private theorem eventually_saddleNegative_relativeGammaTail_lt_half
                 (K *
                   (2 * (saddleSmallResidueTruncation ℓ : ℝ) + 1) ^ 2 /
                     ℓ)) < 1 / 2 := by
-  have _hε : 0 < ε := hε
-  have _hK : 0 ≤ K := hK
   have hmajor :=
     (tendsto_saddleNegativeRelativeGammaTailMajorant C K Kε).eventually
       (Iio_mem_nhds (by norm_num : (0 : ℝ) < 1 / 2))
@@ -3534,13 +3530,13 @@ private theorem eventually_plusSaddleTaylorRemainder_relative_lt_half_on_star
             (saddleOriginValue ε ℓ : ℂ)‖ < 1 / 2 := by
   obtain ⟨C, hC, hstar⟩ :=
     exists_eventually_y_star_le_log_eighth_add hε horder
-  obtain ⟨K, hK, hphase⟩ :=
+  obtain ⟨K, _, hphase⟩ :=
     exists_saddleNegativeContourPhaseError_bound hε horder
   let Kε : ℝ := saddleNegativeRelativeCoefficient ε
   have hKε : 0 ≤ Kε :=
     saddleNegativeRelativeCoefficient_nonneg hε
   have htail := eventually_saddleNegative_relativeGammaTail_lt_half
-    hε C K Kε hC hK hKε
+    C K Kε hC hKε
   have htaildim :=
     tendsto_saddleResidue_dimension_half.eventually htail
   have hdepth :=
