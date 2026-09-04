@@ -2760,6 +2760,8 @@ import LeanPool.LocalComplexGeometry.WPTBridge.DivisionUniqueness
 import LeanPool.LocalComplexGeometry.WPTBridge.GermDivision
 import LeanPool.LocalComplexGeometry.WPTBridge.Preparation
 import LeanPool.LocalComplexGeometry.WPTBridge.PreparedAssociate
+import LeanPool.LongGapsBetweenPrimes
+import LeanPool.LongGapsBetweenPrimes.Main
 import LeanPool.LowDimSolvClassification
 import LeanPool.LowDimSolvClassification.Classification1
 import LeanPool.LowDimSolvClassification.Classification2
