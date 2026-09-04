@@ -1180,7 +1180,7 @@ variable {G : Type uG} [AddCommGroup G] [Finite G] [hGm : MeasurableSpace G]
 $$ \phi[X;Y] := d[X;Y] + \eta(\rho(X) + \rho(Y))$$. -/
 @[expose]
 public
-noncomputable def phi {Ω : Type*} [MeasurableSpace Ω]
+noncomputable def pfrPhi {Ω : Type*} [MeasurableSpace Ω]
     (X Y : Ω → G) (η : ℝ) (A : Finset G) (μ : Measure Ω) : ℝ :=
   d[ X; μ # Y; μ] + η * (ρ[X; μ # A] + ρ[Y; μ # A])
 
@@ -1194,23 +1194,23 @@ def phiMinimizes {Ω : Type*} [MeasurableSpace Ω] (X Y : Ω → G) (η : ℝ) (
     (μ : Measure Ω) : Prop :=
   ∀ (Ω' : Type uG) (_ : MeasureSpace Ω') (X' Y' : Ω' → G),
     IsProbabilityMeasure (ℙ : Measure Ω') → Measurable X' → Measurable Y' →
-    phi X Y η A μ ≤ phi X' Y' η A ℙ
+    pfrPhi X Y η A μ ≤ pfrPhi X' Y' η A ℙ
 
 public
 lemma phiMinimizes_of_identDistrib {Ω' : Type*} [MeasureSpace Ω']
     {X Y : Ω → G} {X' Y' : Ω' → G} {η : ℝ} {A : Finset G}
     (h_min : phiMinimizes X Y η A ℙ) (h₁ : IdentDistrib X X') (h₂ : IdentDistrib Y Y') :
     phiMinimizes X' Y' η A ℙ := by
-  have : phi X Y η A ℙ = phi X' Y' η A ℙ := by
-    simp only [phi]
+  have : pfrPhi X Y η A ℙ = pfrPhi X' Y' η A ℙ := by
+    simp only [pfrPhi]
     rw [h₁.rdist_congr h₂, rho_eq_of_identDistrib h₁, rho_eq_of_identDistrib h₂]
   simpa [phiMinimizes, this] using h_min
 
 public
 lemma phiMinimizes_comm [IsProbabilityMeasure (ℙ : Measure Ω)] {X Y : Ω → G} {η : ℝ} {A : Finset G}
     (h_min : phiMinimizes X Y η A ℙ) : phiMinimizes Y X η A ℙ := by
-  have : phi Y X η A ℙ = phi X Y η A ℙ := by
-    simp only [phi]
+  have : pfrPhi Y X η A ℙ = pfrPhi X Y η A ℙ := by
+    simp only [pfrPhi]
     rw [rdist_symm]
     linarith
   simpa [phiMinimizes, this] using h_min
@@ -1224,7 +1224,7 @@ lemma phi_min_exists (hA : A.Nonempty) : ∃ (μ : Measure (G × G)), IsProbabil
   let _i : TopologicalSpace G := (⊥ : TopologicalSpace G)
   have : DiscreteTopology G := ⟨rfl⟩
   let iG : Inhabited G := ⟨0⟩
-  have T : Continuous (fun (μ : ProbabilityMeasure (G × G)) ↦ phi Prod.fst Prod.snd η A μ) := by
+  have T : Continuous (fun (μ : ProbabilityMeasure (G × G)) ↦ pfrPhi Prod.fst Prod.snd η A μ) := by
     apply continuous_iff_continuousAt.2 (fun μ ↦ ?_)
     apply Tendsto.add
     · apply tendsto_rdist_probabilityMeasure continuous_fst continuous_snd tendsto_id
@@ -1239,7 +1239,7 @@ lemma phi_min_exists (hA : A.Nonempty) : ∃ (μ : Measure (G × G)), IsProbabil
   let ν : Measure (G × G) := Measure.map (⟨X', Y'⟩) ℙ
   have : IsProbabilityMeasure ν := isProbabilityMeasure_map (by fun_prop)
   let ν' : ProbabilityMeasure (G × G) := ⟨ν, this⟩
-  have : phi Prod.fst Prod.snd η A ↑μ ≤ phi Prod.fst Prod.snd η A ↑ν' := hμ (mem_univ _)
+  have : pfrPhi Prod.fst Prod.snd η A ↑μ ≤ pfrPhi Prod.fst Prod.snd η A ↑ν' := hμ (mem_univ _)
   apply this.trans_eq
   have h₁ : IdentDistrib Prod.fst X' (ν' : Measure (G × G)) ℙ := by
     refine ⟨measurable_fst.aemeasurable, hX'.aemeasurable, ?_⟩
@@ -1251,7 +1251,7 @@ lemma phi_min_exists (hA : A.Nonempty) : ∃ (μ : Measure (G × G)), IsProbabil
     simp only [ProbabilityMeasure.coe_mk, ν', ν]
     rw [Measure.map_map measurable_snd (by fun_prop)]
     rfl
-  simp [phi, h₁.rdist_congr h₂, rho_eq_of_identDistrib h₁, rho_eq_of_identDistrib h₂]
+  simp [pfrPhi, h₁.rdist_congr h₂, rho_eq_of_identDistrib h₁, rho_eq_of_identDistrib h₂]
 
 -- Let $(X_1, X_2)$ be a $\phi$-minimizer, and $\tilde X_1, \tilde X_2$ be independent copies
 -- of $X_1,X_2$ respectively.
@@ -1283,7 +1283,8 @@ lemma le_rdist_of_phiMinimizes (h_min : phiMinimizes X₁ X₂ η A ℙ)
   have hP : (ℙ : Measure Ω') = m := rfl
   let Y₁ : G × G → G := Prod.fst
   let Y₂ : G × G → G := Prod.snd
-  have : phi X₁ X₂ η A ℙ ≤ phi Y₁ Y₂ η A ℙ := h_min _ _ _ _ m_prob measurable_fst measurable_snd
+  have : pfrPhi X₁ X₂ η A ℙ ≤ pfrPhi Y₁ Y₂ η A ℙ :=
+    h_min _ _ _ _ m_prob measurable_fst measurable_snd
   have Id₁ : IdentDistrib Y₁ X₁' ℙ μ₁ :=
     ⟨measurable_fst.aemeasurable, hX₁'.aemeasurable, by simp [Y₁, hP, m]⟩
   have Id₂ : IdentDistrib Y₂ X₂' ℙ μ₂ :=
@@ -1291,7 +1292,7 @@ lemma le_rdist_of_phiMinimizes (h_min : phiMinimizes X₁ X₂ η A ℙ)
   have I : d[Y₁ # Y₂] = d[X₁'; μ₁ # X₂'; μ₂] := Id₁.rdist_congr Id₂
   have J : ρ[Y₁ # A] = ρ[X₁'; μ₁ # A] := rho_eq_of_identDistrib Id₁
   have K : ρ[Y₂ # A] = ρ[X₂'; μ₂ # A] := rho_eq_of_identDistrib Id₂
-  simp only [phi, I, J, K] at this
+  simp only [pfrPhi, I, J, K] at this
   linarith
 
 public
@@ -1959,17 +1960,18 @@ lemma phiMinimizer_exists_rdist_eq_zero (hA : A.Nonempty) :
   refine ⟨G × G, M, Prod.fst, Prod.snd, measurable_fst, measurable_snd, by infer_instance, ?_, ?_⟩
   -- check that it is indeed a minimizer, as a limit of minimizers.
   · intro Ω' mΩ' X' Y' hP hX' hY'
-    have I n : phi Prod.fst Prod.snd (u n) A (μ n) ≤ phi X' Y' (u n) A ℙ :=
+    have I n : pfrPhi Prod.fst Prod.snd (u n) A (μ n) ≤ pfrPhi X' Y' (u n) A ℙ :=
       hμ n _ _ _ _ hP hX' hY'
-    have L1 : Tendsto (fun n ↦ phi Prod.fst Prod.snd (u (φ n)) A (μ (φ n))) atTop
-        (𝓝 (phi Prod.fst Prod.snd (1/8) A ν)) := by
+    have L1 : Tendsto (fun n ↦ pfrPhi Prod.fst Prod.snd (u (φ n)) A (μ (φ n))) atTop
+        (𝓝 (pfrPhi Prod.fst Prod.snd (1/8) A ν)) := by
       apply Tendsto.add
       · apply tendsto_rdist_probabilityMeasure continuous_fst continuous_snd hν
       apply Tendsto.mul (u_lim.comp φlim)
       apply Tendsto.add
       · apply tendsto_rho_probabilityMeasure continuous_fst hA hν
       · apply tendsto_rho_probabilityMeasure continuous_snd hA hν
-    have L2 : Tendsto (fun n ↦ phi X' Y' (u (φ n)) A ℙ) atTop (𝓝 (phi X' Y' (1/8) A ℙ)) :=
+    have L2 : Tendsto (fun n ↦ pfrPhi X' Y' (u (φ n)) A ℙ) atTop
+        (𝓝 (pfrPhi X' Y' (1/8) A ℙ)) :=
       Tendsto.const_add _ (Tendsto.mul_const _ (u_lim.comp φlim))
     exact le_of_tendsto_of_tendsto' L1 L2 (fun n ↦ I _)
   -- check that it has zero Rusza distance, as a limit of a sequence at zero Rusza distance.
