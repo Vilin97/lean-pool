@@ -9513,12 +9513,9 @@ noncomputable section MainTheorem
 
 open Finset SimpleGraph
 
-private noncomputable def compactnessSharpHostPowerConstant : ℝ :=
-  compactnessHostPowerConstant
-
-private theorem compactnessSharpHostPowerConstant_pos :
-    0 < compactnessSharpHostPowerConstant := by
-  unfold compactnessSharpHostPowerConstant compactnessHostPowerConstant
+private theorem compactnessHostPowerConstant_pos :
+    0 < compactnessHostPowerConstant := by
+  unfold compactnessHostPowerConstant
     compactnessDegreePowerConstant
   positivity
 
@@ -9579,7 +9576,7 @@ public theorem quantitativeCompactnessCounterexample :
     compactnessHostPowerConstant, hnonempty, hgeometry, hlower_pos, ?_,
     hlower, hhost, hfamily, hgap_pos, hexponents, hnot_compact,
     hconjecture⟩
-  simpa only [compactnessSharpHostPowerConstant] using compactnessSharpHostPowerConstant_pos
+  exact compactnessHostPowerConstant_pos
 
 end MainTheorem
 
