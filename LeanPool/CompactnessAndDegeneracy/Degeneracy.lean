@@ -29,45 +29,45 @@ open scoped Topology
 
 section BinaryEntropy
 
-noncomputable def binaryEntropy (x : ℝ) : ℝ :=
+private noncomputable def binaryEntropy (x : ℝ) : ℝ :=
   Real.binEntropy x / Real.log 2
 
-noncomputable def tau : ℝ := (Real.sqrt 3 - 1) / 2
+private noncomputable def tau : ℝ := (Real.sqrt 3 - 1) / 2
 
-noncomputable def kappa : ℝ := 3 / 2 - (3 / 4) * Real.logb 2 3
+private noncomputable def kappa : ℝ := 3 / 2 - (3 / 4) * Real.logb 2 3
 
-noncomputable def certifiedWindowWidth : ℝ :=
+private noncomputable def certifiedWindowWidth : ℝ :=
   Real.logb 2 ((97 + 56 * Real.sqrt 3) / 192) / 4
 
-theorem twelve_sevenths_lt_sqrt_three : (12 : ℝ) / 7 < Real.sqrt 3 := by
+private theorem twelve_sevenths_lt_sqrt_three : (12 : ℝ) / 7 < Real.sqrt 3 := by
   have hsqrt_nonneg : 0 ≤ Real.sqrt (3 : ℝ) := Real.sqrt_nonneg 3
   have hsqrt_sq : (Real.sqrt (3 : ℝ)) ^ 2 = 3 := by
     exact Real.sq_sqrt (by positivity)
   nlinarith
 
-theorem log_two_pos : 0 < Real.log (2 : ℝ) :=
+private theorem log_two_pos : 0 < Real.log (2 : ℝ) :=
   Real.log_pos (by norm_num)
 
-theorem binaryEntropy_nonneg {x : ℝ} (hzero : 0 ≤ x)
+private theorem binaryEntropy_nonneg {x : ℝ} (hzero : 0 ≤ x)
     (hone : x ≤ 1) : 0 ≤ binaryEntropy x := by
   exact div_nonneg (Real.binEntropy_nonneg hzero hone) log_two_pos.le
 
-theorem binaryEntropy_le_one (x : ℝ) : binaryEntropy x ≤ 1 := by
+private theorem binaryEntropy_le_one (x : ℝ) : binaryEntropy x ≤ 1 := by
   unfold binaryEntropy
   apply (div_le_iff₀ log_two_pos).2
   simpa only [one_mul] using (Real.binEntropy_le_log_two (p := x))
 
-@[simp] theorem binaryEntropy_zero : binaryEntropy 0 = 0 := by
+@[simp] private theorem binaryEntropy_zero : binaryEntropy 0 = 0 := by
   simp only [binaryEntropy, Real.binEntropy_zero, zero_div]
 
-@[simp] theorem binaryEntropy_one_sub (x : ℝ) :
+@[simp] private theorem binaryEntropy_one_sub (x : ℝ) :
     binaryEntropy (1 - x) = binaryEntropy x := by
   simp only [binaryEntropy, Real.binEntropy_one_sub]
 
-@[fun_prop] theorem binaryEntropy_continuous : Continuous binaryEntropy := by
+@[fun_prop] private theorem binaryEntropy_continuous : Continuous binaryEntropy := by
   exact Real.binEntropy_continuous.div_const _
 
-theorem binaryEntropy_scale_le (probability scale : ℝ)
+private theorem binaryEntropy_scale_le (probability scale : ℝ)
     (hprobability_zero : 0 ≤ probability)
     (hprobability_one : probability ≤ 1)
     (hscale_zero : 0 ≤ scale)
@@ -91,7 +91,7 @@ theorem binaryEntropy_scale_le (probability scale : ℝ)
     _ ≤ Real.binEntropy (scale * probability) / Real.log 2 :=
       (div_le_div_iff_of_pos_right log_two_pos).mpr hnatural
 
-theorem binaryEntropy_subadditive (x y : ℝ)
+private theorem binaryEntropy_subadditive (x y : ℝ)
     (hx : 0 ≤ x) (hy : 0 ≤ y) (hsum : x + y ≤ 1) :
     binaryEntropy (x + y) ≤ binaryEntropy x + binaryEntropy y := by
   by_cases hzero : x + y = 0
@@ -129,7 +129,7 @@ theorem binaryEntropy_subadditive (x y : ℝ)
   rw [hleft] at hcombined
   exact hcombined
 
-theorem abs_binaryEntropy_sub_le_binaryEntropy_abs_sub
+private theorem abs_binaryEntropy_sub_le_binaryEntropy_abs_sub
     (x y : ℝ)
     (hxzero : 0 ≤ x) (hxone : x ≤ 1)
     (hyzero : 0 ≤ y) (hyone : y ≤ 1) :
@@ -163,7 +163,7 @@ theorem abs_binaryEntropy_sub_le_binaryEntropy_abs_sub
     have h := hordered y x hyzero hyone hxzero hxone hyx
     simpa only [ge_iff_le, abs_sub_comm] using h
 
-theorem binaryEntropy_mono_on_half
+private theorem binaryEntropy_mono_on_half
     (x y : ℝ) (hx : 0 ≤ x) (hxy : x ≤ y)
     (hyhalf : y ≤ (2 : ℝ)⁻¹) :
     binaryEntropy x ≤ binaryEntropy y := by
@@ -176,20 +176,20 @@ theorem binaryEntropy_mono_on_half
   unfold binaryEntropy
   exact (div_le_div_iff_of_pos_right log_two_pos).mpr hnatural
 
-noncomputable def binaryPinskerGap (q : ℝ) : ℝ :=
+private noncomputable def binaryPinskerGap (q : ℝ) : ℝ :=
   Real.log 2 - Real.binEntropy q - (2 * q - 1) ^ 2 / 2
 
-noncomputable def binaryPinskerGapDeriv (q : ℝ) : ℝ :=
+private noncomputable def binaryPinskerGapDeriv (q : ℝ) : ℝ :=
   Real.log q - Real.log (1 - q) - 2 * (2 * q - 1)
 
-noncomputable def binaryPinskerGapDerivTwo (q : ℝ) : ℝ :=
+private noncomputable def binaryPinskerGapDerivTwo (q : ℝ) : ℝ :=
   q⁻¹ + (1 - q)⁻¹ - 4
 
-theorem binaryPinskerGap_continuous : Continuous binaryPinskerGap := by
+private theorem binaryPinskerGap_continuous : Continuous binaryPinskerGap := by
   unfold binaryPinskerGap
   fun_prop
 
-theorem binaryPinskerGap_hasDerivAt {q : ℝ}
+private theorem binaryPinskerGap_hasDerivAt {q : ℝ}
     (hqzero : q ≠ 0) (hqone : q ≠ 1) :
     HasDerivAt binaryPinskerGap (binaryPinskerGapDeriv q) q := by
   have hlinear : HasDerivAt (fun x : ℝ => 2 * x - 1) 2 q := by
@@ -203,7 +203,7 @@ theorem binaryPinskerGap_hasDerivAt {q : ℝ}
     | rfl
     | (dsimp [binaryPinskerGap, binaryPinskerGapDeriv]; ring)
 
-theorem binaryPinskerGapDeriv_hasDerivAt {q : ℝ}
+private theorem binaryPinskerGapDeriv_hasDerivAt {q : ℝ}
     (hqzero : q ≠ 0) (hqone : q ≠ 1) :
     HasDerivAt binaryPinskerGapDeriv (binaryPinskerGapDerivTwo q) q := by
   have hlinear : HasDerivAt (fun x : ℝ => 2 * x - 1) 2 q := by
@@ -220,7 +220,7 @@ theorem binaryPinskerGapDeriv_hasDerivAt {q : ℝ}
     | rfl
     | (dsimp [binaryPinskerGapDeriv, binaryPinskerGapDerivTwo]; ring)
 
-theorem binaryPinskerGapDerivTwo_nonneg {q : ℝ}
+private theorem binaryPinskerGapDerivTwo_nonneg {q : ℝ}
     (hqzero : 0 < q) (hqone : q < 1) :
     0 ≤ binaryPinskerGapDerivTwo q := by
   have hcomplement : 0 < 1 - q := sub_pos.mpr hqone
@@ -233,7 +233,7 @@ theorem binaryPinskerGapDerivTwo_nonneg {q : ℝ}
   rw [hidentity]
   exact div_nonneg (sq_nonneg _) (mul_pos hqzero hcomplement).le
 
-theorem binaryPinskerGap_convex :
+private theorem binaryPinskerGap_convex :
     ConvexOn ℝ (Set.Icc 0 1) binaryPinskerGap := by
   refine convexOn_of_hasDerivWithinAt2_nonneg
     (f' := binaryPinskerGapDeriv)
@@ -254,18 +254,18 @@ theorem binaryPinskerGap_convex :
       simpa only [interior_Icc] using hq
     exact binaryPinskerGapDerivTwo_nonneg hq'.1 hq'.2
 
-@[simp] theorem binaryPinskerGap_half :
+@[simp] private theorem binaryPinskerGap_half :
     binaryPinskerGap ((2 : ℝ)⁻¹) = 0 := by
   unfold binaryPinskerGap
   rw [Real.binEntropy_two_inv]
   norm_num
 
-@[simp] theorem binaryPinskerGapDeriv_half :
+@[simp] private theorem binaryPinskerGapDeriv_half :
     binaryPinskerGapDeriv ((2 : ℝ)⁻¹) = 0 := by
   unfold binaryPinskerGapDeriv
   norm_num
 
-theorem binary_pinsker (q : ℝ) (hqzero : 0 ≤ q) (hqone : q ≤ 1) :
+private theorem binary_pinsker (q : ℝ) (hqzero : 0 ≤ q) (hqone : q ≤ 1) :
     Real.binEntropy q ≤
       Real.log 2 - (2 * q - 1) ^ 2 / 2 := by
   have habove :
@@ -304,13 +304,13 @@ theorem binary_pinsker (q : ℝ) (hqzero : 0 ≤ q) (hqone : q ≤ 1) :
     rw [Real.binEntropy_one_sub] at hgap
     nlinarith
 
-theorem log_le_tangent {x c : ℝ} (hx : 0 < x) (hc : 0 < c) :
+private theorem log_le_tangent {x c : ℝ} (hx : 0 < x) (hc : 0 < c) :
     Real.log x ≤ Real.log c + x / c - 1 := by
   have hlog := Real.log_le_sub_one_of_pos (div_pos hx hc)
   rw [Real.log_div hx.ne' hc.ne'] at hlog
   linarith
 
-theorem log_four_thirds_lt_one_third :
+private theorem log_four_thirds_lt_one_third :
     Real.log ((4 : ℝ) / 3) < (1 : ℝ) / 3 := by
   have hlog := Real.log_lt_sub_one_of_pos
     (show (0 : ℝ) < 4 / 3 by norm_num)
@@ -318,13 +318,13 @@ theorem log_four_thirds_lt_one_third :
   norm_num at hlog ⊢
   linarith
 
-theorem sqrt_one_add_le (x : ℝ) (hx : 0 ≤ x) :
+private theorem sqrt_one_add_le (x : ℝ) (hx : 0 ≤ x) :
     Real.sqrt (1 + x) ≤ 1 + x / 2 := by
   have hroot := Real.sqrt_nonneg (1 + x)
   have hsquare := Real.sq_sqrt (show 0 ≤ 1 + x by linarith)
   nlinarith [sq_nonneg x]
 
-theorem normalized_binary_cauchy (a b x y : ℝ)
+private theorem normalized_binary_cauchy (a b x y : ℝ)
     (hab : a ^ 2 + b ^ 2 = 1) :
     a * x + b * y ≤ Real.sqrt (x ^ 2 + y ^ 2) := by
   have hrad : 0 ≤ x ^ 2 + y ^ 2 :=
@@ -338,7 +338,7 @@ theorem normalized_binary_cauchy (a b x y : ℝ)
   rw [hab, one_mul] at hidentity
   nlinarith [sq_nonneg (a * y - b * x)]
 
-theorem binary_log_sum_bound (probability zeroWeight oneWeight : ℝ)
+private theorem binary_log_sum_bound (probability zeroWeight oneWeight : ℝ)
     (hprobability_zero : 0 ≤ probability)
     (hprobability_one : probability ≤ 1)
     (hzeroWeight : 0 < zeroWeight)
@@ -385,21 +385,21 @@ theorem binary_log_sum_bound (probability zeroWeight oneWeight : ℝ)
   rw [hentropy]
   linarith
 
-noncomputable def entropyTangentSigma : ℝ :=
+private noncomputable def entropyTangentSigma : ℝ :=
   4 / (3 * Real.sqrt 2)
 
-noncomputable def entropyTangentRho : ℝ :=
+private noncomputable def entropyTangentRho : ℝ :=
   Real.sqrt 2 / Real.sqrt 3
 
-theorem entropyTangentSigma_pos : 0 < entropyTangentSigma := by
+private theorem entropyTangentSigma_pos : 0 < entropyTangentSigma := by
   unfold entropyTangentSigma
   positivity
 
-theorem entropyTangentRho_pos : 0 < entropyTangentRho := by
+private theorem entropyTangentRho_pos : 0 < entropyTangentRho := by
   unfold entropyTangentRho
   positivity
 
-theorem log_entropyTangentSigma :
+private theorem log_entropyTangentSigma :
     Real.log entropyTangentSigma =
       (3 / 2 : ℝ) * Real.log 2 - Real.log 3 := by
   have hlogfour : Real.log (4 : ℝ) = 2 * Real.log 2 := by
@@ -412,7 +412,7 @@ theorem log_entropyTangentSigma :
     Real.log_sqrt (by positivity), hlogfour]
   ring
 
-theorem log_entropyTangentRho :
+private theorem log_entropyTangentRho :
     Real.log entropyTangentRho =
       (Real.log 2 - Real.log 3) / 2 := by
   unfold entropyTangentRho
@@ -420,19 +420,19 @@ theorem log_entropyTangentRho :
     Real.log_sqrt (by positivity), Real.log_sqrt (by positivity)]
   ring
 
-theorem sqrt_three_mul_entropyTangentRho :
+private theorem sqrt_three_mul_entropyTangentRho :
     Real.sqrt 3 * entropyTangentRho = Real.sqrt 2 := by
   unfold entropyTangentRho
   have hthree : Real.sqrt (3 : ℝ) ≠ 0 := by positivity
   field_simp [hthree]
 
-noncomputable def entropyTangentZeroCoefficient (q : ℝ) : ℝ :=
+private noncomputable def entropyTangentZeroCoefficient (q : ℝ) : ℝ :=
   Real.sqrt 2 * (3 - 2 * q) / 4
 
-noncomputable def entropyTangentOneCoefficient (q : ℝ) : ℝ :=
+private noncomputable def entropyTangentOneCoefficient (q : ℝ) : ℝ :=
   Real.sqrt 2 * (1 + 2 * q) / 4
 
-theorem entropyTangentZeroCoefficient_eq (q : ℝ) :
+private theorem entropyTangentZeroCoefficient_eq (q : ℝ) :
     (1 - q) ^ 2 / entropyTangentSigma +
         q ^ 2 / (3 * entropyTangentSigma) +
         2 * q * (1 - q) /
@@ -444,7 +444,7 @@ theorem entropyTangentZeroCoefficient_eq (q : ℝ) :
   field_simp [htwo]
   nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num)]
 
-theorem entropyTangentOneCoefficient_eq (q : ℝ) :
+private theorem entropyTangentOneCoefficient_eq (q : ℝ) :
     (1 - q) ^ 2 / (3 * entropyTangentSigma) +
         q ^ 2 / entropyTangentSigma +
         2 * q * (1 - q) /
@@ -456,7 +456,7 @@ theorem entropyTangentOneCoefficient_eq (q : ℝ) :
   field_simp [htwo]
   nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num)]
 
-theorem entropyTangentCoefficient_norm (q : ℝ) :
+private theorem entropyTangentCoefficient_norm (q : ℝ) :
     entropyTangentZeroCoefficient q ^ 2 +
         entropyTangentOneCoefficient q ^ 2 =
       1 + (2 * q - 1) ^ 2 / 4 := by
@@ -470,7 +470,7 @@ theorem entropyTangentCoefficient_norm (q : ℝ) :
       rw [Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num)]
       ring
 
-theorem entropyTangentLog_constant (q : ℝ) :
+private theorem entropyTangentLog_constant (q : ℝ) :
     ((1 - q) ^ 2 + q ^ 2) * Real.log entropyTangentSigma +
         2 * q * (1 - q) * Real.log entropyTangentRho =
       Real.log 2 - (3 / 4 : ℝ) * Real.log 3 +
@@ -483,14 +483,14 @@ theorem entropyTangentLog_constant (q : ℝ) :
     Real.log_div (by positivity) (by positivity), hlogfour]
   ring
 
-noncomputable def binaryConditionalLogPotential (q zeroAmplitude oneAmplitude : ℝ) : ℝ :=
+private noncomputable def binaryConditionalLogPotential (q zeroAmplitude oneAmplitude : ℝ) : ℝ :=
   Real.binEntropy q / 2 +
     (1 - q) ^ 2 * Real.log (zeroAmplitude + oneAmplitude / 3) +
     q ^ 2 * Real.log (zeroAmplitude / 3 + oneAmplitude) +
     2 * q * (1 - q) *
       Real.log ((zeroAmplitude + oneAmplitude) / Real.sqrt 3)
 
-theorem binaryConditionalLogPotential_tangent_bound
+private theorem binaryConditionalLogPotential_tangent_bound
     (q zeroAmplitude oneAmplitude : ℝ)
     (hqzero : 0 ≤ q) (hqone : q ≤ 1)
     (hzeroAmplitude : 0 ≤ zeroAmplitude)
@@ -556,7 +556,7 @@ theorem binaryConditionalLogPotential_tangent_bound
   unfold binaryConditionalLogPotential
   linarith
 
-theorem binaryConditionalLogPotential_le_kappa
+private theorem binaryConditionalLogPotential_le_kappa
     (q zeroAmplitude oneAmplitude : ℝ)
     (hqzero : 0 ≤ q) (hqone : q ≤ 1)
     (hzeroAmplitude : 0 ≤ zeroAmplitude)
@@ -582,25 +582,25 @@ theorem binaryConditionalLogPotential_le_kappa
   rw [hkappa]
   nlinarith [sq_nonneg (2 * q - 1)]
 
-def binaryCoinMass (q : ℝ) (outcome : Bool) : ℝ :=
+private def binaryCoinMass (q : ℝ) (outcome : Bool) : ℝ :=
   if outcome then q else 1 - q
 
-theorem binaryCoinMass_nonneg {q : ℝ}
+private theorem binaryCoinMass_nonneg {q : ℝ}
     (hqzero : 0 ≤ q) (hqone : q ≤ 1) (outcome : Bool) :
     0 ≤ binaryCoinMass q outcome := by
   cases outcome <;> simp [binaryCoinMass] <;> linarith
 
-def independentBinaryPairMass (q : ℝ) (left right : Bool) : ℝ :=
+private def independentBinaryPairMass (q : ℝ) (left right : Bool) : ℝ :=
   binaryCoinMass q left * binaryCoinMass q right
 
-theorem independentBinaryPairMass_nonneg {q : ℝ}
+private theorem independentBinaryPairMass_nonneg {q : ℝ}
     (hqzero : 0 ≤ q) (hqone : q ≤ 1) (left right : Bool) :
     0 ≤ independentBinaryPairMass q left right := by
   exact mul_nonneg
     (binaryCoinMass_nonneg hqzero hqone left)
     (binaryCoinMass_nonneg hqzero hqone right)
 
-theorem independentBinaryPairMass_sum (q : ℝ) :
+private theorem independentBinaryPairMass_sum (q : ℝ) :
     (∑ left : Bool, ∑ right : Bool,
       independentBinaryPairMass q left right) = 1 := by
   simp only [Fintype.univ_bool, independentBinaryPairMass, binaryCoinMass, mul_ite, ite_mul,
@@ -609,7 +609,7 @@ theorem independentBinaryPairMass_sum (q : ℝ) :
         Bool.false_eq_true]
   ring
 
-structure BinaryPairKernel where
+private structure BinaryPairKernel where
   parentProbability : ℝ
   parentProbability_nonneg : 0 ≤ parentProbability
   parentProbability_le_one : parentProbability ≤ 1
@@ -619,20 +619,20 @@ structure BinaryPairKernel where
 
 namespace BinaryPairKernel
 
-noncomputable def childMarginal (kernel : BinaryPairKernel) : ℝ :=
+private noncomputable def childMarginal (kernel : BinaryPairKernel) : ℝ :=
   ∑ left : Bool, ∑ right : Bool,
     independentBinaryPairMass kernel.parentProbability left right *
       kernel.childProbability left right
 
-noncomputable def conditionalEntropy (kernel : BinaryPairKernel) : ℝ :=
+private noncomputable def conditionalEntropy (kernel : BinaryPairKernel) : ℝ :=
   ∑ left : Bool, ∑ right : Bool,
     independentBinaryPairMass kernel.parentProbability left right *
       binaryEntropy (kernel.childProbability left right)
 
-def bitDisagreementProbability (parent : Bool) (childProbability : ℝ) : ℝ :=
+private def bitDisagreementProbability (parent : Bool) (childProbability : ℝ) : ℝ :=
   if parent then 1 - childProbability else childProbability
 
-noncomputable def averageDisagreement (kernel : BinaryPairKernel) : ℝ :=
+private noncomputable def averageDisagreement (kernel : BinaryPairKernel) : ℝ :=
   ∑ left : Bool, ∑ right : Bool,
     independentBinaryPairMass kernel.parentProbability left right *
       ((bitDisagreementProbability left
@@ -640,7 +640,7 @@ noncomputable def averageDisagreement (kernel : BinaryPairKernel) : ℝ :=
         bitDisagreementProbability right
           (kernel.childProbability left right)) / 2)
 
-theorem childMarginal_nonneg (kernel : BinaryPairKernel) :
+private theorem childMarginal_nonneg (kernel : BinaryPairKernel) :
     0 ≤ kernel.childMarginal := by
   unfold childMarginal
   apply Finset.sum_nonneg
@@ -653,7 +653,7 @@ theorem childMarginal_nonneg (kernel : BinaryPairKernel) :
       left right)
     (kernel.childProbability_nonneg left right)
 
-theorem childMarginal_le_one (kernel : BinaryPairKernel) :
+private theorem childMarginal_le_one (kernel : BinaryPairKernel) :
     kernel.childMarginal ≤ 1 := by
   unfold childMarginal
   calc
@@ -676,7 +676,7 @@ theorem childMarginal_le_one (kernel : BinaryPairKernel) :
           not_false_eq_true, sum_insert,
         sum_singleton] using independentBinaryPairMass_sum kernel.parentProbability
 
-theorem childMarginal_eq_four_outcomes (kernel : BinaryPairKernel) :
+private theorem childMarginal_eq_four_outcomes (kernel : BinaryPairKernel) :
     kernel.childMarginal =
       (1 - kernel.parentProbability) ^ 2 *
           kernel.childProbability false false +
@@ -692,7 +692,7 @@ theorem childMarginal_eq_four_outcomes (kernel : BinaryPairKernel) :
         sum_singleton, Bool.false_eq_true]
   ring
 
-theorem conditionalEntropy_mul_log_two (kernel : BinaryPairKernel) :
+private theorem conditionalEntropy_mul_log_two (kernel : BinaryPairKernel) :
     kernel.conditionalEntropy * Real.log 2 =
       (1 - kernel.parentProbability) ^ 2 *
           Real.binEntropy (kernel.childProbability false false) +
@@ -710,7 +710,7 @@ theorem conditionalEntropy_mul_log_two (kernel : BinaryPairKernel) :
   field_simp [log_two_pos.ne']
   ring
 
-theorem bitDisagreementProbability_mem_Icc (parent : Bool)
+private theorem bitDisagreementProbability_mem_Icc (parent : Bool)
     (childProbability : ℝ)
     (hzero : 0 ≤ childProbability) (hone : childProbability ≤ 1) :
     0 ≤ bitDisagreementProbability parent childProbability ∧
@@ -718,7 +718,7 @@ theorem bitDisagreementProbability_mem_Icc (parent : Bool)
   cases parent <;> simp [bitDisagreementProbability] <;> constructor <;>
     linarith
 
-theorem averageDisagreement_eq_four_outcomes (kernel : BinaryPairKernel) :
+private theorem averageDisagreement_eq_four_outcomes (kernel : BinaryPairKernel) :
     kernel.averageDisagreement =
       (1 - kernel.parentProbability) ^ 2 *
           kernel.childProbability false false +
@@ -732,7 +732,7 @@ theorem averageDisagreement_eq_four_outcomes (kernel : BinaryPairKernel) :
     sum_singleton, Bool.false_eq_true, add_self_div_two, sub_add_cancel, one_div, add_sub_cancel]
   ring
 
-noncomputable def smoothed (kernel : BinaryPairKernel)
+private noncomputable def smoothed (kernel : BinaryPairKernel)
     (mixing : ℝ) (hmixing_zero : 0 ≤ mixing)
     (hmixing_one : mixing ≤ 1) : BinaryPairKernel where
   parentProbability := kernel.parentProbability
@@ -753,7 +753,7 @@ noncomputable def smoothed (kernel : BinaryPairKernel)
       (sub_nonneg.mpr hmixing_one)
     nlinarith
 
-theorem smoothed_childMarginal (kernel : BinaryPairKernel)
+private theorem smoothed_childMarginal (kernel : BinaryPairKernel)
     (mixing : ℝ) (hmixing_zero : 0 ≤ mixing)
     (hmixing_one : mixing ≤ 1) :
     (smoothed kernel mixing hmixing_zero hmixing_one).childMarginal =
@@ -763,7 +763,7 @@ theorem smoothed_childMarginal (kernel : BinaryPairKernel)
   simp only [smoothed]
   ring
 
-theorem smoothed_averageDisagreement (kernel : BinaryPairKernel)
+private theorem smoothed_averageDisagreement (kernel : BinaryPairKernel)
     (mixing : ℝ) (hmixing_zero : 0 ≤ mixing)
     (hmixing_one : mixing ≤ 1) :
     (smoothed kernel mixing hmixing_zero hmixing_one).averageDisagreement =
@@ -773,26 +773,26 @@ theorem smoothed_averageDisagreement (kernel : BinaryPairKernel)
   simp only [smoothed]
   ring
 
-noncomputable def smoothedConditionalEntropy
+private noncomputable def smoothedConditionalEntropy
     (kernel : BinaryPairKernel) (mixing : ℝ) : ℝ :=
   ∑ left : Bool, ∑ right : Bool,
     independentBinaryPairMass kernel.parentProbability left right *
       binaryEntropy
         ((1 - mixing) * kernel.childProbability left right + mixing / 2)
 
-theorem smoothedConditionalEntropy_continuous (kernel : BinaryPairKernel) :
+private theorem smoothedConditionalEntropy_continuous (kernel : BinaryPairKernel) :
     Continuous (smoothedConditionalEntropy kernel) := by
   unfold smoothedConditionalEntropy
   fun_prop
 
-theorem smoothed_conditionalEntropy (kernel : BinaryPairKernel)
+private theorem smoothed_conditionalEntropy (kernel : BinaryPairKernel)
     (mixing : ℝ) (hmixing_zero : 0 ≤ mixing)
     (hmixing_one : mixing ≤ 1) :
     (smoothed kernel mixing hmixing_zero hmixing_one).conditionalEntropy =
       smoothedConditionalEntropy kernel mixing := by
   rfl
 
-theorem conditionalEntropy_logsum_reduction (kernel : BinaryPairKernel)
+private theorem conditionalEntropy_logsum_reduction (kernel : BinaryPairKernel)
     (hmarginal_zero : 0 < kernel.childMarginal)
     (hmarginal_one : kernel.childMarginal < 1) :
     kernel.conditionalEntropy * Real.log 2 -
@@ -927,7 +927,7 @@ theorem conditionalEntropy_logsum_reduction (kernel : BinaryPairKernel)
   rw [hleft, hright] at hcombined
   simpa only [tsub_le_iff_right, ge_iff_le] using hcombined
 
-theorem conditionalEntropy_bound_of_marginal_interior
+private theorem conditionalEntropy_bound_of_marginal_interior
     (kernel : BinaryPairKernel)
     (hmarginal_zero : 0 < kernel.childMarginal)
     (hmarginal_one : kernel.childMarginal < 1) :
@@ -973,7 +973,7 @@ theorem conditionalEntropy_bound_of_marginal_interior
     linarith
   exact (mul_le_mul_iff_of_pos_right log_two_pos).mp hscaled
 
-theorem conditionalEntropy_bound (kernel : BinaryPairKernel) :
+private theorem conditionalEntropy_bound (kernel : BinaryPairKernel) :
     kernel.conditionalEntropy ≤
       kappa + Real.logb 2 3 * kernel.averageDisagreement +
         (binaryEntropy kernel.childMarginal -
@@ -1099,19 +1099,19 @@ theorem conditionalEntropy_bound (kernel : BinaryPairKernel) :
 
 end BinaryPairKernel
 
-def empiricalBinaryOutcomeCount
+private def empiricalBinaryOutcomeCount
     (parentCount oneCount : ℕ) (outcome : Bool) : ℝ :=
   if outcome then (oneCount : ℝ)
   else (parentCount : ℝ) - (oneCount : ℝ)
 
-noncomputable def withoutReplacementBinaryPairMass
+private noncomputable def withoutReplacementBinaryPairMass
     (parentCount oneCount : ℕ) (left right : Bool) : ℝ :=
   empiricalBinaryOutcomeCount parentCount oneCount left *
       (empiricalBinaryOutcomeCount parentCount oneCount right -
         if left = right then 1 else 0) /
     ((parentCount : ℝ) * ((parentCount : ℝ) - 1))
 
-theorem withoutReplacementBinaryPairMass_nonneg
+private theorem withoutReplacementBinaryPairMass_nonneg
     (parentCount oneCount : ℕ)
     (hparents : 2 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (left right : Bool) :
@@ -1168,7 +1168,7 @@ theorem withoutReplacementBinaryPairMass_nonneg
       ge_iff_le] using
       div_nonneg hone_diagonal hdenominator
 
-theorem withoutReplacementBinaryPairMass_sum
+private theorem withoutReplacementBinaryPairMass_sum
     (parentCount oneCount : ℕ) (hparents : 2 ≤ parentCount) :
     (∑ left : Bool, ∑ right : Bool,
       withoutReplacementBinaryPairMass parentCount oneCount left right) = 1 := by
@@ -1186,13 +1186,13 @@ theorem withoutReplacementBinaryPairMass_sum
   field_simp [hparent_real.ne', hparent_minus.ne']
   ring
 
-noncomputable def withoutReplacementBinaryPairExpectation
+private noncomputable def withoutReplacementBinaryPairExpectation
     (parentCount oneCount : ℕ) (f : Bool → Bool → ℝ) : ℝ :=
   ∑ left : Bool, ∑ right : Bool,
     withoutReplacementBinaryPairMass parentCount oneCount left right *
       f left right
 
-theorem withoutReplacementBinaryPairExpectation_sub
+private theorem withoutReplacementBinaryPairExpectation_sub
     (parentCount oneCount : ℕ) (hparents : 2 ≤ parentCount)
     (f : Bool → Bool → ℝ) :
     withoutReplacementBinaryPairExpectation parentCount oneCount f -
@@ -1218,7 +1218,7 @@ theorem withoutReplacementBinaryPairExpectation_sub
   field_simp [hparent_real.ne', hparent_minus.ne']
   ring
 
-theorem withoutReplacementBinaryPairExpectation_error
+private theorem withoutReplacementBinaryPairExpectation_error
     (parentCount oneCount : ℕ)
     (hparents : 2 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (f : Bool → Bool → ℝ)
@@ -1283,7 +1283,7 @@ theorem withoutReplacementBinaryPairExpectation_error
     _ ≤ 1 / (parentCount : ℝ) := by
       nlinarith
 
-theorem withoutReplacementBinaryPairExpectation_nonneg
+private theorem withoutReplacementBinaryPairExpectation_nonneg
     (parentCount oneCount : ℕ)
     (hparents : 2 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (f : Bool → Bool → ℝ)
@@ -1299,7 +1299,7 @@ theorem withoutReplacementBinaryPairExpectation_nonneg
       parentCount oneCount hparents hones left right)
     (hf left right)
 
-theorem withoutReplacementBinaryPairExpectation_le_one
+private theorem withoutReplacementBinaryPairExpectation_le_one
     (parentCount oneCount : ℕ)
     (hparents : 2 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (f : Bool → Bool → ℝ)
@@ -1324,17 +1324,17 @@ theorem withoutReplacementBinaryPairExpectation_le_one
           not_false_eq_true, sum_insert,
         sum_singleton] using withoutReplacementBinaryPairMass_sum parentCount oneCount hparents
 
-noncomputable def empiricalChildMarginal
+private noncomputable def empiricalChildMarginal
     (parentCount oneCount : ℕ) (kernel : BinaryPairKernel) : ℝ :=
   withoutReplacementBinaryPairExpectation parentCount oneCount
     kernel.childProbability
 
-noncomputable def empiricalConditionalEntropy
+private noncomputable def empiricalConditionalEntropy
     (parentCount oneCount : ℕ) (kernel : BinaryPairKernel) : ℝ :=
   withoutReplacementBinaryPairExpectation parentCount oneCount
     (fun left right => binaryEntropy (kernel.childProbability left right))
 
-noncomputable def empiricalAverageDisagreement
+private noncomputable def empiricalAverageDisagreement
     (parentCount oneCount : ℕ) (kernel : BinaryPairKernel) : ℝ :=
   withoutReplacementBinaryPairExpectation parentCount oneCount
     (fun left right =>
@@ -1343,7 +1343,7 @@ noncomputable def empiricalAverageDisagreement
         BinaryPairKernel.bitDisagreementProbability right
           (kernel.childProbability left right)) / 2)
 
-theorem empiricalChildMarginal_mem_Icc
+private theorem empiricalChildMarginal_mem_Icc
     (parentCount oneCount : ℕ)
     (hparents : 2 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (kernel : BinaryPairKernel) :
@@ -1357,7 +1357,7 @@ theorem empiricalChildMarginal_mem_Icc
       parentCount oneCount hparents hones kernel.childProbability
       kernel.childProbability_le_one
 
-theorem empiricalChildMarginal_error
+private theorem empiricalChildMarginal_error
     (parentCount oneCount : ℕ)
     (hparents : 2 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (kernel : BinaryPairKernel)
@@ -1378,7 +1378,7 @@ theorem empiricalChildMarginal_error
     Bool.true_eq_false, not_false_eq_true, sum_insert, sum_singleton, one_div,
         ge_iff_le] using herror
 
-theorem empiricalConditionalEntropy_error
+private theorem empiricalConditionalEntropy_error
     (parentCount oneCount : ℕ)
     (hparents : 2 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (kernel : BinaryPairKernel)
@@ -1400,7 +1400,7 @@ theorem empiricalConditionalEntropy_error
     mem_singleton, Bool.true_eq_false, not_false_eq_true, sum_insert, sum_singleton, one_div,
         ge_iff_le] using herror
 
-theorem empiricalAverageDisagreement_error
+private theorem empiricalAverageDisagreement_error
     (parentCount oneCount : ℕ)
     (hparents : 2 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (kernel : BinaryPairKernel)
@@ -1432,13 +1432,13 @@ theorem empiricalAverageDisagreement_error
   simpa [empiricalAverageDisagreement,
     BinaryPairKernel.averageDisagreement, observable] using herror
 
-noncomputable def binomialProbabilityMass
+private noncomputable def binomialProbabilityMass
     (trialCount successCount : ℕ) (probability : ℝ) : ℝ :=
   (trialCount.choose successCount : ℝ) *
     probability ^ successCount *
     (1 - probability) ^ (trialCount - successCount)
 
-theorem binomialProbabilityMass_nonneg
+private theorem binomialProbabilityMass_nonneg
     (trialCount successCount : ℕ) (probability : ℝ)
     (hprobability_zero : 0 ≤ probability)
     (hprobability_one : probability ≤ 1) :
@@ -1447,7 +1447,7 @@ theorem binomialProbabilityMass_nonneg
   have hcomplement : 0 ≤ 1 - probability := by linarith
   positivity
 
-theorem binomialProbabilityMass_succ_mul
+private theorem binomialProbabilityMass_succ_mul
     (trialCount successCount : ℕ) (probability : ℝ)
     (hcount : successCount < trialCount) :
     binomialProbabilityMass trialCount (successCount + 1) probability *
@@ -1470,7 +1470,7 @@ theorem binomialProbabilityMass_succ_mul
       (1 - probability) ^ (trialCount - (successCount + 1)) *
       probability * (1 - probability)) * hc
 
-theorem binomialModeRatio_le_of_lt
+private theorem binomialModeRatio_le_of_lt
     (trialCount mode successCount : ℕ)
     (hmode : mode ≤ trialCount)
     (hcount : successCount < mode) :
@@ -1500,7 +1500,7 @@ theorem binomialModeRatio_le_of_lt
   have hmode_nonneg : 0 ≤ (mode : ℝ) := Nat.cast_nonneg mode
   nlinarith
 
-theorem binomialModeRatio_le_of_ge
+private theorem binomialModeRatio_le_of_ge
     (trialCount mode successCount : ℕ)
     (htrials : 0 < trialCount)
     (hmode : mode ≤ trialCount)
@@ -1532,7 +1532,7 @@ theorem binomialModeRatio_le_of_ge
     exact_mod_cast hmode
   nlinarith
 
-theorem binomialProbabilityMass_le_succ_of_lt_mode
+private theorem binomialProbabilityMass_le_succ_of_lt_mode
     (trialCount mode successCount : ℕ)
     (hmode : mode < trialCount)
     (hcount : successCount < mode) :
@@ -1581,7 +1581,7 @@ theorem binomialProbabilityMass_le_succ_of_lt_mode
         (1 - (mode : ℝ) / (trialCount : ℝ))) := by
           nlinarith [hidentity]
 
-theorem binomialProbabilityMass_succ_le_of_ge_mode
+private theorem binomialProbabilityMass_succ_le_of_ge_mode
     (trialCount mode successCount : ℕ)
     (hmode : mode < trialCount)
     (hcount : mode ≤ successCount)
@@ -1630,7 +1630,7 @@ theorem binomialProbabilityMass_succ_le_of_ge_mode
         (1 - (mode : ℝ) / (trialCount : ℝ))) :=
           mul_le_mul_of_nonneg_left hratio hmass
 
-theorem binomialProbabilityMass_le_mode
+private theorem binomialProbabilityMass_le_mode
     (trialCount mode successCount : ℕ)
     (hmode : mode ≤ trialCount)
     (hsuccess : successCount ≤ trialCount) :
@@ -1710,7 +1710,7 @@ theorem binomialProbabilityMass_le_mode
           (hinduction (by omega))
     exact hwalk successCount habove hsuccess
 
-theorem binomialProbabilityMass_sum_eq_one
+private theorem binomialProbabilityMass_sum_eq_one
     (trialCount : ℕ) (probability : ℝ) :
     (∑ successCount ∈ Finset.range (trialCount + 1),
       binomialProbabilityMass trialCount successCount probability) = 1 := by
@@ -1733,7 +1733,7 @@ theorem binomialProbabilityMass_sum_eq_one
       rw [show probability + (1 - probability) = 1 by ring]
       simp only [one_pow]
 
-theorem binomialProbabilityMass_mode_ge_inverse
+private theorem binomialProbabilityMass_mode_ge_inverse
     (trialCount mode : ℕ) (hmode : mode ≤ trialCount) :
     1 / ((trialCount + 1 : ℕ) : ℝ) ≤
       binomialProbabilityMass trialCount mode
@@ -1763,7 +1763,7 @@ theorem binomialProbabilityMass_mode_ge_inverse
       simp only [sum_const, card_range, nsmul_eq_mul, Nat.cast_add, Nat.cast_one]
       ring
 
-theorem binomialProbabilityMass_mode_mul_exp_entropy
+private theorem binomialProbabilityMass_mode_mul_exp_entropy
     (trialCount mode : ℕ) (hmode : mode ≤ trialCount) :
     binomialProbabilityMass trialCount mode
         ((mode : ℝ) / (trialCount : ℝ)) *
@@ -1849,7 +1849,7 @@ theorem binomialProbabilityMass_mode_mul_exp_entropy
       rw [hlog]
       simp only [Real.exp_zero, mul_one]
 
-theorem exp_binary_entropy_div_le_choose
+private theorem exp_binary_entropy_div_le_choose
     (trialCount successCount : ℕ)
     (hcount : successCount ≤ trialCount) :
     Real.exp
@@ -1889,7 +1889,7 @@ theorem exp_binary_entropy_div_le_choose
       binomialProbabilityMass_mode_mul_exp_entropy
         trialCount successCount hcount
 
-theorem binomial_probability_term_le_one
+private theorem binomial_probability_term_le_one
     (trialCount successCount : ℕ) (probability : ℝ)
     (hcount : successCount ≤ trialCount)
     (hprobability_zero : 0 ≤ probability)
@@ -1926,7 +1926,7 @@ theorem binomial_probability_term_le_one
   rw [hsum] at hterm
   nlinarith
 
-theorem log_choose_le_binary_entropy
+private theorem log_choose_le_binary_entropy
     (trialCount successCount : ℕ)
     (hcount : successCount ≤ trialCount) :
     Real.log (trialCount.choose successCount : ℝ) ≤
@@ -1996,7 +1996,7 @@ theorem log_choose_le_binary_entropy
   rw [hentropy]
   linarith
 
-theorem choose_le_exp_binary_entropy
+private theorem choose_le_exp_binary_entropy
     (trialCount successCount : ℕ)
     (hcount : successCount ≤ trialCount) :
     (trialCount.choose successCount : ℝ) ≤
@@ -2008,7 +2008,7 @@ theorem choose_le_exp_binary_entropy
   exact (Real.log_le_iff_le_exp hchoose).mp
     (log_choose_le_binary_entropy trialCount successCount hcount)
 
-theorem choose_product_le_exp_binary_entropy
+private theorem choose_product_le_exp_binary_entropy
     {ι : Type*} [Fintype ι]
     (population success : ι → ℕ)
     (hcount : ∀ index, success index ≤ population index) :
@@ -2040,39 +2040,39 @@ theorem choose_product_le_exp_binary_entropy
               ((success index : ℝ) / (population index : ℝ))) := by
       rw [Real.exp_sum]
 
-theorem certificate_ratio_one_lt :
+private theorem certificate_ratio_one_lt :
     (1 : ℝ) < (97 + 56 * Real.sqrt 3) / 192 := by
   have h := twelve_sevenths_lt_sqrt_three
   nlinarith
 
-theorem certifiedWindowWidth_pos : 0 < certifiedWindowWidth := by
+private theorem certifiedWindowWidth_pos : 0 < certifiedWindowWidth := by
   unfold certifiedWindowWidth Real.logb
   exact div_pos
     (div_pos (Real.log_pos certificate_ratio_one_lt)
       log_two_pos)
     (by norm_num)
 
-theorem tau_pos : 0 < tau := by
+private theorem tau_pos : 0 < tau := by
   unfold tau
   nlinarith [twelve_sevenths_lt_sqrt_three]
 
-theorem tau_lt_one_half : tau < (1 : ℝ) / 2 := by
+private theorem tau_lt_one_half : tau < (1 : ℝ) / 2 := by
   have hsqrt_nonneg : 0 ≤ Real.sqrt (3 : ℝ) := Real.sqrt_nonneg 3
   have hsqrt_sq : (Real.sqrt (3 : ℝ)) ^ 2 = 3 := by
     exact Real.sq_sqrt (by positivity)
   unfold tau
   nlinarith
 
-theorem sqrt_three_pos : 0 < Real.sqrt (3 : ℝ) := by
+private theorem sqrt_three_pos : 0 < Real.sqrt (3 : ℝ) := by
   positivity
 
-theorem tau_complement : 1 - tau = Real.sqrt 3 * tau := by
+private theorem tau_complement : 1 - tau = Real.sqrt 3 * tau := by
   have hsqrt_sq : (Real.sqrt (3 : ℝ)) ^ 2 = 3 := by
     exact Real.sq_sqrt (by positivity)
   unfold tau
   nlinarith
 
-theorem tau_reciprocal_identity :
+private theorem tau_reciprocal_identity :
     1 + 1 / Real.sqrt 3 = (1 - tau)⁻¹ := by
   have hsqrt_sq : (Real.sqrt (3 : ℝ)) ^ 2 = 3 := by
     exact Real.sq_sqrt (by positivity)
@@ -2081,7 +2081,7 @@ theorem tau_reciprocal_identity :
   unfold tau
   nlinarith
 
-theorem log_three_eq_twice_log_sqrt_three :
+private theorem log_three_eq_twice_log_sqrt_three :
     Real.log (3 : ℝ) = 2 * Real.log (Real.sqrt 3) := by
   have hsqrt_sq : (Real.sqrt (3 : ℝ)) ^ 2 = 3 := by
     exact Real.sq_sqrt (by positivity)
@@ -2091,7 +2091,7 @@ theorem log_three_eq_twice_log_sqrt_three :
       rw [Real.log_pow]
       ring
 
-theorem entropy_tau_identity :
+private theorem entropy_tau_identity :
     2 * binaryEntropy tau - tau * Real.logb 2 3 =
       2 * Real.logb 2 (1 + 1 / Real.sqrt 3) := by
   have hlog_complement :
@@ -2102,7 +2102,7 @@ theorem entropy_tau_identity :
     hlog_complement, log_three_eq_twice_log_sqrt_three]
   ring
 
-theorem certificate_ratio_identity :
+private theorem certificate_ratio_identity :
     (1 + 1 / Real.sqrt 3) ^ (8 : ℕ) * 27 / 1024 =
       (97 + 56 * Real.sqrt 3) / 192 := by
   have hs : (Real.sqrt (3 : ℝ)) ^ 2 = 3 :=
@@ -2119,7 +2119,7 @@ theorem certificate_ratio_identity :
       - 94144 * Real.sqrt 3 ^ 6
       - 57344 * Real.sqrt 3 ^ 7) * hs
 
-theorem log_certificate_ratio_identity :
+private theorem log_certificate_ratio_identity :
     Real.log ((97 + 56 * Real.sqrt 3) / 192) =
       8 * Real.log (1 + 1 / Real.sqrt 3) +
         3 * Real.log 3 - 10 * Real.log 2 := by
@@ -2139,14 +2139,14 @@ theorem log_certificate_ratio_identity :
     Real.log_pow, hlog27, hlog1024]
   ring
 
-noncomputable def entropyLowerEndpoint : ℝ := kappa + tau * Real.logb 2 3
+private noncomputable def entropyLowerEndpoint : ℝ := kappa + tau * Real.logb 2 3
 
-noncomputable def entropyUpperEndpoint : ℝ := 2 * binaryEntropy tau - 1
+private noncomputable def entropyUpperEndpoint : ℝ := 2 * binaryEntropy tau - 1
 
-noncomputable def midpointBeta : ℝ :=
+private noncomputable def midpointBeta : ℝ :=
   (entropyLowerEndpoint + entropyUpperEndpoint) / 2
 
-theorem entropyWindow_eq_certifiedWindowWidth :
+private theorem entropyWindow_eq_certifiedWindowWidth :
     entropyUpperEndpoint - entropyLowerEndpoint = certifiedWindowWidth := by
   have hentropy := entropy_tau_identity
   have hlog := log_certificate_ratio_identity
@@ -2162,36 +2162,36 @@ theorem entropyWindow_eq_certifiedWindowWidth :
   ring_nf at hentropy hlog ⊢
   linarith
 
-theorem entropyWindow_pos : entropyLowerEndpoint < entropyUpperEndpoint := by
+private theorem entropyWindow_pos : entropyLowerEndpoint < entropyUpperEndpoint := by
   have h := certifiedWindowWidth_pos
   rw [← entropyWindow_eq_certifiedWindowWidth] at h
   linarith
 
-theorem midpointBeta_gt_lower
+private theorem midpointBeta_gt_lower
     (hwindow : entropyLowerEndpoint < entropyUpperEndpoint) :
     entropyLowerEndpoint < midpointBeta := by
   unfold midpointBeta
   linarith
 
-theorem midpointBeta_lt_upper
+private theorem midpointBeta_lt_upper
     (hwindow : entropyLowerEndpoint < entropyUpperEndpoint) :
     midpointBeta < entropyUpperEndpoint := by
   unfold midpointBeta
   linarith
 
-theorem midpointBeta_gt_lower_unconditional :
+private theorem midpointBeta_gt_lower_unconditional :
     entropyLowerEndpoint < midpointBeta :=
   midpointBeta_gt_lower entropyWindow_pos
 
-theorem midpointBeta_lt_upper_unconditional :
+private theorem midpointBeta_lt_upper_unconditional :
     midpointBeta < entropyUpperEndpoint :=
   midpointBeta_lt_upper entropyWindow_pos
 
-theorem logTwo_three_pos : 0 < Real.logb 2 3 := by
+private theorem logTwo_three_pos : 0 < Real.logb 2 3 := by
   unfold Real.logb
   exact div_pos (Real.log_pos (by norm_num)) log_two_pos
 
-theorem logTwo_three_lt_two : Real.logb 2 3 < 2 := by
+private theorem logTwo_three_lt_two : Real.logb 2 3 < 2 := by
   have hlog : Real.log (3 : ℝ) < Real.log 4 :=
     Real.log_lt_log (by norm_num) (by norm_num)
   have hlog_four : Real.log (4 : ℝ) = 2 * Real.log 2 := by
@@ -2202,15 +2202,15 @@ theorem logTwo_three_lt_two : Real.logb 2 3 < 2 := by
   apply (div_lt_iff₀ log_two_pos).mpr
   nlinarith [hlog]
 
-theorem kappa_pos : 0 < kappa := by
+private theorem kappa_pos : 0 < kappa := by
   unfold kappa
   nlinarith [logTwo_three_lt_two]
 
-theorem entropyLowerEndpoint_pos : 0 < entropyLowerEndpoint := by
+private theorem entropyLowerEndpoint_pos : 0 < entropyLowerEndpoint := by
   unfold entropyLowerEndpoint
   positivity [kappa_pos, tau_pos, logTwo_three_pos]
 
-theorem binaryEntropy_tau_lt_one : binaryEntropy tau < 1 := by
+private theorem binaryEntropy_tau_lt_one : binaryEntropy tau < 1 := by
   have htau_ne : tau ≠ (2 : ℝ)⁻¹ := by
     intro heq
     have hlt := tau_lt_one_half
@@ -2220,35 +2220,35 @@ theorem binaryEntropy_tau_lt_one : binaryEntropy tau < 1 := by
   apply (div_lt_iff₀ log_two_pos).mpr
   simpa only [one_mul] using (Real.binEntropy_lt_log_two.mpr htau_ne)
 
-theorem entropyUpperEndpoint_lt_one : entropyUpperEndpoint < 1 := by
+private theorem entropyUpperEndpoint_lt_one : entropyUpperEndpoint < 1 := by
   unfold entropyUpperEndpoint
   nlinarith [binaryEntropy_tau_lt_one]
 
-theorem midpointBeta_pos : 0 < midpointBeta :=
+private theorem midpointBeta_pos : 0 < midpointBeta :=
   entropyLowerEndpoint_pos.trans midpointBeta_gt_lower_unconditional
 
-theorem midpointBeta_lt_one : midpointBeta < 1 :=
+private theorem midpointBeta_lt_one : midpointBeta < 1 :=
   midpointBeta_lt_upper_unconditional.trans entropyUpperEndpoint_lt_one
 
-noncomputable def entropySlack : ℝ := certifiedWindowWidth / 8
+private noncomputable def entropySlack : ℝ := certifiedWindowWidth / 8
 
-noncomputable def exponentGain : ℝ :=
+private noncomputable def exponentGain : ℝ :=
   certifiedWindowWidth / (8 * (1 - midpointBeta))
 
-theorem entropySlack_pos : 0 < entropySlack := by
+private theorem entropySlack_pos : 0 < entropySlack := by
   unfold entropySlack
   exact div_pos certifiedWindowWidth_pos (by norm_num)
 
-theorem exponentGain_pos : 0 < exponentGain := by
+private theorem exponentGain_pos : 0 < exponentGain := by
   unfold exponentGain
   exact div_pos certifiedWindowWidth_pos
     (mul_pos (by norm_num) (sub_pos.mpr midpointBeta_lt_one))
 
-noncomputable def empiricalEntropyError (layerSize : ℕ) : ℝ :=
+private noncomputable def empiricalEntropyError (layerSize : ℕ) : ℝ :=
   (1 + Real.logb 2 3) / (layerSize : ℝ) +
     binaryEntropy (1 / (layerSize : ℝ)) / 2
 
-theorem empiricalChildMarginal_entropy_error
+private theorem empiricalChildMarginal_entropy_error
     (parentCount oneCount : ℕ)
     (hparents : 4 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (kernel : BinaryPairKernel)
@@ -2285,7 +2285,7 @@ theorem empiricalChildMarginal_entropy_error
     (abs_nonneg _) hcoupling hhalf
   exact hmodulus.trans hmonotone
 
-theorem empiricalConditionalEntropy_bound
+private theorem empiricalConditionalEntropy_bound
     (parentCount oneCount : ℕ)
     (hparents : 4 ≤ parentCount) (hones : oneCount ≤ parentCount)
     (kernel : BinaryPairKernel)
@@ -2355,7 +2355,7 @@ theorem empiricalConditionalEntropy_bound
         empiricalEntropyError parentCount := by
       rw [herror]
 
-theorem empiricalEntropyError_tendsto_zero :
+private theorem empiricalEntropyError_tendsto_zero :
     Filter.Tendsto empiricalEntropyError Filter.atTop (nhds 0) := by
   have hinv :
       Filter.Tendsto (fun L : ℕ => 1 / (L : ℝ)) Filter.atTop (nhds 0) :=
@@ -2384,7 +2384,7 @@ theorem empiricalEntropyError_tendsto_zero :
     Filter.atTop (nhds 0)
   simpa only [one_div, zero_div, add_zero] using hfirst.add (hentropy.div_const 2)
 
-theorem logTwo_pairLayer_card_add_one_le (L : ℕ) (hL : 2 ≤ L) :
+private theorem logTwo_pairLayer_card_add_one_le (L : ℕ) (hL : 2 ≤ L) :
     Real.logb 2 ((L.choose 2 + 1 : ℕ) : ℝ) ≤
       2 * (L : ℝ) / Real.log 2 := by
   let x : ℝ := ((L.choose 2 + 1 : ℕ) : ℝ)
@@ -2414,7 +2414,7 @@ theorem logTwo_pairLayer_card_add_one_le (L : ℕ) (hL : 2 ≤ L) :
   apply (div_le_div_iff_of_pos_right log_two_pos).mpr
   linarith
 
-theorem exists_empiricalEntropyError_base :
+private theorem exists_empiricalEntropyError_base :
     ∃ L₀ : ℕ, 4 ≤ L₀ ∧
       ∀ L : ℕ, L₀ ≤ L → empiricalEntropyError L < entropySlack := by
   have heventually :
@@ -2427,7 +2427,7 @@ theorem exists_empiricalEntropyError_base :
   intro L hL
   exact hL₀ L ((le_max_right 4 L₀).trans hL)
 
-theorem exists_entropy_exclusion_base :
+private theorem exists_entropy_exclusion_base :
     ∃ L₀ : ℕ, 4 ≤ L₀ ∧
       ∀ L : ℕ, L₀ ≤ L →
         empiricalEntropyError L < entropySlack ∧
@@ -2475,7 +2475,7 @@ theorem exists_entropy_exclusion_base :
   rw [hchoose]
   nlinarith [mul_pos entropySlack_pos hLpos]
 
-theorem exists_entropy_exclusion_depth :
+private theorem exists_entropy_exclusion_depth :
     ∃ depth : ℕ, 0 < depth ∧
       1 < (depth : ℝ) * (certifiedWindowWidth / 2) := by
   obtain ⟨depth, hdepth⟩ :=
@@ -2488,7 +2488,7 @@ theorem exists_entropy_exclusion_depth :
   have hproduct := (div_lt_iff₀ hwidth).mp hdepth
   nlinarith
 
-theorem entropy_potential_increment
+private theorem entropy_potential_increment
     (potentialBefore potentialAfter conditionalEntropy error : ℝ)
     (herror : error < entropySlack)
     (hlower : midpointBeta - entropySlack < conditionalEntropy)
@@ -2501,7 +2501,7 @@ theorem entropy_potential_increment
   unfold entropySlack at herror
   linarith
 
-theorem entropy_potential_layers_impossible
+private theorem entropy_potential_layers_impossible
     (depth : ℕ) (potential : ℕ → ℝ)
     (hrange : ∀ i ≤ depth, 0 ≤ potential i ∧ potential i ≤ 1)
     (hincrement : ∀ i < depth,
@@ -2526,7 +2526,7 @@ theorem entropy_potential_layers_impossible
   have hsum := htotal depth le_rfl
   linarith
 
-theorem entropy_layer_exclusion
+private theorem entropy_layer_exclusion
     (depth : ℕ) (potential conditionalEntropy error : ℕ → ℝ)
     (hrange : ∀ i ≤ depth, 0 ≤ potential i ∧ potential i ≤ 1)
     (herror : ∀ i < depth, error i < entropySlack)
@@ -2548,7 +2548,7 @@ end BinaryEntropy
 
 section ForbiddenGraph
 
-noncomputable def neighborsWithin {V : Type*} (G : SimpleGraph V)
+private noncomputable def neighborsWithin {V : Type*} (G : SimpleGraph V)
     (s : Finset V) (v : V) : Finset V := by
   classical
   exact s.filter (G.Adj v)
@@ -2563,7 +2563,7 @@ vertex with at most two neighbors. -/
 public abbrev IsTwoDegenerate {V : Type*} (G : SimpleGraph V) : Prop :=
   IsDegenerate 2 G
 
-theorem isTwoDegenerate_of_iso {V W : Type*}
+private theorem isTwoDegenerate_of_iso {V W : Type*}
     {G : SimpleGraph V} {H : SimpleGraph W}
     (e : G ≃g H) (hG : IsTwoDegenerate G) :
     IsTwoDegenerate H := by
@@ -2604,13 +2604,13 @@ theorem isTwoDegenerate_of_iso {V W : Type*}
     rw [hneighbors, Finset.card_map]
     exact hcard
 
-theorem isBipartite_of_iso {V W : Type*}
+private theorem isBipartite_of_iso {V W : Type*}
     {G : SimpleGraph V} {H : SimpleGraph W}
     (e : G ≃g H) (hG : G.IsBipartite) : H.IsBipartite := by
   obtain ⟨coloring⟩ := hG
   exact ⟨coloring.comp e.symm.toHom⟩
 
-structure ParentSystem (V : Type*) where
+private structure ParentSystem (V : Type*) where
   level : V → ℕ
   parents : V → Finset V
   parent_level : ∀ ⦃v u : V⦄, u ∈ parents v → level u + 1 = level v
@@ -2618,15 +2618,15 @@ structure ParentSystem (V : Type*) where
 
 namespace ParentSystem
 
-def graph {V : Type*} (P : ParentSystem V) : SimpleGraph V :=
+private def graph {V : Type*} (P : ParentSystem V) : SimpleGraph V :=
   SimpleGraph.fromRel (fun v u => u ∈ P.parents v)
 
-theorem graph_adj_iff {V : Type*} (P : ParentSystem V) (v u : V) :
+private theorem graph_adj_iff {V : Type*} (P : ParentSystem V) (v u : V) :
     (P.graph).Adj v u ↔
       v ≠ u ∧ (u ∈ P.parents v ∨ v ∈ P.parents u) := by
   rfl
 
-theorem graph_isBipartite {V : Type*} (P : ParentSystem V) :
+private theorem graph_isBipartite {V : Type*} (P : ParentSystem V) :
     P.graph.IsBipartite := by
   refine ⟨SimpleGraph.Coloring.mk
     (fun v => (⟨P.level v % 2, by omega⟩ : Fin 2)) ?_⟩
@@ -2639,7 +2639,7 @@ theorem graph_isBipartite {V : Type*} (P : ParentSystem V) :
   · have hlevel := P.parent_level huv
     omega
 
-theorem graph_isTwoDegenerate {V : Type*} (P : ParentSystem V) :
+private theorem graph_isTwoDegenerate {V : Type*} (P : ParentSystem V) :
     IsTwoDegenerate P.graph := by
   classical
   intro s hs
@@ -2658,11 +2658,11 @@ theorem graph_isTwoDegenerate {V : Type*} (P : ParentSystem V) :
 
 end ParentSystem
 
-def PairLayer (baseSize : ℕ) : ℕ → Type
+private def PairLayer (baseSize : ℕ) : ℕ → Type
   | 0 => Fin baseSize
   | i + 1 => {parents : Finset (PairLayer baseSize i) // parents.card = 2}
 
-noncomputable instance pairLayerFintype (baseSize i : ℕ) :
+private noncomputable instance pairLayerFintype (baseSize i : ℕ) :
     Fintype (PairLayer baseSize i) := by
   classical
   induction i with
@@ -2675,12 +2675,12 @@ noncomputable instance pairLayerFintype (baseSize i : ℕ) :
         {parents : Finset (PairLayer baseSize i) // parents.card = 2}
       infer_instance
 
-theorem pairLayer_card_zero (baseSize : ℕ) :
+private theorem pairLayer_card_zero (baseSize : ℕ) :
     Fintype.card (PairLayer baseSize 0) = baseSize := by
   change Fintype.card (Fin baseSize) = baseSize
   simp only [Fintype.card_fin]
 
-theorem pairLayer_card_succ (baseSize i : ℕ) :
+private theorem pairLayer_card_succ (baseSize i : ℕ) :
     Fintype.card (PairLayer baseSize (i + 1)) =
       (Fintype.card (PairLayer baseSize i)).choose 2 := by
   classical
@@ -2701,7 +2701,7 @@ theorem pairLayer_card_succ (baseSize i : ℕ) :
     _ = (Fintype.card (PairLayer baseSize i)).choose 2 := by
       simp only [card_powersetCard, card_univ, layerPairs]
 
-theorem le_choose_two_of_four {size : ℕ} (hsize : 4 ≤ size) :
+private theorem le_choose_two_of_four {size : ℕ} (hsize : 4 ≤ size) :
     size ≤ size.choose 2 := by
   have hreal : (4 : ℝ) ≤ (size : ℝ) := by
     exact_mod_cast hsize
@@ -2714,7 +2714,7 @@ theorem le_choose_two_of_four {size : ℕ} (hsize : 4 ≤ size) :
     nlinarith [sq_nonneg ((size : ℝ) - 2)]
   exact_mod_cast hbound
 
-theorem pairLayer_card_ge_base
+private theorem pairLayer_card_ge_base
     (baseSize i : ℕ) (hbase : 4 ≤ baseSize) :
     baseSize ≤ Fintype.card (PairLayer baseSize i) := by
   induction i with
@@ -2725,12 +2725,12 @@ theorem pairLayer_card_ge_base
       exact ih.trans
         (le_choose_two_of_four (hbase.trans ih))
 
-noncomputable def pairLayerFinEquiv (baseSize layer : ℕ) :
+private noncomputable def pairLayerFinEquiv (baseSize layer : ℕ) :
     PairLayer baseSize layer ≃
       Fin (Fintype.card (PairLayer baseSize layer)) :=
   Fintype.equivFin (PairLayer baseSize layer)
 
-noncomputable def pairLayerPairEquiv (baseSize layer : ℕ) :
+private noncomputable def pairLayerPairEquiv (baseSize layer : ℕ) :
     PairLayer (Fintype.card (PairLayer baseSize layer)) 1 ≃
       PairLayer baseSize (layer + 1) := by
   classical
@@ -2745,7 +2745,7 @@ noncomputable def pairLayerPairEquiv (baseSize layer : ℕ) :
       (fun parents => by
         simp only [Equiv.finsetCongr_apply, card_map])
 
-theorem pairLayerPair_nonempty
+private theorem pairLayerPair_nonempty
     {parentCount : ℕ}
     (hparents : 2 ≤ parentCount) :
     Nonempty (PairLayer parentCount 1) := by
@@ -2754,10 +2754,10 @@ theorem pairLayerPair_nonempty
     pairLayer_card_zero]
   exact Nat.choose_pos hparents
 
-abbrev PairVertex (baseSize depth : ℕ) :=
+private abbrev PairVertex (baseSize depth : ℕ) :=
   Σ i : Fin (depth + 1), PairLayer baseSize i.val
 
-def pairLayerEmbedding (baseSize depth i : ℕ) (hi : i < depth + 1) :
+private def pairLayerEmbedding (baseSize depth i : ℕ) (hi : i < depth + 1) :
     PairLayer baseSize i ↪ PairVertex baseSize depth where
   toFun v := ⟨⟨i, hi⟩, v⟩
   inj' := by
@@ -2765,13 +2765,13 @@ def pairLayerEmbedding (baseSize depth i : ℕ) (hi : i < depth + 1) :
     cases heq
     rfl
 
-noncomputable def pairParents (baseSize depth : ℕ) :
+private noncomputable def pairParents (baseSize depth : ℕ) :
     PairVertex baseSize depth → Finset (PairVertex baseSize depth)
   | ⟨⟨0, _⟩, _⟩ => ∅
   | ⟨⟨i + 1, hi⟩, v⟩ =>
       v.val.map (pairLayerEmbedding baseSize depth i (by omega))
 
-noncomputable def pairParentSystem (baseSize depth : ℕ) :
+private noncomputable def pairParentSystem (baseSize depth : ℕ) :
     ParentSystem (PairVertex baseSize depth) where
   level v := v.1.val
   parents := pairParents baseSize depth
@@ -2800,7 +2800,7 @@ noncomputable def pairParentSystem (baseSize depth : ℕ) :
         change {parents : Finset (PairLayer baseSize i) // parents.card = 2} at v
         simp only [pairParents, card_map, v.property, Std.le_refl]
 
-theorem pairGraph_parent_child_adj
+private theorem pairGraph_parent_child_adj
     (baseSize depth layer : ℕ)
     (hlayer : layer + 1 < depth + 1)
     (child : PairLayer baseSize (layer + 1))
@@ -2829,19 +2829,19 @@ theorem pairGraph_parent_child_adj
           (pairLayerEmbedding baseSize depth layer (by omega))
     exact Finset.mem_map.mpr ⟨parent, hparent, rfl⟩
 
-theorem pairGraph_isBipartite (baseSize depth : ℕ) :
+private theorem pairGraph_isBipartite (baseSize depth : ℕ) :
     (pairParentSystem baseSize depth).graph.IsBipartite :=
   ParentSystem.graph_isBipartite (pairParentSystem baseSize depth)
 
-theorem pairGraph_isTwoDegenerate (baseSize depth : ℕ) :
+private theorem pairGraph_isTwoDegenerate (baseSize depth : ℕ) :
     IsTwoDegenerate (pairParentSystem baseSize depth).graph :=
   ParentSystem.graph_isTwoDegenerate (pairParentSystem baseSize depth)
 
-def pairBaseVertex (baseSize depth : ℕ) (a : Fin baseSize) :
+private def pairBaseVertex (baseSize depth : ℕ) (a : Fin baseSize) :
     PairVertex baseSize depth :=
   pairLayerEmbedding baseSize depth 0 (by omega) a
 
-theorem pairLayer_reaches_base (baseSize depth : ℕ) :
+private theorem pairLayer_reaches_base (baseSize depth : ℕ) :
     ∀ (i : ℕ) (hi : i < depth + 1) (v : PairLayer baseSize i),
       ∃ a : Fin baseSize,
         (pairParentSystem baseSize depth).graph.Reachable
@@ -2879,7 +2879,7 @@ theorem pairLayer_reaches_base (baseSize depth : ℕ) :
       refine ⟨a, hedge.reachable.trans ?_⟩
       exact ha
 
-theorem pairBaseVertices_reachable (baseSize depth : ℕ)
+private theorem pairBaseVertices_reachable (baseSize depth : ℕ)
     (hdepth : 0 < depth) (a b : Fin baseSize) :
     (pairParentSystem baseSize depth).graph.Reachable
       (pairBaseVertex baseSize depth a)
@@ -2922,7 +2922,7 @@ theorem pairBaseVertices_reachable (baseSize depth : ℕ)
     exact (hadj a (Or.inl rfl)).symm.reachable.trans
       (hadj b (Or.inr rfl)).reachable
 
-theorem pairGraph_connected (baseSize depth : ℕ)
+private theorem pairGraph_connected (baseSize depth : ℕ)
     (hbase : 0 < baseSize) (hdepth : 0 < depth) :
     (pairParentSystem baseSize depth).graph.Connected := by
   let root : Fin baseSize := ⟨0, hbase⟩
@@ -2932,33 +2932,33 @@ theorem pairGraph_connected (baseSize depth : ℕ)
   obtain ⟨a, ha⟩ := pairLayer_reaches_base baseSize depth i hi v
   exact (pairBaseVertices_reachable baseSize depth hdepth root a).trans ha.symm
 
-noncomputable def pairGraphOverFin (baseSize depth : ℕ) :
+private noncomputable def pairGraphOverFin (baseSize depth : ℕ) :
     SimpleGraph (Fin (Fintype.card (PairVertex baseSize depth))) :=
   (pairParentSystem baseSize depth).graph.overFin rfl
 
-noncomputable def pairGraphOverFinIso (baseSize depth : ℕ) :
+private noncomputable def pairGraphOverFinIso (baseSize depth : ℕ) :
     (pairParentSystem baseSize depth).graph ≃g
       pairGraphOverFin baseSize depth :=
   (pairParentSystem baseSize depth).graph.overFinIso rfl
 
-theorem pairGraphOverFin_connected (baseSize depth : ℕ)
+private theorem pairGraphOverFin_connected (baseSize depth : ℕ)
     (hbase : 0 < baseSize) (hdepth : 0 < depth) :
     (pairGraphOverFin baseSize depth).Connected :=
   (pairGraphOverFinIso baseSize depth).connected_iff.mp
     (pairGraph_connected baseSize depth hbase hdepth)
 
-theorem pairGraphOverFin_isBipartite (baseSize depth : ℕ) :
+private theorem pairGraphOverFin_isBipartite (baseSize depth : ℕ) :
     (pairGraphOverFin baseSize depth).IsBipartite :=
   isBipartite_of_iso (pairGraphOverFinIso baseSize depth)
     (pairGraph_isBipartite baseSize depth)
 
-theorem pairGraphOverFin_isTwoDegenerate (baseSize depth : ℕ) :
+private theorem pairGraphOverFin_isTwoDegenerate (baseSize depth : ℕ) :
     IsTwoDegenerate (pairGraphOverFin baseSize depth) :=
   isTwoDegenerate_of_iso (pairGraphOverFinIso baseSize depth)
     (pairGraph_isTwoDegenerate baseSize depth)
 
 open Classical in
-theorem degree_gt_two_of_three_neighbors
+private theorem degree_gt_two_of_three_neighbors
     {V : Type*} [Fintype V] (G : SimpleGraph V)
     (v x y z : V)
     (hx : G.Adj v x) (hy : G.Adj v y) (hz : G.Adj v z)
@@ -2974,7 +2974,7 @@ theorem degree_gt_two_of_three_neighbors
     hxy, hxz, hyz⟩
 
 open Classical in
-theorem pairGraph_exists_adj_degree_gt_two
+private theorem pairGraph_exists_adj_degree_gt_two
     (baseSize depth : ℕ) (hbase : 4 ≤ baseSize) (hdepth : 2 ≤ depth) :
     ∃ u v : PairVertex baseSize depth,
       (pairParentSystem baseSize depth).graph.Adj u v ∧
@@ -3141,7 +3141,7 @@ theorem pairGraph_exists_adj_degree_gt_two
   exact ⟨va, vab, hab_a.symm, ha_degree, hab_degree⟩
 
 open Classical in
-theorem pairGraphOverFin_exists_adj_degree_gt_two
+private theorem pairGraphOverFin_exists_adj_degree_gt_two
     (baseSize depth : ℕ) (hbase : 4 ≤ baseSize) (hdepth : 2 ≤ depth) :
     ∃ u v : Fin (Fintype.card (PairVertex baseSize depth)),
       (pairGraphOverFin baseSize depth).Adj u v ∧
@@ -3156,7 +3156,7 @@ theorem pairGraphOverFin_exists_adj_degree_gt_two
   · simpa only [e.degree_eq] using hv
 
 open Classical in
-theorem bipartition_maximum_degree_gt_two_of_adj
+private theorem bipartition_maximum_degree_gt_two_of_adj
     {V : Type*} [Fintype V]
     (G : SimpleGraph V) {u v : V}
     (hadj : G.Adj u v)
@@ -3188,7 +3188,7 @@ theorem bipartition_maximum_degree_gt_two_of_adj
     (Finset.le_sup (f := fun candidate => G.degree candidate) hmember)
 
 open Classical in
-theorem pairGraphOverFin_bipartition_maximum_degree_gt_two
+private theorem pairGraphOverFin_bipartition_maximum_degree_gt_two
     (baseSize depth : ℕ) (hbase : 4 ≤ baseSize) (hdepth : 2 ≤ depth) :
     ∀ coloring : (pairGraphOverFin baseSize depth).Coloring (Fin 2),
       ∀ side : Fin 2,
@@ -3206,14 +3206,14 @@ end ForbiddenGraph
 
 section HammingProfiles
 
-abbrev HammingWord (dimension : ℕ) := Fin dimension → Bool
+private abbrev HammingWord (dimension : ℕ) := Fin dimension → Bool
 
-noncomputable def booleanWordOnes {ι : Type*} [Fintype ι]
+private noncomputable def booleanWordOnes {ι : Type*} [Fintype ι]
     (word : ι → Bool) : Finset ι := by
   classical
   exact Finset.univ.filter (fun index => word index = true)
 
-theorem booleanWordOnes_card_equiv
+private theorem booleanWordOnes_card_equiv
     {ι κ : Type*} [Fintype ι] [Fintype κ]
     (equivalence : ι ≃ κ)
     (word : κ → Bool) :
@@ -3237,13 +3237,13 @@ theorem booleanWordOnes_card_equiv
     have hone := (Finset.mem_filter.mp hindex).2
     simpa only [Equiv.apply_symm_apply] using hone
 
-noncomputable def booleanWordsOfWeight (ι : Type*) [Fintype ι]
+private noncomputable def booleanWordsOfWeight (ι : Type*) [Fintype ι]
     (weight : ℕ) : Finset (ι → Bool) := by
   classical
   exact Finset.univ.filter
     (fun word => (booleanWordOnes word).card = weight)
 
-noncomputable def booleanWordsOfWeightEquiv
+private noncomputable def booleanWordsOfWeightEquiv
     (ι : Type*) [Fintype ι] (weight : ℕ) :
     ↥(booleanWordsOfWeight ι weight) ≃
       ↥((Finset.univ : Finset ι).powersetCard weight) := by
@@ -3286,7 +3286,7 @@ noncomputable def booleanWordsOfWeightEquiv
     ext index
     simp only [booleanWordOnes, decide_eq_true_eq, subset_univ, filter_mem_eq_of_subset]
 
-theorem booleanWordsOfWeight_card
+private theorem booleanWordsOfWeight_card
     (ι : Type*) [Fintype ι] (weight : ℕ) :
     (booleanWordsOfWeight ι weight).card =
       (Fintype.card ι).choose weight := by
@@ -3302,22 +3302,22 @@ theorem booleanWordsOfWeight_card
     _ = (Fintype.card ι).choose weight := by
       simp only [card_powersetCard, card_univ]
 
-abbrev ClassificationFiber
+private abbrev ClassificationFiber
     {ι γ : Type*} (classify : ι → γ) (group : γ) :=
   {index : ι // classify index = group}
 
-noncomputable def classificationGroup
+private noncomputable def classificationGroup
     {ι γ : Type*} [Fintype ι] [DecidableEq γ]
     (classify : ι → γ) (group : γ) : Finset ι :=
   Finset.univ.filter (fun index => classify index = group)
 
-noncomputable def classifiedWordOnes
+private noncomputable def classifiedWordOnes
     {ι γ : Type*} [Fintype ι] [DecidableEq γ]
     (classify : ι → γ) (group : γ) (word : ι → Bool) : Finset ι :=
   (classificationGroup classify group).filter
     (fun index => word index = true)
 
-noncomputable def classifiedWordSupportEquiv
+private noncomputable def classifiedWordSupportEquiv
     {ι γ : Type*} [Fintype ι] [DecidableEq γ]
     (classify : ι → γ) (group : γ) (word : ι → Bool) :
     ↥(booleanWordOnes
@@ -3361,7 +3361,7 @@ noncomputable def classifiedWordSupportEquiv
     apply Subtype.ext
     rfl
 
-theorem classifiedWordOnes_card
+private theorem classifiedWordOnes_card
     {ι γ : Type*} [Fintype ι] [DecidableEq γ]
     (classify : ι → γ) (group : γ) (word : ι → Bool) :
     (classifiedWordOnes classify group word).card =
@@ -3380,7 +3380,7 @@ theorem classifiedWordOnes_card
           (fun index : ClassificationFiber classify group => word index.val)).card :=
       Fintype.card_coe _
 
-noncomputable def classifiedBooleanWords
+private noncomputable def classifiedBooleanWords
     {ι γ : Type*} [Fintype ι] [Fintype γ] [DecidableEq γ]
     (classify : ι → γ) (counts : γ → ℕ) : Finset (ι → Bool) := by
   classical
@@ -3388,7 +3388,7 @@ noncomputable def classifiedBooleanWords
     (fun word => ∀ group,
       (classifiedWordOnes classify group word).card = counts group)
 
-noncomputable def classifiedBooleanWordsEquiv
+private noncomputable def classifiedBooleanWordsEquiv
     {ι γ : Type*} [Fintype ι] [Fintype γ] [DecidableEq γ]
     (classify : ι → γ) (counts : γ → ℕ) :
     ↥(classifiedBooleanWords classify counts) ≃
@@ -3445,7 +3445,7 @@ noncomputable def classifiedBooleanWordsEquiv
     cases hindex
     rfl
 
-theorem classifiedBooleanWords_card
+private theorem classifiedBooleanWords_card
     {ι γ : Type*} [Fintype ι] [Fintype γ] [DecidableEq γ]
     (classify : ι → γ) (counts : γ → ℕ) :
     (classifiedBooleanWords classify counts).card =
@@ -3474,19 +3474,19 @@ theorem classifiedBooleanWords_card
       rw [Fintype.card_coe,
         booleanWordsOfWeight_card]
 
-abbrev PairBitType := Fin 3
+private abbrev PairBitType := Fin 3
 
-abbrev PairTypeCountProfile (parentCount dimension : ℕ) :=
+private abbrev PairTypeCountProfile (parentCount dimension : ℕ) :=
   PairBitType → Fin dimension → Fin (parentCount.choose 2 + 1)
 
-theorem pairTypeCountProfile_card (parentCount dimension : ℕ) :
+private theorem pairTypeCountProfile_card (parentCount dimension : ℕ) :
     Fintype.card (PairTypeCountProfile parentCount dimension) =
       (parentCount.choose 2 + 1) ^ (3 * dimension) := by
   simp only [PairTypeCountProfile, Fintype.card_pi, Fintype.card_fin, prod_const, card_univ,
       Nat.mul_comm,
     pow_mul]
 
-noncomputable def pairCoordinateBitType
+private noncomputable def pairCoordinateBitType
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension)
@@ -3497,7 +3497,7 @@ noncomputable def pairCoordinateBitType
     else if ∀ parent ∈ pair.val, parents parent coordinate = true then 1
     else 2
 
-noncomputable def pairTypeGroup
+private noncomputable def pairTypeGroup
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension)
@@ -3506,14 +3506,14 @@ noncomputable def pairTypeGroup
   exact Finset.univ.filter
     (fun pair => pairCoordinateBitType parents coordinate pair = bitType)
 
-noncomputable def pairCoordinateClassification
+private noncomputable def pairCoordinateClassification
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension) :
     PairLayer parentCount 1 × Fin dimension → PairBitType × Fin dimension :=
   fun index =>
     (pairCoordinateBitType parents index.2 index.1, index.2)
 
-noncomputable def pairCoordinateClassificationFiberEquiv
+private noncomputable def pairCoordinateClassificationFiberEquiv
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (bitType : PairBitType) (coordinate : Fin dimension) :
@@ -3553,7 +3553,7 @@ noncomputable def pairCoordinateClassificationFiberEquiv
     apply Subtype.ext
     rfl
 
-theorem pairCoordinateClassificationFiber_card
+private theorem pairCoordinateClassificationFiber_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (bitType : PairBitType) (coordinate : Fin dimension) :
@@ -3571,7 +3571,7 @@ theorem pairCoordinateClassificationFiber_card
     _ = (pairTypeGroup parents coordinate bitType).card :=
       Fintype.card_coe _
 
-theorem sum_pairTypeGroup_card
+private theorem sum_pairTypeGroup_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension) :
@@ -3599,7 +3599,7 @@ theorem sum_pairTypeGroup_card
         simpa only [pairTypeGroup, card_univ] using hpartition.symm
     _ = parentCount.choose 2 := hpairs
 
-theorem pairTypeGroup_card_le
+private theorem pairTypeGroup_card_le
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension)
@@ -3616,7 +3616,7 @@ theorem pairTypeGroup_card_le
       rw [Finset.card_univ, pairLayer_card_succ parentCount 0,
         pairLayer_card_zero]
 
-noncomputable def pairTypeGroupChildOnes
+private noncomputable def pairTypeGroupChildOnes
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -3626,7 +3626,7 @@ noncomputable def pairTypeGroupChildOnes
   exact (pairTypeGroup parents coordinate bitType).filter
     (fun pair => children pair coordinate = true)
 
-theorem pairTypeGroupChildOnes_card_le
+private theorem pairTypeGroupChildOnes_card_le
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -3638,13 +3638,13 @@ theorem pairTypeGroupChildOnes_card_le
   unfold pairTypeGroupChildOnes
   exact Finset.card_filter_le _ _
 
-def flattenPairChildArray
+private def flattenPairChildArray
     {parentCount dimension : ℕ}
     (children : PairLayer parentCount 1 → HammingWord dimension) :
     PairLayer parentCount 1 × Fin dimension → Bool :=
   fun index => children index.1 index.2
 
-theorem pairChildClassificationOnes_card
+private theorem pairChildClassificationOnes_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -3707,7 +3707,7 @@ theorem pairChildClassificationOnes_card
       exact Prod.ext hpair_type rfl
     · exact hpair_parts.2
 
-noncomputable def pairChildCountProfile
+private noncomputable def pairChildCountProfile
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension) :
@@ -3719,7 +3719,7 @@ noncomputable def pairChildCountProfile
   have hgroup := pairTypeGroup_card_le parents coordinate bitType
   omega
 
-noncomputable def pairChildArraysOfProfile
+private noncomputable def pairChildArraysOfProfile
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (profile : PairTypeCountProfile parentCount dimension) :
@@ -3728,7 +3728,7 @@ noncomputable def pairChildArraysOfProfile
   exact Finset.univ.filter
     (fun children => pairChildCountProfile parents children = profile)
 
-noncomputable def pairChildArraysOfProfileEquiv
+private noncomputable def pairChildArraysOfProfileEquiv
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (profile : PairTypeCountProfile parentCount dimension) :
@@ -3790,7 +3790,7 @@ noncomputable def pairChildArraysOfProfileEquiv
     rcases index with ⟨pair, coordinate⟩
     rfl
 
-theorem pairChildArraysOfProfile_card
+private theorem pairChildArraysOfProfile_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (profile : PairTypeCountProfile parentCount dimension) :
@@ -3830,7 +3830,7 @@ theorem pairChildArraysOfProfile_card
       rintro ⟨bitType, coordinate⟩ _
       rw [pairCoordinateClassificationFiber_card]
 
-noncomputable def pairCoordinateConditionalEntropy
+private noncomputable def pairCoordinateConditionalEntropy
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -3842,7 +3842,7 @@ noncomputable def pairCoordinateConditionalEntropy
         (((pairTypeGroupChildOnes parents children coordinate bitType).card : ℝ) /
           ((pairTypeGroup parents coordinate bitType).card : ℝ))
 
-noncomputable def pairChildArrayEntropy
+private noncomputable def pairChildArrayEntropy
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension) : ℝ :=
@@ -3850,13 +3850,13 @@ noncomputable def pairChildArrayEntropy
     pairCoordinateConditionalEntropy parents children coordinate) /
       (dimension : ℝ)
 
-noncomputable def pairParentCoordinateOneCount
+private noncomputable def pairParentCoordinateOneCount
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension) : ℕ :=
   (booleanWordOnes (fun parent => parents parent coordinate)).card
 
-theorem pairParentCoordinateOneCount_le
+private theorem pairParentCoordinateOneCount_le
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension) :
@@ -3871,7 +3871,7 @@ theorem pairParentCoordinateOneCount_le
       Finset.card_filter_le _ _
     _ = parentCount := by simp only [card_univ, Fintype.card_fin]
 
-noncomputable def pairParentCoordinateSupport
+private noncomputable def pairParentCoordinateSupport
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension)
@@ -3880,7 +3880,7 @@ noncomputable def pairParentCoordinateSupport
   exact Finset.univ.filter
     (fun parent => parents parent coordinate = outcome)
 
-theorem pairParentCoordinateSupport_true_card
+private theorem pairParentCoordinateSupport_true_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension) :
@@ -3888,7 +3888,7 @@ theorem pairParentCoordinateSupport_true_card
       pairParentCoordinateOneCount parents coordinate := by
   rfl
 
-theorem pairParentCoordinateSupport_card_add
+private theorem pairParentCoordinateSupport_card_add
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension) :
@@ -3903,7 +3903,7 @@ theorem pairParentCoordinateSupport_card_add
   simpa only [pairParentCoordinateSupport, Bool.not_eq_false, card_univ,
       Fintype.card_fin] using hpartition
 
-theorem pairParentCoordinateSupport_false_card
+private theorem pairParentCoordinateSupport_false_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension) :
@@ -3913,7 +3913,7 @@ theorem pairParentCoordinateSupport_false_card
   rw [pairParentCoordinateSupport_true_card] at hpartition
   omega
 
-theorem pairCoordinateBitType_homogeneous_iff
+private theorem pairCoordinateBitType_homogeneous_iff
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension)
@@ -3928,7 +3928,7 @@ theorem pairCoordinateBitType_homogeneous_iff
     cases hb : parents b coordinate <;>
     simp_all [pairCoordinateBitType]
 
-noncomputable def pairTypeGroupHomogeneousEquiv
+private noncomputable def pairTypeGroupHomogeneousEquiv
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension)
@@ -3977,7 +3977,7 @@ noncomputable def pairTypeGroupHomogeneousEquiv
     apply Subtype.ext
     rfl
 
-theorem pairTypeGroup_homogeneous_card
+private theorem pairTypeGroup_homogeneous_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension)
@@ -4001,7 +4001,7 @@ theorem pairTypeGroup_homogeneous_card
     _ = (pairParentCoordinateSupport parents coordinate outcome).card.choose 2 :=
       Finset.card_powersetCard _ _
 
-theorem pairTypeGroup_false_card
+private theorem pairTypeGroup_false_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension) :
@@ -4011,7 +4011,7 @@ theorem pairTypeGroup_false_card
       pairParentCoordinateSupport_false_card] using
     pairTypeGroup_homogeneous_card parents coordinate false
 
-theorem pairTypeGroup_true_card
+private theorem pairTypeGroup_true_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension) :
@@ -4020,7 +4020,7 @@ theorem pairTypeGroup_true_card
   simpa only [Fin.isValue, ↓reduceIte, pairParentCoordinateSupport_true_card] using
     pairTypeGroup_homogeneous_card parents coordinate true
 
-theorem pairTypeGroup_mixed_card
+private theorem pairTypeGroup_mixed_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (coordinate : Fin dimension) :
@@ -4056,12 +4056,12 @@ theorem pairTypeGroup_mixed_card
     nlinarith
   exact_mod_cast hresult
 
-def pairBitTypeOfOutcomes (left right : Bool) : PairBitType :=
+private def pairBitTypeOfOutcomes (left right : Bool) : PairBitType :=
   if left = false ∧ right = false then 0
   else if left = true ∧ right = true then 1
   else 2
 
-noncomputable def pairCoordinateKernel
+private noncomputable def pairCoordinateKernel
     {parentCount dimension : ℕ}
     (hparents : 0 < parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4098,7 +4098,7 @@ noncomputable def pairCoordinateKernel
       apply (div_le_one hpositive).mpr
       exact_mod_cast hle
 
-theorem pairCoordinateKernel_parentProbability
+private theorem pairCoordinateKernel_parentProbability
     {parentCount dimension : ℕ}
     (hparents : 0 < parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4109,7 +4109,7 @@ theorem pairCoordinateKernel_parentProbability
         (parentCount : ℝ) := by
   rfl
 
-theorem pairCoordinateKernel_childProbability
+private theorem pairCoordinateKernel_childProbability
     {parentCount dimension : ℕ}
     (hparents : 0 < parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4124,13 +4124,13 @@ theorem pairCoordinateKernel_childProbability
             (pairBitTypeOfOutcomes left right)).card : ℝ) := by
   rfl
 
-noncomputable def pairChildCoordinateOneCount
+private noncomputable def pairChildCoordinateOneCount
     {parentCount dimension : ℕ}
     (children : PairLayer parentCount 1 → HammingWord dimension)
     (coordinate : Fin dimension) : ℕ :=
   (booleanWordOnes (fun pair => children pair coordinate)).card
 
-theorem sum_pairTypeGroupChildOnes_card
+private theorem sum_pairTypeGroupChildOnes_card
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -4172,7 +4172,7 @@ theorem sum_pairTypeGroupChildOnes_card
     _ = pairChildCoordinateOneCount children coordinate := by
       rfl
 
-theorem pairTypeGroup_probability_mul_childRatio
+private theorem pairTypeGroup_probability_mul_childRatio
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4202,7 +4202,7 @@ theorem pairTypeGroup_probability_mul_childRatio
       exact_mod_cast hgroup
     field_simp [hpair.ne', hgroup_real]
 
-theorem withoutReplacementBinaryPairMass_eq_pairTypeGroup
+private theorem withoutReplacementBinaryPairMass_eq_pairTypeGroup
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4232,7 +4232,7 @@ theorem withoutReplacementBinaryPairMass_eq_pairTypeGroup
       Nat.cast_sub hones] <;>
     field_simp [hparent.ne', hparent_minus.ne']
 
-theorem pairCoordinateKernel_empiricalConditionalEntropy
+private theorem pairCoordinateKernel_empiricalConditionalEntropy
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4254,7 +4254,7 @@ theorem pairCoordinateKernel_empiricalConditionalEntropy
     Fin.sum_univ_succ, Fin.succ_zero_eq_one, univ_unique, Fin.default_eq_zero, Fin.succ_one_eq_two]
   ring
 
-theorem pairCoordinateKernel_empiricalChildMarginal
+private theorem pairCoordinateKernel_empiricalChildMarginal
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4324,7 +4324,7 @@ theorem pairCoordinateKernel_empiricalChildMarginal
     _ = (pairChildCoordinateOneCount children coordinate : ℝ) /
       (parentCount.choose 2 : ℝ) := hgroups
 
-theorem pairTypeGroup_probability_mul_childComplement
+private theorem pairTypeGroup_probability_mul_childComplement
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4369,7 +4369,7 @@ theorem pairTypeGroup_probability_mul_childComplement
           (parentCount.choose 2 : ℝ) := by
           ring
 
-theorem pairCoordinateKernel_empiricalAverageDisagreement
+private theorem pairCoordinateKernel_empiricalAverageDisagreement
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4424,7 +4424,7 @@ theorem pairCoordinateKernel_empiricalAverageDisagreement
       rw [hzero, hone]
       ring
 
-noncomputable def pairCoordinatePairMismatchCount
+private noncomputable def pairCoordinatePairMismatchCount
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -4435,7 +4435,7 @@ noncomputable def pairCoordinatePairMismatchCount
     (fun parent =>
       parents parent coordinate ≠ children pair coordinate)).card
 
-theorem pairCoordinatePairMismatchCount_homogeneous
+private theorem pairCoordinatePairMismatchCount_homogeneous
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -4483,7 +4483,7 @@ theorem pairCoordinatePairMismatchCount_homogeneous
     rw [hfull, ite_eq_right hchild]
     exact pair.property
 
-theorem pairCoordinatePairMismatchCount_mixed
+private theorem pairCoordinatePairMismatchCount_mixed
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -4566,7 +4566,7 @@ theorem pairCoordinatePairMismatchCount_mixed
   change mismatches.card = 1
   omega
 
-theorem pairCoordinatePairMismatchCount_sum_false
+private theorem pairCoordinatePairMismatchCount_sum_false
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -4599,7 +4599,7 @@ theorem pairCoordinatePairMismatchCount_sum_false
       rw [← Finset.sum_filter]
       simp only [Fin.isValue, sum_const, smul_eq_mul, Nat.mul_comm, pairTypeGroupChildOnes]
 
-theorem pairCoordinatePairMismatchCount_sum_true
+private theorem pairCoordinatePairMismatchCount_sum_true
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -4654,7 +4654,7 @@ theorem pairCoordinatePairMismatchCount_sum_true
           (pairTypeGroupChildOnes parents children coordinate 1).card) := by
       rw [hzero_card]
 
-theorem pairCoordinatePairMismatchCount_sum_mixed
+private theorem pairCoordinatePairMismatchCount_sum_mixed
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -4683,7 +4683,7 @@ theorem pairCoordinatePairMismatchCount_sum_mixed
     _ = (pairTypeGroup parents coordinate 2).card := by
       simp only [Fin.isValue, sum_const, smul_eq_mul, mul_one]
 
-theorem sum_pairCoordinatePairMismatchCount
+private theorem sum_pairCoordinatePairMismatchCount
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -4730,7 +4730,7 @@ theorem sum_pairCoordinatePairMismatchCount
     pairCoordinatePairMismatchCount_sum_mixed] at hpartition
   omega
 
-theorem sum_pairCoordinatePairMismatchCount_eq_hammingDist
+private theorem sum_pairCoordinatePairMismatchCount_eq_hammingDist
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension) :
@@ -4768,7 +4768,7 @@ theorem sum_pairCoordinatePairMismatchCount_eq_hammingDist
           parents parent coordinate ≠ children pair coordinate)).card
   exact Finset.sum_boole _ _
 
-theorem pairCoordinateKernel_empiricalAverageDisagreement_eq_mismatches
+private theorem pairCoordinateKernel_empiricalAverageDisagreement_eq_mismatches
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4791,7 +4791,7 @@ theorem pairCoordinateKernel_empiricalAverageDisagreement_eq_mismatches
   push_cast [hone]
   field_simp [hpair.ne']
 
-theorem pairCoordinateConditionalEntropy_empirical_bound
+private theorem pairCoordinateConditionalEntropy_empirical_bound
     {parentCount dimension : ℕ}
     (hparents : 4 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4845,7 +4845,7 @@ theorem pairCoordinateConditionalEntropy_empirical_bound
         empiricalEntropyError parentCount at hkernel
   exact hkernel
 
-noncomputable def pairParentArrayEntropyPotential
+private noncomputable def pairParentArrayEntropyPotential
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension) : ℝ :=
   (∑ coordinate : Fin dimension,
@@ -4854,7 +4854,7 @@ noncomputable def pairParentArrayEntropyPotential
         (parentCount : ℝ))) /
       (dimension : ℝ)
 
-noncomputable def pairChildArrayEntropyPotential
+private noncomputable def pairChildArrayEntropyPotential
     {parentCount dimension : ℕ}
     (children : PairLayer parentCount 1 → HammingWord dimension) : ℝ :=
   (∑ coordinate : Fin dimension,
@@ -4863,7 +4863,7 @@ noncomputable def pairChildArrayEntropyPotential
         (parentCount.choose 2 : ℝ))) /
       (dimension : ℝ)
 
-noncomputable def pairChildArrayAverageDisagreement
+private noncomputable def pairChildArrayAverageDisagreement
     {parentCount dimension : ℕ}
     (hparents : 4 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
@@ -4874,7 +4874,7 @@ noncomputable def pairChildArrayAverageDisagreement
       (pairCoordinateKernel (by omega) parents children coordinate)) /
     (dimension : ℝ)
 
-theorem pairChildArrayAverageDisagreement_le_radius
+private theorem pairChildArrayAverageDisagreement_le_radius
     {parentCount dimension : ℕ}
     (hparents : 4 ≤ parentCount)
     (hdimension : 0 < dimension)
@@ -4939,7 +4939,7 @@ theorem pairChildArrayAverageDisagreement_le_radius
   apply (div_le_iff₀ (mul_pos (by norm_num) hpair)).mpr
   nlinarith
 
-theorem pairChildArrayEntropy_empirical_bound
+private theorem pairChildArrayEntropy_empirical_bound
     {parentCount dimension : ℕ}
     (hparents : 4 ≤ parentCount)
     (hdimension : 0 < dimension)
@@ -5111,7 +5111,7 @@ theorem pairChildArrayEntropy_empirical_bound
       rw [hsum_formula]
       field_simp [hdimension_real.ne']
 
-theorem pairCoordinateConditionalEntropy_mass
+private theorem pairCoordinateConditionalEntropy_mass
     {parentCount dimension : ℕ} (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -5132,7 +5132,7 @@ theorem pairCoordinateConditionalEntropy_mass
   intro bitType _
   field_simp [hpair.ne']
 
-theorem pairCoordinateConditionalEntropy_log_mass
+private theorem pairCoordinateConditionalEntropy_log_mass
     {parentCount dimension : ℕ} (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -5170,7 +5170,7 @@ theorem pairCoordinateConditionalEntropy_log_mass
         hparents parents children coordinate]
       ring
 
-theorem pairChildGroup_choose_product_entropy_bound
+private theorem pairChildGroup_choose_product_entropy_bound
     {parentCount dimension : ℕ} (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension) :
@@ -5205,7 +5205,7 @@ theorem pairChildGroup_choose_product_entropy_bound
   rw [hsum] at hproduct
   exact hproduct
 
-theorem pairChildArraysOfRealizedProfile_card_le
+private theorem pairChildArraysOfRealizedProfile_card_le
     {parentCount dimension : ℕ} (hparents : 2 ≤ parentCount)
     (parents : Fin parentCount → HammingWord dimension)
     (children : PairLayer parentCount 1 → HammingWord dimension) :
@@ -5229,7 +5229,7 @@ theorem pairChildArraysOfRealizedProfile_card_le
   exact pairChildGroup_choose_product_entropy_bound
     hparents parents children
 
-noncomputable def badPairChildArrays
+private noncomputable def badPairChildArrays
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (threshold : ℝ) :
@@ -5238,7 +5238,7 @@ noncomputable def badPairChildArrays
   exact Finset.univ.filter
     (fun children => pairChildArrayEntropy parents children ≤ threshold)
 
-theorem badPairChildArrays_card_le
+private theorem badPairChildArrays_card_le
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (hdimension : 0 < dimension)
@@ -5361,15 +5361,15 @@ end HammingProfiles
 
 section SamplingAndHammingBalls
 
-noncomputable def hammingRetentionProbability (dimension : ℕ) : ℝ :=
+private noncomputable def hammingRetentionProbability (dimension : ℕ) : ℝ :=
   Real.exp (-(midpointBeta * (dimension : ℝ) * Real.log 2))
 
-theorem hammingRetentionProbability_pos (dimension : ℕ) :
+private theorem hammingRetentionProbability_pos (dimension : ℕ) :
     0 < hammingRetentionProbability dimension := by
   unfold hammingRetentionProbability
   exact Real.exp_pos _
 
-theorem hammingRetentionProbability_le_one (dimension : ℕ) :
+private theorem hammingRetentionProbability_le_one (dimension : ℕ) :
     hammingRetentionProbability dimension ≤ 1 := by
   unfold hammingRetentionProbability
   apply Real.exp_le_one_iff.mpr
@@ -5380,7 +5380,7 @@ theorem hammingRetentionProbability_le_one (dimension : ℕ) :
       log_two_pos.le
   linarith
 
-theorem hammingRetentionProbability_mul_wordCount_eq_exp
+private theorem hammingRetentionProbability_mul_wordCount_eq_exp
     (dimension : ℕ) :
     hammingRetentionProbability dimension *
         ((2 ^ dimension : ℕ) : ℝ) =
@@ -5396,7 +5396,7 @@ theorem hammingRetentionProbability_mul_wordCount_eq_exp
   congr 1
   ring
 
-theorem hammingRetentionProbability_sq_mul_wordCount_eq_exp
+private theorem hammingRetentionProbability_sq_mul_wordCount_eq_exp
     (dimension : ℕ) :
     hammingRetentionProbability dimension ^ 2 *
         ((2 ^ dimension : ℕ) : ℝ) =
@@ -5413,7 +5413,7 @@ theorem hammingRetentionProbability_sq_mul_wordCount_eq_exp
   push_cast
   ring
 
-theorem hammingRetentionProbability_mul_wordCount_tendsto_atTop :
+private theorem hammingRetentionProbability_mul_wordCount_tendsto_atTop :
     Tendsto
       (fun dimension : ℕ =>
         hammingRetentionProbability dimension *
@@ -5435,7 +5435,7 @@ theorem hammingRetentionProbability_mul_wordCount_tendsto_atTop :
   congr 1
   ring
 
-theorem hammingRetentionProbability_mul_wordCount_inv_tendsto_zero :
+private theorem hammingRetentionProbability_mul_wordCount_inv_tendsto_zero :
     Tendsto
       (fun dimension : ℕ =>
         1 / (hammingRetentionProbability dimension *
@@ -5447,7 +5447,7 @@ theorem hammingRetentionProbability_mul_wordCount_inv_tendsto_zero :
   filter_upwards [] with dimension
   simp only [Function.comp_apply, one_div]
 
-theorem exp_mul_div_nat_succ_tendsto_atTop
+private theorem exp_mul_div_nat_succ_tendsto_atTop
     (rate : ℝ) (hrate : 0 < rate) :
     Tendsto
       (fun dimension : ℕ =>
@@ -5490,23 +5490,23 @@ theorem exp_mul_div_nat_succ_tendsto_atTop
       push_cast
       nlinarith
 
-noncomputable def hammingRetentionParameter (dimension : ℕ) : unitInterval :=
+private noncomputable def hammingRetentionParameter (dimension : ℕ) : unitInterval :=
   ⟨hammingRetentionProbability dimension,
     hammingRetentionProbability_pos dimension |>.le,
     hammingRetentionProbability_le_one dimension⟩
 
-noncomputable def hammingRetentionMeasure (dimension : ℕ) :
+private noncomputable def hammingRetentionMeasure (dimension : ℕ) :
     MeasureTheory.Measure (Set (Bool × HammingWord dimension)) :=
   ProbabilityTheory.setBernoulli Set.univ
     (hammingRetentionParameter dimension)
 
-theorem hammingRetentionMeasure_isProbability (dimension : ℕ) :
+private theorem hammingRetentionMeasure_isProbability (dimension : ℕ) :
     MeasureTheory.IsProbabilityMeasure
       (hammingRetentionMeasure dimension) := by
   unfold hammingRetentionMeasure
   infer_instance
 
-theorem hammingRetentionMeasure_integrable
+private theorem hammingRetentionMeasure_integrable
     (dimension : ℕ)
     (observable : Set (Bool × HammingWord dimension) → ℝ) :
     MeasureTheory.Integrable observable
@@ -5516,7 +5516,7 @@ theorem hammingRetentionMeasure_integrable
     hammingRetentionMeasure_isProbability dimension
   exact MeasureTheory.Integrable.of_finite
 
-theorem hammingRetentionMeasure_memLp_two
+private theorem hammingRetentionMeasure_memLp_two
     (dimension : ℕ)
     (observable : Set (Bool × HammingWord dimension) → ℝ) :
     MeasureTheory.MemLp observable 2
@@ -5526,7 +5526,7 @@ theorem hammingRetentionMeasure_memLp_two
   exact hammingRetentionMeasure_integrable dimension
     (fun retained => observable retained ^ 2)
 
-theorem hammingRetentionMeasure_integral_eq_sum
+private theorem hammingRetentionMeasure_integral_eq_sum
     (dimension : ℕ)
     (observable : Set (Bool × HammingWord dimension) → ℝ) :
     (∫ retained,
@@ -5539,7 +5539,7 @@ theorem hammingRetentionMeasure_integral_eq_sum
     (MeasureTheory.integral_fintype (hammingRetentionMeasure_integrable dimension observable))
 
 open Classical in
-theorem hammingRetentionMeasure_real_event_eq_sum
+private theorem hammingRetentionMeasure_real_event_eq_sum
     (dimension : ℕ)
     (event : Set (Set (Bool × HammingWord dimension))) :
     (hammingRetentionMeasure dimension).real event =
@@ -5571,7 +5571,7 @@ theorem hammingRetentionMeasure_real_event_eq_sum
       rw [← Finset.sum_filter]
 
 open Classical in
-theorem hammingRetentionMeasure_integral_event_indicator
+private theorem hammingRetentionMeasure_integral_event_indicator
     (dimension : ℕ)
     (event : Set (Set (Bool × HammingWord dimension))) :
     (∫ retained,
@@ -5584,7 +5584,7 @@ theorem hammingRetentionMeasure_integral_event_indicator
   intro retained _
   split_ifs <;> simp
 
-theorem hammingRetentionMeasure_real_deviation_le
+private theorem hammingRetentionMeasure_real_deviation_le
     (dimension : ℕ)
     (observable : Set (Bool × HammingWord dimension) → ℝ)
     (threshold : ℝ) (hthreshold : 0 < threshold) :
@@ -5615,7 +5615,7 @@ theorem hammingRetentionMeasure_real_deviation_le
       (sq_nonneg threshold)
   simpa only [MeasureTheory.Measure.real, ge_iff_le, ENNReal.toReal_ofReal hnonnegative] using hreal
 
-theorem hammingRetentionMeasure_real_contains_finset
+private theorem hammingRetentionMeasure_real_contains_finset
     (dimension : ℕ)
     (required : Finset (Bool × HammingWord dimension)) :
     (hammingRetentionMeasure dimension).real
@@ -5661,7 +5661,7 @@ theorem hammingRetentionMeasure_real_contains_finset
   rw [hmeasure, ENNReal.toReal_pow]
   simp only [hammingRetentionParameter, ENNReal.coe_toReal, unitInterval.coe_toNNReal]
 
-theorem hammingRetentionMeasure_real_contains_pair
+private theorem hammingRetentionMeasure_real_contains_pair
     (dimension : ℕ)
     (first second : Bool × HammingWord dimension)
     (hdistinct : first ≠ second) :
@@ -5674,7 +5674,7 @@ theorem hammingRetentionMeasure_real_contains_pair
     card_insert_of_notMem, card_singleton, Nat.reduceAdd] using
     hammingRetentionMeasure_real_contains_finset dimension { first, second }
 
-theorem hammingRetentionMeasure_real_contains_vertex
+private theorem hammingRetentionMeasure_real_contains_vertex
     (dimension : ℕ)
     (vertex : Bool × HammingWord dimension) :
     (hammingRetentionMeasure dimension).real
@@ -5685,7 +5685,7 @@ theorem hammingRetentionMeasure_real_contains_vertex
   simpa only [mem_singleton, forall_eq, card_singleton, pow_one] using
     hammingRetentionMeasure_real_contains_finset dimension { vertex }
 
-theorem hammingRetentionMeasure_real_contains_edgePair
+private theorem hammingRetentionMeasure_real_contains_edgePair
     (dimension : ℕ)
     (firstLeft firstRight secondLeft secondRight : HammingWord dimension) :
     (hammingRetentionMeasure dimension).real
@@ -5741,7 +5741,7 @@ theorem hammingRetentionMeasure_real_contains_edgePair
           Nat.reduceAdd, ↓reduceIte,
       required]
 
-theorem hammingRetentionMeasure_real_contains_edgePair_le
+private theorem hammingRetentionMeasure_real_contains_edgePair_le
     (dimension : ℕ)
     (firstLeft firstRight secondLeft secondRight : HammingWord dimension) :
     (hammingRetentionMeasure dimension).real
@@ -5766,14 +5766,14 @@ theorem hammingRetentionMeasure_real_contains_edgePair_le
       Std.le_refl] <;>
     positivity
 
-noncomputable def hammingExpectedRetainedVertexCount
+private noncomputable def hammingExpectedRetainedVertexCount
     (dimension : ℕ) : ℝ :=
   ∑ vertex : Bool × HammingWord dimension,
     (hammingRetentionMeasure dimension).real
       {retained : Set (Bool × HammingWord dimension) |
         vertex ∈ retained}
 
-theorem hammingExpectedRetainedVertexCount_eq
+private theorem hammingExpectedRetainedVertexCount_eq
     (dimension : ℕ) :
     hammingExpectedRetainedVertexCount dimension =
       2 * hammingRetentionProbability dimension *
@@ -5786,14 +5786,14 @@ theorem hammingExpectedRetainedVertexCount_eq
     Fintype.card_fin, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_pow]
   ring
 
-theorem hammingExpectedRetainedVertexCount_pos
+private theorem hammingExpectedRetainedVertexCount_pos
     (dimension : ℕ) :
     0 < hammingExpectedRetainedVertexCount dimension := by
   rw [hammingExpectedRetainedVertexCount_eq]
   have hprobability := hammingRetentionProbability_pos dimension
   positivity
 
-theorem hammingExpectedRetainedVertexCount_tendsto_atTop :
+private theorem hammingExpectedRetainedVertexCount_tendsto_atTop :
     Tendsto hammingExpectedRetainedVertexCount atTop atTop := by
   have hgrowth :=
     hammingRetentionProbability_mul_wordCount_tendsto_atTop.const_mul_atTop
@@ -5803,7 +5803,7 @@ theorem hammingExpectedRetainedVertexCount_tendsto_atTop :
   rw [hammingExpectedRetainedVertexCount_eq]
   ring
 
-theorem hammingExpectedRetainedVertexCount_inv_tendsto_zero :
+private theorem hammingExpectedRetainedVertexCount_inv_tendsto_zero :
     Tendsto
       (fun dimension : ℕ =>
         1 / hammingExpectedRetainedVertexCount dimension)
@@ -5814,7 +5814,7 @@ theorem hammingExpectedRetainedVertexCount_inv_tendsto_zero :
   filter_upwards [] with dimension
   simp only [Function.comp_apply, one_div]
 
-theorem hammingRetentionMeasure_real_vertexPair
+private theorem hammingRetentionMeasure_real_vertexPair
     (dimension : ℕ)
     (first second : Bool × HammingWord dimension) :
     (hammingRetentionMeasure dimension).real
@@ -5839,7 +5839,7 @@ theorem hammingRetentionMeasure_real_vertexPair
       dimension first second hequal]
     simp only [hequal, ↓reduceIte]
 
-noncomputable def hammingExpectedRetainedVertexSquare
+private noncomputable def hammingExpectedRetainedVertexSquare
     (dimension : ℕ) : ℝ :=
   ∑ first : Bool × HammingWord dimension,
     ∑ second : Bool × HammingWord dimension,
@@ -5847,7 +5847,7 @@ noncomputable def hammingExpectedRetainedVertexSquare
         {retained : Set (Bool × HammingWord dimension) |
           first ∈ retained ∧ second ∈ retained}
 
-theorem hammingExpectedRetainedVertexSquare_eq
+private theorem hammingExpectedRetainedVertexSquare_eq
     (dimension : ℕ) :
     hammingExpectedRetainedVertexSquare dimension =
       (((2 * 2 ^ dimension : ℕ) : ℝ) ^ 2) *
@@ -5878,7 +5878,7 @@ theorem hammingExpectedRetainedVertexSquare_eq
     mem_univ, ↓reduceIte]
   ring
 
-theorem hammingExpectedRetainedVertexVariance_eq
+private theorem hammingExpectedRetainedVertexVariance_eq
     (dimension : ℕ) :
     hammingExpectedRetainedVertexSquare dimension -
         hammingExpectedRetainedVertexCount dimension ^ 2 =
@@ -5890,7 +5890,7 @@ theorem hammingExpectedRetainedVertexVariance_eq
   push_cast
   ring
 
-theorem hammingExpectedRetainedVertexVariance_le_mean
+private theorem hammingExpectedRetainedVertexVariance_le_mean
     (dimension : ℕ) :
     hammingExpectedRetainedVertexSquare dimension -
         hammingExpectedRetainedVertexCount dimension ^ 2 ≤
@@ -5909,7 +5909,7 @@ theorem hammingExpectedRetainedVertexVariance_le_mean
   push_cast at hscaled ⊢
   nlinarith
 
-noncomputable def hammingRetainedVertexCount
+private noncomputable def hammingRetainedVertexCount
     (dimension : ℕ)
     (retained : Set (Bool × HammingWord dimension)) : ℝ := by
   classical
@@ -5917,7 +5917,7 @@ noncomputable def hammingRetainedVertexCount
     if vertex ∈ retained then 1 else 0
 
 open Classical in
-theorem hammingRetainedVertexCount_eq_card
+private theorem hammingRetainedVertexCount_eq_card
     (dimension : ℕ)
     (retained : Set (Bool × HammingWord dimension)) :
     hammingRetainedVertexCount dimension retained =
@@ -5925,7 +5925,7 @@ theorem hammingRetainedVertexCount_eq_card
   classical
   simp only [hammingRetainedVertexCount, sum_boole, Fintype.card_subtype]
 
-theorem hammingRetainedVertexCount_integral_eq
+private theorem hammingRetainedVertexCount_integral_eq
     (dimension : ℕ) :
     (∫ retained,
       hammingRetainedVertexCount dimension retained
@@ -5943,7 +5943,7 @@ theorem hammingRetainedVertexCount_integral_eq
     {retained : Set (Bool × HammingWord dimension) | vertex ∈ retained}
 
 open Classical in
-theorem hammingRetainedVertexCount_sq
+private theorem hammingRetainedVertexCount_sq
     (dimension : ℕ)
     (retained : Set (Bool × HammingWord dimension)) :
     hammingRetainedVertexCount dimension retained ^ 2 =
@@ -5961,7 +5961,7 @@ theorem hammingRetainedVertexCount_sq
     by_cases hsecond : second ∈ retained <;>
     simp [hfirst, hsecond]
 
-theorem hammingRetainedVertexCount_sq_integral_eq
+private theorem hammingRetainedVertexCount_sq_integral_eq
     (dimension : ℕ) :
     (∫ retained,
       hammingRetainedVertexCount dimension retained ^ 2
@@ -5990,7 +5990,7 @@ theorem hammingRetainedVertexCount_sq_integral_eq
   by_cases hretained : first ∈ retained ∧ second ∈ retained <;>
     simp [hretained]
 
-theorem hammingRetainedVertexCount_variance_eq
+private theorem hammingRetainedVertexCount_variance_eq
     (dimension : ℕ) :
     ProbabilityTheory.variance
         (hammingRetainedVertexCount dimension)
@@ -6015,7 +6015,7 @@ theorem hammingRetainedVertexCount_variance_eq
   rw [hammingRetainedVertexCount_sq_integral_eq,
     hammingRetainedVertexCount_integral_eq]
 
-theorem hammingRetainedVertexCount_variance_le
+private theorem hammingRetainedVertexCount_variance_le
     (dimension : ℕ) :
     ProbabilityTheory.variance
         (hammingRetainedVertexCount dimension)
@@ -6024,7 +6024,7 @@ theorem hammingRetainedVertexCount_variance_le
   rw [hammingRetainedVertexCount_variance_eq]
   exact hammingExpectedRetainedVertexVariance_le_mean dimension
 
-theorem hammingRetainedVertexCount_deviation_probability_le
+private theorem hammingRetainedVertexCount_deviation_probability_le
     (dimension : ℕ) (threshold : ℝ)
     (hthreshold : 0 < threshold) :
     (hammingRetentionMeasure dimension).real
@@ -6052,7 +6052,7 @@ theorem hammingRetainedVertexCount_deviation_probability_le
       gcongr
       exact hammingRetainedVertexCount_variance_le dimension
 
-theorem hammingRetainedVertexCount_upper_tail_probability_le
+private theorem hammingRetainedVertexCount_upper_tail_probability_le
     (dimension : ℕ) :
     (hammingRetentionMeasure dimension).real
       {retained : Set (Bool × HammingWord dimension) |
@@ -6112,7 +6112,7 @@ theorem hammingRetainedVertexCount_upper_tail_probability_le
       field_simp [hmean.ne']
       ring
 
-noncomputable def pairChildVertexFinset
+private noncomputable def pairChildVertexFinset
     {parentCount dimension : ℕ}
     (side : Bool)
     (children : PairLayer parentCount 1 → HammingWord dimension) :
@@ -6121,7 +6121,7 @@ noncomputable def pairChildVertexFinset
   exact (Finset.univ : Finset (PairLayer parentCount 1)).image
     (fun pair => (side, children pair))
 
-theorem pairChildVertexFinset_card
+private theorem pairChildVertexFinset_card
     {parentCount dimension : ℕ}
     (side : Bool)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -6135,14 +6135,14 @@ theorem pairChildVertexFinset_card
   · intro first second hequal
     exact hinjective (congrArg Prod.snd hequal)
 
-def pairChildRetentionEvent
+private def pairChildRetentionEvent
     {parentCount dimension : ℕ}
     (side : Bool)
     (children : PairLayer parentCount 1 → HammingWord dimension) :
     Set (Set (Bool × HammingWord dimension)) :=
   {retained | ∀ pair, (side, children pair) ∈ retained}
 
-theorem hammingRetentionMeasure_real_pairChildren
+private theorem hammingRetentionMeasure_real_pairChildren
     {parentCount dimension : ℕ}
     (side : Bool)
     (children : PairLayer parentCount 1 → HammingWord dimension)
@@ -6163,7 +6163,7 @@ theorem hammingRetentionMeasure_real_pairChildren
   rw [hevent, hammingRetentionMeasure_real_contains_finset,
     pairChildVertexFinset_card side children hinjective]
 
-noncomputable def badPairChildRetentionEvent
+private noncomputable def badPairChildRetentionEvent
     {parentCount dimension : ℕ}
     (parents : Fin parentCount → HammingWord dimension)
     (side : Bool)
@@ -6174,7 +6174,7 @@ noncomputable def badPairChildRetentionEvent
         (badPairChildArrays parents threshold).filter Function.Injective,
       pairChildRetentionEvent side children
 
-theorem badPairChildRetentionEvent_real_le
+private theorem badPairChildRetentionEvent_real_le
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (hdimension : 0 < dimension)
@@ -6249,21 +6249,21 @@ theorem badPairChildRetentionEvent_real_le
           (badPairChildArrays_card_le hparents hdimension parents threshold)
           hprobability_nonneg
 
-theorem hammingParentTuple_card (parentCount dimension : ℕ) :
+private theorem hammingParentTuple_card (parentCount dimension : ℕ) :
     Fintype.card (Fin parentCount → HammingWord dimension) =
       2 ^ (dimension * parentCount) := by
   simp only [HammingWord, Fintype.card_pi, Fintype.card_bool, prod_const, card_univ,
       Fintype.card_fin,
     ← pow_mul]
 
-noncomputable def badPairLayerRetentionEvent
+private noncomputable def badPairLayerRetentionEvent
     (parentCount dimension : ℕ)
     (side : Bool)
     (threshold : ℝ) : Set (Set (Bool × HammingWord dimension)) :=
   ⋃ parents : Fin parentCount → HammingWord dimension,
     badPairChildRetentionEvent parents side threshold
 
-theorem badPairLayerRetentionEvent_real_le
+private theorem badPairLayerRetentionEvent_real_le
     {parentCount dimension : ℕ}
     (hparents : 2 ≤ parentCount)
     (hdimension : 0 < dimension)
@@ -6316,7 +6316,7 @@ theorem badPairLayerRetentionEvent_real_le
       dsimp [bound]
       ring
 
-theorem badPairLayerRetentionBound_eq_exp
+private theorem badPairLayerRetentionBound_eq_exp
     (parentCount dimension : ℕ) :
     ((((2 ^ (dimension * parentCount) : ℕ) : ℝ) *
       (((parentCount.choose 2 + 1) ^ (3 * dimension) : ℕ) : ℝ) *
@@ -6371,7 +6371,7 @@ theorem badPairLayerRetentionBound_eq_exp
   field_simp [log_two_pos.ne']
   ring
 
-theorem badPairLayerRetentionEvent_real_lt_exp_neg
+private theorem badPairLayerRetentionEvent_real_lt_exp_neg
     {parentCount dimension : ℕ}
     (hparents : 4 ≤ parentCount)
     (hdimension : 0 < dimension)
@@ -6411,7 +6411,7 @@ theorem badPairLayerRetentionEvent_real_lt_exp_neg
         (mul_pos hdimension_real log_two_pos)
       nlinarith
 
-noncomputable def badPairLayersRetentionEvent
+private noncomputable def badPairLayersRetentionEvent
     {depth : ℕ}
     (layerSizes : Fin depth → ℕ)
     (dimension : ℕ) : Set (Set (Bool × HammingWord dimension)) :=
@@ -6419,7 +6419,7 @@ noncomputable def badPairLayersRetentionEvent
     badPairLayerRetentionEvent (layerSizes layer) dimension side
       (midpointBeta - entropySlack)
 
-theorem badPairLayersRetentionEvent_real_le
+private theorem badPairLayersRetentionEvent_real_le
     {depth dimension : ℕ}
     (layerSizes : Fin depth → ℕ)
     (hdimension : 0 < dimension)
@@ -6481,7 +6481,7 @@ theorem badPairLayersRetentionEvent_real_le
           Nat.cast_mul, bound]
         ring
 
-theorem exp_neg_dimension_log_two (dimension : ℕ) :
+private theorem exp_neg_dimension_log_two (dimension : ℕ) :
     Real.exp (-(dimension : ℝ) * Real.log 2) =
       ((1 / 2 : ℝ) ^ dimension) := by
   calc
@@ -6497,7 +6497,7 @@ theorem exp_neg_dimension_log_two (dimension : ℕ) :
       rw [← inv_pow]
       norm_num
 
-theorem pairLayerExclusionProbability_tendsto_zero (depth : ℕ) :
+private theorem pairLayerExclusionProbability_tendsto_zero (depth : ℕ) :
     Filter.Tendsto
       (fun dimension : ℕ =>
         (((2 * depth : ℕ) : ℝ)) *
@@ -6512,7 +6512,7 @@ theorem pairLayerExclusionProbability_tendsto_zero (depth : ℕ) :
   simpa only [mul_zero] using
     hgeometric.const_mul (((2 * depth : ℕ) : ℝ))
 
-theorem exists_hammingRetention_outside_event
+private theorem exists_hammingRetention_outside_event
     (dimension : ℕ)
     (event : Set (Set (Bool × HammingWord dimension)))
     (hsmall : (hammingRetentionMeasure dimension).real event < 1) :
@@ -6526,7 +6526,7 @@ theorem exists_hammingRetention_outside_event
   rw [hevent] at hsmall
   simp only [MeasureTheory.probReal_univ, lt_self_iff_false] at hsmall
 
-theorem exists_actualPairLayer_exclusion_parameters :
+private theorem exists_actualPairLayer_exclusion_parameters :
     ∃ baseSize depth : ℕ,
       4 ≤ baseSize ∧
       0 < depth ∧
@@ -6554,19 +6554,19 @@ theorem exists_actualPairLayer_exclusion_parameters :
       (Fintype.card (PairLayer baseSize layer.val)) hsize
   exact ⟨hbase.trans hsize, herror, hfirst_moment⟩
 
-noncomputable def hammingDifferenceSet {dimension : ℕ}
+private noncomputable def hammingDifferenceSet {dimension : ℕ}
     (u v : HammingWord dimension) : Finset (Fin dimension) := by
   classical
   exact Finset.univ.filter (fun coordinate => u coordinate ≠ v coordinate)
 
-noncomputable def hammingFlip {dimension : ℕ}
+private noncomputable def hammingFlip {dimension : ℕ}
     (u : HammingWord dimension) (coordinates : Finset (Fin dimension)) :
     HammingWord dimension := by
   classical
   exact fun coordinate =>
     if coordinate ∈ coordinates then !(u coordinate) else u coordinate
 
-theorem hammingDifferenceSet_flip {dimension : ℕ}
+private theorem hammingDifferenceSet_flip {dimension : ℕ}
     (u : HammingWord dimension) (coordinates : Finset (Fin dimension)) :
     hammingDifferenceSet u (hammingFlip u coordinates) = coordinates := by
   classical
@@ -6579,7 +6579,7 @@ theorem hammingDifferenceSet_flip {dimension : ℕ}
       imp_false,
       Decidable.not_not, subset_univ, filter_mem_eq_of_subset, hcoordinate]
 
-theorem hammingFlip_differenceSet {dimension : ℕ}
+private theorem hammingFlip_differenceSet {dimension : ℕ}
     (u v : HammingWord dimension) :
     hammingFlip u (hammingDifferenceSet u v) = v := by
   classical
@@ -6587,18 +6587,18 @@ theorem hammingFlip_differenceSet {dimension : ℕ}
   cases hu : u coordinate <;> cases hv : v coordinate <;>
     simp [hammingFlip, hammingDifferenceSet, hu, hv]
 
-noncomputable def hammingBall (dimension radius : ℕ)
+private noncomputable def hammingBall (dimension radius : ℕ)
     (u : HammingWord dimension) : Finset (HammingWord dimension) := by
   classical
   exact Finset.univ.filter (fun v => hammingDist u v ≤ radius)
 
-noncomputable def boundedDifferenceSets (dimension radius : ℕ) :
+private noncomputable def boundedDifferenceSets (dimension radius : ℕ) :
     Finset (Finset (Fin dimension)) := by
   classical
   exact ((Finset.univ : Finset (Fin dimension)).powerset).filter
     (fun coordinates => coordinates.card ≤ radius)
 
-noncomputable def hammingBallEquiv (dimension radius : ℕ)
+private noncomputable def hammingBallEquiv (dimension radius : ℕ)
     (u : HammingWord dimension) :
     ↥(hammingBall dimension radius u) ≃
       ↥(boundedDifferenceSets dimension radius) := by
@@ -6636,7 +6636,7 @@ noncomputable def hammingBallEquiv (dimension radius : ℕ)
     apply Subtype.ext
     exact hammingDifferenceSet_flip u coordinates.val
 
-theorem boundedDifferenceSets_card (dimension radius : ℕ) :
+private theorem boundedDifferenceSets_card (dimension radius : ℕ) :
     (boundedDifferenceSets dimension radius).card =
       ∑ d ∈ Finset.range (radius + 1), dimension.choose d := by
   classical
@@ -6678,7 +6678,7 @@ theorem boundedDifferenceSets_card (dimension radius : ℕ) :
       rw [hfiber, Finset.card_powersetCard]
       simp only [card_univ, Fintype.card_fin]
 
-theorem hammingBall_card (dimension radius : ℕ)
+private theorem hammingBall_card (dimension radius : ℕ)
     (u : HammingWord dimension) :
     (hammingBall dimension radius u).card =
       ∑ d ∈ Finset.range (radius + 1), dimension.choose d := by
@@ -6699,12 +6699,12 @@ attribute [local instance] Classical.propDecidable
 
 section HammingHostAndExclusion
 
-def hammingHost (dimension radius : ℕ) :
+private def hammingHost (dimension radius : ℕ) :
     SimpleGraph (Bool × HammingWord dimension) :=
   SimpleGraph.fromRel
     (fun x y => x.1 ≠ y.1 ∧ hammingDist x.2 y.2 ≤ radius)
 
-theorem hammingHost_adj_iff (dimension radius : ℕ)
+private theorem hammingHost_adj_iff (dimension radius : ℕ)
     (x y : Bool × HammingWord dimension) :
     (hammingHost dimension radius).Adj x y ↔
       x.1 ≠ y.1 ∧ hammingDist x.2 y.2 ≤ radius := by
@@ -6719,7 +6719,7 @@ theorem hammingHost_adj_iff (dimension radius : ℕ)
     intro heq
     exact hxy.1 (congrArg Prod.fst heq)
 
-theorem hammingBall_card_ge_boundary_binomial
+private theorem hammingBall_card_ge_boundary_binomial
     (dimension radius : ℕ)
     (word : HammingWord dimension) :
     dimension.choose radius ≤ (hammingBall dimension radius word).card := by
@@ -6731,7 +6731,7 @@ theorem hammingBall_card_ge_boundary_binomial
     exact Nat.zero_le _
   · simp only [mem_range, lt_add_iff_pos_right, Order.lt_one_iff]
 
-theorem hammingWordNeighbor_sum_const
+private theorem hammingWordNeighbor_sum_const
     (dimension radius : ℕ) (left : HammingWord dimension)
     (weight : ℝ) :
     (∑ right : HammingWord dimension,
@@ -6751,7 +6751,7 @@ theorem hammingWordNeighbor_sum_const
         dimension.choose distance : ℕ) : ℝ) * weight := by
       rw [hammingBall_card]
 
-theorem hammingWordEdge_sum_const
+private theorem hammingWordEdge_sum_const
     (dimension radius : ℕ) (weight : ℝ) :
     (∑ left : HammingWord dimension,
       ∑ right : HammingWord dimension,
@@ -6767,7 +6767,7 @@ theorem hammingWordEdge_sum_const
     Nat.cast_pow, Nat.cast_ofNat, Nat.cast_sum]
   ring
 
-theorem hammingWordEdgePair_sum_const
+private theorem hammingWordEdgePair_sum_const
     (dimension radius : ℕ) (weight : ℝ) :
     (∑ firstLeft : HammingWord dimension,
       ∑ firstRight : HammingWord dimension,
@@ -6801,7 +6801,7 @@ theorem hammingWordEdgePair_sum_const
   rw [hammingWordEdge_sum_const]
   ring
 
-theorem hammingWordEdgePairSharedLeft_sum_const
+private theorem hammingWordEdgePairSharedLeft_sum_const
     (dimension radius : ℕ) (weight : ℝ) :
     (∑ firstLeft : HammingWord dimension,
       ∑ firstRight : HammingWord dimension,
@@ -6863,7 +6863,7 @@ theorem hammingWordEdgePairSharedLeft_sum_const
   rw [hammingWordEdge_sum_const]
   ring
 
-theorem hammingWordEdgePairSharedRight_sum_const
+private theorem hammingWordEdgePairSharedRight_sum_const
     (dimension radius : ℕ) (weight : ℝ) :
     (∑ firstLeft : HammingWord dimension,
       ∑ firstRight : HammingWord dimension,
@@ -6906,7 +6906,7 @@ theorem hammingWordEdgePairSharedRight_sum_const
       simpa only [hammingDist_comm] using
         hammingWordEdgePairSharedLeft_sum_const dimension radius weight
 
-theorem hammingWordEdgePairIdentical_sum_const
+private theorem hammingWordEdgePairIdentical_sum_const
     (dimension radius : ℕ) (weight : ℝ) :
     (∑ firstLeft : HammingWord dimension,
       ∑ firstRight : HammingWord dimension,
@@ -6945,7 +6945,7 @@ theorem hammingWordEdgePairIdentical_sum_const
       · simp only [hedge, false_and, ↓reduceIte, sum_const_zero]
     _ = _ := hammingWordEdge_sum_const dimension radius weight
 
-noncomputable def hammingExpectedRetainedEdgeCount
+private noncomputable def hammingExpectedRetainedEdgeCount
     (dimension radius : ℕ) : ℝ :=
   ∑ left : HammingWord dimension,
     ∑ right : HammingWord dimension,
@@ -6955,7 +6955,7 @@ noncomputable def hammingExpectedRetainedEdgeCount
             (false, left) ∈ retained ∧ (true, right) ∈ retained}
       else 0
 
-theorem hammingExpectedRetainedEdgeCount_eq
+private theorem hammingExpectedRetainedEdgeCount_eq
     (dimension radius : ℕ) :
     hammingExpectedRetainedEdgeCount dimension radius =
       hammingRetentionProbability dimension ^ 2 *
@@ -6976,7 +6976,7 @@ theorem hammingExpectedRetainedEdgeCount_eq
   simpa only [Nat.cast_pow, Nat.cast_ofNat, mul_comm, Nat.cast_sum, mul_assoc, mul_left_comm] using
     hammingWordEdge_sum_const dimension radius (hammingRetentionProbability dimension ^ 2)
 
-theorem hammingExpectedRetainedEdgeCount_pos
+private theorem hammingExpectedRetainedEdgeCount_pos
     (dimension radius : ℕ) :
     0 < hammingExpectedRetainedEdgeCount dimension radius := by
   have hterm :
@@ -6998,7 +6998,7 @@ theorem hammingExpectedRetainedEdgeCount_pos
   have hprobability := hammingRetentionProbability_pos dimension
   positivity
 
-noncomputable def hammingExpectedRetainedEdgeSquare
+private noncomputable def hammingExpectedRetainedEdgeSquare
     (dimension radius : ℕ) : ℝ :=
   ∑ firstLeft : HammingWord dimension,
     ∑ firstRight : HammingWord dimension,
@@ -7014,7 +7014,7 @@ noncomputable def hammingExpectedRetainedEdgeSquare
                 (true, secondRight) ∈ retained}
           else 0
 
-theorem hammingExpectedRetainedEdgeSquare_le_endpoint_decomposition
+private theorem hammingExpectedRetainedEdgeSquare_le_endpoint_decomposition
     (dimension radius : ℕ) :
     hammingExpectedRetainedEdgeSquare dimension radius ≤
       ∑ firstLeft : HammingWord dimension,
@@ -7049,7 +7049,7 @@ theorem hammingExpectedRetainedEdgeSquare_le_endpoint_decomposition
       dimension firstLeft firstRight secondLeft secondRight
   · simp only [hedge, ↓reduceIte, Std.le_refl]
 
-theorem hammingExpectedRetainedEdgeSquare_le
+private theorem hammingExpectedRetainedEdgeSquare_le
     (dimension radius : ℕ) :
     hammingExpectedRetainedEdgeSquare dimension radius ≤
       hammingExpectedRetainedEdgeCount dimension radius ^ 2 +
@@ -7122,7 +7122,7 @@ theorem hammingExpectedRetainedEdgeSquare_le
         hammingExpectedRetainedEdgeCount_eq]
       ring
 
-theorem hammingExpectedRetainedEdgeVariance_le
+private theorem hammingExpectedRetainedEdgeVariance_le
     (dimension radius : ℕ) :
     hammingExpectedRetainedEdgeSquare dimension radius -
         hammingExpectedRetainedEdgeCount dimension radius ^ 2 ≤
@@ -7134,7 +7134,7 @@ theorem hammingExpectedRetainedEdgeVariance_le
   have hsecond := hammingExpectedRetainedEdgeSquare_le dimension radius
   linarith
 
-noncomputable def retainedHammingWordEdges
+private noncomputable def retainedHammingWordEdges
     (dimension radius : ℕ)
     (retained : Set (Bool × HammingWord dimension)) :
     Finset (HammingWord dimension × HammingWord dimension) := by
@@ -7143,7 +7143,7 @@ noncomputable def retainedHammingWordEdges
     hammingDist edge.1 edge.2 ≤ radius ∧
       (false, edge.1) ∈ retained ∧ (true, edge.2) ∈ retained)
 
-noncomputable def hammingRetainedEdgeCount
+private noncomputable def hammingRetainedEdgeCount
     (dimension radius : ℕ)
     (retained : Set (Bool × HammingWord dimension)) : ℝ := by
   classical
@@ -7154,7 +7154,7 @@ noncomputable def hammingRetainedEdgeCount
             (false, left) ∈ retained ∧ (true, right) ∈ retained
         then 1 else 0
 
-theorem hammingRetainedEdgeCount_eq_wordEdges_card
+private theorem hammingRetainedEdgeCount_eq_wordEdges_card
     (dimension radius : ℕ)
     (retained : Set (Bool × HammingWord dimension)) :
     hammingRetainedEdgeCount dimension radius retained =
@@ -7179,7 +7179,7 @@ theorem hammingRetainedEdgeCount_eq_wordEdges_card
     _ = ((retainedHammingWordEdges dimension radius retained).card : ℝ) := by
       simp only [sum_const, nsmul_eq_mul, mul_one]
 
-theorem hammingRetainedEdgeCount_integral_eq
+private theorem hammingRetainedEdgeCount_integral_eq
     (dimension radius : ℕ) :
     (∫ retained,
       hammingRetainedEdgeCount dimension radius retained
@@ -7216,7 +7216,7 @@ theorem hammingRetainedEdgeCount_integral_eq
   · simp only [hedge, false_and, ↓reduceIte, MeasureTheory.integral_zero]
 
 open Classical in
-theorem hammingRetainedEdgeCount_sq
+private theorem hammingRetainedEdgeCount_sq
     (dimension radius : ℕ)
     (retained : Set (Bool × HammingWord dimension)) :
     hammingRetainedEdgeCount dimension radius retained ^ 2 =
@@ -7254,7 +7254,7 @@ theorem hammingRetainedEdgeCount_sq
     simp [hfirst_edge, hsecond_edge, hfirst_left, hfirst_right,
       hsecond_left, hsecond_right]
 
-theorem hammingRetainedEdgeCount_sq_integral_eq
+private theorem hammingRetainedEdgeCount_sq_integral_eq
     (dimension radius : ℕ) :
     (∫ retained,
       hammingRetainedEdgeCount dimension radius retained ^ 2
@@ -7337,7 +7337,7 @@ theorem hammingRetainedEdgeCount_sq_integral_eq
       simp [hretained]
   · simp only [hedge, ↓reduceIte, MeasureTheory.integral_zero]
 
-theorem hammingRetainedEdgeCount_variance_eq
+private theorem hammingRetainedEdgeCount_variance_eq
     (dimension radius : ℕ) :
     ProbabilityTheory.variance
         (hammingRetainedEdgeCount dimension radius)
@@ -7362,7 +7362,7 @@ theorem hammingRetainedEdgeCount_variance_eq
   rw [hammingRetainedEdgeCount_sq_integral_eq,
     hammingRetainedEdgeCount_integral_eq]
 
-theorem hammingRetainedEdgeCount_variance_le
+private theorem hammingRetainedEdgeCount_variance_le
     (dimension radius : ℕ) :
     ProbabilityTheory.variance
         (hammingRetainedEdgeCount dimension radius)
@@ -7375,7 +7375,7 @@ theorem hammingRetainedEdgeCount_variance_le
   rw [hammingRetainedEdgeCount_variance_eq]
   exact hammingExpectedRetainedEdgeVariance_le dimension radius
 
-theorem hammingRetainedEdgeCount_deviation_probability_le
+private theorem hammingRetainedEdgeCount_deviation_probability_le
     (dimension radius : ℕ) (threshold : ℝ)
     (hthreshold : 0 < threshold) :
     (hammingRetentionMeasure dimension).real
@@ -7413,7 +7413,7 @@ theorem hammingRetainedEdgeCount_deviation_probability_le
       gcongr
       exact hammingRetainedEdgeCount_variance_le dimension radius
 
-theorem hammingRetainedEdgeCount_lower_tail_probability_le
+private theorem hammingRetainedEdgeCount_lower_tail_probability_le
     (dimension radius : ℕ) :
     (hammingRetentionMeasure dimension).real
       {retained : Set (Bool × HammingWord dimension) |
@@ -7497,12 +7497,12 @@ theorem hammingRetainedEdgeCount_lower_tail_probability_le
       field_simp [hprobability.ne', hwords.ne', hdegree_positive.ne']
       ring
 
-def retainedHammingHost (dimension radius : ℕ)
+private def retainedHammingHost (dimension radius : ℕ)
     (retained : Set (Bool × HammingWord dimension)) : SimpleGraph retained :=
   (hammingHost dimension radius).induce retained
 
 open Classical in
-theorem retainedHammingHost_edgeFinset_card
+private theorem retainedHammingHost_edgeFinset_card
     (dimension radius : ℕ)
     (retained : Set (Bool × HammingWord dimension)) :
     (retainedHammingHost dimension radius retained).edgeFinset.card =
@@ -7574,7 +7574,7 @@ theorem retainedHammingHost_edgeFinset_card
   exact hcard.symm
 
 open Classical in
-theorem hammingRetainedEdgeCount_eq_edgeFinset_card
+private theorem hammingRetainedEdgeCount_eq_edgeFinset_card
     (dimension radius : ℕ)
     (retained : Set (Bool × HammingWord dimension)) :
     hammingRetainedEdgeCount dimension radius retained =
@@ -7582,7 +7582,7 @@ theorem hammingRetainedEdgeCount_eq_edgeFinset_card
   rw [hammingRetainedEdgeCount_eq_wordEdges_card,
     retainedHammingHost_edgeFinset_card]
 
-theorem pairGraphCopy_layer_side_eq
+private theorem pairGraphCopy_layer_side_eq
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -7649,7 +7649,7 @@ theorem pairGraphCopy_layer_side_eq
             (by omega) second)).val.1 <;>
       simp_all
 
-theorem pairGraphCopy_child_layer_side_eq
+private theorem pairGraphCopy_child_layer_side_eq
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -7721,7 +7721,7 @@ theorem pairGraphCopy_child_layer_side_eq
           (by omega) secondParent)).val.1 <;>
     simp_all
 
-noncomputable def pairGraphCopyParentWords
+private noncomputable def pairGraphCopyParentWords
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -7735,7 +7735,7 @@ noncomputable def pairGraphCopyParentWords
       (pairLayerEmbedding baseSize depth layer.val (by omega)
         ((pairLayerFinEquiv baseSize layer.val).symm parent))).val.2
 
-noncomputable def pairGraphCopyChildWords
+private noncomputable def pairGraphCopyChildWords
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -7749,7 +7749,7 @@ noncomputable def pairGraphCopyChildWords
       (pairLayerEmbedding baseSize depth (layer.val + 1) (by omega)
         ((pairLayerPairEquiv baseSize layer.val) pair))).val.2
 
-noncomputable def pairGraphCopyChildSide
+private noncomputable def pairGraphCopyChildSide
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -7762,7 +7762,7 @@ noncomputable def pairGraphCopyChildSide
     (pairLayerEmbedding baseSize depth (layer.val + 1) (by omega)
       ((pairLayerPairEquiv baseSize layer.val) reference))).val.1
 
-noncomputable def pairGraphCopyLayerPotential
+private noncomputable def pairGraphCopyLayerPotential
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -7779,7 +7779,7 @@ noncomputable def pairGraphCopyLayerPotential
         (Fintype.card (PairLayer baseSize layer.val) : ℝ))) /
     (dimension : ℝ)
 
-theorem pairGraphCopy_parentPotential_eq
+private theorem pairGraphCopy_parentPotential_eq
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -7803,7 +7803,7 @@ theorem pairGraphCopy_parentPotential_eq
         (pairLayerEmbedding baseSize depth layer.val (by omega)
           vertex)).val.2 coordinate)]
 
-theorem pairGraphCopy_childPotential_eq
+private theorem pairGraphCopy_childPotential_eq
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -7828,7 +7828,7 @@ theorem pairGraphCopy_childPotential_eq
           vertex)).val.2 coordinate)]
   rw [pairLayer_card_succ]
 
-theorem pairGraphCopyLayerPotential_mem_Icc
+private theorem pairGraphCopyLayerPotential_mem_Icc
     {baseSize depth dimension radius : ℕ}
     (hbase : 4 ≤ baseSize)
     (hdimension : 0 < dimension)
@@ -7920,7 +7920,7 @@ theorem pairGraphCopyLayerPotential_mem_Icc
       _ = (dimension : ℝ) := by
         simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul, mul_one]
 
-theorem pairGraphCopy_layer_entropy_upper_of_disagreement
+private theorem pairGraphCopy_layer_entropy_upper_of_disagreement
     {baseSize depth dimension radius : ℕ}
     (hbase : 4 ≤ baseSize)
     (hdimension : 0 < dimension)
@@ -7960,7 +7960,7 @@ theorem pairGraphCopy_layer_entropy_upper_of_disagreement
   unfold entropyLowerEndpoint
   nlinarith
 
-theorem pairGraphCopyChildWords_injective
+private theorem pairGraphCopyChildWords_injective
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -7997,7 +7997,7 @@ theorem pairGraphCopyChildWords_injective
       (by omega)).injective hsources
   exact (pairLayerPairEquiv baseSize layer.val).injective hpairs
 
-theorem pairGraphCopyChildWords_retained
+private theorem pairGraphCopyChildWords_retained
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -8026,7 +8026,7 @@ theorem pairGraphCopyChildWords_retained
   rw [hside]
   exact hretained
 
-theorem pairGraphCopy_parent_child_hammingDist_le
+private theorem pairGraphCopy_parent_child_hammingDist_le
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -8068,7 +8068,7 @@ theorem pairGraphCopy_parent_child_hammingDist_le
   simpa only [pairGraphCopyParentWords, pairGraphCopyChildWords, ge_iff_le,
       hammingDist_comm] using hdist
 
-theorem pairGraphCopy_averageDisagreement_le_radius
+private theorem pairGraphCopy_averageDisagreement_le_radius
     {baseSize depth dimension radius : ℕ}
     (hbase : 4 ≤ baseSize)
     (hdimension : 0 < dimension)
@@ -8094,7 +8094,7 @@ theorem pairGraphCopy_averageDisagreement_le_radius
   exact pairGraphCopy_parent_child_hammingDist_le
     retained copy layer pair parent hparent
 
-theorem pairGraphCopy_averageDisagreement_le_tau
+private theorem pairGraphCopy_averageDisagreement_le_tau
     {baseSize depth dimension radius : ℕ}
     (hbase : 4 ≤ baseSize)
     (hdimension : 0 < dimension)
@@ -8123,7 +8123,7 @@ theorem pairGraphCopy_averageDisagreement_le_tau
     _ ≤ tau :=
       (div_le_iff₀ hdimension_real).mpr hradius
 
-theorem pairGraphCopy_entropy_lower_of_exclusion
+private theorem pairGraphCopy_entropy_lower_of_exclusion
     {baseSize depth dimension radius : ℕ}
     (retained : Set (Bool × HammingWord dimension))
     (copy : SimpleGraph.Copy
@@ -8188,7 +8188,7 @@ theorem pairGraphCopy_entropy_lower_of_exclusion
           pairGraphCopyChildWords_retained
             retained copy layer reference⟩⟩
 
-theorem pairGraph_free_of_layer_exclusion_and_disagreement
+private theorem pairGraph_free_of_layer_exclusion_and_disagreement
     {baseSize depth dimension radius : ℕ}
     (hbase : 4 ≤ baseSize)
     (hdimension : 0 < dimension)
@@ -8274,7 +8274,7 @@ theorem pairGraph_free_of_layer_exclusion_and_disagreement
       hlayer, hnext, hcurrent, hnext_le, hcurrent_le] using hupper
   · exact hdepth
 
-theorem pairGraphOverFin_free_of_layer_exclusion_and_disagreement
+private theorem pairGraphOverFin_free_of_layer_exclusion_and_disagreement
     {baseSize depth dimension radius : ℕ}
     (hbase : 4 ≤ baseSize)
     (hdimension : 0 < dimension)
@@ -8307,7 +8307,7 @@ theorem pairGraphOverFin_free_of_layer_exclusion_and_disagreement
       (pairGraph_free_of_layer_exclusion_and_disagreement
         hbase hdimension hdepth retained hexclusion herror hdisagreement)
 
-theorem pairGraphOverFin_free_of_layer_exclusion
+private theorem pairGraphOverFin_free_of_layer_exclusion
     {baseSize depth dimension radius : ℕ}
     (hbase : 4 ≤ baseSize)
     (hdimension : 0 < dimension)
@@ -8336,17 +8336,17 @@ end HammingHostAndExclusion
 
 section MainTheorem
 
-noncomputable def manuscriptHammingRadius (dimension : ℕ) : ℕ :=
+private noncomputable def manuscriptHammingRadius (dimension : ℕ) : ℕ :=
   ⌊tau * (dimension : ℝ)⌋₊
 
-theorem manuscriptHammingRadius_le (dimension : ℕ) :
+private theorem manuscriptHammingRadius_le (dimension : ℕ) :
     (manuscriptHammingRadius dimension : ℝ) ≤
       tau * (dimension : ℝ) := by
   unfold manuscriptHammingRadius
   exact Nat.floor_le
     (mul_nonneg tau_pos.le (Nat.cast_nonneg dimension))
 
-theorem manuscriptHammingRadius_le_dimension (dimension : ℕ) :
+private theorem manuscriptHammingRadius_le_dimension (dimension : ℕ) :
     manuscriptHammingRadius dimension ≤ dimension := by
   have hradius := manuscriptHammingRadius_le dimension
   have hdimension : 0 ≤ (dimension : ℝ) := Nat.cast_nonneg dimension
@@ -8356,7 +8356,7 @@ theorem manuscriptHammingRadius_le_dimension (dimension : ℕ) :
     nlinarith
   exact_mod_cast hreal
 
-theorem manuscriptHammingRadius_ratio_tendsto :
+private theorem manuscriptHammingRadius_ratio_tendsto :
     Tendsto
       (fun dimension : ℕ =>
         (manuscriptHammingRadius dimension : ℝ) / (dimension : ℝ))
@@ -8366,7 +8366,7 @@ theorem manuscriptHammingRadius_ratio_tendsto :
     (tendsto_nat_floor_mul_div_atTop (R := ℝ) tau_pos.le).comp
       tendsto_natCast_atTop_atTop
 
-theorem manuscriptHammingRadius_binEntropy_tendsto :
+private theorem manuscriptHammingRadius_binEntropy_tendsto :
     Tendsto
       (fun dimension : ℕ =>
         Real.binEntropy
@@ -8375,7 +8375,7 @@ theorem manuscriptHammingRadius_binEntropy_tendsto :
   exact Real.binEntropy_continuous.continuousAt.tendsto.comp
     manuscriptHammingRadius_ratio_tendsto
 
-theorem manuscriptHammingBall_card_entropy_lower
+private theorem manuscriptHammingBall_card_entropy_lower
     (dimension : ℕ) (word : HammingWord dimension) :
     Real.exp
         ((dimension : ℝ) *
@@ -8401,7 +8401,7 @@ theorem manuscriptHammingBall_card_entropy_lower
       exact_mod_cast hammingBall_card_ge_boundary_binomial
         dimension (manuscriptHammingRadius dimension) word
 
-theorem eventually_manuscriptHammingRadius_binEntropy_ge
+private theorem eventually_manuscriptHammingRadius_binEntropy_ge
     (loss : ℝ) (hloss : 0 < loss) :
     ∀ᶠ dimension : ℕ in atTop,
       Real.binEntropy tau - loss ≤
@@ -8420,10 +8420,10 @@ theorem eventually_manuscriptHammingRadius_binEntropy_ge
       ((manuscriptHammingRadius dimension : ℝ) /
         (dimension : ℝ)) from hdimension).le
 
-noncomputable def sampledHammingEdgeEntropyRate : ℝ :=
+private noncomputable def sampledHammingEdgeEntropyRate : ℝ :=
   (1 - 2 * midpointBeta) * Real.log 2 + Real.binEntropy tau
 
-theorem sampledHammingEdgeEntropyRate_pos :
+private theorem sampledHammingEdgeEntropyRate_pos :
     0 < sampledHammingEdgeEntropyRate := by
   have hwindow := midpointBeta_lt_upper_unconditional
   unfold entropyUpperEndpoint at hwindow
@@ -8438,7 +8438,7 @@ theorem sampledHammingEdgeEntropyRate_pos :
   rw [hentropy]
   nlinarith [mul_pos hbits log_two_pos]
 
-theorem eventually_manuscriptExpectedRetainedEdge_entropy_lower
+private theorem eventually_manuscriptExpectedRetainedEdge_entropy_lower
     (loss : ℝ) (hloss : 0 < loss) :
     ∀ᶠ dimension : ℕ in atTop,
       Real.exp
@@ -8498,7 +8498,7 @@ theorem eventually_manuscriptExpectedRetainedEdge_entropy_lower
         (manuscriptHammingRadius dimension) := by
       rw [hammingExpectedRetainedEdgeCount_eq]
 
-theorem manuscriptExpectedRetainedEdgeCount_tendsto_atTop :
+private theorem manuscriptExpectedRetainedEdgeCount_tendsto_atTop :
     Tendsto
       (fun dimension : ℕ =>
         hammingExpectedRetainedEdgeCount dimension
@@ -8520,7 +8520,7 @@ theorem manuscriptExpectedRetainedEdgeCount_tendsto_atTop :
   filter_upwards [hlower] with dimension hdimension
   simpa only [hhalf, mul_comm] using hdimension
 
-theorem manuscriptExpectedRetainedEdgeCount_inv_tendsto_zero :
+private theorem manuscriptExpectedRetainedEdgeCount_inv_tendsto_zero :
     Tendsto
       (fun dimension : ℕ =>
         1 / hammingExpectedRetainedEdgeCount dimension
@@ -8532,7 +8532,7 @@ theorem manuscriptExpectedRetainedEdgeCount_inv_tendsto_zero :
   filter_upwards [] with dimension
   simp only [Function.comp_apply, one_div]
 
-noncomputable def manuscriptSamplingFailureBound
+private noncomputable def manuscriptSamplingFailureBound
     (depth dimension : ℕ) : ℝ :=
   (((2 * depth : ℕ) : ℝ)) *
       Real.exp (-(dimension : ℝ) * Real.log 2) +
@@ -8542,7 +8542,7 @@ noncomputable def manuscriptSamplingFailureBound
       8 / (hammingRetentionProbability dimension *
         ((2 ^ dimension : ℕ) : ℝ)))
 
-theorem manuscriptSamplingFailureBound_tendsto_zero
+private theorem manuscriptSamplingFailureBound_tendsto_zero
     (depth : ℕ) :
     Tendsto
       (manuscriptSamplingFailureBound depth)
@@ -8574,7 +8574,7 @@ theorem manuscriptSamplingFailureBound_tendsto_zero
   simp only [div_eq_mul_inv]
   ring
 
-noncomputable def manuscriptSamplingFailureEvent
+private noncomputable def manuscriptSamplingFailureEvent
     {depth : ℕ}
     (layerSizes : Fin depth → ℕ)
     (dimension : ℕ) : Set (Set (Bool × HammingWord dimension)) :=
@@ -8589,7 +8589,7 @@ noncomputable def manuscriptSamplingFailureEvent
         hammingExpectedRetainedEdgeCount dimension
           (manuscriptHammingRadius dimension) / 2}
 
-theorem manuscriptSamplingFailureEvent_real_le
+private theorem manuscriptSamplingFailureEvent_real_le
     {depth dimension : ℕ}
     (layerSizes : Fin depth → ℕ)
     (hdimension : 0 < dimension)
@@ -8657,7 +8657,7 @@ theorem manuscriptSamplingFailureEvent_real_le
     _ = manuscriptSamplingFailureBound depth dimension := by
       rfl
 
-theorem pairGraphOverFin_free_of_manuscript_exclusion
+private theorem pairGraphOverFin_free_of_manuscript_exclusion
     {baseSize depth dimension : ℕ}
     (hbase : 4 ≤ baseSize)
     (hdimension : 0 < dimension)
@@ -8681,7 +8681,7 @@ theorem pairGraphOverFin_free_of_manuscript_exclusion
     (manuscriptHammingRadius_le dimension)
     retained hexclusion herror
 
-theorem eventually_exists_pairGraph_free_dense_retainedHost :
+private theorem eventually_exists_pairGraph_free_dense_retainedHost :
     ∃ baseSize depth : ℕ,
       4 ≤ baseSize ∧
       0 < depth ∧
@@ -8751,7 +8751,7 @@ theorem eventually_exists_pairGraph_free_dense_retainedHost :
       (fun layer => (hlayers layer).2.1),
     hvertices, hedges⟩
 
-theorem baseSize_le_pairVertex_card
+private theorem baseSize_le_pairVertex_card
     (baseSize depth : ℕ) :
     baseSize ≤ Fintype.card (PairVertex baseSize depth) := by
   calc
@@ -8761,7 +8761,7 @@ theorem baseSize_le_pairVertex_card
       Fintype.card_le_of_embedding
         (pairLayerEmbedding baseSize depth 0 (by omega))
 
-theorem pairGraphOverFin_forall_exists_adj
+private theorem pairGraphOverFin_forall_exists_adj
     (baseSize depth : ℕ)
     (hbase : 4 ≤ baseSize)
     (hdepth : 0 < depth) :
@@ -8778,12 +8778,12 @@ theorem pairGraphOverFin_forall_exists_adj
     (pairGraphOverFin_connected baseSize depth (by omega) hdepth).preconnected
       |>.exists_adj_of_nontrivial vertex
 
-noncomputable def manuscriptVertexCount (dimension : ℕ) : ℕ :=
+private noncomputable def manuscriptVertexCount (dimension : ℕ) : ℕ :=
   ⌈3 * hammingRetentionProbability dimension *
     ((2 ^ dimension : ℕ) : ℝ)⌉₊
 
 open Classical in
-theorem retainedVertex_card_le_manuscriptVertexCount
+private theorem retainedVertex_card_le_manuscriptVertexCount
     (dimension : ℕ)
     (retained : Set (Bool × HammingWord dimension))
     (hvertices :
@@ -8807,7 +8807,7 @@ theorem retainedVertex_card_le_manuscriptVertexCount
   exact_mod_cast hreal
 
 open Classical in
-theorem eventually_expectedRetainedEdge_le_extremalNumber :
+private theorem eventually_expectedRetainedEdge_le_extremalNumber :
     ∃ baseSize depth : ℕ,
       4 ≤ baseSize ∧
       0 < depth ∧
@@ -8866,22 +8866,22 @@ theorem eventually_expectedRetainedEdge_le_extremalNumber :
         (pairGraphOverFin baseSize depth) : ℝ) := by
       exact_mod_cast hpadded_edges
 
-noncomputable def manuscriptExtremalPower : ℝ :=
+private noncomputable def manuscriptExtremalPower : ℝ :=
   (3 : ℝ) / 2 + exponentGain
 
-theorem manuscriptExtremalPower_pos :
+private theorem manuscriptExtremalPower_pos :
     0 < manuscriptExtremalPower := by
   unfold manuscriptExtremalPower
   linarith [exponentGain_pos]
 
-noncomputable def manuscriptEntropyGap : ℝ :=
+private noncomputable def manuscriptEntropyGap : ℝ :=
   certifiedWindowWidth * Real.log 2 / 16
 
-theorem manuscriptEntropyGap_pos : 0 < manuscriptEntropyGap := by
+private theorem manuscriptEntropyGap_pos : 0 < manuscriptEntropyGap := by
   unfold manuscriptEntropyGap
   positivity [certifiedWindowWidth_pos, log_two_pos]
 
-theorem sampledHammingEdgeEntropyRate_eq_manuscriptExtremalPower :
+private theorem sampledHammingEdgeEntropyRate_eq_manuscriptExtremalPower :
     sampledHammingEdgeEntropyRate =
       (1 - midpointBeta) * manuscriptExtremalPower * Real.log 2 +
         2 * manuscriptEntropyGap := by
@@ -8929,7 +8929,7 @@ theorem sampledHammingEdgeEntropyRate_eq_manuscriptExtremalPower :
       unfold manuscriptExtremalPower manuscriptEntropyGap
       ring
 
-theorem manuscriptVertexCount_le_four_wordMean
+private theorem manuscriptVertexCount_le_four_wordMean
     (dimension : ℕ)
     (hmean :
       1 ≤ hammingRetentionProbability dimension *
@@ -8949,7 +8949,7 @@ theorem manuscriptVertexCount_le_four_wordMean
     exact Nat.ceil_lt_add_one hargument
   nlinarith
 
-theorem eventually_manuscriptVertexCount_le_four_wordMean :
+private theorem eventually_manuscriptVertexCount_le_four_wordMean :
     ∀ᶠ dimension : ℕ in Filter.atTop,
       (manuscriptVertexCount dimension : ℝ) ≤
         4 * (hammingRetentionProbability dimension *
@@ -8959,7 +8959,7 @@ theorem eventually_manuscriptVertexCount_le_four_wordMean :
   filter_upwards [hlarge] with dimension hdimension
   exact manuscriptVertexCount_le_four_wordMean dimension hdimension
 
-theorem eventually_manuscriptEntropyGap_dominates_power_constant :
+private theorem eventually_manuscriptEntropyGap_dominates_power_constant :
     ∀ᶠ dimension : ℕ in Filter.atTop,
       2 * (4 : ℝ) ^ manuscriptExtremalPower ≤
         Real.exp (manuscriptEntropyGap * (dimension : ℝ)) /
@@ -8969,7 +8969,7 @@ theorem eventually_manuscriptEntropyGap_dominates_power_constant :
       manuscriptEntropyGap manuscriptEntropyGap_pos)
     (2 * (4 : ℝ) ^ manuscriptExtremalPower)
 
-theorem eventually_manuscriptVertexCount_power_le_expectedRetainedEdge :
+private theorem eventually_manuscriptVertexCount_power_le_expectedRetainedEdge :
     ∀ᶠ dimension : ℕ in Filter.atTop,
       (manuscriptVertexCount dimension : ℝ) ^
           manuscriptExtremalPower ≤
@@ -9051,7 +9051,7 @@ theorem eventually_manuscriptVertexCount_power_le_expectedRetainedEdge :
           (manuscriptHammingRadius dimension) / 2 := by
       gcongr
 
-theorem eventually_manuscriptVertexCount_power_le_extremalNumber :
+private theorem eventually_manuscriptVertexCount_power_le_extremalNumber :
     ∃ baseSize depth : ℕ,
       4 ≤ baseSize ∧
       0 < depth ∧
@@ -9071,7 +9071,7 @@ theorem eventually_manuscriptVertexCount_power_le_extremalNumber :
       hextremal] with dimension hpower hbound
   exact hpower.trans hbound
 
-theorem manuscriptVertexCount_tendsto_atTop :
+private theorem manuscriptVertexCount_tendsto_atTop :
     Filter.Tendsto manuscriptVertexCount Filter.atTop Filter.atTop := by
   have hscaled :
       Filter.Tendsto
@@ -9092,7 +9092,7 @@ theorem manuscriptVertexCount_tendsto_atTop :
   congr 1
   ring
 
-theorem manuscriptVertexCount_succ_le_two_mul
+private theorem manuscriptVertexCount_succ_le_two_mul
     (dimension : ℕ) :
     manuscriptVertexCount (dimension + 1) ≤
       2 * manuscriptVertexCount dimension := by
@@ -9142,7 +9142,7 @@ theorem manuscriptVertexCount_succ_le_two_mul
         gcongr
         exact Nat.le_ceil _
 
-theorem exists_manuscriptVertexCount_bracket
+private theorem exists_manuscriptVertexCount_bracket
     (minimum n : ℕ)
     (hminimum : manuscriptVertexCount minimum ≤ n) :
     ∃ dimension : ℕ,

@@ -51,7 +51,7 @@ public noncomputable def familyExtremal (family : Finset FiniteGraph)
   exact (Finset.univ.filter (FamilyFree family)).sup
     (fun host : SimpleGraph (Fin n) => host.edgeFinset.card)
 
-def IsCyclicFamily (family : Finset FiniteGraph) : Prop :=
+private def IsCyclicFamily (family : Finset FiniteGraph) : Prop :=
   ∀ forbidden ∈ family, ¬ forbidden.graph.IsAcyclic
 
 /-- The extremal function of one member controls that of the whole family. -/
@@ -66,7 +66,7 @@ public def CompactnessConjectureStatement : Prop :=
   ∀ family : Finset FiniteGraph,
     family.Nonempty → IsCyclicFamily family → IsCompactFamily family
 
-theorem FamilyFree.member {family : Finset FiniteGraph}
+private theorem FamilyFree.member {family : Finset FiniteGraph}
     {forbidden : FiniteGraph} (hmem : forbidden ∈ family)
     {n : ℕ} {host : SimpleGraph (Fin n)}
     (hfree : FamilyFree family host) : forbidden.graph.Free host :=
@@ -78,55 +78,55 @@ noncomputable section DensityReduction
 
 open Finset SimpleGraph
 
-lemma edgeFinset_card_eq_natCard {V : Type*} (G : SimpleGraph V)
+private lemma edgeFinset_card_eq_natCard {V : Type*} (G : SimpleGraph V)
     [Fintype G.edgeSet] :
     G.edgeFinset.card = Nat.card G.edgeSet := by
   simpa only [Nat.card_eq_fintype_card] using
     (SimpleGraph.edgeFinset_card (G := G))
 
-lemma degree_eq_natCard_neighborSet {V : Type*}
+private lemma degree_eq_natCard_neighborSet {V : Type*}
     (G : SimpleGraph V) (v : V) [Fintype (G.neighborSet v)] :
     G.degree v = Nat.card (G.neighborSet v) := by
   simpa only [Nat.card_eq_fintype_card] using
     (SimpleGraph.card_neighborSet_eq_degree G v).symm
 
-def booleanCut {V : Type*} (G : SimpleGraph V)
+private def booleanCut {V : Type*} (G : SimpleGraph V)
     (color : V → Bool) : SimpleGraph V :=
   G ⊓ (⊤ : SimpleGraph Bool).comap color
 
 @[simp]
-lemma booleanCut_adj {V : Type*} (G : SimpleGraph V)
+private lemma booleanCut_adj {V : Type*} (G : SimpleGraph V)
     (color : V → Bool) (u v : V) :
     (booleanCut G color).Adj u v ↔ G.Adj u v ∧ color u ≠ color v :=
   Iff.rfl
 
-instance booleanCutDecidableRel {V : Type*}
+private instance booleanCutDecidableRel {V : Type*}
     (G : SimpleGraph V) [DecidableRel G.Adj] (color : V → Bool) :
     DecidableRel (booleanCut G color).Adj :=
   inferInstanceAs
     (DecidableRel fun u v => G.Adj u v ∧ color u ≠ color v)
 
-lemma booleanCut_le {V : Type*} (G : SimpleGraph V)
+private lemma booleanCut_le {V : Type*} (G : SimpleGraph V)
     (color : V → Bool) : booleanCut G color ≤ G := by
   intro u v huv
   exact huv.1
 
-lemma booleanCut_isBipartite {V : Type*} (G : SimpleGraph V)
+private lemma booleanCut_isBipartite {V : Type*} (G : SimpleGraph V)
     (color : V → Bool) : (booleanCut G color).IsBipartite := by
   simpa only [Fintype.card_bool] using
     (SimpleGraph.Coloring.mk (G := booleanCut G color) color (fun h => h.2)).colorable
 
-def flipBooleanColor {V : Type*} [DecidableEq V]
+private def flipBooleanColor {V : Type*} [DecidableEq V]
     (color : V → Bool) (v : V) : V → Bool :=
   Function.update color v (! color v)
 
 @[simp]
-lemma flipBooleanColor_self {V : Type*} [DecidableEq V]
+private lemma flipBooleanColor_self {V : Type*} [DecidableEq V]
     (color : V → Bool) (v : V) :
     flipBooleanColor color v v = ! color v := by
   simp only [flipBooleanColor, Function.update_self]
 
-lemma booleanCut_deleteIncidence_flip
+private lemma booleanCut_deleteIncidence_flip
     {V : Type*} [DecidableEq V]
     (G : SimpleGraph V) (color : V → Bool) (v : V) :
     (booleanCut G (flipBooleanColor color v)).deleteIncidenceSet v =
@@ -144,7 +144,7 @@ lemma booleanCut_deleteIncidence_flip
   simp only [flipBooleanColor, ne_eq, hx, not_false_eq_true, Function.update_of_ne, hy,
       and_self, and_true]
 
-lemma booleanCut_flip_neighborFinset
+private lemma booleanCut_flip_neighborFinset
     {V : Type*} [Fintype V] [DecidableEq V]
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (color : V → Bool) (v : V) :
@@ -162,7 +162,7 @@ lemma booleanCut_flip_neighborFinset
   · cases hcv : color v <;> cases hcw : color w <;>
       simp [flipBooleanColor, hwv, hcv, hcw]
 
-lemma booleanCut_flip_degree_add
+private lemma booleanCut_flip_degree_add
     {V : Type*} [Fintype V] [DecidableEq V]
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (color : V → Bool) (v : V) :
@@ -180,7 +180,7 @@ lemma booleanCut_flip_degree_add
   simpa only [SimpleGraph.mem_neighborFinset] using hadj.1
 
 open Classical in
-theorem exists_maximum_booleanCut
+private theorem exists_maximum_booleanCut
     {V : Type*} [Fintype V]
     (G : SimpleGraph V) [DecidableRel G.Adj] :
     ∃ color : V → Bool, ∀ other : V → Bool,
@@ -194,7 +194,7 @@ theorem exists_maximum_booleanCut
   exact ⟨color, fun other => hcolor other (Finset.mem_univ other)⟩
 
 open Classical in
-lemma maximum_booleanCut_degree
+private lemma maximum_booleanCut_degree
     {V : Type*} [Fintype V]
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (color : V → Bool)
@@ -239,7 +239,7 @@ lemma maximum_booleanCut_degree
   omega
 
 open Classical in
-theorem exists_bipartite_half_edges
+private theorem exists_bipartite_half_edges
     {V : Type*} [Fintype V]
     (G : SimpleGraph V) [DecidableRel G.Adj] :
     ∃ B : SimpleGraph V,
@@ -264,13 +264,13 @@ theorem exists_bipartite_half_edges
   have hhalf := Nat.le_of_mul_le_mul_left hsum (by omega)
   simpa only [edgeFinset_card_eq_natCard] using hhalf
 
-lemma natCard_support_le_card
+private lemma natCard_support_le_card
     {V : Type*} [Fintype V] (G : SimpleGraph V) :
     Nat.card G.support ≤ Fintype.card V := by
   simpa only [Nat.card_eq_fintype_card] using
     (Finite.card_subtype_le (fun v : V => v ∈ G.support))
 
-lemma natCard_support_deleteIncidence_add_one_le
+private lemma natCard_support_deleteIncidence_add_one_le
     {V : Type*} [Finite V]
     (G : SimpleGraph V)
     {v : V} (hv : v ∈ G.support) :
@@ -284,18 +284,18 @@ lemma natCard_support_deleteIncidence_add_one_le
   simp only [Nat.card_eq_fintype_card] at hpositive ⊢
   omega
 
-noncomputable def sharpPruningPotential {V : Type*} [Fintype V]
+private noncomputable def sharpPruningPotential {V : Type*} [Fintype V]
     (originalEdges : ℕ) (H : SimpleGraph V) : ℕ :=
   2 * Fintype.card V * Nat.card H.edgeSet +
     originalEdges * (Fintype.card V - Nat.card H.support)
 
-noncomputable def sharpPruningScore {V : Type*} [Fintype V]
+private noncomputable def sharpPruningScore {V : Type*} [Fintype V]
     (originalEdges : ℕ) (H : SimpleGraph V) : ℕ :=
   2 * sharpPruningPotential originalEdges H +
     (if 0 < Nat.card H.edgeSet then 1 else 0)
 
 open Classical in
-theorem exists_maximum_sharp_pruning_subgraph
+private theorem exists_maximum_sharp_pruning_subgraph
     {V : Type*} [Fintype V]
     (base : SimpleGraph V) (originalEdges : ℕ) :
     ∃ H : SimpleGraph V, H ≤ base ∧
@@ -324,7 +324,7 @@ theorem exists_maximum_sharp_pruning_subgraph
       (Finset.mem_filter.mpr ⟨Finset.mem_univ D, hD⟩)
 
 open Classical in
-lemma maximum_sharp_pruning_subgraph_degree
+private lemma maximum_sharp_pruning_subgraph_degree
     {V : Type*} [Fintype V]
     (base H : SimpleGraph V) [DecidableRel H.Adj]
     (originalEdges : ℕ) (hHB : H ≤ base)
@@ -387,7 +387,7 @@ lemma maximum_sharp_pruning_subgraph_degree
   omega
 
 open Classical in
-lemma maximum_sharp_pruning_subgraph_edge_positive
+private lemma maximum_sharp_pruning_subgraph_edge_positive
     {V : Type*} [Fintype V]
     (original base H : SimpleGraph V) [DecidableRel original.Adj]
     (hpositive : 0 < original.edgeFinset.card)
@@ -452,7 +452,7 @@ lemma maximum_sharp_pruning_subgraph_edge_positive
   omega
 
 open Classical in
-theorem exists_bipartite_min_degree_supported_subgraph
+private theorem exists_bipartite_min_degree_supported_subgraph
     {V : Type*} [Fintype V]
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hpositive : 0 < G.edgeFinset.card) :
@@ -476,7 +476,7 @@ theorem exists_bipartite_min_degree_supported_subgraph
       cut H (Nat.card G.edgeSet) hH hpotential hv)
 
 open Classical in
-theorem exists_bipartite_min_degree_subgraph
+private theorem exists_bipartite_min_degree_subgraph
     {n : ℕ} (G : SimpleGraph (Fin n))
     (hpositive : 0 < G.edgeFinset.card) :
     ∃ (N : ℕ) (B : SimpleGraph (Fin N)) (f : Fin N ↪ Fin n),
@@ -557,19 +557,19 @@ noncomputable section Patterns
 
 open SimpleGraph
 
-abbrev SubdivisionVertex (k : ℕ) :=
+private abbrev SubdivisionVertex (k : ℕ) :=
   (Fin 3 ⊕ Fin k) ⊕ (Fin 3 × Fin k)
 
-def subdivisionRelation (k : ℕ) :
+private def subdivisionRelation (k : ℕ) :
     SubdivisionVertex k → SubdivisionVertex k → Prop
   | .inl (.inl base), .inr (otherBase, _) => base = otherBase
   | .inl (.inr center), .inr (_, otherCenter) => center = otherCenter
   | _, _ => False
 
-def SubdivisionGraph (k : ℕ) : SimpleGraph (SubdivisionVertex k) :=
+private def SubdivisionGraph (k : ℕ) : SimpleGraph (SubdivisionVertex k) :=
   SimpleGraph.fromRel (subdivisionRelation k)
 
-instance subdivisionRelationDecidable (k : ℕ) :
+private instance subdivisionRelationDecidable (k : ℕ) :
     DecidableRel (subdivisionRelation k)
   | .inl (.inl base), .inr (otherBase, _) => by
       change Decidable (base = otherBase)
@@ -590,19 +590,19 @@ instance subdivisionRelationDecidable (k : ℕ) :
       change Decidable False
       infer_instance
 
-instance subdivisionGraphDecidableRel (k : ℕ) :
+private instance subdivisionGraphDecidableRel (k : ℕ) :
     DecidableRel (SubdivisionGraph k).Adj :=
   @instDecidableRelAdjFromRelOfDecidableEq _ inferInstance _
     (subdivisionRelationDecidable k)
 
-def subdivisionColor (k : ℕ) : SubdivisionVertex k → Bool
+private def subdivisionColor (k : ℕ) : SubdivisionVertex k → Bool
   | .inl _ => false
   | .inr _ => true
 
-abbrev thetaGraph : SimpleGraph (SubdivisionVertex 2) :=
+private abbrev thetaGraph : SimpleGraph (SubdivisionVertex 2) :=
   SubdivisionGraph 2
 
-abbrev gammaGraph : SimpleGraph (SubdivisionVertex 3) :=
+private abbrev gammaGraph : SimpleGraph (SubdivisionVertex 3) :=
   SubdivisionGraph 3
 
 end Patterns
@@ -611,16 +611,16 @@ noncomputable section Quotients
 
 open Finset SimpleGraph
 
-abbrev JVertex :=
+private abbrev JVertex :=
   (Fin 4 ⊕ (Fin 2 × Fin 2)) ⊕
     ((Fin 2 × (Fin 3 × Fin 2)) ⊕ Unit)
 
-def jBase (copy : Fin 2) (base : Fin 3) : Fin 4 :=
+private def jBase (copy : Fin 2) (base : Fin 3) : Fin 4 :=
   if base = 0 then
     if copy = 0 then 0 else 1
   else if base = 1 then 2 else 3
 
-def jTemplateRelation : JVertex → JVertex → Prop
+private def jTemplateRelation : JVertex → JVertex → Prop
   | .inl (.inl base), .inr (.inl (copy, (i, _))) =>
       base = jBase copy i
   | .inl (.inr (copy, center)), .inr (.inl (copy', (_, center'))) =>
@@ -629,73 +629,73 @@ def jTemplateRelation : JVertex → JVertex → Prop
       base = 0 ∨ base = 1
   | _, _ => False
 
-def jTemplate : SimpleGraph JVertex :=
+private def jTemplate : SimpleGraph JVertex :=
   SimpleGraph.fromRel jTemplateRelation
 
-def jColor : JVertex → Bool
+private def jColor : JVertex → Bool
   | .inl _ => false
   | .inr _ => true
 
-def InJCopy (copy : Fin 2) : JVertex → Prop
+private def InJCopy (copy : Fin 2) : JVertex → Prop
   | .inl (.inl base) => ∃ i : Fin 3, base = jBase copy i
   | .inl (.inr (copy', _)) => copy = copy'
   | .inr (.inl (copy', _)) => copy = copy'
   | .inr (.inr _) => False
 
-abbrev KVertex := Fin 2 × SubdivisionVertex 3
+private abbrev KVertex := Fin 2 × SubdivisionVertex 3
 
-def kSpecifiedCenter : SubdivisionVertex 3 :=
+private def kSpecifiedCenter : SubdivisionVertex 3 :=
   .inl (.inr 0)
 
-def kTemplateRelation (u v : KVertex) : Prop :=
+private def kTemplateRelation (u v : KVertex) : Prop :=
   (u.1 = v.1 ∧ subdivisionRelation 3 u.2 v.2) ∨
     (u.1 = 0 ∧ v.1 = 1 ∧
       u.2 = kSpecifiedCenter ∧ v.2 = kSpecifiedCenter)
 
-def kTemplate : SimpleGraph KVertex :=
+private def kTemplate : SimpleGraph KVertex :=
   SimpleGraph.fromRel kTemplateRelation
 
-def kColor (v : KVertex) : Bool :=
+private def kColor (v : KVertex) : Bool :=
   if v.1 = 0 then subdivisionColor 3 v.2
   else !(subdivisionColor 3 v.2)
 
-def ColorRespecting {α : Type*}
+private def ColorRespecting {α : Type*}
     (color : α → Bool) (f : α → α) : Prop :=
   ∀ u v, f u = f v → color u = color v
 
-def JAdmissible (f : JVertex → JVertex) : Prop :=
+private def JAdmissible (f : JVertex → JVertex) : Prop :=
   ColorRespecting jColor f ∧
     Function.Injective
       (fun base : Fin 4 => f (.inl (.inl base))) ∧
     ∀ copy : Fin 2, Set.InjOn f {v | InJCopy copy v}
 
-def KAdmissible (f : KVertex → KVertex) : Prop :=
+private def KAdmissible (f : KVertex → KVertex) : Prop :=
   ColorRespecting kColor f ∧
     ∀ copy : Fin 2,
       Set.InjOn f {v : KVertex | v.1 = copy}
 
-def quotientRelation {α : Type*}
+private def quotientRelation {α : Type*}
     (graph : SimpleGraph α) (f : α → α)
     (u v : Set.range f) : Prop :=
   ∃ x y : α, f x = (u : α) ∧ f y = (v : α) ∧ graph.Adj x y
 
-def quotientGraph {α : Type*}
+private def quotientGraph {α : Type*}
     (graph : SimpleGraph α) (f : α → α) :
     SimpleGraph (Set.range f) :=
   SimpleGraph.fromRel (quotientRelation graph f)
 
-noncomputable def encodeFiniteGraph {α : Type*} [Fintype α]
+private noncomputable def encodeFiniteGraph {α : Type*} [Fintype α]
     (graph : SimpleGraph α) : FiniteGraph :=
   ⟨Fintype.card α,
     graph.map (Fintype.equivFin α).toEmbedding⟩
 
-noncomputable def jQuotients : Finset FiniteGraph :=
+private noncomputable def jQuotients : Finset FiniteGraph :=
   (Set.finite_range
     (fun f : {f : JVertex → JVertex // JAdmissible f} =>
       encodeFiniteGraph
         (quotientGraph jTemplate (f : JVertex → JVertex)))).toFinset
 
-theorem jQuotients_mem_iff {graph : FiniteGraph} :
+private theorem jQuotients_mem_iff {graph : FiniteGraph} :
     graph ∈ jQuotients ↔
       ∃ f : JVertex → JVertex, JAdmissible f ∧
         encodeFiniteGraph (quotientGraph jTemplate f) = graph := by
@@ -706,13 +706,13 @@ theorem jQuotients_mem_iff {graph : FiniteGraph} :
   · rintro ⟨f, hf, heq⟩
     exact ⟨⟨f, hf⟩, heq⟩
 
-noncomputable def kQuotients : Finset FiniteGraph :=
+private noncomputable def kQuotients : Finset FiniteGraph :=
   (Set.finite_range
     (fun f : {f : KVertex → KVertex // KAdmissible f} =>
       encodeFiniteGraph
         (quotientGraph kTemplate (f : KVertex → KVertex)))).toFinset
 
-theorem kQuotients_mem_iff {graph : FiniteGraph} :
+private theorem kQuotients_mem_iff {graph : FiniteGraph} :
     graph ∈ kQuotients ↔
       ∃ f : KVertex → KVertex, KAdmissible f ∧
         encodeFiniteGraph (quotientGraph kTemplate f) = graph := by
@@ -723,14 +723,14 @@ theorem kQuotients_mem_iff {graph : FiniteGraph} :
   · rintro ⟨f, hf, heq⟩
     exact ⟨⟨f, hf⟩, heq⟩
 
-def finiteCycle (n : ℕ) : FiniteGraph :=
+private def finiteCycle (n : ℕ) : FiniteGraph :=
   ⟨n, SimpleGraph.cycleGraph n⟩
 
-noncomputable def proposedFamily : Finset FiniteGraph := by
+private noncomputable def proposedFamily : Finset FiniteGraph := by
   classical
   exact {finiteCycle 4, finiteCycle 6} ∪ jQuotients ∪ kQuotients
 
-theorem proposedFamily_mem_iff {graph : FiniteGraph} :
+private theorem proposedFamily_mem_iff {graph : FiniteGraph} :
     graph ∈ proposedFamily ↔
       (((graph = finiteCycle 4 ∨ graph = finiteCycle 6) ∨
         (∃ f : JVertex → JVertex, JAdmissible f ∧
@@ -741,7 +741,7 @@ theorem proposedFamily_mem_iff {graph : FiniteGraph} :
   simp only [proposedFamily, Finset.mem_union, Finset.mem_insert,
     Finset.mem_singleton, jQuotients_mem_iff, kQuotients_mem_iff]
 
-theorem proposedFamily_induction {P : FiniteGraph → Prop}
+private theorem proposedFamily_induction {P : FiniteGraph → Prop}
     (hfour : P (finiteCycle 4)) (hsix : P (finiteCycle 6))
     (hj : ∀ f : JVertex → JVertex, JAdmissible f →
       P (encodeFiniteGraph (quotientGraph jTemplate f)))
@@ -756,36 +756,36 @@ theorem proposedFamily_induction {P : FiniteGraph → Prop}
   · exact hj f hf
   · exact hk f hf
 
-theorem four_cycle_mem_proposedFamily :
+private theorem four_cycle_mem_proposedFamily :
     finiteCycle 4 ∈ proposedFamily :=
   proposedFamily_mem_iff.mpr (.inl (.inl (.inl rfl)))
 
-theorem proposedFamily_nonempty : proposedFamily.Nonempty :=
+private theorem proposedFamily_nonempty : proposedFamily.Nonempty :=
   ⟨finiteCycle 4, four_cycle_mem_proposedFamily⟩
 
-theorem six_cycle_mem_proposedFamily : finiteCycle 6 ∈ proposedFamily :=
+private theorem six_cycle_mem_proposedFamily : finiteCycle 6 ∈ proposedFamily :=
   proposedFamily_mem_iff.mpr (.inl (.inl (.inr rfl)))
 
-theorem proposedFamilyFree_four_cycle
+private theorem proposedFamilyFree_four_cycle
     {n : ℕ} {host : SimpleGraph (Fin n)}
     (hfree : FamilyFree proposedFamily host) :
     (SimpleGraph.cycleGraph 4).Free host := by
   simpa only [not_nonempty_iff,
       finiteCycle] using FamilyFree.member four_cycle_mem_proposedFamily hfree
 
-theorem proposedFamilyFree_six_cycle
+private theorem proposedFamilyFree_six_cycle
     {n : ℕ} {host : SimpleGraph (Fin n)}
     (hfree : FamilyFree proposedFamily host) :
     (SimpleGraph.cycleGraph 6).Free host := by
   simpa only [not_nonempty_iff,
       finiteCycle] using FamilyFree.member six_cycle_mem_proposedFamily hfree
 
-lemma jQuotient_mem_proposedFamily
+private lemma jQuotient_mem_proposedFamily
     {f : JVertex → JVertex} (hf : JAdmissible f) :
     encodeFiniteGraph (quotientGraph jTemplate f) ∈ proposedFamily :=
   proposedFamily_mem_iff.mpr (.inl (.inr ⟨f, hf, rfl⟩))
 
-lemma kQuotient_mem_proposedFamily
+private lemma kQuotient_mem_proposedFamily
     {f : KVertex → KVertex} (hf : KAdmissible f) :
     encodeFiniteGraph (quotientGraph kTemplate f) ∈ proposedFamily :=
   proposedFamily_mem_iff.mpr (.inr ⟨f, hf, rfl⟩)
@@ -800,55 +800,55 @@ section SymplecticGeometry
 
 variable (K : Type*) [Field K]
 
-abbrev SymplecticVector := Fin 4 → K
+private abbrev SymplecticVector := Fin 4 → K
 
-def standardSymplecticForm
+private def standardSymplecticForm
     (u v : SymplecticVector K) : K :=
   u 0 * v 1 - u 1 * v 0 +
     (u 2 * v 3 - u 3 * v 2)
 
-theorem standardSymplecticForm_self
+private theorem standardSymplecticForm_self
     (u : SymplecticVector K) :
     standardSymplecticForm K u u = 0 := by
   unfold standardSymplecticForm
   ring
 
-lemma standardSymplecticForm_swap
+private lemma standardSymplecticForm_swap
     (u v : SymplecticVector K) :
     standardSymplecticForm K u v =
       -standardSymplecticForm K v u := by
   unfold standardSymplecticForm
   ring
 
-lemma standardSymplecticForm_add_left
+private lemma standardSymplecticForm_add_left
     (u v w : SymplecticVector K) :
     standardSymplecticForm K (u + v) w =
       standardSymplecticForm K u w + standardSymplecticForm K v w := by
   simp only [standardSymplecticForm, Pi.add_apply]
   ring
 
-lemma standardSymplecticForm_add_right
+private lemma standardSymplecticForm_add_right
     (u v w : SymplecticVector K) :
     standardSymplecticForm K u (v + w) =
       standardSymplecticForm K u v + standardSymplecticForm K u w := by
   simp only [standardSymplecticForm, Pi.add_apply]
   ring
 
-lemma standardSymplecticForm_smul_left
+private lemma standardSymplecticForm_smul_left
     (a : K) (u v : SymplecticVector K) :
     standardSymplecticForm K (a • u) v =
       a * standardSymplecticForm K u v := by
   simp only [standardSymplecticForm, Pi.smul_apply, smul_eq_mul]
   ring
 
-lemma standardSymplecticForm_smul_right
+private lemma standardSymplecticForm_smul_right
     (a : K) (u v : SymplecticVector K) :
     standardSymplecticForm K u (a • v) =
       a * standardSymplecticForm K u v := by
   simp only [standardSymplecticForm, Pi.smul_apply, smul_eq_mul]
   ring
 
-theorem standardSymplecticForm_nondegenerate_left
+private theorem standardSymplecticForm_nondegenerate_left
     (u : SymplecticVector K)
     (h : ∀ v : SymplecticVector K,
       standardSymplecticForm K u v = 0) : u = 0 := by
@@ -871,7 +871,7 @@ theorem standardSymplecticForm_nondegenerate_left
           zero_sub, zero_add,
       neg_eq_zero] using h ![0, 0, 1, 0]
 
-theorem standardSymplecticForm_nondegenerate_right
+private theorem standardSymplecticForm_nondegenerate_right
     (u : SymplecticVector K)
     (h : ∀ v : SymplecticVector K,
       standardSymplecticForm K v u = 0) : u = 0 := by
@@ -879,7 +879,7 @@ theorem standardSymplecticForm_nondegenerate_right
   intro v
   rw [standardSymplecticForm_swap, h v, neg_zero]
 
-def standardSymplecticBilin :
+private def standardSymplecticBilin :
     LinearMap.BilinForm K (SymplecticVector K) :=
   LinearMap.mk₂ K (standardSymplecticForm K)
     (standardSymplecticForm_add_left K)
@@ -889,7 +889,7 @@ def standardSymplecticBilin :
     (fun a u v => by
       simpa only [smul_eq_mul] using standardSymplecticForm_smul_right K a u v)
 
-theorem standardSymplecticBilin_nondegenerate :
+private theorem standardSymplecticBilin_nondegenerate :
     (standardSymplecticBilin K).Nondegenerate := by
   constructor
   · intro u hu
@@ -897,24 +897,24 @@ theorem standardSymplecticBilin_nondegenerate :
   · intro u hu
     exact standardSymplecticForm_nondegenerate_right K u hu
 
-theorem standardSymplecticBilin_isAlt :
+private theorem standardSymplecticBilin_isAlt :
     (standardSymplecticBilin K).IsAlt := by
   intro u
   exact standardSymplecticForm_self K u
 
-abbrev SymplecticPoint :=
+private abbrev SymplecticPoint :=
   {P : Submodule K (SymplecticVector K) //
     Module.finrank K P = 1}
 
-abbrev SymplecticLine :=
+private abbrev SymplecticLine :=
   {L : Submodule K (SymplecticVector K) //
     Module.finrank K L = 2 ∧
       ∀ u ∈ L, ∀ v ∈ L, standardSymplecticForm K u v = 0}
 
-abbrev SymplecticPointOrthogonal (p : SymplecticPoint K) :=
+private abbrev SymplecticPointOrthogonal (p : SymplecticPoint K) :=
   (standardSymplecticBilin K).orthogonal p.1
 
-lemma symplecticPoint_le_orthogonal (p : SymplecticPoint K) :
+private lemma symplecticPoint_le_orthogonal (p : SymplecticPoint K) :
     p.1 ≤ SymplecticPointOrthogonal K p := by
   intro x hx
   change ∀ y ∈ p.1, standardSymplecticForm K y x = 0
@@ -932,7 +932,7 @@ lemma symplecticPoint_le_orthogonal (p : SymplecticPoint K) :
     rw [← hav, standardSymplecticForm_smul_left,
       standardSymplecticForm_self, mul_zero]
 
-lemma symplecticPointOrthogonal_finrank
+private lemma symplecticPointOrthogonal_finrank
     (p : SymplecticPoint K) :
     Module.finrank K (SymplecticPointOrthogonal K p) = 3 := by
   change Module.finrank K
@@ -942,20 +942,20 @@ lemma symplecticPointOrthogonal_finrank
   simp only [SymplecticVector, Module.finrank_fintype_fun_eq_card, Fintype.card_fin,
       Nat.add_one_sub_one]
 
-abbrev SymplecticPointRadical (p : SymplecticPoint K) :
+private abbrev SymplecticPointRadical (p : SymplecticPoint K) :
     Submodule K (SymplecticPointOrthogonal K p) :=
   Submodule.comap (SymplecticPointOrthogonal K p).subtype p.1
 
-lemma symplecticPointRadical_finrank
+private lemma symplecticPointRadical_finrank
     (p : SymplecticPoint K) :
     Module.finrank K (SymplecticPointRadical K p) = 1 := by
   exact (Submodule.comapSubtypeEquivOfLe
     (symplecticPoint_le_orthogonal K p)).finrank_eq.trans p.2
 
-abbrev SymplecticPointQuotient (p : SymplecticPoint K) :=
+private abbrev SymplecticPointQuotient (p : SymplecticPoint K) :=
   (SymplecticPointOrthogonal K p) ⧸ (SymplecticPointRadical K p)
 
-lemma symplecticPointQuotient_finrank
+private lemma symplecticPointQuotient_finrank
     (p : SymplecticPoint K) :
     Module.finrank K (SymplecticPointQuotient K p) = 2 := by
   change Module.finrank K
@@ -967,7 +967,7 @@ lemma symplecticPointQuotient_finrank
     symplecticPointOrthogonal_finrank K p] at h
   omega
 
-lemma quotient_map_finrank
+private lemma quotient_map_finrank
     {W : Type*} [AddCommGroup W] [Module K W]
     [FiniteDimensional K W]
     (R S : Submodule K W) (hRS : R ≤ S) :
@@ -980,7 +980,7 @@ lemma quotient_map_finrank
     (Submodule.comapSubtypeEquivOfLe hRS).finrank_eq] at h
   exact h
 
-lemma symplecticLine_le_pointOrthogonal
+private lemma symplecticLine_le_pointOrthogonal
     {p : SymplecticPoint K} {L : SymplecticLine K}
     (hpL : p.1 ≤ L.1) : L.1 ≤ SymplecticPointOrthogonal K p := by
   intro x hx
@@ -988,7 +988,7 @@ lemma symplecticLine_le_pointOrthogonal
   intro y hy
   exact L.2.2 y (hpL hy) x hx
 
-lemma symplectic_two_plane_isotropic
+private lemma symplectic_two_plane_isotropic
     {p : SymplecticPoint K}
     {S : Submodule K (SymplecticVector K)}
     (hdim : Module.finrank K S = 2)
@@ -1017,29 +1017,29 @@ lemma symplectic_two_plane_isotropic
       standardSymplecticForm_self,
       hreverse, mul_zero, add_zero]
 
-abbrev SymplecticLinesOnPoint (p : SymplecticPoint K) :=
+private abbrev SymplecticLinesOnPoint (p : SymplecticPoint K) :=
   {L : SymplecticLine K // p.1 ≤ L.1}
 
-abbrev SymplecticLineInPointOrthogonal
+private abbrev SymplecticLineInPointOrthogonal
     (p : SymplecticPoint K) (L : SymplecticLine K) :
     Submodule K (SymplecticPointOrthogonal K p) :=
   Submodule.comap (SymplecticPointOrthogonal K p).subtype L.1
 
-lemma symplecticLineInPointOrthogonal_finrank
+private lemma symplecticLineInPointOrthogonal_finrank
     {p : SymplecticPoint K} {L : SymplecticLine K}
     (hpL : p.1 ≤ L.1) :
     Module.finrank K (SymplecticLineInPointOrthogonal K p L) = 2 := by
   exact (Submodule.comapSubtypeEquivOfLe
     (symplecticLine_le_pointOrthogonal K hpL)).finrank_eq.trans L.2.1
 
-lemma symplecticPointRadical_le_lineInPointOrthogonal
+private lemma symplecticPointRadical_le_lineInPointOrthogonal
     {p : SymplecticPoint K} {L : SymplecticLine K}
     (hpL : p.1 ≤ L.1) :
     SymplecticPointRadical K p ≤
       SymplecticLineInPointOrthogonal K p L :=
   Submodule.comap_mono hpL
 
-noncomputable def symplecticLinesOnPointEquivSubmodule
+private noncomputable def symplecticLinesOnPointEquivSubmodule
     (p : SymplecticPoint K) :
     SymplecticLinesOnPoint K p ≃
       {S : Submodule K (SymplecticPointQuotient K p) //
@@ -1122,7 +1122,7 @@ noncomputable def symplecticLinesOnPointEquivSubmodule
     rw [Submodule.range_mkQ]
     exact le_top
 
-noncomputable def symplecticLinesOnPointEquiv
+private noncomputable def symplecticLinesOnPointEquiv
     (p : SymplecticPoint K) :
     SymplecticLinesOnPoint K p ≃
       Projectivization K (SymplecticPointQuotient K p) :=
@@ -1130,7 +1130,7 @@ noncomputable def symplecticLinesOnPointEquiv
     (Projectivization.equivSubmodule K
       (SymplecticPointQuotient K p)).symm
 
-lemma symplecticLinesOnPoint_card [Finite K]
+private lemma symplecticLinesOnPoint_card [Finite K]
     (p : SymplecticPoint K) :
     Nat.card (SymplecticLinesOnPoint K p) = Nat.card K + 1 := by
   rw [Nat.card_congr (symplecticLinesOnPointEquiv K p)]
@@ -1138,10 +1138,10 @@ lemma symplecticLinesOnPoint_card [Finite K]
     (SymplecticPointQuotient K p)
     (symplecticPointQuotient_finrank K p)
 
-abbrev SymplecticPointsOnLine (L : SymplecticLine K) :=
+private abbrev SymplecticPointsOnLine (L : SymplecticLine K) :=
   {p : SymplecticPoint K // p.1 ≤ L.1}
 
-noncomputable def symplecticPointsOnLineEquivSubmodule
+private noncomputable def symplecticPointsOnLineEquivSubmodule
     (L : SymplecticLine K) :
     SymplecticPointsOnLine K L ≃
       {S : Submodule K L.1 // Module.finrank K S = 1} where
@@ -1169,19 +1169,19 @@ noncomputable def symplecticPointsOnLineEquivSubmodule
     rw [Submodule.comap_map_eq,
       LinearMap.ker_eq_bot.mpr L.1.subtype_injective, sup_bot_eq]
 
-noncomputable def symplecticPointsOnLineEquiv
+private noncomputable def symplecticPointsOnLineEquiv
     (L : SymplecticLine K) :
     SymplecticPointsOnLine K L ≃ Projectivization K L.1 :=
   (symplecticPointsOnLineEquivSubmodule K L).trans
     (Projectivization.equivSubmodule K L.1).symm
 
-lemma symplecticPointsOnLine_card [Finite K]
+private lemma symplecticPointsOnLine_card [Finite K]
     (L : SymplecticLine K) :
     Nat.card (SymplecticPointsOnLine K L) = Nat.card K + 1 := by
   rw [Nat.card_congr (symplecticPointsOnLineEquiv K L)]
   exact Projectivization.card_of_finrank_two K L.1 L.2.1
 
-lemma symplecticPoint_sup_finrank
+private lemma symplecticPoint_sup_finrank
     {p q : SymplecticPoint K} (hpq : p ≠ q) :
     Module.finrank K
       (p.1 ⊔ q.1 : Submodule K (SymplecticVector K)) = 2 := by
@@ -1193,7 +1193,7 @@ lemma symplecticPoint_sup_finrank
   rw [hd.eq_bot, finrank_bot, p.2, q.2] at hrank
   omega
 
-lemma symplecticLine_eq_of_points
+private lemma symplecticLine_eq_of_points
     {p q : SymplecticPoint K} (hpq : p ≠ q)
     {L M : SymplecticLine K}
     (hpL : p.1 ≤ L.1) (hqL : q.1 ≤ L.1)
@@ -1208,7 +1208,7 @@ lemma symplecticLine_eq_of_points
       ((symplecticPoint_sup_finrank K hpq).trans M.2.1.symm)
   exact Subtype.ext (hL.symm.trans hM)
 
-lemma symplectic_isotropic_finrank_le_two
+private lemma symplectic_isotropic_finrank_le_two
     (S : Submodule K (SymplecticVector K))
     (hS : ∀ u ∈ S, ∀ v ∈ S,
       standardSymplecticForm K u v = 0) :
@@ -1226,7 +1226,7 @@ lemma symplectic_isotropic_finrank_le_two
   rw [hambient] at hrank
   omega
 
-lemma symplectic_triangle_points_collinear
+private lemma symplectic_triangle_points_collinear
     {p q r : SymplecticPoint K} (hpq : p ≠ q)
     {Lpq Lpr Lqr : SymplecticLine K}
     (hpLpq : p.1 ≤ Lpq.1) (hqLpq : q.1 ≤ Lpq.1)
@@ -1262,7 +1262,7 @@ lemma symplectic_triangle_points_collinear
   exact (show r.1 ≤ T from le_sup_right).trans
     (hspan.symm ▸ sup_le hpLpq hqLpq)
 
-lemma symplectic_triangle_lines_eq
+private lemma symplectic_triangle_lines_eq
     {p q r : SymplecticPoint K}
     (hpq : p ≠ q) (hqr : q ≠ r)
     {Lpq Lpr Lqr : SymplecticLine K}
@@ -1274,25 +1274,25 @@ lemma symplectic_triangle_lines_eq
     hpLpq hqLpq hpLpr hrLpr hqLqr hrLqr
   exact symplecticLine_eq_of_points K hqr hqLpq hrLpq hqLqr hrLqr
 
-abbrev QuadrangleVertex :=
+private abbrev QuadrangleVertex :=
   SymplecticPoint K ⊕ SymplecticLine K
 
-def quadrangleIncidence :
+private def quadrangleIncidence :
     QuadrangleVertex K → QuadrangleVertex K → Prop
   | .inl point, .inr line => (point.1 : Submodule K _) ≤ line.1
   | _, _ => False
 
-def symplecticQuadrangle : SimpleGraph (QuadrangleVertex K) :=
+private def symplecticQuadrangle : SimpleGraph (QuadrangleVertex K) :=
   SimpleGraph.fromRel (quadrangleIncidence K)
 
-theorem symplecticQuadrangle_incidence_adj
+private theorem symplecticQuadrangle_incidence_adj
     (p : SymplecticPoint K) (L : SymplecticLine K) :
     (symplecticQuadrangle K).Adj (.inl p) (.inr L) ↔ p.1 ≤ L.1 := by
   simp only [symplecticQuadrangle, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
       quadrangleIncidence,
     or_false, true_and]
 
-theorem symplecticQuadrangle_adjacent_to_point
+private theorem symplecticQuadrangle_adjacent_to_point
     {p : SymplecticPoint K} {v : QuadrangleVertex K}
     (h : (symplecticQuadrangle K).Adj (.inl p) v) :
     ∃ L : SymplecticLine K, v = .inr L ∧ p.1 ≤ L.1 := by
@@ -1302,7 +1302,7 @@ theorem symplecticQuadrangle_adjacent_to_point
       and_false] at h
   · exact ⟨L, rfl, (symplecticQuadrangle_incidence_adj K p L).mp h⟩
 
-theorem symplecticQuadrangle_adjacent_to_line
+private theorem symplecticQuadrangle_adjacent_to_line
     {L : SymplecticLine K} {v : QuadrangleVertex K}
     (h : (symplecticQuadrangle K).Adj (.inr L) v) :
     ∃ p : SymplecticPoint K, v = .inl p ∧ p.1 ≤ L.1 := by
@@ -1313,7 +1313,7 @@ theorem symplecticQuadrangle_adjacent_to_line
       or_self,
       and_false] at h
 
-theorem symplecticQuadrangle_common_neighbor_unique
+private theorem symplecticQuadrangle_common_neighbor_unique
     {u v : QuadrangleVertex K} (huv : u ≠ v)
     {w z : QuadrangleVertex K}
     (huw : (symplecticQuadrangle K).Adj u w)
@@ -1341,7 +1341,7 @@ theorem symplecticQuadrangle_common_neighbor_unique
       huw huz hvw hvz
     exact huv (congrArg Sum.inr hlines)
 
-theorem symplecticQuadrangle_four_cycle_free :
+private theorem symplecticQuadrangle_four_cycle_free :
     (SimpleGraph.cycleGraph 4).Free (symplecticQuadrangle K) := by
   rintro ⟨copy⟩
   have h01 : (symplecticQuadrangle K).Adj (copy 0) (copy 1) :=
@@ -1358,7 +1358,7 @@ theorem symplecticQuadrangle_four_cycle_free :
     symplecticQuadrangle_common_neighbor_unique K h02 h01 h21 h03 h23
   exact (by decide : (1 : Fin 4) ≠ 3) (copy.injective h13)
 
-theorem symplecticQuadrangle_six_cycle_free :
+private theorem symplecticQuadrangle_six_cycle_free :
     (SimpleGraph.cycleGraph 6).Free (symplecticQuadrangle K) := by
   rintro ⟨copy⟩
   have h01 : (symplecticQuadrangle K).Adj (copy 0) (copy 1) :=
@@ -1455,7 +1455,7 @@ theorem symplecticQuadrangle_six_cycle_free :
       change copy 2 = copy 4
       rw [h2, h4, hMN]
 
-lemma symplecticPoint_card [Finite K] :
+private lemma symplecticPoint_card [Finite K] :
     Nat.card (SymplecticPoint K) =
       (Nat.card K + 1) * ((Nat.card K) ^ 2 + 1) := by
   calc
@@ -1470,10 +1470,10 @@ lemma symplecticPoint_card [Finite K] :
       simp only [Finset.sum_range_succ, Finset.range_one, Finset.sum_singleton, pow_zero, pow_one]
       ring
 
-abbrev SymplecticIncidence :=
+private abbrev SymplecticIncidence :=
   {x : SymplecticPoint K × SymplecticLine K // x.1.1 ≤ x.2.1}
 
-def symplecticIncidenceEquivSigmaPoints :
+private def symplecticIncidenceEquivSigmaPoints :
     SymplecticIncidence K ≃
       (Σ p : SymplecticPoint K, SymplecticLinesOnPoint K p) where
   toFun i := ⟨i.1.1, ⟨i.1.2, i.2⟩⟩
@@ -1485,7 +1485,7 @@ def symplecticIncidenceEquivSigmaPoints :
     rcases s with ⟨p, ⟨L, h⟩⟩
     rfl
 
-def symplecticIncidenceEquivSigmaLines :
+private def symplecticIncidenceEquivSigmaLines :
     SymplecticIncidence K ≃
       (Σ L : SymplecticLine K, SymplecticPointsOnLine K L) where
   toFun i := ⟨i.1.2, ⟨i.1.1, i.2⟩⟩
@@ -1497,7 +1497,7 @@ def symplecticIncidenceEquivSigmaLines :
     rcases s with ⟨L, ⟨p, h⟩⟩
     rfl
 
-lemma symplecticIncidence_card_by_points [Finite K] :
+private lemma symplecticIncidence_card_by_points [Finite K] :
     Nat.card (SymplecticIncidence K) =
       Nat.card (SymplecticPoint K) * (Nat.card K + 1) := by
   classical
@@ -1516,7 +1516,7 @@ lemma symplecticIncidence_card_by_points [Finite K] :
       simp_rw [symplecticLinesOnPoint_card]
       simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul, Nat.card_eq_fintype_card]
 
-lemma symplecticIncidence_card_by_lines [Finite K] :
+private lemma symplecticIncidence_card_by_lines [Finite K] :
     Nat.card (SymplecticIncidence K) =
       Nat.card (SymplecticLine K) * (Nat.card K + 1) := by
   classical
@@ -1535,7 +1535,7 @@ lemma symplecticIncidence_card_by_lines [Finite K] :
       simp_rw [symplecticPointsOnLine_card]
       simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul, Nat.card_eq_fintype_card]
 
-lemma symplecticLine_card [Finite K] :
+private lemma symplecticLine_card [Finite K] :
     Nat.card (SymplecticLine K) =
       (Nat.card K + 1) * ((Nat.card K) ^ 2 + 1) := by
   have hcounts :
@@ -1548,25 +1548,25 @@ lemma symplecticLine_card [Finite K] :
     Nat.eq_of_mul_eq_mul_right (Nat.succ_pos _) hcounts
   rw [← hline, symplecticPoint_card]
 
-lemma symplecticIncidence_card [Finite K] :
+private lemma symplecticIncidence_card [Finite K] :
     Nat.card (SymplecticIncidence K) =
       (Nat.card K + 1) ^ 2 * ((Nat.card K) ^ 2 + 1) := by
   rw [symplecticIncidence_card_by_points, symplecticPoint_card]
   ring
 
-theorem symplecticQuadrangle_vertex_card [Finite K] :
+private theorem symplecticQuadrangle_vertex_card [Finite K] :
     Nat.card (QuadrangleVertex K) =
       2 * (Nat.card K + 1) * ((Nat.card K) ^ 2 + 1) := by
   rw [Nat.card_sum, symplecticPoint_card, symplecticLine_card]
   ring
 
-def symplecticIncidenceToEdge :
+private def symplecticIncidenceToEdge :
     SymplecticIncidence K → (symplecticQuadrangle K).edgeSet :=
   fun i =>
     ⟨s(Sum.inl i.1.1, Sum.inr i.1.2),
       (symplecticQuadrangle_incidence_adj K i.1.1 i.1.2).mpr i.2⟩
 
-lemma symplecticIncidenceToEdge_injective :
+private lemma symplecticIncidenceToEdge_injective :
     Function.Injective (symplecticIncidenceToEdge K) := by
   intro i j h
   have hedges := congrArg Subtype.val h
@@ -1579,7 +1579,7 @@ lemma symplecticIncidenceToEdge_injective :
     · exact Sum.inr_injective hL
   · cases hbad
 
-lemma symplecticIncidenceToEdge_surjective :
+private lemma symplecticIncidenceToEdge_surjective :
     Function.Surjective (symplecticIncidenceToEdge K) := by
   intro e
   obtain ⟨⟨u, v⟩, huv⟩ := Sym2.mk_surjective e.1
@@ -1604,13 +1604,13 @@ lemma symplecticIncidenceToEdge_surjective :
       or_self,
       and_false] at hadj
 
-noncomputable def symplecticIncidenceEquivEdge :
+private noncomputable def symplecticIncidenceEquivEdge :
     SymplecticIncidence K ≃ (symplecticQuadrangle K).edgeSet :=
   Equiv.ofBijective (symplecticIncidenceToEdge K)
     ⟨symplecticIncidenceToEdge_injective K,
       symplecticIncidenceToEdge_surjective K⟩
 
-theorem symplecticQuadrangle_edge_card [Finite K] :
+private theorem symplecticQuadrangle_edge_card [Finite K] :
     Nat.card (symplecticQuadrangle K).edgeSet =
       (Nat.card K + 1) ^ 2 * ((Nat.card K) ^ 2 + 1) := by
   rw [← Nat.card_congr (symplecticIncidenceEquivEdge K),
@@ -1620,13 +1620,13 @@ end SymplecticGeometry
 
 section NumericalParameters
 
-def quadrangleVertexCount (q : ℕ) : ℕ :=
+private def quadrangleVertexCount (q : ℕ) : ℕ :=
   2 * (q + 1) * (q ^ 2 + 1)
 
-def quadrangleEdgeCount (q : ℕ) : ℕ :=
+private def quadrangleEdgeCount (q : ℕ) : ℕ :=
   (q + 1) ^ 2 * (q ^ 2 + 1)
 
-theorem quadrangle_density_certificate (q : ℕ) :
+private theorem quadrangle_density_certificate (q : ℕ) :
     (quadrangleVertexCount q : ℝ) ^ 4 ≤
       16 * (quadrangleEdgeCount q : ℝ) ^ 3 := by
   have hnonneg :
@@ -1644,7 +1644,7 @@ theorem quadrangle_density_certificate (q : ℕ) :
     ring
   linarith
 
-theorem quadrangle_rpow_density (q : ℕ) :
+private theorem quadrangle_rpow_density (q : ℕ) :
     (2 : ℝ) ^ (-((4 : ℝ) / 3)) *
       (quadrangleVertexCount q : ℝ) ^ ((4 : ℝ) / 3) ≤
         (quadrangleEdgeCount q : ℝ) := by
@@ -1664,7 +1664,7 @@ theorem quadrangle_rpow_density (q : ℕ) :
   rw [hcubed]
   nlinarith [quadrangle_density_certificate q]
 
-theorem quadrangleVertexCount_mul_le
+private theorem quadrangleVertexCount_mul_le
     (q t : ℕ) (ht : 1 ≤ t) :
     quadrangleVertexCount (t * q) ≤
       t ^ 3 * quadrangleVertexCount q := by
@@ -1688,7 +1688,7 @@ noncomputable section Cyclicity
 
 open Finset SimpleGraph
 
-def thetaCycleVertex : Fin 8 → SubdivisionVertex 2 :=
+private def thetaCycleVertex : Fin 8 → SubdivisionVertex 2 :=
   ![.inl (.inl 0),
     .inr (0, 0),
     .inl (.inr 0),
@@ -1698,18 +1698,18 @@ def thetaCycleVertex : Fin 8 → SubdivisionVertex 2 :=
     .inl (.inr 1),
     .inr (0, 1)]
 
-def thetaCycleCopy :
+private def thetaCycleCopy :
     SimpleGraph.Copy (SimpleGraph.cycleGraph 8) thetaGraph := by
   refine ⟨⟨thetaCycleVertex, ?_⟩, ?_⟩
   · decide
   · decide
 
-def jThetaVertex (copy : Fin 2) : SubdivisionVertex 2 → JVertex
+private def jThetaVertex (copy : Fin 2) : SubdivisionVertex 2 → JVertex
   | .inl (.inl base) => .inl (.inl (jBase copy base))
   | .inl (.inr center) => .inl (.inr (copy, center))
   | .inr (base, center) => .inr (.inl (copy, (base, center)))
 
-def jThetaCopy (copy : Fin 2) :
+private def jThetaCopy (copy : Fin 2) :
     SimpleGraph.Copy thetaGraph jTemplate := by
   refine ⟨⟨jThetaVertex copy, ?_⟩, ?_⟩
   · intro u v hadj
@@ -1746,7 +1746,7 @@ def jThetaCopy (copy : Fin 2) :
             jThetaVertex, Prod.mk.eta, Sum.inr.injEq, and_self]
   · fin_cases copy <;> decide
 
-lemma jThetaVertex_mem (copy : Fin 2)
+private lemma jThetaVertex_mem (copy : Fin 2)
     (v : SubdivisionVertex 2) :
     InJCopy copy (jThetaVertex copy v) := by
   rcases v with (base | center) | pair
@@ -1754,7 +1754,7 @@ lemma jThetaVertex_mem (copy : Fin 2)
   · simp only [InJCopy, jThetaVertex]
   · simp only [InJCopy, jThetaVertex, Prod.mk.eta]
 
-def gammaCycleVertex : Fin 8 → SubdivisionVertex 3 :=
+private def gammaCycleVertex : Fin 8 → SubdivisionVertex 3 :=
   ![.inl (.inl 0),
     .inr (0, 0),
     .inl (.inr 0),
@@ -1764,16 +1764,16 @@ def gammaCycleVertex : Fin 8 → SubdivisionVertex 3 :=
     .inl (.inr 1),
     .inr (0, 1)]
 
-def gammaCycleCopy :
+private def gammaCycleCopy :
     SimpleGraph.Copy (SimpleGraph.cycleGraph 8) gammaGraph := by
   refine ⟨⟨gammaCycleVertex, ?_⟩, ?_⟩
   · decide
   · decide
 
-def kGammaVertex (copy : Fin 2)
+private def kGammaVertex (copy : Fin 2)
     (v : SubdivisionVertex 3) : KVertex := (copy, v)
 
-def kGammaCopy (copy : Fin 2) :
+private def kGammaCopy (copy : Fin 2) :
     SimpleGraph.Copy gammaGraph kTemplate := by
   refine ⟨⟨kGammaVertex copy, ?_⟩, ?_⟩
   · intro u v hadj
@@ -1799,7 +1799,7 @@ def kGammaCopy (copy : Fin 2) :
   · intro u v h
     exact congrArg Prod.snd h
 
-def copyToQuotient {α β : Type*}
+private def copyToQuotient {α β : Type*}
     (source : SimpleGraph β) (target : SimpleGraph α)
     (f : α → α) (copy : SimpleGraph.Copy source target)
     (hinj : Function.Injective (fun v : β => f (copy v))) :
@@ -1816,7 +1816,7 @@ def copyToQuotient {α β : Type*}
   · intro u v heq
     exact hinj (congrArg Subtype.val heq)
 
-lemma not_acyclic_of_eight_cycle_copy
+private lemma not_acyclic_of_eight_cycle_copy
     {α : Type*} {graph : SimpleGraph α}
     (copy : SimpleGraph.Copy (SimpleGraph.cycleGraph 8) graph) :
     ¬ graph.IsAcyclic := by
@@ -1826,7 +1826,7 @@ lemma not_acyclic_of_eight_cycle_copy
   exact hcycle (SimpleGraph.cycleGraph.cycle 5)
     (SimpleGraph.cycleGraph.isCycle_cycle)
 
-lemma encodeFiniteGraph_not_acyclic
+private lemma encodeFiniteGraph_not_acyclic
     {α : Type*} [Fintype α]
     (graph : SimpleGraph α) (h : ¬ graph.IsAcyclic) :
     ¬ (encodeFiniteGraph graph).graph.IsAcyclic := by
@@ -1835,7 +1835,7 @@ lemma encodeFiniteGraph_not_acyclic
   exact (SimpleGraph.Iso.map (Fintype.equivFin α) graph).isAcyclic_iff.mpr
     hencoded
 
-lemma jTheta_quotient_injective
+private lemma jTheta_quotient_injective
     {f : JVertex → JVertex} (hf : JAdmissible f)
     (copy : Fin 2) :
     Function.Injective (fun v : SubdivisionVertex 2 =>
@@ -1846,7 +1846,7 @@ lemma jTheta_quotient_injective
       (jThetaVertex_mem copy v) heq
   exact (jThetaCopy copy).injective htemplate
 
-theorem jQuotient_not_acyclic
+private theorem jQuotient_not_acyclic
     {f : JVertex → JVertex} (hf : JAdmissible f) :
     ¬ (encodeFiniteGraph (quotientGraph jTemplate f)).graph.IsAcyclic := by
   apply encodeFiniteGraph_not_acyclic
@@ -1854,7 +1854,7 @@ theorem jQuotient_not_acyclic
   exact (copyToQuotient thetaGraph jTemplate f (jThetaCopy 0)
     (jTheta_quotient_injective hf 0)).comp thetaCycleCopy
 
-lemma kGamma_quotient_injective
+private lemma kGamma_quotient_injective
     {f : KVertex → KVertex} (hf : KAdmissible f)
     (copy : Fin 2) :
     Function.Injective (fun v : SubdivisionVertex 3 =>
@@ -1865,7 +1865,7 @@ lemma kGamma_quotient_injective
       (show (kGammaVertex copy v).1 = copy from rfl) heq
   exact (kGammaCopy copy).injective htemplate
 
-theorem kQuotient_not_acyclic
+private theorem kQuotient_not_acyclic
     {f : KVertex → KVertex} (hf : KAdmissible f) :
     ¬ (encodeFiniteGraph (quotientGraph kTemplate f)).graph.IsAcyclic := by
   apply encodeFiniteGraph_not_acyclic
@@ -1873,19 +1873,19 @@ theorem kQuotient_not_acyclic
   exact (copyToQuotient gammaGraph kTemplate f (kGammaCopy 0)
     (kGamma_quotient_injective hf 0)).comp gammaCycleCopy
 
-theorem four_cycle_not_acyclic :
+private theorem four_cycle_not_acyclic :
     ¬ (finiteCycle 4).graph.IsAcyclic := by
   intro h
   exact h (SimpleGraph.cycleGraph.cycle 1)
     SimpleGraph.cycleGraph.isCycle_cycle
 
-theorem six_cycle_not_acyclic :
+private theorem six_cycle_not_acyclic :
     ¬ (finiteCycle 6).graph.IsAcyclic := by
   intro h
   exact h (SimpleGraph.cycleGraph.cycle 3)
     SimpleGraph.cycleGraph.isCycle_cycle
 
-theorem proposedFamily_isCyclic : IsCyclicFamily proposedFamily :=
+private theorem proposedFamily_isCyclic : IsCyclicFamily proposedFamily :=
   proposedFamily_induction (P := fun graph => ¬ graph.graph.IsAcyclic)
     four_cycle_not_acyclic six_cycle_not_acyclic
     (fun _ hf => jQuotient_not_acyclic hf)
@@ -1901,17 +1901,17 @@ section PointClass
 
 variable (K : Type*) [Field K]
 
-def SymplecticPointRelated (p q : SymplecticPoint K) : Prop :=
+private def SymplecticPointRelated (p q : SymplecticPoint K) : Prop :=
   p ≠ q ∧ ∃ L : SymplecticLine K, p.1 ≤ L.1 ∧ q.1 ≤ L.1
 
-lemma symplecticPointRelated_symm
+private lemma symplecticPointRelated_symm
     {p q : SymplecticPoint K}
     (h : SymplecticPointRelated K p q) :
     SymplecticPointRelated K q p := by
   obtain ⟨hpq, L, hpL, hqL⟩ := h
   exact ⟨Ne.symm hpq, L, hqL, hpL⟩
 
-lemma symplecticPointRelated_iff_orthogonal
+private lemma symplecticPointRelated_iff_orthogonal
     (p q : SymplecticPoint K) :
     SymplecticPointRelated K p q ↔
       p ≠ q ∧ p.1 ≤ SymplecticPointOrthogonal K q := by
@@ -1933,7 +1933,7 @@ lemma symplecticPointRelated_iff_orthogonal
       ⟨U, hdim, symplectic_two_plane_isotropic K hdim hqU hUorth⟩,
       le_sup_left, le_sup_right⟩
 
-lemma symplecticPointRelated_of_quadrangle_common_neighbor
+private lemma symplecticPointRelated_of_quadrangle_common_neighbor
     {p q : SymplecticPoint K}
     (hpq : p ≠ q) {v : QuadrangleVertex K}
     (hpv : (symplecticQuadrangle K).Adj (.inl p) v)
@@ -1945,7 +1945,7 @@ lemma symplecticPointRelated_of_quadrangle_common_neighbor
   exact ⟨hpq, L, hpL,
     (symplecticQuadrangle_incidence_adj K q L).mp hqv⟩
 
-lemma subdivisionGraph_base_pair_adj
+private lemma subdivisionGraph_base_pair_adj
     (k : ℕ) (base : Fin 3) (center : Fin k) :
     (SubdivisionGraph k).Adj
       (.inl (.inl base)) (.inr (base, center)) := by
@@ -1953,7 +1953,7 @@ lemma subdivisionGraph_base_pair_adj
       subdivisionRelation,
     or_false, and_self]
 
-lemma subdivisionGraph_center_pair_adj
+private lemma subdivisionGraph_center_pair_adj
     (k : ℕ) (base : Fin 3) (center : Fin k) :
     (SubdivisionGraph k).Adj
       (.inl (.inr center)) (.inr (base, center)) := by
@@ -1961,7 +1961,7 @@ lemma subdivisionGraph_center_pair_adj
       subdivisionRelation,
     or_false, and_self]
 
-lemma subdivisionPoint_pair_incidence
+private lemma subdivisionPoint_pair_incidence
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -1989,7 +1989,7 @@ lemma subdivisionPoint_pair_incidence
   exact ⟨L, hpair, hpL,
     (symplecticQuadrangle_incidence_adj K c L).mp hcenteradj⟩
 
-lemma subdivisionPoint_center_of_point_base
+private lemma subdivisionPoint_center_of_point_base
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2016,7 +2016,7 @@ lemma subdivisionPoint_center_of_point_base
     symplecticQuadrangle_adjacent_to_line K hcenteradj.symm
   exact ⟨c, hc⟩
 
-lemma subdivisionPoint_base_of_point_base
+private lemma subdivisionPoint_base_of_point_base
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2045,7 +2045,7 @@ lemma subdivisionPoint_base_of_point_base
     symplecticQuadrangle_adjacent_to_line K hotheradj.symm
   exact ⟨q, hq⟩
 
-lemma subdivisionPoint_base_center_related
+private lemma subdivisionPoint_base_center_related
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2067,7 +2067,7 @@ lemma subdivisionPoint_base_center_related
     rw [hbase, hcenter, hpc]
   cases hvertex
 
-lemma subdivisionPoint_bases_unrelated
+private lemma subdivisionPoint_bases_unrelated
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2104,7 +2104,7 @@ lemma subdivisionPoint_bases_unrelated
         .inr (j, center) := copy.injective hpair
   exact hij (congrArg Prod.fst (Sum.inr.inj hsource))
 
-lemma symplecticPointSpan_orthogonal_finrank
+private lemma symplecticPointSpan_orthogonal_finrank
     {y z : SymplecticPoint K} (hyz : y ≠ z) :
     Module.finrank K
       ((standardSymplecticBilin K).orthogonal
@@ -2114,7 +2114,7 @@ lemma symplecticPointSpan_orthogonal_finrank
     symplecticPoint_sup_finrank K hyz]
   simp only [SymplecticVector, Module.finrank_fintype_fun_eq_card, Fintype.card_fin, Nat.reduceSub]
 
-lemma symplecticPoint_centers_span_orthogonal
+private lemma symplecticPoint_centers_span_orthogonal
     {y z c d : SymplecticPoint K}
     (hyz : y ≠ z) (hcd : c ≠ d)
     (hcy : c.1 ≤ SymplecticPointOrthogonal K y)
@@ -2156,7 +2156,7 @@ lemma symplecticPoint_centers_span_orthogonal
   · rw [symplecticPoint_sup_finrank K hcd,
       symplecticPointSpan_orthogonal_finrank K hyz]
 
-lemma symplecticPoint_mem_span_of_two_centers
+private lemma symplecticPoint_mem_span_of_two_centers
     {x y z c d : SymplecticPoint K}
     (hyz : y ≠ z) (hcd : c ≠ d)
     (hcx : c.1 ≤ SymplecticPointOrthogonal K x)
@@ -2191,7 +2191,7 @@ lemma symplecticPoint_mem_span_of_two_centers
       (standardSymplecticBilin_isAlt K).isRefl] at hxorth
   exact hxorth
 
-theorem symplecticPoint_point_class_avoidance
+private theorem symplecticPoint_point_class_avoidance
     {x x' y z c d c' d' : SymplecticPoint K}
     (hyz : y ≠ z)
     (hyz_unrelated : ¬ SymplecticPointRelated K y z)
@@ -2238,7 +2238,7 @@ theorem symplecticPoint_point_class_avoidance
   exact hyz_unrelated
     ⟨hyz, L, le_sup_left.trans hyzL, le_sup_right.trans hyzL⟩
 
-def colorRespectingQuotientProjectionHom
+private def colorRespectingQuotientProjectionHom
     {V : Type*} (graph : SimpleGraph V) (color : V → Bool)
     (hproper : ∀ ⦃u v : V⦄, graph.Adj u v → color u ≠ color v)
     (f : V → V) (hf : ColorRespecting color f) :
@@ -2256,7 +2256,7 @@ def colorRespectingQuotientProjectionHom
   · left
     exact ⟨u, v, rfl, rfl, hadj⟩
 
-lemma jTemplate_adj_color_ne
+private lemma jTemplate_adj_color_ne
     {u v : JVertex} (h : jTemplate.Adj u v) :
     jColor u ≠ jColor v := by
   rcases u with (u | u) | (u | u) <;>
@@ -2264,7 +2264,7 @@ lemma jTemplate_adj_color_ne
     simp_all [jTemplate, SimpleGraph.fromRel_adj,
       jTemplateRelation, jColor]
 
-lemma kTemplate_adj_color_ne
+private lemma kTemplate_adj_color_ne
     {u v : KVertex} (h : kTemplate.Adj u v) :
     kColor u ≠ kColor v := by
   rcases u with ⟨u, (u | u) | u⟩ <;>
@@ -2274,19 +2274,19 @@ lemma kTemplate_adj_color_ne
       subdivisionRelation, kSpecifiedCenter]
   all_goals aesop
 
-def jQuotientProjectionHom
+private def jQuotientProjectionHom
     {f : JVertex → JVertex} (hf : JAdmissible f) :
     jTemplate →g quotientGraph jTemplate f :=
   colorRespectingQuotientProjectionHom jTemplate jColor
     (fun _ _ h => jTemplate_adj_color_ne h) f hf.1
 
-def kQuotientProjectionHom
+private def kQuotientProjectionHom
     {f : KVertex → KVertex} (hf : KAdmissible f) :
     kTemplate →g quotientGraph kTemplate f :=
   colorRespectingQuotientProjectionHom kTemplate kColor
     (fun _ _ h => kTemplate_adj_color_ne h) f hf.1
 
-def jThetaHomCopy
+private def jThetaHomCopy
     {V : Type*} {host : SimpleGraph V}
     (hom : jTemplate →g host)
     (hcopies : ∀ copy : Fin 2,
@@ -2301,7 +2301,7 @@ def jThetaHomCopy
   exact hcopies copy (jThetaVertex_mem copy u)
     (jThetaVertex_mem copy v) huv
 
-theorem symplecticQuadrangle_no_point_jTemplate
+private theorem symplecticQuadrangle_no_point_jTemplate
     (hom : jTemplate →g symplecticQuadrangle K)
     (hbase_inj : Function.Injective
       (fun base : Fin 4 => hom (.inl (.inl base))))
@@ -2412,7 +2412,7 @@ theorem symplecticQuadrangle_no_point_jTemplate
     (symplecticPointRelated_of_quadrangle_common_neighbor K
       hxx' hleft hright)
 
-theorem symplecticQuadrangle_no_point_jTemplate_of_bases
+private theorem symplecticQuadrangle_no_point_jTemplate_of_bases
     (hom : jTemplate →g symplecticQuadrangle K)
     (hbase_inj : Function.Injective
       (fun base : Fin 4 => hom (.inl (.inl base))))
@@ -2450,7 +2450,7 @@ theorem symplecticQuadrangle_no_point_jTemplate_of_bases
   exact symplecticQuadrangle_no_point_jTemplate K hom
     hbase_inj hcopies p c hp hc
 
-theorem symplecticQuadrangle_no_point_jTemplate_of_first_base
+private theorem symplecticQuadrangle_no_point_jTemplate_of_first_base
     (hom : jTemplate →g symplecticQuadrangle K)
     (hbase_inj : Function.Injective
       (fun base : Fin 4 => hom (.inl (.inl base))))
@@ -2497,7 +2497,7 @@ theorem symplecticQuadrangle_no_point_jTemplate_of_first_base
   · exact ⟨py, hpy⟩
   · exact hz
 
-theorem symplecticQuadrangle_jTemplate_first_base_is_line
+private theorem symplecticQuadrangle_jTemplate_first_base_is_line
     (hom : jTemplate →g symplecticQuadrangle K)
     (hbase_inj : Function.Injective
       (fun base : Fin 4 => hom (.inl (.inl base))))
@@ -2512,7 +2512,7 @@ theorem symplecticQuadrangle_jTemplate_first_base_is_line
           hom hbase_inj hcopies ⟨p, h⟩)
   | inr L => exact ⟨L, rfl⟩
 
-def kGammaHomCopy
+private def kGammaHomCopy
     {V : Type*} {host : SimpleGraph V}
     (hom : kTemplate →g host)
     (hcopies : ∀ copy : Fin 2,
@@ -2527,7 +2527,7 @@ def kGammaHomCopy
   exact hcopies copy (show (kGammaVertex copy u).1 = copy from rfl)
     (show (kGammaVertex copy v).1 = copy from rfl) huv
 
-theorem symplecticQuadrangle_kTemplate_has_line_gamma
+private theorem symplecticQuadrangle_kTemplate_has_line_gamma
     (hom : kTemplate →g symplecticQuadrangle K)
     (hcopies : ∀ copy : Fin 2,
       Set.InjOn hom {v : KVertex | v.1 = copy}) :
@@ -2567,7 +2567,7 @@ open SimpleGraph
 
 variable (K : Type*) [Field K]
 
-lemma subdivisionLine_pair_incidence
+private lemma subdivisionLine_pair_incidence
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2595,7 +2595,7 @@ lemma subdivisionLine_pair_incidence
   exact ⟨p, hpair, hpL,
     (symplecticQuadrangle_incidence_adj K p C).mp hcenteradj.symm⟩
 
-lemma subdivisionLine_center_of_line_base
+private lemma subdivisionLine_center_of_line_base
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2622,7 +2622,7 @@ lemma subdivisionLine_center_of_line_base
     symplecticQuadrangle_adjacent_to_point K hcenteradj.symm
   exact ⟨C, hC⟩
 
-lemma subdivisionLine_base_of_line_center
+private lemma subdivisionLine_base_of_line_center
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2649,7 +2649,7 @@ lemma subdivisionLine_base_of_line_center
     symplecticQuadrangle_adjacent_to_point K hbaseadj.symm
   exact ⟨L, hL⟩
 
-lemma subdivisionLine_base_of_line_base
+private lemma subdivisionLine_base_of_line_base
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2663,7 +2663,7 @@ lemma subdivisionLine_base_of_line_base
   exact subdivisionLine_base_of_line_center K
     copy (base := otherBase) hC
 
-lemma subdivisionLine_centers_injective
+private lemma subdivisionLine_centers_injective
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2677,7 +2677,7 @@ lemma subdivisionLine_centers_injective
     rw [hcenter i, hcenter j, hij]
   exact Sum.inr.inj (Sum.inl.inj (copy.injective hcopy))
 
-lemma subdivisionLine_bases_disjoint
+private lemma subdivisionLine_bases_disjoint
     {k : ℕ}
     (copy : SimpleGraph.Copy (SubdivisionGraph k)
       (symplecticQuadrangle K))
@@ -2742,7 +2742,7 @@ noncomputable section Padding
 
 open SimpleGraph
 
-def GraphHasNoIsolated {V : Type*} (graph : SimpleGraph V) : Prop :=
+private def GraphHasNoIsolated {V : Type*} (graph : SimpleGraph V) : Prop :=
   ∀ u : V, ∃ v : V, graph.Adj u v
 
 /-- Mapping a free graph along an embedding preserves freeness when the forbidden graph
@@ -2810,7 +2810,7 @@ public lemma extremalNumber_monotone_of_no_isolated
         simpa only [Fintype.card_fin] using SimpleGraph.card_edgeFinset_le_extremalNumber hpadded
   simpa only [ge_iff_le, Fintype.card_fin] using hbound
 
-lemma cycleGraph_no_isolated (k : ℕ) :
+private lemma cycleGraph_no_isolated (k : ℕ) :
     ∀ u : Fin (k + 2),
       ∃ v : Fin (k + 2),
         (SimpleGraph.cycleGraph (k + 2)).Adj u v := by
@@ -2821,7 +2821,7 @@ lemma cycleGraph_no_isolated (k : ℕ) :
   rw [SimpleGraph.cycleGraph_neighborSet]
   simp only [Set.mem_insert_iff, Set.mem_singleton_iff, or_true]
 
-lemma quotientGraph_no_isolated
+private lemma quotientGraph_no_isolated
     {V : Type*} (graph : SimpleGraph V) (color : V → Bool)
     (hproper : ∀ ⦃u v : V⦄, graph.Adj u v → color u ≠ color v)
     (hneighbors : ∀ u : V, ∃ v : V, graph.Adj u v)
@@ -2834,7 +2834,7 @@ lemma quotientGraph_no_isolated
   exact (colorRespectingQuotientProjectionHom
     graph color hproper f hf).map_rel huv
 
-lemma map_equiv_no_isolated
+private lemma map_equiv_no_isolated
     {V W : Type*} (graph : SimpleGraph V) (e : V ≃ W)
     (hneighbors : ∀ u : V, ∃ v : V, graph.Adj u v) :
     ∀ u : W, ∃ v : W, (graph.map e.toEmbedding).Adj u v := by
@@ -2847,14 +2847,14 @@ lemma map_equiv_no_isolated
       (a := e.symm u) (b := v)).mpr huv
   simpa only [Function.Embedding.coeFn_mk, Equiv.apply_symm_apply] using h
 
-lemma encodeFiniteGraph_no_isolated
+private lemma encodeFiniteGraph_no_isolated
     {V : Type*} [Fintype V] (graph : SimpleGraph V)
     (hneighbors : ∀ u : V, ∃ v : V, graph.Adj u v) :
     GraphHasNoIsolated (encodeFiniteGraph graph).graph := by
   classical
   exact map_equiv_no_isolated graph (Fintype.equivFin V) hneighbors
 
-lemma jTemplate_no_isolated :
+private lemma jTemplate_no_isolated :
     GraphHasNoIsolated jTemplate := by
   intro u
   rcases u with (base | ⟨copy, center⟩) |
@@ -2890,7 +2890,7 @@ lemma jTemplate_no_isolated :
         jTemplateRelation,
       zero_ne_one, or_false, or_true, and_self]
 
-lemma kTemplate_no_isolated :
+private lemma kTemplate_no_isolated :
     GraphHasNoIsolated kTemplate := by
   intro u
   rcases u with ⟨copy, (base | center) | ⟨base, center⟩⟩
@@ -2905,7 +2905,7 @@ lemma kTemplate_no_isolated :
         not_false_eq_true,
       kTemplateRelation, subdivisionRelation, Fin.isValue, false_or, and_self, true_or, or_true]
 
-lemma encodedJQuotient_no_isolated
+private lemma encodedJQuotient_no_isolated
     {f : JVertex → JVertex} (hf : JAdmissible f) :
     GraphHasNoIsolated
       (encodeFiniteGraph (quotientGraph jTemplate f)).graph := by
@@ -2914,7 +2914,7 @@ lemma encodedJQuotient_no_isolated
       (fun _ _ h => jTemplate_adj_color_ne h)
       jTemplate_no_isolated f hf.1)
 
-lemma encodedKQuotient_no_isolated
+private lemma encodedKQuotient_no_isolated
     {f : KVertex → KVertex} (hf : KAdmissible f) :
     GraphHasNoIsolated
       (encodeFiniteGraph (quotientGraph kTemplate f)).graph := by
@@ -2923,7 +2923,7 @@ lemma encodedKQuotient_no_isolated
       (fun _ _ h => kTemplate_adj_color_ne h)
       kTemplate_no_isolated f hf.1)
 
-theorem proposedFamily_member_no_isolated
+private theorem proposedFamily_member_no_isolated
     {forbidden : FiniteGraph}
     (hforbidden : forbidden ∈ proposedFamily) :
     GraphHasNoIsolated forbidden.graph :=
@@ -2933,16 +2933,16 @@ theorem proposedFamily_member_no_isolated
     (fun _ hf => encodedKQuotient_no_isolated hf)
     forbidden hforbidden
 
-lemma nat_le_pow_of_two_le
+private lemma nat_le_pow_of_two_le
     {t : ℕ} (ht : 2 ≤ t) (j : ℕ) : j ≤ t ^ j := by
   exact (Nat.lt_pow_self (show 1 < t by omega)).le
 
-theorem quadrangleVertexCount_parameter_lt (q : ℕ) :
+private theorem quadrangleVertexCount_parameter_lt (q : ℕ) :
     q < quadrangleVertexCount q := by
   unfold quadrangleVertexCount
   nlinarith [sq_nonneg q]
 
-theorem quadrangle_prime_power_bracketing
+private theorem quadrangle_prime_power_bracketing
     {t n : ℕ} (ht : 2 ≤ t)
     (hn : quadrangleVertexCount t ≤ n) :
     ∃ j : ℕ, 0 < j ∧
@@ -2978,7 +2978,7 @@ theorem quadrangle_prime_power_bracketing
     (show 1 ≤ t by omega)
   exact ⟨j, hjpositive, hjfit, lt_of_lt_of_le hnnext hgap⟩
 
-theorem quadrangle_extremal_lower_of_free
+private theorem quadrangle_extremal_lower_of_free
     (K : Type*) [Field K] [Finite K]
     {U : Type*} (forbidden : SimpleGraph U)
     (hfree : forbidden.Free (symplecticQuadrangle K)) :
@@ -3004,7 +3004,7 @@ theorem quadrangle_extremal_lower_of_free
           (quadrangleVertexCount (Nat.card K)) forbidden := by
       rw [hvertex]
 
-theorem quadrangle_extremal_lower_padded_of_free
+private theorem quadrangle_extremal_lower_padded_of_free
     (K : Type*) [Field K] [Finite K]
     {U : Type*} (forbidden : SimpleGraph U)
     (hneighbors : ∀ u : U, ∃ v : U, forbidden.Adj u v)
@@ -3015,7 +3015,7 @@ theorem quadrangle_extremal_lower_padded_of_free
   exact (quadrangle_extremal_lower_of_free K forbidden hfree).trans
     (extremalNumber_monotone_of_no_isolated forbidden hneighbors hn)
 
-theorem quadrangle_manuscript_scaled_density_of_gap
+private theorem quadrangle_manuscript_scaled_density_of_gap
     (q n : ℕ)
     (hgap : n ≤ 27 * quadrangleVertexCount q) :
     ((2 : ℝ) ^ (-((4 : ℝ) / 3)) *
@@ -3057,7 +3057,7 @@ theorem quadrangle_manuscript_scaled_density_of_gap
         _ = _ := by rw [hcancel]; ring
     _ ≤ (quadrangleEdgeCount q : ℝ) := quadrangle_rpow_density q
 
-theorem quadrangle_uniform_lower_of_prime_power_avoidance
+private theorem quadrangle_uniform_lower_of_prime_power_avoidance
     {U : Type*} (forbidden : SimpleGraph U)
     (hneighbors : ∀ u : U, ∃ v : U, forbidden.Adj u v)
     (t : ℕ) [Fact t.Prime]
@@ -3095,7 +3095,7 @@ theorem quadrangle_uniform_lower_of_prime_power_avoidance
   exact (quadrangle_manuscript_scaled_density_of_gap
     (t ^ j) n hgap27).trans hedge'
 
-theorem four_cycle_uniform_manuscript_lower
+private theorem four_cycle_uniform_manuscript_lower
     {n : ℕ} (hn : quadrangleVertexCount 3 ≤ n) :
     ((2 : ℝ) ^ (-((4 : ℝ) / 3)) *
       (27 : ℝ) ^ (-((4 : ℝ) / 3))) *
@@ -3108,7 +3108,7 @@ theorem four_cycle_uniform_manuscript_lower
     3 (by norm_num) (by norm_num)
     (fun _ _ => symplecticQuadrangle_four_cycle_free _) hn
 
-theorem six_cycle_uniform_manuscript_lower
+private theorem six_cycle_uniform_manuscript_lower
     {n : ℕ} (hn : quadrangleVertexCount 3 ≤ n) :
     ((2 : ℝ) ^ (-((4 : ℝ) / 3)) *
       (27 : ℝ) ^ (-((4 : ℝ) / 3))) *
@@ -3127,7 +3127,7 @@ noncomputable section LocalGeometry
 
 open SimpleGraph
 
-theorem common_neighbor_unique_of_four_cycle_free
+private theorem common_neighbor_unique_of_four_cycle_free
     {V : Type*} {G : SimpleGraph V}
     (hfree : (SimpleGraph.cycleGraph 4).Free G)
     {u v x y : V} (huv : u ≠ v)
@@ -3157,18 +3157,18 @@ theorem common_neighbor_unique_of_four_cycle_free
         hux.ne, hux.symm.ne, hvx.ne, hvx.symm.ne,
         huy.ne, huy.symm.ne, hvy.ne, hvy.symm.ne] at hij ⊢
 
-def CommonNeighborRelated {V : Type*} (G : SimpleGraph V)
+private def CommonNeighborRelated {V : Type*} (G : SimpleGraph V)
     (u v : V) : Prop :=
   u ≠ v ∧ ∃ w : V, G.Adj u w ∧ G.Adj v w
 
-lemma commonNeighborRelated_symm
+private lemma commonNeighborRelated_symm
     {V : Type*} {G : SimpleGraph V} {u v : V}
     (h : CommonNeighborRelated G u v) :
     CommonNeighborRelated G v u := by
   obtain ⟨hne, w, huw, hvw⟩ := h
   exact ⟨hne.symm, w, hvw, huw⟩
 
-lemma bipartite_coloring_eq_of_common_neighbor
+private lemma bipartite_coloring_eq_of_common_neighbor
     {V : Type*} {G : SimpleGraph V}
     (color : G.Coloring (Fin 2)) {u v w : V}
     (huw : G.Adj u w) (hvw : G.Adj v w) :
@@ -3178,7 +3178,7 @@ lemma bipartite_coloring_eq_of_common_neighbor
   apply Fin.ext
   omega
 
-theorem common_neighbors_triangle_eq_of_cycle_free
+private theorem common_neighbors_triangle_eq_of_cycle_free
     {V : Type*} {G : SimpleGraph V}
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -3254,7 +3254,7 @@ theorem common_neighbors_triangle_eq_of_cycle_free
         hwc.ne, hwc.symm.ne, huc.ne, huc.symm.ne,
         hub, hub.symm, hvc, hvc.symm, hwa, hwa.symm] at hij ⊢
 
-theorem common_second_neighbors_pairwise_unrelated
+private theorem common_second_neighbors_pairwise_unrelated
     {V : Type*} {G : SimpleGraph V}
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -3288,11 +3288,11 @@ section FourPathCounting
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-abbrev NonbacktrackingNeighbor (G : SimpleGraph V)
+private abbrev NonbacktrackingNeighbor (G : SimpleGraph V)
     (previous current : V) :=
   {next : V // G.Adj current next ∧ next ≠ previous}
 
-lemma card_nonbacktrackingNeighbor
+private lemma card_nonbacktrackingNeighbor
     (G : SimpleGraph V) [DecidableRel G.Adj]
     {previous current : V} (hedge : G.Adj current previous) :
     Fintype.card (NonbacktrackingNeighbor G previous current) =
@@ -3311,13 +3311,13 @@ lemma card_nonbacktrackingNeighbor
       · rfl
       · simpa only [mem_neighborFinset] using hedge
 
-abbrev NonbacktrackingFourPath (G : SimpleGraph V) (u : V) :=
+private abbrev NonbacktrackingFourPath (G : SimpleGraph V) (u : V) :=
   Σ a : G.neighborSet u,
     Σ w : NonbacktrackingNeighbor G u (a : V),
       Σ b : NonbacktrackingNeighbor G (a : V) (w : V),
         NonbacktrackingNeighbor G (w : V) (b : V)
 
-lemma fintype_card_sigma_lower
+private lemma fintype_card_sigma_lower
     {α : Type*} [Fintype α]
     {β : α → Type*} [∀ a, Fintype (β a)]
     {baseLower fiberLower : ℕ}
@@ -3333,7 +3333,7 @@ lemma fintype_card_sigma_lower
     _ ≤ ∑ a : α, Fintype.card (β a) :=
       Finset.sum_le_sum fun a _ => hfiber a
 
-lemma card_nonbacktrackingFourPath_lower
+private lemma card_nonbacktrackingFourPath_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (d : ℕ) (hdegree : ∀ v : V, d ≤ G.degree v) (u : V) :
     d * (d - 1) ^ 3 ≤
@@ -3376,13 +3376,13 @@ lemma card_nonbacktrackingFourPath_lower
   rw [hpow]
   exact hcount
 
-def nonbacktrackingFourPathPair
+private def nonbacktrackingFourPathPair
     (G : SimpleGraph V) {u : V}
     (path : NonbacktrackingFourPath G u) : V × V :=
   (path.2.2.2.1, path.2.1.1)
 
 omit [Fintype V] [DecidableEq V] in
-lemma nonbacktrackingFourPath_endpoint_ne
+private lemma nonbacktrackingFourPath_endpoint_ne
     (G : SimpleGraph V)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
     {u : V} (path : NonbacktrackingFourPath G u) :
@@ -3399,7 +3399,7 @@ lemma nonbacktrackingFourPath_endpoint_ne
   exact b.property.2 hab.symm
 
 omit [Fintype V] [DecidableEq V] in
-lemma nonbacktrackingFourPath_endpoint_unrelated
+private lemma nonbacktrackingFourPath_endpoint_unrelated
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -3420,19 +3420,19 @@ lemma nonbacktrackingFourPath_endpoint_unrelated
     b.property.1 v.property.1.symm hvc huc
   exact b.property.2 hab.1.symm
 
-abbrev FourPathEndpointWitness (G : SimpleGraph V) (u : V) :=
+private abbrev FourPathEndpointWitness (G : SimpleGraph V) (u : V) :=
   {pair : V × V //
     u ≠ pair.1 ∧
       ¬ CommonNeighborRelated G u pair.1 ∧
       CommonNeighborRelated G u pair.2 ∧
       CommonNeighborRelated G pair.1 pair.2}
 
-noncomputable instance fourPathEndpointWitnessFintype
+private noncomputable instance fourPathEndpointWitnessFintype
     (G : SimpleGraph V) (u : V) :
     Fintype (FourPathEndpointWitness G u) :=
   Fintype.ofFinite _
 
-def nonbacktrackingFourPathWitness
+private def nonbacktrackingFourPathWitness
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -3450,7 +3450,7 @@ def nonbacktrackingFourPathWitness
       path.2.2.1.property.1⟩
 
 omit [Fintype V] [DecidableEq V] in
-lemma nonbacktrackingFourPathPair_injective
+private lemma nonbacktrackingFourPathPair_injective
     (G : SimpleGraph V)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
     {u : V} :
@@ -3491,7 +3491,7 @@ lemma nonbacktrackingFourPathPair_injective
   rfl
 
 omit [Fintype V] [DecidableEq V] in
-lemma nonbacktrackingFourPathWitness_injective
+private lemma nonbacktrackingFourPathWitness_injective
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -3506,7 +3506,7 @@ lemma nonbacktrackingFourPathWitness_injective
 
 open Classical in
 omit [DecidableEq V] in
-lemma four_path_endpoint_witness_count_lower
+private lemma four_path_endpoint_witness_count_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -3523,24 +3523,24 @@ lemma four_path_endpoint_witness_count_lower
         (nonbacktrackingFourPathWitness G hbip hfour hsix)
         (nonbacktrackingFourPathWitness_injective G hbip hfour hsix)
 
-abbrev UnrelatedFourPathEndpoint (G : SimpleGraph V) (u : V) :=
+private abbrev UnrelatedFourPathEndpoint (G : SimpleGraph V) (u : V) :=
   {v : V // u ≠ v ∧ ¬ CommonNeighborRelated G u v}
 
-abbrev CommonSecondNeighbor (G : SimpleGraph V) (u v : V) :=
+private abbrev CommonSecondNeighbor (G : SimpleGraph V) (u v : V) :=
   {w : V //
     CommonNeighborRelated G u w ∧ CommonNeighborRelated G v w}
 
-noncomputable instance unrelatedFourPathEndpointFintype
+private noncomputable instance unrelatedFourPathEndpointFintype
     (G : SimpleGraph V) (u : V) :
     Fintype (UnrelatedFourPathEndpoint G u) :=
   Fintype.ofFinite _
 
-noncomputable instance commonSecondNeighborFintype
+private noncomputable instance commonSecondNeighborFintype
     (G : SimpleGraph V) (u v : V) :
     Fintype (CommonSecondNeighbor G u v) :=
   Fintype.ofFinite _
 
-def fourPathEndpointWitnessEquiv
+private def fourPathEndpointWitnessEquiv
     (G : SimpleGraph V) (u : V) :
     FourPathEndpointWitness G u ≃
       Σ v : UnrelatedFourPathEndpoint G u,
@@ -3558,7 +3558,7 @@ def fourPathEndpointWitnessEquiv
     rfl
 
 omit [DecidableEq V] in
-lemma fourPathEndpointWitness_card_eq_sum
+private lemma fourPathEndpointWitness_card_eq_sum
     (G : SimpleGraph V) (u : V) :
     Fintype.card (FourPathEndpointWitness G u) =
       ∑ v : UnrelatedFourPathEndpoint G u,
@@ -3567,7 +3567,7 @@ lemma fourPathEndpointWitness_card_eq_sum
     Fintype.card_sigma]
 
 omit [DecidableEq V] in
-theorem four_path_common_second_neighbor_sum_lower
+private theorem four_path_common_second_neighbor_sum_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -3580,13 +3580,13 @@ theorem four_path_common_second_neighbor_sum_lower
   exact four_path_endpoint_witness_count_lower
     G hbip hfour hsix d hdegree u
 
-def CommonNeighborIndependent (G : SimpleGraph V)
+private def CommonNeighborIndependent (G : SimpleGraph V)
     (vertices : Finset V) : Prop :=
   ∀ ⦃x y : V⦄, x ∈ vertices → y ∈ vertices → x ≠ y →
     ¬ CommonNeighborRelated G x y
 
 omit [Fintype V] [DecidableEq V] in
-lemma commonNeighborIndependent_neighborhood_injective
+private lemma commonNeighborIndependent_neighborhood_injective
     (G : SimpleGraph V) (vertices : Finset V)
     (hindependent : CommonNeighborIndependent G vertices) :
     Function.Injective
@@ -3609,7 +3609,7 @@ lemma commonNeighborIndependent_neighborhood_injective
   rfl
 
 omit [DecidableEq V] in
-lemma commonNeighborIndependent_sum_degree_le_card
+private lemma commonNeighborIndependent_sum_degree_le_card
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (vertices : Finset V)
     (hindependent : CommonNeighborIndependent G vertices) :
@@ -3626,7 +3626,7 @@ lemma commonNeighborIndependent_sum_degree_le_card
     SimpleGraph.card_neighborSet_eq_degree] using hcard
 
 omit [DecidableEq V] in
-lemma commonNeighborIndependent_card_mul_degree_le
+private lemma commonNeighborIndependent_card_mul_degree_le
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (vertices : Finset V)
     (hindependent : CommonNeighborIndependent G vertices)
@@ -3652,17 +3652,17 @@ section BreadthFirstPaths
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-abbrev NonbacktrackingThreePath (G : SimpleGraph V) (u : V) :=
+private abbrev NonbacktrackingThreePath (G : SimpleGraph V) (u : V) :=
   Σ a : G.neighborSet u,
     Σ w : NonbacktrackingNeighbor G u (a : V),
       NonbacktrackingNeighbor G (a : V) (w : V)
 
-def nonbacktrackingThreePathEndpoint
+private def nonbacktrackingThreePathEndpoint
     (G : SimpleGraph V) {u : V}
     (path : NonbacktrackingThreePath G u) : V :=
   path.2.2.1
 
-lemma card_nonbacktrackingThreePath_lower
+private lemma card_nonbacktrackingThreePath_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (d : ℕ) (hdegree : ∀ v : V, d ≤ G.degree v) (u : V) :
     G.degree u * (d - 1) ^ 2 ≤
@@ -3693,7 +3693,7 @@ lemma card_nonbacktrackingThreePath_lower
   exact hcount
 
 omit [Fintype V] [DecidableEq V] in
-lemma nonbacktrackingThreePathEndpoint_injective
+private lemma nonbacktrackingThreePathEndpoint_injective
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -3745,7 +3745,7 @@ lemma nonbacktrackingThreePathEndpoint_injective
 
 open Classical in
 omit [DecidableEq V] in
-theorem girthEight_degree_mul_pred_sq_le_card
+private theorem girthEight_degree_mul_pred_sq_le_card
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -3775,14 +3775,14 @@ section SubdivisionCopies
 
 variable {V : Type*} {G : SimpleGraph V} {k : ℕ}
 
-def subdivisionVertexImage
+private def subdivisionVertexImage
     (base : Fin 3 → V) (center : Fin k → V)
     (pair : Fin 3 → Fin k → V) : SubdivisionVertex k → V
   | .inl (.inl i) => base i
   | .inl (.inr j) => center j
   | .inr (i, j) => pair i j
 
-lemma subdivisionPairVertex_injective
+private lemma subdivisionPairVertex_injective
     (base : Fin 3 → V) (center : Fin k → V)
     (pair : Fin 3 → Fin k → V)
     (hbase : Function.Injective base)
@@ -3815,7 +3815,7 @@ lemma subdivisionPairVertex_injective
       (hpair_center i j')
   exact Prod.ext rfl hj
 
-lemma subdivisionPairVertex_ne_base
+private lemma subdivisionPairVertex_ne_base
     (hbip : G.IsBipartite)
     (base : Fin 3 → V) (center : Fin k → V)
     (pair : Fin 3 → Fin k → V)
@@ -3835,7 +3835,7 @@ lemma subdivisionPairVertex_ne_base
   exact hfirst.trans
     (hother.symm.trans (congrArg color heq).symm)
 
-lemma subdivisionPairVertex_ne_center
+private lemma subdivisionPairVertex_ne_center
     (hbip : G.IsBipartite)
     (base : Fin 3 → V) (center : Fin k → V)
     (pair : Fin 3 → Fin k → V)
@@ -3851,7 +3851,7 @@ lemma subdivisionPairVertex_ne_center
   apply color.valid (hpair_base i j)
   exact hother.trans (congrArg color heq).symm
 
-lemma subdivisionVertexImage_injective
+private lemma subdivisionVertexImage_injective
     (hbip : G.IsBipartite)
     (base : Fin 3 → V) (center : Fin k → V)
     (pair : Fin 3 → Fin k → V)
@@ -3903,7 +3903,7 @@ lemma subdivisionVertexImage_injective
       (fun ij : Fin 3 × Fin k =>
         (Sum.inr ij : SubdivisionVertex k)) heq
 
-lemma subdivisionVertexImage_map_directedRelation
+private lemma subdivisionVertexImage_map_directedRelation
     (base : Fin 3 → V) (center : Fin k → V)
     (pair : Fin 3 → Fin k → V)
     (hpair_base : ∀ i j, G.Adj (base i) (pair i j))
@@ -3926,7 +3926,7 @@ lemma subdivisionVertexImage_map_directedRelation
   · rcases v with (i' | j') | ⟨i', j'⟩ <;>
       exact hadj.elim
 
-lemma subdivisionVertexImage_map_relation
+private lemma subdivisionVertexImage_map_relation
     (base : Fin 3 → V) (center : Fin k → V)
     (pair : Fin 3 → Fin k → V)
     (hpair_base : ∀ i j, G.Adj (base i) (pair i j))
@@ -3941,7 +3941,7 @@ lemma subdivisionVertexImage_map_relation
   · exact (subdivisionVertexImage_map_directedRelation
       base center pair hpair_base hpair_center hvu).symm
 
-def subdivisionCopyOfCommonNeighbors
+private def subdivisionCopyOfCommonNeighbors
     (hbip : G.IsBipartite)
     (base : Fin 3 → V) (center : Fin k → V)
     (pair : Fin 3 → Fin k → V)
@@ -3963,7 +3963,7 @@ def subdivisionCopyOfCommonNeighbors
       hbase hcenter hbase_center hbase_unrelated
       hcenter_unrelated hpair_base hpair_center
 
-noncomputable def subdivisionCopyOfRelatedCenters
+private noncomputable def subdivisionCopyOfRelatedCenters
     (hbip : G.IsBipartite)
     (base : Fin 3 → V) (center : Fin k → V)
     (hbase : Function.Injective base)
@@ -3988,7 +3988,7 @@ noncomputable def subdivisionCopyOfRelatedCenters
     hbase hcenter (fun i j => (hrelated i j).1)
     hbase_unrelated hcenter_unrelated hpair_base hpair_center
 
-noncomputable def subdivisionCopyOfGirthEightCenters
+private noncomputable def subdivisionCopyOfGirthEightCenters
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
     (hsix : (SimpleGraph.cycleGraph 6).Free G)
@@ -4025,25 +4025,25 @@ noncomputable section QuotientWitnesses
 
 open SimpleGraph
 
-noncomputable def fiberRepresentative
+private noncomputable def fiberRepresentative
     {α β : Type*} (g : α → β) (b : Set.range g) : α :=
   Classical.choose b.property
 
-lemma fiberRepresentative_spec
+private lemma fiberRepresentative_spec
     {α β : Type*} (g : α → β) (b : Set.range g) :
     g (fiberRepresentative g b) = b.1 :=
   Classical.choose_spec b.property
 
-noncomputable def kernelNormalForm
+private noncomputable def kernelNormalForm
     {α β : Type*} (g : α → β) (x : α) : α :=
   fiberRepresentative g ⟨g x, ⟨x, rfl⟩⟩
 
-lemma kernelNormalForm_spec
+private lemma kernelNormalForm_spec
     {α β : Type*} (g : α → β) (x : α) :
     g (kernelNormalForm g x) = g x :=
   fiberRepresentative_spec g ⟨g x, ⟨x, rfl⟩⟩
 
-lemma kernelNormalForm_eq_iff
+private lemma kernelNormalForm_eq_iff
     {α β : Type*} (g : α → β) (x y : α) :
     kernelNormalForm g x = kernelNormalForm g y ↔ g x = g y := by
   constructor
@@ -4058,14 +4058,14 @@ lemma kernelNormalForm_eq_iff
     congr 1
     exact Subtype.ext h
 
-lemma kernelNormalForm_idempotent
+private lemma kernelNormalForm_idempotent
     {α β : Type*} (g : α → β) (x : α) :
     kernelNormalForm g (kernelNormalForm g x) =
       kernelNormalForm g x := by
   apply (kernelNormalForm_eq_iff g _ _).mpr
   exact kernelNormalForm_spec g x
 
-lemma kernelNormalForm_fixed
+private lemma kernelNormalForm_fixed
     {α β : Type*} (g : α → β)
     (u : Set.range (kernelNormalForm g)) :
     kernelNormalForm g u.1 = u.1 := by
@@ -4073,7 +4073,7 @@ lemma kernelNormalForm_fixed
   rw [← hx]
   exact kernelNormalForm_idempotent g x
 
-noncomputable def kernelQuotientCopy
+private noncomputable def kernelQuotientCopy
     {α β : Type*} (source : SimpleGraph α)
     (target : SimpleGraph β) (hom : source →g target) :
     SimpleGraph.Copy
@@ -4117,7 +4117,7 @@ noncomputable def kernelQuotientCopy
     rwa [kernelNormalForm_fixed hom u,
       kernelNormalForm_fixed hom v] at h
 
-noncomputable def encodeFiniteGraphCopy
+private noncomputable def encodeFiniteGraphCopy
     {α β : Type*} [Fintype α]
     (source : SimpleGraph α) (target : SimpleGraph β)
     (copy : SimpleGraph.Copy source target) :
@@ -4125,7 +4125,7 @@ noncomputable def encodeFiniteGraphCopy
   exact copy.comp
     (SimpleGraph.Iso.map (Fintype.equivFin α) source).symm.toCopy
 
-lemma kernelNormalForm_jAdmissible
+private lemma kernelNormalForm_jAdmissible
     {V : Type*} (g : JVertex → V)
     (hcolor : ∀ u v, g u = g v → jColor u = jColor v)
     (hbase : Function.Injective
@@ -4143,7 +4143,7 @@ lemma kernelNormalForm_jAdmissible
     exact hcopies copy hu hv
       ((kernelNormalForm_eq_iff g _ _).mp huv)
 
-lemma kernelNormalForm_kAdmissible
+private lemma kernelNormalForm_kAdmissible
     {V : Type*} (g : KVertex → V)
     (hcolor : ∀ u v, g u = g v → kColor u = kColor v)
     (hcopies : ∀ copy : Fin 2,
@@ -4156,7 +4156,7 @@ lemma kernelNormalForm_kAdmissible
     exact hcopies copy hu hv
       ((kernelNormalForm_eq_iff g _ _).mp huv)
 
-theorem proposedFamilyFree_no_jTemplate
+private theorem proposedFamilyFree_no_jTemplate
     {n : ℕ} {host : SimpleGraph (Fin n)}
     (hfree : FamilyFree proposedFamily host)
     (hom : jTemplate →g host)
@@ -4174,7 +4174,7 @@ theorem proposedFamilyFree_no_jTemplate
     (quotientGraph jTemplate f) host
     (kernelQuotientCopy jTemplate host hom)⟩
 
-theorem proposedFamilyFree_no_kTemplate
+private theorem proposedFamilyFree_no_kTemplate
     {n : ℕ} {host : SimpleGraph (Fin n)}
     (hfree : FamilyFree proposedFamily host)
     (hom : kTemplate →g host)
@@ -4196,17 +4196,17 @@ section CommutativeRing
 
 variable {K : Type*} [CommRing K]
 
-def symmetricQuadratic (a b c x y : K) : K :=
+private def symmetricQuadratic (a b c x y : K) : K :=
   a * x ^ 2 + (2 : K) * b * x * y + c * y ^ 2
 
-lemma symmetricQuadratic_eq_bilinear
+private lemma symmetricQuadratic_eq_bilinear
     (a b c x y : K) :
     symmetricQuadratic a b c x y =
       x * (a * x + b * y) + y * (b * x + c * y) := by
   unfold symmetricQuadratic
   ring
 
-lemma symmetricDet_zero_diagonal_sub (b b' : K) :
+private lemma symmetricDet_zero_diagonal_sub (b b' : K) :
     ((0 : K) * 0 - (b - b') ^ 2) = -((b - b') ^ 2) := by
   simp only [mul_zero, zero_sub]
 
@@ -4216,13 +4216,13 @@ section CharacteristicTwo
 
 variable {K : Type*} [Field K] [CharP K 2]
 
-lemma symmetricQuadratic_char_two
+private lemma symmetricQuadratic_char_two
     (a b c x y : K) :
     symmetricQuadratic a b c x y = a * x ^ 2 + c * y ^ 2 := by
   have htwo : (2 : K) = 0 := CharP.cast_eq_zero K 2
   simp only [symmetricQuadratic, htwo, zero_mul, add_zero]
 
-lemma symmetricQuadratic_char_two_eq_square
+private lemma symmetricQuadratic_char_two_eq_square
     (r s b x y : K) :
     symmetricQuadratic (r ^ 2) b (s ^ 2) x y =
       (r * x + s * y) ^ 2 := by
@@ -4235,13 +4235,13 @@ lemma symmetricQuadratic_char_two_eq_square
       rw [add_sq]
       simp only [htwo, zero_mul, add_zero]
 
-lemma square_surjective_char_two [Finite K] :
+private lemma square_surjective_char_two [Finite K] :
     Function.Surjective (fun x : K => x ^ 2) := by
   intro a
   obtain ⟨r, hr⟩ := (isSquare_of_charTwo' a).exists_sq
   exact ⟨r, hr.symm⟩
 
-lemma symmetricQuadratic_char_two_diagonal_zero_of_two_independent_roots
+private lemma symmetricQuadratic_char_two_diagonal_zero_of_two_independent_roots
     [Finite K] {a b c x y x' y' : K}
     (hind : x * y' - x' * y ≠ 0)
     (hfirst : symmetricQuadratic a b c x y = 0)
@@ -4275,13 +4275,13 @@ section Field
 
 variable {K : Type*} [Field K]
 
-def symmetricQuadraticEvaluationMatrix
+private def symmetricQuadraticEvaluationMatrix
     (x₀ y₀ x₁ y₁ x₂ y₂ : K) : Matrix (Fin 3) (Fin 3) K :=
   !![x₀ ^ 2, (2 : K) * x₀ * y₀, y₀ ^ 2;
      x₁ ^ 2, (2 : K) * x₁ * y₁, y₁ ^ 2;
      x₂ ^ 2, (2 : K) * x₂ * y₂, y₂ ^ 2]
 
-lemma symmetricQuadraticEvaluationMatrix_det
+private lemma symmetricQuadraticEvaluationMatrix_det
     (x₀ y₀ x₁ y₁ x₂ y₂ : K) :
     (symmetricQuadraticEvaluationMatrix x₀ y₀ x₁ y₁ x₂ y₂).det =
       (2 : K) * (x₀ * y₁ - x₁ * y₀) *
@@ -4291,7 +4291,7 @@ lemma symmetricQuadraticEvaluationMatrix_det
     Matrix.cons_val_zero, Matrix.cons_val_fin_one, Matrix.cons_val_one, Matrix.cons_val]
   ring
 
-lemma symmetricQuadratic_no_three_independent_roots
+private lemma symmetricQuadratic_no_three_independent_roots
     (htwo : (2 : K) ≠ 0)
     {a b c x₀ y₀ x₁ y₁ x₂ y₂ : K}
     (hcoeff : a ≠ 0 ∨ b ≠ 0 ∨ c ≠ 0)
@@ -4325,7 +4325,7 @@ lemma symmetricQuadratic_no_three_independent_roots
   exact hcoeff.elim (fun h => h ha)
     (fun h => h.elim (fun h' => h' hb) (fun h' => h' hc))
 
-lemma symmetricQuadratic_no_three_roots_of_det_ne_zero
+private lemma symmetricQuadratic_no_three_roots_of_det_ne_zero
     (htwo : (2 : K) ≠ 0)
     {a b c x₀ y₀ x₁ y₁ x₂ y₂ : K}
     (hdet : (a * c - b ^ 2) ≠ 0)
@@ -4347,7 +4347,7 @@ lemma symmetricQuadratic_no_three_roots_of_det_ne_zero
   simp only [ha, hc, mul_zero, hb, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
     sub_self]
 
-lemma symmetricDet_zero_diagonal_sub_ne_zero
+private lemma symmetricDet_zero_diagonal_sub_ne_zero
     {b b' : K} (h : b ≠ b') :
     ((0 : K) * 0 - (b - b') ^ 2) ≠ 0 := by
   rw [symmetricDet_zero_diagonal_sub]
@@ -4360,20 +4360,20 @@ noncomputable section Separation
 open Filter Finset SimpleGraph
 open scoped Topology
 
-def extremalScale (n : ℕ) : ℝ :=
+private def extremalScale (n : ℕ) : ℝ :=
   (n : ℝ) ^ ((4 : ℝ) / 3)
 
-lemma extremalScale_pos {n : ℕ} (hn : 0 < n) :
+private lemma extremalScale_pos {n : ℕ} (hn : 0 < n) :
     0 < extremalScale n := by
   unfold extremalScale
   exact Real.rpow_pos_of_pos (by exact_mod_cast hn) _
 
-lemma extremalScale_nonneg (n : ℕ) :
+private lemma extremalScale_nonneg (n : ℕ) :
     0 ≤ extremalScale n := by
   unfold extremalScale
   exact Real.rpow_nonneg (Nat.cast_nonneg _) _
 
-def FamilyLittleO (family : Finset FiniteGraph) : Prop :=
+private def FamilyLittleO (family : Finset FiniteGraph) : Prop :=
   ∀ ε : ℝ, 0 < ε →
     ∀ᶠ n : ℕ in atTop,
       (familyExtremal family n : ℝ) ≤ ε * extremalScale n
@@ -4385,21 +4385,21 @@ public def UniformMemberLower (family : Finset FiniteGraph) (c : ℝ) : Prop :=
       c * extremalScale n ≤
         (SimpleGraph.extremalNumber n forbidden.graph : ℝ)
 
-structure SeparationCertificate (family : Finset FiniteGraph) where
+private structure SeparationCertificate (family : Finset FiniteGraph) where
   lowerConstant : ℝ
   lowerConstant_pos : 0 < lowerConstant
   family_littleO : FamilyLittleO family
   member_lower : UniformMemberLower family lowerConstant
 
-noncomputable def manuscriptLowerConstant : ℝ :=
+private noncomputable def manuscriptLowerConstant : ℝ :=
   (2 : ℝ) ^ (-((4 : ℝ) / 3)) *
     (27 : ℝ) ^ (-((4 : ℝ) / 3))
 
-theorem manuscriptLowerConstant_pos : 0 < manuscriptLowerConstant := by
+private theorem manuscriptLowerConstant_pos : 0 < manuscriptLowerConstant := by
   unfold manuscriptLowerConstant
   positivity
 
-lemma not_compact_of_separation
+private lemma not_compact_of_separation
     {family : Finset FiniteGraph}
     (certificate : SeparationCertificate family) :
     ¬ IsCompactFamily family := by
@@ -4430,7 +4430,7 @@ lemma not_compact_of_separation
     nlinarith [mul_pos certificate.lowerConstant_pos hs]
   exact himpossible.exists.elim (fun _ h => h)
 
-theorem proposedFamily_not_compact_of_bounds
+private theorem proposedFamily_not_compact_of_bounds
     (hupper : FamilyLittleO proposedFamily)
     (hlower : UniformMemberLower proposedFamily manuscriptLowerConstant) :
     ¬ IsCompactFamily proposedFamily := by
@@ -4441,7 +4441,7 @@ theorem proposedFamily_not_compact_of_bounds
       family_littleO := hupper
       member_lower := hlower }
 
-lemma not_compactnessConjecture_of_bounds
+private lemma not_compactnessConjecture_of_bounds
     (hupper : FamilyLittleO proposedFamily)
     (hlower : UniformMemberLower proposedFamily manuscriptLowerConstant) :
     ¬ CompactnessConjectureStatement := by
@@ -4458,16 +4458,16 @@ open Finset SimpleGraph
 
 section FiniteHeavyFibers
 
-def fourPathHeavyThreshold (N p : ℕ) : ℝ :=
+private def fourPathHeavyThreshold (N p : ℕ) : ℝ :=
   (p : ℝ) / (2 * (N : ℝ))
 
-def finiteHeavyFiberMass {α : Type*} [Fintype α]
+private def finiteHeavyFiberMass {α : Type*} [Fintype α]
     (weight : α → ℕ) (N p : ℕ) : ℝ :=
   ∑ x : α,
     if fourPathHeavyThreshold N p ≤ (weight x : ℝ)
     then (weight x : ℝ) else 0
 
-theorem finite_heavy_fiber_mass_half
+private theorem finite_heavy_fiber_mass_half
     {α : Type*} [Fintype α]
     (weight : α → ℕ) (N p : ℕ)
     (hN : 0 < N)
@@ -4513,7 +4513,7 @@ section ActualFourPathFibers
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
 omit [DecidableEq V] in
-lemma unrelated_four_path_endpoint_card_le
+private lemma unrelated_four_path_endpoint_card_le
     (G : SimpleGraph V) (u : V) :
     Fintype.card (UnrelatedFourPathEndpoint G u) ≤ Fintype.card V := by
   exact Fintype.card_le_of_injective
@@ -4521,7 +4521,7 @@ lemma unrelated_four_path_endpoint_card_le
     Subtype.val_injective
 
 omit [Fintype V] [DecidableEq V] in
-lemma common_second_neighbor_pairwise_unrelated
+private lemma common_second_neighbor_pairwise_unrelated
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -4539,7 +4539,7 @@ lemma common_second_neighbor_pairwise_unrelated
     (commonNeighborRelated_symm y.property.2)
 
 omit [DecidableEq V] in
-lemma four_path_heavy_common_second_neighbor_mass_lower
+private lemma four_path_heavy_common_second_neighbor_mass_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -4562,7 +4562,7 @@ section ActualThetaExtensions
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-noncomputable def thetaBaseExtensions
+private noncomputable def thetaBaseExtensions
     (G : SimpleGraph V) (y z : V) : Finset V := by
   classical
   exact Finset.univ.filter fun x =>
@@ -4571,7 +4571,7 @@ noncomputable def thetaBaseExtensions
       witness (.inl (.inl (1 : Fin 3))) = y ∧
       witness (.inl (.inl (2 : Fin 3))) = z
 
-lemma mem_thetaBaseExtensions
+private lemma mem_thetaBaseExtensions
     (G : SimpleGraph V) (x y z : V) :
     x ∈ thetaBaseExtensions G y z ↔
       ∃ witness : SimpleGraph.Copy thetaGraph G,
@@ -4581,14 +4581,14 @@ lemma mem_thetaBaseExtensions
   classical
   simp only [thetaBaseExtensions, Fin.isValue, mem_filter, mem_univ, true_and]
 
-def gluedJBase {G : SimpleGraph V}
+private def gluedJBase {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G) : Fin 4 → V :=
   ![copies 0 (.inl (.inl (0 : Fin 3))),
     copies 1 (.inl (.inl (0 : Fin 3))),
     copies 0 (.inl (.inl (1 : Fin 3))),
     copies 0 (.inl (.inl (2 : Fin 3)))]
 
-def gluedJVertex {G : SimpleGraph V}
+private def gluedJVertex {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (joining : V) : JVertex → V
   | .inl (.inl base) => gluedJBase copies base
@@ -4599,7 +4599,7 @@ def gluedJVertex {G : SimpleGraph V}
   | .inr (.inr _) => joining
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedJBase_jBase
+private lemma gluedJBase_jBase
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (hfirst :
@@ -4615,7 +4615,7 @@ lemma gluedJBase_jBase
     simp [gluedJBase, jBase, hfirst, hsecond]
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedJVertex_jThetaVertex
+private lemma gluedJVertex_jThetaVertex
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (joining : V)
@@ -4633,7 +4633,7 @@ lemma gluedJVertex_jThetaVertex
   · simp only [gluedJVertex, jThetaVertex]
   · simp only [gluedJVertex, jThetaVertex, Prod.mk.eta]
 
-lemma inJCopy_iff_exists_jThetaVertex
+private lemma inJCopy_iff_exists_jThetaVertex
     (copy : Fin 2) (vertex : JVertex) :
     InJCopy copy vertex ↔
       ∃ source : SubdivisionVertex 2,
@@ -4657,14 +4657,14 @@ lemma inJCopy_iff_exists_jThetaVertex
   · rintro ⟨source, rfl⟩
     exact jThetaVertex_mem copy source
 
-lemma theta_base_pair_adj (base : Fin 3) (center : Fin 2) :
+private lemma theta_base_pair_adj (base : Fin 3) (center : Fin 2) :
     thetaGraph.Adj
       (.inl (.inl base)) (.inr (base, center)) := by
   simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
       subdivisionRelation,
     or_false, and_self]
 
-lemma theta_center_pair_adj (base : Fin 3) (center : Fin 2) :
+private lemma theta_center_pair_adj (base : Fin 3) (center : Fin 2) :
     thetaGraph.Adj
       (.inl (.inr center)) (.inr (base, center)) := by
   simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
@@ -4672,7 +4672,7 @@ lemma theta_center_pair_adj (base : Fin 3) (center : Fin 2) :
     or_false, and_self]
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedJVertex_map_relation
+private lemma gluedJVertex_map_relation
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (joining : V)
@@ -4727,7 +4727,7 @@ lemma gluedJVertex_map_relation
   · exact False.elim hedge
   · exact False.elim hedge
 
-def gluedJHom
+private def gluedJHom
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (joining : V)
@@ -4754,7 +4754,7 @@ def gluedJHom
         hfirst hsecond hjoinFirst hjoinSecond hbackward).symm
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedJHom_injOn_marked_copy
+private lemma gluedJHom_injOn_marked_copy
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (joining : V)
@@ -4790,7 +4790,7 @@ lemma gluedJHom_injOn_marked_copy
   rfl
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedJBase_injective
+private lemma gluedJBase_injective
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (hfirst :
@@ -4841,7 +4841,7 @@ lemma gluedJBase_injective
       h13, h13.symm] at hij ⊢
 
 omit [Fintype V] [DecidableEq V] in
-lemma thetaCopy_base_center_color_eq
+private lemma thetaCopy_base_center_color_eq
     {G : SimpleGraph V}
     (color : G.Coloring (Fin 2))
     (copy : SimpleGraph.Copy thetaGraph G)
@@ -4853,7 +4853,7 @@ lemma thetaCopy_base_center_color_eq
     (copy.toHom.map_rel (theta_center_pair_adj base center))
 
 omit [Fintype V] [DecidableEq V] in
-lemma thetaCopy_base_color_eq
+private lemma thetaCopy_base_color_eq
     {G : SimpleGraph V}
     (color : G.Coloring (Fin 2))
     (copy : SimpleGraph.Copy thetaGraph G)
@@ -4868,7 +4868,7 @@ lemma thetaCopy_base_color_eq
       (thetaCopy_base_center_color_eq color copy second 0).symm
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedThetaBase_color_eq
+private lemma gluedThetaBase_color_eq
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (hfirst :
@@ -4890,7 +4890,7 @@ lemma gluedThetaBase_color_eq
         thetaCopy_base_color_eq color (copies 0) 1 0
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedJBase_color_eq
+private lemma gluedJBase_color_eq
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (hfirst :
@@ -4907,7 +4907,7 @@ lemma gluedJBase_color_eq
   · exact gluedThetaBase_color_eq copies hfirst color 0 2
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedJVertex_color_false_iff
+private lemma gluedJVertex_color_false_iff
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
     (joining : V)
@@ -4947,7 +4947,7 @@ lemma gluedJVertex_color_false_iff
     exact (color.valid hjoinFirst) heq.symm
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedJHom_color_respecting
+private lemma gluedJHom_color_respecting
     {G : SimpleGraph V}
     (hbip : G.IsBipartite)
     (copies : Fin 2 → SimpleGraph.Copy thetaGraph G)
@@ -4996,7 +4996,7 @@ lemma gluedJHom_color_respecting
     simp only [hleft, Bool.true_eq_false] at hfalse
   · rfl
 
-lemma thetaBaseExtensions_commonNeighborIndependent
+private lemma thetaBaseExtensions_commonNeighborIndependent
     {n : ℕ} (host : SimpleGraph (Fin n))
     (hfree : FamilyFree proposedFamily host)
     (hbip : host.IsBipartite)
@@ -5051,7 +5051,7 @@ lemma thetaBaseExtensions_commonNeighborIndependent
     exact gluedJHom_injOn_marked_copy copies joining
       hsharedFirst hsharedSecond hjoinFirst hjoinSecond copy
 
-lemma thetaBaseExtensions_card_mul_degree_le
+private lemma thetaBaseExtensions_card_mul_degree_le
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hfree : FamilyFree proposedFamily host)
@@ -5069,21 +5069,21 @@ section ActualCommonCenterTriples
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-noncomputable def tripleCommonCenters
+private noncomputable def tripleCommonCenters
     (G : SimpleGraph V) (base : Fin 3 → V) : Finset V := by
   classical
   exact Finset.univ.filter fun center =>
     ∀ i : Fin 3, CommonNeighborRelated G (base i) center
 
 omit [DecidableEq V] in
-lemma mem_tripleCommonCenters
+private lemma mem_tripleCommonCenters
     (G : SimpleGraph V) (base : Fin 3 → V) (center : V) :
     center ∈ tripleCommonCenters G base ↔
       ∀ i : Fin 3, CommonNeighborRelated G (base i) center := by
   classical
   simp only [tripleCommonCenters, mem_filter, mem_univ, true_and]
 
-lemma mem_thetaBaseExtensions_of_girthEightCenters
+private lemma mem_thetaBaseExtensions_of_girthEightCenters
     {G : SimpleGraph V}
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -5102,7 +5102,7 @@ lemma mem_thetaBaseExtensions_of_girthEightCenters
   refine ⟨witness, ?_, ?_, ?_⟩
   all_goals rfl
 
-lemma mem_thetaBaseExtensions_of_two_common_centers
+private lemma mem_thetaBaseExtensions_of_two_common_centers
     {G : SimpleGraph V}
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -5134,14 +5134,14 @@ end ActualCommonCenterTriples
 
 section CubicBinomialSupersaturation
 
-lemma choose_three_factorial_identity (t : ℕ) :
+private lemma choose_three_factorial_identity (t : ℕ) :
     6 * t.choose 3 = t * (t - 1) * (t - 2) := by
   simpa only [Nat.mul_comm, Nat.mul_assoc, Nat.factorial, Nat.succ_eq_add_one, Nat.reduceAdd,
       zero_add, mul_one,
     Nat.reduceMul, Nat.descFactorial,
         tsub_zero] using (Nat.descFactorial_eq_factorial_mul_choose t 3).symm
 
-lemma choose_three_cubic_lower {t : ℕ} (ht : 3 ≤ t) :
+private lemma choose_three_cubic_lower {t : ℕ} (ht : 3 ≤ t) :
     (t : ℝ) ^ 3 / 27 ≤ (t.choose 3 : ℝ) := by
   have hone : 1 ≤ t := by omega
   have htwo : 2 ≤ t := by omega
@@ -5163,13 +5163,13 @@ section ActualTripleSupersaturation
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-noncomputable def commonSecondNeighborTripleMass
+private noncomputable def commonSecondNeighborTripleMass
     (G : SimpleGraph V) (u : V) : ℕ :=
   ∑ v : UnrelatedFourPathEndpoint G u,
     (Fintype.card (CommonSecondNeighbor G u (v : V))).choose 3
 
 omit [DecidableEq V] in
-lemma four_path_common_second_neighbor_triple_mass_lower
+private lemma four_path_common_second_neighbor_triple_mass_lower
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -5246,7 +5246,7 @@ lemma four_path_common_second_neighbor_triple_mass_lower
     _ = (commonSecondNeighborTripleMass G u : ℝ) := by
       simp only [commonSecondNeighborTripleMass, weight, Nat.cast_sum]
 
-theorem proposedFamilyFree_four_path_triple_mass_lower
+private theorem proposedFamilyFree_four_path_triple_mass_lower
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hfree : FamilyFree proposedFamily host)
@@ -5271,11 +5271,11 @@ end ActualTripleSupersaturation
 
 section OrderedThetaTripleCounting
 
-noncomputable def orderedThetaTripleCount
+private noncomputable def orderedThetaTripleCount
     {n : ℕ} (host : SimpleGraph (Fin n)) : ℕ :=
   ∑ y : Fin n, ∑ z : Fin n, (thetaBaseExtensions host y z).card
 
-lemma orderedThetaTripleCount_mul_degree_le
+private lemma orderedThetaTripleCount_mul_degree_le
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hfree : FamilyFree proposedFamily host)
@@ -5301,12 +5301,12 @@ section ActualGammaAndKForcing
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-def GammaGood (G : SimpleGraph V) (u : V) : Prop :=
+private def GammaGood (G : SimpleGraph V) (u : V) : Prop :=
   ∃ witness : SimpleGraph.Copy gammaGraph G,
     witness kSpecifiedCenter = u
 
 omit [DecidableEq V] in
-lemma gammaGood_of_three_common_centers
+private lemma gammaGood_of_three_common_centers
     {G : SimpleGraph V}
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -5350,14 +5350,14 @@ lemma gammaGood_of_three_common_centers
   refine ⟨witness, ?_⟩
   rfl
 
-lemma gamma_base_pair_adj (base : Fin 3) (center : Fin 3) :
+private lemma gamma_base_pair_adj (base : Fin 3) (center : Fin 3) :
     gammaGraph.Adj
       (.inl (.inl base)) (.inr (base, center)) := by
   simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
       subdivisionRelation,
     or_false, and_self]
 
-lemma gamma_center_pair_adj (base : Fin 3) (center : Fin 3) :
+private lemma gamma_center_pair_adj (base : Fin 3) (center : Fin 3) :
     gammaGraph.Adj
       (.inl (.inr center)) (.inr (base, center)) := by
   simp only [SubdivisionGraph, fromRel_adj, ne_eq, reduceCtorEq, not_false_eq_true,
@@ -5365,7 +5365,7 @@ lemma gamma_center_pair_adj (base : Fin 3) (center : Fin 3) :
     or_false, and_self]
 
 omit [Fintype V] [DecidableEq V] in
-lemma gammaCopy_vertex_color_false_iff
+private lemma gammaCopy_vertex_color_false_iff
     {G : SimpleGraph V}
     (color : G.Coloring (Fin 2))
     (witness : SimpleGraph.Copy gammaGraph G)
@@ -5402,12 +5402,12 @@ lemma gammaCopy_vertex_color_false_iff
       (witness.toHom.map_rel (gamma_base_pair_adj base center)))
         (hbase.trans heq.symm)
 
-def gluedKVertex {G : SimpleGraph V}
+private def gluedKVertex {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy gammaGraph G)
     (vertex : KVertex) : V :=
   copies vertex.1 vertex.2
 
-lemma subdivisionRelation_adj
+private lemma subdivisionRelation_adj
     {k : ℕ} {source target : SubdivisionVertex k}
     (hedge : subdivisionRelation k source target) :
     (SubdivisionGraph k).Adj source target := by
@@ -5417,7 +5417,7 @@ lemma subdivisionRelation_adj
       subdivisionRelation]
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedKVertex_map_relation
+private lemma gluedKVertex_map_relation
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy gammaGraph G)
     (hjoining :
@@ -5448,7 +5448,7 @@ lemma gluedKVertex_map_relation
     subst vertex'
     exact hjoining
 
-def gluedKHom
+private def gluedKHom
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy gammaGraph G)
     (hjoining :
@@ -5466,7 +5466,7 @@ def gluedKHom
         copies hjoining hbackward).symm
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedKHom_injOn_marked_copy
+private lemma gluedKHom_injOn_marked_copy
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy gammaGraph G)
     (hjoining :
@@ -5487,7 +5487,7 @@ lemma gluedKHom_injOn_marked_copy
   rfl
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedKVertex_color_false_iff
+private lemma gluedKVertex_color_false_iff
     {G : SimpleGraph V}
     (copies : Fin 2 → SimpleGraph.Copy gammaGraph G)
     (hjoining :
@@ -5533,7 +5533,7 @@ lemma gluedKVertex_color_false_iff
       omega
 
 omit [Fintype V] [DecidableEq V] in
-lemma gluedKHom_color_respecting
+private lemma gluedKHom_color_respecting
     {G : SimpleGraph V}
     (hbip : G.IsBipartite)
     (copies : Fin 2 → SimpleGraph.Copy gammaGraph G)
@@ -5572,7 +5572,7 @@ lemma gluedKHom_color_respecting
     simp only [hleft, Bool.true_eq_false] at hfalse
   · rfl
 
-theorem proposedFamilyFree_not_adj_gammaGood
+private theorem proposedFamilyFree_not_adj_gammaGood
     {n : ℕ} (host : SimpleGraph (Fin n))
     (hfree : FamilyFree proposedFamily host)
     (hbip : host.IsBipartite)
@@ -5601,17 +5601,17 @@ section ActualBadVertexEdgeCounting
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-noncomputable def gammaBadVertices (G : SimpleGraph V) : Finset V := by
+private noncomputable def gammaBadVertices (G : SimpleGraph V) : Finset V := by
   classical
   exact Finset.univ.filter fun v => ¬ GammaGood G v
 
 omit [DecidableEq V] in
-lemma mem_gammaBadVertices (G : SimpleGraph V) (v : V) :
+private lemma mem_gammaBadVertices (G : SimpleGraph V) (v : V) :
     v ∈ gammaBadVertices G ↔ ¬ GammaGood G v := by
   classical
   simp only [gammaBadVertices, mem_filter, mem_univ, true_and]
 
-theorem proposedFamilyFree_edge_has_gammaBad
+private theorem proposedFamilyFree_edge_has_gammaBad
     {n : ℕ} (host : SimpleGraph (Fin n))
     (hfree : FamilyFree proposedFamily host)
     (hbip : host.IsBipartite)
@@ -5629,7 +5629,7 @@ theorem proposedFamilyFree_edge_has_gammaBad
     exact (mem_gammaBadVertices host u).mpr hu
 
 omit [DecidableEq V] in
-lemma edgeFinset_card_le_sum_degree_of_vertex_cover
+private lemma edgeFinset_card_le_sum_degree_of_vertex_cover
     (G : SimpleGraph V) [DecidableRel G.Adj]
     (cover : Finset V)
     (hcover : ∀ ⦃u v : V⦄, G.Adj u v →
@@ -5659,7 +5659,7 @@ lemma edgeFinset_card_le_sum_degree_of_vertex_cover
     _ = ∑ v ∈ cover, G.degree v := by
       simp only [card_incidenceFinset_eq_degree]
 
-theorem proposedFamilyFree_edge_card_le_gammaBad_degree_sum
+private theorem proposedFamilyFree_edge_card_le_gammaBad_degree_sum
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hfree : FamilyFree proposedFamily host)
@@ -5679,14 +5679,14 @@ noncomputable section BadVertexCounting
 
 open Finset SimpleGraph
 
-noncomputable def finiteBadFiberMass
+private noncomputable def finiteBadFiberMass
     {α β : Type*} [Fintype α]
     (fibers : α → Finset β) (good : β → Prop) : ℕ := by
   classical
   exact ∑ index : α,
     ((fibers index).filter fun vertex => ¬ good vertex).card
 
-lemma finite_bad_fiber_card_le_two
+private lemma finite_bad_fiber_card_le_two
     {α β : Type*}
     (fibers : α → Finset β) (good : β → Prop)
     [DecidablePred good]
@@ -5708,7 +5708,7 @@ lemma finite_bad_fiber_card_le_two
         (fun vertex => ¬ good vertex)
     omega
 
-lemma finite_bad_fiber_mass_le_two
+private lemma finite_bad_fiber_mass_le_two
     {α β : Type*} [Fintype α]
     (fibers : α → Finset β) (good : β → Prop)
     (hgood : ∀ (index : α) (vertex : β),
@@ -5725,57 +5725,57 @@ section ActualIndependentTriples
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-noncomputable def commonCenterFinset
+private noncomputable def commonCenterFinset
     (G : SimpleGraph V) (base : Finset V) : Finset V := by
   classical
   exact Finset.univ.filter fun center =>
     ∀ vertex ∈ base, CommonNeighborRelated G vertex center
 
-lemma mem_commonCenterFinset
+private lemma mem_commonCenterFinset
     (G : SimpleGraph V) (base : Finset V) (center : V) :
     center ∈ commonCenterFinset G base ↔
       ∀ vertex ∈ base, CommonNeighborRelated G vertex center := by
   classical
   simp only [commonCenterFinset, mem_filter, mem_univ, true_and]
 
-def IsIndependentThetaTriple
+private def IsIndependentThetaTriple
     (G : SimpleGraph V) (base : Finset V) : Prop :=
   base.card = 3 ∧
     (base : Set V).Pairwise
       (fun first second => ¬ CommonNeighborRelated G first second) ∧
     2 ≤ (commonCenterFinset G base).card
 
-abbrev IndependentThetaTriple (G : SimpleGraph V) :=
+private abbrev IndependentThetaTriple (G : SimpleGraph V) :=
   {base : Finset V // IsIndependentThetaTriple G base}
 
-noncomputable instance independentThetaTripleFintype
+private noncomputable instance independentThetaTripleFintype
     (G : SimpleGraph V) : Fintype (IndependentThetaTriple G) :=
   Fintype.ofFinite _
 
-abbrev OrderedThetaWitness (G : SimpleGraph V) :=
+private abbrev OrderedThetaWitness (G : SimpleGraph V) :=
   Σ first : V, Σ second : V,
     {third : V // third ∈ thetaBaseExtensions G first second}
 
-noncomputable def independentThetaTripleBase
+private noncomputable def independentThetaTripleBase
     (G : SimpleGraph V) (triple : IndependentThetaTriple G) :
     Fin 3 → V :=
   fun index =>
     ((Finset.equivFinOfCardEq triple.property.1).symm index : triple.val)
 
-lemma independentThetaTripleBase_injective
+private lemma independentThetaTripleBase_injective
     (G : SimpleGraph V) (triple : IndependentThetaTriple G) :
     Function.Injective (independentThetaTripleBase G triple) := by
   intro first second heq
   apply (Finset.equivFinOfCardEq triple.property.1).symm.injective
   exact Subtype.ext heq
 
-lemma independentThetaTripleBase_mem
+private lemma independentThetaTripleBase_mem
     (G : SimpleGraph V) (triple : IndependentThetaTriple G)
     (index : Fin 3) :
     independentThetaTripleBase G triple index ∈ triple.val :=
   ((Finset.equivFinOfCardEq triple.property.1).symm index).property
 
-lemma independentThetaTripleBase_surjective
+private lemma independentThetaTripleBase_surjective
     (G : SimpleGraph V) (triple : IndependentThetaTriple G)
     {vertex : V} (hvertex : vertex ∈ triple.val) :
     ∃ index : Fin 3,
@@ -5787,7 +5787,7 @@ lemma independentThetaTripleBase_surjective
       vertex
   simp only [Equiv.symm_apply_apply, member]
 
-lemma commonCenterFinset_eq_tripleCommonCenters
+private lemma commonCenterFinset_eq_tripleCommonCenters
     (G : SimpleGraph V) (triple : IndependentThetaTriple G) :
     commonCenterFinset G triple.val =
       tripleCommonCenters G (independentThetaTripleBase G triple) := by
@@ -5802,7 +5802,7 @@ lemma commonCenterFinset_eq_tripleCommonCenters
       independentThetaTripleBase_surjective G triple hvertex
     exact hcenter index
 
-lemma independentThetaTripleBase_unrelated
+private lemma independentThetaTripleBase_unrelated
     (G : SimpleGraph V) (triple : IndependentThetaTriple G)
     ⦃first second : Fin 3⦄ (hne : first ≠ second) :
     ¬ CommonNeighborRelated G
@@ -5814,7 +5814,7 @@ lemma independentThetaTripleBase_unrelated
   exact fun heq =>
     hne (independentThetaTripleBase_injective G triple heq)
 
-lemma gammaGood_of_independentThetaTriple_fiber
+private lemma gammaGood_of_independentThetaTriple_fiber
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -5832,7 +5832,7 @@ lemma gammaGood_of_independentThetaTriple_fiber
   · rw [← commonCenterFinset_eq_tripleCommonCenters]
     exact hcard
 
-noncomputable def independentThetaTripleOrderedWitness
+private noncomputable def independentThetaTripleOrderedWitness
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -5848,7 +5848,7 @@ noncomputable def independentThetaTripleOrderedWitness
   rw [← commonCenterFinset_eq_tripleCommonCenters]
   exact triple.property.2.2
 
-lemma independentThetaTripleOrderedWitness_injective
+private lemma independentThetaTripleOrderedWitness_injective
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -5875,14 +5875,14 @@ lemma independentThetaTripleOrderedWitness_injective
     rw [← hbase]
     exact independentThetaTripleBase_mem G left index
 
-lemma orderedThetaWitness_card
+private lemma orderedThetaWitness_card
     {n : ℕ} (host : SimpleGraph (Fin n)) :
     Fintype.card (OrderedThetaWitness host) =
       orderedThetaTripleCount host := by
   classical
   simp only [OrderedThetaWitness, Fintype.card_sigma, Fintype.card_coe, orderedThetaTripleCount]
 
-lemma independentThetaTriple_card_le_orderedThetaTripleCount
+private lemma independentThetaTriple_card_le_orderedThetaTripleCount
     {n : ℕ} (host : SimpleGraph (Fin n))
     (hbip : host.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free host)
@@ -5898,7 +5898,7 @@ lemma independentThetaTriple_card_le_orderedThetaTripleCount
           host hbip hfour hsix)
     _ = orderedThetaTripleCount host := orderedThetaWitness_card host
 
-theorem gamma_bad_triple_fiber_mass_le_two_orderedTheta
+private theorem gamma_bad_triple_fiber_mass_le_two_orderedTheta
     {n : ℕ} (host : SimpleGraph (Fin n))
     (hbip : host.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free host)
@@ -5927,14 +5927,14 @@ section TripleIncidence
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-noncomputable def commonSecondNeighborFinset
+private noncomputable def commonSecondNeighborFinset
     (G : SimpleGraph V) (u v : V) : Finset V := by
   classical
   exact Finset.univ.filter fun x =>
     CommonNeighborRelated G u x ∧ CommonNeighborRelated G v x
 
 omit [DecidableEq V] in
-lemma mem_commonSecondNeighborFinset
+private lemma mem_commonSecondNeighborFinset
     (G : SimpleGraph V) (u v x : V) :
     x ∈ commonSecondNeighborFinset G u v ↔
       CommonNeighborRelated G u x ∧ CommonNeighborRelated G v x := by
@@ -5942,7 +5942,7 @@ lemma mem_commonSecondNeighborFinset
   simp only [commonSecondNeighborFinset, mem_filter, mem_univ, true_and]
 
 omit [DecidableEq V] in
-lemma commonSecondNeighborFinset_card
+private lemma commonSecondNeighborFinset_card
     (G : SimpleGraph V) (u v : V) :
     (commonSecondNeighborFinset G u v).card =
       Fintype.card (CommonSecondNeighbor G u v) := by
@@ -5950,29 +5950,29 @@ lemma commonSecondNeighborFinset_card
   rw [Fintype.card_subtype]
   rfl
 
-abbrev BadFourPathTripleWitness (G : SimpleGraph V) :=
+private abbrev BadFourPathTripleWitness (G : SimpleGraph V) :=
   Σ center : {u : V // ¬ GammaGood G u},
     Σ endpoint : UnrelatedFourPathEndpoint G (center : V),
       {base : Finset V //
         base ∈ (commonSecondNeighborFinset G
           (center : V) (endpoint : V)).powersetCard 3}
 
-abbrev BadIndependentTripleWitness (G : SimpleGraph V) :=
+private abbrev BadIndependentTripleWitness (G : SimpleGraph V) :=
   Σ triple : IndependentThetaTriple G,
     {center : V // center ∈ commonCenterFinset G triple.val ∧
       ¬ GammaGood G center}
 
-noncomputable instance badFourPathTripleWitnessFintype
+private noncomputable instance badFourPathTripleWitnessFintype
     (G : SimpleGraph V) : Fintype (BadFourPathTripleWitness G) := by
   classical
   infer_instance
 
-noncomputable instance badIndependentTripleWitnessFintype
+private noncomputable instance badIndependentTripleWitnessFintype
     (G : SimpleGraph V) : Fintype (BadIndependentTripleWitness G) := by
   classical
   infer_instance
 
-noncomputable def fourPathTripleToIndependentThetaTriple
+private noncomputable def fourPathTripleToIndependentThetaTriple
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -6014,7 +6014,7 @@ noncomputable def fourPathTripleToIndependentThetaTriple
         ⟨u, hu, (endpoint : V), hv, endpoint.property.1⟩
     omega
 
-lemma fourPathTripleToIndependentThetaTriple_center_mem
+private lemma fourPathTripleToIndependentThetaTriple_center_mem
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -6035,7 +6035,7 @@ lemma fourPathTripleToIndependentThetaTriple_center_mem
     ((mem_commonSecondNeighborFinset
       G u (endpoint : V) x).mp (hsubset hx)).1
 
-lemma fourPathTripleToIndependentThetaTriple_endpoint_mem
+private lemma fourPathTripleToIndependentThetaTriple_endpoint_mem
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -6056,7 +6056,7 @@ lemma fourPathTripleToIndependentThetaTriple_endpoint_mem
     ((mem_commonSecondNeighborFinset
       G u (endpoint : V) x).mp (hsubset hx)).2
 
-lemma badIndependentThetaTriple_other_center_unique
+private lemma badIndependentThetaTriple_other_center_unique
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -6091,7 +6091,7 @@ lemma badIndependentThetaTriple_other_center_unique
   exact hbad (gammaGood_of_independentThetaTriple_fiber
     G hbip hfour hsix triple u hu hcard)
 
-noncomputable def badFourPathTripleToBadIndependentTriple
+private noncomputable def badFourPathTripleToBadIndependentTriple
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -6104,7 +6104,7 @@ noncomputable def badFourPathTripleToBadIndependentTriple
   exact fourPathTripleToIndependentThetaTriple_center_mem
     G hbip hfour hsix center endpoint base
 
-lemma badFourPathTripleToBadIndependentTriple_injective
+private lemma badFourPathTripleToBadIndependentTriple_injective
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -6147,7 +6147,7 @@ lemma badFourPathTripleToBadIndependentTriple_injective
   rfl
 
 omit [DecidableEq V] in
-lemma badFourPathTripleWitness_card
+private lemma badFourPathTripleWitness_card
     (G : SimpleGraph V) :
     Fintype.card (BadFourPathTripleWitness G) =
       ∑ u ∈ gammaBadVertices G,
@@ -6166,7 +6166,7 @@ lemma badFourPathTripleWitness_card
     (gammaBadVertices G)
     (fun u => (mem_gammaBadVertices G u))
 
-lemma badIndependentTripleWitness_card
+private lemma badIndependentTripleWitness_card
     (G : SimpleGraph V) :
     Fintype.card (BadIndependentTripleWitness G) =
       finiteBadFiberMass
@@ -6184,7 +6184,7 @@ lemma badIndependentTripleWitness_card
     ext center
     simp only [mem_filter, mem_univ, true_and]
 
-lemma gammaBad_four_path_triple_mass_le_bad_fiber_mass
+private lemma gammaBad_four_path_triple_mass_le_bad_fiber_mass
     (G : SimpleGraph V)
     (hbip : G.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free G)
@@ -6203,7 +6203,7 @@ lemma gammaBad_four_path_triple_mass_le_bad_fiber_mass
     (badFourPathTripleToBadIndependentTriple_injective
       G hbip hfour hsix)
 
-theorem gammaBad_four_path_triple_mass_le_two_orderedTheta
+private theorem gammaBad_four_path_triple_mass_le_two_orderedTheta
     {n : ℕ} (host : SimpleGraph (Fin n))
     (hbip : host.IsBipartite)
     (hfour : (SimpleGraph.cycleGraph 4).Free host)
@@ -6216,7 +6216,7 @@ theorem gammaBad_four_path_triple_mass_le_two_orderedTheta
       (gamma_bad_triple_fiber_mass_le_two_orderedTheta
         host hbip hfour hsix)
 
-lemma gammaBad_card_mul_heavyTripleLower_le_two_orderedTheta
+private lemma gammaBad_card_mul_heavyTripleLower_le_two_orderedTheta
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hfree : FamilyFree proposedFamily host)
@@ -6256,7 +6256,7 @@ lemma gammaBad_card_mul_heavyTripleLower_le_two_orderedTheta
     _ = 2 * (orderedThetaTripleCount host : ℝ) := by
       norm_num
 
-theorem gammaBad_card_mul_fourpath_power_le
+private theorem gammaBad_card_mul_fourpath_power_le
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hfree : FamilyFree proposedFamily host)
@@ -6318,7 +6318,7 @@ theorem gammaBad_card_mul_fourpath_power_le
       _ = 432 * (n : ℝ) ^ 5 := by ring
   exact_mod_cast hfinal
 
-theorem proposedFamilyFree_edge_mul_pred_sq_le_bad_card_mul
+private theorem proposedFamilyFree_edge_mul_pred_sq_le_bad_card_mul
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hfree : FamilyFree proposedFamily host)
@@ -6344,7 +6344,7 @@ theorem proposedFamilyFree_edge_mul_pred_sq_le_bad_card_mul
           (proposedFamilyFree_six_cycle hfree) d hdegree u
     _ = (gammaBadVertices host).card * n := by simp only [sum_const, smul_eq_mul]
 
-lemma fourPathHeavyThreshold_low_degree_fourth_le
+private lemma fourPathHeavyThreshold_low_degree_fourth_le
     (N d : ℕ)
     (hN : 0 < N)
     (hd : 2 ≤ d)
@@ -6388,7 +6388,7 @@ noncomputable section QuantitativeBadVertexBound
 
 open Finset SimpleGraph
 
-lemma quantitative_minimum_degree_edge_bound
+private lemma quantitative_minimum_degree_edge_bound
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (d : ℕ) (hdegree : ∀ vertex : Fin n, d ≤ host.degree vertex) :
@@ -6397,7 +6397,7 @@ lemma quantitative_minimum_degree_edge_bound
     Finset.card_nsmul_le_sum Finset.univ (fun vertex : Fin n => host.degree vertex) d (fun
         vertex _ => hdegree vertex)
 
-lemma quantitative_bad_vertex_edge_bound
+private lemma quantitative_bad_vertex_edge_bound
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hfree : FamilyFree proposedFamily host)
@@ -6408,7 +6408,7 @@ lemma quantitative_bad_vertex_edge_bound
   proposedFamilyFree_edge_mul_pred_sq_le_bad_card_mul
     host hfree hbip d hdegree
 
-lemma quantitative_bad_vertex_heavy_triple_bound
+private lemma quantitative_bad_vertex_heavy_triple_bound
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hn : 0 < n)
@@ -6426,7 +6426,7 @@ lemma quantitative_bad_vertex_heavy_triple_bound
     (gammaBad_card_mul_fourpath_power_le
       host hfree hbip d hdegree hthreshold)
 
-theorem proposedFamilyFree_minDegree_polynomial_le
+private theorem proposedFamilyFree_minDegree_polynomial_le
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hn : 0 < n)
@@ -6487,7 +6487,7 @@ theorem proposedFamilyFree_minDegree_polynomial_le
       mul_le_mul_of_nonneg_left hedgePolynomial (by norm_num)
     _ = (n : ℝ) * (864 * (n : ℝ) ^ 5) := by ring
 
-theorem proposedFamilyFree_minDegree_sixteenth_power_le
+private theorem proposedFamilyFree_minDegree_sixteenth_power_le
     {n : ℕ} (host : SimpleGraph (Fin n))
     [DecidableRel host.Adj]
     (hn : 0 < n)
@@ -6528,16 +6528,16 @@ noncomputable section LineCoordinates
 
 variable (K : Type*) [Field K]
 
-def symplecticHorizontalVector (x y : K) : SymplecticVector K :=
+private def symplecticHorizontalVector (x y : K) : SymplecticVector K :=
   ![x, 0, y, 0]
 
-def symplecticAnnihilatorVector (x y : K) : SymplecticVector K :=
+private def symplecticAnnihilatorVector (x y : K) : SymplecticVector K :=
   ![0, -y, 0, x]
 
-def symmetricGraphVector (a b c x y : K) : SymplecticVector K :=
+private def symmetricGraphVector (a b c x y : K) : SymplecticVector K :=
   ![x, a * x + b * y, y, b * x + c * y]
 
-lemma symmetricGraphVector_orthogonal
+private lemma symmetricGraphVector_orthogonal
     (a b c x y x' y' : K) :
     standardSymplecticForm K
       (symmetricGraphVector K a b c x y)
@@ -6546,7 +6546,7 @@ lemma symmetricGraphVector_orthogonal
     Matrix.cons_val_one, Matrix.cons_val]
   ring
 
-def coordinateCenterLinearMap (x y : K) :
+private def coordinateCenterLinearMap (x y : K) :
     (Fin 2 → K) →ₗ[K] SymplecticVector K where
   toFun h :=
     h 0 • symplecticHorizontalVector K x y +
@@ -6562,7 +6562,7 @@ def coordinateCenterLinearMap (x y : K) :
       simp [symplecticHorizontalVector, symplecticAnnihilatorVector,
         Pi.add_apply, Pi.smul_apply, smul_eq_mul] <;> ring
 
-lemma coordinateCenterLinearMap_injective
+private lemma coordinateCenterLinearMap_injective
     {x y : K} (hxy : x ≠ 0 ∨ y ≠ 0) :
     Function.Injective (coordinateCenterLinearMap K x y) := by
   intro u v huv
@@ -6582,7 +6582,7 @@ lemma coordinateCenterLinearMap_injective
     · exact hthree.resolve_right hx
     · exact hone.resolve_right hy
 
-def coordinateCenterLine (x y : K) (hxy : x ≠ 0 ∨ y ≠ 0) :
+private def coordinateCenterLine (x y : K) (hxy : x ≠ 0 ∨ y ≠ 0) :
     SymplecticLine K :=
   ⟨LinearMap.range (coordinateCenterLinearMap K x y), by
     constructor
@@ -6601,7 +6601,7 @@ def coordinateCenterLine (x y : K) (hxy : x ≠ 0 ∨ y ≠ 0) :
         Matrix.cons_val_zero, Matrix.cons_val_one, neg_mul, sub_neg_eq_add, Matrix.cons_val]
       ring⟩
 
-def symmetricGraphLinearMap (a b c : K) :
+private def symmetricGraphLinearMap (a b c : K) :
     (Fin 2 → K) →ₗ[K] SymplecticVector K where
   toFun h := symmetricGraphVector K a b c (h 0) (h 1)
   map_add' u v := by
@@ -6613,7 +6613,7 @@ def symmetricGraphLinearMap (a b c : K) :
     fin_cases i <;>
       simp [symmetricGraphVector, Pi.smul_apply, smul_eq_mul] <;> ring
 
-lemma symmetricGraphLinearMap_injective
+private lemma symmetricGraphLinearMap_injective
     (a b c : K) :
     Function.Injective (symmetricGraphLinearMap K a b c) := by
   intro u v huv
@@ -6626,7 +6626,7 @@ lemma symmetricGraphLinearMap_injective
       symmetricGraphVector,
       LinearMap.coe_mk, AddHom.coe_mk, Matrix.cons_val] using congrFun huv 2
 
-def symmetricGraphLine (a b c : K) : SymplecticLine K :=
+private def symmetricGraphLine (a b c : K) : SymplecticLine K :=
   ⟨LinearMap.range (symmetricGraphLinearMap K a b c), by
     constructor
     · rw [LinearMap.finrank_range_of_inj
@@ -6638,7 +6638,7 @@ def symmetricGraphLine (a b c : K) : SymplecticLine K :=
       exact symmetricGraphVector_orthogonal K a b c
         (u' 0) (u' 1) (v' 0) (v' 1)⟩
 
-lemma symmetricGraphVector_mem_center_span_iff
+private lemma symmetricGraphVector_mem_center_span_iff
     {a b c x y : K} (hxy : x ≠ 0 ∨ y ≠ 0) :
     (∃ s t : K,
       symmetricGraphVector K a b c x y =
@@ -6725,7 +6725,7 @@ lemma symmetricGraphVector_mem_center_span_iff
         field_simp [hy]
         linear_combination hbilinear
 
-lemma symmetricGraphLine_coordinateCenter_intersection_iff
+private lemma symmetricGraphLine_coordinateCenter_intersection_iff
     {a b c x y : K} (hxy : x ≠ 0 ∨ y ≠ 0) :
     (∃ w : SymplecticVector K,
       w ≠ 0 ∧ w ∈ (symmetricGraphLine K a b c).1 ∧
@@ -6786,7 +6786,7 @@ lemma symmetricGraphLine_coordinateCenter_intersection_iff
           Matrix.cons_val_zero,
         Matrix.cons_val_one, Matrix.cons_val_fin_one] using hvector.symm
 
-lemma symmetricGraphLine_coordinateCenter_common_point_iff
+private lemma symmetricGraphLine_coordinateCenter_common_point_iff
     {a b c x y : K} (hxy : x ≠ 0 ∨ y ≠ 0) :
     (∃ p : SymplecticPoint K,
       p.1 ≤ (symmetricGraphLine K a b c).1 ∧
@@ -6812,7 +6812,7 @@ lemma symmetricGraphLine_coordinateCenter_common_point_iff
     · exact (Submodule.span_le).mpr (by simpa only [Set.singleton_subset_iff,
         SetLike.mem_coe] using hwcenter)
 
-lemma projectiveDirection_nonzero_left
+private lemma projectiveDirection_nonzero_left
     {x y x' y' : K}
     (hdet : x * y' - x' * y ≠ 0) :
     x ≠ 0 ∨ y ≠ 0 := by
@@ -6822,7 +6822,7 @@ lemma projectiveDirection_nonzero_left
   apply hdet
   simp only [hx, zero_mul, hy, mul_zero, sub_self]
 
-lemma projectiveDirection_nonzero_right
+private lemma projectiveDirection_nonzero_right
     {x y x' y' : K}
     (hdet : x * y' - x' * y ≠ 0) :
     x' ≠ 0 ∨ y' ≠ 0 := by
@@ -6832,7 +6832,7 @@ lemma projectiveDirection_nonzero_right
   apply hdet
   simp only [hy, mul_zero, hx, zero_mul, sub_self]
 
-lemma symmetricGraphLine_odd_no_three_actual_centers
+private lemma symmetricGraphLine_odd_no_three_actual_centers
     (htwo : (2 : K) ≠ 0)
     {a b c x₀ y₀ x₁ y₁ x₂ y₂ : K}
     (hdet : (a * c - b ^ 2) ≠ 0)
@@ -6864,7 +6864,7 @@ lemma symmetricGraphLine_odd_no_three_actual_centers
   · exact (symmetricGraphLine_coordinateCenter_common_point_iff K
       (projectiveDirection_nonzero_right K h02)).mp hcenter₂
 
-lemma symmetricGraphLines_disjoint_of_difference_det
+private lemma symmetricGraphLines_disjoint_of_difference_det
     {a b c a' b' c' : K}
     (hdet : ((a - a') * (c - c') - (b - b') ^ 2) ≠ 0) :
     Disjoint (symmetricGraphLine K a b c).1
@@ -6905,7 +6905,7 @@ lemma symmetricGraphLines_disjoint_of_difference_det
   funext i
   fin_cases i <;> simp [symmetricGraphVector, hx, hy]
 
-theorem symmetricGraphLine_zero_diagonal_disjoint
+private theorem symmetricGraphLine_zero_diagonal_disjoint
     {b b' : K} (h : b ≠ b') :
     Disjoint (symmetricGraphLine K 0 b 0).1
       (symmetricGraphLine K 0 b' 0).1 := by
@@ -6916,7 +6916,7 @@ section CharacteristicTwo
 
 variable [CharP K 2] [Finite K]
 
-lemma symmetricGraphLine_char_two_diagonal_zero_of_actual_centers
+private lemma symmetricGraphLine_char_two_diagonal_zero_of_actual_centers
     {a b c x y x' y' : K}
     (hind : x * y' - x' * y ≠ 0)
     (hfirst : ∃ p : SymplecticPoint K,
@@ -6947,11 +6947,11 @@ open SimpleGraph
 
 variable (K : Type*) [Field K]
 
-abbrev SymplecticAutomorphism :=
+private abbrev SymplecticAutomorphism :=
   (standardSymplecticBilin K).IsometryEquiv
     (standardSymplecticBilin K)
 
-lemma symplecticAutomorphism_form
+private lemma symplecticAutomorphism_form
     (e : SymplecticAutomorphism K)
     (u v : SymplecticVector K) :
     standardSymplecticForm K (e u) (e v) =
@@ -6961,13 +6961,13 @@ lemma symplecticAutomorphism_form
       standardSymplecticBilin K u v
   exact e.map_app' u v
 
-def symplecticAutomorphismPoint
+private def symplecticAutomorphismPoint
     (e : SymplecticAutomorphism K)
     (p : SymplecticPoint K) : SymplecticPoint K :=
   ⟨p.1.map e.toLinearEquiv.toLinearMap,
     (e.toLinearEquiv.finrank_map_eq p.1).trans p.2⟩
 
-def symplecticAutomorphismLine
+private def symplecticAutomorphismLine
     (e : SymplecticAutomorphism K)
     (L : SymplecticLine K) : SymplecticLine K := by
   refine ⟨L.1.map e.toLinearEquiv.toLinearMap, ?_, ?_⟩
@@ -6979,7 +6979,7 @@ def symplecticAutomorphismLine
     exact (symplecticAutomorphism_form K e u' v').trans
       (L.2.2 u' hu' v' hv')
 
-lemma symplecticAutomorphism_incidence_iff
+private lemma symplecticAutomorphism_incidence_iff
     (e : SymplecticAutomorphism K)
     (p : SymplecticPoint K) (L : SymplecticLine K) :
     (symplecticAutomorphismPoint K e p).1 ≤
@@ -6991,7 +6991,7 @@ lemma symplecticAutomorphism_incidence_iff
   exact LinearMap.map_le_map_iff'
     (LinearMap.ker_eq_bot.mpr e.toLinearEquiv.injective)
 
-lemma symplecticAutomorphism_isotropic_iff
+private lemma symplecticAutomorphism_isotropic_iff
     (e : SymplecticAutomorphism K)
     (S : Submodule K (SymplecticVector K)) :
     (∀ u ∈ S.map e.toLinearEquiv.toLinearMap,
@@ -7010,7 +7010,7 @@ lemma symplecticAutomorphism_isotropic_iff
     exact (symplecticAutomorphism_form K e u' v').trans
       (h u' hu' v' hv')
 
-def symplecticAutomorphismLineEquiv
+private def symplecticAutomorphismLineEquiv
     (e : SymplecticAutomorphism K) :
     SymplecticLine K ≃ SymplecticLine K :=
   (Submodule.orderIsoMapComap e.toLinearEquiv).toEquiv.subtypeEquiv
@@ -7028,7 +7028,7 @@ def symplecticAutomorphismLineEquiv
         symplecticAutomorphism_isotropic_iff K e S])
 
 @[simp]
-lemma symplecticAutomorphismLineEquiv_apply
+private lemma symplecticAutomorphismLineEquiv_apply
     (e : SymplecticAutomorphism K)
     (L : SymplecticLine K) :
     symplecticAutomorphismLineEquiv K e L =
@@ -7036,7 +7036,7 @@ lemma symplecticAutomorphismLineEquiv_apply
   apply Subtype.ext
   rfl
 
-lemma symplecticLine_orthogonal_eq
+private lemma symplecticLine_orthogonal_eq
     (L : SymplecticLine K) :
     (standardSymplecticBilin K).orthogonal L.1 = L.1 := by
   have hle :
@@ -7055,14 +7055,14 @@ lemma symplecticLine_orthogonal_eq
   exact (Submodule.eq_of_le_of_finrank_eq hle
     (L.2.1.trans hdim.symm)).symm
 
-lemma symplecticLine_isCompl_of_disjoint
+private lemma symplecticLine_isCompl_of_disjoint
     {L M : SymplecticLine K}
     (hLM : Disjoint L.1 M.1) : IsCompl L.1 M.1 := by
   apply (Submodule.isCompl_iff_disjoint L.1 M.1 ?_).mpr hLM
   simp only [SymplecticVector, Module.finrank_fintype_fun_eq_card, Fintype.card_fin, L.2.1, M.2.1,
     Nat.reduceAdd, Std.le_refl]
 
-def symplecticLinePairing
+private def symplecticLinePairing
     (L M : SymplecticLine K) :
     M.1 →ₗ[K] Module.Dual K L.1 where
   toFun y :=
@@ -7094,7 +7094,7 @@ def symplecticLinePairing
       smul_eq_mul] using standardSymplecticForm_smul_right K c (x : SymplecticVector K) (y :
           SymplecticVector K)
 
-lemma symplecticLinePairing_injective
+private lemma symplecticLinePairing_injective
     {L M : SymplecticLine K}
     (hLM : Disjoint L.1 M.1) :
     Function.Injective (symplecticLinePairing K L M) := by
@@ -7129,13 +7129,13 @@ lemma symplecticLinePairing_injective
     exact (Submodule.mem_bot K).2 hyzero'
   · exact bot_le
 
-lemma symplecticLinePairing_finrank
+private lemma symplecticLinePairing_finrank
     (L M : SymplecticLine K) :
     Module.finrank K M.1 =
       Module.finrank K (Module.Dual K L.1) := by
   rw [Subspace.dual_finrank_eq, L.2.1, M.2.1]
 
-def symplecticLinePairingEquiv
+private def symplecticLinePairingEquiv
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1) :
     M.1 ≃ₗ[K] Module.Dual K L.1 :=
@@ -7143,11 +7143,11 @@ def symplecticLinePairingEquiv
     (symplecticLinePairing_injective K hLM)
     (symplecticLinePairing_finrank K L M)
 
-def symplecticLineBasis
+private def symplecticLineBasis
     (L : SymplecticLine K) : Module.Basis (Fin 2) K L.1 :=
   Module.finBasisOfFinrankEq K L.1 L.2.1
 
-def symplecticLineDualCoordinates
+private def symplecticLineDualCoordinates
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1) :
     M.1 ≃ₗ[K] (Fin 2 → K) :=
@@ -7155,7 +7155,7 @@ def symplecticLineDualCoordinates
     (symplecticLineBasis K L).dualBasis.equivFun
 
 @[simp]
-lemma symplecticLineDualCoordinates_apply
+private lemma symplecticLineDualCoordinates_apply
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1)
     (y : M.1) (i : Fin 2) :
@@ -7169,7 +7169,7 @@ lemma symplecticLineDualCoordinates_apply
   rw [Module.Basis.equivFun_apply, Module.Basis.dualBasis_repr]
   rfl
 
-def symplecticCoordinateInterleave :
+private def symplecticCoordinateInterleave :
     ((Fin 2 → K) × (Fin 2 → K)) ≃ₗ[K] SymplecticVector K where
   toFun x := ![x.1 0, x.2 0, x.1 1, x.2 1]
   invFun x := (![x 0, x 2], ![x 1, x 3])
@@ -7193,7 +7193,7 @@ def symplecticCoordinateInterleave :
     funext i
     fin_cases i <;> simp [smul_eq_mul]
 
-def symplecticLineCoordinateEquiv
+private def symplecticLineCoordinateEquiv
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1) :
     SymplecticVector K ≃ₗ[K] SymplecticVector K :=
@@ -7203,7 +7203,7 @@ def symplecticLineCoordinateEquiv
         (symplecticLineDualCoordinates K L M hLM))).trans
       (symplecticCoordinateInterleave K)
 
-lemma symplecticLinePairing_coordinate_expansion
+private lemma symplecticLinePairing_coordinate_expansion
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1)
     (x : L.1) (y : M.1) :
@@ -7242,7 +7242,7 @@ lemma symplecticLinePairing_coordinate_expansion
       simp only [Fin.sum_univ_two, b,
         symplecticLineDualCoordinates_apply]
 
-lemma symplecticLineCoordinateEquiv_apply_add
+private lemma symplecticLineCoordinateEquiv_apply_add
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1)
     (x : L.1) (y : M.1) :
@@ -7269,7 +7269,7 @@ lemma symplecticLineCoordinateEquiv_apply_add
   rw [hsplit]
   rfl
 
-lemma symplecticLineCoordinateEquiv_form
+private lemma symplecticLineCoordinateEquiv_form
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1)
     (u v : SymplecticVector K) :
@@ -7339,7 +7339,7 @@ lemma symplecticLineCoordinateEquiv_form
             (x' : SymplecticVector K)]
         ring
 
-def symplecticLineNormalizer
+private def symplecticLineNormalizer
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1) :
     SymplecticAutomorphism K :=
@@ -7353,7 +7353,7 @@ def symplecticLineNormalizer
           standardSymplecticForm K u v
       exact symplecticLineCoordinateEquiv_form K L M hLM u v }
 
-lemma symplecticLineNormalizer_apply_left
+private lemma symplecticLineNormalizer_apply_left
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1)
     (x : L.1) :
@@ -7371,7 +7371,7 @@ lemma symplecticLineNormalizer_apply_left
   simpa only [ZeroMemClass.coe_zero, add_zero, map_zero, Pi.zero_apply]
     using h
 
-lemma symplecticLineNormalizer_apply_right
+private lemma symplecticLineNormalizer_apply_right
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1)
     (y : M.1) :
@@ -7389,7 +7389,7 @@ lemma symplecticLineNormalizer_apply_right
   simpa only [ZeroMemClass.coe_zero, zero_add, map_zero, Pi.zero_apply]
     using h
 
-def symplecticVerticalLinearMap :
+private def symplecticVerticalLinearMap :
     (Fin 2 → K) →ₗ[K] SymplecticVector K where
   toFun y := ![0, y 0, 0, y 1]
   map_add' u v := by
@@ -7399,7 +7399,7 @@ def symplecticVerticalLinearMap :
     funext i
     fin_cases i <;> simp [smul_eq_mul]
 
-lemma symplecticVerticalLinearMap_injective :
+private lemma symplecticVerticalLinearMap_injective :
     Function.Injective (symplecticVerticalLinearMap K) := by
   intro u v huv
   funext i
@@ -7411,7 +7411,7 @@ lemma symplecticVerticalLinearMap_injective :
       LinearMap.coe_mk,
       AddHom.coe_mk, Matrix.cons_val] using congrFun huv 3
 
-def symplecticVerticalLine : SymplecticLine K :=
+private def symplecticVerticalLine : SymplecticLine K :=
   ⟨LinearMap.range (symplecticVerticalLinearMap K), by
     constructor
     · rw [LinearMap.finrank_range_of_inj
@@ -7425,7 +7425,7 @@ def symplecticVerticalLine : SymplecticLine K :=
         Matrix.cons_val_zero, Matrix.cons_val_one, zero_mul, mul_zero, sub_self,
             Matrix.cons_val, add_zero]⟩
 
-lemma symplecticLineNormalizer_map_left
+private lemma symplecticLineNormalizer_map_left
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1) :
     symplecticAutomorphismLine K
@@ -7459,7 +7459,7 @@ lemma symplecticLineNormalizer_map_left
           Nat.succ_eq_add_one,
       Nat.reduceAdd] using hx
 
-lemma symplecticLineNormalizer_map_right
+private lemma symplecticLineNormalizer_map_right
     (L M : SymplecticLine K)
     (hLM : Disjoint L.1 M.1) :
     symplecticAutomorphismLine K
@@ -7499,7 +7499,7 @@ lemma symplecticLineNormalizer_map_right
       (symplecticLineDualCoordinates K L M hLM).apply_symm_apply z
     rw [hy]
 
-def symplecticHorizontalProjection :
+private def symplecticHorizontalProjection :
     SymplecticVector K →ₗ[K] (Fin 2 → K) where
   toFun v := ![v 0, v 2]
   map_add' u v := by
@@ -7509,7 +7509,7 @@ def symplecticHorizontalProjection :
     funext i
     fin_cases i <;> simp [smul_eq_mul]
 
-def symplecticVerticalProjection :
+private def symplecticVerticalProjection :
     SymplecticVector K →ₗ[K] (Fin 2 → K) where
   toFun v := ![v 1, v 3]
   map_add' u v := by
@@ -7519,7 +7519,7 @@ def symplecticVerticalProjection :
     funext i
     fin_cases i <;> simp [smul_eq_mul]
 
-lemma symplecticHorizontalProjection_ker :
+private lemma symplecticHorizontalProjection_ker :
     LinearMap.ker (symplecticHorizontalProjection K) =
       (symplecticVerticalLine K).1 := by
   apply le_antisymm
@@ -7544,7 +7544,7 @@ lemma symplecticHorizontalProjection_ker :
       simp [symplecticHorizontalProjection,
         symplecticVerticalLinearMap]
 
-lemma symplecticLineHorizontalProjection_injective
+private lemma symplecticLineHorizontalProjection_injective
     (L : SymplecticLine K)
     (hvertical : Disjoint L.1 (symplecticVerticalLine K).1) :
     Function.Injective
@@ -7573,7 +7573,7 @@ lemma symplecticLineHorizontalProjection_injective
     exact (Submodule.mem_bot K).2 hxsub
   · exact bot_le
 
-def symplecticLineHorizontalProjectionEquiv
+private def symplecticLineHorizontalProjectionEquiv
     (L : SymplecticLine K)
     (hvertical : Disjoint L.1 (symplecticVerticalLine K).1) :
     L.1 ≃ₗ[K] (Fin 2 → K) :=
@@ -7581,7 +7581,7 @@ def symplecticLineHorizontalProjectionEquiv
       (symplecticLineHorizontalProjection_injective K L hvertical)
       (by simp only [L.2.1, Module.finrank_fintype_fun_eq_card, Fintype.card_fin])
 
-def symplecticLineGraphMap
+private def symplecticLineGraphMap
     (L : SymplecticLine K)
     (hvertical : Disjoint L.1 (symplecticVerticalLine K).1) :
     (Fin 2 → K) →ₗ[K] (Fin 2 → K) :=
@@ -7589,7 +7589,7 @@ def symplecticLineGraphMap
     (L.1.subtype.comp
       (symplecticLineHorizontalProjectionEquiv K L hvertical).symm.toLinearMap)
 
-lemma symplecticLineGraphMap_horizontal
+private lemma symplecticLineGraphMap_horizontal
     (L : SymplecticLine K)
     (hvertical : Disjoint L.1 (symplecticVerticalLine K).1)
     (x : L.1) :
@@ -7605,7 +7605,7 @@ lemma symplecticLineGraphMap_horizontal
           SymplecticVector K) = _
   rw [LinearEquiv.symm_apply_apply]
 
-lemma symplecticLineGraphMap_symmetric
+private lemma symplecticLineGraphMap_symmetric
     (L : SymplecticLine K)
     (hvertical : Disjoint L.1 (symplecticVerticalLine K).1) :
     symplecticLineGraphMap K L hvertical ![1, 0] 1 =
@@ -7678,7 +7678,7 @@ lemma symplecticLineGraphMap_symmetric
       hu3, hv2, mul_one, zero_sub] using hpair
   exact (sub_eq_zero.mp hzero).symm
 
-lemma symplecticLineGraphMap_coordinate_expansion
+private lemma symplecticLineGraphMap_coordinate_expansion
     (L : SymplecticLine K)
     (hvertical : Disjoint L.1 (symplecticVerticalLine K).1)
     (z : Fin 2 → K) (i : Fin 2) :
@@ -7699,7 +7699,7 @@ lemma symplecticLineGraphMap_coordinate_expansion
       simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
       ring
 
-lemma symplecticLineGraphMap_graphVector
+private lemma symplecticLineGraphMap_graphVector
     (L : SymplecticLine K)
     (hvertical : Disjoint L.1 (symplecticVerticalLine K).1)
     (z : Fin 2 → K) :
@@ -7763,7 +7763,7 @@ lemma symplecticLineGraphMap_graphVector
     exact (symplecticLineGraphMap_coordinate_expansion
       K L hvertical z 1).symm.trans hg1
 
-lemma symplecticLine_eq_symmetricGraphLine_of_disjoint_vertical
+private lemma symplecticLine_eq_symmetricGraphLine_of_disjoint_vertical
     (L : SymplecticLine K)
     (hvertical : Disjoint L.1 (symplecticVerticalLine K).1) :
     ∃ a b c : K, L = symmetricGraphLine K a b c := by
@@ -7810,7 +7810,7 @@ lemma symplecticLine_eq_symmetricGraphLine_of_disjoint_vertical
     exact ((symplecticLineHorizontalProjectionEquiv
       K L hvertical).symm z).2
 
-lemma symmetricGraphLine_det_ne_zero_of_disjoint_horizontal
+private lemma symmetricGraphLine_det_ne_zero_of_disjoint_horizontal
     (a b c : K)
     (hhorizontal :
       Disjoint (symmetricGraphLine K a b c).1
@@ -7855,7 +7855,7 @@ lemma symmetricGraphLine_det_ne_zero_of_disjoint_horizontal
     simpa [w, symmetricGraphVector] using congrFun hwzero 2
   exact hnonzero.elim (fun h => h hxzero) (fun h => h hyzero)
 
-lemma symplecticLine_eq_invertible_symmetricGraphLine
+private lemma symplecticLine_eq_invertible_symmetricGraphLine
     (L : SymplecticLine K)
     (hvertical : Disjoint L.1 (symplecticVerticalLine K).1)
     (hhorizontal :
@@ -7871,7 +7871,7 @@ lemma symplecticLine_eq_invertible_symmetricGraphLine
   rw [← hL]
   exact hhorizontal
 
-lemma symplecticCanonicalLines_disjoint :
+private lemma symplecticCanonicalLines_disjoint :
     Disjoint (symmetricGraphLine K 0 0 0).1
       (symplecticVerticalLine K).1 := by
   apply Submodule.disjoint_def.mpr
@@ -7897,7 +7897,7 @@ lemma symplecticCanonicalLines_disjoint :
     simp [symmetricGraphLinearMap, symmetricGraphVector,
       hz0, hz1]
 
-lemma symplecticVertical_mem_coordinateCenter_of_orthogonal
+private lemma symplecticVertical_mem_coordinateCenter_of_orthogonal
     {x y : K} (hxy : x ≠ 0 ∨ y ≠ 0)
     {v : SymplecticVector K}
     (hv : v ∈ (symplecticVerticalLine K).1)
@@ -7942,7 +7942,7 @@ lemma symplecticVertical_mem_coordinateCenter_of_orthogonal
       field_simp [hx]
     linear_combination -heq
 
-lemma symplecticLine_eq_coordinateCenterLine_of_common_points
+private lemma symplecticLine_eq_coordinateCenterLine_of_common_points
     (C : SymplecticLine K)
     (p q : SymplecticPoint K)
     (hpH : p.1 ≤ (symmetricGraphLine K 0 0 0).1)
@@ -8047,7 +8047,7 @@ lemma symplecticLine_eq_coordinateCenterLine_of_common_points
         (coordinateCenterLine K x y hxy).2.1.symm)
   exact hspanC.symm.trans hspanCenter
 
-lemma coordinateCenterLine_direction_det_ne_zero_of_ne
+private lemma coordinateCenterLine_direction_det_ne_zero_of_ne
     {x y x' y' : K}
     (hxy : x ≠ 0 ∨ y ≠ 0)
     (hxy' : x' ≠ 0 ∨ y' ≠ 0)
@@ -8117,7 +8117,7 @@ lemma coordinateCenterLine_direction_det_ne_zero_of_ne
     refine ⟨t • u, ?_⟩
     rw [map_smul, ← hmap]
 
-lemma symplecticAutomorphism_disjoint_iff
+private lemma symplecticAutomorphism_disjoint_iff
     (e : SymplecticAutomorphism K)
     (L M : SymplecticLine K) :
     Disjoint (symplecticAutomorphismLine K e L).1
@@ -8133,7 +8133,7 @@ lemma symplecticAutomorphism_disjoint_iff
     Submodule.map_eq_bot_iff,
     ← disjoint_iff]
 
-lemma symplecticCanonical_line_no_three_common_centers
+private lemma symplecticCanonical_line_no_three_common_centers
     (htwo : (2 : K) ≠ 0)
     (X : SymplecticLine K)
     (hXH :
@@ -8202,7 +8202,7 @@ lemma symplecticCanonical_line_no_three_common_centers
     · rw [← hrepr 2]
       exact hpC
 
-theorem symplecticLine_no_three_common_centers
+private theorem symplecticLine_no_three_common_centers
     (htwo : (2 : K) ≠ 0)
     (Y Z X : SymplecticLine K)
     (hYZ : Disjoint Y.1 Z.1)
@@ -8266,7 +8266,7 @@ theorem symplecticLine_no_three_common_centers
         (symplecticAutomorphism_incidence_iff K e p
           (centers i)).mpr hpC
 
-theorem symplecticQuadrangle_no_line_gamma_of_odd
+private theorem symplecticQuadrangle_no_line_gamma_of_odd
     (htwo : (2 : K) ≠ 0)
     (copy : SimpleGraph.Copy gammaGraph
       (symplecticQuadrangle K))
@@ -8312,7 +8312,7 @@ theorem symplecticQuadrangle_no_line_gamma_of_odd
       K copy (hbase 0) (hcenter i)
     exact ⟨p, hpB, hpC⟩
 
-theorem symplecticQuadrangle_no_kQuotient_of_odd
+private theorem symplecticQuadrangle_no_kQuotient_of_odd
     (htwo : (2 : K) ≠ 0)
     {f : KVertex → KVertex} (hf : KAdmissible f) :
     (quotientGraph kTemplate f).Free
@@ -8335,7 +8335,7 @@ theorem symplecticQuadrangle_no_kQuotient_of_odd
   exact symplecticQuadrangle_no_line_gamma_of_odd K htwo
     (kGammaHomCopy hom hcopies i) L hL
 
-theorem symplecticQuadrangle_encodeFiniteGraph_free_iff
+private theorem symplecticQuadrangle_encodeFiniteGraph_free_iff
     {V : Type*} [Fintype V]
     (G : SimpleGraph V) :
     (encodeFiniteGraph G).graph.Free
@@ -8344,7 +8344,7 @@ theorem symplecticQuadrangle_encodeFiniteGraph_free_iff
   (SimpleGraph.free_congr_left
     (SimpleGraph.Iso.map (Fintype.equivFin V) G)).symm
 
-theorem symplecticQuadrangle_no_encoded_kQuotient_of_odd
+private theorem symplecticQuadrangle_no_encoded_kQuotient_of_odd
     (htwo : (2 : K) ≠ 0)
     {f : KVertex → KVertex} (hf : KAdmissible f) :
     (encodeFiniteGraph (quotientGraph kTemplate f)).graph.Free
@@ -8359,7 +8359,7 @@ noncomputable section JQuotientAvoidanceReduction
 
 open SimpleGraph
 
-lemma jQuotient_free_of_template_avoidance
+private lemma jQuotient_free_of_template_avoidance
     {V : Type*} (host : SimpleGraph V)
     (havoid : ∀ hom : jTemplate →g host,
       Function.Injective
@@ -8389,7 +8389,7 @@ lemma jQuotient_free_of_template_avoidance
     apply hf.2.2 index hfirst hsecond
     exact congrArg Subtype.val (copy.injective heq)
 
-theorem symplecticQuadrangle_no_encoded_jQuotient_of_template_avoidance
+private theorem symplecticQuadrangle_no_encoded_jQuotient_of_template_avoidance
     (K : Type*) [Field K]
     (havoid : ∀ hom : jTemplate →g symplecticQuadrangle K,
       Function.Injective
@@ -8413,7 +8413,7 @@ open SimpleGraph
 
 variable (K : Type*) [Field K]
 
-def CharTwoLinePairAvoidance : Prop :=
+private def CharTwoLinePairAvoidance : Prop :=
   ∀ (Y Z X X' : SymplecticLine K),
     Disjoint Y.1 Z.1 →
     Disjoint X.1 Y.1 →
@@ -8444,7 +8444,7 @@ def CharTwoLinePairAvoidance : Prop :=
           p.1 ≤ X'.1 ∧ p.1 ≤ (C' i).1) →
       Disjoint X.1 X'.1
 
-theorem symplecticQuadrangle_no_jTemplate_of_char_two_line_avoidance
+private theorem symplecticQuadrangle_no_jTemplate_of_char_two_line_avoidance
     (havoid : CharTwoLinePairAvoidance K)
     (hom : jTemplate →g symplecticQuadrangle K)
     (hbase_inj : Function.Injective
@@ -8629,7 +8629,7 @@ open SimpleGraph
 
 variable (K : Type*) [Field K] [CharP K 2] [Finite K]
 
-lemma symplecticLine_char_two_canonical_zero_diagonal
+private lemma symplecticLine_char_two_canonical_zero_diagonal
     (X : SymplecticLine K)
     (hXH : Disjoint X.1 (symmetricGraphLine K 0 0 0).1)
     (hXV : Disjoint X.1 (symplecticVerticalLine K).1)
@@ -8698,7 +8698,7 @@ lemma symplecticLine_char_two_canonical_zero_diagonal
   simpa only [ha, hc] using hXgraph
 
 omit [CharP K 2] [Finite K] in
-lemma symplecticAutomorphism_commonPoint
+private lemma symplecticAutomorphism_commonPoint
     (e : SymplecticAutomorphism K)
     (L M : SymplecticLine K)
     (hpoint : ∃ p : SymplecticPoint K,
@@ -8711,7 +8711,7 @@ lemma symplecticAutomorphism_commonPoint
     (symplecticAutomorphism_incidence_iff K e p L).mpr hpL,
     (symplecticAutomorphism_incidence_iff K e p M).mpr hpM⟩
 
-lemma symplecticLine_char_two_disjoint_of_two_common_center_pairs
+private lemma symplecticLine_char_two_disjoint_of_two_common_center_pairs
     (Y Z X X' : SymplecticLine K)
     (hYZ : Disjoint Y.1 Z.1)
     (hXY : Disjoint X.1 Y.1)
@@ -8844,11 +8844,11 @@ lemma symplecticLine_char_two_disjoint_of_two_common_center_pairs
   rw [hb, hb']
   exact symmetricGraphLine_zero_diagonal_disjoint K hbb
 
-lemma symplecticLine_char_two_pair_avoidance :
+private lemma symplecticLine_char_two_pair_avoidance :
     CharTwoLinePairAvoidance K :=
   symplecticLine_char_two_disjoint_of_two_common_center_pairs K
 
-theorem symplecticQuadrangle_no_jTemplate_of_char_two
+private theorem symplecticQuadrangle_no_jTemplate_of_char_two
     (hom : jTemplate →g symplecticQuadrangle K)
     (hbase : Function.Injective
       (fun base : Fin 4 => hom (.inl (.inl base))))
@@ -8858,7 +8858,7 @@ theorem symplecticQuadrangle_no_jTemplate_of_char_two
   symplecticQuadrangle_no_jTemplate_of_char_two_line_avoidance
     K (symplecticLine_char_two_pair_avoidance K) hom hbase hcopies
 
-theorem symplecticQuadrangle_no_encoded_jQuotient_of_char_two
+private theorem symplecticQuadrangle_no_encoded_jQuotient_of_char_two
     {f : JVertex → JVertex} (hf : JAdmissible f) :
     (encodeFiniteGraph (quotientGraph jTemplate f)).graph.Free
       (symplecticQuadrangle K) :=
@@ -8873,7 +8873,7 @@ open Filter Finset SimpleGraph
 open scoped Topology
 
 open Classical in
-theorem familyExtremal_real_le_of_forall_free
+private theorem familyExtremal_real_le_of_forall_free
     (family : Finset FiniteGraph) (n : ℕ)
     {bound : ℝ} (hbound : 0 ≤ bound)
     (hfree : ∀ host : SimpleGraph (Fin n),
@@ -8893,7 +8893,7 @@ theorem familyExtremal_real_le_of_forall_free
   exact hcast.trans (Nat.floor_le hbound)
 
 open Classical in
-lemma familyLittleO_of_eventual_host_bounds
+private lemma familyLittleO_of_eventual_host_bounds
     (family : Finset FiniteGraph)
     (hhost : ∀ ε : ℝ, 0 < ε →
       ∀ᶠ n : ℕ in Filter.atTop,
@@ -8913,7 +8913,7 @@ noncomputable section AsymptoticExtraction
 open Filter Finset SimpleGraph
 open scoped Topology
 
-lemma familyFree_of_embedded_subgraph
+private lemma familyFree_of_embedded_subgraph
     {family : Finset FiniteGraph}
     {n N : ℕ} (host : SimpleGraph (Fin n))
     (subgraph : SimpleGraph (Fin N))
@@ -8926,7 +8926,7 @@ lemma familyFree_of_embedded_subgraph
     ((hcontained.trans
       ⟨(SimpleGraph.Embedding.map embedding subgraph).toCopy⟩).mono_right hsub)
 
-lemma eventually_constant_le_positive_nat_rpow
+private lemma eventually_constant_le_positive_nat_rpow
     (bound coefficient exponent : ℝ)
     (hcoefficient : 0 < coefficient)
     (hexponent : 0 < exponent) :
@@ -8947,7 +8947,7 @@ lemma eventually_constant_le_positive_nat_rpow
     _ ≤ coefficient * (n : ℝ) ^ exponent :=
       mul_le_mul_of_nonneg_left hn hcoefficient.le
 
-lemma extremalScale_sixteenth_power
+private lemma extremalScale_sixteenth_power
     {n : ℕ} (hn : 0 < n) :
     (extremalScale n) ^ 16 =
       (n : ℝ) ^ 21 * (n : ℝ) ^ ((1 : ℝ) / 3) := by
@@ -8965,7 +8965,7 @@ lemma extremalScale_sixteenth_power
       simp only [one_div, Real.rpow_add hnreal, Real.rpow_ofNat]
 
 open Classical in
-lemma familyLittleO_of_sixteenth_power_host_bound
+private lemma familyLittleO_of_sixteenth_power_host_bound
     (family : Finset FiniteGraph) (bound : ℝ)
     (hbound : ∀ (n : ℕ) (host : SimpleGraph (Fin n)),
       FamilyFree family host →
@@ -9003,11 +9003,11 @@ lemma familyLittleO_of_sixteenth_power_host_bound
     simpa only [edgeFinset_card_eq_natCard] using htarget
   simpa only [edgeFinset_card_eq_natCard] using hresult
 
-noncomputable def compactnessDegreePowerConstant : ℝ :=
+private noncomputable def compactnessDegreePowerConstant : ℝ :=
   (48 : ℝ) ^ (4 : ℕ) + 1769472 + 1
 
 open Classical in
-theorem proposedFamilyFree_minDegree_ambient_sixteenth_power_le
+private theorem proposedFamilyFree_minDegree_ambient_sixteenth_power_le
     {N n : ℕ} (host : SimpleGraph (Fin N))
     (hN : 0 < N) (hn : 0 < n) (hNn : N ≤ n)
     (hfree : FamilyFree proposedFamily host)
@@ -9065,11 +9065,11 @@ theorem proposedFamilyFree_minDegree_ambient_sixteenth_power_le
       _ ≤ compactnessDegreePowerConstant * (n : ℝ) ^ 5 :=
         mul_le_mul_of_nonneg_right hcoefOne (by positivity)
 
-noncomputable def compactnessHostPowerConstant : ℝ :=
+private noncomputable def compactnessHostPowerConstant : ℝ :=
   (2 : ℝ) ^ (16 : ℕ) * compactnessDegreePowerConstant
 
 open Classical in
-theorem proposedFamilyFree_sixteenth_power_host_bound
+private theorem proposedFamilyFree_sixteenth_power_host_bound
     (n : ℕ) (host : SimpleGraph (Fin n))
     (hfree : FamilyFree proposedFamily host) :
     (host.edgeFinset.card : ℝ) ^ 16 ≤
@@ -9114,7 +9114,7 @@ theorem proposedFamilyFree_sixteenth_power_host_bound
         unfold compactnessHostPowerConstant
         ring
 
-theorem proposedFamily_familyLittleO :
+private theorem proposedFamily_familyLittleO :
     FamilyLittleO proposedFamily :=
   familyLittleO_of_sixteenth_power_host_bound
     proposedFamily compactnessHostPowerConstant
@@ -9127,7 +9127,7 @@ noncomputable section CycleBounds
 open Filter Finset SimpleGraph
 open scoped Topology
 
-theorem four_cycle_eventual_manuscript_lower :
+private theorem four_cycle_eventual_manuscript_lower :
     ∀ᶠ n : ℕ in atTop,
       manuscriptLowerConstant * extremalScale n ≤
         (SimpleGraph.extremalNumber n
@@ -9136,7 +9136,7 @@ theorem four_cycle_eventual_manuscript_lower :
     with n hn
   simpa only [manuscriptLowerConstant, extremalScale] using four_cycle_uniform_manuscript_lower hn
 
-theorem six_cycle_eventual_manuscript_lower :
+private theorem six_cycle_eventual_manuscript_lower :
     ∀ᶠ n : ℕ in atTop,
       manuscriptLowerConstant * extremalScale n ≤
         (SimpleGraph.extremalNumber n
@@ -9145,7 +9145,7 @@ theorem six_cycle_eventual_manuscript_lower :
     with n hn
   simpa only [manuscriptLowerConstant, extremalScale] using six_cycle_uniform_manuscript_lower hn
 
-theorem member_eventual_lower_of_prime_power_avoidance
+private theorem member_eventual_lower_of_prime_power_avoidance
     {forbidden : FiniteGraph}
     (hmember : forbidden ∈ proposedFamily)
     (t : ℕ) [Fact t.Prime]
@@ -9163,7 +9163,7 @@ theorem member_eventual_lower_of_prime_power_avoidance
         (proposedFamily_member_no_isolated hmember) t ht
       htgap hfree hn
 
-theorem uniformMemberLower_of_characteristic_avoidance
+private theorem uniformMemberLower_of_characteristic_avoidance
     (hj : ∀ (f : JVertex → JVertex), JAdmissible f →
       ∀ j : ℕ, 0 < j →
         (encodeFiniteGraph (quotientGraph jTemplate f)).graph.Free
@@ -9192,7 +9192,7 @@ noncomputable section Counterexample
 
 open SimpleGraph
 
-theorem proposedFamily_odd_characteristic_avoidance :
+private theorem proposedFamily_odd_characteristic_avoidance :
     ∀ (f : KVertex → KVertex), KAdmissible f →
       ∀ j : ℕ, 0 < j →
         (encodeFiniteGraph (quotientGraph kTemplate f)).graph.Free
@@ -9202,7 +9202,7 @@ theorem proposedFamily_odd_characteristic_avoidance :
     (GaloisField 3 j)
     ((CharP.cast_eq_zero_iff (GaloisField 3 j) 3 2).not.mpr (by norm_num)) hf
 
-theorem proposedFamily_even_characteristic_avoidance :
+private theorem proposedFamily_even_characteristic_avoidance :
     ∀ (f : JVertex → JVertex), JAdmissible f →
       ∀ j : ℕ, 0 < j →
         (encodeFiniteGraph (quotientGraph jTemplate f)).graph.Free
@@ -9211,18 +9211,18 @@ theorem proposedFamily_even_characteristic_avoidance :
     symplecticQuadrangle_no_encoded_jQuotient_of_char_two
       (GaloisField 2 j) hf
 
-theorem proposedFamily_uniformMemberLower :
+private theorem proposedFamily_uniformMemberLower :
     UniformMemberLower proposedFamily manuscriptLowerConstant :=
   uniformMemberLower_of_characteristic_avoidance
     proposedFamily_even_characteristic_avoidance
     proposedFamily_odd_characteristic_avoidance
 
-theorem proposedFamily_not_compact :
+private theorem proposedFamily_not_compact :
     ¬ IsCompactFamily proposedFamily :=
   proposedFamily_not_compact_of_bounds
     proposedFamily_familyLittleO proposedFamily_uniformMemberLower
 
-theorem not_erdos_180 :
+private theorem not_erdos_180 :
     ¬ CompactnessConjectureStatement :=
   not_compactnessConjecture_of_bounds
     proposedFamily_familyLittleO proposedFamily_uniformMemberLower
@@ -9233,7 +9233,7 @@ noncomputable section Connectedness
 
 open Finset SimpleGraph
 
-lemma jTemplate_connected : jTemplate.Connected := by
+private lemma jTemplate_connected : jTemplate.Connected := by
   apply (SimpleGraph.connected_iff_exists_forall_reachable jTemplate).2
   let root : JVertex := .inl (.inl (2 : Fin 4))
   refine ⟨root, ?_⟩
@@ -9291,7 +9291,7 @@ lemma jTemplate_connected : jTemplate.Connected := by
       simpa only [Fin.isValue, jBase, ↓reduceIte] using hrootBase 0 0
     exact hzero.trans hjoin.reachable
 
-lemma kTemplate_connected : kTemplate.Connected := by
+private lemma kTemplate_connected : kTemplate.Connected := by
   apply (SimpleGraph.connected_iff_exists_forall_reachable kTemplate).2
   let root : KVertex := ((0 : Fin 2), kSpecifiedCenter)
   refine ⟨root, ?_⟩
@@ -9341,7 +9341,7 @@ lemma kTemplate_connected : kTemplate.Connected := by
   · exact hrootCenter copy center
   · exact hrootPair copy base center
 
-lemma quotientGraph_connected_of_colorRespecting
+private lemma quotientGraph_connected_of_colorRespecting
     {V : Type*} (graph : SimpleGraph V) (color : V → Bool)
     (hproper : ∀ ⦃u v : V⦄, graph.Adj u v → color u ≠ color v)
     (f : V → V) (hf : ColorRespecting color f)
@@ -9353,7 +9353,7 @@ lemma quotientGraph_connected_of_colorRespecting
   rintro ⟨_, ⟨v, rfl⟩⟩
   exact ⟨v, rfl⟩
 
-lemma encodeFiniteGraph_connected
+private lemma encodeFiniteGraph_connected
     {V : Type*} [Fintype V] (graph : SimpleGraph V)
     (hconnected : graph.Connected) :
     (encodeFiniteGraph graph).graph.Connected := by
@@ -9361,27 +9361,27 @@ lemma encodeFiniteGraph_connected
   exact (SimpleGraph.Iso.connected_iff
     (SimpleGraph.Iso.map (Fintype.equivFin V) graph)).mp hconnected
 
-lemma encodedJQuotient_connected {f : JVertex → JVertex}
+private lemma encodedJQuotient_connected {f : JVertex → JVertex}
     (hf : JAdmissible f) :
     (encodeFiniteGraph (quotientGraph jTemplate f)).graph.Connected :=
   encodeFiniteGraph_connected _
     (quotientGraph_connected_of_colorRespecting jTemplate jColor
       (fun _ _ h => jTemplate_adj_color_ne h) f hf.1 jTemplate_connected)
 
-lemma encodedKQuotient_connected {f : KVertex → KVertex}
+private lemma encodedKQuotient_connected {f : KVertex → KVertex}
     (hf : KAdmissible f) :
     (encodeFiniteGraph (quotientGraph kTemplate f)).graph.Connected :=
   encodeFiniteGraph_connected _
     (quotientGraph_connected_of_colorRespecting kTemplate kColor
       (fun _ _ h => kTemplate_adj_color_ne h) f hf.1 kTemplate_connected)
 
-theorem finiteCycle_connected {n : ℕ} (hn : 0 < n) :
+private theorem finiteCycle_connected {n : ℕ} (hn : 0 < n) :
     (finiteCycle n).graph.Connected := by
   change (SimpleGraph.cycleGraph n).Connected
   let _ : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   exact ⟨SimpleGraph.cycleGraph_preconnected⟩
 
-theorem proposedFamily_member_connected
+private theorem proposedFamily_member_connected
     {forbidden : FiniteGraph}
     (hforbidden : forbidden ∈ proposedFamily) :
     forbidden.graph.Connected :=
@@ -9398,7 +9398,7 @@ noncomputable section Bipartiteness
 
 open Finset SimpleGraph
 
-lemma colorRespectingQuotient_isBipartite
+private lemma colorRespectingQuotient_isBipartite
     {V : Type*} (graph : SimpleGraph V) (color : V → Bool)
     (hproper : ∀ ⦃u v : V⦄, graph.Adj u v → color u ≠ color v)
     (f : V → V) (hf : ColorRespecting color f) :
@@ -9437,7 +9437,7 @@ lemma colorRespectingQuotient_isBipartite
       · exact Ne.symm (hdirected hbackward))
   simpa only [Fintype.card_bool] using hcoloring.colorable
 
-lemma encodeFiniteGraph_isBipartite
+private lemma encodeFiniteGraph_isBipartite
     {V : Type*} [Fintype V] (graph : SimpleGraph V)
     (hbipartite : graph.IsBipartite) :
     (encodeFiniteGraph graph).graph.IsBipartite := by
@@ -9445,21 +9445,21 @@ lemma encodeFiniteGraph_isBipartite
   exact SimpleGraph.Colorable.map
     (Fintype.equivFin V).toEmbedding hbipartite
 
-lemma encodedJQuotient_isBipartite
+private lemma encodedJQuotient_isBipartite
     {f : JVertex → JVertex} (hf : JAdmissible f) :
     (encodeFiniteGraph (quotientGraph jTemplate f)).graph.IsBipartite :=
   encodeFiniteGraph_isBipartite _
     (colorRespectingQuotient_isBipartite jTemplate jColor
       (fun _ _ h => jTemplate_adj_color_ne h) f hf.1)
 
-lemma encodedKQuotient_isBipartite
+private lemma encodedKQuotient_isBipartite
     {f : KVertex → KVertex} (hf : KAdmissible f) :
     (encodeFiniteGraph (quotientGraph kTemplate f)).graph.IsBipartite :=
   encodeFiniteGraph_isBipartite _
     (colorRespectingQuotient_isBipartite kTemplate kColor
       (fun _ _ h => kTemplate_adj_color_ne h) f hf.1)
 
-theorem proposedFamily_member_isBipartite
+private theorem proposedFamily_member_isBipartite
     {forbidden : FiniteGraph}
     (hforbidden : forbidden ∈ proposedFamily) :
     forbidden.graph.IsBipartite :=
@@ -9476,7 +9476,7 @@ noncomputable section FamilyExtremal
 
 open Finset SimpleGraph
 
-theorem finiteNatSup_sixteenth_power_le
+private theorem finiteNatSup_sixteenth_power_le
     {α : Type*} (s : Finset α) (weight : α → ℕ) (bound : ℝ)
     (hbound : 0 ≤ bound)
     (hweight : ∀ a ∈ s, (weight a : ℝ) ^ 16 ≤ bound) :
@@ -9490,7 +9490,7 @@ theorem finiteNatSup_sixteenth_power_le
   · obtain ⟨a, ha, hmax⟩ := Finset.exists_mem_eq_sup s hs weight
     simpa only [hmax] using hweight a ha
 
-theorem proposedFamily_familyExtremal_sixteenth_power_le (n : ℕ) :
+private theorem proposedFamily_familyExtremal_sixteenth_power_le (n : ℕ) :
     (familyExtremal proposedFamily n : ℝ) ^ 16 ≤
       compactnessHostPowerConstant * (n : ℝ) ^ 21 := by
   classical
@@ -9513,17 +9513,17 @@ noncomputable section MainTheorem
 
 open Finset SimpleGraph
 
-noncomputable def compactnessSharpHostPowerConstant : ℝ :=
+private noncomputable def compactnessSharpHostPowerConstant : ℝ :=
   compactnessHostPowerConstant
 
-theorem compactnessSharpHostPowerConstant_pos :
+private theorem compactnessSharpHostPowerConstant_pos :
     0 < compactnessSharpHostPowerConstant := by
   unfold compactnessSharpHostPowerConstant compactnessHostPowerConstant
     compactnessDegreePowerConstant
   positivity
 
 open Classical in
-theorem checkedManuscriptCounterexample :
+private theorem checkedManuscriptCounterexample :
     proposedFamily.Nonempty ∧
       (∀ forbidden ∈ proposedFamily,
         forbidden.graph.Connected ∧ forbidden.graph.IsBipartite ∧
