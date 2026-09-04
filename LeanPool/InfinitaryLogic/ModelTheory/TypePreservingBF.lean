@@ -13,11 +13,11 @@ The relation `TypeAgree N a b`: tuples of the ambient `M` and of the companion s
 `N` agree when their complete `L_{ω₁ω}`-types — both computed IN `M`, viewing `b` through the
 inclusion — coincide. The two extension properties hold by the isolator machinery:
 
-* **forth** (`TypeAgree.forth`): isolate `tp_M(ā, a')`; its one-variable existential holds at
-  `ā`, transfers to `ι b̄` across the type equality, descends to `N` by A-elementarity of the
+* **forth** (`TypeAgree.forth`): isolate `tp_M(a, a')`; its one-variable existential holds at
+  `a`, transfers to `ι b` across the type equality, descends to `N` by A-elementarity of the
   controlling fragment, and the witness comes back up at arity `n+1`;
-* **back** (`TypeAgree.back`): isolate `tp_M(ι b̄, ι b')`; its existential transfers across
-  the type equality to `ā`, and the witness is chosen directly in `M` — no A-elementarity.
+* **back** (`TypeAgree.back`): isolate `tp_M(ι b, ι b')`; its existential transfers across
+  the type equality to `a`, and the witness is chosen directly in `M` — no A-elementarity.
 
 The audited thin bridge (`bfEquiv_all_of_typeAgree`): any relation with type agreement and the
 two extensions is `BFEquiv` at EVERY ordinal — one `limitRecOn` induction whose zero stage is

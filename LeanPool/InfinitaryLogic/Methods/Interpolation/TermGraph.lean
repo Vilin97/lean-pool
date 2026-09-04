@@ -13,7 +13,7 @@ The graph formula of a term: `termGraph t y` asserts, in the relationalized lang
 Nested applications are flattened through auxiliary bound variables — one block of `k` fresh
 variables per `k`-ary function application, bound by `existsBlock` — with each argument's value
 pinned by its own recursive graph formula and the application itself by one graph atom
-`G_f(y⃗, y)`.
+`G_f(ys, y)`.
 
 ## Design
 
@@ -67,7 +67,7 @@ def graphWitnessVar (m : ℕ) {k : ℕ} (i : Fin k) : (graphLanguage L).Term (α
 the `L`-term `t` — its variables read through the embedding `ρ` into the current context — is
 the value of `y`. A variable is an equality atom; an application `f(t₀, …, t_{k-1})` extends the
 context by `k` witness variables, pins each argument's value with a recursive graph formula,
-adds the graph atom `G_f(y⃗, y)`, and existentially closes the witness block. -/
+adds the graph atom `G_f(ys, y)`, and existentially closes the witness block. -/
 def termGraphAux : ∀ {m : ℕ}, L.Term β → (β → (graphLanguage L).Term (α ⊕ Fin m)) →
     (graphLanguage L).Term (α ⊕ Fin m) → (graphLanguage L).BoundedFormulaω α m
   | _, .var z, ρ, y => .equal (ρ z) y

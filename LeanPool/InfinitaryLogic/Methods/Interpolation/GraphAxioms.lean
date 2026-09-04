@@ -9,8 +9,8 @@ import LeanPool.InfinitaryLogic.Methods.ConstantSupport
 # Graph axioms: totality and functionality (Craig Layer 3, Unit 5a)
 
 The sentences asserting that the graph relations of a symbol set `F` really are function
-graphs: for each `f ∈ F`, **totality** `∀ x⃗ ∃ y, G_f(x⃗, y)` and **functionality**
-`∀ x⃗ y z, G_f(x⃗,y) → G_f(x⃗,z) → y = z`, bundled as `graphAxioms F` — the countable
+graphs: for each `f ∈ F`, **totality** `∀ xs ∃ y, G_f(xs, y)` and **functionality**
+`∀ xs y z, G_f(xs,y) → G_f(xs,z) → y = z`, bundled as `graphAxioms F` — the countable
 conjunction over `F` (hence `[Countable ↥F]`; the sentence does not depend on a choice of proof
 of countability, and `F = ∅` correctly produces a tautology).
 
@@ -38,7 +38,7 @@ variable {L : Language.{0, 0}}
 
 /-! ## The axiom sentences -/
 
-/-- **Totality** of the graph relation of `f`: `∀ x⃗, ∃ y, G_f(x⃗, y)` — output variable last. -/
+/-- **Totality** of the graph relation of `f`: `∀ xs, ∃ y, G_f(xs, y)` — output variable last. -/
 def graphTotality {n : ℕ} (f : L.Functions n) : (graphLanguage L).Sentenceω :=
   .forallBlock (k := n) (.existsBlock (k := 1)
     (.rel (GraphRelation.graph f)
@@ -46,7 +46,7 @@ def graphTotality {n : ℕ} (f : L.Functions n) : (graphLanguage L).Sentenceω :
         (Term.var (Sum.inr (Fin.natAdd (0 + n) 0))))))
 
 /-- **Functionality** of the graph relation of `f`:
-`∀ x⃗ y z, G_f(x⃗, y) → G_f(x⃗, z) → y = z` — one universal block of `n + 2` variables, the two
+`∀ xs y z, G_f(xs, y) → G_f(xs, z) → y = z` — one universal block of `n + 2` variables, the two
 output candidates last. -/
 def graphFunctionality {n : ℕ} (f : L.Functions n) : (graphLanguage L).Sentenceω :=
   .forallBlock (k := n + 2)

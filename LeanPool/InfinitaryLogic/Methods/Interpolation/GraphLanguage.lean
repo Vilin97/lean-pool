@@ -9,7 +9,7 @@ import LeanPool.InfinitaryLogic.Lomega1omega.Operations
 
 The first gated unit of the functions→relations relationalization (audit §9b): the relationalized
 language `graphLanguage L` — no function symbols, each `n`-ary function `f` replaced by an
-`(n+1)`-ary **graph relation** `G_f` with intended meaning `G_f(x⃗, y) ↔ f(x⃗) = y` — its graph
+`(n+1)`-ary **graph relation** `G_f` with intended meaning `G_f(xs, y) ↔ f(xs) = y` — its graph
 expansion of an `L`-structure, and the σ-level embeddings of the original symbols into the graph
 language's relation symbols.
 
@@ -24,7 +24,7 @@ computation.
 ## Contents
 
 * `GraphRelation`, `graphLanguage`, `graphLanguage_isRelational`;
-* `graphExpansion` (the `G_f(x⃗,y) ↔ f(x⃗)=y` structure) with `relMap_base`/`relMap_graph` simp
+* `graphExpansion` (the `G_f(xs,y) ↔ f(xs)=y` structure) with `relMap_base`/`relMap_graph` simp
   lemmas;
 * `baseRelSym`/`graphRelSym` σ-embeddings, their injectivity and cross-disjointness;
 * `relSym` and the intersection identity `relSym_inter`.
@@ -66,7 +66,7 @@ variable {L : Language.{0, 0}}
 /-! ## The graph expansion of an `L`-structure -/
 
 /-- Realization of a graph-language relation symbol in the graph expansion of an `L`-structure:
-base relations unchanged, and `G_f(x⃗, y)` reads `f(x⃗) = y` (the first `n` coordinates feed `f`,
+base relations unchanged, and `G_f(xs, y)` reads `f(xs) = y` (the first `n` coordinates feed `f`,
 the last is its value). -/
 private def graphRelMap (M : Type) [L.Structure M] :
     ∀ {n : ℕ}, GraphRelation L n → (Fin n → M) → Prop
@@ -74,7 +74,7 @@ private def graphRelMap (M : Type) [L.Structure M] :
   | _, .graph f, v => Structure.funMap f (Fin.init v) = v (Fin.last _)
 
 /-- The **graph expansion** of an `L`-structure to a `graphLanguage L`-structure:
-`G_f(x⃗, y) ↔ f(x⃗) = y`, base relations preserved, and no function symbols to interpret. -/
+`G_f(xs, y) ↔ f(xs) = y`, base relations preserved, and no function symbols to interpret. -/
 @[reducible] def graphExpansion (L : Language.{0, 0}) (M : Type) [L.Structure M] :
     (graphLanguage L).Structure M where
   funMap f _ := nomatch f

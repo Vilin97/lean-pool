@@ -7,7 +7,7 @@ import LeanPool.InfinitaryLogic.Methods.Interpolation.Relationalize
 /-!
 # Back-translation from the graph language (Craig Layer 3, Unit 6)
 
-The translation back into `L`: `G_f(x⃗, y) ↦ f(x⃗) = y`, base relation atoms recover the
+The translation back into `L`: `G_f(xs, y) ↦ f(xs) = y`, base relation atoms recover the
 original relations, and — separately — **native equality stays equality** after term erasure
 (a relational interpolant may introduce equality even when no `G_f` occurs, and its
 back-translation then correctly uses no function symbol).
@@ -61,8 +61,8 @@ def ungraphTerm {β : Type*} : (graphLanguage L).Term β → L.Term β
 /-! ## The back-translation -/
 
 /-- Back-translate a graph-language formula to `L`: native equality stays equality (after term
-erasure), a base atom recovers the original relation, a graph atom `G_f(x⃗, y)` becomes
-`f(x⃗) = y`, and all connectives and quantifiers are structural. -/
+erasure), a base atom recovers the original relation, a graph atom `G_f(xs, y)` becomes
+`f(xs) = y`, and all connectives and quantifiers are structural. -/
 def backTranslateFormula : ∀ {n : ℕ}, (graphLanguage L).BoundedFormulaω α n →
     L.BoundedFormulaω α n
   | _, .falsum => .falsum

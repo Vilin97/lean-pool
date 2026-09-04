@@ -525,7 +525,7 @@ private noncomputable def LocalEMContext.commonSupport (ctx : LocalEMContext Λ 
   Finset.univ.biUnion fun i => locJSupport Λ J (Quotient.out (xs i))
 
 /-- The **local EM term-model structure** on the carrier: function symbols act by term formation
-`f([t̄]) := [func f t̄]` (skeleton constants are the arity-0 case), and a relation holds iff
+`f([ts]) := [func f ts]` (skeleton constants are the arity-0 case), and a relation holds iff
 it holds
 in `M` on the deep interpretations for all sufficiently deep `d` (read over a common support of the
 arguments). Well-definedness is proved separately via the enlargement-invariance congruence

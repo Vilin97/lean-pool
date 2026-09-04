@@ -16,7 +16,7 @@ term-graph flattening and transporting the connectives and quantifiers structura
 * `equalGraph t u` — **one** witness, not two: `∃ y, termGraph(t, y) ∧ termGraph(u, y)`.
   Smaller than two witnesses plus an equality atom, and its relation-symbol set is exactly the
   graph symbols occurring in `t` or `u`.
-* `relGraph R ts` — `∃ y⃗, (⋀ᵢ termGraph(tᵢ, yᵢ)) ∧ R^base(y⃗)`.
+* `relGraph R ts` — `∃ ys, (⋀ᵢ termGraph(tᵢ, yᵢ)) ∧ R^base(ys)`.
 
 Both consume `existsBlock` directly, with the context-polymorphic `termGraphAux` fed by the
 lifted variable embedding `ctxLiftEmb` (no term relabeling of built formulas).
@@ -54,7 +54,7 @@ def equalGraph (t u : L.Term (α ⊕ Fin n)) : (graphLanguage L).BoundedFormula�
     ((termGraphAux t (ctxLiftEmb 1) (graphWitnessVar n 0)).and
       (termGraphAux u (ctxLiftEmb 1) (graphWitnessVar n 0)))
 
-/-- The relation atom, relationalized: `∃ y⃗, (⋀ᵢ termGraph(tᵢ, yᵢ)) ∧ R^base(y⃗)`. -/
+/-- The relation atom, relationalized: `∃ ys, (⋀ᵢ termGraph(tᵢ, yᵢ)) ∧ R^base(ys)`. -/
 def relGraph {k : ℕ} (R : L.Relations k) (ts : Fin k → L.Term (α ⊕ Fin n)) :
     (graphLanguage L).BoundedFormulaω α n :=
   .existsBlock
