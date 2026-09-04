@@ -6985,3 +6985,51 @@ projects:
     msc:
       - "05C60"
       - "68R10"
+  - slug: hopf-problem
+    title: A complex structure on the six-sphere
+    summary: >-
+      Formalizes a construction of a complex-analytic atlas on the standard
+      six-sphere. The development builds a compact complex threefold from
+      torus fibrations with cusp and elliptic fibres, computes its homology and
+      fundamental group, recognizes its underlying smooth manifold as the
+      six-sphere, and transports the complex atlas across the resulting
+      homeomorphism.
+    branch: complex geometry and differential topology
+    entry_module: LeanPool.HopfProblem
+    authors:
+      - Boris Alexeev
+    source:
+      title: HopfProblem
+      authors:
+        - Boris Alexeev
+      url: https://github.com/plby/HopfProblem/tree/9ac8a456b526527837d7082ff775213ca8bc9809
+      github_repo: plby/HopfProblem
+      commit: 9ac8a456b526527837d7082ff775213ca8bc9809
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Mathoverflow1973.mathoverflow_1973
+    main_results:
+      - declaration: Mathoverflow1973.SixSphereComplexAtlas.exists_complex_analytic_atlas
+        informal: >-
+          The standard unit six-sphere admits a complex three-dimensional
+          charted-space structure making it a complex-analytic manifold.
+      - declaration: Mathoverflow1973.SixSphereComplexAtlas.exists_complex_atlas
+        informal: >-
+          The standard unit six-sphere admits a complex three-dimensional
+          charted-space structure making it a continuously differentiable
+          complex manifold.
+      - declaration: Mathoverflow1973.mathoverflow_1973
+        informal: >-
+          The formalized statement of MathOverflow question 1973: the standard
+          six-sphere carries a complex three-dimensional manifold atlas.
+    tags:
+      - complex-geometry
+      - differential-topology
+      - complex-manifolds
+      - six-sphere
+      - torus-fibrations
+    msc:
+      - "32Q55"
+      - "57R15"
