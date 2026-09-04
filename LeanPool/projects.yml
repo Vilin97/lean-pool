@@ -7082,6 +7082,62 @@ projects:
       - "68Q17"
       - "68Q25"
       - "15A15"
+  - slug: flt-regular
+    title: Fermat's Last Theorem for regular primes
+    summary: >-
+      Formalizes Kummer's proof of Fermat's Last Theorem for every odd regular
+      prime exponent. The development proves both cases of the theorem and
+      includes the required theory of cyclotomic integers, relative units,
+      Hilbert 90 and 92, ramification, class groups, and Kummer's lemma.
+    branch: algebraic number theory
+    entry_module: LeanPool.FltRegular
+    authors:
+      - FltRegular contributors
+    source:
+      title: Fermat's Last Theorem for regular primes
+      authors:
+        - Riccardo Brasca
+        - Ruben Van de Velde
+        - Andrew Yang
+        - Chris Birkbeck
+        - Alex J. Best
+        - Eric Rodriguez
+      url: https://github.com/leanprover-community/flt-regular
+      github_repo: leanprover-community/flt-regular
+      commit: 94a1d78956a348568c80975ec9005dc5762ab10a
+    license: Apache-2.0
+    status: verified
+    provenance: human
+    main_declarations:
+      - flt_regular
+    main_results:
+      - declaration: flt_regular
+        informal: >-
+          Fermat's Last Theorem holds for every odd regular prime exponent.
+      - declaration: FltRegular.caseI
+        informal: >-
+          The first case of Fermat's Last Theorem holds for every regular prime:
+          no primitive solution exists when the exponent does not divide the
+          product of the three terms.
+      - declaration: FltRegular.caseII
+        informal: >-
+          The second case of Fermat's Last Theorem holds for every odd regular
+          prime: no primitive nonzero solution exists when the exponent divides
+          the product of the three terms.
+      - declaration: eq_pow_prime_of_unit_of_congruent
+        informal: >-
+          A unit of the cyclotomic field of an odd regular prime that is
+          congruent to an integer modulo the prime is itself a prime-th power.
+    tags:
+      - algebraic-number-theory
+      - fermats-last-theorem
+      - cyclotomic-fields
+      - class-groups
+      - regular-primes
+    msc:
+      - "11D41"
+      - "11R18"
+      - "11R29"
   - slug: erdos81-paper-ii-chordal-heredity
     title: "Chordal graphs: minimal separators and simplicial vertices"
     summary: >-
