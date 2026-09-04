@@ -4,11 +4,26 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-module
+import LeanPool.NonSoficGroup.Foundations
+import Mathlib.Analysis.InnerProductSpace.Reproducing
+import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Algebra.Group.Pointwise.Finset.BigOperators
+import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+import Mathlib.Analysis.InnerProductSpace.GramMatrix
+import Mathlib.Data.Nat.Dist
+import Mathlib.Dynamics.FixedPoints.Topology
+import Mathlib.RepresentationTheory.Invariants
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.Topology.Algebra.LinearMapCompletion
 
-public import LeanPool.NonSoficGroup.Foundations
-import all LeanPool.NonSoficGroup.Foundations
-import all Mathlib.Analysis.InnerProductSpace.Reproducing
+/-!
+# Spectral and finite-model estimates for the non-sofic group construction
+
+This file develops the Hilbert-space, expansion, partition, and completion
+estimates used in the final obstruction.
+-/
 
 noncomputable section
 
@@ -23,7 +38,7 @@ section ThreeProjectionSumOfSquares
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
 /-- A three-vector polarization identity used in the spectral-gap argument. -/
-public theorem three_pair_sum_norm_sq (a b c : H) :
+theorem three_pair_sum_norm_sq (a b c : H) :
     ‖a + b‖ ^ 2 + ‖b + c‖ ^ 2 + ‖c + a‖ ^ 2 =
       ‖a + b + c‖ ^ 2 + (‖a‖ ^ 2 + ‖b‖ ^ 2 + ‖c‖ ^ 2) := by
   have hca :
@@ -33,7 +48,7 @@ public theorem three_pair_sum_norm_sq (a b c : H) :
   nlinarith
 
 omit [InnerProductSpace ℂ H] in
-theorem norm_add_three_sq_le_three_mul (a b c : H) :
+private theorem norm_add_three_sq_le_three_mul (a b c : H) :
     ‖a + b + c‖ ^ 2 ≤ 3 * (‖a‖ ^ 2 + ‖b‖ ^ 2 + ‖c‖ ^ 2) := by
   have htriangle : ‖a + b + c‖ ≤ ‖a‖ + ‖b‖ + ‖c‖ := by
     calc
@@ -45,7 +60,7 @@ theorem norm_add_three_sq_le_three_mul (a b c : H) :
   nlinarith [sq_nonneg (‖a‖ - ‖b‖),
     sq_nonneg (‖b‖ - ‖c‖), sq_nonneg (‖c‖ - ‖a‖)]
 
-theorem three_pairwise_residual_spectral_gap
+private theorem three_pairwise_residual_spectral_gap
     (a b c : H) (ε : ℝ)
     (hab : (1 - ε) * (‖a‖ ^ 2 + ‖b‖ ^ 2) ≤ ‖a + b‖ ^ 2)
     (hbc : (1 - ε) * (‖b‖ ^ 2 + ‖c‖ ^ 2) ≤ ‖b + c‖ ^ 2)
@@ -60,7 +75,7 @@ section TwoOrthogonalSectors
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
-theorem inner_sq_le_of_orthogonal_two_sector
+private theorem inner_sq_le_of_orthogonal_two_sector
     (a₀ a₁ b₀ b₁ : H)
     (ha : inner ℂ a₀ a₁ = 0)
     (hb : inner ℂ b₀ b₁ = 0)
@@ -113,7 +128,7 @@ theorem inner_sq_le_of_orthogonal_two_sector
   rw [ha', hb']
   nlinarith
 
-theorem inner_sq_le_of_finite_orthogonal_sector_splitting
+private theorem inner_sq_le_of_finite_orthogonal_sector_splitting
     {ι : Type*} [Finite ι]
     (F : ι → Submodule ℂ H)
     [∀ i, (F i).HasOrthogonalProjection]
@@ -222,7 +237,7 @@ section ThreeOrthogonalProjections
 variable {H : Type*} [NormedAddCommGroup H]
   [InnerProductSpace ℂ H]
 
-theorem ejStarProjection_re_inner (W : Submodule ℂ H)
+private theorem ejStarProjection_re_inner (W : Submodule ℂ H)
     [W.HasOrthogonalProjection] (x : H) :
     RCLike.re (inner ℂ (W.starProjection x) x) =
       ‖W.starProjection x‖ ^ 2 := by
@@ -245,17 +260,17 @@ theorem ejStarProjection_re_inner (W : Submodule ℂ H)
   rw [hinner]
   exact (norm_sq_eq_re_inner _).symm
 
-def ejResidualProjection (V : Submodule ℂ H)
+private def ejResidualProjection (V : Submodule ℂ H)
     [V.HasOrthogonalProjection] : H →L[ℂ] H :=
   Vᗮ.starProjection
 
 @[simp]
-theorem ejResidualProjection_apply (V : Submodule ℂ H)
+private theorem ejResidualProjection_apply (V : Submodule ℂ H)
     [V.HasOrthogonalProjection] (x : H) :
     ejResidualProjection V x = x - V.starProjection x :=
   Submodule.starProjection_orthogonal_val x
 
-theorem ejResidualProjection_idempotent (V : Submodule ℂ H)
+private theorem ejResidualProjection_idempotent (V : Submodule ℂ H)
     [V.HasOrthogonalProjection] (x : H) :
     ejResidualProjection V (ejResidualProjection V x) =
       ejResidualProjection V x := by
@@ -263,13 +278,13 @@ theorem ejResidualProjection_idempotent (V : Submodule ℂ H)
   exact Submodule.starProjection_eq_self_iff.mpr
     (Submodule.starProjection_apply_mem Vᗮ x)
 
-theorem ejResidualProjection_inner (V : Submodule ℂ H)
+private theorem ejResidualProjection_inner (V : Submodule ℂ H)
     [V.HasOrthogonalProjection] (x y : H) :
     inner ℂ (ejResidualProjection V x) y =
       inner ℂ x (ejResidualProjection V y) :=
   Submodule.inner_starProjection_left_eq_right Vᗮ x y
 
-theorem ejResidualProjection_re_inner (V : Submodule ℂ H)
+private theorem ejResidualProjection_re_inner (V : Submodule ℂ H)
     [V.HasOrthogonalProjection] (x : H) :
     RCLike.re (inner ℂ (ejResidualProjection V x) x) =
       ‖ejResidualProjection V x‖ ^ 2 := by
@@ -295,21 +310,21 @@ theorem ejResidualProjection_re_inner (V : Submodule ℂ H)
 variable (V : Fin 3 → Submodule ℂ H)
   [∀ i, (V i).HasOrthogonalProjection]
 
-def ejThreeResidualMap : H →L[ℂ] H :=
+private def ejThreeResidualMap : H →L[ℂ] H :=
   ejResidualProjection (V 0) + ejResidualProjection (V 1) +
     ejResidualProjection (V 2)
 
-def ejThreeResidualEnergy (x : H) : ℝ :=
+private def ejThreeResidualEnergy (x : H) : ℝ :=
   ‖ejResidualProjection (V 0) x‖ ^ 2 +
     ‖ejResidualProjection (V 1) x‖ ^ 2 +
     ‖ejResidualProjection (V 2) x‖ ^ 2
 
-def ejThreeProjectionAverage : H →L[ℂ] H :=
+private def ejThreeProjectionAverage : H →L[ℂ] H :=
   ContinuousLinearMap.id ℂ H -
     (3 : ℂ)⁻¹ • ejThreeResidualMap V
 
 @[simp]
-theorem ejThreeResidualMap_apply (x : H) :
+private theorem ejThreeResidualMap_apply (x : H) :
     ejThreeResidualMap V x =
       ejResidualProjection (V 0) x +
         ejResidualProjection (V 1) x +
@@ -317,17 +332,17 @@ theorem ejThreeResidualMap_apply (x : H) :
   rfl
 
 @[simp]
-theorem ejThreeProjectionAverage_apply (x : H) :
+private theorem ejThreeProjectionAverage_apply (x : H) :
     ejThreeProjectionAverage V x =
       x - (3 : ℂ)⁻¹ • ejThreeResidualMap V x := by
   rfl
 
-theorem ejThreeResidualEnergy_nonneg (x : H) :
+private theorem ejThreeResidualEnergy_nonneg (x : H) :
     0 ≤ ejThreeResidualEnergy V x := by
   unfold ejThreeResidualEnergy
   positivity
 
-theorem ejThreeResidualEnergy_eq_re_inner (x : H) :
+private theorem ejThreeResidualEnergy_eq_re_inner (x : H) :
     ejThreeResidualEnergy V x =
       RCLike.re (inner ℂ (ejThreeResidualMap V x) x) := by
   simp only [ejThreeResidualEnergy, ejThreeResidualMap_apply,
@@ -336,7 +351,7 @@ theorem ejThreeResidualEnergy_eq_re_inner (x : H) :
     ejResidualProjection_re_inner (V 1) x,
     ejResidualProjection_re_inner (V 2) x]
 
-theorem ejThreeResidualMap_norm_sq_le (x : H) :
+private theorem ejThreeResidualMap_norm_sq_le (x : H) :
     ‖ejThreeResidualMap V x‖ ^ 2 ≤
       3 * ejThreeResidualEnergy V x := by
   simpa only [ejThreeResidualMap_apply, Fin.isValue, ejResidualProjection_apply,
@@ -344,11 +359,11 @@ theorem ejThreeResidualMap_norm_sq_le (x : H) :
     norm_add_three_sq_le_three_mul (ejResidualProjection (V 0) x) (ejResidualProjection (V 1) x)
       (ejResidualProjection (V 2) x)
 
-theorem ejResidualProjection_norm_le (i : Fin 3) (x : H) :
+private theorem ejResidualProjection_norm_le (i : Fin 3) (x : H) :
     ‖ejResidualProjection (V i) x‖ ≤ ‖x‖ :=
   (V i)ᗮ.norm_starProjection_apply_le x
 
-theorem ejThreeResidualEnergy_le_three_norm_sq (x : H) :
+private theorem ejThreeResidualEnergy_le_three_norm_sq (x : H) :
     ejThreeResidualEnergy V x ≤ 3 * ‖x‖ ^ 2 := by
   have h0 : ‖ejResidualProjection (V 0) x‖ ^ 2 ≤ ‖x‖ ^ 2 :=
     (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mpr
@@ -362,7 +377,7 @@ theorem ejThreeResidualEnergy_le_three_norm_sq (x : H) :
   unfold ejThreeResidualEnergy
   linarith
 
-theorem ejResidualProjection_cross_inner (W : Submodule ℂ H)
+private theorem ejResidualProjection_cross_inner (W : Submodule ℂ H)
     [W.HasOrthogonalProjection] (x z : H) :
     inner ℂ (ejResidualProjection W x) (ejResidualProjection W z) =
       inner ℂ (ejResidualProjection W x) z := by
@@ -374,7 +389,7 @@ theorem ejResidualProjection_cross_inner (W : Submodule ℂ H)
     _ = inner ℂ (ejResidualProjection W x) z := by
       rw [ejResidualProjection_idempotent W x]
 
-theorem ejThreeResidual_cross_re_inner (x : H) :
+private theorem ejThreeResidual_cross_re_inner (x : H) :
     RCLike.re (inner ℂ (ejResidualProjection (V 0) x)
         (ejResidualProjection (V 0) (ejThreeResidualMap V x))) +
       RCLike.re (inner ℂ (ejResidualProjection (V 1) x)
@@ -402,7 +417,7 @@ theorem ejThreeResidual_cross_re_inner (x : H) :
       rw [← ejThreeResidualMap_apply V x]
       exact (norm_sq_eq_re_inner _).symm
 
-theorem norm_sub_one_third_smul_sq (a b : H) :
+private theorem norm_sub_one_third_smul_sq (a b : H) :
     ‖a - (3 : ℂ)⁻¹ • b‖ ^ 2 =
       ‖a‖ ^ 2 - (2 / 3 : ℝ) * RCLike.re (inner ℂ a b) +
         (1 / 9 : ℝ) * ‖b‖ ^ 2 := by
@@ -410,7 +425,7 @@ theorem norm_sub_one_third_smul_sq (a b : H) :
   norm_num [Complex.mul_re]
   ring
 
-theorem ejResidualProjection_average_norm_sq
+private theorem ejResidualProjection_average_norm_sq
     (W : Submodule ℂ H) [W.HasOrthogonalProjection]
     (x z : H) :
     ‖ejResidualProjection W (x - (3 : ℂ)⁻¹ • z)‖ ^ 2 =
@@ -423,7 +438,7 @@ theorem ejResidualProjection_average_norm_sq
   exact norm_sub_one_third_smul_sq
     (ejResidualProjection W x) (ejResidualProjection W z)
 
-theorem ejThreeResidualEnergy_average (x : H) :
+private theorem ejThreeResidualEnergy_average (x : H) :
     ejThreeResidualEnergy V (ejThreeProjectionAverage V x) =
       ejThreeResidualEnergy V x -
         (2 / 3 : ℝ) * ‖ejThreeResidualMap V x‖ ^ 2 +
@@ -437,7 +452,7 @@ theorem ejThreeResidualEnergy_average (x : H) :
   have hcross := ejThreeResidual_cross_re_inner V x
   nlinarith
 
-theorem ejThreeResidualMap_spectral_gap (x : H) (ε : ℝ)
+private theorem ejThreeResidualMap_spectral_gap (x : H) (ε : ℝ)
     (h01 : (1 - ε) *
       (‖ejResidualProjection (V 0) x‖ ^ 2 +
         ‖ejResidualProjection (V 1) x‖ ^ 2) ≤
@@ -461,7 +476,7 @@ theorem ejThreeResidualMap_spectral_gap (x : H) (ε : ℝ)
     (ejResidualProjection (V 2) x)
     ε h01 h12 h20
 
-theorem ejThreeResidualEnergy_average_le
+private theorem ejThreeResidualEnergy_average_le
     (x : H) (δ : ℝ)
     (hgap : δ * ejThreeResidualEnergy V x ≤
       ‖ejThreeResidualMap V x‖ ^ 2) :
@@ -472,7 +487,7 @@ theorem ejThreeResidualEnergy_average_le
     (ejThreeResidualMap V x)
   nlinarith
 
-theorem ejStarProjection_mem_inf_orthogonal
+private theorem ejStarProjection_mem_inf_orthogonal
     (U V : Submodule ℂ H) [U.HasOrthogonalProjection]
     (w : H) (hw : w ∈ (U ⊓ V)ᗮ) :
     U.starProjection w ∈ (U ⊓ V)ᗮ := by
@@ -485,7 +500,7 @@ theorem ejStarProjection_mem_inf_orthogonal
       rw [Submodule.starProjection_eq_self_iff.mpr hq.1]
     _ = 0 := hw q hq
 
-theorem ejTwoProjection_norm_sq_sum_le_of_angle
+private theorem ejTwoProjection_norm_sq_sum_le_of_angle
     (U V : Submodule ℂ H)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (c : ℝ) (hc : 0 ≤ c)
@@ -567,7 +582,7 @@ theorem ejTwoProjection_norm_sq_sum_le_of_angle
       _ = (‖u‖ ^ 2 + ‖v‖ ^ 2) *
           ((1 + c) * ‖w‖ ^ 2) := by ring
 
-theorem ejTwoResidualEnergy_ge_of_angle
+private theorem ejTwoResidualEnergy_ge_of_angle
     (U V : Submodule ℂ H)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (c : ℝ) (hc : 0 ≤ c)
@@ -591,7 +606,7 @@ theorem ejTwoResidualEnergy_ge_of_angle
     ejTwoProjection_norm_sq_sum_le_of_angle U V c hc hangle w hw
   nlinarith
 
-theorem ejTwoResidual_sum_re_inner
+private theorem ejTwoResidual_sum_re_inner
     (U V : Submodule ℂ H)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     (w : H) :
@@ -615,7 +630,7 @@ theorem ejTwoResidual_sum_re_inner
   simp only [inner_add_left, Complex.add_re]
   rw [hU, hV]
 
-theorem ejTwoResidual_spectral_gap_of_angle
+private theorem ejTwoResidual_spectral_gap_of_angle
     (U V : Submodule ℂ H)
     [U.HasOrthogonalProjection] [V.HasOrthogonalProjection]
     [(U ⊓ V).HasOrthogonalProjection]
@@ -687,7 +702,7 @@ theorem ejTwoResidual_spectral_gap_of_angle
   rw [hwU, hwV] at hgap
   exact hgap
 
-theorem ejThreeProjectionAverage_dist_sq (x : H) :
+private theorem ejThreeProjectionAverage_dist_sq (x : H) :
     dist x (ejThreeProjectionAverage V x) ^ 2 =
       (1 / 9 : ℝ) * ‖ejThreeResidualMap V x‖ ^ 2 := by
   rw [dist_eq_norm, ejThreeProjectionAverage_apply]
@@ -699,14 +714,14 @@ theorem ejThreeProjectionAverage_dist_sq (x : H) :
   norm_num
   ring
 
-theorem ejThreeProjectionAverage_dist_sq_le (x : H) :
+private theorem ejThreeProjectionAverage_dist_sq_le (x : H) :
     dist x (ejThreeProjectionAverage V x) ^ 2 ≤
       ejThreeResidualEnergy V x / 3 := by
   rw [ejThreeProjectionAverage_dist_sq]
   have h := ejThreeResidualMap_norm_sq_le V x
   nlinarith
 
-theorem ejThreeResidualEnergy_iterate_le
+private theorem ejThreeResidualEnergy_iterate_le
     (δ : ℝ) (hδ : δ ≤ 3)
     (hgap : ∀ x : H,
       δ * ejThreeResidualEnergy V x ≤ ‖ejThreeResidualMap V x‖ ^ 2)
@@ -734,7 +749,7 @@ theorem ejThreeResidualEnergy_iterate_le
           rw [pow_succ]
           ring
 
-theorem ejThreeProjectionAverage_iterate_dist_le_geometric
+private theorem ejThreeProjectionAverage_iterate_dist_le_geometric
     (δ : ℝ) (hδ : δ ≤ 3)
     (hgap : ∀ x : H,
       δ * ejThreeResidualEnergy V x ≤ ‖ejThreeResidualMap V x‖ ^ 2)
@@ -798,7 +813,7 @@ theorem ejThreeProjectionAverage_iterate_dist_le_geometric
   rw [Function.iterate_succ_apply']
   exact hdist
 
-theorem ejThreeResidual_spectral_gap_of_pair_angles
+private theorem ejThreeResidual_spectral_gap_of_pair_angles
     [∀ i j : Fin 3, (V i ⊓ V j).HasOrthogonalProjection]
     (c : ℝ) (hc : 0 ≤ c) (hc' : c ≤ 1)
     (hangle : ∀ (i j : Fin 3) (u v : H),
@@ -816,7 +831,7 @@ theorem ejThreeResidual_spectral_gap_of_pair_angles
   · exact ejTwoResidual_spectral_gap_of_angle
       (V 2) (V 0) c hc hc' (hangle 2 0) x
 
-theorem ejThreeProjectionAverage_iterate_dist_le_of_pair_angles
+private theorem ejThreeProjectionAverage_iterate_dist_le_of_pair_angles
     [∀ i j : Fin 3, (V i ⊓ V j).HasOrthogonalProjection]
     (c : ℝ) (hc : 0 ≤ c) (hchalf : c < (1 / 2 : ℝ))
     (hangle : ∀ (i j : Fin 3) (u v : H),
@@ -835,7 +850,7 @@ theorem ejThreeProjectionAverage_iterate_dist_le_of_pair_angles
   exact ejThreeResidual_spectral_gap_of_pair_angles
     V c hc hc' hangle y
 
-theorem ejThreeResidualEnergy_sqrt_div_three_le
+private theorem ejThreeResidualEnergy_sqrt_div_three_le
     (x : H) (T : ℝ) (hT : 0 ≤ T)
     (hbound : ∀ i : Fin 3,
       ‖ejResidualProjection (V i) x‖ ≤ T) :
@@ -851,7 +866,7 @@ theorem ejThreeResidualEnergy_sqrt_div_three_le
   unfold ejThreeResidualEnergy
   nlinarith
 
-theorem ejThreeProjectionAverage_fixed_iff_residualMap_eq_zero (x : H) :
+private theorem ejThreeProjectionAverage_fixed_iff_residualMap_eq_zero (x : H) :
     ejThreeProjectionAverage V x = x ↔
       ejThreeResidualMap V x = 0 := by
   constructor
@@ -863,7 +878,7 @@ theorem ejThreeProjectionAverage_fixed_iff_residualMap_eq_zero (x : H) :
   · intro h
     simp only [ejThreeProjectionAverage_apply, h, smul_zero, sub_zero]
 
-theorem ejThreeResidualEnergy_eq_zero_iff (x : H) :
+private theorem ejThreeResidualEnergy_eq_zero_iff (x : H) :
     ejThreeResidualEnergy V x = 0 ↔
       ∀ i : Fin 3, ejResidualProjection (V i) x = 0 := by
   constructor
@@ -891,7 +906,7 @@ theorem ejThreeResidualEnergy_eq_zero_iff (x : H) :
       h 1,
       add_zero, h 2]
 
-theorem ejThreeProjectionAverage_fixed_mem
+private theorem ejThreeProjectionAverage_fixed_mem
     (x : H) (hx : ejThreeProjectionAverage V x = x)
     (i : Fin 3) : x ∈ V i := by
   have hD : ejThreeResidualMap V x = 0 :=
@@ -910,7 +925,7 @@ section ThreeFiniteUnitaryFixedSpaces
 
 universe u₂ v₂
 
-def ejUnitaryFixedSubmodule
+private def ejUnitaryFixedSubmodule
     {G : Type u₂} {H : Type v₂} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) :
@@ -923,7 +938,7 @@ def ejUnitaryFixedSubmodule
     simp only [map_smul, hx k]
 
 @[simp]
-theorem mem_ejUnitaryFixedSubmodule
+private theorem mem_ejUnitaryFixedSubmodule
     {G : Type u₂} {H : Type v₂} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) (x : H) :
@@ -931,7 +946,7 @@ theorem mem_ejUnitaryFixedSubmodule
       ∀ k : K, π (k : G) x = x :=
   Iff.rfl
 
-theorem ejUnitaryFixedSubmodule_isClosed
+private theorem ejUnitaryFixedSubmodule_isClosed
     {G : Type u₂} {H : Type v₂} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) :
@@ -946,7 +961,7 @@ theorem ejUnitaryFixedSubmodule_isClosed
   exact isClosed_iInter fun k =>
     isClosed_eq (π (k : G)).continuous continuous_id
 
-theorem ejUnitaryFixedSubmodule_inf_isClosed
+private theorem ejUnitaryFixedSubmodule_inf_isClosed
     {G : Type u₂} {H : Type v₂} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (K J : Subgroup G) :
@@ -959,14 +974,14 @@ theorem ejUnitaryFixedSubmodule_inf_isClosed
   exact (ejUnitaryFixedSubmodule_isClosed π K).inter
     (ejUnitaryFixedSubmodule_isClosed π J)
 
-instance ejUnitaryFixedSubmodule_completeSpace
+private instance ejUnitaryFixedSubmodule_completeSpace
     {G : Type u₂} {H : Type v₂} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) :
     CompleteSpace (ejUnitaryFixedSubmodule π K) :=
   (ejUnitaryFixedSubmodule_isClosed π K).isComplete.completeSpace_coe
 
-instance ejUnitaryFixedSubmodule_inf_completeSpace
+private instance ejUnitaryFixedSubmodule_inf_completeSpace
     {G : Type u₂} {H : Type v₂} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (π : UnitaryRepresentation G H) (K J : Subgroup G) :
@@ -990,12 +1005,12 @@ section FiniteUnitaryAveraging
 variable {G : Type u} {H : Type v} [Group G]
   [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
-def finiteUnitarySubgroupAverage
+private def finiteUnitarySubgroupAverage
     (π : UnitaryRepresentation G H)
     (K : Subgroup G) [Fintype K] (x : H) : H :=
   (Fintype.card K : ℂ)⁻¹ • ∑ k : K, π (k : G) x
 
-theorem finiteUnitarySubgroupAverage_fixed
+private theorem finiteUnitarySubgroupAverage_fixed
     (π : UnitaryRepresentation G H)
     (K : Subgroup G) [Fintype K] (x : H) (g : K) :
     π (g : G) (finiteUnitarySubgroupAverage π K x) =
@@ -1014,7 +1029,7 @@ theorem finiteUnitarySubgroupAverage_fixed
       Function.Bijective.sum_comp (Group.mulLeft_bijective g)
         (fun k : K => π (k : G) x)
 
-theorem finiteUnitarySubgroupAverage_sub
+private theorem finiteUnitarySubgroupAverage_sub
     (π : UnitaryRepresentation G H)
     (K : Subgroup G) [Fintype K] (x : H) :
     finiteUnitarySubgroupAverage π K x - x =
@@ -1032,7 +1047,7 @@ theorem finiteUnitarySubgroupAverage_sub
       not_false_eq_true, inv_mul_cancel₀, one_smul]
   rw [hconst]
 
-theorem norm_finiteUnitarySubgroupAverage_sub_le
+private theorem norm_finiteUnitarySubgroupAverage_sub_le
     (π : UnitaryRepresentation G H)
     (K : Subgroup G) [Fintype K] (x : H) :
     ‖finiteUnitarySubgroupAverage π K x - x‖ ≤
@@ -1045,7 +1060,7 @@ theorem norm_finiteUnitarySubgroupAverage_sub_le
     (norm_sum_le Finset.univ (fun k : K => π (k : G) x - x))
     (by positivity)
 
-theorem norm_sub_starProjection_le_finiteUnitarySubgroupAverage
+private theorem norm_sub_starProjection_le_finiteUnitarySubgroupAverage
     (π : UnitaryRepresentation G H)
     (K : Subgroup G) [Fintype K]
     (U : Submodule ℂ H) [U.HasOrthogonalProjection]
@@ -1065,7 +1080,7 @@ theorem norm_sub_starProjection_le_finiteUnitarySubgroupAverage
 
 end FiniteUnitaryAveraging
 
-theorem hasPropertyT_of_geometric_finite_averaging
+private theorem hasPropertyT_of_geometric_finite_averaging
     {G : Type u} [Group G] (S : Finset G) (q : ℝ)
     (hq1 : q < 1)
     (haverage :
@@ -1144,14 +1159,14 @@ theorem hasPropertyT_of_geometric_finite_averaging
     linarith
   exact ⟨η, hηne, hfixed η hηfixed⟩
 
-def threeFiniteSubgroupGenerators
+private def threeFiniteSubgroupGenerators
     {G : Type u} [Group G] (K : Fin 3 → Subgroup G)
     [∀ i, Fintype (K i)] : Finset G := by
   classical
   exact Finset.univ.biUnion fun i : Fin 3 =>
     Finset.univ.image fun g : K i => (g : G)
 
-theorem mem_threeFiniteSubgroupGenerators
+private theorem mem_threeFiniteSubgroupGenerators
     {G : Type u} [Group G] (K : Fin 3 → Subgroup G)
     [∀ i, Fintype (K i)] (g : G) :
     g ∈ threeFiniteSubgroupGenerators K ↔ ∃ i : Fin 3, g ∈ K i := by
@@ -1160,7 +1175,7 @@ theorem mem_threeFiniteSubgroupGenerators
     true_and,
     Subtype.exists, exists_prop, exists_eq_right]
 
-def unitaryVectorStabilizer
+private def unitaryVectorStabilizer
     {G : Type u} {H : Type v} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H)
@@ -1181,7 +1196,7 @@ def unitaryVectorStabilizer
     simpa only [map_inv, LinearIsometryEquiv.coe_inv, LinearIsometryEquiv.symm_apply_apply] using
       h.symm
 
-theorem hasPropertyT_of_three_finite_subgroups_geometric
+private theorem hasPropertyT_of_three_finite_subgroups_geometric
     {G : Type u} [Group G]
     (K : Fin 3 → Subgroup G) [∀ i, Fintype (K i)]
     (hgen : (⨆ i : Fin 3, K i) = ⊤)
@@ -1213,10 +1228,10 @@ theorem hasPropertyT_of_three_finite_subgroups_geometric
     exact iSup_le hK
   exact htop (show g ∈ (⊤ : Subgroup G) from Subgroup.mem_top g)
 
-theorem inv_sqrt_eight_pos : 0 < (Real.sqrt (8 : ℝ))⁻¹ := by
+private theorem inv_sqrt_eight_pos : 0 < (Real.sqrt (8 : ℝ))⁻¹ := by
   positivity
 
-theorem inv_sqrt_eight_lt_one_half :
+private theorem inv_sqrt_eight_lt_one_half :
     (Real.sqrt (8 : ℝ))⁻¹ < (1 / 2 : ℝ) := by
   have hsqrt : 2 < Real.sqrt (8 : ℝ) := by
     have hsq := Real.sq_sqrt (show (0 : ℝ) ≤ 8 by norm_num)
@@ -1225,7 +1240,7 @@ theorem inv_sqrt_eight_lt_one_half :
   simpa only [one_div, gt_iff_lt] using (one_div_lt_one_div_of_lt (show (0 : ℝ) < 2 by norm_num)
     hsqrt)
 
-theorem norm_inner_le_inv_sqrt_eight_of_sq
+private theorem norm_inner_le_inv_sqrt_eight_of_sq
     {H : Type v} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (a b : H)
     (h : 8 * ‖inner ℂ a b‖ ^ 2 ≤ ‖a‖ ^ 2 * ‖b‖ ^ 2) :
@@ -1247,7 +1262,7 @@ theorem norm_inner_le_inv_sqrt_eight_of_sq
         nlinarith
   exact (sq_le_sq₀ (norm_nonneg _) (by positivity)).mp hsq
 
-theorem hasPropertyT_of_three_finite_subgroups_friedrichs_angle
+private theorem hasPropertyT_of_three_finite_subgroups_friedrichs_angle
     {G : Type u} [Group G]
     (K : Fin 3 → Subgroup G) [∀ i, Finite (K i)]
     (hgen : (⨆ i : Fin 3, K i) = ⊤)
@@ -1369,23 +1384,23 @@ section
 
 open scoped BigOperators commutatorElement
 
-abbrev finiteBlockGaloisField : Type := GaloisField 2 3
+private abbrev finiteBlockGaloisField : Type := GaloisField 2 3
 
-def finiteBlockGaloisBasis :
+private def finiteBlockGaloisBasis :
     Module.Basis (Fin 3) (ZMod 2) finiteBlockGaloisField :=
   Module.finBasisOfFinrankEq (ZMod 2) finiteBlockGaloisField
     (GaloisField.finrank 2 (by decide))
 
-def finiteBlockGaloisMatrix :
+private def finiteBlockGaloisMatrix :
     finiteBlockGaloisField →ₐ[ZMod 2]
       Matrix (Fin 3) (Fin 3) (ZMod 2) :=
   Algebra.leftMulMatrix finiteBlockGaloisBasis
 
-theorem finiteBlockGaloisField_natCard :
+private theorem finiteBlockGaloisField_natCard :
     Nat.card finiteBlockGaloisField = 8 := by
   simpa only [Nat.reducePow] using (GaloisField.card 2 3 (by decide))
 
-def finiteBlockGaloisMatrixOver (R : Type*) [Ring R]
+private def finiteBlockGaloisMatrixOver (R : Type*) [Ring R]
     [Algebra (ZMod 2) R] :
     finiteBlockGaloisField →+* Matrix (Fin 3) (Fin 3) R :=
   (RingHom.mapMatrix (algebraMap (ZMod 2) R)).comp
@@ -1395,7 +1410,7 @@ section ActualBlockRoots
 
 variable {R : Type*} [Ring R] [Algebra (ZMod 2) R]
 
-theorem finiteBlockCoefficientMatrix_mul_binary_mem
+private theorem finiteBlockCoefficientMatrix_mul_binary_mem
     (W : Submodule (ZMod 2) R)
     (A : Matrix (Fin 3) (Fin 3) R)
     (hA : ∀ i j, A i j ∈ W)
@@ -1410,7 +1425,7 @@ theorem finiteBlockCoefficientMatrix_mul_binary_mem
   rw [← Algebra.commutes, ← Algebra.smul_def]
   exact W.smul_mem (B k j) (hA i k)
 
-theorem finiteBlockCoefficientMatrix_binary_mul_mem
+private theorem finiteBlockCoefficientMatrix_binary_mul_mem
     (W : Submodule (ZMod 2) R)
     (A : Matrix (Fin 3) (Fin 3) R)
     (hA : ∀ i j, A i j ∈ W)
@@ -1424,7 +1439,7 @@ theorem finiteBlockCoefficientMatrix_binary_mul_mem
   rw [RingHom.mapMatrix_apply, Matrix.map_apply, ← Algebra.smul_def]
   exact W.smul_mem (B i k) (hA k j)
 
-theorem finiteBlockCoefficientMatrix_mul_galois_mem
+private theorem finiteBlockCoefficientMatrix_mul_galois_mem
     (W : Submodule (ZMod 2) R)
     (A : Matrix (Fin 3) (Fin 3) R)
     (hA : ∀ i j, A i j ∈ W)
@@ -1436,7 +1451,7 @@ theorem finiteBlockCoefficientMatrix_mul_galois_mem
   exact finiteBlockCoefficientMatrix_mul_binary_mem W A hA
     (finiteBlockGaloisMatrix t)
 
-theorem finiteBlockCoefficientMatrix_galois_mul_mem
+private theorem finiteBlockCoefficientMatrix_galois_mul_mem
     (W : Submodule (ZMod 2) R)
     (A : Matrix (Fin 3) (Fin 3) R)
     (hA : ∀ i j, A i j ∈ W)
@@ -1448,25 +1463,25 @@ theorem finiteBlockCoefficientMatrix_galois_mul_mem
   exact finiteBlockCoefficientMatrix_binary_mul_mem W A hA
     (finiteBlockGaloisMatrix t)
 
-def finiteBlockCoefficientMatrixHom
+private def finiteBlockCoefficientMatrixHom
     (W : Submodule (ZMod 2) R) :
     Matrix (Fin 3) (Fin 3) W →+
       Matrix (Fin 3) (Fin 3) R :=
   W.subtype.toAddMonoidHom.mapMatrix
 
-def finiteOuterBlockRootHom
+private def finiteOuterBlockRootHom
     (W : Submodule (ZMod 2) R) (i j : Fin 3) (hij : i ≠ j) :
     Multiplicative (Matrix (Fin 3) (Fin 3) W) →*
       elementaryGroup (Fin 3) (Matrix (Fin 3) (Fin 3) R) :=
   (elementaryRootHom (R := Matrix (Fin 3) (Fin 3) R) i j hij).comp
     (finiteBlockCoefficientMatrixHom W).toMultiplicative
 
-def finiteOuterBlockRootSubgroup
+private def finiteOuterBlockRootSubgroup
     (W : Submodule (ZMod 2) R) (i j : Fin 3) (hij : i ≠ j) :
     Subgroup (elementaryGroup (Fin 3) (Matrix (Fin 3) (Fin 3) R)) :=
   (finiteOuterBlockRootHom W i j hij).range
 
-theorem finite_finiteOuterBlockRootSubgroup
+private theorem finite_finiteOuterBlockRootSubgroup
     (W : Submodule (ZMod 2) R) [Finite W]
     (i j : Fin 3) (hij : i ≠ j) :
     Finite (finiteOuterBlockRootSubgroup W i j hij) := by
@@ -1479,7 +1494,7 @@ theorem finite_finiteOuterBlockRootSubgroup
   exact ⟨a, Subtype.ext ha⟩
 
 omit [Algebra (ZMod 2) R] in
-theorem finiteOuterElementaryRoot_commutator
+private theorem finiteOuterElementaryRoot_commutator
     (i j k : Fin 3) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
     (A B : Matrix (Fin 3) (Fin 3) R) :
     ⁅elementaryRootHom i j hij (Multiplicative.ofAdd A),
@@ -1489,7 +1504,7 @@ theorem finiteOuterElementaryRoot_commutator
   exact elementaryUnit_commutator i j k hij hjk hik A B
 
 omit [Algebra (ZMod 2) R] in
-theorem finiteOuterElementaryRoot_conjugate_by_successor
+private theorem finiteOuterElementaryRoot_conjugate_by_successor
     (i j k : Fin 3) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
     (A B : Matrix (Fin 3) (Fin 3) R) :
     let x := elementaryRootHom i j hij (Multiplicative.ofAdd A)
@@ -1502,7 +1517,7 @@ theorem finiteOuterElementaryRoot_conjugate_by_successor
   group
 
 omit [Algebra (ZMod 2) R] in
-theorem finiteOuterElementaryUnit_commute_of_nonadjacent
+private theorem finiteOuterElementaryUnit_commute_of_nonadjacent
     (i j k l : Fin 3) (hij : i ≠ j) (hkl : k ≠ l)
     (hjk : j ≠ k) (hli : l ≠ i)
     (A B : Matrix (Fin 3) (Fin 3) R) :
@@ -1518,7 +1533,7 @@ theorem finiteOuterElementaryUnit_commute_of_nonadjacent
   noncomm_ring [hAB, hBA]
 
 omit [Algebra (ZMod 2) R] in
-theorem finiteOuterElementaryRoot_commute_of_nonadjacent
+private theorem finiteOuterElementaryRoot_commute_of_nonadjacent
     (i j k l : Fin 3) (hij : i ≠ j) (hkl : k ≠ l)
     (hjk : j ≠ k) (hli : l ≠ i)
     (A B : Matrix (Fin 3) (Fin 3) R) :
@@ -1530,7 +1545,7 @@ theorem finiteOuterElementaryRoot_commute_of_nonadjacent
     i j k l hij hkl hjk hli A B).eq
 
 omit [Algebra (ZMod 2) R] in
-theorem finiteOuterElementaryRoot_commute_same
+private theorem finiteOuterElementaryRoot_commute_same
     (i j : Fin 3) (hij : i ≠ j)
     (A B : Matrix (Fin 3) (Fin 3) R) :
     Commute
@@ -1552,7 +1567,7 @@ theorem finiteOuterElementaryRoot_commute_same
     _ = _ := map_mul (elementaryRootHom i j hij)
       (Multiplicative.ofAdd B) (Multiplicative.ofAdd A)
 
-def finiteBlockCoefficientMatrixRightMul
+private def finiteBlockCoefficientMatrixRightMul
     (W : Submodule (ZMod 2) R)
     (B : Matrix (Fin 3) (Fin 3) W) :
     Matrix (Fin 3) (Fin 3) W →+
@@ -1563,7 +1578,7 @@ def finiteBlockCoefficientMatrixRightMul
   map_zero' := by simp only [map_zero, zero_mul]
   map_add' A C := by simp only [map_add, add_mul]
 
-def finiteOuterBlockProductCentralRootHom
+private def finiteOuterBlockProductCentralRootHom
     (W : Submodule (ZMod 2) R)
     (i k : Fin 3) (hik : i ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W) :
@@ -1573,14 +1588,14 @@ def finiteOuterBlockProductCentralRootHom
     (R := Matrix (Fin 3) (Fin 3) R) i k hik).comp
       (finiteBlockCoefficientMatrixRightMul W B).toMultiplicative
 
-def finiteOuterBlockProductCentralRootSubgroup
+private def finiteOuterBlockProductCentralRootSubgroup
     (W : Submodule (ZMod 2) R)
     (i k : Fin 3) (hik : i ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W) :
     Subgroup (elementaryGroup (Fin 3) (Matrix (Fin 3) (Fin 3) R)) :=
   (finiteOuterBlockProductCentralRootHom W i k hik B).range
 
-theorem finiteOuterBlockRoot_commutator_mem_productCentral
+private theorem finiteOuterBlockRoot_commutator_mem_productCentral
     (W : Submodule (ZMod 2) R)
     (i j k : Fin 3) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
     (A B : Matrix (Fin 3) (Fin 3) W) :
@@ -1601,7 +1616,7 @@ theorem finiteOuterBlockRoot_commutator_mem_productCentral
     (finiteBlockCoefficientMatrixHom W A)
     (finiteBlockCoefficientMatrixHom W B)).symm
 
-theorem finiteOuterBlockRoot_commutator_exists_productCentral
+private theorem finiteOuterBlockRoot_commutator_exists_productCentral
     (W : Submodule (ZMod 2) R)
     (i j k : Fin 3) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
     (x y : elementaryGroup (Fin 3) (Matrix (Fin 3) (Fin 3) R))
@@ -1615,7 +1630,7 @@ theorem finiteOuterBlockRoot_commutator_exists_productCentral
     finiteOuterBlockRoot_commutator_mem_productCentral
       W i j k hij hjk hik A.toAdd B.toAdd⟩
 
-theorem finiteOuterBlockProductCentralRoot_commute_left
+private theorem finiteOuterBlockProductCentralRoot_commute_left
     (W : Submodule (ZMod 2) R)
     (i j k : Fin 3) (hij : i ≠ j) (hik : i ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W)
@@ -1630,7 +1645,7 @@ theorem finiteOuterBlockProductCentralRoot_commute_left
     (finiteBlockCoefficientMatrixHom W A.toAdd)
     (finiteBlockCoefficientMatrixRightMul W B C.toAdd)
 
-theorem finiteOuterBlockProductCentralRoot_commute_right
+private theorem finiteOuterBlockProductCentralRoot_commute_right
     (W : Submodule (ZMod 2) R)
     (i j k : Fin 3) (hjk : j ≠ k) (hik : i ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W)
@@ -1645,7 +1660,7 @@ theorem finiteOuterBlockProductCentralRoot_commute_right
     (finiteBlockCoefficientMatrixHom W A.toAdd)
     (finiteBlockCoefficientMatrixRightMul W B C.toAdd)
 
-theorem finiteOuterBlockProductCentralRoot_pair_le_centralizer
+private theorem finiteOuterBlockProductCentralRoot_pair_le_centralizer
     (W : Submodule (ZMod 2) R)
     (i j k : Fin 3) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W) :
@@ -1666,7 +1681,7 @@ theorem finiteOuterBlockProductCentralRoot_pair_le_centralizer
     exact (finiteOuterBlockProductCentralRoot_commute_right
       W i j k hjk hik B y z hy hz).symm.eq
 
-theorem finiteOuterBlockProductCentralRoots_commute
+private theorem finiteOuterBlockProductCentralRoots_commute
     (W : Submodule (ZMod 2) R)
     (i k : Fin 3) (hik : i ≠ k)
     (B C : Matrix (Fin 3) (Fin 3) W)
@@ -1680,7 +1695,7 @@ theorem finiteOuterBlockProductCentralRoots_commute
     (finiteBlockCoefficientMatrixRightMul W B A.toAdd)
     (finiteBlockCoefficientMatrixRightMul W C D.toAdd)
 
-def finiteBlockGaloisLeftProductCoefficientMatrix
+private def finiteBlockGaloisLeftProductCoefficientMatrix
     (W : Submodule (ZMod 2) R)
     (B : Matrix (Fin 3) (Fin 3) W)
     (t : finiteBlockGaloisField) :
@@ -1692,7 +1707,7 @@ def finiteBlockGaloisLeftProductCoefficientMatrix
         (finiteBlockCoefficientMatrixHom W B)
         (fun i j => (B i j).property) t p q⟩
 
-theorem finiteBlockCoefficientMatrixHom_galoisLeftProduct
+private theorem finiteBlockCoefficientMatrixHom_galoisLeftProduct
     (W : Submodule (ZMod 2) R)
     (B : Matrix (Fin 3) (Fin 3) W)
     (t : finiteBlockGaloisField) :
@@ -1703,7 +1718,7 @@ theorem finiteBlockCoefficientMatrixHom_galoisLeftProduct
   ext p q
   rfl
 
-def finiteOuterBlockGaloisConjugatorWithCoefficient
+private def finiteOuterBlockGaloisConjugatorWithCoefficient
     (W : Submodule (ZMod 2) R)
     (j k : Fin 3) (hjk : j ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W)
@@ -1714,7 +1729,7 @@ def finiteOuterBlockGaloisConjugatorWithCoefficient
       (finiteBlockGaloisMatrixOver R t *
         finiteBlockCoefficientMatrixHom W B))
 
-theorem finiteOuterBlockGaloisConjugatorWithCoefficient_mem
+private theorem finiteOuterBlockGaloisConjugatorWithCoefficient_mem
     (W : Submodule (ZMod 2) R)
     (j k : Fin 3) (hjk : j ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W)
@@ -1734,7 +1749,7 @@ theorem finiteOuterBlockGaloisConjugatorWithCoefficient_mem
             finiteBlockCoefficientMatrixHom W B))
   rw [finiteBlockCoefficientMatrixHom_galoisLeftProduct]
 
-def finiteOuterBlockGaloisConjugateRootWithCoefficient
+private def finiteOuterBlockGaloisConjugateRootWithCoefficient
     (W : Submodule (ZMod 2) R)
     (i j k : Fin 3) (hij : i ≠ j) (hjk : j ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W)
@@ -1746,7 +1761,7 @@ def finiteOuterBlockGaloisConjugateRootWithCoefficient
         W j k hjk B t)).toMonoidHom
 
 omit [Algebra (ZMod 2) R] in
-theorem finiteOuterElementaryRootConjugates_commute
+private theorem finiteOuterElementaryRootConjugates_commute
     (i j k : Fin 3) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
     (A C P Q : Matrix (Fin 3) (Fin 3) R) :
     Commute
@@ -1771,7 +1786,7 @@ theorem finiteOuterElementaryRootConjugates_commute
   exact (hzz.inv_inv.mul_right hzx.inv_left).mul_left
     (hxz.inv_right.mul_right hxx)
 
-theorem finiteOuterBlockGaloisConjugateRootsWithCoefficient_commute
+private theorem finiteOuterBlockGaloisConjugateRootsWithCoefficient_commute
     (W : Submodule (ZMod 2) R)
     (i j k : Fin 3) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W)
@@ -1793,7 +1808,7 @@ theorem finiteOuterBlockGaloisConjugateRootsWithCoefficient_commute
     (finiteBlockGaloisMatrixOver R t *
       finiteBlockCoefficientMatrixHom W B)
 
-def finiteBlockGaloisRightInverseCoefficientMatrix
+private def finiteBlockGaloisRightInverseCoefficientMatrix
     (W : Submodule (ZMod 2) R)
     (A : Matrix (Fin 3) (Fin 3) W)
     (s t : finiteBlockGaloisField) :
@@ -1805,7 +1820,7 @@ def finiteBlockGaloisRightInverseCoefficientMatrix
         (finiteBlockCoefficientMatrixHom W A)
         (fun i j => (A i j).property) (t - s)⁻¹ p q⟩
 
-theorem finiteBlockCoefficientMatrixHom_galoisRightInverse
+private theorem finiteBlockCoefficientMatrixHom_galoisRightInverse
     (W : Submodule (ZMod 2) R)
     (A : Matrix (Fin 3) (Fin 3) W)
     (s t : finiteBlockGaloisField) :
@@ -1816,7 +1831,7 @@ theorem finiteBlockCoefficientMatrixHom_galoisRightInverse
   ext p q
   rfl
 
-theorem finiteBlockGalois_right_inverse_difference
+private theorem finiteBlockGalois_right_inverse_difference
     (s t : finiteBlockGaloisField) (hst : s ≠ t)
     (C : Matrix (Fin 3) (Fin 3) R) :
     (C * finiteBlockGaloisMatrixOver R (t - s)⁻¹) *
@@ -1826,7 +1841,7 @@ theorem finiteBlockGalois_right_inverse_difference
   rw [← mul_sub, ← map_sub, mul_assoc, ← map_mul,
     inv_mul_cancel₀ (sub_ne_zero.mpr hst.symm), map_one, mul_one]
 
-theorem finiteOuterBlockProductCentralRoot_le_galoisConjugates
+private theorem finiteOuterBlockProductCentralRoot_le_galoisConjugates
     (W : Submodule (ZMod 2) R)
     (i j k : Fin 3) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k)
     (B : Matrix (Fin 3) (Fin 3) W)
@@ -1928,7 +1943,7 @@ end ActualBlockRoots
 
 universe u₁ v₁
 
-def UnitaryRepresentation.toRepresentation
+private def UnitaryRepresentation.toRepresentation
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) : Representation ℂ G H where
@@ -1944,20 +1959,20 @@ def UnitaryRepresentation.toRepresentation
       LinearIsometryEquiv.coe_mul,
       Function.comp_apply, Module.End.mul_apply]
 
-def unitaryFixedSubmodule
+private def unitaryFixedSubmodule
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) : Submodule ℂ H :=
   Representation.invariants (π.toRepresentation.comp K.subtype)
 
-@[simp] theorem mem_unitaryFixedSubmodule
+@[simp] private theorem mem_unitaryFixedSubmodule
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) (x : H) :
     x ∈ unitaryFixedSubmodule π K ↔ ∀ g : K, π (g : G) x = x :=
   Iff.rfl
 
-def unitaryVectorStabilizer
+private def unitaryVectorStabilizer
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (x : H) : Subgroup G where
@@ -1977,7 +1992,7 @@ def unitaryVectorStabilizer
     simpa only [map_inv, LinearIsometryEquiv.coe_inv, LinearIsometryEquiv.symm_apply_apply] using
       heq.symm
 
-theorem unitaryFixedSubmodule_sup
+private theorem unitaryFixedSubmodule_sup
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (K J : Subgroup G) :
@@ -2008,7 +2023,7 @@ theorem unitaryFixedSubmodule_sup
     intro g
     exact (sup_le hK hJ) g.property
 
-theorem unitaryFixedSubmodule_isClosed
+private theorem unitaryFixedSubmodule_isClosed
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) :
@@ -2023,14 +2038,14 @@ theorem unitaryFixedSubmodule_isClosed
   exact isClosed_iInter fun g =>
     isClosed_eq (π (g : G)).continuous continuous_id
 
-instance unitaryFixedSubmodule_completeSpace
+private instance unitaryFixedSubmodule_completeSpace
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) :
     CompleteSpace (unitaryFixedSubmodule π K) :=
   (unitaryFixedSubmodule_isClosed π K).isComplete.completeSpace_coe
 
-theorem unitaryFixedSubmodule_map_of_centralizes
+private theorem unitaryFixedSubmodule_map_of_centralizes
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) (g : G)
@@ -2067,7 +2082,7 @@ theorem unitaryFixedSubmodule_map_of_centralizes
       LinearIsometryEquiv.coe_toLinearEquiv,
         LinearIsometryEquiv.apply_symm_apply]
 
-theorem unitaryFixedSubmodule_starProjection_commute
+private theorem unitaryFixedSubmodule_starProjection_commute
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (π : UnitaryRepresentation G H) (K : Subgroup G) (g : G)
@@ -2080,7 +2095,7 @@ theorem unitaryFixedSubmodule_starProjection_commute
   simpa only [hmap, LinearIsometryEquiv.symm_apply_apply] using
     Submodule.starProjection_map_apply (π g) (unitaryFixedSubmodule π K) (π g x)
 
-theorem unitaryFixedSubmodule_starProjection_mem_of_commute
+private theorem unitaryFixedSubmodule_starProjection_mem_of_commute
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (π : UnitaryRepresentation G H) (K J : Subgroup G)
@@ -2097,7 +2112,7 @@ theorem unitaryFixedSubmodule_starProjection_mem_of_commute
     (fun k => (hcomm k j).symm) x
   simpa only [hj] using he.symm
 
-theorem norm_finset_sum_sq_eq_of_pairwise_inner_zero
+private theorem norm_finset_sum_sq_eq_of_pairwise_inner_zero
     {ι H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (f : ι → H) (s : Finset ι)
     (horth : ∀ ⦃i j : ι⦄, i ≠ j → inner ℂ (f i) (f j) = 0) :
@@ -2119,7 +2134,7 @@ theorem norm_finset_sum_sq_eq_of_pairwise_inner_zero
           exact hi hj)
       simp only [hzero, RCLike.re_to_complex, Complex.zero_re, mul_zero, add_zero, ih]
 
-theorem unitaryImages_inner_sq_mul_card_le
+private theorem unitaryImages_inner_sq_mul_card_le
     {ι H : Type*} [Fintype ι]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (U : ι → H ≃ₗᵢ[ℂ] H) (a b : H)
@@ -2173,7 +2188,7 @@ theorem unitaryImages_inner_sq_mul_card_le
       _ ≤ ((Fintype.card ι : ℝ) * ‖a‖ ^ 2) * ‖b‖ ^ 2 := hsq
       _ = (Fintype.card ι : ℝ) * (‖a‖ ^ 2 * ‖b‖ ^ 2) := by ring
 
-theorem unitaryFixedSubmodule_starProjection_mem_orthogonal_of_commute
+private theorem unitaryFixedSubmodule_starProjection_mem_orthogonal_of_commute
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (π : UnitaryRepresentation G H) (K Z : Subgroup G)
@@ -2196,7 +2211,7 @@ theorem unitaryFixedSubmodule_starProjection_mem_orthogonal_of_commute
       (Submodule.mem_orthogonal (unitaryFixedSubmodule π Z) x).mp hx
         ((unitaryFixedSubmodule π K).starProjection z) hpz
 
-theorem unitaryFixedSubmodule_orthogonal_map_of_centralizes
+private theorem unitaryFixedSubmodule_orthogonal_map_of_centralizes
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (Z : Subgroup G) (g : G)
@@ -2219,7 +2234,7 @@ theorem unitaryFixedSubmodule_orthogonal_map_of_centralizes
       (Submodule.mem_orthogonal (unitaryFixedSubmodule π Z) x).mp
         hx (π g⁻¹ z) hzpre
 
-theorem unitaryFixedSubmodules_inner_eq_zero_of_commute_centerComplement
+private theorem unitaryFixedSubmodules_inner_eq_zero_of_commute_centerComplement
     {G : Type u₁} {H : Type v₁} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     (π : UnitaryRepresentation G H) (K J Z : Subgroup G)
@@ -2259,12 +2274,12 @@ theorem unitaryFixedSubmodules_inner_eq_zero_of_commute_centerComplement
     (Submodule.starProjection_inner_eq_zero
       (K := unitaryFixedSubmodule π K) b a ha)
 
-def heisenbergConjugateSubgroup
+private def heisenbergConjugateSubgroup
     {G : Type*} [Group G] (X : Subgroup G) (g : G) :
     Subgroup G :=
   X.map (MulAut.conj g).toMonoidHom
 
-theorem heisenbergFiniteFamily_centerComplement_inner_sq_le
+private theorem heisenbergFiniteFamily_centerComplement_inner_sq_le
     {G : Type u₁} {H : Type v₁} {ι : Type*}
     [Group G] [Fintype ι]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -2315,7 +2330,7 @@ theorem heisenbergFiniteFamily_centerComplement_inner_sq_le
     (hcomm hij) (hJZ i) (hcenter hij)
     (hfix i) (hfix j) (horthZ j)
 
-theorem finiteOuterBlockProductCentral_centerComplement_inner_sq_le
+private theorem finiteOuterBlockProductCentral_centerComplement_inner_sq_le
     {R : Type*} [Ring R] [Algebra (ZMod 2) R]
     {H : Type v₁} [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -2381,12 +2396,12 @@ section FiniteSubgroupAveraging
 variable {G : Type*} {H : Type*} [Group G]
   [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
-def finiteUnitarySubgroupAverage
+private def finiteUnitarySubgroupAverage
     (π : UnitaryRepresentation G H)
     (K : Subgroup G) [Fintype K] (x : H) : H :=
   (Fintype.card K : ℂ)⁻¹ • ∑ k : K, π (k : G) x
 
-theorem finiteUnitarySubgroupAverage_fixed
+private theorem finiteUnitarySubgroupAverage_fixed
     (π : UnitaryRepresentation G H)
     (K : Subgroup G) [Fintype K] (x : H) (g : K) :
     π (g : G) (finiteUnitarySubgroupAverage π K x) =
@@ -2405,7 +2420,7 @@ theorem finiteUnitarySubgroupAverage_fixed
       Function.Bijective.sum_comp (Group.mulLeft_bijective g)
         (fun k : K => π (k : G) x)
 
-theorem inner_finiteUnitarySubgroupAverage_of_fixed_left
+private theorem inner_finiteUnitarySubgroupAverage_of_fixed_left
     (π : UnitaryRepresentation G H)
     (K : Subgroup G) [Fintype K] (a b : H)
     (ha : ∀ k : K, π (k : G) a = a) :
@@ -2426,7 +2441,7 @@ theorem inner_finiteUnitarySubgroupAverage_of_fixed_left
   simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, ne_eq, hcard, not_false_eq_true,
     inv_mul_cancel_left₀]
 
-theorem finiteUnitarySubgroupAverage_fixed_of_orbit_fixed
+private theorem finiteUnitarySubgroupAverage_fixed_of_orbit_fixed
     (π : UnitaryRepresentation G H)
     (K J : Subgroup G) [Fintype K] (b : H)
     (horbit : ∀ (k : K) (j : J),
@@ -2442,7 +2457,7 @@ theorem finiteUnitarySubgroupAverage_fixed_of_orbit_fixed
   intro k _
   exact horbit k j
 
-theorem inner_eq_zero_of_finite_subgroupAverage_pair_orthogonal
+private theorem inner_eq_zero_of_finite_subgroupAverage_pair_orthogonal
     (π : UnitaryRepresentation G H)
     (K J : Subgroup G) [Finite K] (a b : H)
     (ha : ∀ k : K, π (k : G) a = a)
@@ -2468,7 +2483,7 @@ theorem inner_eq_zero_of_finite_subgroupAverage_pair_orthogonal
 
 end FiniteSubgroupAveraging
 
-theorem finiteOuterBlockRootSubgroups_pair_inner_sq_le
+private theorem finiteOuterBlockRootSubgroups_pair_inner_sq_le
     {R : Type*} [Ring R] [Algebra (ZMod 2) R]
     {H : Type v₁} [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -2636,14 +2651,14 @@ theorem finiteOuterBlockRootSubgroups_pair_inner_sq_le
       exact ⟨(mem_unitaryFixedSubmodule π X z).mpr hzX,
         (mem_unitaryFixedSubmodule π Y z).mpr hzY⟩
 
-def finiteOuterBlockCyclicRootFamily
+private def finiteOuterBlockCyclicRootFamily
     {R : Type*} [Ring R] [Algebra (ZMod 2) R]
     (W : Submodule (ZMod 2) R) (i : Fin 3) :
     Subgroup (elementaryGroup (Fin 3) (Matrix (Fin 3) (Fin 3) R)) :=
   finiteOuterBlockRootSubgroup W i (i + 1) (by
     fin_cases i <;> decide)
 
-theorem finiteOuterBlockCyclicRootFamily_pair_inner_sq_le
+private theorem finiteOuterBlockCyclicRootFamily_pair_inner_sq_le
     {R : Type*} [Ring R] [Algebra (ZMod 2) R]
     {H : Type v₁} [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -2715,21 +2730,21 @@ section BinaryCoefficientSpan
 
 variable {R : Type u} [Ring R] [Algebra (ZMod 2) R]
 
-def finiteBlockCoefficientSpan (s : Finset R) : Submodule (ZMod 2) R :=
+private def finiteBlockCoefficientSpan (s : Finset R) : Submodule (ZMod 2) R :=
   Submodule.span (ZMod 2) ({1} ∪ (↑s : Set R))
 
-theorem one_mem_finiteBlockCoefficientSpan (s : Finset R) :
+private theorem one_mem_finiteBlockCoefficientSpan (s : Finset R) :
     (1 : R) ∈ finiteBlockCoefficientSpan s := by
   apply Submodule.subset_span
   exact Set.mem_union_left _ (Set.mem_singleton 1)
 
-theorem mem_finiteBlockCoefficientSpan_of_mem
+private theorem mem_finiteBlockCoefficientSpan_of_mem
     (s : Finset R) {a : R} (ha : a ∈ s) :
     a ∈ finiteBlockCoefficientSpan s := by
   apply Submodule.subset_span
   exact Set.mem_union_right _ ha
 
-instance finiteBlockCoefficientSpan_finite (s : Finset R) :
+private instance finiteBlockCoefficientSpan_finite (s : Finset R) :
     Finite (finiteBlockCoefficientSpan s) := by
   let : Module.Finite (ZMod 2) (finiteBlockCoefficientSpan s) :=
     Module.Finite.span_of_finite (ZMod 2)
@@ -2742,22 +2757,22 @@ section FiniteBlockRoots
 
 variable {R : Type u} [Ring R] [Algebra (ZMod 2) R]
 
-def finiteBlockIndex (i p : Fin 3) : Fin 9 :=
+private def finiteBlockIndex (i p : Fin 3) : Fin 9 :=
   finProdFinEquiv (i, p)
 
-theorem finiteBlockIndex_ne_of_ne
+private theorem finiteBlockIndex_ne_of_ne
     {i j : Fin 3} (hij : i ≠ j) (p q : Fin 3) :
     finiteBlockIndex i p ≠ finiteBlockIndex j q := by
   intro h
   exact hij (congrArg Prod.fst (finProdFinEquiv.injective h))
 
-def finiteBlockFlattenRingEquiv :
+private def finiteBlockFlattenRingEquiv :
     Matrix (Fin 3) (Fin 3) (Matrix (Fin 3) (Fin 3) R) ≃+*
       Matrix (Fin 9) (Fin 9) R :=
   (Matrix.compRingEquiv (Fin 3) (Fin 3) R).trans
     (Matrix.reindexRingEquiv R finProdFinEquiv)
 
-def finiteBlockRootHom
+private def finiteBlockRootHom
     (W : Submodule (ZMod 2) R) (i j : Fin 3) (hij : i ≠ j) :
     Multiplicative (Matrix (Fin 3) (Fin 3) W) →*
       (Matrix (Fin 9) (Fin 9) R)ˣ :=
@@ -2766,12 +2781,12 @@ def finiteBlockRootHom
       (elementaryRootHom (R := Matrix (Fin 3) (Fin 3) R) i j hij)).comp
         (finiteBlockCoefficientMatrixHom W).toMultiplicative)
 
-def finiteBlockRootSubgroup
+private def finiteBlockRootSubgroup
     (W : Submodule (ZMod 2) R) (i j : Fin 3) (hij : i ≠ j) :
     Subgroup (Matrix (Fin 9) (Fin 9) R)ˣ :=
   (finiteBlockRootHom W i j hij).range
 
-theorem finiteBlockRootHom_single
+private theorem finiteBlockRootHom_single
     (W : Submodule (ZMod 2) R)
     (i j : Fin 3) (hij : i ≠ j) (p q : Fin 3) (a : W) :
     finiteBlockRootHom W i j hij
@@ -2819,7 +2834,7 @@ theorem finiteBlockRootHom_single
     Matrix.single_apply,
     Equiv.eq_symm_apply, finiteBlockIndex]
 
-theorem elementaryUnit_mem_finiteBlockRootSubgroup
+private theorem elementaryUnit_mem_finiteBlockRootSubgroup
     (W : Submodule (ZMod 2) R)
     (i j : Fin 3) (hij : i ≠ j) (p q : Fin 3)
     (a : R) (ha : a ∈ W) :
@@ -2829,7 +2844,7 @@ theorem elementaryUnit_mem_finiteBlockRootSubgroup
   refine ⟨Multiplicative.ofAdd (Matrix.single p q (⟨a, ha⟩ : W)), ?_⟩
   exact finiteBlockRootHom_single W i j hij p q ⟨a, ha⟩
 
-theorem finiteBlockRootSubgroup_le_elementaryGroup
+private theorem finiteBlockRootSubgroup_le_elementaryGroup
     (W : Submodule (ZMod 2) R)
     (i j : Fin 3) (hij : i ≠ j) :
     finiteBlockRootSubgroup W i j hij ≤
@@ -2862,14 +2877,14 @@ theorem finiteBlockRootSubgroup_le_elementaryGroup
     rw [finiteBlockRootHom_single]
     exact elementaryUnit_mem _ _ _ (a : R)
 
-def cyclicFiniteBlockRootSubgroup
+private def cyclicFiniteBlockRootSubgroup
     (W : Submodule (ZMod 2) R) :
     Subgroup (Matrix (Fin 9) (Fin 9) R)ˣ :=
   finiteBlockRootSubgroup W 0 1 (by decide) ⊔
     finiteBlockRootSubgroup W 1 2 (by decide) ⊔
       finiteBlockRootSubgroup W 2 0 (by decide)
 
-theorem cyclicFiniteBlockRootSubgroup_le_elementaryGroup
+private theorem cyclicFiniteBlockRootSubgroup_le_elementaryGroup
     (W : Submodule (ZMod 2) R) :
     cyclicFiniteBlockRootSubgroup W ≤ elementaryGroup (Fin 9) R := by
   unfold cyclicFiniteBlockRootSubgroup
@@ -2879,7 +2894,7 @@ theorem cyclicFiniteBlockRootSubgroup_le_elementaryGroup
       (finiteBlockRootSubgroup_le_elementaryGroup W 1 2 (by decide)))
     (finiteBlockRootSubgroup_le_elementaryGroup W 2 0 (by decide))
 
-theorem elementaryUnit_mem_cyclicFiniteBlockRootSubgroup_of_block_ne
+private theorem elementaryUnit_mem_cyclicFiniteBlockRootSubgroup_of_block_ne
     (W : Submodule (ZMod 2) R) (hW : (1 : R) ∈ W)
     (i j : Fin 3) (hij : i ≠ j) (p q : Fin 3)
     (a : R) (ha : a ∈ W) :
@@ -2964,7 +2979,7 @@ theorem elementaryUnit_mem_cyclicFiniteBlockRootSubgroup_of_block_ne
   · exact h21 p q a ha
   · exact (hij rfl).elim
 
-theorem elementaryUnit_mem_cyclicFiniteBlockRootSubgroup
+private theorem elementaryUnit_mem_cyclicFiniteBlockRootSubgroup
     (W : Submodule (ZMod 2) R) (hW : (1 : R) ∈ W)
     (x y : Fin 9) (hxy : x ≠ y) (a : R) (ha : a ∈ W) :
     elementaryUnit x y hxy a ∈ cyclicFiniteBlockRootSubgroup W := by
@@ -2995,7 +3010,7 @@ theorem elementaryUnit_mem_cyclicFiniteBlockRootSubgroup
   · exact elementaryUnit_mem_cyclicFiniteBlockRootSubgroup_of_block_ne
       W hW i j hij p q a ha
 
-theorem cyclicFiniteBlockRootSubgroup_eq_elementaryGroup
+private theorem cyclicFiniteBlockRootSubgroup_eq_elementaryGroup
     (s : Finset R)
     (hs : Algebra.adjoin (ZMod 2) (↑s : Set R) = ⊤) :
     cyclicFiniteBlockRootSubgroup (finiteBlockCoefficientSpan s) =
@@ -3041,7 +3056,7 @@ open scoped BigOperators
 
 universe vSharp
 
-theorem hasPropertyT_of_finiteOuterBlockCyclicRootFamily_generate
+private theorem hasPropertyT_of_finiteOuterBlockCyclicRootFamily_generate
     {R : Type*} [Ring R] [Algebra (ZMod 2) R]
     (W : Submodule (ZMod 2) R) [Finite W]
     (hgen :
@@ -3084,14 +3099,14 @@ open scoped BigOperators
 
 universe vSharp
 
-def finiteOuterBlockFlattenHom
+private def finiteOuterBlockFlattenHom
     {R : Type*} [Ring R] :
     elementaryGroup (Fin 3) (Matrix (Fin 3) (Fin 3) R) →*
       (Matrix (Fin 9) (Fin 9) R)ˣ :=
   (Units.mapEquiv (finiteBlockFlattenRingEquiv (R := R)).toMulEquiv).toMonoidHom.comp
     (elementaryGroup (Fin 3) (Matrix (Fin 3) (Fin 3) R)).subtype
 
-theorem finiteOuterBlockRootSubgroup_map_flatten
+private theorem finiteOuterBlockRootSubgroup_map_flatten
     {R : Type*} [Ring R] [Algebra (ZMod 2) R]
     (W : Submodule (ZMod 2) R)
     (i j : Fin 3) (hij : i ≠ j) :
@@ -3104,7 +3119,7 @@ theorem finiteOuterBlockRootSubgroup_map_flatten
   rw [MonoidHom.map_range]
   rfl
 
-theorem finiteOuterBlockCyclicRootFamily_iSup_eq_top
+private theorem finiteOuterBlockCyclicRootFamily_iSup_eq_top
     {R : Type*} [Ring R] [Algebra (ZMod 2) R]
     (s : Finset R)
     (hs : Algebra.adjoin (ZMod 2) (↑s : Set R) = ⊤) :
@@ -3169,7 +3184,7 @@ theorem finiteOuterBlockCyclicRootFamily_iSup_eq_top
     (le_iSup (finiteOuterBlockCyclicRootFamily
       (finiteBlockCoefficientSpan s)) 2)
 
-theorem binaryLeavittElementaryNine_hasPropertyT_unconditional :
+private theorem binaryLeavittElementaryNine_hasPropertyT_unconditional :
     HasPropertyT.{0, vSharp} (binaryLeavittElementaryGroup 9) := by
   classical
   obtain ⟨s, hs⟩ :=
@@ -3209,27 +3224,27 @@ end
 
 namespace KunThomFiberCoarea
 
-def firstFiber {V : Type*} [DecidableEq V]
+private def firstFiber {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) (x : V) : Finset (V × V) :=
   U.filter (fun z => z.1 = x)
 
-def secondFiber {V : Type*} [DecidableEq V]
+private def secondFiber {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) (x : V) : Finset (V × V) :=
   U.filter (fun z => z.2 = x)
 
-def firstMultiplicity {V : Type*} [DecidableEq V]
+private def firstMultiplicity {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) (x : V) : ℕ :=
   (firstFiber U x).card
 
-def secondMultiplicity {V : Type*} [DecidableEq V]
+private def secondMultiplicity {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) (x : V) : ℕ :=
   (secondFiber U x).card
 
-def projFiber {V : Type*} [DecidableEq V] (π : V × V → V)
+private def projFiber {V : Type*} [DecidableEq V] (π : V × V → V)
     (U : Finset (V × V)) (x : V) : Finset (V × V) :=
   U.filter (fun z => π z = x)
 
-theorem sum_projFiber_card {V : Type*} [Fintype V] [DecidableEq V]
+private theorem sum_projFiber_card {V : Type*} [Fintype V] [DecidableEq V]
     (π : V × V → V) (U : Finset (V × V)) :
     (∑ x : V, (projFiber π U x).card) = U.card := by
   classical
@@ -3237,17 +3252,17 @@ theorem sum_projFiber_card {V : Type*} [Fintype V] [DecidableEq V]
     (Finset.card_eq_sum_card_fiberwise (f := π) (s := U) (t := Finset.univ) (fun _ _ =>
       Finset.mem_univ _)).symm
 
-theorem sum_firstFiber_card {V : Type*} [Fintype V] [DecidableEq V]
+private theorem sum_firstFiber_card {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) :
     (∑ x : V, (firstFiber U x).card) = U.card :=
   sum_projFiber_card Prod.fst U
 
-theorem sum_secondFiber_card {V : Type*} [Fintype V] [DecidableEq V]
+private theorem sum_secondFiber_card {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) :
     (∑ x : V, (secondFiber U x).card) = U.card :=
   sum_projFiber_card Prod.snd U
 
-theorem natDist_card_le_sdiff {α : Type*} [DecidableEq α]
+private theorem natDist_card_le_sdiff {α : Type*} [DecidableEq α]
     (A B : Finset α) :
     Nat.dist A.card B.card ≤ (A \ B).card + (B \ A).card := by
   have hA := Finset.card_sdiff_add_card_inter A B
@@ -3260,7 +3275,7 @@ theorem natDist_card_le_sdiff {α : Type*} [DecidableEq α]
   · rw [Nat.dist_eq_sub_of_le_right (Nat.le_of_not_ge h)]
     omega
 
-theorem projFiber_sdiff {V : Type*} [DecidableEq V]
+private theorem projFiber_sdiff {V : Type*} [DecidableEq V]
     (π : V × V → V) (U W : Finset (V × V)) (x : V) :
     projFiber π (U \ W) x = projFiber π U x \ projFiber π W x := by
   classical
@@ -3268,7 +3283,7 @@ theorem projFiber_sdiff {V : Type*} [DecidableEq V]
   simp only [projFiber, Finset.mem_filter, Finset.mem_sdiff]
   aesop
 
-theorem projMultiplicity_variation_le_relation_difference
+private theorem projMultiplicity_variation_le_relation_difference
     {V : Type*} [Fintype V] [DecidableEq V]
     (π : V × V → V) (U W : Finset (V × V)) :
     (∑ x : V, Nat.dist (projFiber π U x).card
@@ -3291,7 +3306,7 @@ theorem projMultiplicity_variation_le_relation_difference
     _ = (U \ W).card + (W \ U).card := by
           rw [sum_projFiber_card, sum_projFiber_card]
 
-theorem firstMultiplicity_variation_le_relation_difference
+private theorem firstMultiplicity_variation_le_relation_difference
     {V : Type*} [Fintype V] [DecidableEq V]
     (U W : Finset (V × V)) :
     (∑ x : V, Nat.dist (firstMultiplicity U x)
@@ -3299,7 +3314,7 @@ theorem firstMultiplicity_variation_le_relation_difference
         (U \ W).card + (W \ U).card :=
   projMultiplicity_variation_le_relation_difference Prod.fst U W
 
-theorem secondMultiplicity_variation_le_relation_difference
+private theorem secondMultiplicity_variation_le_relation_difference
     {V : Type*} [Fintype V] [DecidableEq V]
     (U W : Finset (V × V)) :
     (∑ x : V, Nat.dist (secondMultiplicity U x)
@@ -3307,20 +3322,20 @@ theorem secondMultiplicity_variation_le_relation_difference
         (U \ W).card + (W \ U).card :=
   projMultiplicity_variation_le_relation_difference Prod.snd U W
 
-def diagonalImage {V : Type*} [DecidableEq V]
+private def diagonalImage {V : Type*} [DecidableEq V]
     (p : Equiv.Perm V) (U : Finset (V × V)) : Finset (V × V) :=
   U.image (p.prodCongr p)
 
-def diagonalExit {V : Type*} [DecidableEq V]
+private def diagonalExit {V : Type*} [DecidableEq V]
     (p : Equiv.Perm V) (U : Finset (V × V)) : ℕ :=
   (U.filter fun z => (p.prodCongr p) z ∉ U).card
 
-theorem diagonalImage_card {V : Type*} [DecidableEq V]
+private theorem diagonalImage_card {V : Type*} [DecidableEq V]
     (p : Equiv.Perm V) (U : Finset (V × V)) :
     (diagonalImage p U).card = U.card := by
   exact Finset.card_image_of_injective U (p.prodCongr p).injective
 
-theorem projFiber_diagonalImage {V : Type*} [DecidableEq V]
+private theorem projFiber_diagonalImage {V : Type*} [DecidableEq V]
     (π : V × V → V) (p : Equiv.Perm V)
     (hπ : ∀ z : V × V, π ((p.prodCongr p) z) = p (π z))
     (U : Finset (V × V)) (x : V) :
@@ -3340,7 +3355,7 @@ theorem projFiber_diagonalImage {V : Type*} [DecidableEq V]
     refine ⟨⟨w, hw, hzw⟩, ?_⟩
     rw [← hzw, hπ w, hwproj]
 
-theorem projMultiplicity_diagonalImage {V : Type*} [DecidableEq V]
+private theorem projMultiplicity_diagonalImage {V : Type*} [DecidableEq V]
     (π : V × V → V) (p : Equiv.Perm V)
     (hπ : ∀ z : V × V, π ((p.prodCongr p) z) = p (π z))
     (U : Finset (V × V)) (x : V) :
@@ -3349,7 +3364,7 @@ theorem projMultiplicity_diagonalImage {V : Type*} [DecidableEq V]
   rw [projFiber_diagonalImage π p hπ U x]
   exact Finset.card_image_of_injective _ (p.prodCongr p).injective
 
-theorem diagonalImage_sdiff_eq_image_exit {V : Type*} [DecidableEq V]
+private theorem diagonalImage_sdiff_eq_image_exit {V : Type*} [DecidableEq V]
     (p : Equiv.Perm V) (U : Finset (V × V)) :
     diagonalImage p U \ U =
       (U.filter fun z => (p.prodCongr p) z ∉ U).image
@@ -3364,7 +3379,7 @@ theorem diagonalImage_sdiff_eq_image_exit {V : Type*} [DecidableEq V]
   · rintro ⟨w, ⟨hw, hwout⟩, hzw⟩
     exact ⟨⟨w, hw, hzw⟩, by simpa only [← hzw, Equiv.prodCongr_apply] using hwout⟩
 
-theorem diagonalImage_sdiff_cards {V : Type*} [DecidableEq V]
+private theorem diagonalImage_sdiff_cards {V : Type*} [DecidableEq V]
     (p : Equiv.Perm V) (U : Finset (V × V)) :
     (diagonalImage p U \ U).card = diagonalExit p U ∧
       (U \ diagonalImage p U).card = diagonalExit p U := by
@@ -3379,7 +3394,7 @@ theorem diagonalImage_sdiff_cards {V : Type*} [DecidableEq V]
   have hcard := diagonalImage_card p U
   exact ⟨hforward, by omega⟩
 
-theorem projMultiplicity_diagonal_variation_le_twice_exit
+private theorem projMultiplicity_diagonal_variation_le_twice_exit
     {V : Type*} [Fintype V] [DecidableEq V]
     (π : V × V → V) (p : Equiv.Perm V)
     (hπ : ∀ z : V × V, π ((p.prodCongr p) z) = p (π z))
@@ -3409,7 +3424,7 @@ theorem projMultiplicity_diagonal_variation_le_twice_exit
           rw [hforward, hbackward]
           omega
 
-theorem projMultiplicity_totalVariation_le_twice_diagonalBoundary
+private theorem projMultiplicity_totalVariation_le_twice_diagonalBoundary
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (π : V × V → V) (σ : ι → Equiv.Perm V)
     (hπ : ∀ (p : Equiv.Perm V) (z : V × V),
@@ -3434,7 +3449,7 @@ theorem projMultiplicity_totalVariation_le_twice_diagonalBoundary
           (fun i => (σ i).prodCongr (σ i)) U := by
           simp only [diagonalExit, Equiv.prodCongr_apply, boundary, Finset.mul_sum]
 
-theorem firstMultiplicity_totalVariation_le_twice_diagonalBoundary
+private theorem firstMultiplicity_totalVariation_le_twice_diagonalBoundary
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U : Finset (V × V)) :
     (∑ i : ι, ∑ x : V,
@@ -3445,7 +3460,7 @@ theorem firstMultiplicity_totalVariation_le_twice_diagonalBoundary
   projMultiplicity_totalVariation_le_twice_diagonalBoundary
     Prod.fst σ (fun _ _ => rfl) U
 
-theorem secondMultiplicity_totalVariation_le_twice_diagonalBoundary
+private theorem secondMultiplicity_totalVariation_le_twice_diagonalBoundary
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U : Finset (V × V)) :
     (∑ i : ι, ∑ x : V,
@@ -3456,16 +3471,16 @@ theorem secondMultiplicity_totalVariation_le_twice_diagonalBoundary
   projMultiplicity_totalVariation_le_twice_diagonalBoundary
     Prod.snd σ (fun _ _ => rfl) U
 
-def permutationVariation {V ι : Type*} [Fintype V] [Fintype ι]
+private def permutationVariation {V ι : Type*} [Fintype V] [Fintype ι]
     (σ : ι → Equiv.Perm V) (f : V → ℕ) : ℕ :=
   ∑ i : ι, ∑ x : V, Nat.dist (f (σ i x)) (f x)
 
-def positiveNatSupport {V : Type*} [Fintype V]
+private def positiveNatSupport {V : Type*} [Fintype V]
     (f : V → ℕ) : Finset V :=
   Finset.univ.filter (fun x => 0 < f x)
 
 @[simp]
-theorem mem_positiveNatSupport {V : Type*} [Fintype V]
+private theorem mem_positiveNatSupport {V : Type*} [Fintype V]
     (f : V → ℕ) (x : V) :
     x ∈ positiveNatSupport f ↔ 0 < f x := by
   simp only [positiveNatSupport, Finset.mem_filter, Finset.mem_univ, true_and]
@@ -3507,7 +3522,7 @@ theorem card_entering_eq_card_exiting
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, and_comm, P]
   omega
 
-theorem sum_indicator_nat_eq_mul_card
+private theorem sum_indicator_nat_eq_mul_card
     {V : Type*}
     (A : Finset V) (q : V → Prop) [DecidablePred q] (m : ℕ) :
     (∑ x ∈ A, if q x then m else 0) =
@@ -3523,7 +3538,7 @@ theorem sum_indicator_nat_eq_mul_card
           congr 1
           exact Finset.sum_boole (R := ℕ) q A
 
-theorem permutationVariation_subtract_layer
+private theorem permutationVariation_subtract_layer
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (f : V → ℕ)
     (A : Finset V) (m : ℕ)
@@ -3622,7 +3637,7 @@ theorem permutationVariation_subtract_layer
             ∑ i : ι, (A.filter fun x => σ i x ∉ A).card := by
           simp only [Finset.sum_add_distrib, Finset.mul_sum]
 
-theorem permutation_small_support_coarea
+private theorem permutation_small_support_coarea
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (h : ℝ)
     (hexp : ∀ A : Finset V,
@@ -3750,12 +3765,12 @@ theorem permutation_small_support_coarea
         Nat.dist_self,
         Std.le_refl]
 
-theorem natDist_sub_one_le (a b : ℕ) :
+private theorem natDist_sub_one_le (a b : ℕ) :
     Nat.dist (a - 1) (b - 1) ≤ Nat.dist a b := by
   simp only [Nat.dist]
   omega
 
-theorem natDist_zero_indicator_le (a b : ℕ) :
+private theorem natDist_zero_indicator_le (a b : ℕ) :
     Nat.dist (if a = 0 then 1 else 0)
       (if b = 0 then 1 else 0) ≤ Nat.dist a b := by
   by_cases ha : a = 0
@@ -3768,7 +3783,7 @@ theorem natDist_zero_indicator_le (a b : ℕ) :
       omega
     · simp only [ha, ↓reduceIte, hb, Nat.dist_self, zero_le]
 
-theorem permutationVariation_sub_one_le
+private theorem permutationVariation_sub_one_le
     {V ι : Type*} [Fintype V] [Fintype ι]
     (σ : ι → Equiv.Perm V) (f : V → ℕ) :
     permutationVariation σ (fun x => f x - 1) ≤
@@ -3780,7 +3795,7 @@ theorem permutationVariation_sub_one_le
   intro x _
   exact natDist_sub_one_le (f (σ i x)) (f x)
 
-theorem permutationVariation_zero_indicator_le
+private theorem permutationVariation_zero_indicator_le
     {V ι : Type*} [Fintype V] [Fintype ι]
     (σ : ι → Equiv.Perm V) (f : V → ℕ) :
     permutationVariation σ (fun x => if f x = 0 then 1 else 0) ≤
@@ -3792,17 +3807,17 @@ theorem permutationVariation_zero_indicator_le
   intro x _
   exact natDist_zero_indicator_le (f (σ i x)) (f x)
 
-def singletonSupport {V : Type*} [Fintype V]
+private def singletonSupport {V : Type*} [Fintype V]
     (f : V → ℕ) : Finset V :=
   Finset.univ.filter (fun x => f x = 1)
 
 @[simp]
-theorem mem_singletonSupport {V : Type*} [Fintype V]
+private theorem mem_singletonSupport {V : Type*} [Fintype V]
     (f : V → ℕ) (x : V) :
     x ∈ singletonSupport f ↔ f x = 1 := by
   simp only [singletonSupport, Finset.mem_filter, Finset.mem_univ, true_and]
 
-theorem excess_support_card_le_half_of_singletons
+private theorem excess_support_card_le_half_of_singletons
     {V : Type*} [Fintype V]
     (f : V → ℕ)
     (hsingle : Fintype.card V ≤ 2 * (singletonSupport f).card) :
@@ -3831,7 +3846,7 @@ theorem excess_support_card_le_half_of_singletons
     rfl
   omega
 
-theorem zero_support_card_le_half_of_singletons
+private theorem zero_support_card_le_half_of_singletons
     {V : Type*} [Fintype V]
     (f : V → ℕ)
     (hsingle : Fintype.card V ≤ 2 * (singletonSupport f).card) :
@@ -3862,7 +3877,7 @@ theorem zero_support_card_le_half_of_singletons
     rfl
   omega
 
-theorem excess_mass_le_of_diagonal_variation
+private theorem excess_mass_le_of_diagonal_variation
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (h : ℝ)
     (hexp : ∀ A : Finset V,
@@ -3886,7 +3901,7 @@ theorem excess_mass_le_of_diagonal_variation
     exact_mod_cast htotal
   linarith
 
-theorem zero_mass_le_of_diagonal_variation
+private theorem zero_mass_le_of_diagonal_variation
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (h : ℝ)
     (hexp : ∀ A : Finset V,
@@ -3917,7 +3932,7 @@ theorem zero_mass_le_of_diagonal_variation
   rw [hsum] at hcoarea
   linarith
 
-theorem first_excess_mass_le_diagonalBoundary
+private theorem first_excess_mass_le_diagonalBoundary
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U : Finset (V × V)) (h : ℝ)
     (hexp : ∀ A : Finset V,
@@ -3936,7 +3951,7 @@ theorem first_excess_mass_le_diagonalBoundary
   exact firstMultiplicity_totalVariation_le_twice_diagonalBoundary
     σ U
 
-theorem second_excess_mass_le_diagonalBoundary
+private theorem second_excess_mass_le_diagonalBoundary
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U : Finset (V × V)) (h : ℝ)
     (hexp : ∀ A : Finset V,
@@ -3955,7 +3970,7 @@ theorem second_excess_mass_le_diagonalBoundary
   exact secondMultiplicity_totalVariation_le_twice_diagonalBoundary
     σ U
 
-theorem first_zero_mass_le_diagonalBoundary
+private theorem first_zero_mass_le_diagonalBoundary
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U : Finset (V × V)) (h : ℝ)
     (hexp : ∀ A : Finset V,
@@ -3975,20 +3990,20 @@ theorem first_zero_mass_le_diagonalBoundary
   exact firstMultiplicity_totalVariation_le_twice_diagonalBoundary
     σ U
 
-def nonSingletonFirstEdges {V : Type*} [DecidableEq V]
+private def nonSingletonFirstEdges {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) : Finset (V × V) :=
   U.filter (fun z => firstMultiplicity U z.1 ≠ 1)
 
-def nonSingletonSecondEdges {V : Type*} [DecidableEq V]
+private def nonSingletonSecondEdges {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) : Finset (V × V) :=
   U.filter (fun z => secondMultiplicity U z.2 ≠ 1)
 
-def matchedFiberEdges {V : Type*} [DecidableEq V]
+private def matchedFiberEdges {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) : Finset (V × V) :=
   U.filter (fun z =>
     firstMultiplicity U z.1 = 1 ∧ secondMultiplicity U z.2 = 1)
 
-theorem firstFiber_nonSingletonFirstEdges
+private theorem firstFiber_nonSingletonFirstEdges
     {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) (x : V) :
     firstFiber (nonSingletonFirstEdges U) x =
@@ -4011,7 +4026,7 @@ theorem firstFiber_nonSingletonFirstEdges
       not_false_eq_true,
         ↓reduceIte]
 
-theorem secondFiber_nonSingletonSecondEdges
+private theorem secondFiber_nonSingletonSecondEdges
     {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) (x : V) :
     secondFiber (nonSingletonSecondEdges U) x =
@@ -4032,7 +4047,7 @@ theorem secondFiber_nonSingletonSecondEdges
     · simp only [secondFiber, nonSingletonSecondEdges, ne_eq, Finset.mem_filter, hz, and_false, hx,
         not_false_eq_true, ↓reduceIte]
 
-theorem card_nonSingletonFirstEdges_le_twice_excess
+private theorem card_nonSingletonFirstEdges_le_twice_excess
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) :
     (nonSingletonFirstEdges U).card ≤
@@ -4058,7 +4073,7 @@ theorem card_nonSingletonFirstEdges_le_twice_excess
     _ = 2 * ∑ x : V, (firstMultiplicity U x - 1) := by
           rw [Finset.mul_sum]
 
-theorem card_nonSingletonSecondEdges_le_twice_excess
+private theorem card_nonSingletonSecondEdges_le_twice_excess
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) :
     (nonSingletonSecondEdges U).card ≤
@@ -4084,7 +4099,7 @@ theorem card_nonSingletonSecondEdges_le_twice_excess
     _ = 2 * ∑ x : V, (secondMultiplicity U x - 1) := by
           rw [Finset.mul_sum]
 
-theorem nonmatchedFiberEdges_subset
+private theorem nonmatchedFiberEdges_subset
     {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) :
     U \ matchedFiberEdges U ⊆
@@ -4104,7 +4119,7 @@ theorem nonmatchedFiberEdges_subset
   · apply Finset.mem_union_left
     exact Finset.mem_filter.mpr ⟨hzU, hfirst⟩
 
-theorem card_nonmatchedFiberEdges_le_twice_excess
+private theorem card_nonmatchedFiberEdges_le_twice_excess
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) :
     (U \ matchedFiberEdges U).card ≤
@@ -4123,11 +4138,11 @@ theorem card_nonmatchedFiberEdges_le_twice_excess
         (card_nonSingletonFirstEdges_le_twice_excess U)
         (card_nonSingletonSecondEdges_le_twice_excess U)
 
-def singletonFirstEdges {V : Type*} [DecidableEq V]
+private def singletonFirstEdges {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) : Finset (V × V) :=
   U.filter (fun z => firstMultiplicity U z.1 = 1)
 
-theorem firstFiber_singletonFirstEdges
+private theorem firstFiber_singletonFirstEdges
     {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) (x : V) :
     firstFiber (singletonFirstEdges U) x =
@@ -4145,7 +4160,7 @@ theorem firstFiber_singletonFirstEdges
     · simp only [firstFiber, singletonFirstEdges, Finset.mem_filter, hz, and_false, hx, ↓reduceIte,
         Finset.notMem_empty]
 
-theorem card_singletonFirstEdges
+private theorem card_singletonFirstEdges
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) :
     (singletonFirstEdges U).card =
@@ -4165,7 +4180,7 @@ theorem card_singletonFirstEdges
     _ = (singletonSupport (firstMultiplicity U)).card := by
           simp only [Finset.sum_boole, Nat.cast_id, singletonSupport]
 
-theorem singletonFirstEdges_subset_matching_union
+private theorem singletonFirstEdges_subset_matching_union
     {V : Type*} [DecidableEq V]
     (U : Finset (V × V)) :
     singletonFirstEdges U ⊆
@@ -4179,7 +4194,7 @@ theorem singletonFirstEdges_subset_matching_union
   · apply Finset.mem_union_right
     exact Finset.mem_filter.mpr ⟨hzU, hcol⟩
 
-theorem card_singletonSupport_le_matching_add_column_excess
+private theorem card_singletonSupport_le_matching_add_column_excess
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) :
     (singletonSupport (firstMultiplicity U)).card ≤
@@ -4198,7 +4213,7 @@ theorem card_singletonSupport_le_matching_add_column_excess
       Nat.add_le_add_left
         (card_nonSingletonSecondEdges_le_twice_excess U) _
 
-theorem card_le_zero_singleton_excess
+private theorem card_le_zero_singleton_excess
     {V : Type*} [Fintype V]
     (f : V → ℕ) :
     Fintype.card V ≤
@@ -4225,7 +4240,7 @@ theorem card_le_zero_singleton_excess
           ∑ x : V, (f x - 1 : ℕ) := by
           simp only [Finset.sum_add_distrib, Finset.sum_boole, Nat.cast_id, singletonSupport]
 
-theorem unmatched_vertices_le_zero_and_excess
+private theorem unmatched_vertices_le_zero_and_excess
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) :
     Fintype.card V - (matchedFiberEdges U).card ≤
@@ -4237,7 +4252,7 @@ theorem unmatched_vertices_le_zero_and_excess
   have hsingle := card_singletonSupport_le_matching_add_column_excess U
   omega
 
-theorem matchedFiberEdges_relation_loss_bound
+private theorem matchedFiberEdges_relation_loss_bound
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U : Finset (V × V))
     (h : ℝ) (hpositive : 0 < h)
@@ -4287,7 +4302,7 @@ theorem matchedFiberEdges_relation_loss_bound
           (fun i => (σ i).prodCongr (σ i)) U : ℝ) := by
       linarith
 
-theorem matchedFiberEdges_vertex_loss_bound
+private theorem matchedFiberEdges_vertex_loss_bound
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U : Finset (V × V))
     (h : ℝ) (hpositive : 0 < h)
@@ -4344,7 +4359,7 @@ theorem matchedFiberEdges_vertex_loss_bound
           (fun i => (σ i).prodCongr (σ i)) U : ℝ) := by
       linarith
 
-theorem exists_permutation_extending_matchedFiberEdges
+private theorem exists_permutation_extending_matchedFiberEdges
     {V : Type*} [DecidableEq V] (U : Finset (V × V)) :
     ∃ p : Equiv.Perm V,
       ∀ z ∈ matchedFiberEdges U, p z.1 = z.2 := by
@@ -4389,7 +4404,7 @@ theorem exists_permutation_extending_matchedFiberEdges
   intro z hz
   exact hp ⟨z, hz⟩
 
-theorem exists_permutationGraph_containing_matchedFiberEdges
+private theorem exists_permutationGraph_containing_matchedFiberEdges
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) :
     ∃ p : Equiv.Perm V,
@@ -4412,7 +4427,7 @@ theorem permutationGraph_card
   simpa only [permutationGraph, Finset.card_univ] using (Finset.card_image_of_injective Finset.univ
     hinj)
 
-theorem permutationGraph_sdiff_bounds_of_matchedFiberEdges
+private theorem permutationGraph_sdiff_bounds_of_matchedFiberEdges
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) (p : Equiv.Perm V)
     (hp : matchedFiberEdges U ⊆ permutationGraph p) :
@@ -4452,7 +4467,7 @@ theorem permutationGraph_sdiff_bounds_of_matchedFiberEdges
     rw [Finset.inter_comm]
   constructor <;> omega
 
-theorem boundary_le_boundary_add_sdiff
+private theorem boundary_le_boundary_add_sdiff
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U W : Finset V) :
     boundary σ U ≤ boundary σ W +
@@ -4507,7 +4522,7 @@ theorem boundary_le_boundary_add_sdiff
             smul_eq_mul,
             mul_add]
 
-theorem exists_boundary_controlled_permutation_repair
+private theorem exists_boundary_controlled_permutation_repair
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U : Finset (V × V))
     (h : ℝ) (hpositive : 0 < h)
@@ -4582,7 +4597,7 @@ theorem exists_boundary_controlled_permutation_repair
             (fun i => (σ i).prodCongr (σ i)) U : ℝ) := by
       nlinarith
 
-theorem permutationDistance_eq_card_permutationGraph_sdiff
+private theorem permutationDistance_eq_card_permutationGraph_sdiff
     {V : Type*} [Fintype V] [DecidableEq V]
     (p q : Equiv.Perm V) :
     permutationDistance p q =
@@ -4612,7 +4627,7 @@ theorem permutationDistance_eq_card_permutationGraph_sdiff
         (hzsecond.trans heq)
     · exact Prod.ext rfl hzsecond.symm
 
-theorem permutationDistance_le_matching_loss_add_reference
+private theorem permutationDistance_le_matching_loss_add_reference
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) (q p : Equiv.Perm V)
     (hq : matchedFiberEdges U ⊆ permutationGraph q) :
@@ -4648,7 +4663,7 @@ theorem permutationDistance_le_matching_loss_add_reference
           (U \ permutationGraph p).card :=
       Nat.add_le_add_right hleft _
 
-theorem exists_boundary_controlled_permutation_repair_close_to_reference
+private theorem exists_boundary_controlled_permutation_repair_close_to_reference
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (U : Finset (V × V))
     (p : Equiv.Perm V) (h : ℝ) (hpositive : 0 < h)
@@ -4685,7 +4700,7 @@ theorem exists_boundary_controlled_permutation_repair_close_to_reference
   have hscaled := mul_le_mul_of_nonneg_left hdistance_real hpositive.le
   nlinarith
 
-theorem hasAlmostCentralizerImprovement_of_expanding_diagonal_cuts
+private theorem hasAlmostCentralizerImprovement_of_expanding_diagonal_cuts
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (tolerance : ℕ)
     (h : ℝ) (hpositive : 0 < h)
@@ -4734,7 +4749,7 @@ theorem hasAlmostCentralizerImprovement_of_expanding_diagonal_cuts
     exact_mod_cast hdistance_real
   exact ⟨q, hdefect, hdistance⟩
 
-theorem projMultiplicity_permutationGraph
+private theorem projMultiplicity_permutationGraph
     {V : Type*} [Fintype V] [DecidableEq V]
     (π : V × V → V) (p : Equiv.Perm V) (w : V → V × V)
     (hmem : ∀ x, w x ∈ permutationGraph p)
@@ -4754,7 +4769,7 @@ theorem projMultiplicity_permutationGraph
       exact ⟨hmem x, hproj x⟩
   rw [hset, Finset.card_singleton]
 
-theorem firstMultiplicity_permutationGraph
+private theorem firstMultiplicity_permutationGraph
     {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (x : V) :
     firstMultiplicity (permutationGraph p) x = 1 :=
@@ -4765,7 +4780,7 @@ theorem firstMultiplicity_permutationGraph
       ((mem_permutationGraph p z.1 z.2).mp hz).symm)
     x
 
-theorem secondMultiplicity_permutationGraph
+private theorem secondMultiplicity_permutationGraph
     {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (x : V) :
     secondMultiplicity (permutationGraph p) x = 1 :=
@@ -4779,7 +4794,7 @@ theorem secondMultiplicity_permutationGraph
       rfl)
     x
 
-theorem card_nonSingletonMultiplicity_le_total_distance
+private theorem card_nonSingletonMultiplicity_le_total_distance
     {V : Type*} [Fintype V]
     (f : V → ℕ) :
     (Finset.univ.filter fun x : V => f x ≠ 1).card ≤
@@ -4799,7 +4814,7 @@ theorem card_nonSingletonMultiplicity_le_total_distance
           · simp only [ne_eq, hx, not_false_eq_true, ↓reduceIte, Nat.dist]
             omega
 
-theorem card_nonSingletonFirstMultiplicity_le_reference_difference
+private theorem card_nonSingletonFirstMultiplicity_le_reference_difference
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) (p : Equiv.Perm V) :
     (Finset.univ.filter fun x : V =>
@@ -4813,7 +4828,7 @@ theorem card_nonSingletonFirstMultiplicity_le_reference_difference
   simp_rw [firstMultiplicity_permutationGraph] at hvariation
   exact hcount.trans hvariation
 
-theorem card_nonSingletonSecondMultiplicity_le_reference_difference
+private theorem card_nonSingletonSecondMultiplicity_le_reference_difference
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) (p : Equiv.Perm V) :
     (Finset.univ.filter fun x : V =>
@@ -4827,7 +4842,7 @@ theorem card_nonSingletonSecondMultiplicity_le_reference_difference
   simp_rw [secondMultiplicity_permutationGraph] at hvariation
   exact hcount.trans hvariation
 
-theorem first_singleton_half_of_reference_difference
+private theorem first_singleton_half_of_reference_difference
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) (p : Equiv.Perm V)
     (hnear :
@@ -4847,7 +4862,7 @@ theorem first_singleton_half_of_reference_difference
         firstMultiplicity U x = 1))
   omega
 
-theorem second_singleton_half_of_reference_difference
+private theorem second_singleton_half_of_reference_difference
     {V : Type*} [Fintype V] [DecidableEq V]
     (U : Finset (V × V)) (p : Equiv.Perm V)
     (hnear :
@@ -4909,7 +4924,7 @@ universe u
 open Filter
 open scoped BigOperators ComplexOrder InnerProductSpace Topology
 
-theorem sum_sq_le_sq_sum_of_same_sign
+private theorem sum_sq_le_sq_sum_of_same_sign
     {ι : Type*} [Fintype ι] (a : ι → ℝ)
     (h : (∀ i, 0 ≤ a i) ∨ (∀ i, a i ≤ 0)) :
     (∑ i, a i ^ 2) ≤ (∑ i, a i) ^ 2 := by
@@ -4920,7 +4935,7 @@ theorem sum_sq_le_sq_sum_of_same_sign
       (fun i _ => neg_nonneg.mpr (h i))
     simpa only [sq, ge_iff_le, mul_neg, neg_mul, neg_neg, Finset.sum_neg_distrib] using hn
 
-theorem indicator_displacements_same_sign
+private theorem indicator_displacements_same_sign
     {ι V : Type*} (p : ι → V → V) (f : V → ℝ)
     (hf : ∀ x, f x = 0 ∨ f x = 1) (x : V) :
     (∀ i, 0 ≤ f (p i x) - f x) ∨
@@ -4933,7 +4948,7 @@ theorem indicator_displacements_same_sign
     intro i
     rcases hf (p i x) with hi | hi <;> simp [hx, hi]
 
-theorem sum_indicator_displacement_sq_le
+private theorem sum_indicator_displacement_sq_le
     {ι V : Type*} [Fintype ι] (p : ι → V → V) (f : V → ℝ)
     (hf : ∀ x, f x = 0 ∨ f x = 1) (x : V) :
     (∑ i, (f (p i x) - f x) ^ 2) ≤
@@ -4941,7 +4956,7 @@ theorem sum_indicator_displacement_sq_le
   sum_sq_le_sq_sum_of_same_sign _
     (indicator_displacements_same_sign p f hf x)
 
-theorem sum_sum_indicator_displacement_sq_le
+private theorem sum_sum_indicator_displacement_sq_le
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → V → V) (f : V → ℝ)
     (hf : ∀ x, f x = 0 ∨ f x = 1) :
@@ -4951,7 +4966,7 @@ theorem sum_sum_indicator_displacement_sq_le
   exact Finset.sum_le_sum fun x _ =>
     sum_indicator_displacement_sq_le p f hf x
 
-theorem sum_sum_indicator_displacement_sq_le_card_sq_mul_markov_defect
+private theorem sum_sum_indicator_displacement_sq_le_card_sq_mul_markov_defect
     {ι V : Type*} [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → V → V) (f : V → ℝ)
     (hf : ∀ x, f x = 0 ∨ f x = 1) :
@@ -4977,11 +4992,11 @@ theorem sum_sum_indicator_displacement_sq_le_card_sq_mul_markov_defect
       rw [Finset.mul_sum]
       exact Finset.sum_congr rfl fun x _ => (hpoint x).symm
 
-def permutationUnitary {V : Type*} [Fintype V] (p : Equiv.Perm V) :
+private def permutationUnitary {V : Type*} [Fintype V] (p : Equiv.Perm V) :
     EuclideanSpace ℂ V ≃ₗᵢ[ℂ] EuclideanSpace ℂ V :=
   LinearIsometryEquiv.piLpCongrLeft 2 ℂ ℂ p
 
-theorem permutationUnitary_mul {V : Type*} [Fintype V]
+private theorem permutationUnitary_mul {V : Type*} [Fintype V]
     (p q : Equiv.Perm V) (ξ : EuclideanSpace ℂ V) :
     permutationUnitary (p * q) ξ =
       permutationUnitary p (permutationUnitary q ξ) := by
@@ -4990,14 +5005,14 @@ theorem permutationUnitary_mul {V : Type*} [Fintype V]
   rw [Equiv.Perm.mul_def, Equiv.symm_trans_apply]
 
 @[simp]
-theorem permutationUnitary_one {V : Type*} [Fintype V]
+private theorem permutationUnitary_one {V : Type*} [Fintype V]
     (ξ : EuclideanSpace ℂ V) :
     permutationUnitary (1 : Equiv.Perm V) ξ = ξ := by
   ext x
   change ξ x = ξ x
   rfl
 
-theorem permutationUnitary_eq_of_agree_on_support
+private theorem permutationUnitary_eq_of_agree_on_support
     {V : Type*} [Fintype V] (p q : Equiv.Perm V)
     (ξ : EuclideanSpace ℂ V)
     (h : ∀ x : V, ξ x ≠ 0 → p x = q x) :
@@ -5020,7 +5035,7 @@ theorem permutationUnitary_eq_of_agree_on_support
       simpa only [Equiv.apply_symm_apply] using (h (p.symm y) hp).symm
     rw [hsame]
 
-theorem permutationUnitary_model_mul_of_agree_on_support
+private theorem permutationUnitary_model_mul_of_agree_on_support
     {G V : Type*} [Group G] [Fintype V]
     (σ : G → Equiv.Perm V) (a g : G) (ξ : EuclideanSpace ℂ V)
     (hroot : ∀ x : V, ξ x ≠ 0 →
@@ -5031,17 +5046,19 @@ theorem permutationUnitary_model_mul_of_agree_on_support
     (σ (a * g)) (σ a * σ g) ξ hroot,
     permutationUnitary_mul]
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def indicatorVector {V : Type*}
     (f : V → ℝ) : EuclideanSpace ℂ V :=
   WithLp.toLp 2 fun x => (f x : ℂ)
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def permutationMarkov {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (ξ : EuclideanSpace ℂ V) :
     EuclideanSpace ℂ V :=
   (Fintype.card ι : ℂ)⁻¹ • ∑ i, permutationUnitary (p i) ξ
 
 @[simp]
-theorem permutationMarkov_apply {ι V : Type*} [Fintype ι] [Fintype V]
+private theorem permutationMarkov_apply {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (ξ : EuclideanSpace ℂ V) (x : V) :
     permutationMarkov p ξ x =
       (∑ i, ξ ((p i).symm x)) / (Fintype.card ι : ℂ) := by
@@ -5050,7 +5067,7 @@ theorem permutationMarkov_apply {ι V : Type*} [Fintype ι] [Fintype V]
       smul_eq_mul, div_eq_mul_inv,
     mul_comm]
 
-theorem permutation_indicator_displacement_norm_sq
+private theorem permutation_indicator_displacement_norm_sq
     {V : Type*} [Fintype V] (p : Equiv.Perm V) (f : V → ℝ) :
     ‖permutationUnitary p (indicatorVector f) - indicatorVector f‖ ^ 2 =
       ∑ x, (f (p.symm x) - f x) ^ 2 := by
@@ -5062,7 +5079,7 @@ theorem permutation_indicator_displacement_norm_sq
   rw [← Complex.ofReal_sub, Complex.norm_real, Real.norm_eq_abs,
     sq_abs]
 
-theorem permutation_indicator_markov_defect_norm_sq
+private theorem permutation_indicator_markov_defect_norm_sq
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) :
     ‖permutationMarkov p (indicatorVector f) - indicatorVector f‖ ^ 2 =
@@ -5084,7 +5101,7 @@ theorem permutation_indicator_markov_defect_norm_sq
     norm_cast
   rw [hcast, Complex.norm_real, Real.norm_eq_abs, sq_abs]
 
-theorem sum_permutation_indicator_displacement_norm_sq_le
+private theorem sum_permutation_indicator_displacement_norm_sq_le
     {ι V : Type*} [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (hf : ∀ x, f x = 0 ∨ f x = 1) :
@@ -5098,7 +5115,7 @@ theorem sum_permutation_indicator_displacement_norm_sq_le
   exact sum_sum_indicator_displacement_sq_le_card_sq_mul_markov_defect
     (fun i x => (p i).symm x) f hf
 
-theorem permutation_indicator_displacement_norm_le_card_mul_markov_defect
+private theorem permutation_indicator_displacement_norm_le_card_mul_markov_defect
     {ι V : Type*} [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (hf : ∀ x, f x = 0 ∨ f x = 1) (i : ι) :
@@ -5128,7 +5145,7 @@ theorem permutation_indicator_displacement_norm_le_card_mul_markov_defect
   exact (sq_le_sq₀ (norm_nonneg _) (mul_nonneg (by positivity)
     (norm_nonneg _))).mp hsq
 
-def normalizedIndicatorDisplacement
+private def normalizedIndicatorDisplacement
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) (q : Equiv.Perm V) :
     EuclideanSpace ℂ V :=
@@ -5136,7 +5153,7 @@ def normalizedIndicatorDisplacement
       indicatorVector f‖ : ℝ) : ℂ)⁻¹ •
     (permutationUnitary q (indicatorVector f) - indicatorVector f)
 
-theorem norm_normalizedIndicatorDisplacement_generator_le
+private theorem norm_normalizedIndicatorDisplacement_generator_le
     {ι V : Type*} [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (hf : ∀ x, f x = 0 ∨ f x = 1)
@@ -5153,7 +5170,7 @@ theorem norm_normalizedIndicatorDisplacement_generator_le
   simpa only [mul_comm] using permutation_indicator_displacement_norm_le_card_mul_markov_defect p f
     hf i
 
-theorem normalizedIndicatorDisplacement_mul
+private theorem normalizedIndicatorDisplacement_mul
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (q r : Equiv.Perm V) :
@@ -5165,7 +5182,7 @@ theorem normalizedIndicatorDisplacement_mul
   simp only [map_smul, map_sub, smul_sub]
   abel
 
-theorem norm_normalizedIndicatorDisplacement_list_prod_le
+private theorem norm_normalizedIndicatorDisplacement_list_prod_le
     {ι V : Type*} [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (hf : ∀ x, f x = 0 ∨ f x = 1)
@@ -5201,7 +5218,7 @@ theorem norm_normalizedIndicatorDisplacement_list_prod_le
           simp only [List.length_cons, Nat.cast_add, Nat.cast_one]
           ring
 
-def normalizedIndicatorDefect
+private def normalizedIndicatorDefect
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) :
     EuclideanSpace ℂ V :=
@@ -5209,7 +5226,7 @@ def normalizedIndicatorDefect
       indicatorVector f‖ : ℝ) : ℂ)⁻¹ •
     (permutationMarkov p (indicatorVector f) - indicatorVector f)
 
-theorem norm_normalizedIndicatorDefect
+private theorem norm_normalizedIndicatorDefect
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (hdefect : permutationMarkov p (indicatorVector f) ≠
@@ -5222,7 +5239,7 @@ theorem norm_normalizedIndicatorDefect
     hne,
     not_false_eq_true, inv_mul_cancel₀]
 
-theorem average_permutation_indicator_displacement
+private theorem average_permutation_indicator_displacement
     {ι V : Type*} [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) :
     (Fintype.card ι : ℂ)⁻¹ •
@@ -5236,7 +5253,7 @@ theorem average_permutation_indicator_displacement
   simp only [smul_sub, smul_smul, ne_eq, hd, not_false_eq_true, inv_mul_cancel₀, one_smul,
     permutationMarkov]
 
-theorem average_normalizedIndicatorDisplacement
+private theorem average_normalizedIndicatorDisplacement
     {ι V : Type*} [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) :
     (Fintype.card ι : ℂ)⁻¹ •
@@ -5247,7 +5264,7 @@ theorem average_normalizedIndicatorDisplacement
     average_permutation_indicator_displacement]
   rfl
 
-theorem normalizedIndicatorDisplacement_cocycle_of_agree_on_support
+private theorem normalizedIndicatorDisplacement_cocycle_of_agree_on_support
     {G ι V : Type*} [Group G] [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (σ : G → Equiv.Perm V) (a g : G)
@@ -5263,7 +5280,7 @@ theorem normalizedIndicatorDisplacement_cocycle_of_agree_on_support
   simp only [map_smul, map_sub, smul_sub]
   abel
 
-def normalizedPairDisplacement
+private def normalizedPairDisplacement
     {G ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (σ : G → Equiv.Perm V) (q : G × G) :
@@ -5271,7 +5288,7 @@ def normalizedPairDisplacement
   normalizedIndicatorDisplacement p f (σ q.1) -
     normalizedIndicatorDisplacement p f (σ q.2)
 
-theorem normalizedPairDisplacement_diagonal
+private theorem normalizedPairDisplacement_diagonal
     {G ι V : Type*} [Group G] [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (σ : G → Equiv.Perm V) (a g h : G)
@@ -5289,7 +5306,7 @@ theorem normalizedPairDisplacement_diagonal
       p f σ a h hh, map_sub]
   abel
 
-theorem normalizedPairDisplacement_inner_diagonal
+private theorem normalizedPairDisplacement_inner_diagonal
     {G ι V : Type*} [Group G] [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (σ : G → Equiv.Perm V) (a g h j k : G)
@@ -5311,7 +5328,7 @@ theorem normalizedPairDisplacement_inner_diagonal
     normalizedPairDisplacement_diagonal p f σ a j k hj hk]
   exact (permutationUnitary (σ a)).inner_map_map _ _
 
-theorem normalizedPairDisplacement_add
+private theorem normalizedPairDisplacement_add
     {G ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (σ : G → Equiv.Perm V) (g h j : G) :
@@ -5321,7 +5338,7 @@ theorem normalizedPairDisplacement_add
   unfold normalizedPairDisplacement
   abel
 
-theorem norm_normalizedPairDisplacement_le_of_words
+private theorem norm_normalizedPairDisplacement_le_of_words
     {G ι V : Type*} [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (hf : ∀ x, f x = 0 ∨ f x = 1)
@@ -5351,7 +5368,7 @@ theorem norm_normalizedPairDisplacement_le_of_words
           ((w g).length + (w h).length) := by
       ring
 
-theorem exists_hyperfilter_gram_limit_of_pointwise_bound
+private theorem exists_hyperfilter_gram_limit_of_pointwise_bound
     {I : Type*} {H : ℕ → Type*}
     [∀ n, SeminormedAddCommGroup (H n)]
     [∀ n, InnerProductSpace ℂ (H n)]
@@ -5399,7 +5416,7 @@ theorem exists_hyperfilter_gram_limit_of_pointwise_bound
     (Filter.hyperfilter ℕ) (𝓝 (L (i, j) : ℂ)) at hcomp
   exact hcomp
 
-theorem gram_posSemidef_infinite
+private theorem gram_posSemidef_infinite
     {I H : Type*} [SeminormedAddCommGroup H]
     [InnerProductSpace ℂ H] (v : I → H) :
     (Matrix.gram ℂ v).PosSemidef := by
@@ -5422,7 +5439,7 @@ theorem gram_posSemidef_infinite
         Matrix.gram_apply, RCLike.star_def]
       ring
 
-theorem exists_hyperfilter_positive_gram_kernel_of_pointwise_bound
+private theorem exists_hyperfilter_positive_gram_kernel_of_pointwise_bound
     {I : Type*} {H : ℕ → Type*}
     [∀ n, SeminormedAddCommGroup (H n)]
     [∀ n, InnerProductSpace ℂ (H n)]
@@ -5463,7 +5480,7 @@ theorem exists_hyperfilter_positive_gram_kernel_of_pointwise_bound
   exact Eventually.of_forall fun n =>
     (gram_posSemidef_infinite (v n)).2 c
 
-theorem exists_hyperfilter_diagonal_positive_pair_kernel
+private theorem exists_hyperfilter_diagonal_positive_pair_kernel
     {G : Type*} [Group G] {H : ℕ → Type*}
     [∀ n, SeminormedAddCommGroup (H n)]
     [∀ n, InnerProductSpace ℂ (H n)]
@@ -5510,7 +5527,7 @@ theorem exists_hyperfilter_diagonal_positive_pair_kernel
     exact tendsto_nhds_unique haddconv
       (by rw [hfunctions]; exact hconv (g, j) q)
 
-theorem exists_hyperfilter_diagonal_positive_pair_kernel_of_rooted_indicators
+private theorem exists_hyperfilter_diagonal_positive_pair_kernel_of_rooted_indicators
     {G ι : Type*} [Group G] [Fintype ι] [Nonempty ι]
     {V : ℕ → Type*} [∀ n, Fintype (V n)]
     (p : ∀ n, ι → Equiv.Perm (V n))
@@ -5552,11 +5569,11 @@ theorem exists_hyperfilter_diagonal_positive_pair_kernel_of_rooted_indicators
   · intro n g h j
     exact normalizedPairDisplacement_add (p n) (f n) (σ n) g h j
 
-def scalarOperatorKernel {I : Type u} (K : Matrix I I ℂ) :
+private def scalarOperatorKernel {I : Type u} (K : Matrix I I ℂ) :
     Matrix I I (ℂ →L[ℂ] ℂ) :=
   fun g h => ContinuousLinearMap.toSpanSingleton ℂ (K g h)
 
-theorem scalarOperatorKernel_posSemidef {I : Type u}
+private theorem scalarOperatorKernel_posSemidef {I : Type u}
     (K : Matrix I I ℂ) (hK : K.PosSemidef) :
     (scalarOperatorKernel K).PosSemidef := by
   apply ((RKHS.posSemidef_tfae
@@ -5591,7 +5608,7 @@ theorem scalarOperatorKernel_posSemidef {I : Type u}
     simpa only [← RCLike.star_def, hK.isHermitian.apply,
       mul_assoc, mul_left_comm, mul_comm] using hreal
 
-theorem preKernel_inner_single {I : Type u}
+private theorem preKernel_inner_single {I : Type u}
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (i j : I × ℂ) (z w : ℂ) :
@@ -5607,13 +5624,13 @@ theorem preKernel_inner_single {I : Type u}
   simp only [RCLike.star_def, RCLike.inner_apply, mul_zero, zero_mul, Finsupp.sum_single_index,
     map_zero]
 
-def actionPreKernelTranslation {G I : Type u} [Group G]
+private def actionPreKernelTranslation {G I : Type u} [Group G]
     (K : Matrix I I ℂ) (ρ : G →* Equiv.Perm I) (a : G) :
     RKHS.H₀ (scalarOperatorKernel K) ≃ₗ[ℂ]
       RKHS.H₀ (scalarOperatorKernel K) :=
   Finsupp.domLCongr ((ρ a).prodCongr (Equiv.refl ℂ))
 
-theorem actionPreKernelTranslation_inner {G I : Type u} [Group G]
+private theorem actionPreKernelTranslation_inner {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5640,7 +5657,7 @@ theorem actionPreKernelTranslation_inner {G I : Type u} [Group G]
           star z * w * ⟪i.2 • K j.1 i.1, j.2⟫_ℂ
       rw [hinv]
 
-def actionPreKernelTranslationIsometry {G I : Type u} [Group G]
+private def actionPreKernelTranslationIsometry {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5651,7 +5668,7 @@ def actionPreKernelTranslationIsometry {G I : Type u} [Group G]
   (actionPreKernelTranslation K ρ a).isometryOfInner
     (actionPreKernelTranslation_inner K ρ hinv a)
 
-def actionKernelTranslationMap {G I : Type u} [Group G]
+private def actionKernelTranslationMap {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5663,7 +5680,7 @@ def actionKernelTranslationMap {G I : Type u} [Group G]
     ((actionPreKernelTranslationIsometry K ρ hinv a).toLinearIsometry.toContinuousLinearMap)
 
 @[simp]
-theorem actionKernelTranslationMap_coe {G I : Type u} [Group G]
+private theorem actionKernelTranslationMap_coe {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5676,7 +5693,7 @@ theorem actionKernelTranslationMap_coe {G I : Type u} [Group G]
   exact ContinuousLinearMap.completion_apply_coe
     ((actionPreKernelTranslationIsometry K ρ hinv a).toLinearIsometry.toContinuousLinearMap) f
 
-theorem actionKernelTranslationMap_isometry {G I : Type u} [Group G]
+private theorem actionKernelTranslationMap_isometry {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5686,7 +5703,7 @@ theorem actionKernelTranslationMap_isometry {G I : Type u} [Group G]
     (actionPreKernelTranslationIsometry K ρ hinv a))
   exact (actionPreKernelTranslationIsometry K ρ hinv a).isometry.completion_map
 
-theorem actionPreKernelTranslation_mul_apply {G I : Type u} [Group G]
+private theorem actionPreKernelTranslation_mul_apply {G I : Type u} [Group G]
     (K : Matrix I I ℂ) (ρ : G →* Equiv.Perm I)
     (a b : G) (f : RKHS.H₀ (scalarOperatorKernel K)) :
     actionPreKernelTranslation K ρ (a * b) f =
@@ -5704,7 +5721,7 @@ theorem actionPreKernelTranslation_mul_apply {G I : Type u} [Group G]
     rfl
 
 @[simp]
-theorem actionPreKernelTranslation_one_apply {G I : Type u} [Group G]
+private theorem actionPreKernelTranslation_one_apply {G I : Type u} [Group G]
     (K : Matrix I I ℂ) (ρ : G →* Equiv.Perm I)
     (f : RKHS.H₀ (scalarOperatorKernel K)) :
     actionPreKernelTranslation K ρ 1 f = f := by
@@ -5718,7 +5735,7 @@ theorem actionPreKernelTranslation_one_apply {G I : Type u} [Group G]
       Finsupp.single (i.1, i.2) z
     simp only [map_one, Equiv.Perm.coe_one, id_eq, Prod.mk.eta]
 
-theorem actionKernelTranslationMap_mul_apply {G I : Type u} [Group G]
+private theorem actionKernelTranslationMap_mul_apply {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5738,7 +5755,7 @@ theorem actionKernelTranslationMap_mul_apply {G I : Type u} [Group G]
       actionPreKernelTranslation_mul_apply]
 
 @[simp]
-theorem actionKernelTranslationMap_one_apply {G I : Type u} [Group G]
+private theorem actionKernelTranslationMap_one_apply {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5754,7 +5771,7 @@ theorem actionKernelTranslationMap_one_apply {G I : Type u} [Group G]
     simp only [actionKernelTranslationMap_coe,
       actionPreKernelTranslation_one_apply]
 
-def actionKernelTranslationLinearEquiv {G I : Type u} [Group G]
+private def actionKernelTranslationLinearEquiv {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5781,7 +5798,7 @@ def actionKernelTranslationLinearEquiv {G I : Type u} [Group G]
               K ρ hinv a a⁻¹ x).symm
       _ = x := by simp only [mul_inv_cancel, actionKernelTranslationMap_one_apply]
 
-def actionKernelTranslationUnitary {G I : Type u} [Group G]
+private def actionKernelTranslationUnitary {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5794,7 +5811,7 @@ def actionKernelTranslationUnitary {G I : Type u} [Group G]
     (actionKernelTranslationMap_isometry K ρ hinv a).norm_map_of_map_zero
       (map_zero (actionKernelTranslationMap K ρ hinv a))
 
-def actionKernelUnitaryRepresentation {G I : Type u} [Group G]
+private def actionKernelUnitaryRepresentation {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (ρ : G →* Equiv.Perm I)
@@ -5815,7 +5832,7 @@ def actionKernelUnitaryRepresentation {G I : Type u} [Group G]
         (actionKernelTranslationMap K ρ hinv b x)
     exact actionKernelTranslationMap_mul_apply K ρ hinv a b x
 
-def diagonalPairAction (G : Type u) [Group G] :
+private def diagonalPairAction (G : Type u) [Group G] :
     G →* Equiv.Perm (G × G) where
   toFun a := (Equiv.mulLeft a).prodCongr (Equiv.mulLeft a)
   map_one' := by
@@ -5829,7 +5846,7 @@ def diagonalPairAction (G : Type u) [Group G] :
     · exact mul_assoc a b x.1
     · exact mul_assoc a b x.2
 
-def diagonalPairKernelUnitaryRepresentation {G : Type u} [Group G]
+private def diagonalPairKernelUnitaryRepresentation {G : Type u} [Group G]
     (K : Matrix (G × G) (G × G) ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
     (hinv : ∀ a g h j k : G,
@@ -5839,7 +5856,7 @@ def diagonalPairKernelUnitaryRepresentation {G : Type u} [Group G]
   actionKernelUnitaryRepresentation K (diagonalPairAction G)
     (fun a x y => hinv a x.1 x.2 y.1 y.2)
 
-theorem ofKernel_kerFun_one_eq_coe_single
+private theorem ofKernel_kerFun_one_eq_coe_single
     {I : Type u} (L : Matrix I I (ℂ →L[ℂ] ℂ))
     [Fact L.PosSemidef] (i : I) :
     RKHS.kerFun (RKHS.OfKernel L) i (1 : ℂ) =
@@ -5849,7 +5866,7 @@ theorem ofKernel_kerFun_one_eq_coe_single
     ContinuousLinearMap.adjoint_adjoint,
     LinearMap.mkContinuous_apply, LinearMap.coe_mk, AddHom.coe_mk]
 
-theorem actionKernelUnitaryRepresentation_kerFun_one
+private theorem actionKernelUnitaryRepresentation_kerFun_one
     {G I : Type u} [Group G]
     (K : Matrix I I ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
@@ -5874,7 +5891,7 @@ theorem actionKernelUnitaryRepresentation_kerFun_one
   simp only [actionPreKernelTranslation, Finsupp.domLCongr_apply, Finsupp.domCongr_apply,
     Finsupp.equivMapDomain_single, Equiv.prodCongr_apply, Equiv.coe_refl, Prod.map_apply, id_eq]
 
-theorem diagonalPairKernelUnitaryRepresentation_kerFun_one
+private theorem diagonalPairKernelUnitaryRepresentation_kerFun_one
     {G : Type u} [Group G]
     (K : Matrix (G × G) (G × G) ℂ)
     [Fact (scalarOperatorKernel K).PosSemidef]
@@ -5890,7 +5907,7 @@ theorem diagonalPairKernelUnitaryRepresentation_kerFun_one
     (diagonalPairAction G)
     (fun a x y => hinv a x.1 x.2 y.1 y.2) a (g, h)
 
-structure HilbertKernelRealization {I : Type u}
+private structure HilbertKernelRealization {I : Type u}
     (K : Matrix I I ℂ) where
   carrier : Type u
   [normed : NormedAddCommGroup carrier]
@@ -5899,22 +5916,22 @@ structure HilbertKernelRealization {I : Type u}
   vector : I → carrier
   gram : ∀ g h, ⟪vector g, vector h⟫_ℂ = K g h
 
-instance hilbertKernelRealizationNormedAddCommGroup
+private instance hilbertKernelRealizationNormedAddCommGroup
     {I : Type u} {K : Matrix I I ℂ}
     (R : HilbertKernelRealization K) : NormedAddCommGroup R.carrier :=
   R.normed
 
-instance hilbertKernelRealizationInnerProductSpace
+private instance hilbertKernelRealizationInnerProductSpace
     {I : Type u} {K : Matrix I I ℂ}
     (R : HilbertKernelRealization K) : InnerProductSpace ℂ R.carrier :=
   R.inner
 
-instance hilbertKernelRealizationCompleteSpace
+private instance hilbertKernelRealizationCompleteSpace
     {I : Type u} {K : Matrix I I ℂ}
     (R : HilbertKernelRealization K) : CompleteSpace R.carrier :=
   R.complete
 
-theorem hilbertKernelRealization_pair_vector_add
+private theorem hilbertKernelRealization_pair_vector_add
     {G : Type u} (K : Matrix (G × G) (G × G) ℂ)
     (R : HilbertKernelRealization K)
     (hadd : ∀ g h j : G, ∀ q : G × G,
@@ -5933,7 +5950,7 @@ theorem hilbertKernelRealization_pair_vector_add
     horth (g, h), horth (h, j), horth (g, j)]
   simp only [add_zero, sub_self]
 
-structure EquivariantHilbertKernelRealization
+private structure EquivariantHilbertKernelRealization
     {G : Type u} [Group G]
     (K : Matrix (G × G) (G × G) ℂ) where
   realization : HilbertKernelRealization K
@@ -5943,7 +5960,7 @@ structure EquivariantHilbertKernelRealization
     representation a (realization.vector (g, h)) =
       realization.vector (a * g, a * h)
 
-theorem exists_equivariantHilbertKernelRealization
+private theorem exists_equivariantHilbertKernelRealization
     {G : Type u} [Group G]
     (K : Matrix (G × G) (G × G) ℂ)
     (hpositive : K.PosSemidef)
@@ -5973,13 +5990,13 @@ theorem exists_equivariantHilbertKernelRealization
   exact diagonalPairKernelUnitaryRepresentation_kerFun_one
     K hdiagonal a g h
 
-def equivariantPairCocycle {G : Type u} [Group G]
+private def equivariantPairCocycle {G : Type u} [Group G]
     {K : Matrix (G × G) (G × G) ℂ}
     (R : EquivariantHilbertKernelRealization K) (g : G) :
     R.realization.carrier :=
   R.realization.vector (g, 1)
 
-theorem equivariantPairCocycle_mul {G : Type u} [Group G]
+private theorem equivariantPairCocycle_mul {G : Type u} [Group G]
     (K : Matrix (G × G) (G × G) ℂ)
     (R : EquivariantHilbertKernelRealization K)
     (hadd : ∀ g h j : G, ∀ q : G × G,
@@ -5995,7 +6012,7 @@ theorem equivariantPairCocycle_mul {G : Type u} [Group G]
   exact (hilbertKernelRealization_pair_vector_add K R.realization
     hadd (a * g) a 1).symm
 
-theorem normalizedPairDisplacement_generator_of_model
+private theorem normalizedPairDisplacement_generator_of_model
     {G ι V : Type*} [Group G] [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (σ : G → Equiv.Perm V) (s : ι → G)
@@ -6006,7 +6023,7 @@ theorem normalizedPairDisplacement_generator_of_model
   simp only [normalizedPairDisplacement, normalizedIndicatorDisplacement, hgenerator, hone,
     permutationUnitary_one, sub_self, smul_zero, sub_zero]
 
-theorem norm_average_normalizedPairDisplacement_of_model
+private theorem norm_average_normalizedPairDisplacement_of_model
     {G ι V : Type*} [Group G] [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (σ : G → Equiv.Perm V) (s : ι → G)
@@ -6020,7 +6037,7 @@ theorem norm_average_normalizedPairDisplacement_of_model
   rw [average_normalizedIndicatorDisplacement,
     norm_normalizedIndicatorDefect p f hdefect]
 
-theorem inner_smul_finset_sum_self
+private theorem inner_smul_finset_sum_self
     {I E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     (z : I → E) (F : Finset I) (c : ℂ) :
     ⟪c • ∑ i ∈ F, z i, c • ∑ i ∈ F, z i⟫_ℂ =
@@ -6030,7 +6047,7 @@ theorem inner_smul_finset_sum_self
   simp only [RCLike.star_def]
   ring
 
-theorem tendsto_norm_sq_smul_finset_sum_of_gram
+private theorem tendsto_norm_sq_smul_finset_sum_of_gram
     {N I H : Type*} {E : N → Type*}
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     [∀ n, NormedAddCommGroup (E n)]
@@ -6068,7 +6085,7 @@ theorem tendsto_norm_sq_smul_finset_sum_of_gram
   · congr 1
     exact norm_sq_eq_re_inner (𝕜 := ℂ) (c • ∑ i ∈ F, v i)
 
-theorem norm_smul_finset_sum_eq_one_of_gram
+private theorem norm_smul_finset_sum_eq_one_of_gram
     {N I H : Type*} {E : N → Type*}
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     [∀ n, NormedAddCommGroup (E n)]
@@ -6093,7 +6110,7 @@ theorem norm_smul_finset_sum_eq_one_of_gram
     tendsto_nhds_unique hlimit hone
   nlinarith [norm_nonneg (c • ∑ i ∈ F, v i)]
 
-theorem exists_equivariant_hilbert_normalized_rooted_pair_realization
+private theorem exists_equivariant_hilbert_normalized_rooted_pair_realization
     {G ι : Type u} [Group G] [Fintype ι] [Nonempty ι]
     {V : ℕ → Type u} [∀ n, Fintype (V n)]
     (p : ∀ n, ι → Equiv.Perm (V n))
@@ -6174,7 +6191,7 @@ universe u v
 variable {G : Type u} {H : Type v} [Group G]
   [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
-def invariantSubmodule (π : UnitaryRepresentation G H) :
+private def invariantSubmodule (π : UnitaryRepresentation G H) :
     Submodule ℂ H where
   carrier := {x | ∀ g : G, π g x = x}
   zero_mem' := by
@@ -6187,7 +6204,7 @@ def invariantSubmodule (π : UnitaryRepresentation G H) :
     intro c x hx g
     rw [map_smul, hx g]
 
-theorem map_mem_invariantSubmodule_orthogonal
+private theorem map_mem_invariantSubmodule_orthogonal
     (π : UnitaryRepresentation G H) (g : G) {x : H}
     (hx : x ∈ (invariantSubmodule π)ᗮ) :
     π g x ∈ (invariantSubmodule π)ᗮ := by
@@ -6204,7 +6221,7 @@ theorem map_mem_invariantSubmodule_orthogonal
     _ = @inner ℂ H _ y x := by rw [hysymm]
     _ = 0 := (Submodule.mem_orthogonal _ _).mp hx y hy
 
-def orthogonalLinearIsometryEquiv
+private def orthogonalLinearIsometryEquiv
     (π : UnitaryRepresentation G H) (g : G) :
     (invariantSubmodule π)ᗮ ≃ₗᵢ[ℂ] (invariantSubmodule π)ᗮ where
   toFun x := ⟨π g x, map_mem_invariantSubmodule_orthogonal π g x.property⟩
@@ -6226,7 +6243,7 @@ def orthogonalLinearIsometryEquiv
     exact map_smul (π g) c (x : H)
   norm_map' x := (π g).norm_map (x : H)
 
-def orthogonalRepresentation (π : UnitaryRepresentation G H) :
+private def orthogonalRepresentation (π : UnitaryRepresentation G H) :
     UnitaryRepresentation G ((invariantSubmodule π)ᗮ) where
   toFun := orthogonalLinearIsometryEquiv π
   map_one' := by
@@ -6239,7 +6256,7 @@ def orthogonalRepresentation (π : UnitaryRepresentation G H) :
     rw [map_mul]
     rfl
 
-theorem orthogonalRepresentation_no_fixed
+private theorem orthogonalRepresentation_no_fixed
     (π : UnitaryRepresentation G H)
     (x : (invariantSubmodule π)ᗮ)
     (hx : ∀ g : G, orthogonalRepresentation π g x = x) :
@@ -6253,7 +6270,7 @@ theorem orthogonalRepresentation_no_fixed
   change (x : H) = 0
   exact inner_self_eq_zero.mp hinner
 
-theorem cocycle_one
+private theorem cocycle_one
     (π : UnitaryRepresentation G H) (b : G → H)
     (hb : ∀ g h : G, b (g * h) = b g + π g (b h)) :
     b 1 = 0 := by
@@ -6262,7 +6279,7 @@ theorem cocycle_one
       (hb 1 1).symm
   exact add_left_cancel hcancel
 
-theorem inner_cocycle_inv_of_invariant
+private theorem inner_cocycle_inv_of_invariant
     (π : UnitaryRepresentation G H) (b : G → H)
     (hb : ∀ g h : G, b (g * h) = b g + π g (b h))
     (y : H) (hy : ∀ g : G, π g y = y) (g : G) :
@@ -6290,7 +6307,7 @@ theorem inner_cocycle_inv_of_invariant
   apply (add_eq_zero_iff_eq_neg).mp
   simpa only [add_comm] using hinner
 
-theorem inner_cocycle_sum_eq_zero_of_invariant
+private theorem inner_cocycle_sum_eq_zero_of_invariant
     (π : UnitaryRepresentation G H) (b : G → H)
     (hb : ∀ g h : G, b (g * h) = b g + π g (b h))
     (S : Finset G) (hS : ∀ g ∈ S, g⁻¹ ∈ S)
@@ -6333,7 +6350,7 @@ theorem inner_cocycle_sum_eq_zero_of_invariant
       _ = 0 := add_neg_cancel _
   exact (mul_eq_zero.mp hdouble).resolve_left (by norm_num)
 
-theorem inner_smul_cocycle_sum_eq_zero_of_invariant
+private theorem inner_smul_cocycle_sum_eq_zero_of_invariant
     (π : UnitaryRepresentation G H) (b : G → H)
     (hb : ∀ g h : G, b (g * h) = b g + π g (b h))
     (S : Finset G) (hS : ∀ g ∈ S, g⁻¹ ∈ S) (c : ℂ)
@@ -6342,7 +6359,7 @@ theorem inner_smul_cocycle_sum_eq_zero_of_invariant
   rw [inner_smul_right, inner_cocycle_sum_eq_zero_of_invariant π b hb S hS y hy,
     mul_zero]
 
-theorem norm_add_le_two_sub_sq_div_four
+private theorem norm_add_le_two_sub_sq_div_four
     (x y : H) (δ : ℝ)
     (hδ : 0 ≤ δ) (hδtwo : δ ≤ 2)
     (hnorm : ‖y‖ = ‖x‖)
@@ -6363,7 +6380,7 @@ theorem norm_add_le_two_sub_sq_div_four
   exact (sq_le_sq₀ (norm_nonneg (x + y)) htarget).mp hadd
 
 omit [InnerProductSpace ℂ H] in
-theorem norm_finset_sum_le_pair_add
+private theorem norm_finset_sum_le_pair_add
     {X : Type*} (S : Finset X) (f : X → H)
     (a b : X) (ha : a ∈ S) (hb : b ∈ S) (hab : a ≠ b)
     (r : ℝ) (hnorm : ∀ s ∈ S, ‖f s‖ = r) :
@@ -6418,7 +6435,7 @@ universe u v
 variable {G : Type u} {H : Type v} [Group G]
   [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
-theorem kazhdan_generator_displacement_of_orthogonal_invariants
+private theorem kazhdan_generator_displacement_of_orthogonal_invariants
     [CompleteSpace H] (P : KazhdanPair.{u, v} G)
     (π : UnitaryRepresentation G H) (x : H)
     (hx : x ≠ 0)
@@ -6443,7 +6460,7 @@ theorem kazhdan_generator_displacement_of_orthogonal_invariants
       LinearEquiv.coe_mk,
     LinearMap.coe_mk, AddHom.coe_mk, AddSubgroupClass.coe_sub] using hgap
 
-theorem kazhdan_generator_sum_contraction
+private theorem kazhdan_generator_sum_contraction
     [CompleteSpace H] (P : KazhdanPair.{u, v} G)
     (π : UnitaryRepresentation G H)
     (S : Finset G) (hone : 1 ∈ S)
@@ -6496,11 +6513,12 @@ theorem kazhdan_generator_sum_contraction
     _ = ((S.card : ℝ) - P.kazhdanConstant ^ 2 / 4) * ‖x‖ := by
       ring
 
-def unitaryFinsetMarkov
+private def unitaryFinsetMarkov
     (π : UnitaryRepresentation G H)
     (S : Finset G) (x : H) : H :=
   ((S.card : ℂ)⁻¹) • S.sum (fun g => π g x)
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def kazhdanMarkovContractionFactor
     (P : KazhdanPair.{u, v} G) (S : Finset G) : ℝ :=
   max 0 (1 - P.kazhdanConstant ^ 2 / (4 * (S.card : ℝ)))
@@ -6523,7 +6541,7 @@ theorem kazhdanMarkovContractionFactor_nonneg
     0 ≤ kazhdanMarkovContractionFactor P S :=
   le_max_left _ _
 
-theorem unitaryFinsetMarkov_norm_le
+private theorem unitaryFinsetMarkov_norm_le
     [CompleteSpace H] (P : KazhdanPair.{u, v} G)
     (π : UnitaryRepresentation G H)
     (S : Finset G) (hone : 1 ∈ S)
@@ -6550,7 +6568,7 @@ theorem unitaryFinsetMarkov_norm_le
       apply mul_le_mul_of_nonneg_right _ (norm_nonneg x)
       exact le_max_right 0 _
 
-theorem unitaryFinsetMarkov_orthogonal_invariants
+private theorem unitaryFinsetMarkov_orthogonal_invariants
     (π : UnitaryRepresentation G H)
     (S : Finset G) (x : H)
     (horth : ∀ y : H,
@@ -6569,7 +6587,7 @@ theorem unitaryFinsetMarkov_orthogonal_invariants
   intro y hy
   exact (Submodule.mem_orthogonal _ _).mp hmarkov y hy
 
-theorem unitaryFinsetMarkov_iterate_norm_le
+private theorem unitaryFinsetMarkov_iterate_norm_le
     [CompleteSpace H] (P : KazhdanPair.{u, v} G)
     (π : UnitaryRepresentation G H)
     (S : Finset G) (hone : 1 ∈ S)
@@ -6619,7 +6637,7 @@ open scoped BigOperators ComplexConjugate ComplexOrder InnerProductSpace Pointwi
 
 universe u v w
 
-def pairedWordAverage
+private def pairedWordAverage
     {G ι E : Type*} [Group G] [Fintype ι]
     [AddCommMonoid E] [Module ℂ E]
     (s : ι → G) (z : G × G → E) :
@@ -6629,14 +6647,14 @@ def pairedWordAverage
       (Fintype.card ι : ℂ)⁻¹ •
         ∑ i, pairedWordAverage s z k (s i * q.1, s i * q.2)
 
-def pairedDefectWordAverage
+private def pairedDefectWordAverage
     {G ι E : Type*} [Group G] [Fintype ι]
     [AddCommMonoid E] [Module ℂ E]
     (s : ι → G) (z : G × G → E) (k : ℕ) : E :=
   (Fintype.card ι : ℂ)⁻¹ •
     ∑ i, pairedWordAverage s z k (s i, 1)
 
-theorem inner_smul_fintype_sum
+private theorem inner_smul_fintype_sum
     {ι E : Type*} [Fintype ι]
     [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     (x y : ι → E) (c : ℂ) :
@@ -6647,7 +6665,7 @@ theorem inner_smul_fintype_sum
   simp only [RCLike.star_def]
   ring
 
-theorem tendsto_inner_pairedWordAverage_of_gram
+private theorem tendsto_inner_pairedWordAverage_of_gram
     {G ι N H : Type*} [Group G] [Fintype ι]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {E : N → Type*}
@@ -6691,7 +6709,7 @@ theorem tendsto_inner_pairedWordAverage_of_gram
       simpa only [pairedWordAverage, inner_smul_fintype_sum] using
         (tendsto_const_nhds.mul hsum).mul tendsto_const_nhds
 
-theorem tendsto_norm_pairedDefectWordAverage_of_gram
+private theorem tendsto_norm_pairedDefectWordAverage_of_gram
     {G ι N H : Type*} [Group G] [Fintype ι]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {E : N → Type*}
@@ -6733,7 +6751,7 @@ theorem tendsto_norm_pairedDefectWordAverage_of_gram
   · congr 1
     rw [Real.sqrt_sq (norm_nonneg _)]
 
-def permutationMarkovLinear
+private def permutationMarkovLinear
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) :
     EuclideanSpace ℂ V →ₗ[ℂ] EuclideanSpace ℂ V :=
@@ -6741,14 +6759,14 @@ def permutationMarkovLinear
     ∑ i, (permutationUnitary (p i)).toLinearEquiv.toLinearMap
 
 @[simp]
-theorem permutationMarkovLinear_apply
+private theorem permutationMarkovLinear_apply
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (x : EuclideanSpace ℂ V) :
     permutationMarkovLinear p x = permutationMarkov p x := by
   simp only [permutationMarkovLinear, LinearMap.smul_apply, LinearMap.coe_sum, LinearEquiv.coe_coe,
     LinearIsometryEquiv.coe_toLinearEquiv, Finset.sum_apply, permutationMarkov]
 
-theorem permutationMarkovLinear_pow_apply
+private theorem permutationMarkovLinear_pow_apply
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (k : ℕ)
     (x : EuclideanSpace ℂ V) :
@@ -6761,7 +6779,7 @@ theorem permutationMarkovLinear_pow_apply
         Function.iterate_succ_apply']
       rw [ih, permutationMarkovLinear_apply]
 
-theorem permutationMarkov_pair_of_rooted
+private theorem permutationMarkov_pair_of_rooted
     {G ι V : Type*} [Group G] [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (σ : G → Equiv.Perm V) (s : ι → G)
@@ -6782,7 +6800,7 @@ theorem permutationMarkov_pair_of_rooted
   exact (normalizedPairDisplacement_diagonal p f σ
     (s i) q.1 q.2 (hroot i).1 (hroot i).2).symm
 
-theorem eventually_permutationMarkov_pair_of_rooted
+private theorem eventually_permutationMarkov_pair_of_rooted
     {G ι : Type*} [Group G] [Fintype ι]
     {V : ℕ → Type*} [∀ n, Fintype (V n)]
     (p : ∀ n, ι → Equiv.Perm (V n))
@@ -6813,7 +6831,7 @@ theorem eventually_permutationMarkov_pair_of_rooted
   exact permutationMarkov_pair_of_rooted
     (p n) (f n) (σ n) s (hgenerator n) q hn
 
-theorem eventually_linear_pairedWordAverage_pow
+private theorem eventually_linear_pairedWordAverage_pow
     {G ι N : Type*} [Group G] [Fintype ι]
     {E : N → Type*}
     [∀ n, AddCommMonoid (E n)]
@@ -6844,7 +6862,7 @@ theorem eventually_linear_pairedWordAverage_pow
       apply congrArg (fun x => (Fintype.card ι : ℂ)⁻¹ • x)
       exact Finset.sum_congr rfl fun i _ => hnode i
 
-theorem eventually_linear_pairedDefectWordAverage_pow
+private theorem eventually_linear_pairedDefectWordAverage_pow
     {G ι N : Type*} [Group G] [Fintype ι]
     {E : N → Type*}
     [∀ n, AddCommMonoid (E n)]
@@ -6871,7 +6889,7 @@ theorem eventually_linear_pairedDefectWordAverage_pow
   exact congrArg (fun x => (Fintype.card ι : ℂ)⁻¹ • x)
     (Finset.sum_congr rfl fun i _ => hn i)
 
-theorem pairedDefectWordAverage_zero_eq_normalizedIndicatorDefect
+private theorem pairedDefectWordAverage_zero_eq_normalizedIndicatorDefect
     {G ι V : Type*} [Group G] [Fintype ι] [Nonempty ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ)
     (σ : G → Equiv.Perm V) (s : ι → G)
@@ -6884,7 +6902,7 @@ theorem pairedDefectWordAverage_zero_eq_normalizedIndicatorDefect
     p f σ s hone hgenerator]
   exact average_normalizedIndicatorDisplacement p f
 
-theorem tendsto_norm_normalizedIndicatorDefect_markov_pow
+private theorem tendsto_norm_normalizedIndicatorDefect_markov_pow
     {G ι H : Type*} [Group G] [Fintype ι] [Nonempty ι]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {V : ℕ → Type*} [∀ n, Fintype (V n)]
@@ -6950,7 +6968,7 @@ theorem tendsto_norm_normalizedIndicatorDefect_markov_pow
       fun n hn => congrArg norm hn
   exact hlimit.congr' heq.symm
 
-def representationFamilyMarkovLinear
+private def representationFamilyMarkovLinear
     {G ι H : Type*} [Group G] [Fintype ι]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H) (s : ι → G) :
@@ -6958,7 +6976,7 @@ def representationFamilyMarkovLinear
   (Fintype.card ι : ℂ)⁻¹ •
     ∑ i, (π (s i)).toLinearEquiv.toLinearMap
 
-theorem representationFamilyMarkovLinear_subtype_apply
+private theorem representationFamilyMarkovLinear_subtype_apply
     {G H : Type*} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H)
@@ -6970,7 +6988,7 @@ theorem representationFamilyMarkovLinear_subtype_apply
     LinearMap.coe_sum, LinearEquiv.coe_coe, LinearIsometryEquiv.coe_toLinearEquiv, Finset.sum_apply,
     unitaryFinsetMarkov, ← Finset.sum_coe_sort S]
 
-theorem representationFamilyMarkovLinear_subtype_pow_apply
+private theorem representationFamilyMarkovLinear_subtype_pow_apply
     {G H : Type*} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H)
@@ -6985,7 +7003,7 @@ theorem representationFamilyMarkovLinear_subtype_pow_apply
         Function.iterate_succ_apply', ih,
         representationFamilyMarkovLinear_subtype_apply]
 
-theorem representationFamilyMarkovLinear_pair_of_equivariant
+private theorem representationFamilyMarkovLinear_pair_of_equivariant
     {G ι H : Type*} [Group G] [Fintype ι]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H)
@@ -7000,7 +7018,7 @@ theorem representationFamilyMarkovLinear_pair_of_equivariant
     LinearEquiv.coe_coe,
     LinearIsometryEquiv.coe_toLinearEquiv, Finset.sum_apply, hequivariant, pairedWordAverage]
 
-theorem linear_pairedWordAverage_pow
+private theorem linear_pairedWordAverage_pow
     {G ι E : Type*} [Group G] [Fintype ι]
     [AddCommMonoid E] [Module ℂ E]
     (s : ι → G) (L : E →ₗ[ℂ] E)
@@ -7018,7 +7036,7 @@ theorem linear_pairedWordAverage_pow
       exact Finset.sum_congr rfl fun i _ =>
         ih (s i * q.1, s i * q.2)
 
-theorem pairedDefectWordAverage_eq_unitaryFinsetMarkov_iterate
+private theorem pairedDefectWordAverage_eq_unitaryFinsetMarkov_iterate
     {G H : Type*} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (π : UnitaryRepresentation G H)
@@ -7047,7 +7065,7 @@ theorem pairedDefectWordAverage_eq_unitaryFinsetMarkov_iterate
       π S k (pairedDefectWordAverage s v 0)
   exact hpow.symm.trans hrewrite
 
-theorem eventually_normalizedIndicatorDefect_markov_pow_lt_of_rooted
+private theorem eventually_normalizedIndicatorDefect_markov_pow_lt_of_rooted
     {G : Type u} [Group G]
     (P : KazhdanPair.{u, u} G)
     (S : Finset G) (honeS : 1 ∈ S)
@@ -7123,17 +7141,24 @@ theorem eventually_normalizedIndicatorDefect_markov_pow_lt_of_rooted
     p f σ s R.realization.vector hone hgenerator hroot hgram k
   exact hlimit.eventually (Iio_mem_nhds hstrict)
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 structure RootedIndicatorMarkovModel (G ι : Type u) where
+  /-- Internal interface connecting the split non-sofic proof modules. -/
   carrier : Type u
+  /-- Internal interface connecting the split non-sofic proof modules. -/
   [fintype : Fintype carrier]
+  /-- Internal interface connecting the split non-sofic proof modules. -/
   generator : ι → Equiv.Perm carrier
+  /-- Internal interface connecting the split non-sofic proof modules. -/
   indicator : carrier → ℝ
+  /-- Internal interface connecting the split non-sofic proof modules. -/
   evaluation : G → Equiv.Perm carrier
 
 instance rootedIndicatorMarkovModelFintype
     {G ι : Type u} (X : RootedIndicatorMarkovModel G ι) : Fintype X.carrier :=
   X.fintype
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 structure RootedIndicatorMarkovModel.IsGenerated
     {G ι : Type u} [Group G] [Fintype ι]
     (X : RootedIndicatorMarkovModel G ι)
@@ -7144,6 +7169,7 @@ structure RootedIndicatorMarkovModel.IsGenerated
   identity_evaluation : X.evaluation 1 = 1
   generator_evaluation : ∀ i, X.evaluation (s i) = X.generator i
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 structure RootedIndicatorMarkovModel.IsRootedAtRadius
     {G ι : Type u} [Group G]
     (X : RootedIndicatorMarkovModel G ι)
@@ -7154,7 +7180,7 @@ structure RootedIndicatorMarkovModel.IsRootedAtRadius
         X.evaluation (a * g) x =
           (X.evaluation a * X.evaluation g) x
 
-theorem eventually_rooted_of_growing_word_radius
+private theorem eventually_rooted_of_growing_word_radius
     {G ι : Type u} [Group G]
     (X : ℕ → RootedIndicatorMarkovModel G ι)
     (w : G → List ι)
@@ -7170,7 +7196,7 @@ theorem eventually_rooted_of_growing_word_radius
       with n hn
   exact (hroot n).out a g hn
 
-theorem exists_rooted_word_radius_normalized_markov_contraction
+private theorem exists_rooted_word_radius_normalized_markov_contraction
     {G : Type u} [Group G]
     (P : KazhdanPair.{u, u} G)
     (S : Finset G) (honeS : 1 ∈ S)
@@ -7224,7 +7250,7 @@ theorem exists_rooted_word_radius_normalized_markov_contraction
     (hstrict.and (Filter.Eventually.of_forall hbad')).exists
   exact (not_lt_of_ge hge) hlt
 
-theorem permutationMarkov_iterate_difference
+private theorem permutationMarkov_iterate_difference
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (x : EuclideanSpace ℂ V)
     (k : ℕ) :
@@ -7238,7 +7264,7 @@ theorem permutationMarkov_iterate_difference
     ← permutationMarkovLinear_pow_apply p k x,
     ← map_sub]
 
-theorem norm_normalizedIndicatorDefect_markov_pow
+private theorem norm_normalizedIndicatorDefect_markov_pow
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) (k : ℕ) :
     ‖((permutationMarkov p)^[k])
@@ -7304,14 +7330,14 @@ namespace KunActualSoficRootRadius
 open Filter Topology
 open scoped BigOperators Pointwise
 
-def modelMultiplicationBad {G : Type*} [Group G]
+private def modelMultiplicationBad {G : Type*} [Group G]
     (M : PermutationModel G) (g h : G) :
     Finset (Fin M.size) :=
   Finset.univ.filter (fun x =>
     M.action (g * h) x ≠ (M.action g * M.action h) x)
 
 @[simp]
-theorem mem_modelMultiplicationBad {G : Type*} [Group G]
+private theorem mem_modelMultiplicationBad {G : Type*} [Group G]
     (M : PermutationModel G) (g h : G)
     (x : Fin M.size) :
     x ∈ modelMultiplicationBad M g h ↔
@@ -7319,7 +7345,7 @@ theorem mem_modelMultiplicationBad {G : Type*} [Group G]
   simp only [modelMultiplicationBad, Finset.mem_filter,
     Finset.mem_univ, true_and]
 
-theorem modelMultiplicationBad_density_tendsto_zero
+private theorem modelMultiplicationBad_density_tendsto_zero
     {G : Type*} [Group G]
     (A : SoficApproximation G) (g h : G) :
     Tendsto
@@ -7331,19 +7357,19 @@ theorem modelMultiplicationBad_density_tendsto_zero
     normalizedHamming,
     hammingDist, Fintype.card_fin] using A.multiplicative g h
 
-def modelSeparationBad {G : Type*} [Group G]
+private def modelSeparationBad {G : Type*} [Group G]
     (M : PermutationModel G) (g h : G) :
     Finset (Fin M.size) :=
   agreementSet (M.action g) (M.action h)
 
 @[simp]
-theorem mem_modelSeparationBad {G : Type*} [Group G]
+private theorem mem_modelSeparationBad {G : Type*} [Group G]
     (M : PermutationModel G) (g h : G)
     (x : Fin M.size) :
     x ∈ modelSeparationBad M g h ↔ M.action g x = M.action h x := by
   simp only [modelSeparationBad, agreementSet, Finset.mem_filter, Finset.mem_univ, true_and]
 
-theorem modelSeparationBad_density_tendsto_zero
+private theorem modelSeparationBad_density_tendsto_zero
     {G : Type*} [Group G]
     (A : SoficApproximation G)
     {g h : G} (hne : g ≠ h) :
@@ -7391,26 +7417,27 @@ theorem modelSeparationBad_density_tendsto_zero
   field_simp
   linarith
 
-def finiteMultiplicationBad {G : Type*} [Group G]
+private def finiteMultiplicationBad {G : Type*} [Group G]
     (M : PermutationModel G) (F : Finset G) :
     Finset (Fin M.size) := by
   classical
   exact (F.product F).biUnion fun q =>
     modelMultiplicationBad M q.1 q.2
 
-def finiteSeparationBad {G : Type*} [Group G]
+private def finiteSeparationBad {G : Type*} [Group G]
     (M : PermutationModel G) (F : Finset G) :
     Finset (Fin M.size) := by
   classical
   exact ((F.product F).filter fun q => q.1 ≠ q.2).biUnion fun q =>
     modelSeparationBad M q.1 q.2
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def finiteRootBad {G : Type*} [Group G]
     (M : PermutationModel G) (F : Finset G) :
     Finset (Fin M.size) :=
   finiteMultiplicationBad M F ∪ finiteSeparationBad M F
 
-theorem finiteMultiplicationBad_density_tendsto_zero
+private theorem finiteMultiplicationBad_density_tendsto_zero
     {G : Type*} [Group G]
     (A : SoficApproximation G) (F : Finset G) :
     Tendsto
@@ -7431,7 +7458,7 @@ theorem finiteMultiplicationBad_density_tendsto_zero
   simpa only [finiteMultiplicationBad, Finset.univ_inter,
     Finset.card_univ, Fintype.card_fin] using h
 
-theorem finiteSeparationBad_density_tendsto_zero
+private theorem finiteSeparationBad_density_tendsto_zero
     {G : Type*} [Group G]
     (A : SoficApproximation G) (F : Finset G) :
     Tendsto
@@ -7525,7 +7552,7 @@ theorem finiteRootBad_separated
       ⟨Finset.mem_product.mpr ⟨hg, hh⟩, hne⟩,
       (mem_modelSeparationBad M g h x).mpr heq⟩
 
-theorem finiteRootBad_injective_word_evaluation
+private theorem finiteRootBad_injective_word_evaluation
     {G : Type*} [Group G]
     (M : PermutationModel G) (F : Finset G)
     {x : Fin M.size} (hx : x ∉ finiteRootBad M F) :
@@ -7550,7 +7577,7 @@ theorem normalizedHamming_mul_le
       rw [normalizedHamming_mul_right,
         normalizedHamming_mul_left]
 
-theorem action_list_prod_tendsto
+private theorem action_list_prod_tendsto
     {G : Type*} [Group G]
     (A : SoficApproximation G) (l : List G) :
     Tendsto
@@ -7588,6 +7615,7 @@ theorem action_list_prod_tendsto
       rw [normalizedHamming_mul_left] at htriangle
       exact htriangle
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def chosenWordEvaluation
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
@@ -7595,7 +7623,7 @@ def chosenWordEvaluation
     Equiv.Perm (Fin (A.model n).size) :=
   ((w g).map fun i => (A.model n).action (s i)).prod
 
-theorem chosenWordEvaluation_tendsto_action
+private theorem chosenWordEvaluation_tendsto_action
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι)
@@ -7609,7 +7637,7 @@ theorem chosenWordEvaluation_tendsto_action
   have h := action_list_prod_tendsto A ((w g).map s)
   simpa only [chosenWordEvaluation, hw g, List.map_map, Function.comp_def] using h
 
-theorem chosenWordEvaluation_multiplicative_tendsto
+private theorem chosenWordEvaluation_multiplicative_tendsto
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι)
@@ -7670,7 +7698,7 @@ theorem chosenWordEvaluation_multiplicative_tendsto
     ((A.model n).action h) (chosenWordEvaluation A s w n h)
   linarith
 
-def chosenWordMultiplicationBad
+private def chosenWordMultiplicationBad
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι) (n : ℕ) (g h : G) :
@@ -7681,7 +7709,7 @@ def chosenWordMultiplicationBad
         chosenWordEvaluation A s w n h) x)
 
 @[simp]
-theorem mem_chosenWordMultiplicationBad
+private theorem mem_chosenWordMultiplicationBad
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι) (n : ℕ) (g h : G)
@@ -7693,7 +7721,7 @@ theorem mem_chosenWordMultiplicationBad
   simp only [chosenWordMultiplicationBad, Finset.mem_filter,
     Finset.mem_univ, true_and]
 
-theorem chosenWordMultiplicationBad_density_tendsto_zero
+private theorem chosenWordMultiplicationBad_density_tendsto_zero
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι)
@@ -7707,7 +7735,7 @@ theorem chosenWordMultiplicationBad_density_tendsto_zero
     normalizedHamming,
     hammingDist, Fintype.card_fin] using chosenWordEvaluation_multiplicative_tendsto A s w hw g h
 
-def chosenFiniteMultiplicationBad
+private def chosenFiniteMultiplicationBad
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι)
@@ -7716,7 +7744,7 @@ def chosenFiniteMultiplicationBad
   exact (F.product F).biUnion fun q =>
     chosenWordMultiplicationBad A s w n q.1 q.2
 
-theorem chosenFiniteMultiplicationBad_density_tendsto_zero
+private theorem chosenFiniteMultiplicationBad_density_tendsto_zero
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι)
@@ -7740,7 +7768,7 @@ theorem chosenFiniteMultiplicationBad_density_tendsto_zero
   simpa only [chosenFiniteMultiplicationBad, Finset.univ_inter,
     Finset.card_univ, Fintype.card_fin] using h
 
-theorem chosenFiniteMultiplicationBad_rooted
+private theorem chosenFiniteMultiplicationBad_rooted
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι)
@@ -7760,7 +7788,7 @@ theorem chosenFiniteMultiplicationBad_rooted
   simpa only [Equiv.Perm.coe_mul, Function.comp_apply, mem_chosenWordMultiplicationBad, ne_eq,
     Decidable.not_not] using hnot
 
-def chosenFiniteRootBad
+private def chosenFiniteRootBad
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι)
@@ -7768,7 +7796,7 @@ def chosenFiniteRootBad
   finiteRootBad (A.model n) F ∪
     chosenFiniteMultiplicationBad A s w F n
 
-theorem chosenFiniteRootBad_density_tendsto_zero
+private theorem chosenFiniteRootBad_density_tendsto_zero
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι)
@@ -7811,7 +7839,7 @@ theorem chosenFiniteRootBad_density_tendsto_zero
           (A.model n).size := by
         rw [add_div]
 
-theorem chosenFiniteRootBad_injective_word_evaluation
+private theorem chosenFiniteRootBad_injective_word_evaluation
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
     (s : ι → G) (w : G → List ι)
@@ -7825,7 +7853,7 @@ theorem chosenFiniteRootBad_injective_word_evaluation
   intro hbad
   exact hx (Finset.mem_union_left _ hbad)
 
-theorem exists_generator_word_of_symmetric_generates
+private theorem exists_generator_word_of_symmetric_generates
     {G : Type*} [Group G]
     (S : Finset G)
     (hsymmetric : ∀ g ∈ S, g⁻¹ ∈ S)
@@ -7863,6 +7891,7 @@ theorem exists_generator_word_of_symmetric_generates
         rfl
       rw [hmap, ← List.prod_inv_reverse, hl]
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def symmetricGeneratorWord
     {G : Type*} [Group G] [DecidableEq G]
     (S : Finset G)
@@ -7943,7 +7972,7 @@ theorem chosen_symmetric_wordEvaluation_generator
       symmetricGeneratorWord_generator S hsymmetric hgenerates i hi]
     simp only [List.map_cons, List.map_nil, List.prod_cons, List.prod_nil, mul_one]
 
-theorem generator_word_prod_mem_pow
+private theorem generator_word_prod_mem_pow
     {G : Type*} [Group G] [DecidableEq G]
     (S : Finset G) (l : List ↥S) :
     ((l.map fun i : ↥S => (i : G)).prod) ∈ S ^ l.length := by
@@ -7965,6 +7994,7 @@ theorem mem_generator_pow_of_chosen_word_length
     simpa only [hw g] using generator_word_prod_mem_pow S (w g)
   exact Finset.pow_subset_pow_right hone hgr hword
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def chosenCayleyRadiusBad
     {G : Type*} [Group G] [DecidableEq G]
     (A : SoficApproximation G)
@@ -8028,15 +8058,17 @@ namespace KunDirectedIndicatorJensen
 
 open scoped BigOperators
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def realIndicator {V : Type*} [DecidableEq V]
     (T : Finset V) (x : V) : ℝ :=
   if x ∈ T then 1 else 0
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def realPermutationMarkov {V ι : Type*} [Fintype ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ) (x : V) : ℝ :=
   (∑ i : ι, f ((σ i).symm x)) / Fintype.card ι
 
-theorem sq_realIndicator_displacement
+private theorem sq_realIndicator_displacement
     {V : Type*} [DecidableEq V]
     (p : Equiv.Perm V) (T : Finset V) (x : V) :
     (realIndicator T (p x) - realIndicator T x) ^ 2 =
@@ -8046,7 +8078,7 @@ theorem sq_realIndicator_displacement
   by_cases hx : x ∈ T <;> by_cases hp : p x ∈ T <;>
     simp [realIndicator, hx, hp]
 
-theorem sum_sq_realIndicator_displacement
+private theorem sum_sq_realIndicator_displacement
     {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (T : Finset V) :
     (∑ x : V,
@@ -8074,7 +8106,7 @@ theorem sum_sq_realIndicator_displacement
     KunThomFiberCoarea.card_entering_eq_card_exiting]
   ring
 
-theorem sum_sq_realIndicator_inverse_displacement
+private theorem sum_sq_realIndicator_inverse_displacement
     {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (T : Finset V) :
     (∑ x : V,
@@ -8099,7 +8131,7 @@ theorem sum_sq_realIndicator_inverse_displacement
     _ = 2 * ((T.filter fun x => p x ∉ T).card : ℝ) :=
       sum_sq_realIndicator_displacement p T
 
-theorem sum_sum_sq_realIndicator_inverse_displacement
+private theorem sum_sum_sq_realIndicator_inverse_displacement
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (T : Finset V) :
     (∑ i : ι, ∑ x : V,
@@ -8111,7 +8143,7 @@ theorem sum_sum_sq_realIndicator_inverse_displacement
   push_cast
   rw [Finset.mul_sum]
 
-theorem realPermutationMarkov_sub_sq_le_average_sq
+private theorem realPermutationMarkov_sub_sq_le_average_sq
     {V ι : Type*} [Fintype ι] [Nonempty ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ) (x : V) :
     (realPermutationMarkov σ f x - f x) ^ 2 ≤
@@ -8187,15 +8219,17 @@ namespace KunFinitePermutationMarkovMass
 
 open scoped BigOperators
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def realIndicator {V : Type*} [DecidableEq V]
     (T : Finset V) (x : V) : ℝ :=
   if x ∈ T then 1 else 0
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def realPermutationMarkov {V ι : Type*} [Fintype ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ) (x : V) : ℝ :=
   (Fintype.card ι : ℝ)⁻¹ * ∑ i : ι, f ((σ i).symm x)
 
-theorem realPermutationMarkov_nonneg {V ι : Type*}
+private theorem realPermutationMarkov_nonneg {V ι : Type*}
     [Fintype ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ)
     (hf : ∀ x, 0 ≤ f x) (x : V) :
@@ -8204,7 +8238,7 @@ theorem realPermutationMarkov_nonneg {V ι : Type*}
   exact mul_nonneg (inv_nonneg.mpr (Nat.cast_nonneg _))
     (Finset.sum_nonneg fun i _ => hf ((σ i).symm x))
 
-theorem realPermutationMarkov_le_one {V ι : Type*}
+private theorem realPermutationMarkov_le_one {V ι : Type*}
     [Fintype ι] [Nonempty ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ)
     (hf : ∀ x, f x ≤ 1) (x : V) :
@@ -8225,7 +8259,7 @@ theorem realPermutationMarkov_le_one {V ι : Type*}
         not_false_eq_true,
         inv_mul_cancel₀]
 
-theorem sum_realPermutationMarkov {V ι : Type*}
+private theorem sum_realPermutationMarkov {V ι : Type*}
     [Fintype V] [Fintype ι] [Nonempty ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ) :
     (∑ x : V, realPermutationMarkov σ f x) = ∑ x : V, f x := by
@@ -8248,7 +8282,7 @@ theorem sum_realPermutationMarkov {V ι : Type*}
       simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, ne_eq, hcard, not_false_eq_true,
         inv_mul_cancel_left₀]
 
-theorem realPermutationMarkov_iterate_nonneg {V ι : Type*}
+private theorem realPermutationMarkov_iterate_nonneg {V ι : Type*}
     [Fintype ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ)
     (hf : ∀ x, 0 ≤ f x) (k : ℕ) :
@@ -8260,7 +8294,7 @@ theorem realPermutationMarkov_iterate_nonneg {V ι : Type*}
     rw [Function.iterate_succ_apply']
     exact realPermutationMarkov_nonneg σ _ ih x
 
-theorem realPermutationMarkov_iterate_le_one {V ι : Type*}
+private theorem realPermutationMarkov_iterate_le_one {V ι : Type*}
     [Fintype ι] [Nonempty ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ)
     (hf : ∀ x, f x ≤ 1) (k : ℕ) :
@@ -8272,7 +8306,7 @@ theorem realPermutationMarkov_iterate_le_one {V ι : Type*}
     rw [Function.iterate_succ_apply']
     exact realPermutationMarkov_le_one σ _ ih x
 
-theorem sum_realPermutationMarkov_iterate {V ι : Type*}
+private theorem sum_realPermutationMarkov_iterate {V ι : Type*}
     [Fintype V] [Fintype ι] [Nonempty ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ) (k : ℕ) :
     (∑ x : V, ((realPermutationMarkov σ)^[k]) f x) =
@@ -8284,7 +8318,7 @@ theorem sum_realPermutationMarkov_iterate {V ι : Type*}
     exact (sum_realPermutationMarkov σ
       (((realPermutationMarkov σ)^[k]) f)).trans ih
 
-theorem sum_realIndicator {V : Type*}
+private theorem sum_realIndicator {V : Type*}
     [Fintype V] [DecidableEq V] (T : Finset V) :
     (∑ x : V, realIndicator T x) = (T.card : ℝ) := by
   classical
@@ -8325,7 +8359,7 @@ namespace KunResidualExpanderDecomposition
 open Filter Topology
 open scoped BigOperators symmDiff
 
-theorem boundary_eq_sum_indicator {V ι : Type*}
+private theorem boundary_eq_sum_indicator {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (A : Finset V) :
     boundary σ A =
@@ -8342,7 +8376,7 @@ theorem boundary_eq_sum_indicator {V ι : Type*}
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
   rw [hfilter, Finset.card_eq_sum_ones, Finset.sum_filter]
 
-theorem boundary_eq_sum_entering_indicator {V ι : Type*}
+private theorem boundary_eq_sum_entering_indicator {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (A : Finset V) :
     boundary σ A =
@@ -8368,7 +8402,7 @@ theorem boundary_complement {V ι : Type*}
   intro x _
   simp only [Finset.mem_sdiff, Finset.mem_univ, true_and, Decidable.not_not]
 
-theorem boundary_le_degree_mul_card {V ι : Type*}
+private theorem boundary_le_degree_mul_card {V ι : Type*}
     [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (A : Finset V) :
     boundary σ A ≤ Fintype.card ι * A.card := by
@@ -8382,7 +8416,7 @@ theorem boundary_le_degree_mul_card {V ι : Type*}
     _ = Fintype.card ι * A.card := by
       simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul]
 
-theorem boundary_inter_add_boundary_sdiff_le {V ι : Type*}
+private theorem boundary_inter_add_boundary_sdiff_le {V ι : Type*}
     [Finite V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (R U : Finset V) :
     boundary σ (R ∩ U) +
@@ -8427,7 +8461,7 @@ theorem boundary_inter_add_boundary_sdiff_le {V ι : Type*}
           simp_rw [Finset.sum_add_distrib]
           omega
 
-theorem exists_minimum_sparse_residual_cut {V ι : Type*}
+private theorem exists_minimum_sparse_residual_cut {V ι : Type*}
     [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (R : Finset V) (γ : ℝ)
     (hsparse : ∃ T : Finset V, T ⊆ R ∧
@@ -8453,7 +8487,7 @@ theorem exists_minimum_sparse_residual_cut {V ι : Type*}
   apply hminimum E
   simp only [Finset.mem_filter, Finset.mem_powerset, hER, hE, and_self, candidates]
 
-theorem close_residual_inter_properties {V : Type*} [DecidableEq V]
+private theorem close_residual_inter_properties {V : Type*} [DecidableEq V]
     (R T U : Finset V) (hTR : T ⊆ R)
     (hclose : 3 * (U ∆ T).card < T.card) :
     (R ∩ U).Nonempty ∧
@@ -8489,7 +8523,7 @@ theorem close_residual_inter_properties {V : Type*} [DecidableEq V]
   have hPpos : 0 < (R ∩ U).card := by omega
   exact ⟨Finset.card_pos.mp hPpos, by omega, by omega⟩
 
-theorem minimum_sparse_cut_expands_close_residual_part
+private theorem minimum_sparse_cut_expands_close_residual_part
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (R T U : Finset V) (γ : ℝ)
     (hTR : T ⊆ R)
@@ -8510,7 +8544,7 @@ theorem minimum_sparse_cut_expands_close_residual_part
   have hsize := (close_residual_inter_properties R T U hTR hclose).2.2
   omega
 
-theorem exists_expanding_residual_finpartition
+private theorem exists_expanding_residual_finpartition
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (B : Finset V) (γ α : ℝ)
     (hα : 0 ≤ α)
@@ -8654,7 +8688,7 @@ theorem exists_expanding_residual_finpartition
           add_zero, Std.le_refl]
   exact hmain R hRB
 
-theorem exists_expanding_clean_finpartition
+private theorem exists_expanding_clean_finpartition
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (B : Finset V) (γ α : ℝ)
     (hα : 0 ≤ α)
@@ -8689,7 +8723,7 @@ theorem exists_expanding_clean_finpartition
               exact_mod_cast hdegree
             linarith
 
-noncomputable def completeCleanFinpartition
+private noncomputable def completeCleanFinpartition
     {V : Type*} [Fintype V] [DecidableEq V]
     (B : Finset V) (P : Finpartition (Finset.univ \ B)) :
     Finpartition (Finset.univ : Finset V) := by
@@ -8734,14 +8768,14 @@ noncomputable def completeCleanFinpartition
       simp only [Finset.singleton_ne_empty] at hx
 
 @[simp]
-theorem completeCleanFinpartition_parts
+private theorem completeCleanFinpartition_parts
     {V : Type*} [Fintype V] [DecidableEq V]
     (B : Finset V) (P : Finpartition (Finset.univ \ B)) :
     (completeCleanFinpartition B P).parts =
       P.parts ∪ (⊥ : Finpartition B).parts := by
   rfl
 
-theorem disjoint_clean_parts_singleton_bad_parts
+private theorem disjoint_clean_parts_singleton_bad_parts
     {V : Type*} [Fintype V] [DecidableEq V]
     (B : Finset V) (P : Finpartition (Finset.univ \ B)) :
     Disjoint P.parts (⊥ : Finpartition B).parts := by
@@ -8752,7 +8786,7 @@ theorem disjoint_clean_parts_singleton_bad_parts
   have hxclean := P.subset hCP (Finset.mem_singleton_self x)
   exact (Finset.mem_sdiff.mp hxclean).2 hxB
 
-theorem sum_singleton_bad_boundary_le
+private theorem sum_singleton_bad_boundary_le
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (B : Finset V) :
     (∑ C ∈ (⊥ : Finpartition B).parts,
@@ -8776,7 +8810,7 @@ theorem sum_singleton_bad_boundary_le
     _ = (Fintype.card ι : ℝ) * (B.card : ℝ) := by
           simp only [Finset.sum_const, nsmul_eq_mul, mul_comm]
 
-theorem completeCleanFinpartition_half_expansion
+private theorem completeCleanFinpartition_half_expansion
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (B : Finset V)
     (P : Finpartition (Finset.univ \ B)) (γ : ℝ)
@@ -8803,7 +8837,7 @@ theorem completeCleanFinpartition_half_expansion
       not_false_eq_true,
       Finset.filter_empty, Finset.sum_const_zero, Std.le_refl]
 
-theorem exists_expanding_full_finpartition
+private theorem exists_expanding_full_finpartition
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (B : Finset V) (γ α : ℝ)
     (hα : 0 ≤ α)
@@ -9090,6 +9124,7 @@ namespace KunDiagonalGoodRootGraphLoss
 
 open scoped BigOperators symmDiff
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def goodPermutationGraph {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (B : Finset V) : Finset (V × V) :=
   (permutationGraph p).filter
@@ -9101,7 +9136,7 @@ theorem goodPermutationGraph_subset {V : Type*}
     goodPermutationGraph p B ⊆ permutationGraph p :=
   Finset.filter_subset _ _
 
-theorem card_filter_permutationGraph_proj_mem {V : Type*}
+private theorem card_filter_permutationGraph_proj_mem {V : Type*}
     [Fintype V] [DecidableEq V]
     (π : V × V → V) (p : Equiv.Perm V) (w : V → V × V)
     (hmem : ∀ x, w x ∈ permutationGraph p)
@@ -9121,7 +9156,7 @@ theorem card_filter_permutationGraph_proj_mem {V : Type*}
     exact ⟨w x, Finset.mem_filter.mpr
       ⟨hmem x, by rw [hproj x]; exact hx⟩, hproj x⟩
 
-theorem card_filter_permutationGraph_fst_mem {V : Type*}
+private theorem card_filter_permutationGraph_fst_mem {V : Type*}
     [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (B : Finset V) :
     ((permutationGraph p).filter
@@ -9133,7 +9168,7 @@ theorem card_filter_permutationGraph_fst_mem {V : Type*}
       ((mem_permutationGraph p z.1 z.2).mp hz).symm)
     B
 
-theorem card_filter_permutationGraph_snd_mem {V : Type*}
+private theorem card_filter_permutationGraph_snd_mem {V : Type*}
     [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (B : Finset V) :
     ((permutationGraph p).filter
@@ -9148,7 +9183,7 @@ theorem card_filter_permutationGraph_snd_mem {V : Type*}
       rfl)
     B
 
-theorem permutationGraph_sdiff_goodPermutationGraph_subset {V : Type*}
+private theorem permutationGraph_sdiff_goodPermutationGraph_subset {V : Type*}
     [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (B : Finset V) :
     permutationGraph p \ goodPermutationGraph p B ⊆
@@ -9187,7 +9222,7 @@ theorem card_permutationGraph_sdiff_goodPermutationGraph_le {V : Type*}
         card_filter_permutationGraph_snd_mem]
       omega
 
-theorem card_goodPermutationGraph_add_graph_loss {V : Type*}
+private theorem card_goodPermutationGraph_add_graph_loss {V : Type*}
     [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (B : Finset V) :
     (permutationGraph p \ goodPermutationGraph p B).card +
@@ -9264,7 +9299,7 @@ theorem hasAlmostCentralizerImprovement_zero
   · simp only [permutationDistance_self, mul_zero, zero_le]
 
 
-theorem boundary_expansion_of_half
+private theorem boundary_expansion_of_half
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (h : ℝ)
     (hhalf : ∀ A : Finset V,
@@ -9303,7 +9338,7 @@ theorem boundary_expansion_of_half
     rw [hCreal] at hC
     simpa [C, KunResidualExpanderDecomposition.boundary_complement] using hC
 
-theorem inducedBoundary_le_completed_boundary
+private theorem inducedBoundary_le_completed_boundary
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (B Z : Finset V)
     (hZ : Z = Finset.univ \ B)
@@ -9433,6 +9468,7 @@ namespace MatchedComponentCompletion
 
 open scoped BigOperators
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 noncomputable def completedRestriction {V : Type*} [Fintype V]
     (p : Equiv.Perm V) (Z : Finset V) :
     Equiv.Perm (↥Z) :=
@@ -9446,18 +9482,19 @@ theorem completedRestriction_apply_of_mem
   (Classical.choose_spec
     (exists_completion_of_internal_permutation p Z)) x hx hp
 
-@[simp] theorem completedRestriction_one
+@[simp] public theorem completedRestriction_one
     {V : Type*} [Fintype V] (Z : Finset V) :
     completedRestriction (1 : Equiv.Perm V) Z = 1 := by
   ext x
   simpa only [Equiv.Perm.coe_one, id_eq, SetLike.coe_eq_coe, Subtype.coe_eta] using
     completedRestriction_apply_of_mem (1 : Equiv.Perm V) Z x x.property x.property
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def subtypeBad {V : Type*} [DecidableEq V]
     (Z E : Finset V) : Finset (↥Z) :=
   Finset.univ.filter (fun x => (x : V) ∈ E)
 
-@[simp] theorem mem_subtypeBad
+@[simp] private theorem mem_subtypeBad
     {V : Type*} [DecidableEq V]
     (Z E : Finset V) (x : {x : V // x ∈ Z}) :
     x ∈ subtypeBad Z E ↔ (x : V) ∈ E := by
@@ -9494,7 +9531,7 @@ theorem permutationDistance_le_subtypeBad
   by_contra hnot
   exact hneq (hagrees x hnot)
 
-theorem card_lt_five_mul_permutationDistance_of_subtypeBad
+private theorem card_lt_five_mul_permutationDistance_of_subtypeBad
     {V : Type*} [DecidableEq V]
     (Z E : Finset V) (hZ : Z.Nonempty)
     (p q : Equiv.Perm {x : V // x ∈ Z})
@@ -9520,6 +9557,7 @@ theorem card_lt_five_mul_permutationDistance_of_subtypeBad
     simpa only [Fintype.card_coe] using hZ.card_pos
   omega
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 noncomputable def sourceCompletionBad
     {V ι J : Type*} [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9567,7 +9605,7 @@ theorem card_subtype_sourceCompletionBad
   rw [card_subtypeBad, Finset.inter_eq_right.mpr]
   exact sourceCompletionBad_subset σ p F Z
 
-theorem sourceCompletionBad_good
+private theorem sourceCompletionBad_good
     {V ι J : Type*} [DecidableEq V]
     [Fintype ι] [Group J]
     (σ : ι → Equiv.Perm V) (p : J → Equiv.Perm V)
@@ -9808,7 +9846,7 @@ theorem card_permutation_exit_le_deleted
       ⟨Finset.mem_univ _, (Finset.mem_filter.mp hx).2⟩
   · exact p.injective.injOn
 
-theorem card_composite_exit_le_deleted
+private theorem card_composite_exit_le_deleted
     {V : Type*} [Fintype V] [DecidableEq V]
     (p q : Equiv.Perm V) (Z : Finset V) :
     (Z.filter fun x => p (q x) ∉ Z).card ≤
@@ -9820,7 +9858,7 @@ theorem card_composite_exit_le_deleted
     simpa only [Equiv.Perm.mul_apply] using (Finset.mem_filter.mp hx).2
   · exact (p * q).injective.injOn
 
-theorem card_biUnion_permutation_exit_le
+private theorem card_biUnion_permutation_exit_le
     {V ι : Type*} [Fintype V] [DecidableEq V]
     (I : Finset ι) (p : ι → Equiv.Perm V) (Z : Finset V) :
     (I.biUnion fun i => Z.filter fun x => p i x ∉ Z).card ≤
@@ -9836,7 +9874,7 @@ theorem card_biUnion_permutation_exit_le
       exact card_permutation_exit_le_deleted (p i) Z
     _ = I.card * (Finset.univ \ Z).card := by simp only [Finset.sum_const, smul_eq_mul]
 
-theorem card_biUnion_composite_exit_le
+private theorem card_biUnion_composite_exit_le
     {V ι κ : Type*} [Fintype V] [DecidableEq V]
     (I : Finset ι) (K : Finset κ)
     (p : ι → Equiv.Perm V) (q : κ → Equiv.Perm V)
@@ -9867,6 +9905,7 @@ theorem card_biUnion_composite_exit_le
     _ = I.card * K.card * (Finset.univ \ Z).card := by
       simp only [Finset.sum_const, smul_eq_mul, Nat.mul_assoc]
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 noncomputable def sourceWordTestBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9921,7 +9960,7 @@ theorem sourceCompletionBad_subset_exit_union_wordBad
     exact Or.inr (Or.inr (Or.inr (Or.inr
       (Or.inr ⟨j, hj, k, hk, hne, hfailure⟩))))
 
-theorem card_sourceCompletionBad_le_deleted_add_wordBad
+private theorem card_sourceCompletionBad_le_deleted_add_wordBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
     (σ : ι → Equiv.Perm V) (p : J → Equiv.Perm V)
@@ -9983,7 +10022,7 @@ theorem card_sourceCompletionBad_le_deleted_add_wordBad
       dsimp [T, deleted, W]
       ring
 
-theorem sourceCompletionBad_subset_survivors
+private theorem sourceCompletionBad_subset_survivors
     {V ι J : Type*} [DecidableEq V]
     [Fintype ι] [Group J]
     (σ : ι → Equiv.Perm V) (p : J → Equiv.Perm V)
@@ -9997,7 +10036,7 @@ theorem sourceCompletionBad_subset_survivors
     Finset.mem_biUnion, Finset.mem_univ, Finset.mem_filter, true_and, exists_and_left] at hx
   aesop
 
-theorem sourceCompletionBad_original_density_tendsto_zero
+private theorem sourceCompletionBad_original_density_tendsto_zero
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
     {ι J : Type*} [Fintype ι] [Group J]
@@ -10171,30 +10210,33 @@ namespace KunRealComplexMarkovBridge
 
 open scoped BigOperators ComplexOrder InnerProductSpace Topology
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def realMarkov {ι V : Type*} [Fintype ι]
     (p : ι → Equiv.Perm V) (f : V → ℝ) (x : V) : ℝ :=
   (∑ i, f ((p i).symm x)) / (Fintype.card ι : ℝ)
 
-def permutationUnitary {V : Type*} [Fintype V] (p : Equiv.Perm V) :
+private def permutationUnitary {V : Type*} [Fintype V] (p : Equiv.Perm V) :
     EuclideanSpace ℂ V ≃ₗᵢ[ℂ] EuclideanSpace ℂ V :=
   LinearIsometryEquiv.piLpCongrLeft 2 ℂ ℂ p
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def indicatorVector {V : Type*}
     (f : V → ℝ) : EuclideanSpace ℂ V :=
   WithLp.toLp 2 fun x => (f x : ℂ)
 
 @[simp]
-theorem indicatorVector_apply {V : Type*}
+private theorem indicatorVector_apply {V : Type*}
     (f : V → ℝ) (x : V) :
     indicatorVector f x = (f x : ℂ) := rfl
 
+/-- Internal interface connecting the split non-sofic proof modules. -/
 def permutationMarkov {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (ξ : EuclideanSpace ℂ V) :
     EuclideanSpace ℂ V :=
   (Fintype.card ι : ℂ)⁻¹ • ∑ i, permutationUnitary (p i) ξ
 
 @[simp]
-theorem permutationMarkov_apply {ι V : Type*} [Fintype ι] [Fintype V]
+private theorem permutationMarkov_apply {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (ξ : EuclideanSpace ℂ V) (x : V) :
     permutationMarkov p ξ x =
       (∑ i, ξ ((p i).symm x)) / (Fintype.card ι : ℂ) := by
@@ -10203,7 +10245,7 @@ theorem permutationMarkov_apply {ι V : Type*} [Fintype ι] [Fintype V]
       smul_eq_mul, div_eq_mul_inv,
     mul_comm]
 
-theorem indicatorVector_realMarkov
+private theorem indicatorVector_realMarkov
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) :
     indicatorVector (realMarkov p f) =
@@ -10216,7 +10258,7 @@ theorem indicatorVector_realMarkov
       (∑ i, (f ((p i).symm x) : ℂ)) / (Fintype.card ι : ℂ)
   norm_cast
 
-theorem indicatorVector_iterate_realMarkov
+private theorem indicatorVector_iterate_realMarkov
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) (k : ℕ) :
     indicatorVector (((realMarkov p)^[k]) f) =
@@ -10227,7 +10269,7 @@ theorem indicatorVector_iterate_realMarkov
       rw [Function.iterate_succ_apply', Function.iterate_succ_apply',
         indicatorVector_realMarkov, ih]
 
-theorem norm_indicatorVector_sub_sq
+private theorem norm_indicatorVector_sub_sq
     {V : Type*} [Fintype V] (f g : V → ℝ) :
     ‖indicatorVector f - indicatorVector g‖ ^ 2 =
       ∑ x, (f x - g x) ^ 2 := by

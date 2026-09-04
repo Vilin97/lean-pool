@@ -4,10 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-module
+import LeanPool.NonSoficGroup.Compression
 
-public import LeanPool.NonSoficGroup.Compression
-import all LeanPool.NonSoficGroup.Compression
+/-!
+# The finitely presented non-sofic group
+
+This file completes the finite-model obstruction and derives the headline
+existence theorem.
+-/
 
 noncomputable section
 
@@ -26,16 +30,16 @@ namespace ThompsonFFiniteQuotient
 variable {G : Type*} [Group G]
 
 /-- The conjugate of `b` by the `n`th power of `a`. -/
-public def conjugateTerm (a b : G) (n : ℕ) : G :=
+def conjugateTerm (a b : G) (n : ℕ) : G :=
   (a ^ n)⁻¹ * b * a ^ n
 
-theorem conjugateTerm_succ (a b : G) (n : ℕ) :
+private theorem conjugateTerm_succ (a b : G) (n : ℕ) :
     conjugateTerm a b (n + 1) =
       a⁻¹ * conjugateTerm a b n * a := by
   simp only [conjugateTerm, pow_succ, mul_inv_rev]
   group
 
-theorem conjugation_shift (a u v w : G)
+private theorem conjugation_shift (a u v w : G)
     (h : u⁻¹ * v * u = w) :
     (a⁻¹ * u * a)⁻¹ * (a⁻¹ * v * a) *
         (a⁻¹ * u * a) = a⁻¹ * w * a := by
@@ -45,7 +49,7 @@ theorem conjugation_shift (a u v w : G)
       group
     _ = a⁻¹ * w * a := by rw [h]
 
-theorem conjugacy_relation_of_commute (a b : G) (n : ℕ)
+private theorem conjugacy_relation_of_commute (a b : G) (n : ℕ)
     (h : Commute (a * b⁻¹) (conjugateTerm a b n)) :
     b⁻¹ * conjugateTerm a b n * b =
       conjugateTerm a b (n + 1) := by
@@ -59,7 +63,7 @@ theorem conjugacy_relation_of_commute (a b : G) (n : ℕ)
     _ = a⁻¹ * conjugateTerm a b n * a := by
       group
 
-theorem conjugacy_relation_shift (a b u : G) (n : ℕ)
+private theorem conjugacy_relation_shift (a b u : G) (n : ℕ)
     (h : u⁻¹ * conjugateTerm a b n * u =
       conjugateTerm a b (n + 1)) :
     (a⁻¹ * u * a)⁻¹ * conjugateTerm a b (n + 1) *
@@ -69,7 +73,7 @@ theorem conjugacy_relation_shift (a b u : G) (n : ℕ)
   exact conjugation_shift a u
     (conjugateTerm a b n) (conjugateTerm a b (n + 1)) h
 
-theorem conjugacy_relation_step (a b : G) (n : ℕ)
+private theorem conjugacy_relation_step (a b : G) (n : ℕ)
     (hfirst : b⁻¹ * conjugateTerm a b 1 * b =
       conjugateTerm a b 2)
     (hprevious : b⁻¹ * conjugateTerm a b n * b =
@@ -108,7 +112,7 @@ theorem conjugacy_relation_step (a b : G) (n : ℕ)
       rw [hfirst, hcurrent]
     _ = conjugateTerm a b (n + 3) := hdouble
 
-theorem conjugacy_relation_all (a b : G)
+private theorem conjugacy_relation_all (a b : G)
     (hfirst : b⁻¹ * conjugateTerm a b 1 * b =
       conjugateTerm a b 2)
     (hsecond : b⁻¹ * conjugateTerm a b 2 * b =
@@ -122,7 +126,7 @@ theorem conjugacy_relation_all (a b : G)
       simpa only [Nat.add_assoc, Nat.reduceAdd] using conjugacy_relation_step a b (n + 1) hfirst
         hprevious hcurrent
 
-theorem finite_group_commute_of_thompsonF_two_relations
+private theorem finite_group_commute_of_thompsonF_two_relations
     {G : Type*} [Group G] [Finite G] (a b : G)
     (hfirst : Commute (a * b⁻¹) (a⁻¹ * b * a))
     (hsecond : Commute (a * b⁻¹) ((a ^ 2)⁻¹ * b * a ^ 2)) :
@@ -161,15 +165,15 @@ namespace ThompsonFTwoRelatorLEF
 
 open scoped commutatorElement
 
-def thompsonFRelator (n : ℕ) : FreeGroup (Fin 2) :=
+private def thompsonFRelator (n : ℕ) : FreeGroup (Fin 2) :=
   ⁅FreeGroup.of (0 : Fin 2) * (FreeGroup.of (1 : Fin 2))⁻¹,
     ((FreeGroup.of (0 : Fin 2)) ^ n)⁻¹ *
       FreeGroup.of (1 : Fin 2) * (FreeGroup.of (0 : Fin 2)) ^ n⁆
 
-def thompsonFGeneratorCommutator : FreeGroup (Fin 2) :=
+private def thompsonFGeneratorCommutator : FreeGroup (Fin 2) :=
   ⁅FreeGroup.of (0 : Fin 2), FreeGroup.of (1 : Fin 2)⁆
 
-theorem not_lef_of_thompsonF_two_relations
+private theorem not_lef_of_thompsonF_two_relations
     {G : Type*} [Group G] (a b : G)
     (h₁ : Commute (a * b⁻¹) (a⁻¹ * b * a))
     (h₂ : Commute (a * b⁻¹) ((a ^ 2)⁻¹ * b * a ^ 2))
@@ -256,7 +260,7 @@ namespace ThompsonFLocalWitness
 
 open ThompsonPrefixInsertion
 
-theorem prefixWordAction_inv {g : BinaryLeavittˣ}
+private theorem prefixWordAction_inv {g : BinaryLeavittˣ}
     {a b : List (Fin 2)} (h : PrefixWordAction g a b) :
     PrefixWordAction g⁻¹ b a := by
   have hunit : (↑g⁻¹ : BinaryLeavitt) * (g : BinaryLeavitt) = 1 := by
@@ -280,7 +284,7 @@ theorem prefixWordAction_inv {g : BinaryLeavittˣ}
             rw [mul_assoc]
       _ = leavittWordT a := by rw [hunit, mul_one]
 
-theorem prefixWordAction_prefixInsertion {g : BinaryLeavittˣ}
+private theorem prefixWordAction_prefixInsertion {g : BinaryLeavittˣ}
     {a b : List (Fin 2)} (l : List (Fin 2))
     (h : PrefixWordAction g a b) :
     PrefixWordAction (prefixInsertionHom l g) (l ++ a) (l ++ b) := by
@@ -302,15 +306,15 @@ theorem prefixWordAction_prefixInsertion {g : BinaryLeavittˣ}
     noncomm_ring [hl, hl', h.deletion]
     rw [← mul_assoc, h.deletion]
 
-def rootRotation : BinaryLeavittˣ :=
+private def rootRotation : BinaryLeavittˣ :=
   cylinderSwap [0] [1, 0] (by decide) (by decide) *
     cylinderSwap [0] [1, 1] (by decide) (by decide) *
     cylinderSwap [0] [1] (by decide) (by decide)
 
-def rightRotation : BinaryLeavittˣ :=
+private def rightRotation : BinaryLeavittˣ :=
   prefixInsertionHom [1] rootRotation
 
-theorem rootRotation_action_zero_zero :
+private theorem rootRotation_action_zero_zero :
     PrefixWordAction rootRotation [0, 0] [0] := by
   unfold rootRotation
   rw [mul_assoc]
@@ -323,7 +327,7 @@ theorem rootRotation_action_zero_zero :
     · exact ThompsonFiniteGeneration.cylinderSwap_prefixWordAction_of_cases
         (by decide) (by decide) (by decide)
 
-theorem rootRotation_action_zero_one :
+private theorem rootRotation_action_zero_one :
     PrefixWordAction rootRotation [0, 1] [1, 0] := by
   unfold rootRotation
   rw [mul_assoc]
@@ -336,7 +340,7 @@ theorem rootRotation_action_zero_one :
     · exact ThompsonFiniteGeneration.cylinderSwap_prefixWordAction_of_cases
         (by decide) (by decide) (by decide)
 
-theorem rootRotation_action_one :
+private theorem rootRotation_action_one :
     PrefixWordAction rootRotation [1] [1, 1] := by
   unfold rootRotation
   rw [mul_assoc]
@@ -349,14 +353,14 @@ theorem rootRotation_action_one :
     · exact ThompsonFiniteGeneration.cylinderSwap_prefixWordAction_of_cases
         (by decide) (by decide) (by decide)
 
-theorem generatorB_eq_prefixInsertion :
+private theorem generatorB_eq_prefixInsertion :
     rightRotation⁻¹ = prefixInsertionHom [1] rootRotation⁻¹ := by
   change
     (prefixInsertionHom [1] rootRotation)⁻¹ =
       prefixInsertionHom [1] rootRotation⁻¹
   exact ((prefixInsertionHom [1]).map_inv rootRotation).symm
 
-theorem generator_two_eq_prefixInsertion :
+private theorem generator_two_eq_prefixInsertion :
     rootRotation⁻¹⁻¹ * rightRotation⁻¹ * rootRotation⁻¹ =
       prefixInsertionHom [1, 1] rootRotation⁻¹ := by
   calc
@@ -369,7 +373,7 @@ theorem generator_two_eq_prefixInsertion :
       prefixInsertionHom_conjugate_of_prefixWordAction
         rootRotation [1] [1, 1] rootRotation_action_one rootRotation⁻¹
 
-theorem generator_three_eq_prefixInsertion :
+private theorem generator_three_eq_prefixInsertion :
     (rootRotation⁻¹ ^ 2)⁻¹ * rightRotation⁻¹ * rootRotation⁻¹ ^ 2 =
       prefixInsertionHom [1, 1, 1] rootRotation⁻¹ := by
   have hrotation :
@@ -388,7 +392,7 @@ theorem generator_three_eq_prefixInsertion :
       prefixInsertionHom_conjugate_of_prefixWordAction
         rootRotation [1, 1] [1, 1, 1] hrotation rootRotation⁻¹
 
-theorem generator_difference_action_one_one :
+private theorem generator_difference_action_one_one :
     PrefixWordAction (rootRotation⁻¹ * rightRotation⁻¹⁻¹) [1, 1] [1, 1] := by
   have hrotation :
       PrefixWordAction rootRotation [1, 1] [1, 1, 1] := by
@@ -405,7 +409,7 @@ theorem generator_difference_action_one_one :
   simp only [inv_inv]
   exact prefixWordAction_mul (prefixWordAction_inv hrotation) hright
 
-theorem commute_prefixInsertion_of_prefixWordAction_fixed
+private theorem commute_prefixInsertion_of_prefixWordAction_fixed
     (g : BinaryLeavittˣ) (w : List (Fin 2))
     (h : PrefixWordAction g w w) (u : BinaryLeavittˣ) :
     Commute g (prefixInsertionHom w u) := by
@@ -417,7 +421,7 @@ theorem commute_prefixInsertion_of_prefixWordAction_fixed
         (g * prefixInsertionHom w u * g⁻¹) * g := by group
     _ = prefixInsertionHom w u * g := by rw [hconjugate]
 
-theorem relator_one :
+private theorem relator_one :
     Commute (rootRotation⁻¹ * rightRotation⁻¹⁻¹)
       (rootRotation⁻¹⁻¹ * rightRotation⁻¹ * rootRotation⁻¹) := by
   rw [generator_two_eq_prefixInsertion]
@@ -425,7 +429,7 @@ theorem relator_one :
     (rootRotation⁻¹ * rightRotation⁻¹⁻¹) [1, 1]
     generator_difference_action_one_one rootRotation⁻¹
 
-theorem relator_two :
+private theorem relator_two :
     Commute (rootRotation⁻¹ * rightRotation⁻¹⁻¹)
       ((rootRotation⁻¹ ^ 2)⁻¹ * rightRotation⁻¹ * rootRotation⁻¹ ^ 2) := by
   rw [generator_three_eq_prefixInsertion]
@@ -434,13 +438,13 @@ theorem relator_two :
   simpa only [Fin.isValue, List.cons_append, List.nil_append] using
     prefixWordAction_append generator_difference_action_one_one [1]
 
-theorem cylinderSwap_mem_binaryPrefixTranspositionGroup
+private theorem cylinderSwap_mem_binaryPrefixTranspositionGroup
     (a b : List (Fin 2))
     (hab : ¬ a <+: b) (hba : ¬ b <+: a) :
     cylinderSwap a b hab hba ∈ binaryPrefixTranspositionGroup :=
   Subgroup.subset_closure ⟨a, b, hab, hba, rfl⟩
 
-theorem rootRotation_mem_binaryPrefixTranspositionGroup :
+private theorem rootRotation_mem_binaryPrefixTranspositionGroup :
     rootRotation ∈ binaryPrefixTranspositionGroup := by
   unfold rootRotation
   exact binaryPrefixTranspositionGroup.mul_mem
@@ -452,18 +456,18 @@ theorem rootRotation_mem_binaryPrefixTranspositionGroup :
     (cylinderSwap_mem_binaryPrefixTranspositionGroup
       [0] [1] (by decide) (by decide))
 
-theorem generatorA_mem_binaryPrefixTranspositionGroup :
+private theorem generatorA_mem_binaryPrefixTranspositionGroup :
     rootRotation⁻¹ ∈ binaryPrefixTranspositionGroup :=
   binaryPrefixTranspositionGroup.inv_mem
     rootRotation_mem_binaryPrefixTranspositionGroup
 
-theorem generatorB_mem_binaryPrefixTranspositionGroup :
+private theorem generatorB_mem_binaryPrefixTranspositionGroup :
     rightRotation⁻¹ ∈ binaryPrefixTranspositionGroup := by
   rw [generatorB_eq_prefixInsertion]
   exact prefixInsertionHom_mem_binaryPrefixTranspositionGroup
     [1] rootRotation⁻¹ generatorA_mem_binaryPrefixTranspositionGroup
 
-theorem generators_not_commute : ¬ Commute rootRotation⁻¹ rightRotation⁻¹ := by
+private theorem generators_not_commute : ¬ Commute rootRotation⁻¹ rightRotation⁻¹ := by
   have ha_zero_one :
       PrefixWordAction rootRotation⁻¹ [1, 0] [0, 1] :=
     prefixWordAction_inv rootRotation_action_zero_one
@@ -517,17 +521,17 @@ theorem generators_not_commute : ¬ Commute rootRotation⁻¹ rightRotation⁻¹
     _ = 0 := leavittWordT_mul_wordS_of_incomparable
       [0, 1, 1] [1, 0, 0] (by decide) (by decide)
 
-def sourceGeneratorA :
+private def sourceGeneratorA :
     localPrefixTranspositionGroup [0, 0, 0, 1] :=
   ⟨prefixInsertionHom [0, 0, 0, 1] rootRotation⁻¹,
     ⟨rootRotation⁻¹, generatorA_mem_binaryPrefixTranspositionGroup, rfl⟩⟩
 
-def sourceGeneratorB :
+private def sourceGeneratorB :
     localPrefixTranspositionGroup [0, 0, 0, 1] :=
   ⟨prefixInsertionHom [0, 0, 0, 1] rightRotation⁻¹,
     ⟨rightRotation⁻¹, generatorB_mem_binaryPrefixTranspositionGroup, rfl⟩⟩
 
-theorem source_relator_one :
+private theorem source_relator_one :
     Commute (sourceGeneratorA * sourceGeneratorB⁻¹)
       (sourceGeneratorA⁻¹ * sourceGeneratorB * sourceGeneratorA) := by
   apply (commute_iff_eq _ _).2
@@ -537,7 +541,7 @@ theorem source_relator_one :
     (relator_one.map
       (prefixInsertionHom [0, 0, 0, 1])).eq
 
-theorem source_relator_two :
+private theorem source_relator_two :
     Commute (sourceGeneratorA * sourceGeneratorB⁻¹)
       ((sourceGeneratorA ^ 2)⁻¹ * sourceGeneratorB *
         sourceGeneratorA ^ 2) := by
@@ -549,7 +553,7 @@ theorem source_relator_two :
     (relator_two.map
       (prefixInsertionHom [0, 0, 0, 1])).eq
 
-theorem source_generators_not_commute :
+private theorem source_generators_not_commute :
     ¬ Commute sourceGeneratorA sourceGeneratorB := by
   intro hcommute
   apply generators_not_commute
@@ -567,7 +571,7 @@ end ThompsonFLocalWitness
 
 section
 
-theorem sourceLocalPrefixTranspositionGroup_notLEF :
+private theorem sourceLocalPrefixTranspositionGroup_notLEF :
     ¬ LEF
       (ThompsonPrefixInsertion.localPrefixTranspositionGroup
         [0, 0, 0, 1]) := by
@@ -590,7 +594,7 @@ open KunSourceUnconditionalFullDecomposition
 open KunExactActualSourceAmbientGenerators
 open KunUnconditionalActualSourceGeneratorData
 
-theorem exists_unconditional_actual_source_dual_finpartition_sequences
+private theorem exists_unconditional_actual_source_dual_finpartition_sequences
     (A : SoficApproximation
       (prefixElementaryGroup
         ninePrefixCode)) :
@@ -695,7 +699,7 @@ namespace KunCombinedPrescribedRootSourceTolerance
 
 open Filter Topology
 
-theorem eventually_scaled_tolerance_lt
+private theorem eventually_scaled_tolerance_lt
     (N t : ℕ → ℕ)
     (hN : ∀ n, 0 < N n)
     (ht : Tendsto (fun n => (t n : ℝ) / (N n : ℝ)) atTop (𝓝 0))
@@ -713,7 +717,53 @@ theorem eventually_scaled_tolerance_lt
     _ = ell * (N n : ℝ) := by
       field_simp
 
-theorem exists_prescribed_radius_union_source_completed_tolerance
+private theorem union_card_ratio_tendsto_zero
+    (V : ℕ → Type*)
+    [∀ n, Fintype (V n)] [∀ n, DecidableEq (V n)]
+    (hVpositive : ∀ n, 0 < Fintype.card (V n))
+    (left right : (n : ℕ) → Finset (V n))
+    (hleft : Tendsto
+      (fun n => ((left n).card : ℝ) / Fintype.card (V n))
+      atTop (𝓝 0))
+    (hright : Tendsto
+      (fun n => ((right n).card : ℝ) / Fintype.card (V n))
+      atTop (𝓝 0)) :
+    Tendsto
+      (fun n => ((left n ∪ right n).card : ℝ) /
+        Fintype.card (V n))
+      atTop (𝓝 0) := by
+  have hsum : Tendsto
+      (fun n =>
+        ((left n).card : ℝ) / Fintype.card (V n) +
+          ((right n).card : ℝ) / Fintype.card (V n))
+      atTop (𝓝 0) := by
+    simpa only [zero_add] using hleft.add hright
+  refine squeeze_zero (fun _ => by positivity) ?_ hsum
+  intro n
+  have hcard :
+      ((left n ∪ right n).card : ℝ) ≤
+        ((left n).card : ℝ) + ((right n).card : ℝ) := by
+    exact_mod_cast Finset.card_union_le (left n) (right n)
+  calc
+    ((left n ∪ right n).card : ℝ) / Fintype.card (V n) ≤
+        (((left n).card : ℝ) + ((right n).card : ℝ)) /
+          Fintype.card (V n) :=
+      div_le_div_of_nonneg_right hcard
+        (by exact_mod_cast (hVpositive n).le)
+    _ = ((left n).card : ℝ) / Fintype.card (V n) +
+          ((right n).card : ℝ) / Fintype.card (V n) := by ring
+
+private theorem scaled_card_le_augmented_budget
+    {V : Type*}
+    (d extra : ℕ) (selected combined : Finset V)
+    (hsubset : selected ⊆ combined) :
+    2 * d * selected.card ≤ 2 * d * combined.card + extra + 1 := by
+  have hcard := Finset.card_le_card hsubset
+  have hscaled : 2 * d * selected.card ≤ 2 * d * combined.card :=
+    Nat.mul_le_mul_left (2 * d) hcard
+  omega
+
+private theorem exists_prescribed_radius_union_source_completed_tolerance
     (V : ℕ → Type*)
     [∀ n, Fintype (V n)] [∀ n, DecidableEq (V n)]
     (hVpositive : ∀ n, 0 < Fintype.card (V n))
@@ -790,28 +840,9 @@ theorem exists_prescribed_radius_union_source_completed_tolerance
       Tendsto
         (fun n => ((B n j).card : ℝ) / (N n : ℝ))
         atTop (𝓝 0) := by
-    have hsum : Tendsto
-        (fun n =>
-          ((root n (R j)).card : ℝ) / Fintype.card (V n) +
-            ((source n).card : ℝ) / Fintype.card (V n))
-        atTop (𝓝 0) := by
-      simpa only [zero_add] using (hroot (R j)).add hsource
-    refine squeeze_zero (fun n => by positivity) ?_ hsum
-    intro n
-    have hcard :
-        ((B n j).card : ℝ) ≤
-          ((root n (R j)).card : ℝ) +
-            ((source n).card : ℝ) := by
-      exact_mod_cast Finset.card_union_le (root n (R j)) (source n)
-    calc
-      ((B n j).card : ℝ) / (N n : ℝ) ≤
-          (((root n (R j)).card : ℝ) +
-            ((source n).card : ℝ)) / (N n : ℝ) :=
-        div_le_div_of_nonneg_right hcard (hNpositive n).le
-      _ = ((root n (R j)).card : ℝ) / Fintype.card (V n) +
-            ((source n).card : ℝ) / Fintype.card (V n) := by
-        dsimp [N]
-        ring
+    simpa only [B, N] using
+      union_card_ratio_tendsto_zero V hVpositive
+        (fun n => root n (R j)) source (hroot (R j)) hsource
   let e : ℕ → ℕ → ℝ := fun n j =>
     (((B n j).card : ℝ) / (N n : ℝ)) / δ j
   have hepositive (n j : ℕ) : 0 ≤ e n j := by
@@ -886,29 +917,14 @@ theorem exists_prescribed_radius_union_source_completed_tolerance
     omega
   have hrootbudget (n : ℕ) :
       2 * d * (root n (R (m n))).card ≤ t n := by
-    have hsub :
-        root n (R (m n)) ⊆ B n (m n) := by
-      dsimp [B]
+    apply scaled_card_le_augmented_budget
+    · dsimp [B]
       exact Finset.subset_union_left
-    have hcard := Finset.card_le_card hsub
-    have hmul :
-        2 * d * (root n (R (m n))).card ≤
-          2 * d * (B n (m n)).card :=
-      Nat.mul_le_mul_left (2 * d) hcard
-    dsimp [t]
-    omega
   have hsourcebudget (n : ℕ) :
       2 * d * (source n).card ≤ t n := by
-    have hsub : source n ⊆ B n (m n) := by
-      dsimp [B]
+    apply scaled_card_le_augmented_budget
+    · dsimp [B]
       exact Finset.subset_union_right
-    have hcard := Finset.card_le_card hsub
-    have hmul :
-        2 * d * (source n).card ≤
-          2 * d * (B n (m n)).card :=
-      Nat.mul_le_mul_left (2 * d) hcard
-    dsimp [t]
-    omega
   have hrooterrorbudget (n : ℕ) : rootError n ≤ t n := by
     dsimp [t]
     omega
@@ -1000,7 +1016,7 @@ namespace KunLiteralSourceSelectedComponents
 open Filter Topology
 open scoped BigOperators Pointwise
 
-def sourceConjugacyDisagreementBad
+private def sourceConjugacyDisagreementBad
     {G : Type*} [Group G]
     (A : SoficApproximation G)
     (u g : G) (n : ℕ) : Finset (Fin (A.model n).size) := by
@@ -1010,7 +1026,7 @@ def sourceConjugacyDisagreementBad
       ((A.model n).action u * (A.model n).action g *
         ((A.model n).action u)⁻¹) x
 
-theorem sourceConjugacyDisagreementBad_density_tendsto_zero
+private theorem sourceConjugacyDisagreementBad_density_tendsto_zero
     {G : Type*} [Group G]
     (A : SoficApproximation G)
     (u g : G) :
@@ -1032,7 +1048,7 @@ namespace KunActualBothTransportedOverlapScales
 open Filter Topology
 open scoped BigOperators
 
-theorem source_both_transported_generator_boundary_density_tendsto_zero
+private theorem source_both_transported_generator_boundary_density_tendsto_zero
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -1237,7 +1253,7 @@ theorem source_both_transported_generator_boundary_density_tendsto_zero
                 (A.model n).size) from funext hidentity]
   exact hsum
 
-theorem exists_source_both_common_slow_overlap_scales
+private theorem exists_source_both_common_slow_overlap_scales
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -1390,7 +1406,7 @@ open scoped BigOperators
 
 universe v
 
-def sourceCompressionUAlphaHom :
+private def sourceCompressionUAlphaHom :
     prefixElementaryGroup alphaPrefixCode →*
       prefixElementaryGroup alphaZeroPrefixCode :=
   ((MulAut.conj compressionU).toMonoidHom.comp
@@ -1403,7 +1419,7 @@ def sourceCompressionUAlphaHom :
           rw [← compressionU_map_alphaPrefixElementaryGroup]
           exact ⟨g.val, g.property, rfl⟩)
 
-noncomputable def sourceCompressionUAlphaEquiv :
+private noncomputable def sourceCompressionUAlphaEquiv :
     prefixElementaryGroup alphaPrefixCode ≃*
       prefixElementaryGroup alphaZeroPrefixCode := by
   apply MulEquiv.ofBijective sourceCompressionUAlphaHom
@@ -1428,7 +1444,7 @@ noncomputable def sourceCompressionUAlphaEquiv :
     apply Subtype.ext
     exact heq
 
-noncomputable def sourceCompressedGeneratingFinset
+private noncomputable def sourceCompressedGeneratingFinset
     (SΓ : Finset
       (prefixElementaryGroup alphaPrefixCode)) :
     Finset
@@ -1436,7 +1452,7 @@ noncomputable def sourceCompressedGeneratingFinset
   classical
   exact SΓ.image sourceCompressionUAlphaEquiv
 
-theorem sourceCompressedGeneratingFinset_one_mem
+private theorem sourceCompressedGeneratingFinset_one_mem
     (SΓ : Finset
       (prefixElementaryGroup alphaPrefixCode))
     (hone : 1 ∈ SΓ) :
@@ -1446,7 +1462,7 @@ theorem sourceCompressedGeneratingFinset_one_mem
   exact Finset.mem_image.mpr
     ⟨1, hone, map_one sourceCompressionUAlphaEquiv⟩
 
-theorem sourceCompressedGeneratingFinset_inv_mem
+private theorem sourceCompressedGeneratingFinset_inv_mem
     (SΓ : Finset
       (prefixElementaryGroup alphaPrefixCode))
     (hsymmetric : ∀ g ∈ SΓ, g⁻¹ ∈ SΓ)
@@ -1462,7 +1478,7 @@ theorem sourceCompressedGeneratingFinset_inv_mem
     ⟨g⁻¹, hsymmetric g hg,
       map_inv sourceCompressionUAlphaEquiv g⟩
 
-theorem sourceCompressedGeneratingFinset_closure
+private theorem sourceCompressedGeneratingFinset_closure
     (SΓ : Finset
       (prefixElementaryGroup alphaPrefixCode))
     (hgenerates : Subgroup.closure
@@ -1492,7 +1508,7 @@ theorem sourceCompressedGeneratingFinset_closure
       sourceCompressionUAlphaEquiv.toMonoidHom
       sourceCompressionUAlphaEquiv.surjective]
 
-theorem exists_sourceCompressedKazhdanPair_with_same_generators
+private theorem exists_sourceCompressedKazhdanPair_with_same_generators
     (SΓ : Finset
       (prefixElementaryGroup alphaPrefixCode))
     (hsymmetric : ∀ g ∈ SΓ, g⁻¹ ∈ SΓ)
@@ -1514,7 +1530,7 @@ theorem exists_sourceCompressedKazhdanPair_with_same_generators
       (sourceCompressedGeneratingFinset_inv_mem SΓ hsymmetric)
       (sourceCompressedGeneratingFinset_closure SΓ hgenerates)
 
-def sourceCompressedLocalProductToAlpha :
+private def sourceCompressedLocalProductToAlpha :
     (prefixElementaryGroup alphaZeroPrefixCode ×
       ThompsonPrefixInsertion.localPrefixTranspositionGroup
         [0, 0, 0, 1]) →*
@@ -1534,7 +1550,7 @@ def sourceCompressedLocalProductToAlpha :
               (ThompsonPrefixInsertion.sourceLocalPrefixTranspositionGroup_le_alpha_sourceWord
                   x.2.property))
 
-theorem sourceCompressedLocalProductEmbedding_factors_through_alpha :
+private theorem sourceCompressedLocalProductEmbedding_factors_through_alpha :
     SourceGeneratedWordCrossing.sourceAlphaInclusion.comp
         sourceCompressedLocalProductToAlpha =
       ThompsonPrefixInsertion.sourceCompressedLocalProductEmbedding := by
@@ -1543,7 +1559,7 @@ theorem sourceCompressedLocalProductEmbedding_factors_through_alpha :
   apply Subtype.ext
   rfl
 
-theorem source_compressed_local_product_word_crossing_density_tendsto_zero
+private theorem source_compressed_local_product_word_crossing_density_tendsto_zero
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (SΓ : Finset
@@ -1591,7 +1607,7 @@ theorem source_compressed_local_product_word_crossing_density_tendsto_zero
           (sourceCompressedLocalProductToAlpha z)
   simpa only [hfactor] using hword
 
-theorem source_compressed_local_product_ball_crossing_density_tendsto_zero
+private theorem source_compressed_local_product_ball_crossing_density_tendsto_zero
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (SΓ : Finset
@@ -1645,7 +1661,7 @@ theorem source_compressed_local_product_ball_crossing_density_tendsto_zero
             hgenerates Q hboundary z)
   simpa only [Nat.cast_sum, Finset.sum_div] using hsum
 
-def sourceCompressedLocalProductApproximation
+private def sourceCompressedLocalProductApproximation
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode)) :
     SoficApproximation
@@ -1659,7 +1675,7 @@ def sourceCompressedLocalProductApproximation
     A
 
 @[simp]
-theorem sourceCompressedLocalProductApproximation_model_size
+private theorem sourceCompressedLocalProductApproximation_model_size
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (n : ℕ) :
@@ -1667,7 +1683,7 @@ theorem sourceCompressedLocalProductApproximation_model_size
       (A.model n).size := by
   rfl
 
-theorem source_canonical_product_radius_crossing_density_tendsto_zero
+private theorem source_canonical_product_radius_crossing_density_tendsto_zero
     [DecidableEq
       (prefixElementaryGroup
         alphaZeroPrefixCode)]
@@ -1736,7 +1752,7 @@ namespace SourceRetainedActualMatching
 open Filter Topology
 open scoped BigOperators symmDiff
 
-noncomputable def logarithmicComponentRank
+private noncomputable def logarithmicComponentRank
     {V : Type*} [Fintype V] [DecidableEq V]
     (Q : Finpartition (Finset.univ : Finset V))
     (H r : ℝ) : V → ℤ :=
@@ -1744,7 +1760,7 @@ noncomputable def logarithmicComponentRank
     (fun x => Real.log (partitionComponentSize Q x : ℝ))
     H r
 
-noncomputable def retainedTransportedComponents
+private noncomputable def retainedTransportedComponents
     {V : Type*} [Fintype V] [DecidableEq V]
     (Q : Finpartition (Finset.univ : Finset V))
     (T : Equiv.Perm V) (H r eta : ℝ) : Finset (Finset V) :=
@@ -1752,7 +1768,7 @@ noncomputable def retainedTransportedComponents
     (transportedUnivFinpartition Q T) Q T
     (logarithmicComponentRank Q H r) eta
 
-theorem retained_transport_component_matching_bounds
+private theorem retained_transport_component_matching_bounds
     {V : Type*} [Fintype V] [DecidableEq V]
     (Q : Finpartition (Finset.univ : Finset V))
     (T : Equiv.Perm V)
@@ -1830,7 +1846,7 @@ theorem retained_transport_component_matching_bounds
       ((transportedUnivFinpartition Q T).nonempty_of_mem_parts hpart)
       H eta hoverlap hsize hsmall
 
-theorem retained_source_transport_matching_of_ambient_midrank_variance
+private theorem retained_source_transport_matching_of_ambient_midrank_variance
     (V : ℕ → Type*)
     [∀ n, Fintype (V n)] [∀ n, Nonempty (V n)]
     [∀ n, DecidableEq (V n)]
@@ -1976,7 +1992,7 @@ namespace KunActualBothTransportedOverlapScales
 open Filter Topology
 open scoped BigOperators
 
-theorem exists_source_both_capped_overlap_scales
+private theorem exists_source_both_capped_overlap_scales
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -2101,7 +2117,7 @@ namespace KunLiteralNineSourceCompletedCentralizerModels
 open Filter Topology
 open scoped BigOperators
 
-theorem sourceAmbientGeneratedWord_crossing_density_tendsto_zero
+private theorem sourceAmbientGeneratedWord_crossing_density_tendsto_zero
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -2134,7 +2150,7 @@ theorem sourceAmbientGeneratedWord_crossing_density_tendsto_zero
     SourceGeneratedWordCrossing.fixed_generated_word_crossing_density_tendsto_zero
         A (MonoidHom.id _) S hsymmetric hgenerates Q hboundary g
 
-theorem sourceAmbientFiniteFamily_crossing_density_tendsto_zero
+private theorem sourceAmbientFiniteFamily_crossing_density_tendsto_zero
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -2179,7 +2195,7 @@ theorem sourceAmbientFiniteFamily_crossing_density_tendsto_zero
           hgenerates Q hboundary (g i))
   simpa only [Finset.sum_div] using hsum
 
-theorem sourceAmbientActualInverse_crossing_density_tendsto_zero
+private theorem sourceAmbientActualInverse_crossing_density_tendsto_zero
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -2221,7 +2237,7 @@ theorem sourceAmbientActualInverse_crossing_density_tendsto_zero
           (by simpa only [Fintype.card_fin] using hlabel)
           hinverse
 
-theorem exists_source_common_log_rank_with_ambient_midrank_variance
+private theorem exists_source_common_log_rank_with_ambient_midrank_variance
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (SΓ : Finset
@@ -2484,13 +2500,13 @@ namespace KunActualFirstStageReferenceExpansion
 open Filter Topology
 open scoped BigOperators
 
-def componentGeneratorDisagreement
+private def componentGeneratorDisagreement
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (C : Finset V)
     (σref σact : ι → Equiv.Perm V) : ℕ :=
   ∑ i : ι, (C.filter fun x => σref i x ≠ σact i x).card
 
-theorem componentGeneratorDisagreement_comm
+private theorem componentGeneratorDisagreement_comm
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (C : Finset V)
     (σref σact : ι → Equiv.Perm V) :
@@ -2505,7 +2521,7 @@ theorem componentGeneratorDisagreement_comm
   simp only [Finset.mem_filter]
   exact and_congr_right fun _ => ne_comm
 
-theorem boundary_le_boundary_add_componentGeneratorDisagreement
+private theorem boundary_le_boundary_add_componentGeneratorDisagreement
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (σref σact : ι → Equiv.Perm V)
     (C E : Finset V) (hEC : E ⊆ C) :
@@ -2543,7 +2559,7 @@ theorem boundary_le_boundary_add_componentGeneratorDisagreement
             (C.filter fun x => σref i x ≠ σact i x).card := by
           rw [Finset.sum_add_distrib]
 
-theorem completed_actual_component_additive_expansion_of_reference
+private theorem completed_actual_component_additive_expansion_of_reference
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (σref σact : ι → Equiv.Perm V) (C : Finset V)
     (τ : ι → Equiv.Perm {x : V // x ∈ C})
@@ -2638,7 +2654,7 @@ theorem completed_actual_component_additive_expansion_of_reference
     rw [hcomplement] at hsmall
     exact hsmall
 
-theorem completedRestriction_additive_expansion_of_reference
+private theorem completedRestriction_additive_expansion_of_reference
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σref σact : ι → Equiv.Perm V) (C : Finset V)
     (γ : ℝ)
@@ -2663,14 +2679,14 @@ theorem completedRestriction_additive_expansion_of_reference
       (σact i) C x hx hy
   · exact hexpand
 
-def normalizedReferenceCompletionError
+private def normalizedReferenceCompletionError
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (C : Finset V) (σref σact : ι → Equiv.Perm V) : ℝ :=
   ((boundary σref C : ℝ) +
     2 * (componentGeneratorDisagreement C σref σact : ℝ)) /
       (C.card : ℝ)
 
-theorem normalizedReferenceCompletionError_tendsto_zero
+private theorem normalizedReferenceCompletionError_tendsto_zero
     (V : ℕ → Type*) [∀ n, DecidableEq (V n)]
     (ι : Type*) [Fintype ι]
     (C : (n : ℕ) → Finset (V n))
@@ -2694,7 +2710,7 @@ theorem normalizedReferenceCompletionError_tendsto_zero
   simpa only [normalizedReferenceCompletionError, add_div,
     mul_div_assoc, zero_add, mul_zero] using hsum
 
-theorem exists_vanishing_completedRestriction_additive_expansion_of_reference
+private theorem exists_vanishing_completedRestriction_additive_expansion_of_reference
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
     (ι : Type*) [Fintype ι]
@@ -2747,7 +2763,7 @@ theorem exists_vanishing_completedRestriction_additive_expansion_of_reference
     simpa only [a, normalizedReferenceCompletionError,
       Fintype.card_coe, div_mul_cancel₀ _ hcard] using h
 
-theorem componentGeneratorDisagreement_le_card_mul_component_bad
+private theorem componentGeneratorDisagreement_le_card_mul_component_bad
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (C B : Finset V)
     (σref σact : ι → Equiv.Perm V)
@@ -2770,7 +2786,7 @@ theorem componentGeneratorDisagreement_le_card_mul_component_bad
     _ = Fintype.card ι * (C ∩ B).card := by
           simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul]
 
-theorem componentGeneratorDisagreement_density_tendsto_zero_of_component_bad
+private theorem componentGeneratorDisagreement_density_tendsto_zero_of_component_bad
     (V : ℕ → Type*) [∀ n, DecidableEq (V n)]
     (ι : Type*) [Fintype ι]
     (C B : (n : ℕ) → Finset (V n))
@@ -2815,7 +2831,7 @@ theorem componentGeneratorDisagreement_density_tendsto_zero_of_component_bad
     _ = (Fintype.card ι : ℝ) *
           (((C n ∩ B n).card : ℝ) / (C n).card) := by ring
 
-theorem exists_vanishing_completedRestriction_additive_expansion_of_selected_bad
+private theorem exists_vanishing_completedRestriction_additive_expansion_of_selected_bad
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
     (ι : Type*) [Fintype ι]
@@ -2863,7 +2879,7 @@ namespace SourceProductThroughAlpha
 open Filter Topology
 open scoped BigOperators
 
-theorem source_u_conjugated_product_generator
+private theorem source_u_conjugated_product_generator
     (g : prefixElementaryGroup
       alphaPrefixCode) :
     ThompsonPrefixInsertion.sourceCompressedLocalProductEmbedding
@@ -2886,7 +2902,7 @@ theorem source_u_conjugated_product_generator
           compressionU⁻¹
   rw [MulAut.conj_apply]
 
-theorem source_u_transported_reference_half_expansion
+private theorem source_u_transported_reference_half_expansion
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (SΓ : Finset
@@ -2932,7 +2948,7 @@ theorem source_u_transported_reference_half_expansion
         SourceBothCompressionNormalization.sourceCompressionUElement)
       gamma (hexpand n)
 
-theorem source_u_transported_reference_boundary_density_tendsto_zero
+private theorem source_u_transported_reference_boundary_density_tendsto_zero
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (SΓ : Finset
@@ -2990,14 +3006,14 @@ open CanonicalProductRadiusBadMatchedCapture
 open SourceProductThroughAlpha
 open scoped BigOperators Pointwise
 
-def sourceCompressionPermutation
+private def sourceCompressionPermutation
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (n : ℕ) : Equiv.Perm (Fin (A.model n).size) :=
   (A.model n).action
     SourceBothCompressionNormalization.sourceCompressionUElement
 
-def sourceTransportedReferenceGenerators
+private def sourceTransportedReferenceGenerators
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -3008,7 +3024,7 @@ def sourceTransportedReferenceGenerators
       (SourceGeneratedWordCrossing.sourceAlphaInclusion g) *
     (sourceCompressionPermutation A n)⁻¹
 
-def sourceTransportedPartition
+private def sourceTransportedPartition
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (Q : (n : ℕ) →
@@ -3018,7 +3034,7 @@ def sourceTransportedPartition
   transportedUnivFinpartition
     (Q n) (sourceCompressionPermutation A n)
 
-noncomputable def sourceGeneratorFamilyConjugacyBad
+private noncomputable def sourceGeneratorFamilyConjugacyBad
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -3028,7 +3044,7 @@ noncomputable def sourceGeneratorFamilyConjugacyBad
     SourceBothCompressionNormalization.sourceCompressionUElement
     (SourceGeneratedWordCrossing.sourceAlphaInclusion g) n
 
-theorem sourceGeneratorFamilyConjugacyBad_density_tendsto_zero
+private theorem sourceGeneratorFamilyConjugacyBad_density_tendsto_zero
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -3052,7 +3068,7 @@ theorem sourceGeneratorFamilyConjugacyBad_density_tendsto_zero
   simpa only [sourceGeneratorFamilyConjugacyBad, Finset.univ_inter, Finset.card_univ,
     Fintype.card_fin] using h
 
-noncomputable def sourceSelectedRadiusBad
+private noncomputable def sourceSelectedRadiusBad
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -3087,14 +3103,14 @@ namespace SourceGuardedCanonicalSelection
 open Filter Topology
 open scoped BigOperators Pointwise symmDiff
 
-abbrev SourceK :=
+private abbrev SourceK :=
   prefixElementaryGroup alphaZeroPrefixCode
 
-abbrev SourceJ :=
+private abbrev SourceJ :=
   ThompsonPrefixInsertion.localPrefixTranspositionGroup
     [0, 0, 0, 1]
 
-noncomputable def guardedCanonicalProductRadiusBad
+private noncomputable def guardedCanonicalProductRadiusBad
     [DecidableEq SourceK] [DecidableEq SourceJ]
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
@@ -3117,7 +3133,7 @@ noncomputable def guardedCanonicalProductRadiusBad
       SΓ hgenerates)
     F n k ∪ E n k
 
-theorem exists_source_guarded_canonical_selected_components_of_retained_matching
+private theorem exists_source_guarded_canonical_selected_components_of_retained_matching
     [DecidableEq SourceK] [DecidableEq SourceJ]
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
@@ -3371,7 +3387,7 @@ namespace KunActualSourceURetainedNoPremise
 open Filter Topology
 open scoped BigOperators symmDiff
 
-theorem exists_actual_source_u_retained_matching
+private theorem exists_actual_source_u_retained_matching
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode)) :
     ∃ (SΓ : Finset
@@ -3618,7 +3634,7 @@ namespace KunLiteralSourceSelectedComponents
 open Filter Topology
 open scoped BigOperators Pointwise
 
-noncomputable def sourceSelectedProductRadiusLabels
+private noncomputable def sourceSelectedProductRadiusLabels
     (S : Finset
       (prefixElementaryGroup alphaPrefixCode))
     (F : Finset
@@ -3635,7 +3651,7 @@ noncomputable def sourceSelectedProductRadiusLabels
       (SourceProductThroughAlpha.sourceCompressedGeneratingFinset S)
       F k
 
-theorem exists_source_selected_components
+private theorem exists_source_selected_components
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (F : Finset
@@ -3806,7 +3822,7 @@ namespace SourceProductThroughAlpha
 
 open scoped BigOperators
 
-noncomputable def sourceCompressedGeneratorSubtypeEquiv
+private noncomputable def sourceCompressedGeneratorSubtypeEquiv
     (SΓ : Finset
       (prefixElementaryGroup alphaPrefixCode)) :
     (↥SΓ) ≃
@@ -3842,7 +3858,7 @@ noncomputable def sourceCompressedGeneratorSubtypeEquiv
     apply Subtype.ext
     exact sourceCompressionUAlphaEquiv.apply_symm_apply _
 
-theorem boundary_sourceCompressedGeneratorSubtypeEquiv
+private theorem boundary_sourceCompressedGeneratorSubtypeEquiv
     {V : Type*} [DecidableEq V]
     (SΓ : Finset
       (prefixElementaryGroup alphaPrefixCode))
@@ -3864,7 +3880,7 @@ namespace KunGuardedCanonicalMatchedDensity
 
 open Filter Topology
 
-theorem matchedRadiusBad_mono_bad
+private theorem matchedRadiusBad_mono_bad
     {V ι : Type*} [DecidableEq V]
     {U : Finset V} (P : Finpartition U)
     (I : Finset ι) (w : ι → Equiv.Perm V)
@@ -3877,7 +3893,7 @@ theorem matchedRadiusBad_mono_bad
   · exact Finset.mem_union_left _ (hB hxB)
   · exact Finset.mem_union_right _ hxcross
 
-theorem canonical_matched_density_of_guarded
+private theorem canonical_matched_density_of_guarded
     (V : ℕ → Type*) [∀ n, DecidableEq (V n)]
     (U : (n : ℕ) → Finset (V n))
     (P : (n : ℕ) → Finpartition (U n))
@@ -3924,7 +3940,7 @@ namespace KunActualCanonicalSelectedPruning
 open Filter Topology
 open MatchedComponentCompletion
 
-theorem exists_actual_uniformly_expanding_pruned_selected_components
+private theorem exists_actual_uniformly_expanding_pruned_selected_components
     {K J : Type*} [Group K] [Group J]
     (A : SoficApproximation (K × J))
     (S : Finset K)
@@ -4167,7 +4183,7 @@ open Filter Topology
 open MatchedComponentCompletion
 open CanonicalProductRadiusBadMatchedCapture
 
-theorem pruned_sourceCompletionBad_density_tendsto_zero_of_canonical_matched
+private theorem pruned_sourceCompletionBad_density_tendsto_zero_of_canonical_matched
     {K J : Type*} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
     (A : SoficApproximation (K × J))
@@ -4246,12 +4262,12 @@ open CanonicalProductRadiusBadMatchedCapture
 open CompletedSourceFinalGeneratorTransfer
 open scoped BigOperators Pointwise
 
-noncomputable def restrictionMultiplicationBad
+private noncomputable def restrictionMultiplicationBad
     {V : Type*} [DecidableEq V]
     (p q r : Equiv.Perm V) (Z : Finset V) : Finset V :=
   Z.filter (fun x => q x ∉ Z ∨ r x ∉ Z ∨ r x ≠ p (q x))
 
-theorem completedRestriction_mul_of_not_mem_restrictionMultiplicationBad
+private theorem completedRestriction_mul_of_not_mem_restrictionMultiplicationBad
     {V : Type*} [Fintype V] [DecidableEq V]
     (p q r : Equiv.Perm V) (Z : Finset V)
     (x : {v : V // v ∈ Z})
@@ -4297,7 +4313,7 @@ theorem completedRestriction_mul_of_not_mem_restrictionMultiplicationBad
       rw [hqvalue]
       exact hpq
 
-theorem completedRestriction_mul_distance_le_failure_add_deleted
+private theorem completedRestriction_mul_distance_le_failure_add_deleted
     {V : Type*} [Fintype V] [DecidableEq V]
     (p q r : Equiv.Perm V) (Z : Finset V) :
     permutationDistance
@@ -4354,7 +4370,7 @@ theorem completedRestriction_mul_distance_le_failure_add_deleted
       E₃.card + 2 * (Finset.univ \ Z).card
   omega
 
-theorem firstFactor_completed_mul_distance_le_canonical_matched
+private theorem firstFactor_completed_mul_distance_le_canonical_matched
     {K J : Type*} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
     (A : SoficApproximation (K × J))
@@ -4443,7 +4459,7 @@ theorem firstFactor_completed_mul_distance_le_canonical_matched
         (canonicalProductRadiusBad A S hsymmetric hgenerates F n k)).card :=
       card_subtypeBad C B
 
-theorem density_relative_survivors
+private theorem density_relative_survivors
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
     (D : (n : ℕ) → Finset (V n))
@@ -4487,7 +4503,7 @@ theorem density_relative_survivors
           Fintype.card (V n))
   field_simp [hNreal, hZreal]
 
-theorem twiceCompleted_firstFactor_mul_normalizedHamming_tendsto_zero_of_canonical_matched
+private theorem twiceCompleted_firstFactor_mul_normalizedHamming_tendsto_zero_of_canonical_matched
     {K J : Type*} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
     (A : SoficApproximation (K × J))
@@ -4653,7 +4669,7 @@ open MatchedComponentCompletion
 open KunActualSoficRootRadius
 open scoped BigOperators Pointwise
 
-theorem completed_generator_one_of_internal_agreement
+private theorem completed_generator_one_of_internal_agreement
     {G : Type} [Group G] (S : Finset G)
     {W : Type}
     (σ : ↥S → Equiv.Perm W) (Z : Finset W)
@@ -4671,7 +4687,7 @@ theorem completed_generator_one_of_internal_agreement
   simpa only [Equiv.Perm.coe_one, id_eq, SetLike.coe_eq_coe, Subtype.coe_eta, hσ] using
     hagrees i (x : W) x.property hinside
 
-theorem nonempty_expandingCentralizerFiniteModel_of_actual_selected_pruned_source
+private theorem nonempty_expandingCentralizerFiniteModel_of_actual_selected_pruned_source
     {G J : Type} [Group G] [Group J]
     (P : KazhdanPair.{0, 0} G)
     (S : Finset G) (honeS : 1 ∈ S)
@@ -4905,7 +4921,7 @@ open Filter Topology
 open MatchedComponentCompletion
 open CanonicalProductRadiusBadMatchedCapture
 
-theorem nonempty_expandingCentralizerFiniteModel_of_canonical_selected_additive
+private theorem nonempty_expandingCentralizerFiniteModel_of_canonical_selected_additive
     {K J : Type} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
     (A : SoficApproximation (K × J))
@@ -5064,7 +5080,7 @@ open KunActualCanonicalSelectedFiniteModelComposition
 
 namespace KunLiteralSourceSelectedComponents
 
-theorem sourceTransportedReferenceGenerator_disagreement_mem
+private theorem sourceTransportedReferenceGenerator_disagreement_mem
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (SΓ : Finset
@@ -5103,7 +5119,7 @@ namespace KunActualSourceSelectedCompletedGeneratorExpansion
 open Filter Topology
 open scoped BigOperators
 
-theorem exists_vanishing_completed_first_factor_additive_expansion_of_selected_source
+private theorem exists_vanishing_completed_first_factor_additive_expansion_of_selected_source
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (S : Finset
@@ -5266,7 +5282,7 @@ open Filter Topology
 open CanonicalProductRadiusBadMatchedCapture
 open scoped BigOperators Pointwise
 
-theorem source_ambient_nonempty_expandingCentralizerFiniteModel
+private theorem source_ambient_nonempty_expandingCentralizerFiniteModel
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
     (F : Finset
@@ -5381,12 +5397,10 @@ theorem source_ambient_nonempty_expandingCentralizerFiniteModel
 
 end KunLiteralNineSourceFiniteModels
 
-namespace SourceTopLevelCompressionFinal
-
 open SourceTopLevelCompression
 open KunLiteralNineSourceFiniteModels
 
-theorem sourceLocalPrefixTranspositionGroup_lef_of_sofic :
+private theorem sourceLocalPrefixTranspositionGroup_lef_of_sofic :
     Sofic
         (prefixElementaryGroup ninePrefixCode) →
       LEF
@@ -5398,14 +5412,14 @@ theorem sourceLocalPrefixTranspositionGroup_lef_of_sofic :
       source_ambient_nonempty_expandingCentralizerFiniteModel A F)
     hsource
 
-theorem ninePrefixElementaryGroup_not_sofic :
+private theorem ninePrefixElementaryGroup_not_sofic :
     ¬ Sofic
       (prefixElementaryGroup ninePrefixCode) := by
   intro hsource
   exact sourceLocalPrefixTranspositionGroup_notLEF
     (sourceLocalPrefixTranspositionGroup_lef_of_sofic hsource)
 
-theorem binaryLeavittElementaryGroup_not_sofic :
+private theorem binaryLeavittElementaryGroup_not_sofic :
     ¬ Sofic (binaryLeavittElementaryGroup 9) := by
   intro hsofic
   let : Sofic
@@ -5416,13 +5430,11 @@ theorem binaryLeavittElementaryGroup_not_sofic :
       ninePrefixElementaryGroupEquiv.symm.injective)
 
 /-- There exists a finitely presented group that is not sofic. -/
-public theorem exists_finitelyPresented_nonsofic_group :
+theorem exists_finitelyPresented_nonsofic_group :
     ∃ (G : Type) (_ : Group G),
       Group.IsFinitelyPresented G ∧ ¬ Sofic G := by
   exact exists_finitelyPresented_not_sofic_of_not_sofic
     binaryLeavittElementaryGroup_not_sofic
-
-end SourceTopLevelCompressionFinal
 
 end SoficGroups
 

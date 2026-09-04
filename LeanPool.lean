@@ -2882,6 +2882,11 @@ import LeanPool.MulticolorTriangleRamsey
 import LeanPool.Neukirch
 import LeanPool.Neukirch.ExtensionOfDedekindDomains
 import LeanPool.Neukirch.HilbertRamificationTheory
+import LeanPool.NonSoficGroup
+import LeanPool.NonSoficGroup.Compression
+import LeanPool.NonSoficGroup.Conclusion
+import LeanPool.NonSoficGroup.Foundations
+import LeanPool.NonSoficGroup.Spectral
 import LeanPool.OSforGFF
 import LeanPool.OSforGFF.Bochner
 import LeanPool.OSforGFF.Bochner.FejerPD
