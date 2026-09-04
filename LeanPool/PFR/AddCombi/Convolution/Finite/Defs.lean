@@ -47,7 +47,6 @@ Similarly we could drop the commutativity assumption on the domain, but this is 
 point in time.
 -/
 
-
 open Finset Fintype Function
 open scoped BigOperators ComplexConjugate NNReal Pointwise translate Indicator
   Combinatorics.Additive'
@@ -72,43 +71,9 @@ public
 lemma conv_apply (f g : G → K) (a : G) :
     (f ∗ g) a = 𝔼 x : G × G with x.1 + x.2 = a, f x.1 * g x.2 := rfl
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 public
 lemma conv_comm (f g : G → K) : f ∗ g = g ∗ f :=
   funext fun a ↦ Finset.expect_equiv (Equiv.prodComm _ _) (by simp [add_comm]) (by simp [mul_comm])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 public
 lemma conv_eq_expect_sub (f g : G → K) (a : G) : (f ∗ g) a = 𝔼 t, f (a - t) * g t := by
@@ -127,28 +92,10 @@ public
 lemma conv_eq_expect_sub' (f g : G → K) (a : G) : (f ∗ g) a = 𝔼 t, f t * g (a - t) := by
   rw [conv_comm, conv_eq_expect_sub]; grind
 
-
-
 public
 lemma conv_apply_add (f g : G → K) (a b : G) : (f ∗ g) (a + b) = 𝔼 t, f (a + t) * g (b - t) :=
   (conv_eq_expect_sub _ _ _).trans <| Fintype.expect_equiv (Equiv.subLeft b) _ _ fun t ↦ by
     simp [add_sub_assoc]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 variable [StarRing K]
 
@@ -161,22 +108,12 @@ def dconv (f g : G → K) : G → K := fun a ↦ 𝔼 x : G × G with x.1 - x.2 
 
 @[inherit_doc] infixl:71 " ○ " => dconv
 
-
-
-
-
 @[simp]
 public
 lemma conv_conjneg (f g : G → K) : f ∗ conjneg g = f ○ g :=
   funext fun a ↦ expect_bij (fun x _ ↦ (x.1, -x.2)) (fun x hx ↦ by simpa using hx) (fun x _ ↦ rfl)
     (fun x y _ _ h ↦ by grind) fun x hx ↦
       ⟨(x.1, -x.2), by grind, by simp⟩
-
-
-
-
-
-
 
 @[simp]
 public
@@ -196,30 +133,6 @@ public
 lemma IsSelfAdjoint.dconv (hf : IsSelfAdjoint f) (hg : IsSelfAdjoint g) : IsSelfAdjoint (f ○ g) :=
   (conj_dconv _ _).trans <| congr_arg₂ _ hf hg
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 --TODO: Can we generalise to star ring homs?
 -- lemma map_dconv (f g : G → ℝ≥0) (a : G) : (↑((f ○ g) a) : ℝ) = ((↑) ∘ f ○ (↑) ∘ g) a := by
 --   simp_rw [dconv_apply, NNReal.coe_expect, NNReal.coe_mul, starRingEnd_apply, star_trivial,
@@ -233,10 +146,6 @@ public
 lemma dconv_eq_expect_sub (f g : G → K) (a : G) : (f ○ g) a = 𝔼 t, f t * conj (g (t - a)) := by
   simp [← conv_conjneg, conv_eq_expect_sub']
 
-
-
-
-
 public
 lemma expect_dconv_mul (f g h : G → K) :
     𝔼 a, (f ○ g) a * h a = 𝔼 a, 𝔼 b, f a * conj (g b) * h (a - b) := by
@@ -247,14 +156,6 @@ lemma expect_dconv_mul (f g h : G → K) :
 public
 lemma expect_dconv (f g : G → K) : 𝔼 a, (f ○ g) a = (𝔼 a, f a) * 𝔼 a, conj (g a) := by
   simpa only [Fintype.expect_mul_expect, Pi.one_apply, mul_one] using expect_dconv_mul f g 1
-
-
-
-
-
-
-
-
 
 public
 lemma dconv_indicator_one (f : G → K) (s : Finset G) :
@@ -295,67 +196,3 @@ lemma expect_indicator_one_dconv_indicator_sq (s t : Finset G) :
   exact sum_comm
 
 end Semifield
-
-section Field
-variable [Field K] [CharZero K]
-
-
-
-
-
-
-
-
-
-
-variable [StarRing K]
-
-
-
-
-
-
-
-
-
-
-end Field
-
-namespace RCLike
-variable {𝕜 : Type} [RCLike 𝕜] (f g : G → ℝ) (a : G)
-
-
-
-
-
-
-
-
-
-end RCLike
-
-namespace Complex
-variable (f g : G → ℝ) (a : G)
-
-
-
-
-
-
-
-
-
-end Complex
-
-namespace NNReal
-variable (f g : G → ℝ≥0) (a : G)
-
-
-
-
-
-
-
-
-
-end NNReal

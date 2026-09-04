@@ -11,10 +11,3 @@ public import Mathlib.Order.Interval.Finset.Defs
 /-!
 # Finite order intervals
 -/
-
-namespace Finset
-variable {α : Type*} [One α] [Preorder α] [IsBotOneClass α] [LocallyFiniteOrderTop α] [Fintype α]
-
-
-
-end Finset

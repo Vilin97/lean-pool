@@ -116,9 +116,6 @@ lemma independent_copies3_nondep_finiteRange {α : Type u}
     convert IdentDistrib.trans _ hId₃
     exact IdentDistrib.of_ae_eq (Measurable.aemeasurable hX₃'') hX₃''_eq
 
-
-
-
 /-- A version of `independent_copies'` that guarantees that the copies have `FiniteRange`
 if the original variables do. -/
 public
@@ -141,21 +138,6 @@ lemma independent_copies'_finiteRange {I : Type u} [Finite I] {α : I → Type u
   intro i
   refine ⟨(hX'' i).1, ?_, (hX'' i).2.1⟩
   exact .trans (.of_ae_eq (hX'' i).1.aemeasurable (hX'' i).2.2) (hident i).2
-
-/-
-  have : Nonempty α := μ.nonempty_of_neZero.map X
-  have : Nonempty β := μ'.nonempty_of_neZero.map Y
-  obtain ⟨ν, X', Y', hν, hX', hY', hind, hIdX, hIdY⟩ := independent_copies hX hY μ μ'
-  rcases identDistrib_of_finiteRange hX' hIdX.symm with ⟨X'', hX'', hX''_finite, hX''_eq⟩
-  rcases identDistrib_of_finiteRange hY' hIdY.symm with ⟨Y'', hY'', hY''_finite, hY''_eq⟩
-  use ν, X'', Y''
-  refine ⟨hν, hX'', hY'', ?_, ?_, ?_, hX''_finite, hY''_finite⟩
-  · exact hind.congr hX''_eq.symm hY''_eq.symm
-  · convert IdentDistrib.trans _ hIdX
-    exact IdentDistrib.of_ae_eq (Measurable.aemeasurable hX'') hX''_eq
-  · convert IdentDistrib.trans _ hIdY
-    exact IdentDistrib.of_ae_eq (Measurable.aemeasurable hY'') hY''_eq
--/
 
 end IdentDistrib
 end ProbabilityTheory
