@@ -125,28 +125,6 @@ theorem positiveCone_hasWallaceLimitProperty (C : SeparationPackage I) :
   rw [← hcoded]
   exact C.prepared_tendsto_basis c
 
-/-- A minimal construction package yields a Hausdorff group topology with the Wallace limit
-property on the nonnegative cone. -/
-theorem exists_initialTopology_with_wallaceLimitProperty (C : SeparationPackage I) :
-    ∃ topology : TopologicalSpace (I →₀ ℤ),
-      @IsTopologicalAddGroup (I →₀ ℤ) topology _ ∧
-      @T2Space (I →₀ ℤ) topology ∧
-      @HasWallaceLimitProperty (I →₀ ℤ) topology _ (positiveCone I) := by
-  exact ⟨C.initialTopology, C.initial_isTopologicalAddGroup, C.initial_t2Space,
-    C.positiveCone_hasWallaceLimitProperty⟩
-
-/-- Once the genuinely constructed package is available on a nonempty index type, the Wallace
-counterexample follows with no further hypotheses. -/
-theorem wallaceCounterexampleExists {I : Type} (C : SeparationPackage I) [Nonempty I] :
-    WallaceCounterexampleExists := by
-  let topology : TopologicalSpace (I →₀ ℤ) := C.initialTopology
-  letI : TopologicalSpace (I →₀ ℤ) := topology
-  letI : IsTopologicalAddGroup (I →₀ ℤ) := C.initial_isTopologicalAddGroup
-  letI : T2Space (I →₀ ℤ) := C.initial_t2Space
-  let i : I := Classical.choice inferInstance
-  refine ⟨positiveCone I, inferInstance, inferInstance, ?_⟩
-  exact positiveCone_isWallace_of_limitProperty I i C.positiveCone_hasWallaceLimitProperty
-
 end SeparationPackage
 
 end

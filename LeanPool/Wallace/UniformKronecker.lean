@@ -66,11 +66,6 @@ abbrev relationGroup {G : Type u} [AddCommGroup G] {m : ℕ} (z : Fin m → G) :
     AddSubgroup (Fin m → ℤ) :=
   (relationMap z).ker
 
-theorem mem_relationGroup_iff {G : Type u} [AddCommGroup G] {m : ℕ}
-    (z : Fin m → G) (a : Fin m → ℤ) :
-    a ∈ relationGroup z ↔ ∑ i, a i • z i = 0 := by
-  rfl
-
 /-- A target tuple respects every relation of `z`. -/
 def RespectsRelations {G : Type u} [AddCommGroup G] {m : ℕ}
     (z : Fin m → G) (t : Fin m → UnitAddCircle) : Prop :=
@@ -95,14 +90,6 @@ def RespectsRelationsUpTo {G : Type u} [AddCommGroup G] {m : ℕ}
     (q : ℕ) (z : Fin m → G) (t : Fin m → UnitAddCircle) : Prop :=
   ∀ a : Fin m → ℤ, intVectorHeight a ≤ q →
     relationMap z a = 0 → torusRelationMap t a = 0
-
-theorem RespectsRelations.respectsRelationsUpTo
-    {G : Type u} [AddCommGroup G] {m : ℕ}
-    {z : Fin m → G} {t : Fin m → UnitAddCircle}
-    (h : RespectsRelations z t) (q : ℕ) :
-    RespectsRelationsUpTo q z t := by
-  intro a _ha haz
-  exact h haz
 
 /-- `q` is a uniform Kronecker bound for tuples of length `m` and error `ε`. -/
 def IsUniformKroneckerBound (m : ℕ) (ε : ℝ) (q : ℕ) : Prop :=
@@ -150,32 +137,6 @@ theorem exists_character_of_respectsRelations
   simpa only [AddMonoidHom.comp_apply, AddSubgroup.coe_subtype,
     AddMonoidHom.coe_rangeRestrict, relationMap_single, torusRelationMap_single] using
       hrange.trans htuple
-
-/-- Characters into the unit additive circle separate points of every torsion-free Abelian
-group. -/
-theorem exists_character_ne_zero {G : Type u} [AddCommGroup G] [IsAddTorsionFree G]
-    {x : G} (hx : x ≠ 0) :
-    ∃ χ : G →+ UnitAddCircle, χ x ≠ 0 := by
-  let z : Fin 1 → G := fun _ => x
-  let t : Fin 1 → UnitAddCircle := fun _ => (1 / 2 : ℝ)
-  have hrel : RespectsRelations z t := by
-    rw [respectsRelations_iff]
-    intro a ha
-    have ha0 : a 0 = 0 := by
-      have : a 0 • x = 0 := by simpa [z] using ha
-      exact (IsAddTorsionFree.zsmul_eq_zero_iff_left hx).mp this
-    simp [t, ha0]
-  obtain ⟨χ, hχ⟩ := exists_character_of_respectsRelations z t hrel
-  refine ⟨χ, ?_⟩
-  have hχx : χ x = ((1 / 2 : ℝ) : UnitAddCircle) := by simpa [z, t] using hχ 0
-  rw [hχx]
-  intro hzero
-  rw [AddCircle.coe_eq_zero_iff] at hzero
-  obtain ⟨n, hn⟩ := hzero
-  have hnR : (n : ℝ) = 1 / 2 := by simpa using hn
-  have hn' : (2 : ℝ) * (n : ℝ) = 1 := by linarith
-  have hnInt : (2 : ℤ) * n = 1 := by exact_mod_cast hn'
-  omega
 
 /-! ## Algebraic separation into the real unit circle -/
 
@@ -239,12 +200,6 @@ def integerAnnihilator {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) :
     change ∑ i, a i • (-x i) = 0
     simp_rw [smul_neg, Finset.sum_neg_distrib, hx a ha, neg_zero]
 
-@[simp]
-theorem mem_integerAnnihilator_iff {m : ℕ} {R : AddSubgroup (Fin m → ℤ)}
-    {x : UnitAddTorus (Fin m)} :
-    x ∈ integerAnnihilator R ↔ ∀ a ∈ R, torusRelationMap x a = 0 :=
-  Iff.rfl
-
 theorem isClosed_integerAnnihilator {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) :
     IsClosed (integerAnnihilator R : Set (UnitAddTorus (Fin m))) := by
   rw [show (integerAnnihilator R : Set (UnitAddTorus (Fin m))) =
@@ -254,18 +209,6 @@ theorem isClosed_integerAnnihilator {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) 
   refine isClosed_biInter fun a _ha ↦ ?_
   change IsClosed {x : UnitAddTorus (Fin m) | (∑ i, a i • x i) = 0}
   exact isClosed_singleton.preimage (by fun_prop)
-
-/-- The annihilator, bundled as a nonempty compact subset of the finite torus. -/
-def integerAnnihilatorCompact {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) :
-    NonemptyCompacts (UnitAddTorus (Fin m)) :=
-  ⟨⟨integerAnnihilator R,
-      (isClosed_integerAnnihilator R).isCompact⟩,
-    ⟨0, (integerAnnihilator R).zero_mem⟩⟩
-
-@[simp]
-theorem coe_integerAnnihilatorCompact {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) :
-    (integerAnnihilatorCompact R : Set (UnitAddTorus (Fin m))) = integerAnnihilator R :=
-  rfl
 
 /-- Distance to the relation annihilator, as a bounded continuous real-valued function. -/
 def annihilatorDistance {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) :
@@ -325,15 +268,6 @@ theorem exists_mem_integerAnnihilator_not_annihilate {m : ℕ}
     rw [hb0, map_zero]
   · simpa only [heval] using hc
 
-theorem mem_iff_annihilates_integerAnnihilator {m : ℕ}
-    (R : AddSubgroup (Fin m → ℤ)) (a : Fin m → ℤ) :
-    a ∈ R ↔ ∀ x ∈ integerAnnihilator R, torusRelationMap x a = 0 := by
-  constructor
-  · intro ha x hx
-    exact hx a ha
-  · contrapose!
-    exact exists_mem_integerAnnihilator_not_annihilate R
-
 theorem mFourier_eq_toCircle_relation {m : ℕ} (a : Fin m → ℤ)
     (x : UnitAddTorus (Fin m)) :
     UnitAddTorus.mFourier a x = (AddCircle.toCircle (torusRelationMap x a) : ℂ) := by
@@ -350,29 +284,6 @@ theorem mFourier_eq_toCircle_relation {m : ℕ} (a : Fin m → ℤ)
   change (∏ i, (AddCircle.toCircle (a i • x i) : ℂ)) =
     (AddCircle.toCircle (∑ i, a i • x i) : ℂ)
   simpa only [Finset.prod_const_one, Finset.sum_const_zero] using hprod Finset.univ
-
-/-- The family of all distance-to-annihilator functions for a fixed tuple length. -/
-def annihilatorDistanceFamily (m : ℕ) :
-    Set (BoundedContinuousFunction (UnitAddTorus (Fin m)) ℝ) :=
-  Set.range annihilatorDistance
-
-/-- Arzelà--Ascoli makes the closure of the family of annihilator-distance functions compact.
-All functions are `1`-Lipschitz and their ranges lie in one compact interval. -/
-theorem isCompact_closure_annihilatorDistanceFamily (m : ℕ) :
-    IsCompact (closure (annihilatorDistanceFamily m)) := by
-  let D : ℝ := Metric.diam (Set.univ : Set (UnitAddTorus (Fin m)))
-  apply BoundedContinuousFunction.arzela_ascoli (Set.Icc 0 D) isCompact_Icc
-  · rintro f x ⟨R, rfl⟩
-    refine ⟨Metric.infDist_nonneg, ?_⟩
-    calc
-      Metric.infDist x (integerAnnihilator R) ≤ dist x 0 :=
-        Metric.infDist_le_dist_of_mem (integerAnnihilator R).zero_mem
-      _ ≤ D := Metric.dist_le_diam_of_mem isCompact_univ.isBounded
-        (mem_univ x) (mem_univ 0)
-  · apply UniformEquicontinuous.equicontinuous
-    apply LipschitzWith.uniformEquicontinuous _ 1
-    rintro ⟨f, R, rfl⟩
-    exact annihilatorDistance_lipschitz R
 
 /-- Regard a bounded real-valued continuous function on the compact torus as a complex-valued
 continuous function. -/

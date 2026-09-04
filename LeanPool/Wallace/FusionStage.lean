@@ -215,43 +215,6 @@ theorem exists_character_fusion_stage
       (disjoint_of_mixedRelationFree hQ hfree) hyA hyY
     simpa [stageTarget, hzi, hyA, norm_eq_zero] using hnext i
 
-/-- **One fusion step** (the complete form used in Section 4 of the paper).
-
-`Q` is a uniform Kronecker bound for every positive tuple length that can occur.  Bounded
-deletion first produces `Y`, including the no-mixed-relation certificate, and one application
-of the uniform Kronecker lemma then produces the next homomorphism.  The empty union is handled
-directly, exactly as in the paper, so no artificial bound for zero-length tuples is required. -/
-theorem exists_one_fusion_step
-    [IsAddTorsionFree G]
-    (r Q : ℕ) (hQ : 1 ≤ Q) (A X : Finset G) (hAr : A.card ≤ r)
-    (hX : BoundedIndependent (deletionIndependenceBound r Q) X)
-    (old : G →+ UnitAddCircle) {eps : ℝ}
-    (hbound : ∀ m, 0 < m → m ≤ r + X.card →
-      IsUniformKroneckerBound.{u} m eps Q) :
-    ∃ (Y : Finset G) (next : G →+ UnitAddCircle),
-      Y ⊆ X ∧
-      (X \ Y).card ≤ A.card ∧
-      MixedRelationFree Q A Y ∧
-      (∀ a ∈ A, ‖next a - old a‖ < eps) ∧
-      (∀ y ∈ Y, ‖next y‖ < eps) := by
-  classical
-  obtain ⟨Y, hYX, hdeleted, hfree⟩ := bounded_deletion r Q A X hAr hX
-  by_cases hempty : A ∪ Y = ∅
-  · have hA : A = ∅ := (Finset.union_eq_empty.mp hempty).1
-    have hY : Y = ∅ := (Finset.union_eq_empty.mp hempty).2
-    subst A
-    subst Y
-    exact ⟨∅, old, by simp, hdeleted, hfree, by simp, by simp⟩
-  · have hcardPos : 0 < (A ∪ Y).card :=
-      Finset.card_pos.mpr (Finset.nonempty_iff_ne_empty.mpr hempty)
-    have hcardLe : (A ∪ Y).card ≤ r + X.card := by
-      calc
-        (A ∪ Y).card ≤ A.card + Y.card := Finset.card_union_le A Y
-        _ ≤ r + X.card := Nat.add_le_add hAr (Finset.card_le_card hYX)
-    obtain ⟨next, hold, hnew⟩ := exists_character_fusion_stage
-      hQ hfree old (hbound (A ∪ Y).card hcardPos hcardLe)
-    exact ⟨Y, next, hYX, hdeleted, hfree, hold, hnew⟩
-
 end
 
 end Wallace

@@ -65,15 +65,6 @@ theorem refinedLabel_pairwise (x : ContinuumRationalGroup) :
       (fun a : RelevantCode N hN M x ↦ label a.1)
       (relevantLabels_pairwise N hN M x))).1
 
-theorem refinedLabel_subset (x : ContinuumRationalGroup)
-    (a : RelevantCode N hN M x) :
-    refinedLabel N hN M x a ⊆ label a.1 := by
-  letI : Countable (RelevantCode N hN M x) := relevantCode_countable N hN M x
-  exact (Classical.choose_spec
-    (exists_disjoint_refinement_countable
-      (fun a : RelevantCode N hN M x ↦ label a.1)
-      (relevantLabels_pairwise N hN M x))).2 a |>.1
-
 theorem label_diff_refinedLabel_finite (x : ContinuumRationalGroup)
     (a : RelevantCode N hN M x) :
     (label a.1 \ refinedLabel N hN M x a).Finite := by
@@ -107,53 +98,6 @@ theorem activeCode_eq_some_of_mem (x : ContinuumRationalGroup) (l : ℕ)
     exact refinedLabel_unique N hN M x (Classical.choose_spec h) ha
   · rename_i h
     exact (h ⟨a, ha⟩).elim
-
-theorem mem_refinedLabel_of_activeCode_eq_some (x : ContinuumRationalGroup) (l : ℕ)
-    (a : RelevantCode N hN M x) (h : activeCode N hN M x l = some a) :
-    l ∈ refinedLabel N hN M x a := by
-  classical
-  unfold activeCode at h
-  split at h
-  · rename_i hex
-    have hchosen : Classical.choose hex = a := Option.some.inj h
-    simpa only [hchosen] using Classical.choose_spec hex
-  · simp at h
-
-theorem activeCode_eq_some_iff (x : ContinuumRationalGroup) (l : ℕ)
-    (a : RelevantCode N hN M x) :
-    activeCode N hN M x l = some a ↔ l ∈ refinedLabel N hN M x a :=
-  ⟨mem_refinedLabel_of_activeCode_eq_some N hN M x l a,
-    activeCode_eq_some_of_mem N hN M x l a⟩
-
-def activeBlock (x : ContinuumRationalGroup) (l : ℕ) :
-    Finset ContinuumRationalGroup :=
-  match activeCode N hN M x l with
-  | none => ∅
-  | some a => differenceBlock N hN M a.1 l
-
-theorem activeBlock_eq_of_mem (x : ContinuumRationalGroup) (l : ℕ)
-    (a : RelevantCode N hN M x) (ha : l ∈ refinedLabel N hN M x a) :
-    activeBlock N hN M x l = differenceBlock N hN M a.1 l := by
-  simp [activeBlock, activeCode_eq_some_of_mem N hN M x l a ha]
-
-theorem activeBlock_boundedIndependent (x : ContinuumRationalGroup) (l : ℕ) :
-    BoundedIndependent (M l) (activeBlock N hN M x l) := by
-  unfold activeBlock
-  split
-  · simp [BoundedIndependent]
-  · rename_i a hactive
-    exact differenceBlock_boundedIndependent N hN M a.1 l
-
-theorem activeBlock_card_le (x : ContinuumRationalGroup) (l : ℕ) :
-    (activeBlock N hN M x l).card ≤ N l := by
-  unfold activeBlock
-  split
-  · simp
-  · rename_i a hactive
-    calc
-      (differenceBlock N hN M a.1 l).card ≤
-          (TriangularPreprocess.blockPositions N hN l).card := Finset.card_image_le
-      _ = N l := TriangularPreprocess.blockPositions_card N hN l
 
 /-! ## The countable local rational group -/
 
@@ -294,11 +238,6 @@ theorem localActiveBlock_card_le (x : ContinuumRationalGroup) (l : ℕ) :
   · simp
   · rename_i a hactive
     rw [localDifferenceBlock_card]
-
-theorem localActiveBlock_card_eq_of_mem (x : ContinuumRationalGroup) (l : ℕ)
-    (a : RelevantCode N hN M x) (ha : l ∈ refinedLabel N hN M x a) :
-    (localActiveBlock N hN M x l).card = N l := by
-  rw [localActiveBlock_eq_of_mem N hN M x l a ha, localDifferenceBlock_card]
 
 end
 end RationalLocalSetup

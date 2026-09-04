@@ -258,54 +258,6 @@ theorem disjointize_loss_finite [LinearOrder ι] (family : ι → Set α)
   rcases Set.mem_iUnion.mp hxi with ⟨hi, hxFamily⟩
   exact Set.mem_iUnion_of_mem i <| Set.mem_iUnion_of_mem hi ⟨hxj, hxFamily⟩
 
-/-- Equivalent modulo a finite set, phrased as eventual equality on the cofinite filter. -/
-theorem disjointize_eventuallyEq [LinearOrder ι] (family : ι → Set α)
-    (had : Pairwise fun i j ↦ (family i ∩ family j).Finite) (j : ι)
-    (hpred : (Set.Iio j).Finite) :
-    (fun x ↦ x ∈ disjointize family j) =ᶠ[cofinite] (fun x ↦ x ∈ family j) := by
-  have hloss := disjointize_loss_finite family had j hpred
-  filter_upwards [hloss.compl_mem_cofinite] with x hx
-  apply propext
-  constructor
-  · exact fun hxdis ↦ disjointize_subset family j hxdis
-  · intro hxj
-    by_contra hxdis
-    exact hx ⟨hxj, hxdis⟩
-
-/-- Countable-family specialization: at stage `j : ℕ`, there are finitely many predecessors. -/
-theorem disjointize_eventuallyEq_nat (family : ℕ → Set α)
-    (had : Pairwise fun i j ↦ (family i ∩ family j).Finite) (j : ℕ) :
-    (fun x ↦ x ∈ disjointize family j) =ᶠ[cofinite] (fun x ↦ x ∈ family j) :=
-  disjointize_eventuallyEq family had j (Set.finite_Iio j)
-
-/-- Finite-family specialization.  A finite family can be put in any linear order. -/
-theorem disjointize_eventuallyEq_finite [LinearOrder ι] [Finite ι]
-    (family : ι → Set α) (had : Pairwise fun i j ↦ (family i ∩ family j).Finite) (j : ι) :
-    (fun x ↦ x ∈ disjointize family j) =ᶠ[cofinite] (fun x ↦ x ∈ family j) :=
-  disjointize_eventuallyEq family had j (Set.toFinite _)
-
-/-- Bundled countable version of the paper's disjointization assertion. -/
-theorem exists_disjoint_refinement_nat (family : ℕ → Set α)
-    (had : Pairwise fun i j ↦ (family i ∩ family j).Finite) :
-    ∃ refined : ℕ → Set α,
-      (Pairwise fun i j ↦ Disjoint (refined i) (refined j)) ∧
-        ∀ j, refined j ⊆ family j ∧
-          (fun x ↦ x ∈ refined j) =ᶠ[cofinite] (fun x ↦ x ∈ family j) := by
-  refine ⟨disjointize family, pairwise_disjoint_disjointize family, ?_⟩
-  intro j
-  exact ⟨disjointize_subset family j, disjointize_eventuallyEq_nat family had j⟩
-
-/-- Bundled finite version of the paper's disjointization assertion. -/
-theorem exists_disjoint_refinement_finite [LinearOrder ι] [Finite ι]
-    (family : ι → Set α) (had : Pairwise fun i j ↦ (family i ∩ family j).Finite) :
-    ∃ refined : ι → Set α,
-      (Pairwise fun i j ↦ Disjoint (refined i) (refined j)) ∧
-        ∀ j, refined j ⊆ family j ∧
-          (fun x ↦ x ∈ refined j) =ᶠ[cofinite] (fun x ↦ x ∈ family j) := by
-  refine ⟨disjointize family, pairwise_disjoint_disjointize family, ?_⟩
-  intro j
-  exact ⟨disjointize_subset family j, disjointize_eventuallyEq_finite family had j⟩
-
 end AlmostDisjoint
 
 namespace BlockSystem
@@ -384,20 +336,6 @@ theorem retainedBlocks_mem_densityFilter_ofBlockPositions
       (ofBlockPositions N hN).densityFilter a := by
   apply (ofBlockPositions N hN).retainedBlocks_mem_densityFilter E R hab hE hcard
   simpa only [ofBlockPositions_card] using hratio
-
-/-- A free ultrafilter extension can be chosen to contain every retained set supplied by
-the preceding lemma. -/
-theorem exists_free_ultrafilter_with_retainedBlocks (B : BlockSystem) {a b : Set ℕ}
-    (ha : a.Infinite) (E : ℕ → Finset ℕ) (R : ℕ → ℕ)
-    (hab : (a \ b).Finite) (hE : ∀ l, E l ⊆ B.block l)
-    (hcard : ∀ l ∈ b, (E l).card ≤ R l)
-    (hratio : Tendsto (fun l ↦ (R l : ℝ) / ((B.block l).card : ℝ)) atTop (nhds 0)) :
-    ∃ p : Ultrafilter ℕ,
-      (p : Filter ℕ) ≤ B.densityFilter a ∧ (p : Filter ℕ) ≤ cofinite ∧
-        B.retainedBlocks b E ∈ p := by
-  rcases B.exists_free_ultrafilter_le_densityFilter ha with ⟨p, hpD, hpFree⟩
-  refine ⟨p, hpD, hpFree, hpD ?_⟩
-  exact B.retainedBlocks_mem_densityFilter E R hab hE hcard hratio
 
 end BlockSystem
 

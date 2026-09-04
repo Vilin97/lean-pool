@@ -92,11 +92,6 @@ theorem codedSequence_injective (a : ContinuumIndex) :
     Function.Injective (codedSequence a) :=
   (sequenceCodeEquiv a).2
 
-theorem codedSequence_code_injective : Function.Injective codedSequence := by
-  intro a b hab
-  apply sequenceCodeEquiv.injective
-  exact Subtype.ext hab
-
 /-! ## Countable supports have strict upper bounds -/
 
 /-- All coordinates that occur in a sequence. -/
@@ -194,38 +189,6 @@ theorem codedSequence_supportedBelow (a : ContinuumIndex) :
     FiniteCombinatorics.SupportedBelow (codedSequence a) (codeIndex a) := by
   intro n i hi
   exact (support_lt_supportBound a hi).trans (freshIndex_spec supportBound a).1
-
-/-- The paper's set `Λ` of fresh indices. -/
-abbrev TriangularIndices : Set ContinuumIndex := Set.range codeIndex
-
-/-- The code type and `Λ` are equivalent by the fresh-index embedding. -/
-def codeIndexEquiv : ContinuumIndex ≃ TriangularIndices :=
-  Equiv.ofInjective codeIndex codeIndex.injective
-
-/-- The paper-style enumeration, now indexed literally by `Λ`. -/
-def triangularSequenceEquiv : TriangularIndices ≃ InjectiveSequences :=
-  codeIndexEquiv.symm.trans sequenceCodeEquiv
-
-def triangularSequence (α : TriangularIndices) : ℕ → ContinuumFreeGroup :=
-  (triangularSequenceEquiv α).1
-
-@[simp]
-theorem mk_triangularIndices : #TriangularIndices = 𝔠 := by
-  exact (Cardinal.mk_range_eq codeIndex codeIndex.injective).trans mk_continuumIndex
-
-theorem triangularSequence_injective (α : TriangularIndices) :
-    Function.Injective (triangularSequence α) :=
-  (triangularSequenceEquiv α).2
-
-/-- Exact triangular support condition with the fresh index itself as upper bound. -/
-theorem triangularSequence_supportedBelow (α : TriangularIndices) :
-    FiniteCombinatorics.SupportedBelow (triangularSequence α) α := by
-  let a := codeIndexEquiv.symm α
-  have hα : (codeIndex a : ContinuumIndex) = α := by
-    exact Subtype.ext_iff.mp (codeIndexEquiv.apply_symm_apply α)
-  change FiniteCombinatorics.SupportedBelow
-    (codedSequence (codeIndexEquiv.symm α)) α
-  simpa only [a, hα] using codedSequence_supportedBelow a
 
 /-! ## Blockwise bounded-independence selection -/
 
@@ -537,29 +500,6 @@ theorem blockPositions_card
     (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (l : ℕ) :
     (blockPositions N hN l).card = N l := by
   simp [blockPositions, blockStart_succ]
-
-theorem blockPositions_disjoint
-    (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) {l k : ℕ} (hlk : l ≠ k) :
-    Disjoint (blockPositions N hN l) (blockPositions N hN k) := by
-  rw [Finset.disjoint_left]
-  intro n hnl hnk
-  have hl := (mem_blockPositions_iff N hN).mp hnl
-  have hk := (mem_blockPositions_iff N hN).mp hnk
-  exact hlk (hl.symm.trans hk)
-
-theorem mem_blockPositions_blockOf
-    (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (n : ℕ) :
-    n ∈ blockPositions N hN (blockOf N hN n) :=
-  (mem_blockPositions_iff N hN).mpr rfl
-
-/-- The finite blocks are pairwise disjoint and cover all natural-number positions. -/
-theorem iUnion_blockPositions
-    (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) :
-    ⋃ l, (blockPositions N hN l : Set ℕ) = Set.univ := by
-  apply Set.eq_univ_of_forall
-  intro n
-  exact Set.mem_iUnion.mpr
-    ⟨blockOf N hN n, mem_blockPositions_blockOf N hN n⟩
 
 theorem blockFiber_finite
     (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (l : ℕ) :

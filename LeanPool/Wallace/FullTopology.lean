@@ -282,18 +282,9 @@ theorem FullCharacterPackage.hasMainGroupTopology
     C.initial_totallyBounded,
     C.initial_onlyEventuallyConstantConvergentSequences⟩
 
-/-- Exact statement of the free-Abelian group theorem for an arbitrary index type. -/
-abbrev FreeAbelianGroupConclusion (I : Type u) : Prop :=
-  HasMainGroupTopology (I →₀ ℤ)
-
 /-- Exact statement of the rational-vector-group proposition for an arbitrary index type. -/
 abbrev RationalVectorGroupConclusion (I : Type u) : Prop :=
   HasMainGroupTopology (I →₀ ℚ)
-
-theorem SeparationPackage.freeAbelianGroupConclusion
-    {I : Type u} (C : SeparationPackage I) :
-    FreeAbelianGroupConclusion I :=
-  C.toFullCharacterPackage.hasMainGroupTopology
 
 /-- Once the construction is instantiated on the rational direct sum, the rational proposition
 follows through exactly the same topology argument. -/

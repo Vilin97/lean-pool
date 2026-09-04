@@ -40,12 +40,6 @@ def IsWallaceSemigroup (S : Type u) [TopologicalSpace S] [AddMonoid S] : Prop :=
   ContinuousAdd S ∧ IsCancelAdd S ∧ T2Space S ∧ CountablyCompactSpace S ∧
     ∃ x : S, ¬ IsAddUnit x
 
-/-- The existential statement of the Wallace counterexample, bundled with its topology and
-additive monoid structure. -/
-def WallaceCounterexampleExists : Prop :=
-  ∃ (S : Type) (topology : TopologicalSpace S) (monoid : AddMonoid S),
-    @IsWallaceSemigroup S topology monoid
-
 /-- A convenient unbundled form of the accumulation-point criterion used for countable
 compactness. -/
 def HasInfiniteSetAccumulationProperty
@@ -213,37 +207,5 @@ theorem positiveCone_isWallace_of_limitProperty
     IsWallaceSemigroup (positiveCone ι) :=
   addSubmonoid_isWallace_of_limitProperty (positiveCone ι) hlimits
     (single_one_mem_positiveCone ι i) (neg_single_one_not_mem_positiveCone ι i)
-
-/-- A concrete index type of cardinality continuum for the free Abelian group in the paper. -/
-abbrev ContinuumFreeAbelianGroup := ℝ →₀ ℤ
-
-/-- The nonnegative cone in the free Abelian group indexed by the continuum. -/
-abbrev continuumPositiveCone : AddSubmonoid ContinuumFreeAbelianGroup :=
-  positiveCone ℝ
-
-/-- The corollary in its concrete continuum-indexed form.
-
-The hypothesis is precisely the construction-specific property supplied by the main theorem of
-the paper; the entire deduction after that point is proved here. -/
-theorem continuumPositiveCone_isWallace_of_limitProperty
-    [TopologicalSpace ContinuumFreeAbelianGroup]
-    [IsTopologicalAddGroup ContinuumFreeAbelianGroup]
-    [T2Space ContinuumFreeAbelianGroup]
-    (hlimits : HasWallaceLimitProperty
-      (F := ContinuumFreeAbelianGroup) continuumPositiveCone) :
-    IsWallaceSemigroup continuumPositiveCone :=
-  positiveCone_isWallace_of_limitProperty ℝ (0 : ℝ) hlimits
-
-/-- Existential form of the Wallace conclusion from a Hausdorff topological group structure and
-the construction-specific limit property supplied by the paper. -/
-theorem wallaceCounterexampleExists_of_limitProperty
-    [TopologicalSpace ContinuumFreeAbelianGroup]
-    [IsTopologicalAddGroup ContinuumFreeAbelianGroup]
-    [T2Space ContinuumFreeAbelianGroup]
-    (hlimits : HasWallaceLimitProperty
-      (F := ContinuumFreeAbelianGroup) continuumPositiveCone) :
-    WallaceCounterexampleExists := by
-  refine ⟨continuumPositiveCone, inferInstance, inferInstance, ?_⟩
-  exact continuumPositiveCone_isWallace_of_limitProperty hlimits
 
 end Wallace

@@ -51,11 +51,6 @@ theorem label_inter_finite {a b : ContinuumIndex} (hab : a ≠ b) :
   apply binaryBranchOnNat_inter_finite
   exact continuumIndexEquivBinaryStream.injective.ne hab
 
-theorem label_pairwise :
-    Pairwise fun a b : ContinuumIndex ↦ (label a ∩ label b).Finite := by
-  intro a b hab
-  exact label_inter_finite hab
-
 /-! ## The globally prepared sequences -/
 
 variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
@@ -94,22 +89,6 @@ theorem preparedDifference_injective (a : ContinuumIndex) :
   intro m n hmn
   apply prepared_injective N hN M a
   exact sub_left_injective hmn
-
-/-- Each shifted block has exactly the scheduled cardinality `N l`, as in
-Lemma 5.3 of the paper. -/
-theorem differenceBlock_card (a : ContinuumIndex) (l : ℕ) :
-    (differenceBlock N hN M a l).card = N l := by
-  rw [differenceBlock,
-    Finset.card_image_iff.mpr (preparedDifference_injective N hN M a).injOn,
-    blockPositions_card]
-
-theorem differenceBlock_subset_range (a : ContinuumIndex) (l : ℕ) :
-    ↑(differenceBlock N hN M a l) ⊆
-      Set.range (fun n ↦ prepared N hN M a n - codeBasisVector a) := by
-  intro x hx
-  simp only [differenceBlock, Finset.mem_coe, Finset.mem_image] at hx
-  obtain ⟨n, _hn, rfl⟩ := hx
-  exact Set.mem_range_self n
 
 /-! ## The fixed free ultrafilters -/
 

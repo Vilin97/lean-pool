@@ -96,11 +96,6 @@ theorem codedSequence_injective (a : ContinuumIndex) :
     Function.Injective (codedSequence a) :=
   (rationalSequenceCodeEquiv a).2
 
-theorem codedSequence_code_injective : Function.Injective codedSequence := by
-  intro a b hab
-  apply rationalSequenceCodeEquiv.injective
-  exact Subtype.ext hab
-
 /-- The union of the finite supports of a rational sequence. -/
 def sequenceSupport (s : ℕ → ContinuumRationalGroup) : Set ContinuumIndex :=
   {i | ∃ n, i ∈ (s n).support}

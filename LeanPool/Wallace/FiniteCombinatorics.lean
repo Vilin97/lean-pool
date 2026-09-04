@@ -40,35 +40,6 @@ the sequence lies strictly below its assigned index. -/
 def SupportedBelow (s : ℕ → I →₀ ℤ) (i : I) : Prop :=
   ∀ n j, j ∈ (s n).support → j < i
 
-/-- Reindex a family by the range of an injective assignment of fresh upper bounds.
-
-This is the final reindexing step of the triangular-coding lemma in the paper.  The genuinely
-set-theoretic input of that lemma—that continuum many countable supports admit distinct upper
-bounds below the initial ordinal of the continuum—is deliberately visible as `hbound`; it is not
-silently postulated here. -/
-theorem triangular_reindex
-    (t : T → ℕ → I →₀ ℤ) (index : T ↪ I)
-    (ht : Function.Injective t)
-    (hbound : ∀ a, SupportedBelow (t a) (index a)) :
-    ∃ (Λ : Set I) (s : Λ → ℕ → I →₀ ℤ),
-      Function.Injective s ∧ Set.range s = Set.range t ∧
-        ∀ α : Λ, SupportedBelow (s α) α := by
-  let Λ : Set I := Set.range index
-  let e : T ≃ Λ := Equiv.ofInjective index index.injective
-  let s : Λ → ℕ → I →₀ ℤ := t ∘ e.symm
-  refine ⟨Λ, s, ?_, ?_, ?_⟩
-  · exact ht.comp e.symm.injective
-  · ext z
-    constructor
-    · rintro ⟨a, rfl⟩
-      exact ⟨e.symm a, rfl⟩
-    · rintro ⟨a, rfl⟩
-      exact ⟨e a, by simp [s]⟩
-  · intro α
-    have hα : (index (e.symm α) : I) = α := by
-      exact Subtype.ext_iff.mp (e.apply_symm_apply α)
-    simpa [s, SupportedBelow, hα] using hbound (e.symm α)
-
 end Triangular
 
 section Relations
@@ -184,35 +155,6 @@ theorem boundedIndependent_insert_of_not_forbidden [IsAddTorsionFree G] [Decidab
   rcases Finset.mem_insert.mp hz with rfl | hzY
   · exact hcx
   · exact hcY z hzY
-
-/-- **Bounded-independence extraction** (Lemma `lem:finite-extraction` in the paper).
-
-Every infinite subset of a torsion-free Abelian group contains an `M`-independent finite subset
-of any prescribed cardinality `N`. -/
-theorem exists_boundedIndependent_finset [IsAddTorsionFree G]
-    {S : Set G} (hS : S.Infinite) (M N : ℕ) :
-    ∃ X : Finset G, (X : Set G) ⊆ S ∧ X.card = N ∧ BoundedIndependent M X := by
-  classical
-  induction N with
-  | zero =>
-      refine ⟨∅, by simp, by simp, ?_⟩
-      intro c _ _ x hx
-      simp at hx
-  | succ N ih =>
-      obtain ⟨Y, hYS, hYcard, hYind⟩ := ih
-      obtain ⟨x, hxS, hxout⟩ :=
-        hS.exists_notMem_finset (Y ∪ forbiddenFinset M Y)
-      have hxY : x ∉ Y := fun hx ↦ hxout (Finset.mem_union_left _ hx)
-      have hxforbidden : ¬ Forbidden M Y x := by
-        intro hx
-        exact hxout (Finset.mem_union_right _ (forbidden_mem_forbiddenFinset hx))
-      refine ⟨insert x Y, ?_, ?_,
-        boundedIndependent_insert_of_not_forbidden hYind hxY hxforbidden⟩
-      · intro z hz
-        rcases Finset.mem_insert.mp hz with rfl | hz
-        · exact hxS
-        · exact hYS hz
-      · simp [Finset.card_insert_of_notMem hxY, hYcard]
 
 section IntegerDependence
 

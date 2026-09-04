@@ -46,20 +46,9 @@ def blockSize (l : ℕ) : ℕ :=
   (l + 2) * protectedBound l
 
 @[simp]
-theorem accumulatedSize_zero : accumulatedSize 0 = 0 := rfl
-
-@[simp]
 theorem accumulatedSize_succ (l : ℕ) :
     accumulatedSize (l + 1) = accumulatedSize l + blockSize l := by
   rfl
-
-/-- `accumulatedSize` is exactly the sum of all preceding block sizes. -/
-theorem sum_blockSize (l : ℕ) :
-    ∑ i ∈ Finset.range l, blockSize i = accumulatedSize l := by
-  induction l with
-  | zero => simp
-  | succ l ih =>
-      rw [Finset.sum_range_succ, ih, accumulatedSize_succ]
 
 theorem protectedBound_pos (l : ℕ) : 0 < protectedBound l := by
   simp only [protectedBound]
@@ -76,9 +65,6 @@ theorem protectedBound_ne_zero (l : ℕ) : protectedBound l ≠ 0 :=
 theorem blockSize_pos (l : ℕ) : 0 < blockSize l := by
   simp only [blockSize]
   exact Nat.mul_pos (by omega) (protectedBound_pos l)
-
-theorem blockSize_ne_zero (l : ℕ) : blockSize l ≠ 0 :=
-  Nat.ne_of_gt (blockSize_pos l)
 
 /-- The exact discarded-proportion identity behind the density-one argument. -/
 theorem protectedBound_div_blockSize (l : ℕ) :
@@ -107,9 +93,6 @@ def stageError (l : ℕ) : ℝ :=
 theorem stageError_pos (l : ℕ) : 0 < stageError l := by
   simp only [stageError]
   positivity
-
-theorem stageError_ne_zero (l : ℕ) : stageError l ≠ 0 :=
-  ne_of_gt (stageError_pos l)
 
 /-- Exact geometric-tail identity, convenient for the completeness estimate. -/
 theorem stageError_add (L n : ℕ) :
@@ -144,21 +127,6 @@ theorem tendsto_stageError : Tendsto stageError atTop (nhds 0) :=
 theorem tsum_stageError : ∑' l : ℕ, stageError l = (1 / 32 : ℝ) := by
   change (∑' n : ℕ, (1 / 32 : ℝ) / 2 / 2 ^ n) = 1 / 32
   exact tsum_geometric_two' (1 / 32 : ℝ)
-
-theorem tsum_stageError_pos : 0 < ∑' l : ℕ, stageError l := by
-  rw [tsum_stageError]
-  norm_num
-
-/-- Even twice the full error budget is far below the initial value `1/2`. -/
-theorem two_mul_tsum_stageError_lt_half :
-    2 * (∑' l : ℕ, stageError l) < (1 / 2 : ℝ) := by
-  rw [tsum_stageError]
-  norm_num
-
-/-- The pointwise-limit estimate from the zeroth stage also preserves a nonzero half-turn. -/
-theorem two_mul_stageError_zero_lt_half :
-    2 * stageError 0 < (1 / 2 : ℝ) := by
-  norm_num [stageError]
 
 /-- Independence threshold used before the bounded-deletion step. -/
 def independenceBound (l Q : ℕ) : ℕ :=

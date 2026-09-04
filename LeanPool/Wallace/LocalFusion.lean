@@ -43,24 +43,6 @@ open FiniteCombinatorics
 
 /-! ## The bounded-deletion input to one stage -/
 
-/-- A retained finite subset of `X` supplied by the bounded-deletion theorem. -/
-structure DeletionStage {G : Type u} [AddCommGroup G] [DecidableEq G]
-    (A X : Finset G) (Q : ℕ) where
-  retained : Finset G
-  retained_subset : retained ⊆ X
-  deleted_card_le : (X \ retained).card ≤ A.card
-  mixedRelationFree : MixedRelationFree Q A retained
-
-/-- The existing bounded-deletion theorem produces a complete stage certificate. -/
-theorem exists_deletionStage {G : Type u} [AddCommGroup G] [IsAddTorsionFree G]
-    [DecidableEq G]
-    (r Q : ℕ) (A X : Finset G) (hAr : A.card ≤ r)
-    (hX : BoundedIndependent (deletionIndependenceBound r Q) X) :
-    Nonempty (DeletionStage A X Q) := by
-  classical
-  obtain ⟨Y, hYX, hcard, hfree⟩ := bounded_deletion r Q A X hAr hX
-  exact ⟨⟨Y, hYX, hcard, hfree⟩⟩
-
 /-- A scheduled bounded-deletion and finite-fusion stage. -/
 theorem exists_character_after_deletion
     {G : Type} [AddCommGroup G] [IsAddTorsionFree G] [DecidableEq G]
@@ -234,29 +216,6 @@ theorem norm_limit_difference_le_on_retained (R : FusionRun G) (B : CodeBlocks R
   exact R.norm_limitCharacter_le_of_mem_retained
     l (B.retained_in_stage l n hlab hnblock)
 
-/-- If retained indices determine block labels tending to infinity, the limiting character of
-the difference sequence tends to zero along the fixed ultrafilter. -/
-theorem tendsto_limit_difference_zero (R : FusionRun G) (B : CodeBlocks R)
-    (blockOf : ℕ → ℕ)
-    (hblockOf : ∀ l n, n ∈ B.block l → blockOf n = l)
-    (hblockTendsto : Tendsto blockOf B.p atTop) :
-    Tendsto (fun n ↦ R.limitCharacter (B.difference n)) B.p (nhds 0) := by
-  rw [Metric.tendsto_nhds]
-  intro ε hε
-  have herr : Tendsto (fun l ↦ 2 * FusionSchedule.stageError l) atTop (nhds 0) := by
-    simpa using FusionSchedule.tendsto_stageError.const_mul 2
-  have hevent : ∀ᶠ l in atTop, 2 * FusionSchedule.stageError l < ε :=
-    (Metric.tendsto_nhds.mp herr ε hε).mono fun l hl ↦ by
-      simpa [abs_of_pos (FusionSchedule.stageError_pos l)] using hl
-  have heventP : ∀ᶠ n in B.p, 2 * FusionSchedule.stageError (blockOf n) < ε :=
-    hblockTendsto hevent
-  filter_upwards [B.retained_mem, heventP] with n hnret hnerr
-  obtain ⟨l, _hlab, hnblock, hnorm⟩ :=
-    R.norm_limit_difference_le_on_retained B hnret
-  have hlabel : blockOf n = l := hblockOf l n (Finset.mem_sdiff.mp hnblock).1
-  rw [dist_zero_right]
-  exact hnorm.trans_lt (by simpa [hlabel] using hnerr)
-
 /-- Concrete block-position version of `tendsto_limit_difference_zero`.  Here freeness of the
 ultrafilter and the partition theorem for `blockPositions` supply the required divergence of
 block labels automatically. -/
@@ -422,17 +381,6 @@ def fusionStates
     (initial : G →+ UnitAddCircle) :
     (fusionStates fresh enumeration x hfresh_card hfresh_independent initial 0).character =
       initial := rfl
-
-@[simp] theorem fusionStates_succ
-    {G : Type} [AddCommGroup G] [IsAddTorsionFree G] [DecidableEq G]
-    (fresh : ℕ → Finset G) (enumeration : ℕ → G) (x : G)
-    (hfresh_card : ∀ l, (fresh l).card ≤ FusionSchedule.blockSize l)
-    (hfresh_independent : ∀ l,
-      BoundedIndependent (FusionSchedule.stageIndependenceBound l) (fresh l))
-    (initial : G →+ UnitAddCircle) (l : ℕ) :
-    fusionStates fresh enumeration x hfresh_card hfresh_independent initial (l + 1) =
-      nextFusionState fresh enumeration x hfresh_card hfresh_independent l
-        (fusionStates fresh enumeration x hfresh_card hfresh_independent initial l) := rfl
 
 /- The rest of the construction uses shorter local names. -/
 section ScheduledConstruction

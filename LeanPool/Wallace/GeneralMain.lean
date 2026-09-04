@@ -78,15 +78,6 @@ theorem torsionFreeAbelianGroup_mainTheorem_exact
       torsionFreeAbelianGroup_mainTheorem G hcard
   exact ⟨topology, htopologicalGroup, hT2, hcompact, hsequences⟩
 
-/-- The Baer--Specker group has cardinality continuum. -/
-theorem mk_baerSpeckerGroup : #(ℕ → ℤ) = 𝔠 := by
-  rw [Cardinal.mk_arrow, Cardinal.mk_int, Cardinal.mk_nat]
-  simp
-
-/-- The Baer--Specker specialization highlighted in the abstract and introduction. -/
-theorem baerSpeckerGroup_mainTheorem : HasMainGroupTopology (ℕ → ℤ) :=
-  torsionFreeAbelianGroup_mainTheorem (ℕ → ℤ) mk_baerSpeckerGroup
-
 end
 
 end Wallace

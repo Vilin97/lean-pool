@@ -40,18 +40,6 @@ def dependencyClosure (index : Code ↪ I) (dependency : Code → Set I)
     (D₀ : Set I) : Set I :=
   ⋃ n, dependencyClosureStages index dependency D₀ n
 
-theorem subset_dependencyClosureStep (index : Code ↪ I) (dependency : Code → Set I)
-    (D : Set I) : D ⊆ dependencyClosureStep index dependency D :=
-  subset_union_left
-
-theorem dependencyClosureStages_mono (index : Code ↪ I) (dependency : Code → Set I)
-    (D₀ : Set I) : Monotone (dependencyClosureStages index dependency D₀) := by
-  intro m n hmn
-  induction n, hmn using Nat.le_induction with
-  | base => exact Subset.rfl
-  | succ n _ ih =>
-      exact ih.trans (subset_dependencyClosureStep index dependency _)
-
 theorem subset_dependencyClosure (index : Code ↪ I) (dependency : Code → Set I)
     (D₀ : Set I) : D₀ ⊆ dependencyClosure index dependency D₀ := by
   intro x hx

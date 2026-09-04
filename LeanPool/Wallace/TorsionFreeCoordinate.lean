@@ -36,41 +36,6 @@ namespace RationalCoordinatization
 
 variable {G : Type} [AddCommGroup G]
 
-/-- The coordinatewise inclusion `ℤ^(𝔠) → ℚ^(𝔠)` occurring in the paper's
-coordinatization lemma. -/
-def integerCoordinateEmbedding :
-    TriangularPreprocess.ContinuumFreeGroup →+
-      RationalTriangularPreprocess.ContinuumRationalGroup :=
-  Finsupp.mapRange.addMonoidHom (Int.castAddHom ℚ)
-
-theorem integerCoordinateEmbedding_injective :
-    Function.Injective integerCoordinateEmbedding := by
-  intro z w h
-  ext i
-  have hi := congrArg (fun q : RationalTriangularPreprocess.ContinuumRationalGroup ↦ q i) h
-  change (z i : ℚ) = (w i : ℚ) at hi
-  exact_mod_cast hi
-
-/-- Integer linear combinations of the distinguished preimages in `G`. -/
-def integerCoordinatePreimage (K : RationalCoordinatization G) :
-    TriangularPreprocess.ContinuumFreeGroup →+ G :=
-  Finsupp.liftAddHom (fun i ↦ zmultiplesHom G (K.basisPreimage i))
-
-/-- The embedding of a coordinatized group contains the whole canonical copy of
-`ℤ^(𝔠)`, not merely its individual basis vectors. -/
-theorem embedding_integerCoordinatePreimage (K : RationalCoordinatization G) :
-    K.embedding.comp K.integerCoordinatePreimage = integerCoordinateEmbedding := by
-  ext i z
-  simp [integerCoordinatePreimage, integerCoordinateEmbedding,
-    K.embedding_basisPreimage]
-
-theorem integerCoordinatePreimage_injective (K : RationalCoordinatization G) :
-    Function.Injective K.integerCoordinatePreimage := by
-  intro z w h
-  apply integerCoordinateEmbedding_injective
-  rw [← K.embedding_integerCoordinatePreimage]
-  simpa using congrArg K.embedding h
-
 variable [IsAddTorsionFree G]
 
 omit [IsAddTorsionFree G] in
@@ -175,19 +140,6 @@ def ofCardinalityContinuum (hcard : #G = 𝔠) : RationalCoordinatization G wher
   embedding_injective := canonicalEmbedding_injective hcard
   basisPreimage := basisNumerator (G := G) hcard
   embedding_basisPreimage := canonicalEmbedding_basisNumerator hcard
-
-/-- A proposition-level form of the paper's coordinatization lemma: the map is
-injective and its image contains the canonical copy of `ℤ^(𝔠)` in `ℚ^(𝔠)`. -/
-theorem exists_coordinatization (hcard : #G = 𝔠) :
-    ∃ (embedding : G →+ RationalTriangularPreprocess.ContinuumRationalGroup)
-      (preimage : TriangularPreprocess.ContinuumFreeGroup →+ G),
-      Function.Injective embedding ∧
-        Function.Injective preimage ∧
-        embedding.comp preimage = integerCoordinateEmbedding := by
-  let K := ofCardinalityContinuum (G := G) hcard
-  exact ⟨K.embedding, K.integerCoordinatePreimage, K.embedding_injective,
-    K.integerCoordinatePreimage_injective,
-    K.embedding_integerCoordinatePreimage⟩
 
 end RationalCoordinatization
 

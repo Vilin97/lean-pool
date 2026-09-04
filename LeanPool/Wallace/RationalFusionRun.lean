@@ -41,11 +41,6 @@ abbrev LocalGroup (x : ContinuumRationalGroup) := localCarrier x →₀ ℚ
 abbrev fresh (x : ContinuumRationalGroup) : ℕ → Finset (LocalGroup x) :=
   localActiveBlock blockSize blockSize_pos independenceBound x
 
-theorem localGroup_countable (x : ContinuumRationalGroup) : Countable (LocalGroup x) := by
-  letI : Countable (localCarrier x) :=
-    (closure_countable blockSize blockSize_pos independenceBound x).to_subtype
-  infer_instance
-
 /-- A fixed surjection used to make every local point eventually protected. -/
 def localEnumeration (x : ContinuumRationalGroup) : ℕ → LocalGroup x := by
   letI : Countable (localCarrier x) :=
@@ -257,10 +252,6 @@ def localRunCertificate (x : {x : ContinuumRationalGroup // x ≠ 0}) :
     · exact (scheduledCertificate x).initial_half
     · exact (scheduledCertificate x).distinguished_protected
   codeBlocks := codeBlocks x
-
-theorem exists_localRunCertificate
-    (x : {x : ContinuumRationalGroup // x ≠ 0}) :
-    Nonempty (LocalRunCertificate x) := ⟨localRunCertificate x⟩
 
 end
 end RationalFusionRun

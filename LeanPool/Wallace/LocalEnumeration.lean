@@ -19,12 +19,6 @@ open TriangularPreprocess
 
 variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
 
-/-- The free Abelian group on a countable coordinate closure is countable. -/
-theorem localFreeGroup_countable (x : ContinuumFreeGroup) :
-    Countable (closure N hN M x →₀ ℤ) := by
-  letI : Countable (closure N hN M x) := (closure_countable N hN M x).to_subtype
-  infer_instance
-
 /-- A fixed surjective enumeration of every local free group. -/
 def groupEnumeration (x : ContinuumFreeGroup) :
     ℕ → (closure N hN M x →₀ ℤ) := by

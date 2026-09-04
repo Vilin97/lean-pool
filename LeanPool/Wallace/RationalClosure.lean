@@ -64,24 +64,6 @@ theorem closure_closedUnderPreparedSupports (x : ContinuumRationalGroup) :
   intro a ha n i hi
   exact prepared_support_mem_closure N hN M x a ha n i hi
 
-theorem closure_nonempty {x : ContinuumRationalGroup} (hx : x ≠ 0) :
-    (closure N hN M x).Nonempty := by
-  obtain ⟨i, hi⟩ := Finsupp.support_nonempty_iff.mpr hx
-  exact ⟨i, support_subset_closure N hN M x hi⟩
-
-/-- A fixed enumeration of the nonempty countable closure. -/
-def enumeration {x : ContinuumRationalGroup} (hx : x ≠ 0) :
-    ℕ → closure N hN M x := by
-  letI : Countable (closure N hN M x) := (closure_countable N hN M x).to_subtype
-  letI : Nonempty (closure N hN M x) := (closure_nonempty N hN M hx).to_subtype
-  exact Classical.choose (exists_surjective_nat (closure N hN M x))
-
-theorem enumeration_surjective {x : ContinuumRationalGroup} (hx : x ≠ 0) :
-    Function.Surjective (enumeration N hN M hx) := by
-  letI : Countable (closure N hN M x) := (closure_countable N hN M x).to_subtype
-  letI : Nonempty (closure N hN M x) := (closure_nonempty N hN M hx).to_subtype
-  exact Classical.choose_spec (exists_surjective_nat (closure N hN M x))
-
 end
 end RationalClosure
 end Wallace

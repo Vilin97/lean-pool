@@ -80,19 +80,6 @@ theorem no_injective_sequence_converges_of_nonzeroLimitProperty
   have hp0 : Tendsto (t ∘ φ) p (nhds 0) := hsub0.mono_left hfree'
   exact hy (tendsto_nhds_unique hpy hp0)
 
-/-- The nonzero limits supplied by a separation package rule out convergence of every injective
-sequence in its initial topology. -/
-theorem SeparationPackage.no_injective_sequence_converges
-    {I : Type u} (C : SeparationPackage I) :
-    ∀ s : ℕ → (I →₀ ℤ), Function.Injective s →
-      ¬ ∃ x : I →₀ ℤ,
-        Tendsto s atTop (@nhds (I →₀ ℤ) C.initialTopology x) := by
-  letI : TopologicalSpace (I →₀ ℤ) := C.initialTopology
-  letI : IsTopologicalAddGroup (I →₀ ℤ) := C.initial_isTopologicalAddGroup
-  letI : T2Space (I →₀ ℤ) := C.initial_t2Space
-  exact no_injective_sequence_converges_of_nonzeroLimitProperty
-    C.hasNonzeroLimitProperty
-
 /-- Any sequence with infinite range has a strictly reindexed injective subsequence. -/
 theorem exists_injective_subsequence_of_infinite_range
     {X : Type u} {s : ℕ → X} (hinf : (Set.range s).Infinite) :
@@ -143,19 +130,6 @@ theorem eventually_eq_limit_of_no_injective_sequence_converges
   · have hinf : (Set.range s).Infinite := hfinite
     obtain ⟨φ, hφ, hinj⟩ := exists_injective_subsequence_of_infinite_range hinf
     exact ((hno (s ∘ φ) hinj) ⟨x, hs.comp hφ.tendsto_atTop⟩).elim
-
-/-- Consequently every convergent sequence in the initial topology of a separation package is
-eventually constant at its limit. -/
-theorem SeparationPackage.every_convergent_sequence_eventually_constant
-    {I : Type u} (C : SeparationPackage I)
-    {s : ℕ → (I →₀ ℤ)} {x : I →₀ ℤ}
-    (hs : Tendsto s atTop (@nhds (I →₀ ℤ) C.initialTopology x)) :
-    ∀ᶠ n in atTop, s n = x := by
-  letI : TopologicalSpace (I →₀ ℤ) := C.initialTopology
-  letI : IsTopologicalAddGroup (I →₀ ℤ) := C.initial_isTopologicalAddGroup
-  letI : T2Space (I →₀ ℤ) := C.initial_t2Space
-  exact eventually_eq_limit_of_no_injective_sequence_converges
-    C.no_injective_sequence_converges hs
 
 end
 

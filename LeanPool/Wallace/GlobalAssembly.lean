@@ -96,14 +96,6 @@ def separationPackage : SeparationPackage ContinuumIndex where
     intro a x
     exact globalCharacter_admissible N hN M H x a
 
-/-- Once the local fusion has been proved for the concrete schedule, the existential Wallace
-counterexample follows without any additional topological or set-theoretic assumption. -/
-theorem wallaceCounterexampleExists_of_local
-    (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
-    (H : HasLocalSeparatingCharacters N hN M) : WallaceCounterexampleExists := by
-  letI : Infinite ContinuumIndex := continuumIndex_infinite
-  exact (separationPackage N hN M H).wallaceCounterexampleExists
-
 end
 
 end GlobalAssembly

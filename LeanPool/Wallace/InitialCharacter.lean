@@ -38,16 +38,6 @@ theorem exists_character_apply_eq_half
   obtain ⟨χ, hχ⟩ := exists_character_of_respectsRelations z t hrel
   exact ⟨χ, by simpa [z, t] using hχ 0⟩
 
-/-- The half-turn is nonzero. -/
-theorem half_ne_zero : (((1 / 2 : ℝ) : UnitAddCircle)) ≠ 0 := by
-  intro hzero
-  rw [AddCircle.coe_eq_zero_iff] at hzero
-  obtain ⟨n, hn⟩ := hzero
-  have hnR : (n : ℝ) = 1 / 2 := by simpa using hn
-  have hn' : (2 : ℝ) * (n : ℝ) = 1 := by linarith
-  have hnInt : (2 : ℤ) * n = 1 := by exact_mod_cast hn'
-  omega
-
 end
 
 end Wallace

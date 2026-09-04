@@ -80,12 +80,6 @@ def enumeration {x : ContinuumFreeGroup} (hx : x ≠ 0) :
   letI : Nonempty (closure N hN M x) := (closure_nonempty N hN M hx).to_subtype
   exact Classical.choose (exists_surjective_nat (closure N hN M x))
 
-theorem enumeration_surjective {x : ContinuumFreeGroup} (hx : x ≠ 0) :
-    Function.Surjective (enumeration N hN M hx) := by
-  letI : Countable (closure N hN M x) := (closure_countable N hN M x).to_subtype
-  letI : Nonempty (closure N hN M x) := (closure_nonempty N hN M hx).to_subtype
-  exact Classical.choose_spec (exists_surjective_nat (closure N hN M x))
-
 end
 
 end ConcreteClosure
