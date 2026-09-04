@@ -103,7 +103,6 @@ lemma dist_triangle (n : ℕ) (a b c : EmpiricalSpace n) :
     dist a c ≤ dist a b + dist b c := by
   change empiricalNorm n (a - c) ≤ empiricalNorm n (a - b) + empiricalNorm n (b - c)
   unfold empiricalNorm
-  -- Expand subtraction in EmpiricalSpace
   have eq_ac : ∀ k, (a - c : EmpiricalSpace n) k = a k - c k := fun k => rfl
   have eq_ab : ∀ k, (a - b : EmpiricalSpace n) k = a k - b k := fun k => rfl
   have eq_bc : ∀ k, (b - c : EmpiricalSpace n) k = b k - c k := fun k => rfl
@@ -112,19 +111,16 @@ lemma dist_triangle (n : ℕ) (a b c : EmpiricalSpace n) :
   · simp [hn]
   have hn_pos : (0 : ℝ) < n := Nat.cast_pos.mpr (Nat.pos_of_ne_zero hn)
   have hn_inv_nonneg : 0 ≤ (n : ℝ)⁻¹ := inv_nonneg.mpr (le_of_lt hn_pos)
-  -- Factor out √(n⁻¹) and use EuclideanSpace norm
   have h_factor : ∀ f : Fin n → ℝ, Real.sqrt ((n : ℝ)⁻¹ * ∑ i, (f i)^2) =
       Real.sqrt (n : ℝ)⁻¹ * Real.sqrt (∑ i, (f i)^2) := fun f => by
     rw [Real.sqrt_mul hn_inv_nonneg]
   rw [h_factor (fun i => a i - c i), h_factor (fun i => a i - b i),
       h_factor (fun i => b i - c i), ← mul_add]
   apply mul_le_mul_of_nonneg_left _ (Real.sqrt_nonneg _)
-  -- Convert to EuclideanSpace norms using the equivalence
   let e := EuclideanSpace.equiv (Fin n) ℝ
   let a' : EuclideanSpace ℝ (Fin n) := e.symm a
   let b' : EuclideanSpace ℝ (Fin n) := e.symm b
   let c' : EuclideanSpace ℝ (Fin n) := e.symm c
-  -- The equivalence preserves function values
   have h_a' : ∀ i, a' i = a i := fun i => rfl
   have h_b' : ∀ i, b' i = b i := fun i => rfl
   have h_c' : ∀ i, c' i = c i := fun i => rfl
@@ -136,10 +132,8 @@ lemma dist_triangle (n : ℕ) (a b c : EmpiricalSpace n) :
     intro i _
     rw [Real.norm_eq_abs, sq_abs]
     rfl
-  -- Rewrite using the equalities
   simp only [← h_a', ← h_b', ← h_c']
   rw [h_norm a' c', h_norm a' b', h_norm b' c']
-  -- a - c = (a - b) + (b - c), then use norm_add_le
   have h_eq : a' - c' = (a' - b') + (b' - c') := (sub_add_sub_cancel a' b' c').symm
   rw [h_eq]
   exact norm_add_le (a' - b') (b' - c')

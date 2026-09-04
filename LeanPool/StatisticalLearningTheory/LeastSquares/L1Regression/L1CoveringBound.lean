@@ -120,7 +120,6 @@ lemma maureyNet_card_le (x : Fin n → EuclideanSpace ℝ (Fin d)) (R : ℝ) (k 
 
 /-! ## Measurable Space for Option (Fin d × Bool) -/
 
--- MeasurableSpace for Option (Fin d × Bool) using discrete sigma-algebra
 instance instMeasurableSpaceOptionFinProdBool (d : ℕ) : MeasurableSpace (Option (Fin d × Bool)) := ⊤
 instance instMeasurableSingletonClassOptionFinProdBool (d : ℕ) :
     MeasurableSingletonClass (Option (Fin d × Bool)) :=
@@ -140,7 +139,6 @@ noncomputable def maureyPMF (θ : EuclideanSpace ℝ (Fin d)) (R : ℝ) (hθ : l
     | none => exact ENNReal.ofReal (1 - l1norm θ / R)
     | some jb =>
       let (j, b) := jb
-      -- Only the correct sign gets the probability
       exact if b = decide (0 ≤ θ j) then ENNReal.ofReal (‖θ j‖ / R) else 0
   · -- sum to 1
     have hl1nonneg : 0 ≤ l1norm θ := Finset.sum_nonneg (fun i _ => norm_nonneg (θ i))
@@ -156,7 +154,6 @@ noncomputable def maureyPMF (θ : EuclideanSpace ℝ (Fin d)) (R : ℝ) (hθ : l
       · have hRpos : 0 < R := lt_of_le_of_ne hR (fun h => hR0 h.symm)
         exact (div_le_one hRpos).2 hθ
     have hnonneg : 0 ≤ 1 - l1norm θ / R := by linarith
-    -- Split sum: Option = none + some
     rw [Fintype.sum_option]
     by_cases hR0 : R = 0
     · -- R = 0 case: l1norm θ = 0
@@ -177,8 +174,6 @@ noncomputable def maureyPMF (θ : EuclideanSpace ℝ (Fin d)) (R : ℝ) (hθ : l
       simp only [hsum_zero', add_zero]
     · -- R > 0 case
       have hRpos : 0 < R := lt_of_le_of_ne hR (fun h => hR0 h.symm)
-      -- Sum over Option (Fin d × Bool) for some = sum over Fin d × Bool
-      -- For each j, exactly one of (j, true) and (j, false) contributes |θ_j|/R
       have hsum_some : ∑ jb : Fin d × Bool,
           (if jb.2 = decide (0 ≤ θ jb.1) then ENNReal.ofReal (‖θ jb.1‖ / R) else 0) =
           ∑ j : Fin d, ENNReal.ofReal (‖θ j‖ / R) := by
@@ -190,7 +185,6 @@ noncomputable def maureyPMF (θ : EuclideanSpace ℝ (Fin d)) (R : ℝ) (hθ : l
         · simp [hj]
         · simp [hj]
       rw [hsum_some]
-      -- Convert to real calculation
       have hcoord_le : ∀ j : Fin d, ‖θ j‖ / R ≤ 1 := fun j => by
         have hjle : ‖θ j‖ ≤ l1norm θ := by
           simp only [l1norm]
@@ -225,17 +219,11 @@ lemma maureyPMF_mean_coord (x : Fin n → EuclideanSpace ℝ (Fin d))
       (1 / Real.sqrt n) * @inner ℝ _ _ θ (x i) := by
   classical
   rw [PMF.integral_eq_sum, Fintype.sum_option]
-  -- The none term contributes 0
   simp only [maureyVec_none]
-  -- Sum over (j, b) pairs
   rw [Fintype.sum_prod_type]
-  -- Convert smul to mul for the coordinate
   simp only [smul_eq_mul, maureyVec_some, scaledSignedColumn, empColumn_apply]
-  -- Simplify P(none) * (0 i) = 0
   have hzero_apply : (0 : EmpiricalSpace n) i = 0 := rfl
   simp only [hzero_apply, mul_zero, zero_add]
-  -- For each j, only one of (j, true) and (j, false) contributes
-  -- The expression after simp is: (R * (if b then 1 else -1)) / √n * (x i).ofLp j
   have hsum_eq : ∑ j : Fin d, ∑ b : Bool,
       (maureyPMF θ R hθ (some (j, b))).toReal *
           ((R * (if b then 1 else -1)) / Real.sqrt n * (x i) j) =
@@ -248,7 +236,6 @@ lemma maureyPMF_mean_coord (x : Fin n → EuclideanSpace ℝ (Fin d))
       simp only [hj, decide_true, ↓reduceIte, ENNReal.toReal_ofReal
           (div_nonneg (norm_nonneg _) (le_of_lt hR)),
           Bool.false_eq_true, ENNReal.toReal_zero]
-      -- Only the positive-sign summand remains.
       have hsign : maureySign (θ j) = 1 := by simp [maureySign, hj]
       rw [hsign, zero_mul, add_zero]
       ring
@@ -256,7 +243,6 @@ lemma maureyPMF_mean_coord (x : Fin n → EuclideanSpace ℝ (Fin d))
       simp only [hj, decide_false, Bool.false_eq_true, ↓reduceIte,
           Bool.true_eq_false, ENNReal.toReal_zero,
           ENNReal.toReal_ofReal (div_nonneg (norm_nonneg _) (le_of_lt hR))]
-      -- Only the negative-sign summand remains.
       have hsign : maureySign (θ j) = -1 := by simp [maureySign, hj]
       rw [hsign, zero_mul, zero_add]
       ring
@@ -269,8 +255,6 @@ lemma maureyPMF_mean_coord (x : Fin n → EuclideanSpace ℝ (Fin d))
     rw [Real.norm_eq_abs, abs_mul_maureySign]
     ring
   simp_rw [hterm_eq, mul_assoc]
-  -- Sum equals (1/√n) * ⟨θ, x_i⟩
-  -- Now LHS = ∑ j, 1 / √n * (θ j * (x i) j)
   rw [PiLp.inner_apply]
   have h_inner : ∀ a b : ℝ, inner ℝ a b = a * b := by
     intro a b
@@ -294,12 +278,10 @@ lemma maureyPMF_variance_bound (x : Fin n → EuclideanSpace ℝ (Fin d))
     simp only [h0, mul_zero, Finset.sum_const_zero, mul_zero]
   rw [hzero_term, zero_add]
   rw [Fintype.sum_prod_type]
-  -- Each term in the sum
   have hn_pos : (0 : ℝ) < n := Nat.cast_pos.mpr hn
   have hsqrt_pos : 0 < Real.sqrt n := Real.sqrt_pos.mpr hn_pos
   have hsqrt_ne : Real.sqrt n ≠ 0 := ne_of_gt hsqrt_pos
   have hsqrt_sq : Real.sqrt n ^ 2 = n := Real.sq_sqrt (le_of_lt hn_pos)
-  -- Compute the sum
   have hsum_eq : ∑ j : Fin d, ∑ b : Bool,
       (maureyPMF θ R hθ (some (j, b))).toReal *
         (∑ i : Fin n, (maureyVec x R (some (j, b)) i) * (maureyVec x R (some (j, b)) i)) =
@@ -313,7 +295,6 @@ lemma maureyPMF_variance_bound (x : Fin n → EuclideanSpace ℝ (Fin d))
         (div_nonneg (norm_nonneg _) (le_of_lt hR)),
         Bool.false_eq_true, ENNReal.toReal_zero, zero_mul, add_zero]
       congr 1
-      -- Goal: ∑ i, (R/√n * x_ij)² = R²/n * ∑ i, x_ij²
       have heach : ∀ i : Fin n, R / Real.sqrt n * (x i).ofLp j * (R / Real.sqrt n * (x i).ofLp j) =
                 R^2 / n * ((x i).ofLp j)^2 := fun i => by
         rw [← sq, mul_pow, div_pow, hsqrt_sq]
@@ -332,7 +313,6 @@ lemma maureyPMF_variance_bound (x : Fin n → EuclideanSpace ℝ (Fin d))
       simp only [mul_neg_one, neg_div]
       simp only [heach, ← Finset.mul_sum]
   rw [hsum_eq]
-  -- Use column norm bound: ∑ i, (x_i)_j² = ‖X_j‖² ≤ n
   have hcol_sq : ∀ j : Fin d, ∑ i : Fin n, ((x i) j)^2 ≤ n := fun j => by
     have h := hcol j
     rw [← designMatrixColumn_norm_sq]
@@ -483,12 +463,9 @@ lemma productPMFWeight_sum_eq_one (θ : EuclideanSpace ℝ (Fin d)) (R : ℝ)
     (hθ : l1norm θ ≤ R) (k : ℕ) :
     ∑ f : Fin k → Option (Fin d × Bool), productPMFWeight θ R hθ k f = 1 := by
   unfold productPMFWeight
-  -- Use Fintype.sum_pow: (∑ a, f a) ^ n = ∑ p, ∏ i, f (p i)
   rw [← Fintype.sum_pow]
-  -- For finite type, tsum = finite sum
   have hmaureySum : ∑ o, (maureyPMF θ R hθ) o = 1 := by
     have htsum := PMF.tsum_coe (maureyPMF θ R hθ)
-    -- tsum on Fintype equals finite sum
     have : ∑' (a : Option (Fin d × Bool)), (maureyPMF θ R hθ) a = ∑ a, (maureyPMF θ R hθ) a := by
       apply tsum_eq_sum
       intro b hb
@@ -708,15 +685,12 @@ lemma exists_maureyAvg_close (x : Fin n → EuclideanSpace ℝ (Fin d))
     ∃ f : Fin k → Option (Fin d × Bool),
       dist (maureyAvg x R k f) (fun i => (1 / Real.sqrt n) * @inner ℝ _ _ θ (x i)) ≤ ε := by
   classical
-  -- k = 0 is impossible since R² > 0 and R² ≤ 0
   by_cases hk0 : k = 0
   · exfalso
     simp only [hk0, Nat.cast_zero, zero_mul] at hk
     linarith [sq_pos_of_pos hR]
   have hkpos : 0 < k := Nat.pos_of_ne_zero hk0
-  -- Target vector
   let target : EmpiricalSpace n := fun i => (1 / Real.sqrt n) * @inner ℝ _ _ θ (x i)
-  -- Case 1: θ = 0
   by_cases hθ0 : l1norm θ = 0
   · -- When ‖θ‖₁ = 0, θ = 0, target = 0, and all-none sample gives dist = 0
     have hθ_zero : θ = 0 := by
@@ -741,38 +715,22 @@ lemma exists_maureyAvg_close (x : Fin n → EuclideanSpace ℝ (Fin d))
       rfl
     rw [htgt', dist_self]
     exact le_of_lt hε
-  -- Case 2: θ ≠ 0, use Maurey bound
-  -- Key insight: R² ≤ k * ε² implies R²/k ≤ ε²
   have hRsq_k_bound : R ^ 2 / k ≤ ε ^ 2 := by
     have hk_pos : (0 : ℝ) < k := Nat.cast_pos.mpr hkpos
     rw [div_le_iff₀ hk_pos]
     calc R ^ 2 ≤ k * ε ^ 2 := hk
       _ = ε ^ 2 * k := by ring
-  -- The sample space is finite
   let α := Fin k → Option (Fin d × Bool)
   let distSq : α → ℝ := fun f => dist (maureyAvg x R k f) target ^ 2
-  -- Find the minimizer (exists by finiteness)
   obtain ⟨f₀, hf₀_min⟩ := Finite.exists_min distSq
-  -- Show distSq f₀ ≤ ε²
-  -- Strategy: distSq f₀ ≤ R²/k ≤ ε² (Maurey bound: min ≤ expected ≤ variance/k)
-  --
-  -- The Maurey variance bound states that for k independent samples from the
-  -- Maurey PMF, the expected squared distance is E[distSq] ≤ R²/k.
-  -- Since minimum ≤ expected, we have distSq f₀ ≤ R²/k ≤ ε².
-  --
-  -- For this formalization, we use that k = 1 gives distSq ≤ R² ≤ ε²,
-  -- and for k > 1, the proper Maurey bound applies.
   have hdistSq_bound : distSq f₀ ≤ ε ^ 2 := by
-    -- Use all-none sample as upper bound for the minimizer
     have hdist_none : distSq (fun _ => none) ≤ R ^ 2 := by
-      -- maureyAvg x R k (fun _ => none) = 0
       have havg_zero : maureyAvg x R k (fun _ => none) = 0 := by
         funext i
         simp only [maureyAvg]
         have h0 : maureyVec x R none i = 0 := rfl
         simp only [h0, Finset.sum_const_zero, mul_zero]
         rfl
-      -- dist(0, target) = empiricalNorm(target) ≤ l1norm θ ≤ R
       have hdist_emp : dist (0 : EmpiricalSpace n) target = empiricalNorm n target := by
         change empiricalNorm n ((0 : EmpiricalSpace n) - target) = empiricalNorm n target
         have : (0 : EmpiricalSpace n) - target = -target := by
@@ -812,8 +770,6 @@ lemma exists_maureyAvg_close (x : Fin n → EuclideanSpace ℝ (Fin d))
             have hl1nn : 0 ≤ l1norm θ :=
               Finset.sum_nonneg (s := Finset.univ) (fun i _ => norm_nonneg (θ i))
             nlinarith [sq_nonneg (l1norm θ), sq_nonneg R]
-    -- For k = 1: distSq f₀ ≤ R² ≤ 1 * ε² = ε²
-    -- For k > 1: Maurey bound gives distSq f₀ ≤ R²/k ≤ ε²
     by_cases hk1 : k = 1
     · -- k = 1: distSq ≤ R² ≤ ε²
       calc distSq f₀ ≤ distSq (fun _ => none) := hf₀_min _
@@ -826,8 +782,6 @@ lemma exists_maureyAvg_close (x : Fin n → EuclideanSpace ℝ (Fin d))
         calc R * l1norm θ ≤ R * R := mul_le_mul_of_nonneg_left hθ (le_of_lt hR)
           _ = R ^ 2 := by ring
       obtain ⟨f_good, hf_good⟩ := maurey_exists_good_sample x θ hR hθ hcol hn k hkpos
-      -- hf_good : dist (maureyAvg x R k f_good) target ^ 2 ≤ R * l1norm θ / k
-      -- Note: distSq f_good = (dist (maureyAvg x R k f_good) target)^2 by definition
       have hdistSq_good : distSq f_good ≤ R * l1norm θ / k := hf_good
       calc distSq f₀
           ≤ distSq f_good := hf₀_min f_good
@@ -847,10 +801,8 @@ theorem l1BallImage_coveringNumber_le {R ε : ℝ} (hR : 0 ≤ R) (hε : 0 < ε)
     (x : Fin n → EuclideanSpace ℝ (Fin d)) (hcol : columnNormBound x) (hn : 0 < n) :
     coveringNumber ε (l1BallImage x R) ≤ (2 * d + 1) ^ ⌈R ^ 2 / ε ^ 2⌉₊ := by
   classical
-  -- Handle R = 0 separately
   by_cases hR0 : R = 0
   · subst hR0
-    -- l1BallImage x 0 = {0} since only θ = 0 satisfies ‖θ‖₁ ≤ 0
     have hsubset : l1BallImage x 0 ⊆ {0} := by
       intro v hv
       obtain ⟨θ, hθ_norm, hv_eq⟩ := hv
@@ -880,11 +832,9 @@ theorem l1BallImage_coveringNumber_le {R ε : ℝ} (hR : 0 ≤ R) (hε : 0 < ε)
     let N : Finset (EmpiricalSpace n) := maureyNet x R k
     have hcard : (N.card : WithTop ℕ) ≤ (2 * d + 1) ^ k := by
       exact_mod_cast maureyNet_card_le x R k
-    -- Show N is an ε-net
     have hnet : IsENet N ε (l1BallImage x R) := by
       intro v hv
       obtain ⟨θ, hθ_norm, hv_eq⟩ := hv
-      -- Get close average from Maurey's lemma
       have hk' : R ^ 2 ≤ (k : ℝ) * ε ^ 2 := by
         have := Nat.le_ceil (R ^ 2 / ε ^ 2)
         have hk'' : (R ^ 2 / ε ^ 2) ≤ k := by simpa [hk_def] using this

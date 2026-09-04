@@ -99,11 +99,8 @@ lemma isENet_of_maximal {t : Finset A} {eps : ℝ} {s : Set A}
 lemma coveringNumber_lt_top_of_totallyBounded {eps : ℝ} {s : Set A}
     (heps : 0 < eps) (hs : TotallyBounded s) :
     coveringNumber eps s < ⊤ := by
-  -- TotallyBounded gives us a finite cover by open balls
   obtain ⟨t, ht_sub, ht_finite, ht_cover⟩ := finite_approx_of_totallyBounded hs eps heps
-  -- Convert to a Finset
   let t' : Finset A := ht_finite.toFinset
-  -- The open ball cover implies a closed ball cover (with same radius)
   have hnet : IsENet t' eps s := by
     intro x hx
     have hx_cover := ht_cover hx
@@ -150,7 +147,6 @@ lemma exists_finset_isENet_of_totallyBounded {eps : ℝ} {s : Set A}
 lemma exists_optimal_enet {eps : ℝ} {s : Set A}
     (heps : 0 < eps) (hs : TotallyBounded s) :
     ∃ t : Finset A, IsENet t eps s ∧ (t.card : WithTop ℕ) = coveringNumber eps s := by
-  -- The set of cardinalities of eps-nets is nonempty
   have hne_set :
       {n : WithTop ℕ | ∃ t : Finset A, IsENet t eps s ∧ (t.card : WithTop ℕ) = n}.Nonempty := by
     obtain ⟨t, ht⟩ := exists_finset_isENet_of_totallyBounded heps hs
@@ -167,45 +163,34 @@ lemma exists_enet_subset_from_half {eps : ℝ} {s : Set A}
       (t.card : WithTop ℕ) ≤ coveringNumber (eps / 2) s := by
   classical
   have heps2 : 0 < eps / 2 := by linarith
-  -- Get an optimal (eps/2)-net (which may have points outside s)
   obtain ⟨net, hnet_isNet, hnet_card⟩ := exists_optimal_enet heps2 hs
-  -- hnet_card : net.card = coveringNumber(eps/2, s)
   obtain ⟨s₀, hs₀⟩ := hsne
-  -- Define the projection: for x, if closedBall(x, eps/2) ∩ s is nonempty, pick an element
-  -- Otherwise use s₀ (this case won't affect the covering property)
   let proj : A → A := fun x =>
     if h : (s ∩ closedBall x (eps / 2)).Nonempty then h.some else s₀
-  -- Project the net to s
   let t' := net.image proj
   refine ⟨t', ?_, ?_, ?_⟩
-  -- 1. t' is an eps-net for s
   · intro y hy
-    -- y ∈ s, so by hnet_isNet, ∃ x ∈ net with y ∈ closedBall(x, eps/2)
     have hy_covered := hnet_isNet hy
     rw [mem_iUnion₂] at hy_covered
     obtain ⟨x, hx_mem, hy_ball⟩ := hy_covered
     have hdist_yx : dist y x ≤ eps / 2 := mem_closedBall.mp hy_ball
-    -- proj x is in s ∩ closedBall(x, eps/2)
     have hproj_spec : (s ∩ closedBall x (eps / 2)).Nonempty := ⟨y, hy, hy_ball⟩
     have hproj_in : proj x ∈ s ∩ closedBall x (eps / 2) := by
       simp only [proj, dite_eq_left hproj_spec]
       exact hproj_spec.some_mem
     have hdist_proj_x : dist (proj x) x ≤ eps / 2 := mem_closedBall.mp hproj_in.2
-    -- By triangle inequality: dist(y, proj x) ≤ dist(y, x) + dist(x, proj x) ≤ eps
     have hdist_y_proj : dist y (proj x) ≤ eps := by
       calc dist y (proj x) ≤ dist y x + dist x (proj x) := dist_triangle y x (proj x)
         _ ≤ eps / 2 + eps / 2 := add_le_add hdist_yx (by rw [dist_comm]; exact hdist_proj_x)
         _ = eps := by ring
     have hproj_in_t' : proj x ∈ t' := Finset.mem_image.mpr ⟨x, hx_mem, rfl⟩
     exact mem_iUnion₂.mpr ⟨proj x, hproj_in_t', mem_closedBall.mpr hdist_y_proj⟩
-  -- 2. t' ⊆ s
   · intro z hz
     rw [Finset.mem_coe, Finset.mem_image] at hz
     obtain ⟨x, _, rfl⟩ := hz
     by_cases h : (s ∩ closedBall x (eps / 2)).Nonempty
     · simp only [proj, dite_eq_left h]; exact h.some_mem.1
     · simp only [proj, dite_eq_right h]; exact hs₀
-  -- 3. |t'| ≤ coveringNumber(eps/2, s)
   · have h_card_le : t'.card ≤ net.card := Finset.card_image_le
     calc (t'.card : WithTop ℕ) ≤ net.card := by exact_mod_cast h_card_le
       _ = coveringNumber (eps / 2) s := hnet_card
@@ -343,40 +328,30 @@ lemma packing_card_bound_aux
     (hR : 0 ≤ R) (heps : 0 < eps)
     (hpacking : IsPacking t eps (euclideanBall R)) :
     (t.card : ℝ) ≤ ((R + eps / 2) / (eps / 2)) ^ Fintype.card ι := by
-  -- The half-balls are pairwise disjoint
   have hpwd := packing_halfBalls_pairwiseDisjoint (le_of_lt heps) hpacking
-  -- They are contained in the larger ball
   have hsub := packing_halfBalls_subset hpacking (le_refl _)
-  -- Volume of union = sum of volumes
   have hvol_eq := volume_disjoint_union_closedBalls (le_of_lt heps) hpwd
-  -- Volume of union ≤ volume of containing ball
   have hvol_le : MeasureTheory.volume (⋃ x ∈ t, Metric.closedBall x (eps / 2)) ≤
       MeasureTheory.volume (Metric.closedBall (0 : EuclideanSpace ℝ ι) (R + eps / 2)) :=
     MeasureTheory.measure_mono hsub
-  -- Each ball has the same volume
   have heps_half_pos : 0 < eps / 2 := by linarith
   have heps_half_nonneg : 0 ≤ eps / 2 := le_of_lt heps_half_pos
   have hR_plus_pos : 0 ≤ R + eps / 2 := by linarith
-  -- Volume of each small ball
   have hvol_small : ∀ x : EuclideanSpace ℝ ι, MeasureTheory.volume (Metric.closedBall x (eps / 2)) =
       ENNReal.ofReal ((eps / 2) ^ Fintype.card ι * euclideanBallVolumeConst (Fintype.card ι)) :=
     fun x => volume_closedBall_eq_rpow x (eps / 2) heps_half_nonneg
-  -- Volume of large ball
   have hvol_large :
       MeasureTheory.volume (Metric.closedBall (0 : EuclideanSpace ℝ ι) (R + eps / 2)) =
       ENNReal.ofReal ((R + eps / 2) ^ Fintype.card ι * euclideanBallVolumeConst (Fintype.card ι)) :=
     volume_closedBall_eq_rpow 0 (R + eps / 2) hR_plus_pos
-  -- Sum of small ball volumes
   have hvol_sum : ∑ x ∈ t, MeasureTheory.volume (Metric.closedBall x (eps / 2)) =
       t.card * ENNReal.ofReal
         ((eps / 2) ^ Fintype.card ι * euclideanBallVolumeConst (Fintype.card ι)) := by
     simp only [hvol_small]
     rw [sum_const]
     simp only [nsmul_eq_mul]
-  -- Combine: t.card * vol_small ≤ vol_large
   rw [hvol_eq, hvol_sum] at hvol_le
   rw [hvol_large] at hvol_le
-  -- Convert to real inequality
   have hconst_pos := euclideanBallVolumeConst_pos (Fintype.card ι)
   have hsmall_pos : 0 < (eps / 2) ^ Fintype.card ι * euclideanBallVolumeConst (Fintype.card ι) :=
     mul_pos (pow_pos heps_half_pos _) hconst_pos
@@ -386,7 +361,6 @@ lemma packing_card_bound_aux
   have hlarge_nonneg :
       0 ≤ (R + eps / 2) ^ Fintype.card ι * euclideanBallVolumeConst (Fintype.card ι) :=
     le_of_lt hlarge_pos
-  -- Use ENNReal.ofReal for the bound
   have h :
       t.card * ENNReal.ofReal
           ((eps / 2) ^ Fintype.card ι * euclideanBallVolumeConst (Fintype.card ι)) ≤
@@ -396,7 +370,6 @@ lemma packing_card_bound_aux
   rw [← ENNReal.ofReal_natCast] at h
   rw [← ENNReal.ofReal_mul (Nat.cast_nonneg _)] at h
   have h' := ENNReal.ofReal_le_ofReal_iff hlarge_nonneg |>.mp h
-  -- Simplify: t.card * vol_small ≤ vol_large gives t.card ≤ vol_large / vol_small
   have hdiv : t.card * ((eps / 2) ^ Fintype.card ι * euclideanBallVolumeConst (Fintype.card ι)) ≤
       (R + eps / 2) ^ Fintype.card ι * euclideanBallVolumeConst (Fintype.card ι) := h'
   have hcancel : (t.card : ℝ) ≤ (R + eps / 2) ^ Fintype.card ι / (eps / 2) ^ Fintype.card ι := by
@@ -439,11 +412,9 @@ lemma exists_maximal_packing {E : Type*} [PseudoMetricSpace E]
     ∃ t : Finset E, IsPacking t eps s ∧
       (∀ x ∈ s, x ∉ t → ∃ y ∈ t, dist x y ≤ eps) := by
   classical
-  -- Get the cover that bounds packing sizes
   have heps2 : 0 < eps / 2 := by linarith
   obtain ⟨cover, _, hcover_finite, hcover⟩ :=
     Metric.finite_approx_of_totallyBounded hs (eps / 2) heps2
-  -- Any packing has size at most |cover|
   have hbound : ∀ t : Finset E, IsPacking t eps s → t.card ≤ cover.ncard := by
     intro t ht
     have ht_sep : (t : Set E).Pairwise (fun x y => eps < dist x y) := ht.2
@@ -478,9 +449,7 @@ lemma exists_maximal_packing {E : Type*} [PseudoMetricSpace E]
     calc t.card = Nat.card t := by simp
       _ ≤ Nat.card cover := Nat.card_le_card_of_injective f hf_inj
       _ = cover.ncard := Nat.card_coe_set_eq cover
-  -- Construct maximal packing by induction on (bound - current_size)
   let bound := cover.ncard
-  -- Iterate: if current packing is not maximal, extend it
   have iterate : ∀ n : ℕ, ∀ t : Finset E, IsPacking t eps s → bound - t.card = n →
       ∃ t' : Finset E, t ⊆ t' ∧ IsPacking t' eps s ∧
         (∀ x ∈ s, x ∉ t' → ∃ y ∈ t', dist x y ≤ eps) := by
@@ -488,12 +457,10 @@ lemma exists_maximal_packing {E : Type*} [PseudoMetricSpace E]
     induction n with
     | zero =>
       intro t ht_pack heq
-      -- bound - t.card = 0, so t.card ≥ bound, hence t must be maximal
       use t, Finset.Subset.refl t, ht_pack
       intro x hxs hxt
       by_contra h
       push Not at h
-      -- x is ε-separated from t, so we could add x
       have hx_sep : ∀ y ∈ t, eps < dist x y := fun y hy => h y hy
       have ht'_pack : IsPacking (insert x t) eps s := by
         constructor
@@ -518,7 +485,6 @@ lemma exists_maximal_packing {E : Type*} [PseudoMetricSpace E]
       · use t, Finset.Subset.refl t, ht_pack, hmaximal
       · push Not at hmaximal
         obtain ⟨x, hxs, hxt, hx_sep⟩ := hmaximal
-        -- Add x to get a larger packing
         have ht'_pack : IsPacking (insert x t) eps s := by
           constructor
           · intro y hy
@@ -537,7 +503,6 @@ lemma exists_maximal_packing {E : Type*} [PseudoMetricSpace E]
         have h_gap : bound - (insert x t).card = n := by omega
         obtain ⟨t'', ht''_sub, ht''_pack, ht''_max⟩ := ih (insert x t) ht'_pack h_gap
         exact ⟨t'', Finset.Subset.trans (Finset.subset_insert x t) ht''_sub, ht''_pack, ht''_max⟩
-  -- Apply with empty packing
   have hempty_pack : IsPacking (∅ : Finset E) eps s := by
     constructor
     · simp
@@ -555,22 +520,16 @@ theorem coveringNumber_euclideanBall_le {R eps : ℝ} (hR : 0 ≤ R) (heps : 0 <
           (euclideanBall_totallyBounded R))) : ℝ) ≤
     (1 + 2 * R / eps) ^ Fintype.card ι := by
   have htb := euclideanBall_totallyBounded (ι := ι) R
-  -- Get a maximal packing, which is also an ε-net
   obtain ⟨t, ht_pack, ht_max⟩ := exists_maximal_packing eps heps htb
-  -- The maximal packing is an ε-net
   have ht_net : IsENet t eps (euclideanBall R) := isENet_of_maximal (le_of_lt heps) ht_max
-  -- The covering number is at most t.card
   have hcov_le : coveringNumber eps (euclideanBall R : Set (EuclideanSpace ℝ ι)) ≤ t.card :=
     coveringNumber_le_card ht_net
-  -- By the packing bound, t.card ≤ (1 + 2R/ε)^d
   have hpack_bound : (t.card : ℝ) ≤ (1 + 2 * R / eps) ^ Fintype.card ι :=
     packing_card_bound hR heps ht_pack
-  -- Extract the natural number from the covering number
   have htop : coveringNumber eps (euclideanBall R : Set (EuclideanSpace ℝ ι)) < ⊤ :=
     coveringNumber_lt_top_of_totallyBounded heps htb
   obtain ⟨n, hn⟩ := WithTop.untop_of_lt_top htop
   simp only [hn]
-  -- n ≤ t.card from hcov_le, and t.card ≤ bound from hpack_bound
   have hn_le_card : n ≤ t.card := by
     rw [hn] at hcov_le
     exact WithTop.coe_le_coe.mp hcov_le

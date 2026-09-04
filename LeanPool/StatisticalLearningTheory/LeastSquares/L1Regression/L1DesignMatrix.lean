@@ -81,8 +81,6 @@ lemma designMatrixMul_eq_sum_columns (x : Fin n → EuclideanSpace ℝ (Fin d))
     designMatrixMul x θ = ∑ j : Fin d, (θ j) • designMatrixColumn x j := by
   ext i
   rw [designMatrixMul_apply_sum_columns]
-  -- Show: ∑ j, θ j * (designMatrixColumn x j) i = (∑ j, θ j • designMatrixColumn x j) i
-  -- (∑ j, c_j • v_j) i = ∑ j, c_j * v_j i  for EuclideanSpace
   conv_rhs => rw [WithLp.ofLp_sum, Finset.sum_apply]
   simp only [WithLp.ofLp_smul, Pi.smul_apply, smul_eq_mul]
 
@@ -110,7 +108,6 @@ theorem empiricalNorm_le_l1norm_of_columnNormBound (x : Fin n → EuclideanSpace
   have hn_inv_sqrt : (n : ℝ)⁻¹.sqrt = 1 / Real.sqrt n := by
     rw [Real.sqrt_inv n, one_div]
   rw [hn_inv_sqrt, one_div, mul_comm, ← div_eq_mul_inv]
-  -- Now we need: ‖Xθ‖ / √n ≤ ‖θ‖₁
   calc ‖designMatrixMul x θ‖ / Real.sqrt n
       ≤ (∑ j, ‖θ j‖ * ‖designMatrixColumn x j‖) / Real.sqrt n := by
         apply div_le_div_of_nonneg_right (designMatrixMul_norm_le_sum x θ)

@@ -38,7 +38,6 @@ lemma empiricalNorm_smul_of_nonneg {f : Fin n → ℝ} {α : ℝ} (hα : 0 ≤ �
   have h1 : ∀ i, (α * f i) ^ 2 = α ^ 2 * f i ^ 2 := fun i => by ring
   simp only [h1]
   rw [← Finset.mul_sum]
-  -- Goal: √(n⁻¹ * (α² * Σf²)) = α * √(n⁻¹ * Σf²)
   have h2 :
       (n : ℝ)⁻¹ * (α ^ 2 * ∑ i : Fin n, f i ^ 2) =
         α ^ 2 * ((n : ℝ)⁻¹ * ∑ i : Fin n, f i ^ 2) := by

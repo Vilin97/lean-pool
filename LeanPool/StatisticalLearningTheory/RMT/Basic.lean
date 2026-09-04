@@ -892,7 +892,6 @@ lemma row_inner_hasSubgaussianMGF_of_max_row_psi2 {m n : ℕ}
 
 /-! ## Fixed bilinear forms of random matrices -/
 
--- The Euclidean operator norm is bounded by the `ℓ¹` norm of the matrix entries.
 
 omit [MeasurableSpace Ω] in
 lemma randomVector_norm_sq_eq_sum_sq {n : ℕ} (X : Fin n → Ω → ℝ) (ω : Ω) :

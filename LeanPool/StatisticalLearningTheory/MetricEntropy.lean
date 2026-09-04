@@ -110,33 +110,26 @@ lemma sqrt_log_card_le_sqrtEntropy_of_card_le {eps : ℝ} {s : Set A} {n : ℕ}
     Real.sqrt (Real.log n) ≤ sqrtEntropy eps s := by
   have hfin : coveringNumber eps s < ⊤ := coveringNumber_lt_top_of_totallyBounded heps hs
   have hne : coveringNumber eps s ≠ ⊤ := ne_top_of_lt hfin
-  -- Get the natural number value of coveringNumber
   let m := (coveringNumber eps s).untop hne
   have hm : coveringNumber eps s = m := (WithTop.coe_untop _ hne).symm
-  -- From hle and hm: n ≤ m
   rw [hm] at hle
   have hnm : n ≤ m := WithTop.coe_le_coe.mp hle
-  -- sqrtEntropy eps s = √(metricEntropy eps s)
   unfold sqrtEntropy metricEntropy
   split
   · -- Case: coveringNumber = ⊤ (contradicts hfin)
     rename_i h; rw [h] at hfin; exact absurd rfl (ne_of_lt hfin)
   · -- Case: coveringNumber = some m'
     rename_i m' hm'
-    -- From hm and hm': m = m'
     have hmm' : m = m' := by
       have h1 : (↑m : WithTop ℕ) = coveringNumber eps s := hm.symm
       have h2 : coveringNumber eps s = ↑m' := hm'
       have : (↑m : WithTop ℕ) = ↑m' := h1.trans h2
       exact WithTop.coe_injective this
     subst hmm'
-    -- Need: √(log n) ≤ √(metricEntropyOfNat m)
     apply Real.sqrt_le_sqrt
-    -- Need: log n ≤ metricEntropyOfNat m
     unfold metricEntropyOfNat
     split_ifs with h1
     · -- Case m ≤ 1: metricEntropyOfNat = 0
-      -- n ≤ m ≤ 1, so log n ≤ 0
       have hn_le : n ≤ 1 := le_trans hnm h1
       interval_cases n
       · simp

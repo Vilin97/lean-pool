@@ -52,7 +52,6 @@ lemma integral_exp_neg_mul_le_inv_of_dens_le_one_ae
     (hf_supp : ∀ᵐ x ∂volume, x < 0 → f x = 0)
     (t : ℝ) (ht : 0 < t) :
     ∫ x : ℝ, (f x).toReal * exp (-t * x) ≤ 1 / t := by
-  -- The integrand is bounded a.e. by exp(-tx) on [0, ∞) and is 0 a.e. on (-∞, 0)
   have h_nonneg : ∀ x, 0 ≤ (f x).toReal * exp (-t * x) := fun x =>
     mul_nonneg ENNReal.toReal_nonneg (exp_pos _).le
   have h_bound_ae : ∀ᵐ x ∂volume, (f x).toReal * exp (-t * x) ≤ exp (-t * x) := by
@@ -68,7 +67,6 @@ lemma integral_exp_neg_mul_le_inv_of_dens_le_one_ae
     rw [ae_restrict_iff' measurableSet_Iio]
     filter_upwards [hf_supp] with x hfx hx_mem
     simp [hfx (mem_Iio.mp hx_mem)]
-  -- Integrability
   have h_int : Integrable (fun x => (f x).toReal * exp (-t * x)) volume := by
     rw [← integrableOn_univ, ← Iio_union_Ici (a := (0 : ℝ)), integrableOn_union]
     constructor
@@ -86,13 +84,11 @@ lemma integral_exp_neg_mul_le_inv_of_dens_le_one_ae
       filter_upwards [ae_restrict_of_ae h_bound_ae] with x hx
       simp only [norm_of_nonneg (h_nonneg x)]
       exact hx
-  -- The integral on Iio 0 is 0
   have h_iio_zero : ∫ x in Iio 0, (f x).toReal * exp (-t * x) = 0 := by
     have h_ae' : ∀ᵐ x ∂volume, x ∈ Iio 0 → (f x).toReal * exp (-t * x) = 0 := by
       rw [← ae_restrict_iff' measurableSet_Iio]
       exact h_zero_ae
     exact setIntegral_eq_zero_of_ae_eq_zero h_ae'
-  -- The full integral equals the integral on Ici 0
   have h_split : ∫ x, (f x).toReal * exp (-t * x) ∂volume =
       ∫ x in Iio 0, (f x).toReal * exp (-t * x) ∂volume +
       ∫ x in Ici 0, (f x).toReal * exp (-t * x) ∂volume := by
@@ -132,7 +128,6 @@ theorem mgf_neg_le_inv_of_pdf_bounded
     (t : ℝ) (ht : 0 < t) :
     mgf X μ (-t) ≤ 1 / t := by
   unfold mgf
-  -- Use the law of the unconscious statistician
   have h_eq : ∫ ω, exp ((-t) * X ω) ∂μ =
       ∫ x, (pdf X μ volume x).toReal * exp ((-t) * x) := by
     have hf_aesm : AEStronglyMeasurable (fun x : ℝ => exp ((-t) * x)) volume :=
@@ -142,22 +137,17 @@ theorem mgf_neg_le_inv_of_pdf_bounded
     simp only [smul_eq_mul] at h
     exact h.symm
   rw [h_eq]
-  -- The pdf is bounded by 1 a.e. and supported on [0, ∞) a.e.
   have hf_supp : ∀ᵐ x ∂volume, x < 0 → pdf X μ volume x = 0 := by
-    -- X ≥ 0 a.e. means the pushforward measure is supported on [0, ∞)
-    -- So pdf is 0 a.e. on (-∞, 0)
     have h_map : μ.map X (Iio 0) = 0 := by
       rw [Measure.map_apply hX measurableSet_Iio]
       have h_subset : X ⁻¹' Iio 0 ⊆ {ω | ¬(0 ≤ X ω)} := fun ω hω =>
         not_le.mpr (Set.mem_preimage.mp hω)
       exact measure_mono_null h_subset (ae_iff.mp hX_nn)
-    -- Use that pdf integrates to the pushforward measure
     have h_integral : ∫⁻ x in Iio 0, pdf X μ volume x ∂volume ≤ μ.map X (Iio 0) :=
       setLIntegral_pdf_le_map X μ volume (Iio 0)
     have h_integral_zero : ∫⁻ x in Iio 0, pdf X μ volume x ∂volume = 0 := by
       refine le_antisymm ?_ bot_le
       simpa [h_map] using h_integral
-    -- Since pdf is non-negative and integral is 0, pdf is 0 a.e.
     have h_ae_zero : ∀ᵐ x ∂volume, x ∈ Iio 0 → pdf X μ volume x = 0 :=
       (setLIntegral_eq_zero_iff measurableSet_Iio (measurable_pdf X μ volume)).mp h_integral_zero
     filter_upwards [h_ae_zero] with x hx hx_neg
@@ -194,42 +184,33 @@ theorem small_ball_prob {ι : Type*} [Fintype ι] (X : ι → Ω → ℝ)
     (hX_pdf_le : ∀ i, ∀ᵐ x ∂volume, pdf (X i) μ volume x ≤ 1)
     (ε : ℝ) (hε : 0 < ε) (N : ℕ) (hN : N = Fintype.card ι) :
     (μ {ω : Ω | (∑ i : ι, X i ω) ≤ ε * N}).toReal ≤ ((Real.exp 1 * ε : ℝ) ^ N : ℝ) := by
-  -- Parameter definitions
   have ht : 0 < ε⁻¹ := inv_pos.mpr hε
-  -- Integrability of exp(-t * Xᵢ) for each i
   have h_int_each (i : ι) : Integrable (fun ω => exp (-ε⁻¹ * X i ω)) μ :=
     integrable_exp_neg_mul_of_nonneg (hX_meas i) (hX_nn i) ε⁻¹ ht
-  -- Integrability of exp(-t * ∑ Xᵢ)
   have h_int : Integrable (fun ω => exp (-ε⁻¹ * ∑ i, X i ω)) μ := by
     have := iIndepFun.integrable_exp_mul_sum (t := -ε⁻¹) (s := Finset.univ) hX_indep hX_meas
       (fun i _ => h_int_each i)
     simp only [Finset.sum_apply] at this
     exact this
-  -- Apply Markov bound
   have h_markov := measure_le_le_exp_mul_mgf (X := fun ω => ∑ i, X i ω)
     (ε := ε * N) (t := -ε⁻¹) (by linarith : -ε⁻¹ ≤ 0) h_int
-  -- Simplify exp(-(-ε⁻¹) * εN) = exp(N)
   have h_exp_simp : exp (-(-ε⁻¹) * (ε * N)) = exp N := by
     congr 1
     field_simp
-  -- mgf of sum = product of mgfs
   have h_mgf_sum : mgf (fun ω => ∑ i, X i ω) μ (-ε⁻¹) = ∏ i, mgf (X i) μ (-ε⁻¹) := by
     have := iIndepFun.mgf_sum (t := -ε⁻¹) (s := Finset.univ) hX_indep hX_meas
     convert this using 2
     ext ω
     simp only [Finset.sum_apply]
-  -- Each mgf bounded by ε
   have h_mgf_bound (i : ι) : mgf (X i) μ (-ε⁻¹) ≤ ε := by
     have := hX_pdf i
     have h := mgf_neg_le_inv_of_pdf_bounded (hX_meas i) (hX_nn i) (hX_pdf_le i) ε⁻¹ ht
     simp only [one_div] at h
     convert h using 2; field_simp
-  -- Product bound
   have h_prod_bound : ∏ i, mgf (X i) μ (-ε⁻¹) ≤ ε ^ N := by
     calc ∏ i, mgf (X i) μ (-ε⁻¹)
         ≤ ∏ _i : ι, ε := Finset.prod_le_prod (fun i _ => mgf_nonneg) (fun i _ => h_mgf_bound i)
       _ = ε ^ N := by simp only [Finset.prod_const, Finset.card_univ, hN]
-  -- Final calculation
   calc (μ {ω : Ω | (∑ i : ι, X i ω) ≤ ε * N}).toReal
       ≤ exp (-(-ε⁻¹) * (ε * N)) * mgf (fun ω => ∑ i, X i ω) μ (-ε⁻¹) := h_markov
     _ = exp N * mgf (fun ω => ∑ i, X i ω) μ (-ε⁻¹) := by rw [h_exp_simp]
