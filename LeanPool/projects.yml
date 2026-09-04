@@ -7036,6 +7036,52 @@ projects:
     msc:
       - "05C60"
       - "68R10"
+  - slug: permanent-formula-lower-bound
+    title: Quartic-over-logarithmic lower bound for rational permanent formulas
+    summary: >-
+      Proves that every valid rational arithmetic formula over the complex
+      numbers computing the n-by-n permanent, for n at least 32, has at least
+      n^4 / (192 log_2 n) variable leaves. The development derives the bound
+      through coefficient-field transcendence degree, Jacobian minors,
+      matching-polynomial identities, and a cyclic block decomposition.
+    branch: algebraic complexity theory
+    entry_module: LeanPool.PermanentFormulaLowerBound
+    authors:
+      - OpenAI
+      - Dean Cureton
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - PermanentFormulaLowerBound.permanent_rational_formula_logarithmic_lower_bound
+    main_results:
+      - declaration: PermanentFormulaLowerBound.permanent_rational_formula_logarithmic_lower_bound
+        informal: >-
+          For n at least 32, every valid rational formula over the complex
+          numbers that computes the n-by-n permanent has at least
+          n^4 / (192 log_2 n) variable leaves.
+      - declaration: PermanentFormulaLowerBound.permanent_rational_formula_lower_bound
+        informal: >-
+          The same quartic-over-logarithmic lower bound controls variable
+          leaves, total leaves, and vertices, and half that bound controls
+          internal gates.
+    tags:
+      - algebraic-complexity
+      - arithmetic-formulas
+      - permanent
+      - lower-bounds
+      - transcendence-degree
+    msc:
+      - "68Q17"
+      - "68Q25"
+      - "15A15"
   - slug: erdos132-wei-e2
     title: Six distances from the E2 diameter-heptagon pattern
     summary: >-
