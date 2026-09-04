@@ -6,7 +6,7 @@ Authors: Juliane Trianon Fraga, Vinicius de Oliveira Rodrigues
 
 import LeanPool.Wallace.RationalLocalSetup
 import LeanPool.Wallace.LocalFusion
-import Mathlib.Data.Finsupp.Encodable
+import LeanPool.Wallace.LocalEnumeration
 
 /-!
 # The unconditional local fusion for the rational direct sum
@@ -24,6 +24,7 @@ namespace RationalFusionRun
 noncomputable section
 
 open RationalTriangularPreprocess
+open BlockData
 open RationalData
 open RationalClosure
 open RationalLocalSetup
@@ -48,16 +49,9 @@ abbrev fresh (x : ContinuumRationalGroup) : ℕ → Finset (LocalGroup x) :=
   localActiveBlock blockSize blockSize_pos independenceBound x
 
 /-- A fixed surjection used to make every local point eventually protected. -/
-def localEnumeration (x : ContinuumRationalGroup) : ℕ → LocalGroup x := by
-  letI : Countable (localCarrier x) :=
-    (closure_countable blockSize blockSize_pos independenceBound x).to_subtype
-  exact Classical.choose (exists_surjective_nat (LocalGroup x))
-
-theorem localEnumeration_surjective (x : ContinuumRationalGroup) :
-    Function.Surjective (localEnumeration x) := by
-  let : Countable (localCarrier x) :=
-    (closure_countable blockSize blockSize_pos independenceBound x).to_subtype
-  exact Classical.choose_spec (exists_surjective_nat (LocalGroup x))
+abbrev localEnumeration (x : ContinuumRationalGroup) : ℕ → LocalGroup x :=
+  countableFinsuppEnumeration (localCarrier x)
+    (closure_countable blockSize blockSize_pos independenceBound x)
 
 /-- The restriction of `x` to its local coordinate closure. -/
 def distinguished (x : ContinuumRationalGroup) : LocalGroup x := by
@@ -80,7 +74,8 @@ def scheduledCertificate (x : {x : ContinuumRationalGroup // x ≠ 0}) :
     (distinguished_ne_zero x.2)
     (localActiveBlock_card_le blockSize blockSize_pos independenceBound x.1)
     (localActiveBlock_boundedIndependent blockSize blockSize_pos independenceBound x.1)
-    (localEnumeration_surjective x.1)
+    (countableFinsuppEnumeration_surjective (localCarrier x.1)
+      (closure_countable blockSize blockSize_pos independenceBound x.1))
 
 /-- The certified fusion run attached to a nonzero rational vector. -/
 abbrev run (x : {x : ContinuumRationalGroup // x ≠ 0}) :
@@ -92,13 +87,6 @@ def deletedPositions (x : {x : ContinuumRationalGroup // x ≠ 0})
     Finset ℕ :=
   (TriangularPreprocess.blockPositions blockSize blockSize_pos l).filter fun n ↦
     localDifference blockSize blockSize_pos independenceBound x.1 a n ∉ (run x).retained l
-
-theorem deletedPositions_subset_block
-    (x : {x : ContinuumRationalGroup // x ≠ 0})
-    (a : RelevantCode blockSize blockSize_pos independenceBound x.1) (l : ℕ) :
-    deletedPositions x a l ⊆ TriangularPreprocess.blockPositions blockSize blockSize_pos l := by
-  intro n hn
-  exact (Finset.mem_filter.mp hn).1
 
 private theorem image_deletedPositions
     (x : {x : ContinuumRationalGroup // x ≠ 0})
@@ -155,23 +143,18 @@ theorem retainedPositions_mem_ultrafilter
       blockSize blockSize_pos (deletedPositions x a) FusionSchedule.protectedBound
   · exact label_diff_refinedLabel_finite
       blockSize blockSize_pos independenceBound x.1 a
-  · exact deletedPositions_subset_block x a
   · exact deletedPositions_card_le x a
   · exact FusionSchedule.tendsto_protectedBound_div_blockSize
 
 /-! ## Rational block and run certificates -/
 
-/-- Concrete retained-block data for one rational sequence code. -/
-structure RationalCodeBlocks
+/-- Rational specialization of the shared prepared-block certificate. -/
+abbrev RationalCodeBlocks
     (x : ContinuumRationalGroup) (R : FusionRun (LocalGroup x))
-    (a : RelevantCode blockSize blockSize_pos independenceBound x) where
-  /-- The underlying abstract retained-block data. -/
-  blocks : R.CodeBlocks
-  p_eq : blocks.p = ultrafilter blockSize blockSize_pos a.1
-  block_eq : ∀ l, blocks.block l =
-    TriangularPreprocess.blockPositions blockSize blockSize_pos l
-  difference_eq : ∀ n,
-    blocks.difference n = localDifference blockSize blockSize_pos independenceBound x a n
+    (a : RelevantCode blockSize blockSize_pos independenceBound x) :=
+  R.PreparedCodeBlocks (ultrafilter blockSize blockSize_pos a.1)
+    (TriangularPreprocess.blockPositions blockSize blockSize_pos)
+    (localDifference blockSize blockSize_pos independenceBound x a)
 
 namespace RationalCodeBlocks
 
@@ -185,17 +168,10 @@ theorem tendsto_prepared
           (prepared blockSize blockSize_pos independenceBound a.1 n)))
       (ultrafilter blockSize blockSize_pos a.1)
       (nhds (R.limitCharacter (Finsupp.single ⟨codeIndex a.1, a.2⟩ 1))) := by
-  have hp : (C.blocks.p : Filter ℕ) ≤ cofinite := by
-    rw [C.p_eq]
-    exact ultrafilter_free blockSize blockSize_pos a.1
-  have hzero := R.tendsto_limit_difference_zero_of_blockPositions
-    C.blocks blockSize blockSize_pos hp C.block_eq
-  have hdifference : ∀ n, C.blocks.difference n =
-      Finsupp.subtypeDomain (localCarrier x)
-          (prepared blockSize blockSize_pos independenceBound a.1 n) -
-        Finsupp.single ⟨codeIndex a.1, a.2⟩ 1 := by
-    intro n
-    rw [C.difference_eq]
+  apply FusionRun.PreparedCodeBlocks.tendsto_prepared C blockSize blockSize_pos
+  · exact ultrafilter_free blockSize blockSize_pos a.1
+  · exact fun _ ↦ rfl
+  · intro n
     simp only [localDifference]
     ext i
     change prepared blockSize blockSize_pos independenceBound a.1 n i.val -
@@ -210,11 +186,6 @@ theorem tendsto_prepared
         intro heq
         exact hi (congrArg Subtype.val heq)
       simp [codeBasisVector, hi, hisub]
-  have hprepared := R.tendsto_limit_prepared C.blocks
-    (fun n ↦ Finsupp.subtypeDomain (localCarrier x)
-      (prepared blockSize blockSize_pos independenceBound a.1 n))
-    (Finsupp.single ⟨codeIndex a.1, a.2⟩ 1) hdifference hzero
-  simpa only [C.p_eq] using hprepared
 
 end RationalCodeBlocks
 

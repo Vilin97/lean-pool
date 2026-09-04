@@ -210,6 +210,52 @@ theorem exists_free_ultrafilter_le_densityFilter
 
 end BlockSystem
 
+/-! ## Coefficient-independent block labels and ultrafilters -/
+
+namespace BlockData
+
+open TriangularPreprocess
+
+/-- A fixed identification of the canonical continuum index with binary streams. -/
+def continuumIndexEquivBinaryStream : ContinuumIndex ≃ (ℕ → Bool) := by
+  apply Classical.choice
+  apply Cardinal.eq.mp
+  rw [mk_continuumIndex, Cardinal.mk_arrow, Cardinal.mk_bool, Cardinal.mk_nat]
+  simp only [Cardinal.lift_id, Cardinal.two_power_aleph0]
+
+/-- The almost-disjoint block label assigned to a sequence code. -/
+def label (a : ContinuumIndex) : Set ℕ :=
+  binaryBranchOnNat (continuumIndexEquivBinaryStream a)
+
+theorem label_infinite (a : ContinuumIndex) : (label a).Infinite :=
+  binaryBranchOnNat_infinite _
+
+theorem label_inter_finite {a b : ContinuumIndex} (hab : a ≠ b) :
+    (label a ∩ label b).Finite := by
+  apply binaryBranchOnNat_inter_finite
+  exact continuumIndexEquivBinaryStream.injective.ne hab
+
+variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l)
+
+/-- The block system with the prescribed sizes. -/
+abbrev blocks : BlockSystem := BlockSystem.ofBlockPositions N hN
+
+/-- A free ultrafilter refining the density filter of a code's label. -/
+def ultrafilter (a : ContinuumIndex) : Ultrafilter ℕ :=
+  Classical.choose ((blocks N hN).exists_free_ultrafilter_le_densityFilter (label_infinite a))
+
+theorem ultrafilter_le_density (a : ContinuumIndex) :
+    (ultrafilter N hN a : Filter ℕ) ≤ (blocks N hN).densityFilter (label a) :=
+  (Classical.choose_spec
+    ((blocks N hN).exists_free_ultrafilter_le_densityFilter (label_infinite a))).1
+
+theorem ultrafilter_free (a : ContinuumIndex) :
+    (ultrafilter N hN a : Filter ℕ) ≤ cofinite :=
+  (Classical.choose_spec
+    ((blocks N hN).exists_free_ultrafilter_le_densityFilter (label_infinite a))).2
+
+end BlockData
+
 namespace AlmostDisjoint
 
 variable {ι α : Type*}
@@ -302,7 +348,7 @@ filter.  The hypothesis `a \ b` finite records `b =* a` together with `b ⊆ a`,
 the precise direction needed for the limit along `a`. -/
 theorem retainedBlocks_mem_densityFilter (B : BlockSystem) {a b : Set ℕ}
     (E : ℕ → Finset ℕ) (R : ℕ → ℕ)
-    (hab : (a \ b).Finite) (_hE : ∀ l, E l ⊆ B.block l)
+    (hab : (a \ b).Finite)
     (hcard : ∀ l ∈ b, (E l).card ≤ R l)
     (hratio : Tendsto (fun l ↦ (R l : ℝ) / ((B.block l).card : ℝ)) atTop (nhds 0)) :
     B.retainedBlocks b E ∈ B.densityFilter a := by
@@ -329,12 +375,12 @@ prescribed paper size `N l`, by `blockPositions_card`. -/
 theorem retainedBlocks_mem_densityFilter_ofBlockPositions
     (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) {a b : Set ℕ}
     (E : ℕ → Finset ℕ) (R : ℕ → ℕ)
-    (hab : (a \ b).Finite) (hE : ∀ l, E l ⊆ (ofBlockPositions N hN).block l)
+    (hab : (a \ b).Finite)
     (hcard : ∀ l ∈ b, (E l).card ≤ R l)
     (hratio : Tendsto (fun l ↦ (R l : ℝ) / (N l : ℝ)) atTop (nhds 0)) :
     (ofBlockPositions N hN).retainedBlocks b E ∈
       (ofBlockPositions N hN).densityFilter a := by
-  apply (ofBlockPositions N hN).retainedBlocks_mem_densityFilter E R hab hE hcard
+  apply (ofBlockPositions N hN).retainedBlocks_mem_densityFilter E R hab hcard
   simpa only [ofBlockPositions_card] using hratio
 
 end BlockSystem

@@ -260,6 +260,34 @@ theorem tendsto_limit_prepared (R : FusionRun G) (B : CodeBlocks R)
     simpa using hzero.add_const (R.limitCharacter basis)
   exact hadd.congr' (Eventually.of_forall fun n ↦ (heq n).symm)
 
+/-- A block certificate whose abstract fields are identified with a particular prepared
+sequence, ultrafilter, and block partition. -/
+structure PreparedCodeBlocks (R : FusionRun G) (p : Ultrafilter ℕ)
+    (block : ℕ → Finset ℕ) (difference : ℕ → G) where
+  /-- The underlying retained-block data. -/
+  blocks : R.CodeBlocks
+  p_eq : blocks.p = p
+  block_eq : ∀ l, blocks.block l = block l
+  difference_eq : ∀ n, blocks.difference n = difference n
+
+/-- A prepared block certificate supplies the corresponding ultrafilter limit. -/
+theorem PreparedCodeBlocks.tendsto_prepared
+    {R : FusionRun G} {p : Ultrafilter ℕ} {block : ℕ → Finset ℕ}
+    {difference prepared : ℕ → G} {basis : G}
+    (C : PreparedCodeBlocks R p block difference)
+    (N : ℕ → ℕ) (hN : ∀ l, 0 < N l)
+    (hp : (p : Filter ℕ) ≤ cofinite)
+    (hblock : ∀ l, block l = TriangularPreprocess.blockPositions N hN l)
+    (hdifference : ∀ n, difference n = prepared n - basis) :
+    Tendsto (fun n ↦ R.limitCharacter (prepared n)) p
+      (nhds (R.limitCharacter basis)) := by
+  have hp' : (C.blocks.p : Filter ℕ) ≤ cofinite := by simpa only [C.p_eq] using hp
+  have hzero := R.tendsto_limit_difference_zero_of_blockPositions
+    C.blocks N hN hp' fun l ↦ (C.block_eq l).trans (hblock l)
+  have hprepared := R.tendsto_limit_prepared C.blocks prepared basis
+    (fun n ↦ (C.difference_eq n).trans (hdifference n)) hzero
+  simpa only [C.p_eq] using hprepared
+
 end FusionRun
 
 /-! ## A generic concrete scheduling recursion -/
@@ -527,22 +555,16 @@ theorem exists_scheduledRunCertificate
 
 /-! ## Interface from concrete runs to the global assembly -/
 
-open TriangularPreprocess ConcreteData ConcreteClosure ConcreteLocalSetup
+open TriangularPreprocess BlockData ConcreteData ConcreteClosure ConcreteLocalSetup
 
-/-- The block certificate for one code in the countable closure.  In addition to the analytic
-`CodeBlocks` data it identifies the abstract fields with the concrete prepared sequence,
-ultrafilter, and block partition. -/
-structure ConcreteCodeBlocks
+/-- Integer specialization of the shared prepared-block certificate. -/
+abbrev ConcreteCodeBlocks
     (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
     (x : ContinuumFreeGroup)
     (R : FusionRun (closure N hN M x →₀ ℤ))
-    (a : RelevantCode N hN M x) where
-  /-- The underlying abstract retained-block data. -/
-  blocks : R.CodeBlocks
-  p_eq : blocks.p = ultrafilter N hN a.1
-  block_eq : ∀ l, blocks.block l = blockPositions N hN l
-  difference_eq : ∀ n,
-    blocks.difference n = localDifference N hN M x a n
+    (a : RelevantCode N hN M x) :=
+  R.PreparedCodeBlocks (ultrafilter N hN a.1) (blockPositions N hN)
+    (localDifference N hN M x a)
 
 namespace ConcreteCodeBlocks
 
@@ -559,16 +581,10 @@ theorem tendsto_prepared
         (Finsupp.subtypeDomain (closure N hN M x) (prepared N hN M a.1 n)))
       (ultrafilter N hN a.1)
       (nhds (R.limitCharacter (Finsupp.single ⟨codeIndex a.1, a.2⟩ 1))) := by
-  have hp : (C.blocks.p : Filter ℕ) ≤ cofinite := by
-    rw [C.p_eq]
-    exact ultrafilter_free N hN a.1
-  have hzero := R.tendsto_limit_difference_zero_of_blockPositions
-    C.blocks N hN hp C.block_eq
-  have hdifference : ∀ n, C.blocks.difference n =
-      Finsupp.subtypeDomain (closure N hN M x) (prepared N hN M a.1 n) -
-        Finsupp.single ⟨codeIndex a.1, a.2⟩ 1 := by
-    intro n
-    rw [C.difference_eq]
+  apply FusionRun.PreparedCodeBlocks.tendsto_prepared C N hN
+  · exact ultrafilter_free N hN a.1
+  · exact fun _ ↦ rfl
+  · intro n
     simp only [localDifference]
     ext i
     change prepared N hN M a.1 n i.val - codeBasisVector a.1 i.val =
@@ -582,10 +598,6 @@ theorem tendsto_prepared
         intro heq
         exact hi (congrArg Subtype.val heq)
       simp [codeBasisVector, hi, hisub]
-  have hprepared := R.tendsto_limit_prepared C.blocks
-    (fun n ↦ Finsupp.subtypeDomain (closure N hN M x) (prepared N hN M a.1 n))
-    (Finsupp.single ⟨codeIndex a.1, a.2⟩ 1) hdifference hzero
-  simpa only [C.p_eq] using hprepared
 
 end ConcreteCodeBlocks
 

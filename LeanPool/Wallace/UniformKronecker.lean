@@ -556,7 +556,7 @@ private theorem integral_fourierPolynomial_translate {m : ℕ}
 
 /-- A target satisfying all frequencies in `c.support` is close to the corresponding annihilator.
 This is the quantitative conclusion extracted from the averaged finite Fourier approximation. -/
-theorem infDist_integerAnnihilator_lt_of_finite_relations {m : ℕ} {δ : ℝ} (_hδ : 0 < δ)
+theorem infDist_integerAnnihilator_lt_of_finite_relations {m : ℕ} {δ : ℝ}
     {S : Finset (Fin m → ℤ)}
     (hS : ∀ R : AddSubgroup (Fin m → ℤ),
       ∃ c : (Fin m → ℤ) →₀ ℂ, c.support ⊆ S ∧
@@ -682,7 +682,7 @@ theorem exists_uniform_kronecker_bound (m : ℕ) {ε : ℝ} (hε : 0 < ε) :
     · exact (Finset.le_sup haS).trans (Nat.le_max_right 1 _)
     · exact haR
   have hdist : Metric.infDist t (integerAnnihilator R) ≤ 4 * δ :=
-    infDist_integerAnnihilator_lt_of_finite_relations hδ hS R t hfinite
+    infDist_integerAnnihilator_lt_of_finite_relations hS R t hfinite
   have hdistlt : Metric.infDist t (integerAnnihilator R) < ε := by
     apply hdist.trans_lt
     dsimp [δ]

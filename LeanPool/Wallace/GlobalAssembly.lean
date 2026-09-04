@@ -27,6 +27,7 @@ noncomputable section
 
 open TriangularPreprocess
 open ConcreteData
+open BlockData
 open ConcreteClosure
 open TransfiniteExtension
 

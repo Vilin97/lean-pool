@@ -25,6 +25,7 @@ namespace RationalLocalSetup
 noncomputable section
 
 open RationalTriangularPreprocess
+open BlockData
 open RationalData
 open RationalClosure
 open FiniteCombinatorics
@@ -33,74 +34,31 @@ variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
 
 /-- Codes whose distinguished coordinate lies in the local closure of `x`. -/
 abbrev RelevantCode (x : ContinuumRationalGroup) :=
-  {a : ContinuumIndex // codeIndex a ∈ closure N hN M x}
-
-theorem relevantCode_countable (x : ContinuumRationalGroup) :
-    Countable (RelevantCode N hN M x) := by
-  apply Countable.to_subtype
-  exact countable_preimage_of_injective codeIndex (closure_countable N hN M x)
-
-private theorem relevantLabels_pairwise (x : ContinuumRationalGroup) :
-    Pairwise fun a b : RelevantCode N hN M x ↦
-      (label a.1 ∩ label b.1).Finite := by
-  intro a b hab
-  apply label_inter_finite
-  intro heq
-  apply hab
-  exact Subtype.ext heq
+  LocalCodeSchedule.RelevantCode codeIndex (closure N hN M x)
 
 /-- Pairwise-disjoint refinements of the block labels of all relevant codes. -/
 def refinedLabel (x : ContinuumRationalGroup) :
     RelevantCode N hN M x → Set ℕ := by
-  letI : Countable (RelevantCode N hN M x) := relevantCode_countable N hN M x
-  exact Classical.choose
-    (exists_disjoint_refinement_countable
-      (fun a : RelevantCode N hN M x ↦ label a.1)
-      (relevantLabels_pairwise N hN M x))
-
-theorem refinedLabel_pairwise (x : ContinuumRationalGroup) :
-    Pairwise fun a b : RelevantCode N hN M x ↦
-      Disjoint (refinedLabel N hN M x a) (refinedLabel N hN M x b) := by
-  let : Countable (RelevantCode N hN M x) := relevantCode_countable N hN M x
-  exact (Classical.choose_spec
-    (exists_disjoint_refinement_countable
-      (fun a : RelevantCode N hN M x ↦ label a.1)
-      (relevantLabels_pairwise N hN M x))).1
+  exact LocalCodeSchedule.refinedLabel
+    codeIndex (closure N hN M x) (closure_countable N hN M x)
 
 theorem label_diff_refinedLabel_finite (x : ContinuumRationalGroup)
     (a : RelevantCode N hN M x) :
-    (label a.1 \ refinedLabel N hN M x a).Finite := by
-  let : Countable (RelevantCode N hN M x) := relevantCode_countable N hN M x
-  exact (Classical.choose_spec
-    (exists_disjoint_refinement_countable
-      (fun a : RelevantCode N hN M x ↦ label a.1)
-      (relevantLabels_pairwise N hN M x))).2 a |>.2
-
-theorem refinedLabel_unique (x : ContinuumRationalGroup) {l : ℕ}
-    {a b : RelevantCode N hN M x}
-    (ha : l ∈ refinedLabel N hN M x a)
-    (hb : l ∈ refinedLabel N hN M x b) : a = b := by
-  by_contra hab
-  exact Set.disjoint_left.mp (refinedLabel_pairwise N hN M x hab) ha hb
+    (label a.1 \ refinedLabel N hN M x a).Finite :=
+  LocalCodeSchedule.label_diff_refinedLabel_finite
+    codeIndex (closure N hN M x) (closure_countable N hN M x) a
 
 /-- The unique relevant code assigned to stage `l`, when one exists. -/
 def activeCode (x : ContinuumRationalGroup) (l : ℕ) :
-    Option (RelevantCode N hN M x) := by
-  classical
-  exact if h : ∃ a, l ∈ refinedLabel N hN M x a then
-    some (Classical.choose h) else none
+    Option (RelevantCode N hN M x) :=
+  LocalCodeSchedule.activeCode codeIndex
+    (closure N hN M x) (closure_countable N hN M x) l
 
 theorem activeCode_eq_some_of_mem (x : ContinuumRationalGroup) (l : ℕ)
     (a : RelevantCode N hN M x) (ha : l ∈ refinedLabel N hN M x a) :
-    activeCode N hN M x l = some a := by
-  classical
-  unfold activeCode
-  split
-  · rename_i h
-    congr 1
-    exact refinedLabel_unique N hN M x (Classical.choose_spec h) ha
-  · rename_i h
-    exact (h ⟨a, ha⟩).elim
+    activeCode N hN M x l = some a :=
+  LocalCodeSchedule.activeCode_eq_some_of_mem
+    codeIndex (closure N hN M x) (closure_countable N hN M x) l a ha
 
 /-! ## The countable local rational group -/
 

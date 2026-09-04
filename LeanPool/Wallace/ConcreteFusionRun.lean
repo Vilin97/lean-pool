@@ -23,6 +23,7 @@ namespace ConcreteFusionRun
 noncomputable section
 
 open TriangularPreprocess
+open BlockData
 open ConcreteData
 open ConcreteClosure
 open ConcreteLocalSetup
@@ -53,7 +54,8 @@ abbrev fresh (x : ContinuumFreeGroup) : ℕ → Finset (LocalGroup x) :=
 
 /-- A fixed enumeration of the countable local group. -/
 abbrev enumeration (x : ContinuumFreeGroup) : ℕ → LocalGroup x :=
-  groupEnumeration blockSize blockSize_pos independenceBound x
+  countableFinsuppEnumeration (localCarrier x)
+    (closure_countable blockSize blockSize_pos independenceBound x)
 
 /-- The restriction of `x` to its local coordinate closure. -/
 def distinguished (x : ContinuumFreeGroup) : LocalGroup x := by
@@ -78,7 +80,8 @@ def scheduledCertificate (x : {x : ContinuumFreeGroup // x ≠ 0}) :
     (distinguished_ne_zero x.2)
     (localActiveBlock_card_le blockSize blockSize_pos independenceBound x.1)
     (localActiveBlock_boundedIndependent blockSize blockSize_pos independenceBound x.1)
-    (groupEnumeration_surjective blockSize blockSize_pos independenceBound x.1)
+    (countableFinsuppEnumeration_surjective (localCarrier x.1)
+      (closure_countable blockSize blockSize_pos independenceBound x.1))
 
 /-- The certified fusion run attached to a nonzero vector. -/
 abbrev run (x : {x : ContinuumFreeGroup // x ≠ 0}) :
@@ -95,12 +98,6 @@ def deletedPositions (x : {x : ContinuumFreeGroup // x ≠ 0})
   (blockPositions blockSize blockSize_pos l).filter fun n ↦
     localDifference blockSize blockSize_pos independenceBound x.1 a n ∉
       (run x).retained l
-
-theorem deletedPositions_subset_block (x : {x : ContinuumFreeGroup // x ≠ 0})
-    (a : RelevantCode blockSize blockSize_pos independenceBound x.1) (l : ℕ) :
-    deletedPositions x a l ⊆ blockPositions blockSize blockSize_pos l := by
-  intro n hn
-  exact (Finset.mem_filter.mp hn).1
 
 private theorem image_deletedPositions (x : {x : ContinuumFreeGroup // x ≠ 0})
     (a : RelevantCode blockSize blockSize_pos independenceBound x.1) (l : ℕ) :
@@ -163,7 +160,6 @@ theorem retainedPositions_mem_ultrafilter
       FusionSchedule.protectedBound
   · exact label_diff_refinedLabel_finite
       blockSize blockSize_pos independenceBound x.1 a
-  · exact deletedPositions_subset_block x a
   · exact deletedPositions_card_le x a
   · exact FusionSchedule.tendsto_protectedBound_div_blockSize
 

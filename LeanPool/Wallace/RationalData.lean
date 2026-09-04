@@ -22,26 +22,8 @@ namespace RationalData
 noncomputable section
 
 open RationalTriangularPreprocess
+open BlockData
 open FiniteCombinatorics
-
-/-- The canonical continuum index is in bijection with binary streams. -/
-def continuumIndexEquivBinaryStream : ContinuumIndex ≃ (ℕ → Bool) := by
-  apply Classical.choice
-  apply Cardinal.eq.mp
-  rw [mk_continuumIndex, Cardinal.mk_arrow, Cardinal.mk_bool, Cardinal.mk_nat]
-  simp only [Cardinal.lift_id, Cardinal.two_power_aleph0]
-
-/-- Almost-disjoint block label assigned to a rational sequence code. -/
-def label (a : ContinuumIndex) : Set ℕ :=
-  binaryBranchOnNat (continuumIndexEquivBinaryStream a)
-
-theorem label_infinite (a : ContinuumIndex) : (label a).Infinite :=
-  binaryBranchOnNat_infinite _
-
-theorem label_inter_finite {a b : ContinuumIndex} (hab : a ≠ b) :
-    (label a ∩ label b).Finite := by
-  apply binaryBranchOnNat_inter_finite
-  exact continuumIndexEquivBinaryStream.injective.ne hab
 
 variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
 
@@ -78,23 +60,6 @@ theorem preparedDifference_injective (a : ContinuumIndex) :
   intro m n hmn
   apply prepared_injective N hN M a
   exact sub_left_injective hmn
-
-/-- The concrete block system used by the rational construction. -/
-abbrev blocks : BlockSystem := BlockSystem.ofBlockPositions N hN
-
-/-- A free ultrafilter refining the block-density filter for code `a`. -/
-def ultrafilter (a : ContinuumIndex) : Ultrafilter ℕ :=
-  Classical.choose ((blocks N hN).exists_free_ultrafilter_le_densityFilter (label_infinite a))
-
-theorem ultrafilter_le_density (a : ContinuumIndex) :
-    (ultrafilter N hN a : Filter ℕ) ≤ (blocks N hN).densityFilter (label a) :=
-  (Classical.choose_spec
-    ((blocks N hN).exists_free_ultrafilter_le_densityFilter (label_infinite a))).1
-
-theorem ultrafilter_free (a : ContinuumIndex) :
-    (ultrafilter N hN a : Filter ℕ) ≤ cofinite :=
-  (Classical.choose_spec
-    ((blocks N hN).exists_free_ultrafilter_le_densityFilter (label_infinite a))).2
 
 /-- Concrete input for the rational transfinite recursion. -/
 def transfiniteData : RationalTransfiniteExtension.ContinuumData where

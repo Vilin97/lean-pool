@@ -24,6 +24,7 @@ noncomputable section
 
 open RationalTriangularPreprocess
 open RationalData
+open BlockData
 open RationalClosure
 open RationalFusionRun
 open RationalTransfiniteExtension

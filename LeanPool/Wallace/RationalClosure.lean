@@ -26,37 +26,23 @@ open RationalData
 
 variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
 
-/-- Coordinates occurring in the prepared sequence represented by `a`. -/
-def dependency (a : ContinuumIndex) : Set ContinuumIndex :=
-  ⋃ n, ↑(prepared N hN M a n).support
-
-theorem dependency_countable (a : ContinuumIndex) :
-    (dependency N hN M a).Countable := by
-  apply Set.countable_iUnion
-  intro n
-  exact (prepared N hN M a n).support.finite_toSet.countable
-
 /-- Least finite-stage dependency closure of the support of `x`. -/
 def closure (x : ContinuumRationalGroup) : Set ContinuumIndex :=
-  dependencyClosure codeIndex (dependency N hN M) ↑x.support
+  preparedClosure codeIndex (prepared N hN M) x
 
 theorem support_subset_closure (x : ContinuumRationalGroup) :
     ↑x.support ⊆ closure N hN M x :=
-  subset_dependencyClosure codeIndex (dependency N hN M) ↑x.support
+  support_subset_preparedClosure codeIndex (prepared N hN M) x
 
 theorem closure_countable (x : ContinuumRationalGroup) :
-    (closure N hN M x).Countable := by
-  apply countable_dependencyClosure codeIndex (dependency N hN M)
-  · exact dependency_countable N hN M
-  · exact x.support.finite_toSet.countable
+    (closure N hN M x).Countable :=
+  preparedClosure_countable codeIndex (prepared N hN M) x
 
 theorem prepared_support_mem_closure (x : ContinuumRationalGroup)
     (a : ContinuumIndex) (ha : codeIndex a ∈ closure N hN M x)
     (n : ℕ) (i : ContinuumIndex) (hi : i ∈ (prepared N hN M a n).support) :
-    i ∈ closure N hN M x := by
-  apply dependency_subset_closure_of_index_mem
-      codeIndex (dependency N hN M) ↑x.support ha
-  exact Set.mem_iUnion_of_mem n hi
+    i ∈ closure N hN M x :=
+  preparedSupport_subset_preparedClosure codeIndex (prepared N hN M) x a ha n hi
 
 theorem closure_closedUnderPreparedSupports (x : ContinuumRationalGroup) :
     RationalTransfiniteExtension.ClosedUnderPreparedSupports
