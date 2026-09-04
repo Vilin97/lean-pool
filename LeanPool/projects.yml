@@ -1,4 +1,96 @@
 projects:
+  - slug: polynomial-freiman-ruzsa
+    title: The polynomial Freiman–Ruzsa conjecture
+    summary: >-
+      Formalizes Marton's polynomial Freiman–Ruzsa conjecture by the entropy method, including
+      the characteristic-two bounds with exponents twelve and nine, the bounded-torsion theorem
+      with an explicit exponent, and quantitative consequences for affine dimension and
+      approximate homomorphisms. The supporting development builds entropic Ruzsa distance,
+      multidistance, conditional entropy, and additive-energy machinery. This optimized import
+      reuses the pooled Zhang–Yeung entropy and kernel library in place of duplicate upstream
+      modules while preserving all six closed headline statements.
+    branch: additive combinatorics and information theory
+    entry_module: LeanPool.PFR
+    authors:
+      - PFR contributors
+    contributors:
+      - Aaron Anderson
+      - Mantas Bakšys
+      - Jonas Bayer
+      - Mauricio Collares
+      - Rémy Degenne
+      - Yaël Dillies
+      - Ben Eltschig
+      - Sébastien Gouëzel
+      - Kalle Kytölä
+      - Rob Lewis
+      - Paul Lezeau
+      - Lorenzo Luccioli
+      - Heather Macbeth
+      - Patrick Massot
+      - Arend Mellendijk
+      - Kyle Miller
+      - Pietro Monticone
+      - Kim Morrison
+      - Oliver Nash
+      - Utensil Song
+      - Terence Tao
+      - Floris van Doorn
+      - Sky Wilshaw
+      - Lawrence Wu
+    source:
+      title: Marton's conjecture (the polynomial Freiman–Ruzsa conjecture)
+      authors:
+        - W. T. Gowers
+        - Ben Green
+        - Freddie Manners
+        - Terence Tao
+      arxiv: 2311.05762
+      url: https://github.com/teorth/pfr
+      github_repo: teorth/pfr
+      commit: 07839bddb1395c8808fa47db821ce2e4fff9362e
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - Marton.pfr_conjecture
+    main_results:
+      - declaration: Marton.pfr_conjecture
+        informal: >-
+          A nonempty finite set A of doubling at most K in an abelian group of exponent two is
+          covered by fewer than 2 K^12 cosets of a finite subgroup no larger than A.
+      - declaration: Marton.pfr_conjecture_nine
+        informal: >-
+          Strengthens the characteristic-two covering theorem to fewer than 2 K^9 cosets of a
+          finite subgroup no larger than A.
+      - declaration: Marton.torsion_pfr_conjecture
+        informal: >-
+          In an abelian group of exponent m at least two, a nonempty finite set of doubling at
+          most K is covered by fewer than m K^(256 m^3 + 1) cosets of a subgroup no larger than A.
+      - declaration: Marton.weak_pfr_int
+        informal: >-
+          A nonempty finite set of doubling at most K in a finite-rank free abelian group has a
+          subset of relative size at least K^(-34) and affine dimension at most
+          (80 / log 2) log K.
+      - declaration: Marton.homomorphism_pfr
+        informal: >-
+          A map between finite abelian groups of exponent two whose additive defects lie in S
+          differs from a homomorphism by a map taking at most |S|^10 values.
+      - declaration: Marton.approx_hom_pfr
+        informal: >-
+          A map between finite abelian groups of exponent two that is additive on at least a
+          1/K fraction of pairs agrees with a homomorphism on at least
+          (|G| / (2^144 K^122) - 1) / 2 points.
+    tags:
+      - additive-combinatorics
+      - polynomial-freiman-ruzsa
+      - entropy
+      - approximate-homomorphisms
+    msc:
+      - "11B30"
+      - "11P70"
+      - "20K01"
+      - "94A17"
   - slug: zeta-zeros
     title: Simple zeros of the Riemann zeta function
     summary: >-
