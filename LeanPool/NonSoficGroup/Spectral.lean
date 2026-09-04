@@ -4,9 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.NonSoficGroup.Foundations
-import Mathlib.Analysis.InnerProductSpace.Reproducing
-import Mathlib.Analysis.InnerProductSpace.PiL2
+module
+
+public import LeanPool.NonSoficGroup.Foundations
+import all LeanPool.NonSoficGroup.Foundations
+import all Mathlib.Analysis.InnerProductSpace.Reproducing
+public import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Algebra.Group.Pointwise.Finset.BigOperators
 import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 import Mathlib.Analysis.InnerProductSpace.GramMatrix
@@ -38,6 +41,7 @@ section ThreeProjectionSumOfSquares
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
 /-- A three-vector polarization identity used in the spectral-gap argument. -/
+public
 theorem three_pair_sum_norm_sq (a b c : H) :
     ‖a + b‖ ^ 2 + ‖b + c‖ ^ 2 + ‖c + a‖ ^ 2 =
       ‖a + b + c‖ ^ 2 + (‖a‖ ^ 2 + ‖b‖ ^ 2 + ‖c‖ ^ 2) := by
@@ -3202,18 +3206,21 @@ private theorem binaryLeavittElementaryNine_hasPropertyT_unconditional :
         (R := BinaryLeavitt)
         (finProdFinEquiv : Fin 3 × Fin 3 ≃ Fin 9)))
 
+public
 theorem alphaPrefixElementaryGroup_hasPropertyT_unconditional :
     HasPropertyT.{0, vSharp} (prefixElementaryGroup alphaPrefixCode) := by
   let : HasPropertyT.{0, vSharp} (binaryLeavittElementaryGroup 9) :=
     binaryLeavittElementaryNine_hasPropertyT_unconditional
   exact LeavittElementaryMorita.alphaPrefixElementaryGroup_hasPropertyT_of_nine
 
+public
 theorem alphaZeroPrefixElementaryGroup_hasPropertyT_unconditional :
     HasPropertyT.{0, vSharp} (prefixElementaryGroup alphaZeroPrefixCode) := by
   let : HasPropertyT.{0, vSharp} (binaryLeavittElementaryGroup 9) :=
     binaryLeavittElementaryNine_hasPropertyT_unconditional
   exact LeavittElementaryMorita.alphaZeroPrefixElementaryGroup_hasPropertyT_of_nine
 
+public
 theorem ninePrefixElementaryGroup_hasPropertyT_unconditional :
     HasPropertyT.{0, vSharp} (prefixElementaryGroup ninePrefixCode) := by
   let : HasPropertyT.{0, vSharp} (binaryLeavittElementaryGroup 9) :=
@@ -3485,6 +3492,7 @@ private theorem mem_positiveNatSupport {V : Type*} [Fintype V]
     x ∈ positiveNatSupport f ↔ 0 < f x := by
   simp only [positiveNatSupport, Finset.mem_filter, Finset.mem_univ, true_and]
 
+public
 theorem card_entering_eq_card_exiting
     {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (A : Finset V) :
@@ -4416,6 +4424,7 @@ private theorem exists_permutationGraph_containing_matchedFiberEdges
     (mem_permutationGraph p z.1 z.2).mpr (hp z hz).symm
   simpa only [Prod.mk.eta] using h
 
+public
 theorem permutationGraph_card
     {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) :
@@ -4882,6 +4891,7 @@ private theorem second_singleton_half_of_reference_difference
         secondMultiplicity U x = 1))
   omega
 
+public
 theorem hasAlmostCentralizerImprovement_of_rooted_reference_cuts
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (tolerance : ℕ)
@@ -5047,11 +5057,13 @@ private theorem permutationUnitary_model_mul_of_agree_on_support
     permutationUnitary_mul]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def indicatorVector {V : Type*}
     (f : V → ℝ) : EuclideanSpace ℂ V :=
   WithLp.toLp 2 fun x => (f x : ℂ)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def permutationMarkov {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (ξ : EuclideanSpace ℂ V) :
     EuclideanSpace ℂ V :=
@@ -6519,10 +6531,12 @@ private def unitaryFinsetMarkov
   ((S.card : ℂ)⁻¹) • S.sum (fun g => π g x)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def kazhdanMarkovContractionFactor
     (P : KazhdanPair.{u, v} G) (S : Finset G) : ℝ :=
   max 0 (1 - P.kazhdanConstant ^ 2 / (4 * (S.card : ℝ)))
 
+public
 theorem kazhdanMarkovContractionFactor_lt_one
     (P : KazhdanPair.{u, v} G)
     (S : Finset G) (hS : S.Nonempty) :
@@ -6536,6 +6550,7 @@ theorem kazhdanMarkovContractionFactor_lt_one
   unfold kazhdanMarkovContractionFactor
   exact max_lt (by norm_num) (by linarith)
 
+public
 theorem kazhdanMarkovContractionFactor_nonneg
     (P : KazhdanPair.{u, v} G) (S : Finset G) :
     0 ≤ kazhdanMarkovContractionFactor P S :=
@@ -7142,6 +7157,7 @@ private theorem eventually_normalizedIndicatorDefect_markov_pow_lt_of_rooted
   exact hlimit.eventually (Iio_mem_nhds hstrict)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure RootedIndicatorMarkovModel (G ι : Type u) where
   /-- Internal interface connecting the split non-sofic proof modules. -/
   carrier : Type u
@@ -7154,11 +7170,13 @@ structure RootedIndicatorMarkovModel (G ι : Type u) where
   /-- Internal interface connecting the split non-sofic proof modules. -/
   evaluation : G → Equiv.Perm carrier
 
+public
 instance rootedIndicatorMarkovModelFintype
     {G ι : Type u} (X : RootedIndicatorMarkovModel G ι) : Fintype X.carrier :=
   X.fintype
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure RootedIndicatorMarkovModel.IsGenerated
     {G ι : Type u} [Group G] [Fintype ι]
     (X : RootedIndicatorMarkovModel G ι)
@@ -7170,6 +7188,7 @@ structure RootedIndicatorMarkovModel.IsGenerated
   generator_evaluation : ∀ i, X.evaluation (s i) = X.generator i
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure RootedIndicatorMarkovModel.IsRootedAtRadius
     {G ι : Type u} [Group G]
     (X : RootedIndicatorMarkovModel G ι)
@@ -7279,6 +7298,7 @@ private theorem norm_normalizedIndicatorDefect_markov_pow
     norm_norm,
     div_eq_mul_inv, mul_comm]
 
+public
 theorem exists_rooted_word_radius_markov_iterate_contraction
     {G : Type u} [Group G]
     (P : KazhdanPair.{u, u} G)
@@ -7432,6 +7452,7 @@ private def finiteSeparationBad {G : Type*} [Group G]
     modelSeparationBad M q.1 q.2
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def finiteRootBad {G : Type*} [Group G]
     (M : PermutationModel G) (F : Finset G) :
     Finset (Fin M.size) :=
@@ -7480,6 +7501,7 @@ private theorem finiteSeparationBad_density_tendsto_zero
   simpa only [finiteSeparationBad, Finset.univ_inter,
     Finset.card_univ, Fintype.card_fin] using h
 
+public
 theorem finiteRootBad_density_tendsto_zero
     {G : Type*} [Group G]
     (A : SoficApproximation G) (F : Finset G) :
@@ -7521,6 +7543,7 @@ theorem finiteRootBad_density_tendsto_zero
           (A.model n).size := by
         rw [add_div]
 
+public
 theorem finiteRootBad_multiplicative
     {G : Type*} [Group G]
     (M : PermutationModel G) (F : Finset G)
@@ -7537,6 +7560,7 @@ theorem finiteRootBad_multiplicative
   simpa only [Equiv.Perm.coe_mul, Function.comp_apply, mem_modelMultiplicationBad, ne_eq,
     Decidable.not_not] using hnot
 
+public
 theorem finiteRootBad_separated
     {G : Type*} [Group G]
     (M : PermutationModel G) (F : Finset G)
@@ -7561,6 +7585,7 @@ private theorem finiteRootBad_injective_word_evaluation
   by_contra hne
   exact finiteRootBad_separated M F hg hh hne hx heq
 
+public
 theorem normalizedHamming_mul_le
     {V : Type*} [Fintype V] [DecidableEq V]
     (p p' q q' : Equiv.Perm V) :
@@ -7616,6 +7641,7 @@ private theorem action_list_prod_tendsto
       exact htriangle
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def chosenWordEvaluation
     {G ι : Type*} [Group G]
     (A : SoficApproximation G)
@@ -7892,6 +7918,7 @@ private theorem exists_generator_word_of_symmetric_generates
       rw [hmap, ← List.prod_inv_reverse, hl]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def symmetricGeneratorWord
     {G : Type*} [Group G] [DecidableEq G]
     (S : Finset G)
@@ -7906,6 +7933,7 @@ def symmetricGeneratorWord
     · exact (exists_generator_word_of_symmetric_generates
         S hsymmetric hgenerates g).choose
 
+public
 theorem symmetricGeneratorWord_prod
     {G : Type*} [Group G] [DecidableEq G]
     (S : Finset G)
@@ -7924,6 +7952,7 @@ theorem symmetricGeneratorWord_prod
         S hsymmetric hgenerates g).choose_spec
 
 @[simp]
+public
 theorem symmetricGeneratorWord_one
     {G : Type*} [Group G] [DecidableEq G]
     (S : Finset G)
@@ -7932,6 +7961,7 @@ theorem symmetricGeneratorWord_one
     symmetricGeneratorWord S hsymmetric hgenerates (1 : G) = [] := by
   simp only [symmetricGeneratorWord, ↓reduceDIte]
 
+public
 theorem symmetricGeneratorWord_generator
     {G : Type*} [Group G] [DecidableEq G]
     (S : Finset G)
@@ -7942,6 +7972,7 @@ theorem symmetricGeneratorWord_generator
   classical
   simp only [symmetricGeneratorWord, hi, ↓reduceDIte, i.property, Subtype.coe_eta]
 
+public
 theorem chosen_symmetric_wordEvaluation_one
     {G : Type*} [Group G] [DecidableEq G]
     (A : SoficApproximation G)
@@ -7953,6 +7984,7 @@ theorem chosen_symmetric_wordEvaluation_one
       (symmetricGeneratorWord S hsymmetric hgenerates) n 1 = 1 := by
   simp only [chosenWordEvaluation, symmetricGeneratorWord_one, List.map_nil, List.prod_nil]
 
+public
 theorem chosen_symmetric_wordEvaluation_generator
     {G : Type*} [Group G] [DecidableEq G]
     (A : SoficApproximation G)
@@ -7983,6 +8015,7 @@ private theorem generator_word_prod_mem_pow
         id_eq,
         List.prod_cons] using (Finset.mul_mem_mul a.property ih)
 
+public
 theorem mem_generator_pow_of_chosen_word_length
     {G : Type*} [Group G] [DecidableEq G]
     (S : Finset G) (hone : 1 ∈ S)
@@ -7995,6 +8028,7 @@ theorem mem_generator_pow_of_chosen_word_length
   exact Finset.pow_subset_pow_right hone hgr hword
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def chosenCayleyRadiusBad
     {G : Type*} [Group G] [DecidableEq G]
     (A : SoficApproximation G)
@@ -8002,6 +8036,7 @@ def chosenCayleyRadiusBad
     Finset (Fin (A.model n).size) :=
   chosenFiniteRootBad A (fun i : ↥S => (i : G)) w (S ^ r) n
 
+public
 theorem chosenCayleyRadiusBad_density_tendsto_zero
     {G : Type*} [Group G] [DecidableEq G]
     (A : SoficApproximation G)
@@ -8016,6 +8051,7 @@ theorem chosenCayleyRadiusBad_density_tendsto_zero
   chosenFiniteRootBad_density_tendsto_zero
     A (fun i : ↥S => (i : G)) w hw (S ^ r)
 
+public
 theorem chosenCayleyRadiusBad_rooted
     {G : Type*} [Group G] [DecidableEq G]
     (A : SoficApproximation G)
@@ -8041,6 +8077,7 @@ theorem chosenCayleyRadiusBad_rooted
   intro hbad
   exact hx (Finset.mem_union_right _ hbad)
 
+public
 theorem chosenCayleyRadiusBad_injective_ball
     {G : Type*} [Group G] [DecidableEq G]
     (A : SoficApproximation G)
@@ -8059,11 +8096,13 @@ namespace KunDirectedIndicatorJensen
 open scoped BigOperators
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def realIndicator {V : Type*} [DecidableEq V]
     (T : Finset V) (x : V) : ℝ :=
   if x ∈ T then 1 else 0
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def realPermutationMarkov {V ι : Type*} [Fintype ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ) (x : V) : ℝ :=
   (∑ i : ι, f ((σ i).symm x)) / Fintype.card ι
@@ -8183,6 +8222,7 @@ private theorem realPermutationMarkov_sub_sq_le_average_sq
           (Fintype.card ι : ℝ) := by
         field_simp
 
+public
 theorem realPermutationMarkov_indicator_defect_sq_le_boundary
     {V ι : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Nonempty ι]
@@ -8220,11 +8260,13 @@ namespace KunFinitePermutationMarkovMass
 open scoped BigOperators
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def realIndicator {V : Type*} [DecidableEq V]
     (T : Finset V) (x : V) : ℝ :=
   if x ∈ T then 1 else 0
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def realPermutationMarkov {V ι : Type*} [Fintype ι]
     (σ : ι → Equiv.Perm V) (f : V → ℝ) (x : V) : ℝ :=
   (Fintype.card ι : ℝ)⁻¹ * ∑ i : ι, f ((σ i).symm x)
@@ -8325,6 +8367,7 @@ private theorem sum_realIndicator {V : Type*}
   simp only [realIndicator, Finset.sum_ite_mem, Finset.univ_inter, Finset.sum_const, nsmul_eq_mul,
     mul_one]
 
+public
 theorem sum_realPermutationMarkov_iterate_indicator {V ι : Type*}
     [Fintype V] [DecidableEq V] [Fintype ι] [Nonempty ι]
     (σ : ι → Equiv.Perm V) (T : Finset V) (k : ℕ) :
@@ -8334,6 +8377,7 @@ theorem sum_realPermutationMarkov_iterate_indicator {V ι : Type*}
   rw [sum_realPermutationMarkov_iterate]
   exact sum_realIndicator T
 
+public
 theorem realPermutationMarkov_iterate_indicator_mem_unitInterval
     {V ι : Type*}
     [DecidableEq V] [Fintype ι] [Nonempty ι]
@@ -8389,6 +8433,7 @@ private theorem boundary_eq_sum_entering_indicator {V ι : Type*}
   rw [← KunThomFiberCoarea.card_entering_eq_card_exiting
     (σ i) A, Finset.card_eq_sum_ones, Finset.sum_filter]
 
+public
 theorem boundary_complement {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (A : Finset V) :
@@ -8890,6 +8935,7 @@ private theorem exists_expanding_full_finpartition
           4 * α * (Fintype.card V : ℝ) := by
             nlinarith
 
+public
 theorem exists_expanding_full_finpartition_sequence
     (ι : Type*) [Fintype ι]
     (V : ℕ → Type*)
@@ -8980,6 +9026,7 @@ theorem exists_expanding_full_finpartition_sequence
       (hpositive n).le)
     hupper hlimit
 
+public
 theorem original_boundary_le_completed_add_component_boundary
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (C : Finset V)
@@ -9039,6 +9086,7 @@ theorem original_boundary_le_completed_add_component_boundary
           ∑ i : ι, (C.filter fun x => σ i x ∉ C).card := by
             rw [Finset.sum_add_distrib]
 
+public
 theorem completed_component_additive_expansion
     {V ι : Type*} [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (C : Finset V)
@@ -9125,11 +9173,13 @@ namespace KunDiagonalGoodRootGraphLoss
 open scoped BigOperators symmDiff
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def goodPermutationGraph {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (B : Finset V) : Finset (V × V) :=
   (permutationGraph p).filter
     (fun z => z.1 ∉ B ∧ z.2 ∉ B)
 
+public
 theorem goodPermutationGraph_subset {V : Type*}
     [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (B : Finset V) :
@@ -9201,6 +9251,7 @@ private theorem permutationGraph_sdiff_goodPermutationGraph_subset {V : Type*}
     exact Finset.mem_union_right _
       (Finset.mem_filter.mpr ⟨hzgraph, hsecond⟩)
 
+public
 theorem card_permutationGraph_sdiff_goodPermutationGraph_le {V : Type*}
     [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (B : Finset V) :
@@ -9236,6 +9287,7 @@ private theorem card_goodPermutationGraph_add_graph_loss {V : Type*}
     _ = Fintype.card V :=
       KunThomFiberCoarea.permutationGraph_card p
 
+public
 theorem card_goodPermutationGraph_ge_card_sub_twice_bad {V : Type*}
     [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (B : Finset V) :
@@ -9254,6 +9306,7 @@ theorem card_goodPermutationGraph_ge_card_sub_twice_bad {V : Type*}
     exact_mod_cast card_goodPermutationGraph_add_graph_loss p B
   linarith
 
+public
 theorem boundary_goodPermutationGraph_le_commutationDefect_add {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (p : Equiv.Perm V) (B : Finset V) :
@@ -9290,6 +9343,7 @@ namespace KunCompletedPrunedComponent
 
 open scoped BigOperators
 
+public
 theorem hasAlmostCentralizerImprovement_zero
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) :
@@ -9385,6 +9439,7 @@ private theorem inducedBoundary_le_completed_boundary
     _ = (A.filter fun x => τ i x ∉ A).card :=
       Finset.card_map _
 
+public
 theorem exists_completed_pruned_expander
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (γ ell a : ℝ)
@@ -9469,11 +9524,13 @@ namespace MatchedComponentCompletion
 open scoped BigOperators
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def completedRestriction {V : Type*} [Fintype V]
     (p : Equiv.Perm V) (Z : Finset V) :
     Equiv.Perm (↥Z) :=
   Classical.choose (exists_completion_of_internal_permutation p Z)
 
+public
 theorem completedRestriction_apply_of_mem
     {V : Type*} [Fintype V]
     (p : Equiv.Perm V) (Z : Finset V)
@@ -9490,6 +9547,7 @@ theorem completedRestriction_apply_of_mem
     completedRestriction_apply_of_mem (1 : Equiv.Perm V) Z x x.property x.property
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def subtypeBad {V : Type*} [DecidableEq V]
     (Z E : Finset V) : Finset (↥Z) :=
   Finset.univ.filter (fun x => (x : V) ∈ E)
@@ -9500,6 +9558,7 @@ def subtypeBad {V : Type*} [DecidableEq V]
     x ∈ subtypeBad Z E ↔ (x : V) ∈ E := by
   simp only [subtypeBad, Finset.univ_eq_attach, Finset.mem_filter, Finset.mem_attach, true_and]
 
+public
 theorem card_subtypeBad
     {V : Type*} [DecidableEq V]
     (Z E : Finset V) :
@@ -9516,6 +9575,7 @@ theorem card_subtypeBad
       Finset.mem_inter]
   simpa only [Finset.card_map] using congrArg Finset.card hmap
 
+public
 theorem permutationDistance_le_subtypeBad
     {V : Type*} [DecidableEq V]
     (Z E : Finset V)
@@ -9558,6 +9618,7 @@ private theorem card_lt_five_mul_permutationDistance_of_subtypeBad
   omega
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def sourceCompletionBad
     {V ι J : Type*} [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9583,6 +9644,7 @@ noncomputable def sourceCompletionBad
       F.biUnion fun k =>
         Z.filter fun z => j ≠ k ∧ p j z = p k z)
 
+public
 theorem sourceCompletionBad_subset
     {V ι J : Type*} [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9595,6 +9657,7 @@ theorem sourceCompletionBad_subset
     Finset.mem_univ, Finset.mem_filter, true_and, exists_and_left] at hx
   aesop
 
+public
 theorem card_subtype_sourceCompletionBad
     {V ι J : Type*} [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9628,6 +9691,7 @@ private theorem sourceCompletionBad_good
     not_or, not_exists, Decidable.not_not, not_and] at hgood
   exact hgood
 
+public
 theorem completedRestriction_mul_of_not_mem_sourceCompletionBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9679,6 +9743,7 @@ theorem completedRestriction_mul_of_not_mem_sourceCompletionBad
       rw [hkvalue]
       exact hinner
 
+public
 theorem completedRestriction_ne_of_not_mem_sourceCompletionBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9702,6 +9767,7 @@ theorem completedRestriction_ne_of_not_mem_sourceCompletionBad
   rwa [completedRestriction_apply_of_mem (p j) Z z z.property hjZ,
     completedRestriction_apply_of_mem (p k) Z z z.property hkZ] at hval
 
+public
 theorem completedRestriction_commute_of_not_mem_sourceCompletionBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9755,6 +9821,7 @@ theorem completedRestriction_commute_of_not_mem_sourceCompletionBad
       (hσZ i (completedRestriction (p j) Z z)
         (completedRestriction (p j) Z z).property hrightmem).symm
 
+public
 theorem completedRestriction_mul_distance_le_sourceCompletionBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9777,6 +9844,7 @@ theorem completedRestriction_mul_distance_le_sourceCompletionBad
     _ = (sourceCompletionBad σ p F Z).card :=
       card_subtype_sourceCompletionBad σ p F Z
 
+public
 theorem completedRestriction_separated_of_sourceCompletionBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9795,6 +9863,7 @@ theorem completedRestriction_separated_of_sourceCompletionBad
     exact completedRestriction_ne_of_not_mem_sourceCompletionBad
       σ p F Z hj hk hne z hz
 
+public
 theorem completedRestriction_commutationDefect_le_sourceCompletionBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9835,6 +9904,7 @@ namespace MatchedComponentExitBudget
 open Filter Topology
 open scoped BigOperators
 
+public
 theorem card_permutation_exit_le_deleted
     {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (Z : Finset V) :
@@ -9906,6 +9976,7 @@ private theorem card_biUnion_composite_exit_le
       simp only [Finset.sum_const, smul_eq_mul, Nat.mul_assoc]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def sourceWordTestBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
@@ -9924,6 +9995,7 @@ noncomputable def sourceWordTestBad
       F.biUnion fun k =>
         Finset.univ.filter fun z => j ≠ k ∧ p j z = p k z)
 
+public
 theorem sourceCompletionBad_subset_exit_union_wordBad
     {V ι J : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι] [Group J]
@@ -10108,6 +10180,7 @@ private theorem sourceCompletionBad_original_density_tendsto_zero
     (Filter.Eventually.of_forall hupper)
     hlimit
 
+public
 theorem sourceCompletionBad_surviving_density_tendsto_zero
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
@@ -10171,6 +10244,7 @@ theorem sourceCompletionBad_surviving_density_tendsto_zero
     (sourceCompletionBad_subset_survivors
       (σ n) (p n) F (Finset.univ \ B n))]
 
+public
 theorem pruned_component_card_tendsto_atTop
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
@@ -10211,6 +10285,7 @@ namespace KunRealComplexMarkovBridge
 open scoped BigOperators ComplexOrder InnerProductSpace Topology
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def realMarkov {ι V : Type*} [Fintype ι]
     (p : ι → Equiv.Perm V) (f : V → ℝ) (x : V) : ℝ :=
   (∑ i, f ((p i).symm x)) / (Fintype.card ι : ℝ)
@@ -10220,6 +10295,7 @@ private def permutationUnitary {V : Type*} [Fintype V] (p : Equiv.Perm V) :
   LinearIsometryEquiv.piLpCongrLeft 2 ℂ ℂ p
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def indicatorVector {V : Type*}
     (f : V → ℝ) : EuclideanSpace ℂ V :=
   WithLp.toLp 2 fun x => (f x : ℂ)
@@ -10230,6 +10306,7 @@ private theorem indicatorVector_apply {V : Type*}
     indicatorVector f x = (f x : ℂ) := rfl
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def permutationMarkov {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (ξ : EuclideanSpace ℂ V) :
     EuclideanSpace ℂ V :=
@@ -10279,6 +10356,7 @@ private theorem norm_indicatorVector_sub_sq
   change ‖(f x : ℂ) - (g x : ℂ)‖ ^ 2 = (f x - g x) ^ 2
   rw [← Complex.ofReal_sub, Complex.norm_real, Real.norm_eq_abs, sq_abs]
 
+public
 theorem norm_permutationMarkov_indicator_sub_sq
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) :
@@ -10286,6 +10364,7 @@ theorem norm_permutationMarkov_indicator_sub_sq
       ∑ x, (realMarkov p f x - f x) ^ 2 := by
   rw [← indicatorVector_realMarkov, norm_indicatorVector_sub_sq]
 
+public
 theorem norm_iterate_permutationMarkov_indicator_sub_sq
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) (k : ℕ) :
@@ -10295,6 +10374,7 @@ theorem norm_iterate_permutationMarkov_indicator_sub_sq
   rw [← indicatorVector_iterate_realMarkov,
     norm_indicatorVector_sub_sq]
 
+public
 theorem norm_iterate_permutationMarkov_indicator_sub_iterate_sq
     {ι V : Type*} [Fintype ι] [Fintype V]
     (p : ι → Equiv.Perm V) (f : V → ℝ) (k : ℕ) :

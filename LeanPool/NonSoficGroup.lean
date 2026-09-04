@@ -4,8 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.NonSoficGroup.Foundations
-import LeanPool.NonSoficGroup.Conclusion
+module
+
+public import LeanPool.NonSoficGroup.Foundations
+public import LeanPool.NonSoficGroup.Conclusion
 
 /-!
 # Existence of a finitely presented non-sofic group

@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.NonSoficGroup.Spectral
+module
+
+public import LeanPool.NonSoficGroup.Spectral
+import all LeanPool.NonSoficGroup.Spectral
 import Mathlib.Algebra.Order.Field.GeomSum
 import Mathlib.Geometry.Group.Growth.LinearLowerBound
 import Mathlib.Tactic.Monotonicity.Lemmas
@@ -89,6 +92,7 @@ private theorem exists_rooted_word_radius_all_markov_iterate_contractions
   exact hr j X hgenerated (hroot.mono hrj)
 
 /-- The displacement of an iterate is bounded by its successive displacements. -/
+public
 theorem norm_iterate_sub_le_sum_successive
     {E : Type*} [NormedAddCommGroup E]
     (F : E → E) (x : E) (k : ℕ) :
@@ -1140,6 +1144,7 @@ private theorem completed_sourceWordTestBad_density_tendsto_zero_of_matchedRadiu
       (Q n) (I (r n)) (w n) (B n (r n)))
     hcapture hradius
 
+public
 theorem pruned_sourceCompletionBad_density_tendsto_zero_of_matchedRadius
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
@@ -1227,6 +1232,7 @@ private theorem lt_exp_mul_of_equal_log_floor
   rw [Real.exp_log hy, Real.exp_add, Real.exp_log hx] at hexp
   simpa only [mul_comm, gt_iff_lt] using hexp
 
+public
 theorem transported_maximumOverlapPart_card_lt_exp_mul
     {V : Type*} [Fintype V] [DecidableEq V]
     (Q : Finpartition (Finset.univ : Finset V))
@@ -1280,6 +1286,7 @@ private theorem card_symmDiff_add_twice_inter
   rw [Finset.inter_comm D C] at hD
   omega
 
+public
 theorem symmDiff_card_lt_of_overlap_and_exp_card
     {V : Type*} [DecidableEq V]
     (C D : Finset V) (H eta : ℝ)
@@ -1294,6 +1301,7 @@ theorem symmDiff_card_lt_of_overlap_and_exp_card
     exact_mod_cast card_symmDiff_add_twice_inter C D
   nlinarith
 
+public
 theorem target_majority_of_overlap_and_exp_card
     {V : Type*} [DecidableEq V]
     (C D : Finset V) (hC : C.Nonempty) (H eta : ℝ)
@@ -1321,6 +1329,7 @@ theorem target_majority_of_overlap_and_exp_card
     exact_mod_cast hreal
   exact target_majority_of_small_symmDiff C D hnat
 
+public
 theorem symmDiff_density_tendsto_zero_of_log_rank_bounds
     {V : ℕ → Type*} [∀ n, DecidableEq (V n)]
     (U : ∀ n, Finset (V n)) (hU : ∀ n, (U n).Nonempty)
@@ -1485,6 +1494,7 @@ private theorem tendsto_action_inverse
   rw [heq]
   exact A.multiplicative u (u⁻¹)
 
+public
 theorem tendsto_action_conjugate
     {G : Type*} [Group G] (A : SoficApproximation G)
     (u g : G) :
@@ -1558,6 +1568,7 @@ theorem tendsto_action_conjugate
       (((A.model n).action u)⁻¹)]
   · norm_num
 
+public
 theorem conjugated_word_crossing_density_tendsto_zero
     {G : Type*} [Group G] (A : SoficApproximation G)
     (u g : G)
@@ -2155,6 +2166,7 @@ private theorem source_compression_scale_guard_eventually
   exact hhalf.and
     (hsmallLimit.eventually (gt_mem_nhds zero_lt_one))
 
+public
 theorem exists_matched_slow_diagonal_large_components_on_source_scale_tail
     {K : Type*} [Group K] [Infinite K] [DecidableEq K]
     (S : Finset K) (hS : 1 ∈ S)
@@ -2926,6 +2938,7 @@ open Filter Topology
 open scoped BigOperators symmDiff
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def witnesslessComponents
     {V : Type*} [Fintype V] [DecidableEq V]
     (P Q : Finpartition (Finset.univ : Finset V))
@@ -2936,6 +2949,7 @@ noncomputable def witnesslessComponents
       b (T.symm y) ≠ b y)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def retainedComponents
     {V : Type*} [Fintype V] [DecidableEq V]
     (P Q : Finpartition (Finset.univ : Finset V))
@@ -2964,6 +2978,7 @@ private theorem overlapBad_disjoint_witnesslessComponents
   exact (Finset.mem_sdiff.mp
     (Finset.mem_filter.mp hwitnessless).1).2 hbad
 
+public
 theorem retainedComponents_spec
     {V : Type*} [Fintype V] [DecidableEq V]
     (P Q : Finpartition (Finset.univ : Finset V))
@@ -3129,6 +3144,7 @@ private theorem retained_missing_card_le_overlap_add_twice_rankChanging
         (∑ C ∈ O, C.card) + 2 * B.card
   omega
 
+public
 theorem retained_missing_density_tendsto_zero
     (V : ℕ → Type*)
     [∀ n, Fintype (V n)] [∀ n, DecidableEq (V n)]
@@ -3254,6 +3270,7 @@ private theorem card_partitionWordCrossing_mul_le
         q.symm.toEmbedding))
   simpa only [ge_iff_le, Finset.card_map, Nat.add_comm] using hcard
 
+public
 theorem sum_generator_crossing_eq_sum_partition_boundary
     {V ι : Type*} [Fintype V] [DecidableEq V]
     [Fintype ι]
@@ -3300,6 +3317,7 @@ theorem sum_generator_crossing_eq_sum_partition_boundary
     _ = ∑ C ∈ Q.parts, boundary σ C := by
       simp only [boundary]
 
+public
 theorem generator_crossing_density_tendsto_zero
     {V : ℕ → Type*}
     [∀ n, Fintype (V n)] [∀ n, DecidableEq (V n)]
@@ -3460,6 +3478,7 @@ private theorem exists_word_of_symmetric_generators
         rfl
       rw [hmap, ← List.prod_inv_reverse, hl]
 
+public
 theorem crossing_density_tendsto_zero_of_normalizedHamming
     {V : ℕ → Type*}
     [∀ n, Fintype (V n)] [∀ n, DecidableEq (V n)]
@@ -3506,6 +3525,7 @@ theorem crossing_density_tendsto_zero_of_normalizedHamming
         normalizedHamming (p n) (q n) := by
       simp only [permutationDistance, add_div, normalizedHamming]
 
+public
 theorem fixed_generated_word_crossing_density_tendsto_zero
     {G H : Type*} [Group G] [Group H]
     (A : SoficApproximation G)
@@ -3584,6 +3604,7 @@ theorem fixed_generated_word_crossing_density_tendsto_zero
       hdist
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceAlphaInclusion :
     prefixElementaryGroup alphaPrefixCode →*
       prefixElementaryGroup ninePrefixCode where
@@ -3594,6 +3615,7 @@ def sourceAlphaInclusion :
   map_one' := rfl
   map_mul' _ _ := rfl
 
+public
 theorem source_alpha_word_crossing_density_tendsto_zero
     (A : SoficApproximation
       (prefixElementaryGroup ninePrefixCode))
@@ -3701,18 +3723,19 @@ end KunRootedUniversalToleranceNumerics
 namespace SourceBothCompressionNormalization
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceCompressionUElement :
     prefixElementaryGroup ninePrefixCode :=
   ⟨compressionU,
     compressionU_mem_ninePrefixElementaryGroup⟩
 
-/-- Internal interface connecting the split non-sofic proof modules. -/
-def sourceCompressionVElement :
+private def sourceCompressionVElement :
     prefixElementaryGroup ninePrefixCode :=
   ⟨compressionV,
     compressionV_mem_ninePrefixElementaryGroup⟩
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceAlphaElement
     (g : prefixElementaryGroup alphaPrefixCode) :
     prefixElementaryGroup ninePrefixCode :=
@@ -3757,10 +3780,12 @@ private theorem sourceCompressionVElement_conjugates_alpha
   rfl
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceCompressionTable :
     Fin 2 → prefixElementaryGroup ninePrefixCode :=
   ![sourceCompressionUElement, sourceCompressionVElement]
 
+public
 theorem sourceCompressionTable_conjugates_alpha
     (i : Fin 2)
     (g : prefixElementaryGroup alphaPrefixCode) :
@@ -4216,6 +4241,7 @@ private theorem sum_dominant_component_losses_le_partition_boundaries
       exact_mod_cast
         sum_intersection_boundary_le_partition_boundaries P Q σ
 
+public
 theorem dominant_component_loss_density_tendsto_zero
     {V : ℕ → Type*}
     [∀ n, Fintype (V n)] [∀ n, Nonempty (V n)]
@@ -4326,6 +4352,7 @@ private theorem boundary_conjugate_map
       Finset.mem_map_equiv]
   rw [hfilter, Finset.card_map]
 
+public
 theorem transportedUnivFinpartition_half_expansion
     {V ι : Type*} [Fintype V] [DecidableEq V] [Fintype ι]
     (Q : Finpartition (Finset.univ : Finset V))
@@ -4388,6 +4415,7 @@ private theorem sum_boundary_transportedUnivFinpartition
   · intro C hC D hD heq
     exact T.finsetCongr.injective heq
 
+public
 theorem transported_partition_boundary_density_tendsto_zero
     {V : ℕ → Type*}
     [∀ n, Fintype (V n)] [∀ n, DecidableEq (V n)]
@@ -4420,6 +4448,7 @@ theorem transported_partition_boundary_density_tendsto_zero
       sum_boundary_transportedUnivFinpartition (Q n) (σ n) (T n)
   simpa only [hsum] using hboundary
 
+public
 theorem exists_common_slow_overlap_scales_for_transported_partitions
     {V : ℕ → Type*}
     [∀ n, Fintype (V n)] [∀ n, Nonempty (V n)]
@@ -4562,6 +4591,7 @@ open scoped BigOperators symmDiff
 
 universe u
 
+public
 theorem exists_uniform_radius_hasAlmostCentralizerImprovement
     {G : Type u} [Group G]
     (P : KazhdanPair.{u, u} G)
@@ -4794,6 +4824,7 @@ private theorem approximate_action_list_prod_tendsto
       exact h
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def chosenWordEvaluation
     {G ι V : Type*}
     (σ : ι → Equiv.Perm V) (w : G → List ι) (g : G) :
@@ -4865,6 +4896,7 @@ private theorem chosenWordEvaluation_tendsto_action
     (fun n => normalizedHamming_triangle _ _ _)
     hupper
 
+public
 theorem chosenWordEvaluation_multiplicative_tendsto
     {G ι : Type*} [Group G]
     (V : ℕ → Type*)
@@ -5067,6 +5099,7 @@ open Filter Topology
 open MatchedComponentCompletion
 open CompletedSourceChosenWordRestrictionTransfer
 
+public
 theorem surviving_card_ratio_tendsto_one
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
@@ -5098,6 +5131,7 @@ theorem surviving_card_ratio_tendsto_one
     Nat.cast_sub (Finset.card_le_univ (D n))]
   field_simp
 
+public
 theorem deleted_density_relative_survivors
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
@@ -5141,6 +5175,7 @@ theorem deleted_density_relative_survivors
           Fintype.card (V n))
   field_simp [hNreal, hZreal]
 
+public
 theorem twiceCompleted_sourceGenerator_normalizedHamming_tendsto_zero
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
@@ -5255,6 +5290,7 @@ private def multiplicationBad
   Finset.univ.filter (fun x => φ (a * g) x ≠ (φ a * φ g) x)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def fixedRadiusRootBad
     {G V : Type*} [Group G] [DecidableEq G]
     [Fintype V] [DecidableEq V]
@@ -5262,6 +5298,7 @@ def fixedRadiusRootBad
   ((S ^ r).product (S ^ r)).biUnion fun ag =>
     multiplicationBad φ ag.1 ag.2
 
+public
 theorem fixedRadiusRootBad_rooted
     {G V : Type*} [Group G] [DecidableEq G]
     [Fintype V] [DecidableEq V]
@@ -5287,6 +5324,7 @@ theorem fixedRadiusRootBad_rooted
   unfold multiplicationBad
   exact Finset.mem_filter.mpr ⟨Finset.mem_univ x, hfailure⟩
 
+public
 theorem fixedRadiusRootBad_density_tendsto_zero
     {G : Type*} [Group G] [DecidableEq G]
     (V : ℕ → Type*)
@@ -5584,6 +5622,7 @@ section
 
 open Filter Topology
 
+public
 theorem exists_source_subgroup_and_ambient_full_finpartition_sequences
     {G Γ : Type} [Group G] [Group Γ]
     (A : SoficApproximation G)
@@ -5657,6 +5696,7 @@ namespace KunActualCompressedSourceGroupFoundations
 
 universe v
 
+public
 theorem alphaZeroPrefixElementaryGroup_infinite :
     Infinite
       (prefixElementaryGroup alphaZeroPrefixCode) := by
@@ -5837,6 +5877,7 @@ private theorem kazhdanPairOnSymmetricGeneratingFinset_generators
       P S hsymmetric hgenerates).generators = S := by
   rfl
 
+public
 theorem exists_kazhdanPair_with_exact_symmetric_generators
     {G : Type u} [Group G]
     [HasPropertyT.{u, v} G]
@@ -5861,6 +5902,7 @@ section
 open KunExactKazhdanGeneratorChange
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceAlphaInclusion :
     prefixElementaryGroup alphaPrefixCode →*
       prefixElementaryGroup ninePrefixCode where
@@ -5880,14 +5922,12 @@ private theorem sourceAlphaInclusion_injective :
       prefixElementaryGroup ninePrefixCode =>
         z.val) hxy
 
-/-- Internal interface connecting the split non-sofic proof modules. -/
-def sourceCompressionU :
+private def sourceCompressionU :
     prefixElementaryGroup ninePrefixCode :=
   ⟨compressionU,
     compressionU_mem_ninePrefixElementaryGroup⟩
 
-/-- Internal interface connecting the split non-sofic proof modules. -/
-def sourceCompressionV :
+private def sourceCompressionV :
     prefixElementaryGroup ninePrefixCode :=
   ⟨compressionV,
     compressionV_mem_ninePrefixElementaryGroup⟩
@@ -5902,6 +5942,7 @@ private noncomputable def sourcePositiveGenerators
     {sourceCompressionU, sourceCompressionV}
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def sourceAmbientSymmetricGenerators
     (SΓ : Finset
       (prefixElementaryGroup alphaPrefixCode)) :
@@ -6066,12 +6107,14 @@ end
 section
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceCompressionTable :
     Fin 2 →
       prefixElementaryGroup ninePrefixCode :=
   ![sourceCompressionU, sourceCompressionV]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourcePositiveGeneratorMap
     (SΓ : Finset
       (prefixElementaryGroup alphaPrefixCode)) :
@@ -6267,6 +6310,7 @@ private theorem exists_actual_source_alpha_symmetric_generators :
   exists_symmetric_generating_finset_of_finitelyGenerated
     alphaPrefixElementaryGroup_finitelyGenerated
 
+public
 theorem exists_unconditional_actual_source_generator_data :
     ∃ (SΓ : Finset
           (prefixElementaryGroup
@@ -6714,13 +6758,13 @@ namespace SourceCommonOffsetMidrankEnergy
 open Filter Topology
 open scoped BigOperators
 
-/-- Internal interface connecting the split non-sofic proof modules. -/
-noncomputable def realComponentSize
+private noncomputable def realComponentSize
     {V : Type*} [Fintype V] [DecidableEq V]
     (Q : Finpartition (Finset.univ : Finset V)) (x : V) : ℝ :=
   (partitionComponentSize Q x : ℝ)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def componentLogRank
     {V : Type*} [Fintype V] [DecidableEq V]
     (Q : Finpartition (Finset.univ : Finset V))
@@ -6903,6 +6947,7 @@ namespace SourceCommonComponentRankNoBad
 open Filter Topology
 open scoped BigOperators
 
+public
 theorem exists_common_positive_component_log_rank_with_vanishing_midrank_energy
     (V : ℕ → Type*)
     [∀ n, Fintype (V n)] [∀ n, Nonempty (V n)]
@@ -7026,6 +7071,7 @@ open Filter Topology
 open scoped BigOperators
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def squaredPermutationEnergy
     {V : Type*} [Fintype V] (f : V → ℝ) (p : Equiv.Perm V) : ℝ :=
   ∑ x : V, (f (p x) - f x) ^ 2
@@ -7380,6 +7426,7 @@ private theorem action_energy_tendsto_zero_of_positive_generator_sum
   | inv x _ hx =>
       exact sofic_action_squared_energy_inv A f hf0 hf1 x hx
 
+public
 theorem sum_action_energy_tendsto_zero_of_positive_generator_sum
     {G ι : Type*} [Group G] [Fintype ι]
     (A : SoficApproximation G)
@@ -8423,6 +8470,7 @@ private theorem weighted_component_midrankVariance_tendsto_zero_of_additive_expa
     (Eventually.of_forall hupper)
     hlimit
 
+public
 theorem weighted_component_midrankVariance_tendsto_zero_of_source_half_expansion
     (V : ℕ → Type*)
     [∀ n, Fintype (V n)] [∀ n, Nonempty (V n)]
@@ -8624,6 +8672,7 @@ private theorem rankChangingArc_density_tendsto_zero_of_selected_support
       exact_mod_cast Fintype.card_pos_iff.mpr inferInstance)
     (hcross i) homitted
 
+public
 theorem exists_common_rank_invariance_of_midrank_variance
     {V : ℕ → Type*}
     [∀ n, Fintype (V n)] [∀ n, Nonempty (V n)]
@@ -8674,6 +8723,7 @@ theorem exists_common_rank_invariance_of_midrank_variance
     rankChangingArc_density_tendsto_zero_of_selected_support
       P b j w homitted hcross⟩
 
+public
 theorem sofic_action_inverse_normalizedHamming_tendsto_zero
     {G : Type*} [Group G]
     (A : SoficApproximation G) (g : G) :
@@ -8734,6 +8784,7 @@ private def sourceFirstFactorApproximation
     A
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceFirstFactorCayleyRadiusBad
     {K J : Type*} [Group K] [Group J] [DecidableEq K]
     (A : SoficApproximation (K × J))
@@ -8793,6 +8844,7 @@ open MatchedComponentExitBudget
 open scoped BigOperators Pointwise symmDiff
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceProductRadiusLabels
     {K J : Type*} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
@@ -8805,6 +8857,7 @@ def sourceProductRadiusLabels
         (CompressionCriterion.productTrackedTable F).image
           fun j : J => (a, j)))
 
+public
 theorem firstFactor_mem_sourceProductRadiusLabels
     {K J : Type*} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
@@ -8848,6 +8901,7 @@ private theorem generator_mem_sourceProductRadiusLabels
     (CompressionCriterion.one_mem_productTrackedTable F)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def canonicalProductRadiusBad
     {K J : Type*} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
@@ -8862,6 +8916,7 @@ def canonicalProductRadiusBad
       finiteRootBad (A.model n)
         (sourceProductRadiusLabels S F k)
 
+public
 theorem canonicalProductRadiusBad_density_tendsto_zero
     {K J : Type*} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
@@ -8999,6 +9054,7 @@ private theorem sourceWordTestBad_subset_finiteProductRootBad
       (secondFactor_mem_sourceProductRadiusLabels S F k hlT)
       hne' hxroot heq
 
+public
 theorem component_exit_mem_partitionWordCrossing
     {V : Type*} [DecidableEq V]
     {U : Finset V} (P : Finpartition U)
@@ -9012,6 +9068,7 @@ theorem component_exit_mem_partitionWordCrossing
   refine ⟨hxU, ?_⟩
   rwa [P.part_eq_of_mem hC hx]
 
+public
 theorem sourceCompletionBad_subset_canonical_matchedRadiusBad
     {K J : Type*} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
@@ -9107,6 +9164,7 @@ theorem sourceCompletionBad_subset_canonical_matchedRadiusBad
     exact sourceWordTestBad_subset_finiteProductRootBad
       A S F n k hword
 
+public
 theorem canonical_source_matched_component_cayley_ball_realization
     {K J : Type*} [Group K] [Group J]
     [DecidableEq K] [DecidableEq J]
@@ -9211,6 +9269,7 @@ private theorem eventually_five_mul_sourceCompletionBad_le_of_density
           linarith)
   exact hstrict.le
 
+public
 theorem eventually_completed_sourceCentralizer_table_of_bad_density
     (V : ℕ → Type*) [∀ n, Fintype (V n)]
     [∀ n, DecidableEq (V n)]
@@ -9390,6 +9449,7 @@ private theorem trackedCompletedAlmostCentralizer_separated
         (CompressionCriterion.mem_productTrackedTable hy)]
   exact hsep x hx y hy hxy
 
+public
 theorem nonempty_expandingCentralizerFiniteModel_of_selected_completed_sequence
     {J : Type} [Group J] (F : Finset J)
     (V : ℕ → Type)
@@ -9442,6 +9502,7 @@ namespace SourceTopLevelCompression
 
 open Filter
 
+public
 theorem sourceLocalPrefixTranspositionGroup_lef_of_source_finite_models
     (hmodels :
       ∀ A : SoficApproximation

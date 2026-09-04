@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import LeanPool.NonSoficGroup.Compression
+module
+
+public import LeanPool.NonSoficGroup.Compression
+import all LeanPool.NonSoficGroup.Compression
 
 /-!
 # The finitely presented non-sofic group
@@ -30,6 +33,7 @@ namespace ThompsonFFiniteQuotient
 variable {G : Type*} [Group G]
 
 /-- The conjugate of `b` by the `n`th power of `a`. -/
+public
 def conjugateTerm (a b : G) (n : ℕ) : G :=
   (a ^ n)⁻¹ * b * a ^ n
 
@@ -5430,6 +5434,7 @@ private theorem binaryLeavittElementaryGroup_not_sofic :
       ninePrefixElementaryGroupEquiv.symm.injective)
 
 /-- There exists a finitely presented group that is not sofic. -/
+public
 theorem exists_finitelyPresented_nonsofic_group :
     ∃ (G : Type) (_ : Group G),
       Group.IsFinitelyPresented G ∧ ¬ Sofic G := by

@@ -4,16 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: OpenAI, Dean Cureton
 -/
 
-import Mathlib.Algebra.Field.ZMod
-import Mathlib.Algebra.RingQuot
-import Mathlib.Analysis.InnerProductSpace.Defs
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.CategoryTheory.Category.Basic
-import Mathlib.GroupTheory.FinitelyPresentedGroup
-import Mathlib.InformationTheory.Hamming
-import Mathlib.LinearAlgebra.Matrix.Reindex
-import Mathlib.Order.Partition.Finpartition
-import Mathlib.RingTheory.FiniteType
+module
+
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.Algebra.RingQuot
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.CategoryTheory.Category.Basic
+public import Mathlib.GroupTheory.FinitelyPresentedGroup
+public import Mathlib.InformationTheory.Hamming
+public import Mathlib.LinearAlgebra.Matrix.Reindex
+public import Mathlib.Order.Partition.Finpartition
+public import Mathlib.RingTheory.FiniteType
 import Mathlib.Algebra.Group.MinimalAxioms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,6 +81,7 @@ open Filter Topology
 universe u v w
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 abbrev UnitaryRepresentation (G : Type u) (H : Type v) [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] :=
   G →* (H ≃ₗᵢ[ℂ] H)
@@ -86,6 +89,7 @@ abbrev UnitaryRepresentation (G : Type u) (H : Type v) [Group G]
 open scoped Pointwise commutatorElement symmDiff
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure KazhdanPair (G : Type u) [Group G] where
   /-- Internal interface connecting the split non-sofic proof modules. -/
   generators : Finset G
@@ -100,9 +104,11 @@ structure KazhdanPair (G : Type u) [Group G] where
       ∃ η : H, η ≠ 0 ∧ ∀ g : G, π g η = η
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 class HasPropertyT (G : Type u) [Group G] : Prop where
   exists_kazhdanPair : Nonempty (KazhdanPair.{u, v} G)
 
+public
 theorem hasPropertyT_of_mulEquiv {G : Type u} {G' : Type w}
     [Group G] [Group G'] (e : G ≃* G')
     [HasPropertyT.{u, v} G] : HasPropertyT.{w, v} G' := by
@@ -124,24 +130,29 @@ theorem hasPropertyT_of_mulEquiv {G : Type u} {G' : Type w}
   exact hη' g
 
 /-- The proportion of points on which two finite permutations differ. -/
+public
 def normalizedHamming {Y : Type*} [Fintype Y] [DecidableEq Y]
     (p q : Equiv.Perm Y) : ℝ :=
   (hammingDist (fun y => p y) (fun y => q y) : ℝ) / Fintype.card Y
 
 @[simp]
+public
 theorem normalizedHamming_self {Y : Type*} [Fintype Y] [DecidableEq Y]
     (p : Equiv.Perm Y) : normalizedHamming p p = 0 := by
   simp only [normalizedHamming, hammingDist_self, CharP.cast_eq_zero, zero_div]
 
+public
 theorem normalizedHamming_comm {Y : Type*} [Fintype Y] [DecidableEq Y]
     (p q : Equiv.Perm Y) : normalizedHamming p q = normalizedHamming q p := by
   simp only [normalizedHamming, hammingDist_comm]
 
+public
 theorem normalizedHamming_nonneg {Y : Type*} [Fintype Y] [DecidableEq Y]
     (p q : Equiv.Perm Y) : 0 ≤ normalizedHamming p q := by
   unfold normalizedHamming
   positivity
 
+public
 theorem normalizedHamming_triangle {Y : Type*} [Fintype Y] [DecidableEq Y]
     (p q r : Equiv.Perm Y) :
     normalizedHamming p r ≤ normalizedHamming p q + normalizedHamming q r := by
@@ -167,6 +178,7 @@ private theorem normalizedHamming_le_one {Y : Type*} [Fintype Y] [DecidableEq Y]
     _ ≤ 1 := by
       by_cases h : Fintype.card Y = 0 <;> simp [h]
 
+public
 theorem normalizedHamming_mul_left {Y : Type*} [Fintype Y] [DecidableEq Y]
     (s p q : Equiv.Perm Y) :
     normalizedHamming (s * p) (s * q) = normalizedHamming p q := by
@@ -176,6 +188,7 @@ theorem normalizedHamming_mul_left {Y : Type*} [Fintype Y] [DecidableEq Y]
     hammingDist_comp (fun (_ : Y) (z : Y) => s z) (fun _ => s.injective)
   simp only [normalizedHamming, Equiv.Perm.mul_apply, hdist]
 
+public
 theorem normalizedHamming_mul_right {Y : Type*} [Fintype Y] [DecidableEq Y]
     (s p q : Equiv.Perm Y) :
     normalizedHamming (p * s) (q * s) = normalizedHamming p q := by
@@ -201,6 +214,7 @@ theorem normalizedHamming_mul_right {Y : Type*} [Fintype Y] [DecidableEq Y]
     (fun k : ℕ => (k : ℝ) / (Fintype.card Y : ℝ)) hdist
 
 /-- A finite permutation-valued approximation to a group action. -/
+public
 structure PermutationModel (G : Type*) [Group G] where
   /-- The cardinality of the finite model. -/
   size : ℕ
@@ -212,6 +226,7 @@ structure PermutationModel (G : Type*) [Group G] where
   map_one : action 1 = 1
 
 /-- Multiplication and separation hold on a prescribed finite set. -/
+public
 structure GoodOn {G : Type*} [Group G]
     (M : PermutationModel G) (F : Finset G) (ε : ℝ) : Prop where
   /-- The model is approximately multiplicative on the prescribed set. -/
@@ -228,6 +243,7 @@ private theorem GoodOn.mono {G : Type*} [Group G] {M : PermutationModel G}
   separated g hg hne := h.separated g (hF hg) hne
 
 /-- A group admitting arbitrarily accurate finite permutation models. -/
+public
 class Sofic (G : Type*) [Group G] : Prop where
   /-- Every finite set has a permutation model at every error strictly between zero and one. -/
   approximation : ∀ (F : Finset G) (ε : ℝ), 0 < ε → ε < 1 →
@@ -357,6 +373,7 @@ private theorem amplifyModel_separation_distance
     _ = normalizedHamming (M.action g) 1 := by rw [M.map_one]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure SoficApproximation (G : Type*) [Group G] where
   /-- Internal interface connecting the split non-sofic proof modules. -/
   model : ℕ → PermutationModel G
@@ -378,6 +395,7 @@ private def pullbackPermutationModel {G H : Type*} [Group G] [Group H]
   map_one := by simpa only [map_one] using M.map_one
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def pullbackSoficApproximation {G H : Type*} [Group G] [Group H]
     (f : H →* G) (hf : Function.Injective f)
     (A : SoficApproximation G) : SoficApproximation H where
@@ -474,6 +492,7 @@ private theorem amplifyApproximation_size_tendsto
     exact Nat.le_mul_of_pos_right _ (A.model n).size_pos
   · exact tendsto_add_atTop_nat 1
 
+public
 theorem exists_soficApproximation_size_tendsto
     (G : Type*) [Group G] [Countable G] [Sofic G] :
     ∃ A : SoficApproximation G,
@@ -481,6 +500,7 @@ theorem exists_soficApproximation_size_tendsto
   obtain ⟨A⟩ := nonempty_soficApproximation_of_sofic G
   exact ⟨amplifyApproximation A, amplifyApproximation_size_tendsto A⟩
 
+public
 theorem sofic_of_injective {G H : Type*} [Group G] [Group H]
     [Sofic G] (f : H →* G) (hf : Function.Injective f) : Sofic H := by
   classical
@@ -717,6 +737,7 @@ private theorem exists_nonsofic_finite_table {G : Type u} [Group G]
   exact ⟨F, h₁, tableGroup_finitelyPresented F h₁,
     tableGroup_not_sofic_of_obstruction F h₁ ε hε hε' hbad⟩
 
+public
 theorem exists_finitelyPresented_not_sofic_of_not_sofic
     {G : Type u} [Group G] (hG : ¬ Sofic G) :
     ∃ (H : Type u) (_ : Group H),
@@ -725,12 +746,14 @@ theorem exists_finitelyPresented_not_sofic_of_not_sofic
   exact ⟨tableGroup F h₁, inferInstance, hfp, hn⟩
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure LocalMultiplicativeOn {G : Type u} {H : Type v}
     [Group G] [Group H] (s : Finset G) (f : G → H) : Prop where
   map_one : f 1 = 1
   map_mul : ∀ x ∈ s, ∀ y ∈ s, f (x * y) = f x * f y
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 class LEF (G : Type u) [Group G] : Prop where
   approximate : ∀ s : Finset G, ∃ (n : ℕ) (f : G → Equiv.Perm (Fin n)),
     Set.InjOn f (s : Set G) ∧ LocalMultiplicativeOn s f
@@ -739,6 +762,7 @@ namespace LocalMultiplicativeOn
 
 variable {G : Type u} {H : Type v} [Group G] [Group H]
 
+public
 theorem mono {s t : Finset G} {f : G → H}
     (h : LocalMultiplicativeOn t f) (hst : s ⊆ t) : LocalMultiplicativeOn s f where
   map_one := h.map_one
@@ -753,6 +777,7 @@ private theorem map_inv_of_mem {s : Finset G} {f : G → H}
 
 end LocalMultiplicativeOn
 
+public
 theorem exists_local_word_control {α : Type u} {G : Type v} [Group G]
     (φ : FreeGroup α →* G) (z : FreeGroup α) :
     ∃ s : Finset G, ∀ (H : Type w) [Group H] (f : G → H),
@@ -796,21 +821,25 @@ theorem exists_local_word_control {α : Type u} {G : Type v} [Group G]
       _ = f (φ (x * y)) := by rw [map_mul]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def boundary {V ι : Type*} [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (A : Finset V) : ℕ :=
   ∑ i : ι, (A.filter fun x => σ i x ∉ A).card
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def agreementSet {V : Type*} [Fintype V] [DecidableEq V]
     (c c' : Equiv.Perm V) : Finset V :=
   Finset.univ.filter (fun x => c x = c' x)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def permutationCommutationDefect {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (c : Equiv.Perm V) : ℕ :=
   ∑ i : ι, (Finset.univ.filter fun x => c (σ i x) ≠ σ i (c x)).card
 
+public
 theorem agreementSet_card_add_hammingDist {V : Type*}
     [Fintype V] [DecidableEq V] (c c' : Equiv.Perm V) :
     (agreementSet c c').card +
@@ -905,6 +934,7 @@ private theorem hamming_dichotomy_of_expansion {V ι : Type*}
     simpa only [Nat.cast_add, ge_iff_le, hident] using hcut
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def inducedBoundary {V ι : Type*} [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (B E : Finset V) : ℕ :=
   ∑ i : ι, (E.filter fun x => σ i x ∉ B ∧ σ i x ∉ E).card
@@ -1111,6 +1141,7 @@ private theorem exists_maximal_bad_cut {V ι : Type*}
     simp only [Finset.powerset_univ, Finset.mem_filter, Finset.mem_univ, hhalf, hbad, and_self,
       candidates]
 
+public
 theorem exists_pruned_expander {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (γ ell a : ℝ)
@@ -1158,26 +1189,31 @@ private theorem disjoint_dominant_intersections_false {V : Type*} [DecidableEq V
   omega
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def matchedRetainedSupport {V : Type*} [DecidableEq V]
     (R : Finset (Finset V)) : Finset V :=
   R.biUnion id
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def matchedCore {V : Type*} [DecidableEq V]
     (R : Finset (Finset V)) (D : Finset V → Finset V) : Finset V :=
   R.biUnion fun C => C ∩ D C
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def partitionWordCrossing {V : Type*} [DecidableEq V]
     {U : Finset V} (P : Finpartition U) (w : Equiv.Perm V) : Finset V :=
   U.filter (fun x => w x ∉ P.part x)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def matchedWordPreimageBad {V : Type*} [DecidableEq V]
     (U : Finset V) (R : Finset (Finset V))
     (D : Finset V → Finset V) (w : Equiv.Perm V) : Finset V :=
   U.filter (fun x => w x ∈ U \ matchedCore R D)
 
+public
 theorem finpartition_dominant_matching_injOn
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (R : Finset (Finset V))
@@ -1193,6 +1229,7 @@ theorem finpartition_dominant_matching_injOn
     (hmajor C hCR)
     (by simpa only [heq] using hmajor E hER)
 
+public
 theorem matchedRetainedSupport_subset
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (R : Finset (Finset V))
@@ -1219,6 +1256,7 @@ private theorem matchedCore_subset
   (matchedCore_subset_retainedSupport R D).trans
     (matchedRetainedSupport_subset P R hR)
 
+public
 theorem matchedRetainedSupport_card
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (R : Finset (Finset V))
@@ -1240,6 +1278,7 @@ private theorem matchedCore_card
   exact (P.disjoint (hR hC) (hR hE) hne).mono
     Finset.inter_subset_left Finset.inter_subset_left
 
+public
 theorem matchedCore_missing_card
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (R : Finset (Finset V))
@@ -1296,6 +1335,7 @@ private theorem matched_partition_part_eq_of_target_part_eq
     _ = E := hCE
     _ = P.part y := (P.part_eq_of_mem (hR hE) hyparts.1).symm
 
+public
 theorem matchedWordPreimageBad_card_le
     {V : Type*} [DecidableEq V]
     (U : Finset V) (R : Finset (Finset V))
@@ -1474,6 +1514,7 @@ private theorem permutation_squared_increment_le_twice_decreasing
     linarith
   simpa [d, B, sub_neg] using hfinal
 
+public
 theorem exists_completion_of_internal_permutation {V : Type*}
     [Finite V]
     (p : Equiv.Perm V) (Z : Finset V) :
@@ -1555,6 +1596,7 @@ private theorem diagonalRadius_error_tendsto_zero (e : ℕ → ℕ → ℝ)
     (Eventually.of_forall fun n => hnonneg n (diagonalRadius e n))
     hbound hlimit
 
+public
 theorem exists_diverging_radius_with_vanishing_diagonal_error
     (e : ℕ → ℕ → ℝ) (hnonneg : ∀ n k, 0 ≤ e n k)
     (he : ∀ k, Tendsto (fun n => e n k) atTop (𝓝 0)) :
@@ -1564,6 +1606,7 @@ theorem exists_diverging_radius_with_vanishing_diagonal_error
   ⟨diagonalRadius e, diagonalRadius_tendsto_atTop e he,
     diagonalRadius_error_tendsto_zero e hnonneg he⟩
 
+public
 theorem finite_union_bad_density_tendsto_zero
     {α : ℕ → Type*} [∀ n, DecidableEq (α n)]
     {ι : Type*} (I : Finset ι)
@@ -1604,6 +1647,7 @@ theorem finite_union_bad_density_tendsto_zero
     _ = ∑ i ∈ I, (((V n ∩ B n i).card : ℝ) / (V n).card) :=
       Finset.sum_div _ _ _
 
+public
 theorem sum_card_inter_partition {α : Type*} [DecidableEq α]
     {U : Finset α} (P : Finpartition U) (B : Finset α) :
     ∑ C ∈ P.parts, (C ∩ B).card = (U ∩ B).card := by
@@ -1624,6 +1668,7 @@ theorem sum_card_inter_partition {α : Type*} [DecidableEq α]
       (Finset.card_biUnion hdis).symm
     _ = (U ∩ B).card := congrArg Finset.card hunion
 
+public
 theorem retained_bad_density_tendsto_zero
     {α : ℕ → Type*} [∀ n, DecidableEq (α n)]
     (V U B : ∀ n, Finset (α n))
@@ -1669,12 +1714,14 @@ theorem retained_bad_density_tendsto_zero
         (mul_le_mul_of_nonneg_left hmass (Nat.cast_nonneg (α := ℝ) (V n ∩ B n).card))
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 inductive LeavittGenerator where
   | s : Fin 2 → LeavittGenerator
   | t : Fin 2 → LeavittGenerator
   deriving Fintype
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 abbrev LeavittFree : Type := FreeAlgebra (ZMod 2) LeavittGenerator
 
 private instance leavittFreeCountable : Countable LeavittFree :=
@@ -1684,6 +1731,7 @@ private instance leavittFreeCountable : Countable LeavittFree :=
       (R := ZMod 2) (M := FreeMonoid LeavittGenerator))).injective.countable
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 inductive LeavittRelation : LeavittFree → LeavittFree → Prop where
   | inverse (i j : Fin 2) :
       LeavittRelation
@@ -1696,6 +1744,7 @@ inductive LeavittRelation : LeavittFree → LeavittFree → Prop where
         1
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 abbrev BinaryLeavitt : Type := RingQuot LeavittRelation
 
 private instance binaryLeavittCountable : Countable BinaryLeavitt :=
@@ -1704,6 +1753,7 @@ private instance binaryLeavittCountable : Countable BinaryLeavitt :=
 private def leavittQuotient : LeavittFree →ₐ[ZMod 2] BinaryLeavitt :=
   RingQuot.mkAlgHom (ZMod 2) LeavittRelation
 
+public
 instance binaryLeavittFiniteType : Algebra.FiniteType (ZMod 2) BinaryLeavitt :=
   Algebra.FiniteType.of_surjective leavittQuotient
     (RingQuot.mkAlgHom_surjective (ZMod 2) LeavittRelation)
@@ -1802,6 +1852,7 @@ private def leavittRepresentation :
   simp only [leavittRepresentation, leavittFreeRepresentation, leavittT, leavittQuotient,
     RingQuot.liftAlgHom_mkAlgHom_apply, FreeAlgebra.lift_ι_apply, leavittGeneratorAction]
 
+public
 instance binaryLeavittNontrivial : Nontrivial BinaryLeavitt :=
   leavittRepresentation.toRingHom.domain_nontrivial
 
@@ -1829,15 +1880,18 @@ private instance binaryLeavittInfinite : Infinite BinaryLeavitt where
     exact mul_eq_one_symm (by simpa only [Fin.isValue, ↓reduceIte] using leavittT_mul_S 0 0)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def leavittWordS : List (Fin 2) → BinaryLeavitt
   | [] => 1
   | i :: a => leavittS i * leavittWordS a
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def leavittWordT : List (Fin 2) → BinaryLeavitt
   | [] => 1
   | i :: a => leavittWordT a * leavittT i
 
+public
 theorem leavittWordT_mul_wordS_self (a : List (Fin 2)) :
     leavittWordT a * leavittWordS a = 1 := by
   induction a with
@@ -1850,6 +1904,7 @@ theorem leavittWordT_mul_wordS_self (a : List (Fin 2)) :
                 simp only [leavittWordT, leavittWordS, mul_assoc]
         _ = 1 := by simp only [leavittT_mul_S, ↓reduceIte, one_mul, ih]
 
+public
 theorem leavittWordT_mul_wordS_of_incomparable
     (a b : List (Fin 2)) (hab : ¬a <+: b) (hba : ¬b <+: a) :
     leavittWordT a * leavittWordS b = 0 := by
@@ -1884,12 +1939,14 @@ theorem leavittWordT_mul_wordS_of_incomparable
                       simp only [leavittWordT, leavittWordS, mul_assoc]
               _ = 0 := by simp only [leavittT_mul_S, hij, ↓reduceIte, zero_mul, mul_zero]
 
+public
 theorem leavittWordS_append (a b : List (Fin 2)) :
     leavittWordS (a ++ b) = leavittWordS a * leavittWordS b := by
   induction a with
   | nil => simp only [List.nil_append, leavittWordS, one_mul]
   | cons i a ih => simp only [List.cons_append, leavittWordS, ih, mul_assoc]
 
+public
 theorem leavittWordT_append (a b : List (Fin 2)) :
     leavittWordT (a ++ b) = leavittWordT b * leavittWordT a := by
   induction a with
@@ -1897,6 +1954,7 @@ theorem leavittWordT_append (a b : List (Fin 2)) :
   | cons i a ih => simp only [List.cons_append, leavittWordT, ih, mul_assoc]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def leavittCylinder (a : List (Fin 2)) : BinaryLeavitt :=
   leavittWordS a * leavittWordT a
 
@@ -2051,6 +2109,7 @@ private def ringEquiv [DecidableEq ι] (s t : ι → A)
 end MatrixCorner
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure BinaryPrefixCode (ι : Type*) where
   /-- Internal interface connecting the split non-sofic proof modules. -/
   word : ι → List (Fin 2)
@@ -2182,11 +2241,13 @@ private def vWord : Fin 9 → List (Fin 2)
   | _ => alphaWord 2 ++ [1]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def alphaPrefixCode : BinaryPrefixCode (Fin 3) where
   word := alphaWord
   prefix_free := by decide
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def ninePrefixCode : BinaryPrefixCode (Fin 9) where
   word := nineWord
   prefix_free := by decide
@@ -2383,11 +2444,13 @@ private theorem vPrefixCode_complete :
     _ = 1 := uPrefixCode_complete
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def compressionU : BinaryLeavittˣ :=
   prefixTableUnit ninePrefixCode uPrefixCode
     ninePrefixCode_complete uPrefixCode_complete
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def compressionV : BinaryLeavittˣ :=
   prefixTableUnit ninePrefixCode vPrefixCode
     ninePrefixCode_complete vPrefixCode_complete
@@ -2500,6 +2563,7 @@ private theorem compressionV_conjugate_alpha_root
     compressionV_conjugate_root (alphaNineIndex i) (alphaNineIndex j) a
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def alphaZeroPrefixCode : BinaryPrefixCode (Fin 3) where
   word i := alphaWord i ++ [0]
   prefix_free := by decide
@@ -2527,6 +2591,7 @@ private def prefixElementaryUnit {ι : Type*} [DecidableEq ι]
       inv_val := by noncomm_ring [hx] }
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def prefixElementaryGroup {ι : Type*} [DecidableEq ι]
     (E : BinaryPrefixCode ι) : Subgroup BinaryLeavittˣ :=
   Subgroup.closure
@@ -2606,6 +2671,7 @@ private theorem prefixElementaryGroup_map_conj
     exact ⟨prefixElementaryUnit E i j hij a,
       ⟨i, j, hij, a, rfl⟩, hconj i j hij a⟩
 
+public
 theorem compressionU_map_alphaPrefixElementaryGroup :
     (prefixElementaryGroup alphaPrefixCode).map
         (MulAut.conj compressionU).toMonoidHom =
@@ -2613,6 +2679,7 @@ theorem compressionU_map_alphaPrefixElementaryGroup :
   prefixElementaryGroup_map_conj alphaPrefixCode alphaZeroPrefixCode
     compressionU compressionU_conjugate_alpha_elementaryUnit
 
+public
 theorem compressionV_map_alphaPrefixElementaryGroup :
     (prefixElementaryGroup alphaPrefixCode).map
         (MulAut.conj compressionV).toMonoidHom =
@@ -2635,6 +2702,7 @@ private theorem alphaZero_prefixElementaryUnit_eq
     leavittWordT_append,
     leavittWordT, one_mul]
 
+public
 theorem alphaZero_prefixElementaryGroup_le :
     prefixElementaryGroup alphaZeroPrefixCode ≤
       prefixElementaryGroup alphaPrefixCode := by
@@ -2653,6 +2721,7 @@ private theorem single_mul_self_eq_zero (i j : ι) (h : i ≠ j) (a : R) :
   Matrix.single_mul_single_of_ne (c := a) i j i h.symm a
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def elementaryUnit (i j : ι) (h : i ≠ j) (a : R) : (Matrix ι ι R)ˣ where
   val := 1 + Matrix.single i j a
   inv := 1 - Matrix.single i j a
@@ -2688,16 +2757,19 @@ private theorem elementaryUnit_injective (i j : ι) (h : i ≠ j) :
     Matrix.single_apply_same, zero_add] using he
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def elementaryGroup (ι R : Type*) [Fintype ι] [DecidableEq ι] [Ring R] :
     Subgroup (Matrix ι ι R)ˣ :=
   Subgroup.closure
     {z | ∃ (i j : ι) (h : i ≠ j) (a : R), elementaryUnit i j h a = z}
 
+public
 theorem elementaryUnit_mem (i j : ι) (h : i ≠ j) (a : R) :
     elementaryUnit i j h a ∈ elementaryGroup ι R :=
   Subgroup.subset_closure ⟨i, j, h, a, rfl⟩
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def elementaryRootHom (i j : ι) (h : i ≠ j) :
     Multiplicative R →* elementaryGroup ι R where
   toFun a := ⟨elementaryUnit i j h a.toAdd, elementaryUnit_mem i j h a.toAdd⟩
@@ -2727,6 +2799,7 @@ private theorem cylinder_transposition_factorization [CharP R 2] (P Q : R)
   noncomm_ring [hPP, hPQP]
   simp only [hthree]
 
+public
 theorem elementaryUnit_commutator (i j k : ι)
     (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) (a b : R) :
     ⁅elementaryUnit i j hij a, elementaryUnit j k hjk b⁆ =
@@ -2750,6 +2823,7 @@ theorem elementaryUnit_commutator (i j k : ι)
   have hzz := single_mul_self_eq_zero i k hik (a * b)
   noncomm_ring [hxx, hyy, hyx, hxy, hzx, hzy, hzz]
 
+public
 theorem elementaryUnit_mem_of_two_step
     (H : Subgroup (Matrix ι ι R)ˣ) (i j k : ι)
     (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) (a : R)
@@ -2803,6 +2877,7 @@ private theorem mem_finiteElementaryGenerators [DecidableEq R] (n : ℕ) (s : Fi
 variable [Algebra (ZMod 2) R]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def elementaryCoefficientSubalgebra (n : ℕ) (hn : 2 < n)
     (H : Subgroup (Matrix (Fin n) (Fin n) R)ˣ)
     (hunit : ∀ (i j : Fin n) (h : i ≠ j), elementaryUnit i j h (1 : R) ∈ H) :
@@ -2891,6 +2966,7 @@ private theorem elementaryGroup_three_finitelyGenerated
 end FiniteGeneration
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 abbrev binaryLeavittElementaryGroup (n : ℕ) : Type :=
   elementaryGroup (Fin n) BinaryLeavitt
 
@@ -2987,6 +3063,7 @@ private theorem completePrefixElementaryGroup_map
       completePrefixUnitEquiv_elementaryUnit E hcomplete i j hij a⟩
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def ninePrefixElementaryGroupEquiv :
     binaryLeavittElementaryGroup 9 ≃* prefixElementaryGroup ninePrefixCode :=
   ((completePrefixUnitEquiv ninePrefixCode ninePrefixCode_complete).subgroupMap
@@ -3139,6 +3216,7 @@ namespace SourceGeneration
 open scoped commutatorElement
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceGeneratedGroup : Subgroup BinaryLeavittˣ :=
   Subgroup.closure
     ((prefixElementaryGroup alphaPrefixCode : Set BinaryLeavittˣ) ∪
@@ -3794,6 +3872,7 @@ private theorem alphaPrefixElementaryUnit_eq_nine
         leavittWordT (nineWord (alphaNineIndex j))
   rw [nineWord_alphaNineIndex, nineWord_alphaNineIndex]
 
+public
 theorem alphaPrefixElementaryGroup_le_nine :
     prefixElementaryGroup alphaPrefixCode ≤
       prefixElementaryGroup ninePrefixCode := by
@@ -3847,11 +3926,13 @@ private theorem binaryLeavittEL3_finitelyGenerated :
     Group.FG (binaryLeavittElementaryGroup 3) :=
   elementaryGroup_three_finitelyGenerated
 
+public
 theorem binaryLeavittEL3_infinite :
     Infinite (binaryLeavittElementaryGroup 3) :=
   elementaryGroup_infinite (R := BinaryLeavitt)
     (0 : Fin 3) (1 : Fin 3) (by decide)
 
+public
 theorem alphaPrefixElementaryGroup_finitelyGenerated :
     Group.FG (prefixElementaryGroup alphaPrefixCode) := by
   let : Group.FG (binaryLeavittElementaryGroup 3) :=
@@ -3860,6 +3941,7 @@ theorem alphaPrefixElementaryGroup_finitelyGenerated :
     (f := alphaPrefixElementaryGroupEquiv.toMonoidHom)
     alphaPrefixElementaryGroupEquiv.surjective
 
+public
 theorem ninePrefixElementaryGroup_countable :
     Countable (prefixElementaryGroup ninePrefixCode) :=
   ninePrefixElementaryGroupEquiv.symm.injective.countable
@@ -3893,6 +3975,7 @@ private theorem midrankSecondMoment_eq (a : ℝ) (ps : List ℝ) :
       ring
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def midrankVariance (ps : List ℝ) : ℝ :=
   midrankSecondMoment 0 ps - (midrankFirstMoment 0 ps) ^ 2
 
@@ -3983,11 +4066,13 @@ private theorem weighted_midrank_dominant_mass_le {ι : Type*}
       rw [Finset.mul_sum]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def componentRankMass {V : Type*}
     (C : Finset V) (b : V → ℤ) (j : ℤ) : ℝ :=
   ((C.filter fun x => b x = j).card : ℝ) / (C.card : ℝ)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def componentVertexMidrank {V : Type*}
     (C : Finset V) (b : V → ℤ) (x : V) : ℝ :=
   (((C.filter fun z => b z < b x).card : ℝ) +
@@ -4049,6 +4134,7 @@ private theorem sum_componentRankMass {V : Type*}
   simp only [componentRankMass, ← Finset.sum_div]
   rw [hcard, div_self hne]
 
+public
 theorem componentVertexMidrank_nonneg {V : Type*}
     (C : Finset V) (b : V → ℤ) (x : V) :
     0 ≤ componentVertexMidrank C b x := by
@@ -4066,6 +4152,7 @@ private theorem component_lower_equal_disjoint
   have heq := (Finset.mem_filter.mp hzeq).2
   omega
 
+public
 theorem componentVertexMidrank_le_one {V : Type*}
     (C : Finset V) (b : V → ℤ) (x : V) :
     componentVertexMidrank C b x ≤ 1 := by
@@ -4138,6 +4225,7 @@ private theorem componentVertexMidrank_mono {V : Type*}
       linarith
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def componentRankMassList {V : Type*}
     (C : Finset V) (b : V → ℤ) : List ℝ :=
   ((C.image b).sort (· ≤ ·)).map (componentRankMass C b)
@@ -4180,6 +4268,7 @@ private theorem componentRankMassList_le_max {V : Type*}
   obtain ⟨k, hk, rfl⟩ := List.mem_map.mp hp
   exact hmax k (((C.image b).mem_sort (· ≤ ·)).mp hk)
 
+public
 theorem exists_maximal_componentRankMass
     {V : Type*}
     (C : Finset V) (b : V → ℤ) (hC : C.Nonempty) :
@@ -4205,6 +4294,7 @@ private theorem component_omitted_rank_card_eq
   unfold componentRankMass
   field_simp [hne]
 
+public
 theorem actual_weighted_midrank_dominant_mass_le
     {V ι : Type*}
     (I : Finset ι) (C : ι → Finset V) (b : V → ℤ) (j : ι → ℤ)
@@ -4253,6 +4343,7 @@ private theorem exists_maximum_overlap_component
     (fun D : Finset V => (C ∩ D).card)
     (Q.parts_nonempty hU.ne_empty)
 
+public
 theorem sum_card_component_inter_partition
     {V : Type u} [DecidableEq V] {U : Finset V}
     (Q : Finpartition U) (C : Finset V) (hCU : C ⊆ U) :
@@ -4261,6 +4352,7 @@ theorem sum_card_component_inter_partition
   simpa only [Finset.inter_comm, Finset.inter_eq_right.mpr hCU] using h
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def maximumOverlapPart
     {V : Type u} [DecidableEq V] {U : Finset V}
     (Q : Finpartition U) (C : Finset V) : Finset V := by
@@ -4268,6 +4360,7 @@ noncomputable def maximumOverlapPart
   exact if h : C.Nonempty ∧ C ⊆ U then
     (exists_maximum_overlap_component Q C h.1 h.2).choose else ∅
 
+public
 theorem maximumOverlapPart_mem
     {V : Type u} [DecidableEq V] {U : Finset V}
     (Q : Finpartition U) (C : Finset V)
@@ -4278,6 +4371,7 @@ theorem maximumOverlapPart_mem
   simpa only [maximumOverlapPart, dite_eq_left h] using
     (exists_maximum_overlap_component Q C hC hCU).choose_spec.1
 
+public
 theorem maximumOverlapPart_maximal
     {V : Type u} [DecidableEq V] {U : Finset V}
     (Q : Finpartition U) (C : Finset V)
@@ -4818,6 +4912,7 @@ private theorem compressionU_mem_ninePrefixElementaryGroup :
 
 end PrefixCompressionU
 
+public
 theorem compressionU_mem_ninePrefixElementaryGroup :
     compressionU ∈ prefixElementaryGroup ninePrefixCode :=
   PrefixCompressionU.compressionU_mem_ninePrefixElementaryGroup
@@ -5251,11 +5346,13 @@ private theorem compressionV_mem_of_compressionU
 
 end PrefixCompression
 
+public
 theorem compressionV_mem_ninePrefixElementaryGroup :
     compressionV ∈ prefixElementaryGroup ninePrefixCode :=
   PrefixCompression.compressionV_mem_of_compressionU
     compressionU_mem_ninePrefixElementaryGroup
 
+public
 theorem sourceGeneratedGroup_eq_nine :
     SourceGeneration.sourceGeneratedGroup =
       prefixElementaryGroup ninePrefixCode :=
@@ -5330,6 +5427,7 @@ private theorem exists_common_offset_below_average
   exact MeasureTheory.exists_le_setAverage hnezero hnetop hf
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def rankDropCount {ι : Type*} [Fintype ι]
     (u v : ι → ℝ) (H r : ℝ) : ℝ :=
   Finset.univ.sum (fun i : ι =>
@@ -5725,6 +5823,7 @@ namespace CheegerPoincare
 open scoped BigOperators
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def positiveSupport {V : Type*} [Fintype V]
     (f : V → ℝ) : Finset V := by
   classical
@@ -5737,6 +5836,7 @@ noncomputable def positiveSupport {V : Type*} [Fintype V]
   simp only [positiveSupport, Finset.mem_filter, Finset.mem_univ, true_and]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def finiteMean {V : Type*} [Fintype V] (f : V → ℝ) : ℝ :=
   (∑ x : V, f x) / (Fintype.card V : ℝ)
 
@@ -5750,6 +5850,7 @@ private theorem sum_sub_finiteMean_eq_zero {V : Type*} [Fintype V] [Nonempty V]
   field_simp
   ring
 
+public
 theorem sum_sq_sub_finiteMean_le {V : Type*} [Fintype V] [Nonempty V]
     (f : V → ℝ) (c : ℝ) :
     (∑ x : V, (f x - finiteMean f) ^ 2) ≤
@@ -5786,12 +5887,14 @@ theorem sum_sq_sub_finiteMean_le {V : Type*} [Fintype V] [Nonempty V]
     (mul_nonneg (Nat.cast_nonneg _) (sq_nonneg _))
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def lowerLevel {V : Type*} [Fintype V]
     (f : V → ℝ) (a : ℝ) : Finset V := by
   classical
   exact Finset.univ.filter fun x => f x < a
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def upperLevel {V : Type*} [Fintype V]
     (f : V → ℝ) (a : ℝ) : Finset V := by
   classical
@@ -5809,6 +5912,7 @@ noncomputable def upperLevel {V : Type*} [Fintype V]
   classical
   simp only [upperLevel, Finset.mem_filter, Finset.mem_univ, true_and]
 
+public
 theorem exists_finite_real_median {V : Type*} [Fintype V] [Nonempty V]
     (f : V → ℝ) :
     ∃ m : ℝ,
@@ -5893,6 +5997,7 @@ private theorem positive_max_iff (a : ℝ) : 0 < max a 0 ↔ 0 < a := by
   · rw [max_eq_right (le_of_not_gt ha)]
     simp only [lt_self_iff_false, ha]
 
+public
 theorem positiveSupport_max_sub {V : Type*} [Fintype V]
     (f : V → ℝ) (m : ℝ) :
     positiveSupport (fun x => max (f x - m) 0) = upperLevel f m := by
@@ -5901,6 +6006,7 @@ theorem positiveSupport_max_sub {V : Type*} [Fintype V]
   simp only [mem_positiveSupport, mem_upperLevel,
     positive_max_iff, sub_pos]
 
+public
 theorem positiveSupport_max_sub_reverse {V : Type*} [Fintype V]
     (f : V → ℝ) (m : ℝ) :
     positiveSupport (fun x => max (m - f x) 0) = lowerLevel f m := by
@@ -5910,9 +6016,11 @@ theorem positiveSupport_max_sub_reverse {V : Type*} [Fintype V]
     positive_max_iff, sub_pos]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def finiteVariance {V : Type*} [Fintype V] (f : V → ℝ) : ℝ :=
   (∑ x : V, (f x - finiteMean f) ^ 2) / (Fintype.card V : ℝ)
 
+public
 theorem finiteVariance_nonneg {V : Type*} [Fintype V]
     (f : V → ℝ) : 0 ≤ finiteVariance f := by
   unfold finiteVariance
@@ -5920,6 +6028,7 @@ theorem finiteVariance_nonneg {V : Type*} [Fintype V]
     (Finset.sum_nonneg (fun _ _ => sq_nonneg _))
     (Nat.cast_nonneg _)
 
+public
 theorem card_mul_finiteVariance {V : Type*} [Fintype V] [Nonempty V]
     (f : V → ℝ) :
     (Fintype.card V : ℝ) * finiteVariance f =
@@ -6180,6 +6289,7 @@ private theorem alphaZero_inf_localCylinderCorner_eq_bot :
 
 end ThompsonPrefixLocal
 
+public
 theorem target_majority_of_small_symmDiff
     {V : Type*} [DecidableEq V] (C D : Finset V)
     (hsmall : 2 * (C ∆ D).card < C.card) :
@@ -6194,12 +6304,14 @@ theorem target_majority_of_small_symmDiff
   omega
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def matchedRetainedFinpartition
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (R : Finset (Finset V))
     (hR : R ⊆ P.parts) : Finpartition (matchedRetainedSupport R) :=
   P.ofSubset hR (Finset.sup_eq_biUnion R id)
 
+public
 theorem matchedRetainedSupport_nonempty
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (R : Finset (Finset V))
@@ -6232,6 +6344,7 @@ private theorem partitionWordCrossing_indexed_sum_card_le_target_add_unmatched
           2 * I.card * (U \ matchedCore R D).card := by
       simp only [Finset.sum_add_distrib, Finset.sum_const, smul_eq_mul, mul_comm, mul_assoc]
 
+public
 theorem matchedRetainedSupport_cover_density_tendsto_one
     {V : ℕ → Type*} [∀ n, DecidableEq (V n)]
     (U : ∀ n, Finset (V n)) (hU : ∀ n, (U n).Nonempty)
@@ -6273,6 +6386,7 @@ theorem matchedRetainedSupport_cover_density_tendsto_one
   funext n
   exact hform n
 
+public
 theorem exists_matched_slow_diagonal_word_errors
     {V : ℕ → Type*} [∀ n, DecidableEq (V n)] {ι : Type*}
     (U : ∀ n, Finset (V n))
@@ -6399,11 +6513,13 @@ theorem exists_matched_slow_diagonal_word_errors
   exact ⟨r, hr, her⟩
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def matchedRadiusBad {V ι : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (I : Finset ι) (w : ι → Equiv.Perm V)
     (B : Finset V) : Finset V :=
   B ∪ I.biUnion fun i => partitionWordCrossing P (w i)
 
+public
 theorem matchedRadiusBad_card_le
     {V ι : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (I : Finset ι) (w : ι → Equiv.Perm V)
@@ -6425,6 +6541,7 @@ theorem matchedRadiusBad_card_le
     (s := I) (t := fun i => partitionWordCrossing P (w i))
   omega
 
+public
 theorem matched_exists_le_weighted_average {ι : Type*}
     (s : Finset ι) (hs : s.Nonempty) (weight bad : ι → ℝ)
     (hweight : ∀ i ∈ s, 0 < weight i) :
@@ -6439,6 +6556,7 @@ theorem matched_exists_le_weighted_average {ι : Type*}
   obtain ⟨i, hi, hbound⟩ := Finset.exists_le_of_sum_le hs havg
   exact ⟨i, hi, (div_le_iff₀ (hweight i hi)).2 hbound⟩
 
+public
 theorem matched_sum_card_inter_partition
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (B : Finset V) :
@@ -6459,6 +6577,7 @@ theorem matched_sum_card_inter_partition
       (Finset.card_biUnion hdis).symm
     _ = (U ∩ B).card := congrArg Finset.card hunion
 
+public
 theorem matchedRetained_bad_density_tendsto_zero
     {V : ℕ → Type*} [∀ n, DecidableEq (V n)]
     (U : ∀ n, Finset (V n)) (hU : ∀ n, (U n).Nonempty)
@@ -6524,6 +6643,7 @@ theorem matchedRetained_bad_density_tendsto_zero
       simpa only [mul_comm, mul_assoc] using
         (mul_le_mul_of_nonneg_left hmass (Nat.cast_nonneg (α := ℝ) (U n ∩ B n).card))
 
+public
 theorem matched_eventually_exists_good_vertex
     {V : ℕ → Type*} [∀ n, DecidableEq (V n)]
     (C B : ∀ n, Finset (V n)) (hC : ∀ n, (C n).Nonempty)
@@ -6806,6 +6926,7 @@ private theorem componentVertexMidrank_finiteMean_eq_half
     ComponentMidrankVariance.sum_componentVertexMidrank C b hC]
   field_simp
 
+public
 theorem componentVertexMidrank_finiteVariance_eq
     {V : Type*}
     (C : Finset V) (b : V → ℤ) (hC : C.Nonempty) :
@@ -6828,6 +6949,7 @@ theorem componentVertexMidrank_finiteVariance_eq
 end ComponentMidrankVariance
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def insufficientOverlapComponents
     {V : Type u} [DecidableEq V] {U : Finset V}
     (P Q : Finpartition U) (eta : ℝ) : Finset (Finset V) := by
@@ -6836,6 +6958,7 @@ noncomputable def insufficientOverlapComponents
     ((C ∩ maximumOverlapPart Q C).card : ℝ) <
       (1 - eta) * (C.card : ℝ)
 
+public
 theorem insufficientOverlapComponents_subset
     {V : Type u} [DecidableEq V] {U : Finset V}
     (P Q : Finpartition U) (eta : ℝ) :
@@ -6843,6 +6966,7 @@ theorem insufficientOverlapComponents_subset
   classical
   exact Finset.filter_subset _ _
 
+public
 theorem insufficientOverlapComponents_mass_le_loss
     {V : Type u} [DecidableEq V] {U : Finset V}
     (P Q : Finpartition U) (eta : ℝ) :
@@ -6902,6 +7026,7 @@ private theorem transportedFinpartition_parts
   exact Finset.map_eq_image (finsetPermutationOrderIso T).toEmbedding Q.parts
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def transportedUnivFinpartition
     {V : Type u} [Fintype V] [DecidableEq V]
     (Q : Finpartition (Finset.univ : Finset V))
@@ -6909,6 +7034,7 @@ noncomputable def transportedUnivFinpartition
   (transportedFinpartition Q T).copy (Finset.map_univ_equiv T)
 
 @[simp]
+public
 theorem transportedUnivFinpartition_parts
     {V : Type u} [Fintype V] [DecidableEq V]
     (Q : Finpartition (Finset.univ : Finset V))
@@ -6918,11 +7044,13 @@ theorem transportedUnivFinpartition_parts
   exact transportedFinpartition_parts Q T
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 noncomputable def partitionComponentSize
     {V : Type u} [DecidableEq V] {U : Finset V}
     (Q : Finpartition U) (x : V) : ℕ :=
   (Q.part x).card
 
+public
 theorem partitionComponentSize_eq_card_of_mem
     {V : Type u} [DecidableEq V] {U : Finset V}
     (Q : Finpartition U) (C : Finset V) (hC : C ∈ Q.parts)
@@ -6951,6 +7079,7 @@ private theorem partitionComponentSize_transport_lower_of_overlap
       exact_mod_cast Finset.card_le_card
         (Finset.inter_subset_right : (C.map T.toEmbedding) ∩ D ⊆ D)
 
+public
 theorem maximumOverlapPart_overlap_of_not_mem_insufficient
     {V : Type u} [DecidableEq V] {U : Finset V}
     (P Q : Finpartition U) (eta : ℝ) (C : Finset V)
@@ -6967,6 +7096,7 @@ theorem maximumOverlapPart_overlap_of_not_mem_insufficient
       (1 - eta) * (C.card : ℝ))
   exact Finset.mem_filter.mpr ⟨hC, hbad⟩
 
+public
 theorem partitionComponentSize_transport_lower_of_retained
     {V : Type u} [Fintype V] [DecidableEq V]
     (Q : Finpartition (Finset.univ : Finset V))
@@ -7019,6 +7149,7 @@ private theorem singletonPrefixCode_codeIdempotent (a : List (Fin 2)) :
     singletonPrefixCode, Finset.sum_const, Finset.card_singleton, one_smul, leavittCylinder]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def prefixInsertionHom (a : List (Fin 2)) :
     BinaryLeavittˣ →* BinaryLeavittˣ :=
   (prefixCornerUnitHom (singletonPrefixCode a)).comp
@@ -7026,6 +7157,7 @@ def prefixInsertionHom (a : List (Fin 2)) :
       (Matrix.uniqueRingEquiv (m := Fin 1)
         (A := BinaryLeavitt)).symm.toMulEquiv).toMonoidHom
 
+public
 theorem prefixInsertionHom_injective (a : List (Fin 2)) :
     Function.Injective (prefixInsertionHom a) :=
   (prefixCornerUnitHom_injective (singletonPrefixCode a)).comp
@@ -7068,6 +7200,7 @@ private theorem prefixInsertionHom_mem_cylinderCorner
         (A := BinaryLeavitt)).symm.toMulEquiv) u), ?_⟩
   rfl
 
+public
 theorem prefixInsertionHom_val (a : List (Fin 2)) (u : BinaryLeavittˣ) :
     (↑(prefixInsertionHom a u) : BinaryLeavitt) =
       leavittWordS a * (u : BinaryLeavitt) * leavittWordT a +
@@ -7105,6 +7238,7 @@ private theorem transpositionValue_mul_self {A : Type*} [Ring A]
   noncomm_ring [haa, hbb, hab, hba, haa', hbb', hab', hba']
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def cylinderSwap (a b : List (Fin 2))
     (hab : ¬ a <+: b) (hba : ¬ b <+: a) : BinaryLeavittˣ where
   val := PrefixCompression.wordSwapValue a b
@@ -7407,6 +7541,7 @@ private theorem sourceLocal_cylinderSwap_mem_alpha
   simpa only [alphaPrefixCode, Fin.isValue, List.cons_append, List.nil_append, alphaWord] using h
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def binaryPrefixTranspositionGroup : Subgroup BinaryLeavittˣ :=
   Subgroup.closure
     {z | ∃ (a b : List (Fin 2))
@@ -7414,6 +7549,7 @@ def binaryPrefixTranspositionGroup : Subgroup BinaryLeavittˣ :=
       cylinderSwap a b hab hba = z}
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def localPrefixTranspositionGroup
     (l : List (Fin 2)) : Subgroup BinaryLeavittˣ :=
   binaryPrefixTranspositionGroup.map (prefixInsertionHom l)
@@ -7439,6 +7575,7 @@ private theorem sourceLocalPrefixTranspositionGroup_le_alpha :
   rintro _ ⟨a, b, hab, hba, rfl⟩
   exact sourceLocal_cylinderSwap_mem_alpha a b hab hba
 
+public
 theorem sourceLocalPrefixTranspositionGroup_le_alpha_sourceWord :
     localPrefixTranspositionGroup [0, 0, 0, 1] ≤
       prefixElementaryGroup alphaPrefixCode := by
@@ -7475,6 +7612,7 @@ private theorem alphaZero_inf_sourceLocalPrefixTranspositionGroup_eq_bot :
   · exact bot_le
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceCompressedLocalProductHom :
     (prefixElementaryGroup alphaZeroPrefixCode ×
       localPrefixTranspositionGroup [0, 0, 0, 1]) →*
@@ -7545,6 +7683,7 @@ private theorem sourceCompressedLocalProductHom_range_le_nine :
     (sourceLocalPrefixTranspositionGroup_le_nine j.property)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def sourceCompressedLocalProductEmbedding :
     (prefixElementaryGroup alphaZeroPrefixCode ×
       localPrefixTranspositionGroup [0, 0, 0, 1]) →*
@@ -7553,6 +7692,7 @@ def sourceCompressedLocalProductEmbedding :
     (prefixElementaryGroup ninePrefixCode)
     (fun x => sourceCompressedLocalProductHom_range_le_nine ⟨x, rfl⟩)
 
+public
 theorem sourceCompressedLocalProductEmbedding_injective :
     Function.Injective sourceCompressedLocalProductEmbedding := by
   intro x y hxy
@@ -7564,19 +7704,23 @@ end ThompsonPrefixInsertion
 namespace MidrankPermutationEnergy
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def partitionVertexMidrank {V : Type*} [DecidableEq V]
     {U : Finset V} (P : Finpartition U) (b : V → ℤ) (x : V) : ℝ :=
   componentVertexMidrank (P.part x) b x
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def rankDecreasingVertices {V : Type*}
     (U : Finset V) (b : V → ℤ) (p : Equiv.Perm V) : Finset V :=
   U.filter (fun x => b (p x) < b x)
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def offsetFloorRank {V : Type*} (u : V → ℝ) (H r : ℝ) : V → ℤ :=
   fun x => ⌊(u x + r) / H⌋
 
+public
 theorem rankDropCount_eq_sum_rankDecreasingVertices
     {V ι : Type*} [Fintype V] [Fintype ι]
     (u : V → ℝ) (p : ι → Equiv.Perm V) (H r : ℝ) :
@@ -7691,6 +7835,7 @@ private theorem sum_partitionVertexMidrank_permutation_energy_le
             ((rankDecreasingVertices Finset.univ b (p i)).card : ℝ)) := by
             rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
 
+public
 theorem partitionVertexMidrank_permutation_energy_tendsto_zero
     (V ι : ℕ → Type*)
     [∀ n, Fintype (V n)] [∀ n, DecidableEq (V n)]
@@ -7775,12 +7920,14 @@ namespace RankArcCharging
 open scoped BigOperators
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def selectedRankSupport
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (b : V → ℤ) (j : Finset V → ℤ) : Finset V :=
   P.parts.biUnion (fun C => C.filter (fun x => b x = j C))
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def rankChangingArc
     {V : Type*}
     (U : Finset V) (b : V → ℤ) (w : Equiv.Perm V) : Finset V :=
@@ -7810,6 +7957,7 @@ private theorem selectedRankSupport_card
   exact (P.disjoint hC hD hne).mono
     (Finset.filter_subset _ _) (Finset.filter_subset _ _)
 
+public
 theorem card_sdiff_selectedRankSupport
     {V : Type*} [DecidableEq V] {U : Finset V}
     (P : Finpartition U) (b : V → ℤ) (j : Finset V → ℤ) :
@@ -7891,6 +8039,7 @@ private theorem rankChangingArc_card_le_crossing_add_unselected
     U (selectedRankSupport P b j) w
   omega
 
+public
 theorem rankChangingArc_density_tendsto_zero
     (V : ℕ → Type*) [∀ n, DecidableEq (V n)]
     (U : ∀ n, Finset (V n))
@@ -7952,11 +8101,13 @@ theorem rankChangingArc_density_tendsto_zero
 end RankArcCharging
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def permutationDistance {V : Type*} [Fintype V] [DecidableEq V]
     (p q : Equiv.Perm V) : ℕ :=
   hammingDist (fun x => p x) (fun x => q x)
 
 @[simp]
+public
 theorem permutationDistance_self {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) : permutationDistance p p = 0 := by
   simp only [permutationDistance, hammingDist_self]
@@ -8021,6 +8172,7 @@ private theorem permutationDistance_inv {V : Type*}
     _ = permutationDistance p q := permutationDistance_comm q p
 
 @[simp]
+public
 theorem permutationCommutationDefect_one {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) :
@@ -8107,6 +8259,7 @@ private theorem permutationCommutationDefect_mul_le {V ι : Type*}
     _ = Bp.card + Bq.card := by rw [hC, Nat.add_comm]
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure AlmostCentralizerElement {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (tolerance : ℕ) where
@@ -8240,6 +8393,7 @@ private theorem almostCentralizerCluster_eq_iff {V ι : Type*}
   exact Quotient.eq
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure AlmostCentralizerRepair {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (tolerance : ℕ) where
@@ -8254,6 +8408,7 @@ structure AlmostCentralizerRepair {V ι : Type*}
       (p.permutation * q.permutation) ≤ Fintype.card V
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure HasAlmostCentralizerImprovement {V ι : Type*}
     [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (tolerance : ℕ) : Prop where
@@ -8484,6 +8639,7 @@ private def almostCentralizerClusterGroup {V ι : Type*}
         R.corrected_distance (almostCentralizerInverse p) p
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure ExpandingCentralizerFiniteModel (G : Type*) [Group G]
     (F : Finset G) where
   /-- Internal interface connecting the split non-sofic proof modules. -/
@@ -8538,6 +8694,7 @@ private instance expandingCentralizerFiniteModelGeneratorFintype
   M.generatorFintype
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def expandingCentralizerFiniteModelOfImprovement
     {G : Type*} [Group G] (F : Finset G)
     {V ι : Type} [Fintype V] [DecidableEq V] [Fintype ι]
@@ -8667,6 +8824,7 @@ private theorem exists_permutation_embedding_of_expanding_centralizer
     change ρ (f (x * y)) = ρ (f x) * ρ (f y)
     rw [hmul x hx y hy, map_mul]
 
+public
 theorem lef_of_expanding_centralizer_models {G : Type*} [Group G]
     (hmodels : ∀ F : Finset G,
       Nonempty (ExpandingCentralizerFiniteModel G F)) : LEF G := by
@@ -8761,6 +8919,7 @@ private theorem exists_positive_antitone_slow_vanishing_threshold
   exact squeeze_zero (fun n => div_nonneg (he_nonneg n) (heta_pos n).le)
     hratio_bound heta_zero
 
+public
 theorem exists_positive_antitone_slow_overlap_scales
     (e : ℕ → ℝ) (he_nonneg : ∀ n, 0 ≤ e n)
     (he : Tendsto e atTop (nhds 0)) :
@@ -8896,6 +9055,7 @@ private theorem exists_common_log_rank_offset_except
         (((Finset.univ : Finset ι) \ G).card : ℝ) :=
         add_le_add hbound' (le_refl _)
 
+public
 theorem exists_common_log_rank_offsets_tendsto_zero_except
     (ι : ℕ → Type*)
     [∀ n, Fintype (ι n)] [∀ n, DecidableEq (ι n)]
@@ -9060,6 +9220,7 @@ private theorem elementaryGroup_map_eq_of_surjective
 end ElementaryRingQuotient
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def binaryPrefixElementaryGroupEquiv
     {ι : Type u} [Fintype ι] [DecidableEq ι]
     (E : BinaryPrefixCode ι) :
@@ -9072,6 +9233,7 @@ namespace CompressionCriterion
 
 open Filter Topology
 
+public
 theorem normalizedHamming_distinct_tendsto
     {G : Type*} [Group G]
     (A : SoficApproximation G)
@@ -9124,17 +9286,20 @@ theorem normalizedHamming_distinct_tendsto
     exact normalizedHamming_le_one _ _
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def productTrackedTable {J : Type*} [Group J]
     (F : Finset J) : Finset J := by
   classical
   exact multiplicationTable (insert 1 F)
 
+public
 theorem one_mem_productTrackedTable {J : Type*} [Group J]
     (F : Finset J) : 1 ∈ productTrackedTable F := by
   classical
   exact mem_multiplicationTable_of_mem
     (Finset.mem_insert_self 1 F)
 
+public
 theorem mem_productTrackedTable {J : Type*} [Group J]
     {F : Finset J} {j : J} (hj : j ∈ F) :
     j ∈ productTrackedTable F := by
@@ -9142,6 +9307,7 @@ theorem mem_productTrackedTable {J : Type*} [Group J]
   exact mem_multiplicationTable_of_mem
     (Finset.mem_insert_of_mem hj)
 
+public
 theorem mul_mem_productTrackedTable {J : Type*} [Group J]
     {F : Finset J} {x y : J} (hx : x ∈ F) (hy : y ∈ F) :
     x * y ∈ productTrackedTable F := by
@@ -9152,10 +9318,12 @@ theorem mul_mem_productTrackedTable {J : Type*} [Group J]
 end CompressionCriterion
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def permutationGraph {V : Type*} [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) : Finset (V × V) :=
   Finset.univ.image fun x => (x, p x)
 
+public
 theorem mem_permutationGraph {V : Type*}
     [Fintype V] [DecidableEq V]
     (p : Equiv.Perm V) (x y : V) :
@@ -9163,6 +9331,7 @@ theorem mem_permutationGraph {V : Type*}
   simp only [permutationGraph, Finset.mem_image, Finset.mem_univ, eq_comm, Prod.mk.injEq, true_and,
     exists_eq_left']
 
+public
 theorem boundary_permutationGraph_eq_commutationDefect
     {V ι : Type*} [Fintype V] [Fintype ι] [DecidableEq V]
     (σ : ι → Equiv.Perm V) (p : Equiv.Perm V) :
@@ -9200,6 +9369,7 @@ theorem boundary_permutationGraph_eq_commutationDefect
       (mem_permutationGraph p (σ i x) (σ i (p x))).mp hgraph
     exact hbad hcommute.symm
 
+public
 theorem kazhdan_generator_displacement
     {G : Type u} {H : Type v} [Group G]
     [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
@@ -9243,12 +9413,14 @@ namespace ThompsonPrefixInsertion
 open scoped commutatorElement
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 structure PrefixWordAction (g : BinaryLeavittˣ)
     (a b : List (Fin 2)) : Prop where
   prefixing : (↑g : BinaryLeavitt) * leavittWordS a = leavittWordS b
   deletion :
     leavittWordT a * (↑(g⁻¹) : BinaryLeavitt) = leavittWordT b
 
+public
 theorem prefixWordAction_append
     {g : BinaryLeavittˣ} {a b : List (Fin 2)}
     (h : PrefixWordAction g a b) (r : List (Fin 2)) :
@@ -9257,6 +9429,7 @@ theorem prefixWordAction_append
   · rw [leavittWordS_append, leavittWordS_append, ← mul_assoc, h.prefixing]
   · rw [leavittWordT_append, leavittWordT_append, mul_assoc, h.deletion]
 
+public
 theorem prefixWordAction_mul
     {g h : BinaryLeavittˣ} {a b c : List (Fin 2)}
     (hg : PrefixWordAction g b c)
@@ -9362,6 +9535,7 @@ private theorem cylinderSwap_prefixWordAction_fixed
     unfold PrefixCompression.transpositionValue
     noncomm_ring [hwa', hwb', hwa'', hwb'']
 
+public
 theorem prefixInsertionHom_conjugate_of_prefixWordAction
     (g : BinaryLeavittˣ) (a b : List (Fin 2))
     (h : PrefixWordAction g a b) (u : BinaryLeavittˣ) :
@@ -9400,6 +9574,7 @@ theorem prefixInsertionHom_conjugate_of_prefixWordAction
           (1 - leavittWordS b * leavittWordT b) := by
           rw [h.prefixing, h.deletion, hunit]
 
+public
 theorem prefixInsertionHom_mem_binaryPrefixTranspositionGroup
     (a : List (Fin 2)) (u : BinaryLeavittˣ)
     (hu : u ∈ binaryPrefixTranspositionGroup) :
@@ -9519,6 +9694,7 @@ private theorem elementaryBlockGroup_map [Nontrivial ι] :
     · exact hcross i j hij k l a
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def elementaryBlockGroupEquiv [Nontrivial ι] :
     elementaryGroup ι (Matrix κ κ R) ≃*
       elementaryGroup (ι × κ) R :=
@@ -9579,6 +9755,7 @@ private theorem elementaryReindexGroup_map (e : ι ≃ κ) :
       elementaryReindexUnitEquiv_elementaryUnit e (e.symm k) (e.symm l) hij a
 
 /-- Internal interface connecting the split non-sofic proof modules. -/
+public
 def elementaryReindexGroupEquiv (e : ι ≃ κ) :
     elementaryGroup ι R ≃* elementaryGroup κ R :=
   ((elementaryReindexUnitEquiv (R := R) e).subgroupMap
@@ -9662,6 +9839,7 @@ private theorem binaryLeavittElementaryThree_hasPropertyT_of_nine
     HasPropertyT.{0, v} (binaryLeavittElementaryGroup 3) :=
   hasPropertyT_of_mulEquiv binaryLeavittElementaryThreeEquivNine.symm
 
+public
 theorem alphaPrefixElementaryGroup_hasPropertyT_of_nine
     [HasPropertyT.{0, v} (binaryLeavittElementaryGroup 9)] :
     HasPropertyT.{0, v} (prefixElementaryGroup alphaPrefixCode) := by
@@ -9669,6 +9847,7 @@ theorem alphaPrefixElementaryGroup_hasPropertyT_of_nine
     binaryLeavittElementaryThree_hasPropertyT_of_nine
   exact hasPropertyT_of_mulEquiv alphaPrefixElementaryGroupEquiv
 
+public
 theorem alphaZeroPrefixElementaryGroup_hasPropertyT_of_nine
     [HasPropertyT.{0, v} (binaryLeavittElementaryGroup 9)] :
     HasPropertyT.{0, v} (prefixElementaryGroup alphaZeroPrefixCode) := by
@@ -9683,6 +9862,7 @@ namespace ThompsonFiniteGeneration
 
 open ThompsonPrefixInsertion
 
+public
 theorem cylinderSwap_prefixWordAction_of_cases
     {a b w v : List (Fin 2)}
     (hab : ¬ a <+: b) (hba : ¬ b <+: a)
