@@ -50,6 +50,63 @@ projects:
       - erdos-rankin
     msc:
       - "11N05"
+  - slug: metric-codes
+    title: Improved asymptotic bounds for binary and spherical codes
+    summary: >-
+      Formalizes asymptotic coding bounds obtained from multilevel harmonic
+      analysis, branching rules, and spectral decompositions. The development
+      proves a binary-code exponent strictly below the MRRW rate, constructs a
+      strict hierarchy of spherical-code bounds, and derives the published
+      0.39661 asymptotic kissing-number exponent. This import incorporates
+      substantial proof and performance optimizations by Dean Cureton.
+    branch: coding theory and discrete geometry
+    entry_module: LeanPool.MetricCodes
+    authors:
+      - OpenAI
+      - Dean Cureton
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs/tree/94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - MetricCodes.Johnson.main_binary_theorem
+    main_results:
+      - declaration: MetricCodes.Johnson.main_binary_theorem
+        informal: >-
+          For every relative distance strictly between zero and one half, the
+          combined variational upper bound on the asymptotic binary-code rate is
+          valid and is strictly smaller than the MRRW rate.
+      - declaration: MetricCodes.Spherical.HigherHierarchy.main_general
+        informal: >-
+          Every feasible finite interlacing certificate gives an eventual
+          exponential upper bound for spherical codes, while the spherical-code
+          rate is bounded by the closed hierarchy's variational rate.
+      - declaration: MetricCodes.Spherical.HigherHierarchy.strict_hierarchy
+        informal: >-
+          At every angle parameter strictly between zero and one, successive
+          levels of both the global and localized hierarchies improve strictly,
+          with the localized hierarchy also strictly improving the row and
+          classical bounds.
+      - declaration: MetricCodes.Spherical.HigherHierarchy.NumericalMaximum.eventually_kissingNumber_lt_published
+        informal: >-
+          In all sufficiently large dimensions, the kissing number is at most
+          2 raised to 0.39661 times the dimension.
+    tags:
+      - coding-theory
+      - spherical-codes
+      - kissing-number
+      - harmonic-analysis
+      - asymptotic-bounds
+    msc:
+      - "94B65"
+      - "52C17"
+      - "41A60"
   - slug: zeta-zeros
     title: Simple zeros of the Riemann zeta function
     summary: >-
