@@ -15,12 +15,6 @@ namespace Feige
 
 noncomputable section
 
-/-- The nonnegativity condition on an augmented two-point parameter. -/
-def AugmentedParamNonnegative (p : AugmentedTwoPointParams) : Prop :=
-  match p with
-  | Sum.inl _ => True
-  | Sum.inr q => 0 ≤ q.1.1 ∧ 1 < q.1.2
-
 theorem measurableSet_augmentedParamNonnegative :
     MeasurableSet {p : AugmentedTwoPointParams |
       AugmentedParamNonnegative p} := by
@@ -33,12 +27,6 @@ theorem measurableSet_augmentedParamNonnegative :
       (measurable_fst.comp measurable_subtype_coe)).inter
       (measurableSet_lt measurable_const
         (measurable_snd.comp measurable_subtype_coe))
-
-theorem augmentedParamsNonnegative_iff {n : ℕ}
-    (p : Fin n → AugmentedTwoPointParams) :
-    AugmentedParamsNonnegative p ↔
-      ∀ i, AugmentedParamNonnegative (p i) := by
-  rfl
 
 theorem measurableSet_augmentedParamsNonnegative (n : ℕ) :
     MeasurableSet {p : Fin n → AugmentedTwoPointParams |

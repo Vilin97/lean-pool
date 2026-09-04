@@ -139,18 +139,4 @@ theorem iIndepFun_canonicalTwoPointPiVector {m : ℕ}
     hcoord.comp
       (fun i b ↦ if b then highValue (β i) else lowValue (γ i)) hmap
 
-/-- The finite two-point calibration bound as an actual event probability. -/
-theorem highSetProbability_rejection_le_of_localInsertion {m : ℕ}
-    (γ β : Fin m → ℝ)
-    (hγ : ∀ i, 0 ≤ γ i) (hβ : ∀ i, 0 < β i)
-    (hinsert : LocalInsertionDominance γ β
-      (twoPointHighProbability γ β) hγ (fun i ↦ (hβ i).le))
-    {α : ℝ} (hα : 0 ≤ α) :
-    (highSetMeasure (twoPointHighProbability γ β)
-      (twoPointHighProbability_nonneg (hγ := hγ) (hβ := hβ))
-      (twoPointHighProbability_le_one (hγ := hγ) (hβ := hβ))).real
-        (twoPointRejectionEvent γ β α) ≤ α := by
-  rw [highSetMeasure_rejectionEvent γ β hγ hβ α]
-  exact twoPoint_rejection_le_of_localInsertion γ β hγ hβ hinsert hα
-
 end Feige

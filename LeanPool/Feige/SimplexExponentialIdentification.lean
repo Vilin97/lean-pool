@@ -247,18 +247,8 @@ theorem map_expProductMeasure_to_realOption :
     (fun _ : Option (Fin n) ↦ NNReal.continuous_coe.measurable.aemeasurable)]
   simp only [map_nnexpMeasure_coe]
 
-/-- Split an optional-indexed vector into its distinguished and finite parts. -/
-def realOptionToProduct
-    (e : Option (Fin n) → ℝ) : ℝ × (Fin n → ℝ) :=
-  (e none, fun i ↦ e (some i))
-
-theorem measurable_realOptionToProduct :
-    Measurable (realOptionToProduct (n := n)) := by
-  unfold realOptionToProduct
-  fun_prop
-
 theorem map_realOptionProductMeasure :
-    Measure.map (realOptionToProduct (n := n))
+    Measure.map (optionVectorToProduct (n := n))
         (Measure.pi (fun _ : Option (Fin n) ↦ expMeasure 1)) =
       (expMeasure 1).prod
         (Measure.pi (fun _ : Fin n ↦ expMeasure 1)) := by
@@ -277,17 +267,17 @@ theorem map_realOptionProductMeasure :
     simpa [q] using
       (Measure.pi_map_piOptionEquivProd
         (fun _ : Option (Fin n) ↦ expMeasure 1)).symm
-  rw [show realOptionToProduct (n := n) = Prod.swap ∘ q by rfl]
+  rw [show optionVectorToProduct (n := n) = Prod.swap ∘ q by rfl]
   rw [← Measure.map_map measurable_swap q.measurable]
   rw [hq, Measure.prod_swap]
 
 theorem map_expProductMeasure_to_realProduct :
     Measure.map
-        (realOptionToProduct (n := n) ∘
+        (optionVectorToProduct (n := n) ∘
           nnrealOptionToRealOption (n := n))
         (expProductMeasure (Fin n)) =
       realExponentialProductMeasure (n := n) := by
-  rw [← Measure.map_map measurable_realOptionToProduct
+  rw [← Measure.map_map measurable_optionVectorToProduct
     measurable_nnrealOptionToRealOption]
   rw [map_expProductMeasure_to_realOption,
     map_realOptionProductMeasure,
@@ -380,7 +370,7 @@ theorem mem_kEvent_iff_normalized_simplex_event
 theorem normalizedCoordinates_realProduct_comp
     (e : Option (Fin n) → NNReal) :
     normalizedExponentialCoordinates
-        (realOptionToProduct (nnrealOptionToRealOption e)) =
+        (optionVectorToProduct (nnrealOptionToRealOption e)) =
       nnrealNormalizedCoordinates e := by
   rfl
 
@@ -423,12 +413,12 @@ theorem map_expProductMeasure_normalizedCoordinates :
         (expProductMeasure (Fin n)) =
       Measure.map (normalizedExponentialCoordinates (n := n))
         (Measure.map
-          (realOptionToProduct (n := n) ∘
+          (optionVectorToProduct (n := n) ∘
             nnrealOptionToRealOption (n := n))
           (expProductMeasure (Fin n))) := by
             rw [Measure.map_map
               measurable_normalizedExponentialCoordinates
-              (measurable_realOptionToProduct.comp
+              (measurable_optionVectorToProduct.comp
                 measurable_nnrealOptionToRealOption)]
             apply Measure.map_congr
             filter_upwards [] with e

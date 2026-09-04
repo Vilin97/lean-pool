@@ -32,15 +32,18 @@ def augmentedBeta (p : AugmentedTwoPointParams) : ℝ :=
   | Sum.inl _ => 1
   | Sum.inr q => q.1.2 - 1
 
+/-- The nonnegativity condition on an augmented two-point parameter. -/
+def AugmentedParamNonnegative (p : AugmentedTwoPointParams) : Prop :=
+  match p with
+  | Sum.inl _ => True
+  | Sum.inr q => 0 ≤ q.1.1 ∧ 1 < q.1.2
+
 /-- The condition enjoyed by latent parameters sampled from a
 nonnegative mean-one law: genuine lower support points are nonnegative and
 genuine upper support points are strictly above one. -/
 def AugmentedParamsNonnegative {n : ℕ}
     (p : Fin n → AugmentedTwoPointParams) : Prop :=
-  ∀ i,
-    match p i with
-    | Sum.inl _ => True
-    | Sum.inr q => 0 ≤ q.1.1 ∧ 1 < q.1.2
+  ∀ i, AugmentedParamNonnegative (p i)
 
 theorem augmentedGamma_nonneg {n : ℕ}
     {p : Fin n → AugmentedTwoPointParams} :

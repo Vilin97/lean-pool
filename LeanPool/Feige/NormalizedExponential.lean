@@ -243,6 +243,12 @@ def optionVectorToProduct (v : Option (Fin n) → ℝ) :
     ℝ × (Fin n → ℝ) :=
   (v none, fun i ↦ v (some i))
 
+/-- The optional-coordinate identification is measurable. -/
+theorem measurable_optionVectorToProduct :
+    Measurable (optionVectorToProduct (n := n)) := by
+  unfold optionVectorToProduct
+  fun_prop
+
 /-- The inverse coordinate identification. -/
 def productToOptionVector (z : ℝ × (Fin n → ℝ)) :
     Option (Fin n) → ℝ
