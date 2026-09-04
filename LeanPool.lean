@@ -4069,6 +4069,7 @@ import LeanPool.Wallace
 import LeanPool.Wallace.BlockFilters
 import LeanPool.Wallace.BlockLimit
 import LeanPool.Wallace.BoundedIndependentMap
+import LeanPool.Wallace.CoefficientTransfiniteExtension
 import LeanPool.Wallace.ConcreteClosure
 import LeanPool.Wallace.ConcreteData
 import LeanPool.Wallace.ConcreteFusionRun
