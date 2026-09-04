@@ -3191,6 +3191,7 @@ import LeanPool.PentagonalNumberTheorem.Generic
 import LeanPool.PentagonalNumberTheorem.Old
 import LeanPool.PentagonalNumberTheorem.Partition
 import LeanPool.PentagonalNumberTheorem.PowerSeries
+import LeanPool.PermanentFormulaLowerBound
 import LeanPool.PhaseRetrieval
 import LeanPool.PhaseRetrieval.Constant
 import LeanPool.PhaseRetrieval.Constant.Internal.AnnulusLocalEstimate
