@@ -523,8 +523,8 @@ private noncomputable def boundedDependentRecordFold_totalTrace
       have hbudget := boundedFold_malformedTotalBudget_le
         computer bound input.length
       have htotal := rebound hphysical hbudget
-      convert htotal using 1 ;
-        simp [boundedRecordFoldOutput, hparse] ; rfl
+      convert htotal using 1;
+        simp [boundedRecordFoldOutput, hparse]; rfl
   | some parsed =>
       obtain ⟨count, seed⟩ := parsed
       have hinput := parseUnaryBoundedFold_eq_word
