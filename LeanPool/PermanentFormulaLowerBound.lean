@@ -65,7 +65,7 @@ Tags: algebraic-complexity, arithmetic-formulas, permanent, lower-bounds, transc
 MSC: 68Q17, 68Q25, 15A15
 -/
 
-@[expose] public section
+section
 
 namespace PermanentFormulaLowerBound
 
@@ -138,7 +138,7 @@ private theorem trdeg_intermediateField_le_of_adjoin_card_le
 end TranscendenceBounds
 
 /-- A rational arithmetic formula with variables indexed by `ι` and constants in `R`. -/
-inductive RationalFormula (ι : Type u) (R : Type v) where
+public inductive RationalFormula (ι : Type u) (R : Type v) where
   | var : ι → RationalFormula ι R
   | const : R → RationalFormula ι R
   | add : RationalFormula ι R → RationalFormula ι R → RationalFormula ι R
@@ -151,7 +151,7 @@ namespace RationalFormula
 variable {ι : Type u} {R : Type v}
 
 /-- Evaluates a rational formula in the fraction field of multivariate polynomials. -/
-noncomputable def eval [Field R] :
+@[expose] public noncomputable def eval [Field R] :
     RationalFormula ι R → FractionRing (MvPolynomial ι R)
   | .var i =>
       algebraMap (MvPolynomial ι R) (FractionRing (MvPolynomial ι R))
@@ -165,7 +165,7 @@ noncomputable def eval [Field R] :
   | .div f g => eval f / eval g
 
 /-- A rational formula is valid when every divisor occurring in it evaluates to a nonzero value. -/
-inductive Valid [Field R] : RationalFormula ι R → Prop where
+public inductive Valid [Field R] : RationalFormula ι R → Prop where
   | var (i : ι) : Valid (.var i)
   | const (c : R) : Valid (.const c)
   | add {f g : RationalFormula ι R} : Valid f → Valid g → Valid (.add f g)
@@ -175,7 +175,7 @@ inductive Valid [Field R] : RationalFormula ι R → Prop where
       Valid f → Valid g → eval g ≠ 0 → Valid (.div f g)
 
 /-- The total number of variable and constant leaves in a rational formula. -/
-def leafCount : RationalFormula ι R → ℕ
+@[expose] public def leafCount : RationalFormula ι R → ℕ
   | .var _ => 1
   | .const _ => 1
   | .add f g => leafCount f + leafCount g
@@ -184,7 +184,7 @@ def leafCount : RationalFormula ι R → ℕ
   | .div f g => leafCount f + leafCount g
 
 /-- The number of variable leaves in a rational formula. -/
-def variableLeaves : RationalFormula ι R → ℕ
+@[expose] public def variableLeaves : RationalFormula ι R → ℕ
   | .var _ => 1
   | .const _ => 0
   | .add f g => variableLeaves f + variableLeaves g
@@ -201,7 +201,7 @@ private def blockLeaves [DecidableEq ι] (s : Finset ι) : RationalFormula ι R 
   | .div f g => blockLeaves s f + blockLeaves s g
 
 /-- The number of arithmetic-operation gates in a rational formula. -/
-def internalGateCount : RationalFormula ι R → ℕ
+@[expose] public def internalGateCount : RationalFormula ι R → ℕ
   | .var _ => 0
   | .const _ => 0
   | .add f g => internalGateCount f + internalGateCount g + 1
@@ -210,7 +210,7 @@ def internalGateCount : RationalFormula ι R → ℕ
   | .div f g => internalGateCount f + internalGateCount g + 1
 
 /-- The total number of vertices in the syntax tree of a rational formula. -/
-def vertexCount : RationalFormula ι R → ℕ
+@[expose] public def vertexCount : RationalFormula ι R → ℕ
   | .var _ => 1
   | .const _ => 1
   | .add f g => vertexCount f + vertexCount g + 1
@@ -514,7 +514,7 @@ end RationalSkeletonInduction
 end RationalFormula
 
 /-- The generic `n`-by-`n` permanent polynomial over the complex numbers. -/
-noncomputable def permanentPolynomial (n : ℕ) :
+@[expose] public noncomputable def permanentPolynomial (n : ℕ) :
     MvPolynomial (Fin n × Fin n) ℂ :=
   (Matrix.mvPolynomialX (Fin n) (Fin n) ℂ).permanent
 
@@ -6277,7 +6277,7 @@ private theorem permanent_rational_formula_fourth_power_lower_bound
   simpa only [ge_iff_le] using hfour
 
 /-- Simultaneous size lower bounds for rational formulas computing the permanent. -/
-theorem permanent_rational_formula_lower_bound
+public theorem permanent_rational_formula_lower_bound
     {n : ℕ} (hn : 32 ≤ n)
     (f : RationalFormula (Fin n × Fin n) ℂ)
     (hvalid : RationalFormula.Valid f)
@@ -6298,7 +6298,7 @@ theorem permanent_rational_formula_lower_bound
 
 /-- Any valid rational formula computing the `n`-by-`n` permanent has at least
 `n ^ 4 / (192 * logb 2 n)` variable leaves when `32 ≤ n`. -/
-theorem permanent_rational_formula_logarithmic_lower_bound
+public theorem permanent_rational_formula_logarithmic_lower_bound
     {n : ℕ} (hn : 32 ≤ n)
     (f : RationalFormula (Fin n × Fin n) ℂ)
     (hvalid : RationalFormula.Valid f)
