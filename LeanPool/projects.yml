@@ -7138,6 +7138,67 @@ projects:
       - "11D41"
       - "11R18"
       - "11R29"
+  - slug: feige
+    title: Feige's sharp unit-slack inequality
+    summary: >-
+      For small-universe probability spaces, proves the sharp fixed-dimensional
+      unit-slack lower bound for sums of independent nonnegative random
+      variables: if each coordinate has mean at most one, then the probability
+      that the sum lies below its mean plus one is at least (n/(n+1))^n, and
+      this constant is optimal. The supporting library formalizes the
+      Vlassis--Thomas exact distribution-free calibration theorem, Grünbaum's
+      centroid-halfspace inequality and sharp simplex example, and the
+      normalized-exponential bridge joining them.
+    branch: probability theory and convex geometry
+    entry_module: LeanPool.Feige
+    authors:
+      - Zhengqing Zhou
+    source:
+      title: >-
+        Sharp Small-Deviation Inequalities for Sums of Independent
+        Nonnegative Random Variables
+      authors:
+        - Weibo Fu
+        - Yanjun Han
+        - Guanyang Wang
+        - Jun Yan
+        - Peng Zhang
+        - Zhengqing Zhou
+      arxiv: "2607.23980"
+      github_repo: pengzhang91/Feige
+      commit: 98ab466e74280ae9d40622c19dc7f24f01b60864
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Feige.sharp_unit_slack_feige_complete
+    main_results:
+      - declaration: Feige.sharp_unit_slack_feige_complete
+        informal: >-
+          For every positive dimension n and every small-universe probability
+          space, the sharp fixed-dimensional lower bound for the strict event
+          that a sum of independent nonnegative random variables is below its
+          expectation plus one is (n/(n+1))^n, and an explicit finite family
+          proves optimality.
+      - declaration: VlassisThomas.exactCalibration
+        informal: >-
+          On every small-universe probability space, the Dirichlet statistic
+          used in the proof is super-uniform for every independent family of
+          measurable, integrable, nonnegative random variables whose coordinate
+          means are at most one.
+      - declaration: Grunbaum.grunbaum_centroid_halfspace
+        informal: >-
+          Every closed halfspace containing the centroid of a positive-volume
+          convex body in finite-dimensional Euclidean space contains at least
+          the sharp Grünbaum fraction of the body's volume.
+    tags:
+      - probability
+      - concentration-inequalities
+      - convex-geometry
+      - sharp-constants
+    msc:
+      - "60E15"
+      - "52A20"
   - slug: sphere-packing
     title: Sharp asymptotic upper bounds for sphere packing
     summary: >-
