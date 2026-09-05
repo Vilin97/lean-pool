@@ -605,6 +605,9 @@ import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.Sp
 import LeanPool.CompactSpectral.Analysis.InnerProductSpace.CompactSelfAdjoint.SpectralTheorem
 import LeanPool.CompactSpectral.Analysis.InnerProductSpace.RayleighCompact
 import LeanPool.CompactSpectral.Topology.WeakHilbertCompact
+import LeanPool.CompactnessAndDegeneracy
+import LeanPool.CompactnessAndDegeneracy.Compactness
+import LeanPool.CompactnessAndDegeneracy.Degeneracy
 import LeanPool.CompositionAlgebras
 import LeanPool.CompositionAlgebras.Composition.CayleyDickson
 import LeanPool.CompositionAlgebras.Composition.Classification
