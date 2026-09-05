@@ -12,8 +12,8 @@ import LeanPool.KasamiCyclicAdditive.Prelude
 These definitions intentionally duplicate the concrete statement definitions
 in `Challenge.lean`.  The Challenge may not import candidate-local helper
 files, so the proof development carries its own copies.  Their semantic
-agreement with an independently structured literature specification is audited
-in `Validation/LiteratureBridge.lean`.
+agreement with the independently structured literature specification was
+checked in the source project before this import.
 -/
 
 open Finset
