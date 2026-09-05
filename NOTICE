@@ -95,6 +95,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/JacobianDiffgeo           https://github.com/rkirov/jacobian-fable
   LeanPool/JohnsonLindenstraussLean  https://github.com/claytomode/johnson-lindenstrauss-lean
   LeanPool/KahnKalai                 https://github.com/dcposch/kahn-kalai-lean
+  LeanPool/KasamiCyclicAdditive      https://github.com/dsm054/kasami_cyclic_additive
   LeanPool/KrafftSieve               https://github.com/ElNando888/KrafftSieve
   LeanPool/Lean4GlCoalgebras         https://github.com/mgignoux/lean4-gl-coalgebras
   LeanPool/LeanBooleanfun            https://github.com/roos-j/lean-booleanfun
