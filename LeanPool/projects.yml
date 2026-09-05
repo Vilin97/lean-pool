@@ -7255,3 +7255,73 @@ projects:
       - "11T06"
       - "11T71"
       - "94A60"
+  - slug: statistical-learning-theory
+    title: Statistical learning theory and high-dimensional probability
+    summary: >-
+      Formalizes metric entropy, truncated Dudley chaining, small-ball
+      probabilities, random-matrix singular-value concentration, and localized
+      covering bounds for sparse linear prediction. The imported endpoint
+      closure combines the ICML 2026 empirical-process artifact with its later
+      high-dimensional-probability development.
+    branch: probability theory and statistical learning
+    entry_module: LeanPool.StatisticalLearningTheory
+    authors:
+      - Yuanhe Zhang
+      - Jason D. Lee
+      - Fanghui Liu
+    source:
+      title: "AI4SLT: Empirical Processes in Lean 4 for Formal Statistical Learning Theory"
+      authors:
+        - Yuanhe Zhang
+        - Jason D. Lee
+        - Fanghui Liu
+      url: https://github.com/YuanheZ/lean-stat-learning-theory
+      arxiv: "2602.02285"
+      github_repo: YuanheZ/lean-stat-learning-theory
+      commit: d0f506f0a695018265dccb33bcb05e2f5ca1c876
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - LeanPool.StatisticalLearningTheory.truncated_dudley_entropy_bound
+    main_results:
+      - declaration: LeanPool.StatisticalLearningTheory.truncated_dudley_entropy_bound
+        informal: >-
+          Let a nonempty totally bounded pseudometric set have diameter at most
+          D, and let 0 < delta <= D / 4. If every process increment is
+          sub-Gaussian with variance proxy equal to the squared distance and
+          the global and delta-local oscillations are integrable, then the
+          expected global oscillation is at most twice the expected delta-local
+          oscillation plus 32 times the integral from delta / 4 to D of the
+          half-scale square-root metric entropy.
+      - declaration: LeanPool.StatisticalLearningTheory.RMT.two_sided_subgaussian_matrices_hdp_of_pos
+        informal: >-
+          For positive m and n, a random m-by-n matrix with measurable entries
+          and independent, mean-zero, isotropic rows of finite projection-MGF
+          psi-2 scale admits C > 0 such that, for every t >= 0 and positive K
+          equal to the maximum row scale, with probability at least
+          1 - 2 exp(-t^2) its singular values lie between
+          sqrt(m) - C K^2 (sqrt(n) + t) and sqrt(m) + C K^2 (sqrt(n) + t).
+      - declaration: LeanPool.StatisticalLearningTheory.SmallBallProbability.small_ball_prob
+        informal: >-
+          On a probability space, for epsilon > 0 and a finite independent
+          family of measurable, almost-surely nonnegative real random variables
+          whose Lebesgue densities are bounded by one almost everywhere, the
+          probability that their sum is at most epsilon times the family size
+          is at most (e epsilon) to that size.
+      - declaration: LeanPool.StatisticalLearningTheory.LeastSquares.l1LocalizedImage_coveringNumber_le
+        informal: >-
+          For n > 0, R >= 0, and epsilon > 0, if every design-matrix column has
+          Euclidean norm at most sqrt(n), then the epsilon-covering number of
+          {X theta / sqrt(n) | ||theta||_1 <= R and ||X theta||_2 / sqrt(n) <= delta}
+          is at most (2d + 1) raised to the ceiling of R^2 / epsilon^2.
+    tags:
+      - statistical-learning
+      - empirical-processes
+      - high-dimensional-probability
+      - random-matrices
+    msc:
+      - "60E15"
+      - "60G15"
+      - "62G20"
+      - "62J05"
