@@ -7255,3 +7255,53 @@ projects:
       - "11T06"
       - "11T71"
       - "94A60"
+  - slug: ehrhart-volume-inequality
+    title: Ehrhart's sharp volume inequality
+    summary: >-
+      Proves Ehrhart's sharp upper bound for the volume of a centered
+      full-dimensional convex body whose origin is its unique interior lattice
+      point. The development builds the weighted complex-analytic and variational
+      machinery needed for the bound and verifies sharpness using the centered
+      simplex, including its barycenter and exact volume.
+    branch: convex geometry and geometry of numbers
+    entry_module: LeanPool.EhrhartVolumeInequality
+    authors:
+      - OpenAI
+      - Dean Cureton
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - Ehrhart.Volume.ehrhart_volume_inequality_for_sets
+    main_results:
+      - declaration: Ehrhart.Volume.ehrhart_volume_inequality_for_sets
+        informal: >-
+          In every positive dimension, a compact full-dimensional convex set
+          with barycenter zero and origin as its unique interior lattice point
+          has volume at most (n + 1)^n / n!.
+      - declaration: Ehrhart.SimplexVolume.normalizedVolume_centeredSimplex
+        informal: >-
+          The centered dilation of the standard n-simplex has normalized volume
+          exactly (n + 1)^n / n!, so the volume bound is sharp.
+      - declaration: Ehrhart.SimplexVolume.barycenter_centeredSimplex
+        informal: >-
+          The centered dilation of the standard simplex has barycenter zero.
+      - declaration: Ehrhart.SimplexVolume.exists_centeredBody_sharp
+        informal: >-
+          In every positive dimension there exists a centered convex body with
+          a unique interior lattice point that attains the sharp volume bound.
+    tags:
+      - convex-geometry
+      - geometry-of-numbers
+      - lattice-points
+      - ehrhart-theory
+    msc:
+      - "52A40"
+      - "11H06"

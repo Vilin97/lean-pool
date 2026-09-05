@@ -1007,6 +1007,14 @@ import LeanPool.Egrs75.Reduction
 import LeanPool.Egrs75.RoundUp
 import LeanPool.Egrs75.SeedWindow
 import LeanPool.Egrs75.SubtractBranch
+import LeanPool.EhrhartVolumeInequality
+import LeanPool.EhrhartVolumeInequality.Convergence
+import LeanPool.EhrhartVolumeInequality.Convexity
+import LeanPool.EhrhartVolumeInequality.Foundations
+import LeanPool.EhrhartVolumeInequality.FourierAnalysis
+import LeanPool.EhrhartVolumeInequality.Regularization
+import LeanPool.EhrhartVolumeInequality.Resolvent
+import LeanPool.EhrhartVolumeInequality.Variation
 import LeanPool.Erdos1196
 import LeanPool.Erdos1196.Basic
 import LeanPool.Erdos1196.FirstEntryRowTerm
