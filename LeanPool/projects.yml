@@ -7255,3 +7255,53 @@ projects:
       - "11T06"
       - "11T71"
       - "94A60"
+  - slug: gap-cvp
+    title: Polynomial-factor hardness of the closest vector problem
+    summary: >-
+      Formalizes polynomial-factor NP-hardness of the closest vector problem
+      through an explicit reduction from 3-SAT. The development also derives
+      NP-hardness of binary nearest codeword, binary syndrome decoding, and
+      finite p-norm variants of GapCVP. It includes machine-level polynomial-time
+      bounds, binary encodings, affine systems, Reed--Solomon-style interpolation,
+      and the lattice and coding-theory reductions needed by the final results.
+    branch: computational complexity and lattice problems
+    entry_module: LeanPool.GapCVP
+    authors:
+      - OpenAI
+      - Dean Cureton
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - GapCVP.Comparator.gapCVP400IsNPHard
+    main_results:
+      - declaration: GapCVP.Comparator.gapCVP400IsNPHard
+        informal: >-
+          GapCVP with approximation factor 400 is NP-hard as a promise problem.
+      - declaration: GapCVP.Comparator.binaryNearestCodewordIsNPHard
+        informal: >-
+          Binary nearest codeword is NP-hard as a promise problem.
+      - declaration: GapCVP.Comparator.binarySyndromeDecodingIsNPHard
+        informal: >-
+          Binary syndrome decoding is NP-hard as a promise problem.
+      - declaration: GapCVP.Comparator.finitePNormGapCVPIsNPHard
+        informal: >-
+          For every rational p at least one, the finite p-norm version of
+          GapCVP is NP-hard as a promise problem.
+    tags:
+      - computational-complexity
+      - np-hardness
+      - lattice-problems
+      - coding-theory
+    msc:
+      - "68Q17"
+      - "68Q25"
+      - "11H06"
+      - "94B35"
