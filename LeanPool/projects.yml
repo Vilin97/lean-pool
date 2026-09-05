@@ -7255,3 +7255,51 @@ projects:
       - "11T06"
       - "11T71"
       - "94A60"
+  - slug: erdos81-paper-ii-chordal-heredity
+    title: "Chordal graphs: minimal separators and simplicial vertices"
+    summary: >-
+      A reusable formalization byproduct accompanying Paper II: defines chordal graphs through
+      the cycle-and-chord characterization, proves induced-subgraph heredity and the clique
+      property for finite minimal separators of fixed vertex pairs, proves Dirac's
+      simplicial-vertex theorem, and proves the connected non-complete case of the two-vertex
+      conclusion.
+    branch: graph theory
+    entry_module: LeanPool.Erdos81PaperIIContrib
+    authors:
+      - Juan Pablo Traverso Gianini
+    source:
+      title: Complete-Split Extremizers for a Fractional Triangle-Cover Functional on Chordal Graphs
+      authors:
+        - Juan Pablo Traverso Gianini
+      url: https://github.com/jtraverso/lean-pool/blob/822738f3089d92c5e65a6bfb8c88c992e4699167/LeanPool/Erdos81PaperIIContrib/Chordal.lean
+      github_repo: jtraverso/lean-pool
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial
+    main_results:
+      - declaration: SimpleGraph.IsChordal.comap
+        informal: >-
+          A graph that embeds as an induced subgraph of a chordal graph is itself chordal.
+      - declaration: SimpleGraph.IsChordal.induce
+        informal: >-
+          Every induced subgraph of a chordal graph is chordal.
+      - declaration: SimpleGraph.IsChordal.minimalSeparator_isClique
+        informal: >-
+          Every finite minimal separator of two fixed vertices in a chordal graph is a clique.
+      - declaration: SimpleGraph.IsChordal.exists_isSimplicial
+        informal: >-
+          Every nonempty finite chordal graph has a simplicial vertex.
+      - declaration: SimpleGraph.IsChordal.exists_two_nonadj_isSimplicial
+        informal: >-
+          Every connected non-complete finite chordal graph has two non-adjacent simplicial
+          vertices.
+    tags:
+      - graph-theory
+      - chordal-graphs
+      - induced-subgraphs
+      - minimal-separators
+      - simplicial-vertices
+    msc:
+      - "05C75"
