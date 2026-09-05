@@ -72,6 +72,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/ErdosMoser                https://github.com/lyfar/erdos-moser-distinct-subset-sums-lean
   LeanPool/ErdosTuzaValtr            https://github.com/jcpaik/erdos-tuza-valtr
   LeanPool/EventStructures           https://github.com/vikraman/event-structures
+  LeanPool/Feige                     https://github.com/pengzhang91/Feige
   LeanPool/Fineqs                    https://github.com/nasqret/fineqs
   LeanPool/FiniteGraphFundamentalGroup
                                      https://github.com/Arthur742Ramos/finite-graph-fundamental-group
