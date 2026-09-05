@@ -7199,6 +7199,62 @@ projects:
     msc:
       - "60E15"
       - "52A20"
+  - slug: kasami-cyclic-additive
+    title: Carlet's Kasami cyclic-additive conjecture
+    summary: >-
+      Proves Carlet's cyclic-additive conjecture for the Kasami power function:
+      over every finite field of characteristic two with cardinality 2^n and
+      every k coprime to n, the normalized derivative image has the exact
+      coefficient triple count 2^(2n-3) for all distinct nonzero slopes. The
+      development combines the Müller--Cohen--Matthews permutation theorem,
+      multiplicative character sums, Fourier inversion, and a Fermat-cubic
+      Frobenius-kernel argument.
+    branch: finite fields and coding theory
+    entry_module: LeanPool.KasamiCyclicAdditive
+    authors:
+      - D.S. McNeil
+      - Gábor P. Nagy
+      - Attila Vajda
+    source:
+      title: On a conjecture on the Kasami APN function
+      authors:
+        - Gábor P. Nagy
+        - Attila Vajda
+      arxiv: "2608.18584"
+      url: https://github.com/dsm054/kasami_cyclic_additive
+      github_repo: dsm054/kasami_cyclic_additive
+      commit: c8ab49ebd8e9e53f5aa7585f1d43acf1ff68d10f
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - KasamiCyclicAdditive.carlet_kasami_cyclic_additive_literature
+    main_results:
+      - declaration: KasamiCyclicAdditive.carlet_kasami_cyclic_additive_literature
+        informal: >-
+          For every finite field K of characteristic two with |K| = 2^n,
+          every k coprime to n, and all distinct nonzero v₁ and v₂ in K, the
+          coefficient triple count of the normalized Kasami derivative image is
+          exactly 2^(2n-3).
+      - declaration: KasamiCyclicAdditive.carlet_kasami_cyclic_additive_core
+        informal: >-
+          In the normalized range 1 ≤ k < n, the same coefficient triple count
+          is 2^(2n-3), assuming characteristic two, |K| = 2^n, coprimality,
+          and distinct nonzero coefficients.
+      - declaration: KasamiCyclicAdditive.kasami_half_size
+        informal: >-
+          Under the normalized admissibility hypotheses, the image of the
+          Kasami derivative has exactly half as many elements as the field.
+    tags:
+      - finite-fields
+      - coding-theory
+      - APN-functions
+      - difference-sets
+      - character-sums
+    msc:
+      - "11T06"
+      - "11T71"
+      - "94A60"
   - slug: statistical-learning-theory
     title: Statistical learning theory and high-dimensional probability
     summary: >-
