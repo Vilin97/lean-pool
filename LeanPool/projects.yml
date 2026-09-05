@@ -7255,3 +7255,59 @@ projects:
       - "11T06"
       - "11T71"
       - "94A60"
+  - slug: erdos132-wei-e2
+    title: Six distances from the E2 diameter-heptagon pattern
+    summary: >-
+      Formalizes the repaired E2 case in the diameter-seven-cycle analysis of
+      Wei, Li, Cong, and Gao. Seven planar points whose unit-distance diameter
+      graph is the step-three 7-cycle and whose boundary edges have ordered
+      classes B < A < C realize at least six distinct pairwise distances. The
+      proof extracts an angle parametrization from the geometry, derives exact
+      trigonometric and polynomial identities, excludes every five-value
+      collapse, and finishes by finite counting. This is the independently
+      significant repaired E2 step; it does not completely solve Erdős problem 132.
+    branch: discrete geometry
+    entry_module: LeanPool.Erdos132WeiE2
+    authors:
+      - Egor Lyfar
+    source:
+      title: Distance sets with diameter graph being cycle
+      authors:
+        - Xianglin Wei
+        - Guogang Li
+        - Yue Cong
+        - Feixing Gao
+      doi: "10.11650/tjm.18.2014.4030"
+      url: https://projecteuclid.org/journals/taiwanese-journal-of-mathematics/volume-18/issue-6/DISTANCE-SETS-WITH-DIAMETER-GRAPH-BEING-CYCLE/10.11650/tjm.18.2014.4030.pdf
+      github_repo: lyfar/erdos132-wei-certificates
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.Erdos132WeiE2.e2_pattern_six_distances
+    main_results:
+      - declaration: LeanPool.Erdos132WeiE2.e2_pattern_six_distances
+        informal: >-
+          Seven planar points whose unit-distance diameter graph is the step-three 7-cycle, with
+          boundary edge classes ordered B < A < C, realize at least six distinct pairwise distances —
+          the repaired E2 step of Wei, Li, Cong, and Gao (2014), from the original geometric hypotheses.
+      - declaration: LeanPool.Erdos132WeiE2.Geometry.e2_angle_parametrization
+        informal: >-
+          The E2 geometric hypotheses yield ordered real parameters B < A < C satisfying
+          the angle-sum, closure, edge-length, and diagonal identities used by the
+          six-distance argument.
+      - declaration: LeanPool.Erdos132WeiE2.Counting.six_distances_of_parametrization
+        informal: >-
+          Any seven planar points with a unit 0–3 diagonal, short 0–2 and 0–5 diagonals,
+          boundary distances ordered 1–2 < 4–5 < 0–1, and parameters
+          0 < B < A < C < π/3 satisfying the E2 angle sum, closure equation,
+          three edge formulas, and three squared-diagonal formulas realize at least six
+          distinct pairwise distances.
+    tags:
+      - discrete-geometry
+      - distance-sets
+      - diameter-graph
+      - erdos-problems
+    msc:
+      - "52C10"
+      - "05C62"
