@@ -1948,6 +1948,12 @@ import LeanPool.Incompleteness.Foundation.Vorspiel.RelItr
 import LeanPool.Incompleteness.Foundation.Vorspiel.Vorspiel
 import LeanPool.Incompleteness.ProvabilityLogic.Basic
 import LeanPool.Incompleteness.ToFoundation.Basic
+import LeanPool.InfiniteConnesRigidity
+import LeanPool.InfiniteConnesRigidity.CarryAndCrossedProduct
+import LeanPool.InfiniteConnesRigidity.FactorAndRigidity
+import LeanPool.InfiniteConnesRigidity.GroupConstruction
+import LeanPool.InfiniteConnesRigidity.SpectralAndPropertyT
+import LeanPool.InfiniteConnesRigidity.UniversalLattice
 import LeanPool.IsTranscendentalPi
 import LeanPool.IsTranscendentalPi.AnalyticEstimates
 import LeanPool.IsTranscendentalPi.CalculusOnPoly
