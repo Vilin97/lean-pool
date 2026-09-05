@@ -7255,3 +7255,45 @@ projects:
       - "11T06"
       - "11T71"
       - "94A60"
+  - slug: quantum-parallel-repetition
+    title: Quantum parallel repetition
+    summary: >-
+      Proves a quantitative parallel-repetition theorem for finite two-player
+      quantum games: whenever the entangled value is below one, the entangled
+      values of parallel repetitions decay exponentially, with an explicit
+      universal exponent in the game gap and answer-alphabet sizes.
+    branch: quantum information theory
+    entry_module: LeanPool.QuantumParallelRepetition
+    authors:
+      - OpenAI
+      - Dean Cureton
+    source:
+      title: Ten Advances in Mathematics and Theoretical Computer Science
+      authors:
+        - OpenAI
+      url: https://github.com/openai/ten-proofs
+      github_repo: openai/ten-proofs
+      commit: 94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - QuantumParallelRepetition.distributionUniformExponential
+    main_results:
+      - declaration: QuantumParallelRepetition.distributionUniformExponential
+        informal: >-
+          There is a universal positive constant giving an explicit exponential
+          upper bound on the repeated entangled value of every finite game with
+          positive gap and nonempty answer alphabets.
+      - declaration: QuantumParallelRepetition.standardQuantumParallelRepetition
+        informal: >-
+          Every finite two-player game whose entangled value is below one has
+          exponentially decaying entangled value under parallel repetition.
+    tags:
+      - quantum-information
+      - nonlocal-games
+      - parallel-repetition
+      - theoretical-computer-science
+    msc:
+      - "81P68"
+      - "68Q12"
