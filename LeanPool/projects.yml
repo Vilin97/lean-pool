@@ -7255,3 +7255,50 @@ projects:
       - "11T06"
       - "11T71"
       - "94A60"
+  - slug: imo-2026-question-6
+    title: Periodicity of the IMO 2026 common-factor sequence
+    summary: >-
+      Formalizes the IMO 2026 Question 6 sequence whose next term is the least
+      larger integer sharing a common factor with every earlier term. The
+      development builds the finite-prime support descent, stabilizes the good
+      value profile modulo a prefix product, and upgrades eventual periodicity
+      to a global translation law.
+    branch: number theory and combinatorics
+    entry_module: LeanPool.IMO2026
+    authors:
+      - Axiom Math
+    source:
+      title: IMO 2026 Question 6
+      authors:
+        - International Mathematical Olympiad
+      url: https://github.com/AxiomMath/IMO2026
+      github_repo: AxiomMath/IMO2026
+      commit: c5a6a089d06d3619afe7ff45c5ccab9e2a30d5d2
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - IMO2026Q6.main_theorem
+    main_results:
+      - declaration: IMO2026Q6.main_theorem
+        informal: >-
+          For every sequence satisfying the IMO 2026 Question 6 recursive
+          common-factor rule, there are positive integers T and L such that
+          a (n + T) = a n + L for every natural number n.
+      - declaration: IMO2026Q6.eventual_periodicity_from_stable
+        informal: >-
+          Once the finite prime-support profile stabilizes, the sequence has a
+          fixed positive translation period from an explicit threshold onward.
+      - declaration: IMO2026Q6.good_stabilizes_core
+        informal: >-
+          The common-factor predicate for a valid sequence is controlled by a
+          finite prefix prime product and therefore has a stable profile.
+    tags:
+      - imo
+      - number-theory
+      - integer-sequences
+      - periodicity
+      - gcd
+    msc:
+      - "11B99"
+      - "11A05"
