@@ -4,8 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cameron Freer
 -/
 import LeanPool.InfinitaryLogic.Descriptive.ModelClassStandardBorel
-import LeanPool.InfinitaryLogic.Descriptive.IsomorphismBorel
-import LeanPool.InfinitaryLogic.Descriptive.StructureIsoSetoid
 import Mathlib.SetTheory.Cardinal.Continuum
 /-!
 # Conditional Counting Dichotomy for Models

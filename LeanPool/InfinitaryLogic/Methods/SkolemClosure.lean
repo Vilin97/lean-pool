@@ -58,8 +58,6 @@ theorem setClosure_countable (stepOne : α → Set α) {Γ₀ : Set α} (hΓ₀ 
     (hstep : ∀ x, (stepOne x).Countable) : (setClosure stepOne Γ₀).Countable :=
   Set.countable_iUnion (iterClosure_countable stepOne hΓ₀ hstep)
 
-/-! ### Subformula / connective-component step (any language) -/
-
 /-- Immediate subformulas and countable-connective components of a formula, over **any** language:
 `imp` gives both parts, `all` gives the body (one higher arity), `iSup`/`iInf` give all
 countably-many components, and the atomic forms give none. -/
@@ -84,14 +82,6 @@ theorem bfSubformulas_countable {Λ : Language.{0, 0}} (χ : Σ n, Λ.BoundedFor
   | equal _ _ => exact Set.countable_empty
   | rel _ _ => exact Set.countable_empty
 
-/-! ### Staged formulas and the colimit projection -/
-
 variable (L : Language.{0, 0})
-
-/-! ### Existential Skolem-witness step (stage `k` → `k+1`) -/
-
-/-! ### The Skolem-closed staged family `Γ*` -/
-
-/-! ### Colimit image and enumeration -/
 
 end FirstOrder.Language
