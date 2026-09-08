@@ -7255,3 +7255,88 @@ projects:
       - "11T06"
       - "11T71"
       - "94A60"
+
+  - slug: rare-distance-fields
+    title: Rare-distance bounds over specified coordinate fields
+    summary: >-
+      Proves n <= 2^r for n distinct planar points whose coordinates lie in
+      Q(sqrt(2)), and separately in any real purely transcendental extension
+      Q(T), where r counts positive occurring Euclidean distances realized by
+      at most n unordered pairs. Both settings give two rare distances for
+      n >= 3 and at least k for n >= 2^k. Exact rational specialization
+      preserves the complete distance-equality pattern in the Q(T) case.
+      The coordinate restrictions are essential; this does not solve the
+      unrestricted Erdos problem 132 or cover arbitrary algebraic extensions.
+      The proofs construct the arithmetic descent and all multiplicity
+      transfers. No published classification is assumed. The linked problem
+      is motivation; these quantitative restricted statements are proved here,
+      without a claim of new mathematics.
+    branch: discrete geometry and arithmetic
+    entry_module: LeanPool.RareDistanceFields
+    authors:
+      - Egor Lyfar
+    source:
+      title: Erdos problem 132 (motivation; restricted results proved in this project)
+      url: https://www.erdosproblems.com/132
+      github_repo: lyfar/rare-distance-fields
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.RareDistanceFields.bounds
+    main_results:
+      - declaration: LeanPool.RareDistanceFields.bounds
+        informal: >-
+          For every finite label type, the bound n <= 2^r holds both for
+          injective planar configurations with coordinates in Q(sqrt(2))
+          and, separately, for configurations in a real purely
+          transcendental extension Q(T). In each clause r counts positive
+          occurring Euclidean distances with unordered multiplicity at most n.
+      - declaration: LeanPool.RareDistanceFields.OctagonalRational.card_le_pow_rareDistances
+        informal: >-
+          For any injective finite planar configuration with both coordinates
+          in Q(sqrt(2)), n <= 2^r, where r counts its positive occurring
+          Euclidean distances with complete unordered multiplicity at most n.
+      - declaration: LeanPool.RareDistanceFields.OctagonalRational.two_rare_classes
+        informal: >-
+          Every configuration of at least three distinct planar points with
+          both coordinates in Q(sqrt(2)) has at least two rare distances.
+      - declaration: LeanPool.RareDistanceFields.OctagonalRational.uniform_divergence
+        informal: >-
+          For every k there is a uniform N such that every injective finite
+          planar configuration with coordinates in Q(sqrt(2)) and n >= N has
+          at least k rare distances. The proof chooses N = 2^k.
+      - declaration: LeanPool.RareDistanceFields.OctagonalRational.rareDistances_spec
+        informal: >-
+          Membership in rareDistances is exactly positivity, occurrence
+          between two distinct configuration points, and a complete
+          unordered distance-graph edge count at most the number of points.
+      - declaration: LeanPool.RareDistanceFields.PureTranscendental.exists_rational_pattern
+        informal: >-
+          For any finite configuration with both coordinates in a real image
+          of the fraction field of rational multivariate polynomials, there
+          is a rational planar configuration preserving equality and
+          disequality between every pair of distance labels.
+      - declaration: LeanPool.RareDistanceFields.PureTranscendental.card_le_pow_rare
+        informal: >-
+          For an injective finite planar configuration over any real purely
+          transcendental extension Q(T), n <= 2^r, where r counts its positive
+          occurring Euclidean distances with unordered multiplicity at most n.
+      - declaration: LeanPool.RareDistanceFields.PureTranscendental.two_rare_distances
+        informal: >-
+          Every configuration of at least three distinct planar points over
+          a real purely transcendental extension Q(T) has two distinct
+          positive occurring distances of unordered multiplicity at most n.
+      - declaration: LeanPool.RareDistanceFields.PureTranscendental.uniform_divergence
+        informal: >-
+          For every k there is N, independent of the variable type, real
+          field embedding and finite configuration, such that n >= N implies
+          at least k rare distances. The proof chooses N = 2^k.
+    tags:
+      - discrete-geometry
+      - distance-multiplicity
+      - arithmetic-coordinates
+    msc:
+      - 52C10
+      - 11R11
+      - 05C35
