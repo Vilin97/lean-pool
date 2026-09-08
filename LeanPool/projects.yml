@@ -50,6 +50,57 @@ projects:
       - erdos-rankin
     msc:
       - "11N05"
+  - slug: wallace-problem
+    title: The Wallace problem in ZFC
+    summary: >-
+      Formalizes in ZFC a Hausdorff countably compact group topology without
+      nontrivial convergent sequences on every torsion-free Abelian group of
+      cardinality continuum. It specializes the construction to the rational
+      direct sum and the additive real group, and derives a commutative
+      Tychonoff countably compact cancellative semigroup that is not a group.
+    branch: set-theoretic topology and topological algebra
+    entry_module: LeanPool.Wallace
+    authors:
+      - Juliane Trianon Fraga
+      - Vinicius de Oliveira Rodrigues
+    source:
+      title: The Wallace problem and countably compact torsion-free Abelian groups in ZFC
+      authors:
+        - Juliane Trianon Fraga
+        - Vinicius de Oliveira Rodrigues
+      arxiv: "2608.17317"
+      doi: 10.48550/arXiv.2608.17317
+      url: https://github.com/vo-rodrigues/wallace-problem-zfc-paper
+      github_repo: vo-rodrigues/wallace-problem-zfc-paper
+      commit: 23756864de1f14e272dafb070b97fcdc7cbc75c5
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Wallace.commutativeTychonoffWallaceCounterexampleExists
+    main_results:
+      - declaration: Wallace.torsionFreeAbelianGroup_mainTheorem_exact
+        informal: >-
+          Every torsion-free Abelian group of cardinality continuum admits a
+          Hausdorff countably compact group topology with no nontrivial
+          convergent sequences.
+      - declaration: Wallace.continuumRationalGroup_and_real_mainTheorem
+        informal: >-
+          Both the continuum-indexed rational direct sum and the additive
+          group of real numbers admit such Hausdorff countably compact group
+          topologies without nontrivial convergent sequences.
+      - declaration: Wallace.commutativeTychonoffWallaceCounterexampleExists
+        informal: >-
+          There exists a commutative Tychonoff countably compact topological
+          semigroup with two-sided cancellation which is not a group.
+    tags:
+      - wallace-problem
+      - topological-groups
+      - set-theoretic-topology
+    msc:
+      - "22A05"
+      - "54D30"
+      - "20K20"
   - slug: zeta-zeros
     title: Simple zeros of the Riemann zeta function
     summary: >-
