@@ -3886,14 +3886,6 @@ import LeanPool.SpectralPositivity.Operator.JentzschProof
 import LeanPool.SpectralPositivity.Operator.KernelPositivity
 import LeanPool.SpectralPositivity.Operator.SpectralRadius
 import LeanPool.SpherePacking
-import LeanPool.SpherePacking.Conclusion
-import LeanPool.SpherePacking.Foundations
-import LeanPool.SpherePacking.GammaAnalysis
-import LeanPool.SpherePacking.HarmonicAnalysis
-import LeanPool.SpherePacking.MellinAnalysis
-import LeanPool.SpherePacking.PackingBound
-import LeanPool.SpherePacking.RadialConstruction
-import LeanPool.SpherePacking.SaddleAnalysis
 import LeanPool.SteinhausThreeGap
 import LeanPool.SteinhausThreeGap.Basic
 import LeanPool.SumsThreeSquares
