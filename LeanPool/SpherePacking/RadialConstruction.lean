@@ -7498,9 +7498,9 @@ private theorem saddleSourceGaussianMinusIntegrand_neg_integral_re_eq_norm
   ring
 
 private theorem saddleSmallRadiusStarOrdinate_sourceScale
-    {d : ℕ} (hd : 0 < d) (ε : ℝ)
+    {d : ℕ} (hd : 0 < d)
     {u : ℝ}
-    (hu : saddleSmallRadiusStarOrdinate ε d ≤ u) :
+    (hu : saddleSmallRadiusStarOrdinate d ≤ u) :
     Real.log ((d : ℝ) / 2) / 4 ≤
       ((d : ℝ) / 2) * (1 + u) := by
   let ℓ : ℝ := (d : ℝ) / 2
@@ -7508,7 +7508,7 @@ private theorem saddleSmallRadiusStarOrdinate_sourceScale
     try dsimp [ℓ]
     positivity
   have hstar :
-      ℓ * (1 + saddleSmallRadiusStarOrdinate ε d) =
+      ℓ * (1 + saddleSmallRadiusStarOrdinate d) =
         Real.log ℓ / 4 := by
     unfold saddleSmallRadiusStarOrdinate
     try dsimp [ℓ]
@@ -7531,7 +7531,7 @@ private theorem eventually_plusSaddleProfile_re_pos_at_firstBranchSaddles :
     ∀ᶠ ε : ℝ in 𝓝[>] (0 : ℝ),
       ∀ᶠ d : ℕ in atTop,
         ∀ u : ℝ,
-          saddleSmallRadiusStarOrdinate ε d ≤ u →
+          saddleSmallRadiusStarOrdinate d ≤ u →
             u ≤ 1 + ε / 2 →
               0 < (plusSaddleProfile ε ((d : ℝ) / 2)
                 (Real.exp (saddleLogRadius ε d u))).re := by
@@ -7544,13 +7544,13 @@ private theorem eventually_plusSaddleProfile_re_pos_at_firstBranchSaddles :
   have hdimension :=
     tendsto_saddleResidue_dimension_half.eventually hfull
   filter_upwards [hdimension,
-    eventually_saddleSmallRadiusStarOrdinate_gt_neg_one ε,
+    eventually_saddleSmallRadiusStarOrdinate_gt_neg_one,
     eventually_gt_atTop (0 : ℕ)]
     with d hdimen hstar hd
   intro u hu hupper
   have hulower : -1 < u := hstar.trans_le hu
   have hℓ : 0 < (d : ℝ) / 2 := by positivity
-  have hscale := saddleSmallRadiusStarOrdinate_sourceScale hd ε hu
+  have hscale := saddleSmallRadiusStarOrdinate_sourceScale hd hu
   have herr := (hdimen u hulower hupper hscale).1
   have hV := hvariance ((d : ℝ) / 2) hℓ u hulower hupper
   have herror :

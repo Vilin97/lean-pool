@@ -129,8 +129,7 @@ private theorem saddleLogRadius_eq_digamma_add_shellDerivative
   unfold saddleLogRadius saddleSourceShellDerivative
   ring
 
-private noncomputable def saddleSmallRadiusStarOrdinate (ε : ℝ) (d : ℕ) : ℝ :=
-  let _sourceParameter : ℝ := ε
+private noncomputable def saddleSmallRadiusStarOrdinate (d : ℕ) : ℝ :=
   show ℝ from
     -1 + Real.log ((d : ℝ) / 2) /
       (4 * ((d : ℝ) / 2))
@@ -138,7 +137,7 @@ private noncomputable def saddleSmallRadiusStarOrdinate (ε : ℝ) (d : ℕ) : �
 private noncomputable def saddleSmallRadiusStar (ε : ℝ) (d : ℕ) : ℝ :=
   Real.exp
     (saddleLogRadius ε d
-      (saddleSmallRadiusStarOrdinate ε d))
+      (saddleSmallRadiusStarOrdinate d))
 
 private theorem saddleSmallRadiusStar_pos (ε : ℝ) (d : ℕ) :
     0 < saddleSmallRadiusStar ε d := by
@@ -146,9 +145,9 @@ private theorem saddleSmallRadiusStar_pos (ε : ℝ) (d : ℕ) :
   exact Real.exp_pos _
 
 private theorem saddleSmallRadiusStar_gammaArgument
-    {d : ℕ} (hd : 0 < d) (ε : ℝ) :
+    {d : ℕ} (hd : 0 < d) :
     ((d : ℝ) / 2) *
-        (1 + saddleSmallRadiusStarOrdinate ε d) / 2 =
+        (1 + saddleSmallRadiusStarOrdinate d) / 2 =
       Real.log ((d : ℝ) / 2) / 8 := by
   have hdreal : (d : ℝ) ≠ 0 := by
     exact_mod_cast hd.ne'
@@ -199,23 +198,23 @@ private theorem saddleSmallRadiusVariable_star_eq
           2 *
             (saddleShellDerivativeOne ε +
               saddleSourceShellDerivative ε
-                (saddleSmallRadiusStarOrdinate ε d))) := by
+                (saddleSmallRadiusStarOrdinate d))) := by
   have hpi : Real.pi = Real.exp (Real.log Real.pi) :=
     (Real.exp_log Real.pi_pos).symm
   unfold saddleSmallRadiusVariable saddleSmallRadiusStar
   rw [saddleLogRadius_eq_digamma_add_shellDerivative,
-    saddleSmallRadiusStar_gammaArgument hd ε]
+    saddleSmallRadiusStar_gammaArgument hd]
   nth_rw 1 [hpi]
   rw [show (Real.exp
       (-(Real.log Real.pi) / 2 +
         saddleDigamma (Real.log ((d : ℝ) / 2) / 8) / 2 +
         saddleSourceShellDerivative ε
-          (saddleSmallRadiusStarOrdinate ε d))) ^ 2 =
+          (saddleSmallRadiusStarOrdinate d))) ^ 2 =
       Real.exp
         (2 * (-(Real.log Real.pi) / 2 +
           saddleDigamma (Real.log ((d : ℝ) / 2) / 8) / 2 +
           saddleSourceShellDerivative ε
-            (saddleSmallRadiusStarOrdinate ε d))) by
+            (saddleSmallRadiusStarOrdinate d))) by
       rw [pow_two, ← Real.exp_add]
       congr 1
       ring]
@@ -349,28 +348,28 @@ private theorem exists_saddleSmallRadiusStar_coordinate_bound
     apply (div_le_iff₀ (show 0 < 4 * ℓ by positivity)).mpr
     linarith
   have hstar :
-      saddleSmallRadiusStarOrdinate ε d = -1 + q := by
+      saddleSmallRadiusStarOrdinate d = -1 + q := by
     rfl
   have huinterval :
-      saddleSmallRadiusStarOrdinate ε d ∈
+      saddleSmallRadiusStarOrdinate d ∈
         Icc (-1 : ℝ) 0 := by
     rw [hstar]
     constructor <;> linarith
   have hshell :
       saddleShellDerivativeOne ε +
           saddleSourceShellDerivative ε
-            (saddleSmallRadiusStarOrdinate ε d) ≤
+            (saddleSmallRadiusStarOrdinate d) ≤
         K * q := by
     calc
       saddleShellDerivativeOne ε +
           saddleSourceShellDerivative ε
-            (saddleSmallRadiusStarOrdinate ε d) ≤
+            (saddleSmallRadiusStarOrdinate d) ≤
         |saddleShellDerivativeOne ε +
           saddleSourceShellDerivative ε
-            (saddleSmallRadiusStarOrdinate ε d)| :=
+            (saddleSmallRadiusStarOrdinate d)| :=
           le_abs_self _
       _ ≤ K *
-          (saddleSmallRadiusStarOrdinate ε d + 1) :=
+          (saddleSmallRadiusStarOrdinate d + 1) :=
         hKbound _ huinterval
       _ = K * q := by
         rw [hstar]
@@ -427,7 +426,7 @@ private theorem exists_saddleSmallRadiusStar_coordinate_bound
         (saddleDigamma m +
           2 * (saddleShellDerivativeOne ε +
             saddleSourceShellDerivative ε
-              (saddleSmallRadiusStarOrdinate ε d))) := by
+              (saddleSmallRadiusStarOrdinate d))) := by
         simpa only [m, ℓ] using!
           saddleSmallRadiusVariable_star_eq
             (ε := ε) hd

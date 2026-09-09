@@ -7868,10 +7868,9 @@ private theorem eventually_saddleLogRadius_covers_Ici :
   exact saddleLogRadius_covers_Ici
     hε horder hd hu₀ (htop d hd) hr
 
-private theorem eventually_saddleSmallRadiusStarOrdinate_gt_neg_one
-    (ε : ℝ) :
+private theorem eventually_saddleSmallRadiusStarOrdinate_gt_neg_one :
     ∀ᶠ d : ℕ in atTop,
-      -1 < saddleSmallRadiusStarOrdinate ε d := by
+      -1 < saddleSmallRadiusStarOrdinate d := by
   filter_upwards [eventually_ge_atTop (3 : ℕ)]
     with d hd
   have hdreal : (3 : ℝ) ≤ (d : ℝ) := by
@@ -7895,18 +7894,18 @@ private theorem eventually_saddleSmallRadiusStar_log_coverage :
         ∀ r : ℝ,
           saddleSmallRadiusStar ε d ≤ r →
             ∃ u : ℝ,
-              saddleSmallRadiusStarOrdinate ε d ≤ u ∧
+              saddleSmallRadiusStarOrdinate d ≤ u ∧
                 saddleLogRadius ε d u = Real.log r := by
   filter_upwards
     [eventually_saddleLogRadius_covers_Ici]
     with ε hcoverage
   filter_upwards
-    [eventually_saddleSmallRadiusStarOrdinate_gt_neg_one ε,
+    [eventually_saddleSmallRadiusStarOrdinate_gt_neg_one,
       eventually_gt_atTop (0 : ℕ)]
     with d hstar hd
   intro r hr
   apply hcoverage d hd
-    (saddleSmallRadiusStarOrdinate ε d) hstar r
+    (saddleSmallRadiusStarOrdinate d) hstar r
   exact hr
 
 private theorem eventually_saddleSourceRadius_log_coverage :
